@@ -7,44 +7,26 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 import java.util.zip.ZipException;
 
+import junit.framework.TestCase;
+
 import org.ginsim.common.document.DocumentStyle;
 import org.ginsim.common.document.DocumentWriter;
-import org.ginsim.common.document.LaTeXDocumentWriter;
-import org.ginsim.common.document.OOoDocumentWriter;
-import org.ginsim.common.document.XHTMLDocumentWriter;
+import org.ginsim.common.document.GenericDocumentFormat;
 
-import junit.framework.TestCase;
 import fr.univmrs.tagc.common.TestTools;
 
 public class TestDocumentWriter extends TestCase {
 
-	List l;
-	public TestDocumentWriter() throws FileNotFoundException {
-		l = new ArrayList(2);
+	public void testDocumentWriters() throws FileNotFoundException {
+		List<GenericDocumentFormat> formats = GenericDocumentFormat.getAllFormats();
 		File baseDir = TestTools.getTempDir();
-		DocumentWriter doc = new OOoDocumentWriter();
-		doc.setOutput(new FileOutputStream(new File(baseDir,"testme.odt")));
-		l.add(doc);
-		
-        doc = new XHTMLDocumentWriter();
-        doc.setOutput(new FileOutputStream(new File(baseDir,"testme.html")));
-        l.add(doc);
-
-        doc = new LaTeXDocumentWriter();
-        doc.setOutput(new FileOutputStream(new File(baseDir,"testme.tex")));
-        l.add(doc);
-	}
-	
-	public void testDocumentWriters() {
-		Iterator it = l.iterator();
-		while (it.hasNext()) {
-			DocumentWriter doc = (DocumentWriter) it.next();
+		for (GenericDocumentFormat f: formats) {
+			DocumentWriter doc = f.getWriter();
+			doc.setOutput(new FileOutputStream(new File(baseDir,"testme" + f.extension)));
 			doTestWriter(doc);
 		}		
 	}

@@ -8,8 +8,10 @@ import org.ginsim.core.utils.log.LogManager;
 
 /**
  * Simple description of a file format.
+ * Each format has an identifier and an extension.
  * 
- * A format is identified by a "group" and identifier. Beside this, it provides a name and file extension
+ * A list of defined format is automatically maintained and can be used to retrieve a format by ID or by extension.
+ * "Groups" of related formats can also be created by subclassing (the class will be used as group identifier).
  * 
  * @author Aurelien Naldi
  */
@@ -17,20 +19,12 @@ public class FileFormatDescription {
 
 	private static List<FileFormatDescription> ALL_FORMATS = new ArrayList<FileFormatDescription>();
 	
-	public final Object group;
 	public final String id;
-	public final String name;
 	public final String extension;
 	
-	public FileFormatDescription(String id, String name, String extension) {
-		this(null, id, name, extension);
-	}
-
-	public FileFormatDescription(String group, String id, String name, String extension) {
-		this.group = group;
+	public FileFormatDescription(String id, String extension) {
 		this.id = id;
 		
-		this.name = name;
 		this.extension = extension;
 
 		if (ALL_FORMATS.contains(this)) {
@@ -42,38 +36,58 @@ public class FileFormatDescription {
 	
 	@Override
 	public boolean equals(Object o) {
-		if (!(o instanceof FileFormatDescription)) {
+		if (o.getClass() != getClass()) {
 			return false;
 		}
+		
 		FileFormatDescription other = (FileFormatDescription)o;
-		return other.group == this.group && other.id .equals(this.id);
+		return other.id .equals(this.id);
 	}
 	
 	@Override
 	public String toString() {
-		return name;
+		return id;
+	}
+
+	/**
+	 * Retrieve a format by id.
+	 * @param id
+	 * @return
+	 */
+	public static FileFormatDescription getFormat(String id) {
+		return getFormat( FileFormatDescription.class, id);
 	}
 	
-	public static FileFormatDescription getFormat(String id) {
-		return getFormat(null, id);
-	}
-	public static FileFormatDescription getFormat(Object group, String id) {
+	/**
+	 * Retrieve a subclassing format by ID.
+	 * 
+	 * @param cl
+	 * @param id
+	 * @return
+	 */
+	public static <C extends FileFormatDescription> C getFormat( Class<C> cl, String id) {
 		for (FileFormatDescription d: ALL_FORMATS) {
-			if (d.group == group && d.id == id) {
-				return d;
+			if (d.getClass() == cl && d.id == id) {
+				return (C)d;
 			}
 		}
 		return null;
 	}
 
-	public static Collection<FileFormatDescription> getFormats(Object group) {
-		List<FileFormatDescription> l = null;
+	/**
+	 * Retrieve all formats of a given subclass.
+	 * 
+	 * @param cl
+	 * @return
+	 */
+	public static <C extends FileFormatDescription> Collection<C> getFormats( Class<C> cl) {
+		List<C> l = null;
 		for (FileFormatDescription d: ALL_FORMATS) {
-			if (d.group == group) {
+			if (d.getClass() == cl) {
 				if (l == null) {
-					l = new ArrayList<FileFormatDescription>();
+					l = new ArrayList<C>();
 				}
-				l.add(d);
+				l.add((C)d);
 			}
 		}
 		return l;

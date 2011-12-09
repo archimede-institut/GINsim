@@ -25,6 +25,7 @@ import org.ginsim.core.utils.DataUtils;
  */
 public class XHTMLDocumentWriter extends DocumentWriter {
 
+	public static final DocumentWriterFactory FACTORY = new XHTMLDocumentWriterFactory();;
 	XMLWriter xmlw;
 	OutputStreamWriter writer;
 	
@@ -341,5 +342,13 @@ class xHTMLTable {
 		this.t_colStyle = t_colStyle;
 		this.row = 0;
 		this.col = 0;
+	}
+}
+
+class XHTMLDocumentWriterFactory implements DocumentWriterFactory {
+
+	@Override
+	public DocumentWriter getDocumentWriter() {
+		return new XHTMLDocumentWriter();
 	}
 }

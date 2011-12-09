@@ -33,7 +33,6 @@ import org.ginsim.service.tool.interactionanalysis.InteractionAnalysisAlgoResult
 import org.ginsim.service.tool.interactionanalysis.InteractionAnalysisService;
 
 
-
 public class InteractionAnalysisFrame extends StackDialog implements ActionListener {
 	private JFrame frame;
 	private RegulatoryGraph regGraph;
@@ -123,7 +122,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 				format.add(GenericDocumentFormat.XHTMLDocumentFormat);
 				Object[] fileAndFormat = GenericDocumentFileChooser.saveDialog(OPT_REPORTDIRECTORY, this, format);
 				if (fileAndFormat != null) {
-					DocumentWriter doc = (DocumentWriter)((GenericDocumentFormat)fileAndFormat[1]).documentWriterClass.newInstance();
+					DocumentWriter doc = ((GenericDocumentFormat)fileAndFormat[1]).factory.getDocumentWriter();
 					doc.setOutput((File)fileAndFormat[0]);
 					if (algoResult != null) algoResult.getReport().saveReport(doc, regGraph);
 				}
