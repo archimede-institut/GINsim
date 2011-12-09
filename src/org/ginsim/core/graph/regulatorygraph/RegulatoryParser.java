@@ -10,9 +10,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.exception.GsException;
@@ -28,10 +25,8 @@ import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.io.parser.GsXMLHelper;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.InvalidFunctionResolution;
-import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
-import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -75,7 +70,7 @@ public final class RegulatoryParser extends GsXMLHelper {
     private Vector v_function;
 
     /** some more stuff to check consistency of "old" models (with explicit and free maxvalue) */
-    Map m_checkMaxValue;
+    Map<RegulatoryEdge, Integer> m_checkMaxValue;
 
     /**
      */
@@ -382,19 +377,19 @@ public final class RegulatoryParser extends GsXMLHelper {
 	/**
      * use the constructed v_waitingInteraction to add the accurate interaction to the nodes.
      */
-    private void placeInteractions() {
+    private void placeInteractions() throws SAXException{
     	// check the maxvalues of all interactions first
     	if (m_checkMaxValue != null) {
-        	Map m = null;
-    		Iterator it = m_checkMaxValue.entrySet().iterator();
+        	Map<Entry<RegulatoryEdge,Integer>,String> m = null;
+    		Iterator<Entry<RegulatoryEdge,Integer>> it = m_checkMaxValue.entrySet().iterator();
     		while (it.hasNext()) {
-    			Entry entry = (Entry)it.next();
+    			Entry<RegulatoryEdge,Integer> entry = it.next();
     			byte m1 = ((RegulatoryEdge)entry.getKey()).getMax();
     			byte m2 = ((Integer)entry.getValue()).byteValue();
     			byte max = ((RegulatoryEdge)entry.getKey()).me.getSource().getMaxValue();
     			if ( m1 != m2 ) {
 					if (m == null) {
-    					m = new HashMap();
+    					m = new HashMap<Entry<RegulatoryEdge,Integer>,String>();
     				}
     				if (m1 == -1 && m2 == max || m2 == -1 && m1 == max) {
     					m.put(entry, "");
@@ -405,19 +400,12 @@ public final class RegulatoryParser extends GsXMLHelper {
     		}
     		if (m != null) {
     			
-    			NotificationResolution resolution = new NotificationResolution( new String[] {"View"}){
-    				
-    				public boolean perform( Graph graph, Object[] data, int index){
-	    				StackDialog d = new InteractionInconsistencyDialog( (Map) data[0],
-	    						graph,
-	    						"interactionInconststancy",
-	    						200, 150);
-	    				d.setVisible(true);
-	    				return true;
-    				}
-    			};
-    			
-    			NotificationManager.publishResolvableWarning( this, "inconsistency in some interactions", graph, new Object[] {m}, resolution);
+    			LogManager.error( "Interaction inconsistency detected.");
+    			for( Entry<RegulatoryEdge,Integer> entry : m.keySet()){
+    				LogManager.error( " Edge = " + entry.getKey().getShortDetail());
+    				LogManager.error( "   Pased max value = " + entry.getValue());  
+    			}
+    			throw new SAXException( new GsException( GsException.GRAVITY_ERROR, "Interaction inconsistency detected"));
     		}
     	}
 
@@ -561,55 +549,55 @@ public final class RegulatoryParser extends GsXMLHelper {
     }
 }
 
-class InteractionInconsistencyDialog extends StackDialog {
-	private static final long serialVersionUID = 4607140440879983498L;
-
-	RegulatoryGraph graph;
-	Map m;
-	JPanel panel = null;
-
-	public InteractionInconsistencyDialog(Map m, Graph graph,
-			String msg, int w, int h) {
-		
-		super( graph, msg, w, h);
-		this.graph = (RegulatoryGraph)graph;
-		this.m = m;
-
-		setMainPanel(getMainPanel());
-	}
-
-	private JPanel getMainPanel() {
-		if (panel == null) {
-			panel = new JPanel();
-			JTextArea txt = new JTextArea();
-			String s1 = "";
-			String s2 = "";
-			Iterator it = m.entrySet().iterator();
-			while (it.hasNext()) {
-				Entry entry = (Entry)it.next();
-				Entry e2 = (Entry)entry.getKey();
-				RegulatoryEdge edge = (RegulatoryEdge)e2.getKey();
-				byte oldmax = ((Integer)e2.getValue()).byteValue();
-				if (entry.getValue() == null) {
-					s1 += edge.getLongDetail(" ")+": max should be "+(oldmax == -1 ? "max" : ""+oldmax)+"\n";
-				} else {
-					s2 += edge.getLongDetail(" ")+ ": max was explicitely set to "+oldmax+"\n";
-				}
-			}
-
-			if (s1 != "") {
-				s1 = "potential problems:\n" + s1+"\n\n";
-			}
-			if (s2 != "") {
-				s1 = s1 + "warnings only:\n"+s2;
-			}
-			txt.setText(s1);
-			txt.setEditable(false);
-			panel.add(txt);
-		}
-		return panel;
-	}
-	public void run() {
-		// TODO: propose some automatic corrections
-	}
-}
+//class InteractionInconsistencyDialog extends StackDialog {
+//	private static final long serialVersionUID = 4607140440879983498L;
+//
+//	RegulatoryGraph graph;
+//	Map m;
+//	JPanel panel = null;
+//
+//	public InteractionInconsistencyDialog(Map m, Graph graph,
+//			String msg, int w, int h) {
+//		
+//		super( graph, msg, w, h);
+//		this.graph = (RegulatoryGraph)graph;
+//		this.m = m;
+//
+//		setMainPanel(getMainPanel());
+//	}
+//
+//	private JPanel getMainPanel() {
+//		if (panel == null) {
+//			panel = new JPanel();
+//			JTextArea txt = new JTextArea();
+//			String s1 = "";
+//			String s2 = "";
+//			Iterator it = m.entrySet().iterator();
+//			while (it.hasNext()) {
+//				Entry entry = (Entry)it.next();
+//				Entry e2 = (Entry)entry.getKey();
+//				RegulatoryEdge edge = (RegulatoryEdge)e2.getKey();
+//				byte oldmax = ((Integer)e2.getValue()).byteValue();
+//				if (entry.getValue() == null) {
+//					s1 += edge.getLongDetail(" ")+": max should be "+(oldmax == -1 ? "max" : ""+oldmax)+"\n";
+//				} else {
+//					s2 += edge.getLongDetail(" ")+ ": max was explicitely set to "+oldmax+"\n";
+//				}
+//			}
+//
+//			if (s1 != "") {
+//				s1 = "potential problems:\n" + s1+"\n\n";
+//			}
+//			if (s2 != "") {
+//				s1 = s1 + "warnings only:\n"+s2;
+//			}
+//			txt.setText(s1);
+//			txt.setEditable(false);
+//			panel.add(txt);
+//		}
+//		return panel;
+//	}
+//	public void run() {
+//		// TODO: propose some automatic corrections
+//	}
+//}
