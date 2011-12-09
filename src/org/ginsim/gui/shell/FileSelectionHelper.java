@@ -4,6 +4,7 @@ import java.awt.Frame;
 import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 
 
 public class FileSelectionHelper {
@@ -19,7 +20,7 @@ public class FileSelectionHelper {
 		return selectSaveFilename( parent, file_filter);
 	}
 	
-	public static String selectSaveFilename( Frame parent, GsFileFilter file_filter) {
+	public static String selectSaveFilename( Frame parent, FileFilter file_filter) {
 		JFileChooser chooser = new JFileChooser();
 		if( file_filter != null){
 			chooser.setFileFilter( file_filter);

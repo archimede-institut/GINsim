@@ -6,10 +6,10 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.export.cytoscape.CytoscapeExportService;
 import org.ginsim.servicegui.ServiceGUI;
@@ -50,10 +50,9 @@ public class CytoscapeExportServiceGUI implements ServiceGUI {
  */
 class CytoscapeExportAction<G extends Graph> extends ExportAction {
 	private static final long serialVersionUID = 7934695744239100292L;
-	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"dot"}, "dot (graphviz) files");
+	private static final FileFormatDescription FORMAT = new FileFormatDescription("cytoscape network", "xgmml");
 	
 	public CytoscapeExportAction(G graph) {
-		
 		super( graph, "STR_cytoscape", "STR_cytoscape_descr");
 	}
 
@@ -68,8 +67,8 @@ class CytoscapeExportAction<G extends Graph> extends ExportAction {
 	}
 
 	@Override
-	protected GsFileFilter getFileFilter() {
-		return ffilter;
+	public FileFormatDescription getFileFilter() {
+		return FORMAT;
 	}
 }
 
