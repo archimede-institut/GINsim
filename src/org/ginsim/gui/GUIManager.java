@@ -46,6 +46,16 @@ public class GUIManager {
 		
 		return manager; 
 	}
+	
+	public void registerGUI( GraphGUI graph_gui, MainFrame frame){
+		
+		if( graph_gui!= null && frame != null){
+			Graph graph = graph_gui.getGraph();
+			if( graph != null){
+				graphToGUIObject.put( graph, new GUIObject( graph, graph_gui, frame));
+			}
+		}
+	}
 
 	/**
 	 * Create a new graph (of the default type, i.e. a regulatory graph)
@@ -75,8 +85,6 @@ public class GUIManager {
 			graph_gui = createGraphGUI( graph);
 			MainFrame frame = new MainFrame("test", 800, 600, graph_gui);
 			frame.setVisible(true);
-			
-			graphToGUIObject.put( graph, new GUIObject( graph, graph_gui, frame));
 			
 			NotificationManager.getManager().registerListener( frame, graph);
 			return frame;
