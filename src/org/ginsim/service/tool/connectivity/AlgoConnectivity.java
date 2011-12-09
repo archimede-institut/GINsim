@@ -14,6 +14,7 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.utils.DataUtils;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.servicegui.tool.connectivity.ConnectivityFrame;
@@ -200,7 +201,7 @@ public class AlgoConnectivity extends Thread {
             NodeReducedData currentSCCNode = (NodeReducedData)component.get(scc_i);
             if (graph.getOutgoingEdges(currentSCCNode).size() == 0) {												//  set the node's shape to ellipse if the node has no outgoing edges (is terminal).
             	vreader.setNode(currentSCCNode);
-                vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
+                vreader.setShape(NodeShape.ELLIPSE);
             }
         }
 	}

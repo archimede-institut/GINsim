@@ -10,6 +10,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeBorder;
+import org.ginsim.core.graph.view.NodeShape;
 
 
 public abstract class TreeBuilderFromOmdd extends TreeBuilder {
@@ -68,16 +70,16 @@ public abstract class TreeBuilderFromOmdd extends TreeBuilder {
 		vreader.setNode(vertex);
 		int total_width = getTerminalWidth()*TreeNode.PADDING_HORIZONTAL;
 		if (vertex.getType() == TreeNode.TYPE_LEAF) {
-			vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
+			vreader.setShape(NodeShape.ELLIPSE);
 			vreader.setBackgroundColor(ColorPalette.defaultPalette[vertex.getValue()+1]);
-			vreader.setBorder(0);
+			vreader.setBorder(NodeBorder.SIMPLE);
 			if (vertex.getDepth() != -1) {
 	    		vreader.setPos((int)((vertex.getWidth()-0.5)*total_width/getWidthPerDepth_acc(vertex))+100, getTotalLevels()*TreeNode.PADDING_VERTICAL+40);
 			} else {
 	    		vreader.setPos((int)((vertex.getWidth()+0.5)*total_width/getMaxTerminal())+100, getTotalLevels()*TreeNode.PADDING_VERTICAL+40);
 			}
 		} else {
-			vreader.setShape(NodeAttributesReader.SHAPE_RECTANGLE);			
+			vreader.setShape(NodeShape.RECTANGLE);			
 			if (vertex.getValue() == TreeNode.SKIPPED) {
 				vreader.setBackgroundColor(Color.WHITE);
 				vreader.setForegroundColor(Color.GRAY);
