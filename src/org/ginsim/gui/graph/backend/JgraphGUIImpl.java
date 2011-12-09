@@ -223,7 +223,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	public boolean saveAs() {
 		Frame frame = GUIManager.getInstance().getFrame(graph);
 		GsFileFilter ffilter = new GsFileFilter();
-		ffilter.setExtensionList(new String[] { "ginml", "zginml" }, "GINsim files");
+		ffilter.setExtensionList(new String[] { "zginml" }, "GINsim files");
 		String filename = FileSelectionHelper.selectSaveFilename(frame, ffilter);
 		if (filename != null) {
 			GraphManager.getInstance().registerGraph( graph, filename);
