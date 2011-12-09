@@ -24,6 +24,8 @@ import org.mangosdk.spi.ProviderFor;
 @GUIFor( SBMLQualExportService.class)
 public class SBMLQualExportServiceGUI implements ServiceGUI {
 
+	public static final FileFormatDescription FORMAT = new FileFormatDescription("SBML-qual", "sbml");
+	
 	@Override
 	public List<Action> getAvailableActions( Graph<?, ?> graph) {
 		
@@ -43,8 +45,6 @@ public class SBMLQualExportServiceGUI implements ServiceGUI {
 
 class SBMLQualExportAction extends ExportAction<RegulatoryGraph> {
 	
-	private static final FileFormatDescription FORMAT = new FileFormatDescription("SBML-qual", "sbml");
-	
 	SBMLQualConfig config;
 	
 	public SBMLQualExportAction(RegulatoryGraph graph) {
@@ -54,7 +54,7 @@ class SBMLQualExportAction extends ExportAction<RegulatoryGraph> {
 	
 	@Override
 	public FileFormatDescription getFileFilter() {
-		return FORMAT;
+		return SBMLQualExportServiceGUI.FORMAT;
 	}
 	
 	protected void doExport( String filename) {

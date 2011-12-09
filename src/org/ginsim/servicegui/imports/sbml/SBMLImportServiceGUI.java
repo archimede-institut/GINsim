@@ -1,22 +1,20 @@
 package org.ginsim.servicegui.imports.sbml;
 
-import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.shell.FileSelectionHelper;
-import org.ginsim.gui.shell.GsFileFilter;
-import org.ginsim.gui.utils.widgets.Frame;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.imports.sbml.SBMLImportService;
 import org.ginsim.servicegui.ServiceGUI;
 import org.ginsim.servicegui.common.GUIFor;
 import org.ginsim.servicegui.common.ImportAction;
+import org.ginsim.servicegui.export.sbml.SBMLQualExportServiceGUI;
 import org.mangosdk.spi.ProviderFor;
 
 
@@ -45,32 +43,21 @@ public class SBMLImportServiceGUI implements ServiceGUI {
 
 class SBMLImportAction extends ImportAction {
 
-	private final RegulatoryGraph graph;
-	
 	public SBMLImportAction( RegulatoryGraph graph) {
-		super( "STR_SBML_L3_IMP", "STR_SBML_L3_IMP_descr");
-		this.graph = graph;
+		super( graph, "STR_SBML_L3_IMP", "STR_SBML_L3_IMP_descr");
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-		GsFileFilter ffilter = new GsFileFilter();
-		String filename;
-
-		ffilter.setExtensionList(new String[] { "sbml" }, "SBML files");
-
-		Frame frame = GUIManager.getInstance().getFrame( graph);
-		
-		// we should add a better way to select a file for import
-		filename = FileSelectionHelper.selectOpenFilename( frame, ffilter);
-		if (filename == null) {
-			return;
-		}
+	public void doImport( String filename) {
 		
 		SBMLImportService service = ServiceManager.getManager().getService( SBMLImportService.class);
 		Graph new_graph = service.run( filename);
 		
 		GUIManager.getInstance().whatToDoWithGraph (new_graph, true);
+	}
+
+	@Override
+	public FileFormatDescription getFormat() {
+		return SBMLQualExportServiceGUI.FORMAT;
 	}
 }

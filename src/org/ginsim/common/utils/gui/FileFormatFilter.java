@@ -33,12 +33,16 @@ public class FileFormatFilter extends FileFilter {
 			return false;
 		}
 		
+		if (pathname.isDirectory()) {
+			return pathname.canRead();
+		}
+		
 		String extension = pathname.getAbsolutePath();
 		int pos = extension.lastIndexOf('.');
 		if (pos < 0) {
 			return false;
 		}
-		extension = extension.substring(pos);
+		extension = extension.substring(pos+1);
 		
 		if (formats != null) {
 			for (FileFormatDescription f: formats) {

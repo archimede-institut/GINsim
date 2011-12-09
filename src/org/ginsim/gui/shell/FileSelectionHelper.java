@@ -44,7 +44,7 @@ public class FileSelectionHelper {
 		return selectOpenFilename( parent, file_filter);
 	}
 	
-	public static String selectOpenFilename( Frame parent, GsFileFilter file_filter) {
+	public static String selectOpenFilename( Frame parent, FileFilter file_filter) {
 		// TODO: remember path and so on
 		JFileChooser chooser = new JFileChooser();
 		if( file_filter != null){
