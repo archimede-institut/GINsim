@@ -9,6 +9,7 @@ import java.util.Enumeration;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -20,6 +21,7 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
@@ -66,8 +68,11 @@ class StateListPanel extends JPanel {
     private JScrollPane jScrollPane = null;
     private EnhancedJTable tableInitStates = null;
     private InitStateTableModel model = null;
+    
     private JButton buttonDelStateRow = null;
     private JButton buttonCopyStateRow = null;
+    private JButton buttonUp = null;
+    private JButton buttonDown = null;
 
     SimulationParameterList paramList;
 
@@ -96,6 +101,28 @@ class StateListPanel extends JPanel {
 	        c.weightx = 1;
 	        add(new Label("STR_singleInit_descr", Label.MESSAGE_NORMAL), c);
         }
+        
+        c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 1;
+        c.anchor = GridBagConstraints.WEST;
+        add(getButtonCopyStateRow(), c);
+        c = new GridBagConstraints();
+        c.gridx = 1;
+        c.gridy = 1;
+        add(getButtonDelStateRow(), c);
+        
+        c = new GridBagConstraints();
+        c.gridx = 2;
+        c.gridy = 1;
+        c.anchor = GridBagConstraints.WEST;
+        add(getButtonUp(), c);
+        c = new GridBagConstraints();
+        c.gridx = 3;
+        c.gridy = 1;
+        c.anchor = GridBagConstraints.WEST;
+        add(getButtonDown(), c);
+
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 2;
@@ -104,15 +131,6 @@ class StateListPanel extends JPanel {
         c.weightx = 1;
         c.weighty = 1;
         add(getJScrollPane(), c);
-        c = new GridBagConstraints();
-        c.gridx = 1;
-        c.gridy = 1;
-        add(getButtonDelStateRow(), c);
-        c = new GridBagConstraints();
-        c.gridx = 0;
-        c.gridy = 1;
-        c.anchor = GridBagConstraints.WEST;
-        add(getButtonCopyStateRow(), c);
 	}
 	
     /**
@@ -176,6 +194,22 @@ class StateListPanel extends JPanel {
     	}
     }
     
+    protected void move(int direction) {
+    	int[] t = tableInitStates.getSelectedRows();
+    	model.moveLine(t, direction);
+    	
+        DefaultListSelectionModel selectionModel = (DefaultListSelectionModel)tableInitStates.getSelectionModel();
+        selectionModel.clearSelection();
+        int maxIndex = model.getRowCount()-1;
+        for (int i=0 ; i<t.length ; i++) {
+        	int index = t[i];
+        	if (index < 0 || index >= maxIndex) {
+        		LogManager.error("Incoherent selection after moving lines: "+index);
+        	}
+            selectionModel.addSelectionInterval(index, index);
+        }
+    }
+    
     private JButton getButtonDelStateRow() {
         if (buttonDelStateRow == null) {
             buttonDelStateRow = new StockButton("list-remove.png", true);
@@ -198,6 +232,30 @@ class StateListPanel extends JPanel {
             });
         }
         return buttonCopyStateRow;
+    }
+
+    private JButton getButtonUp() {
+        if (buttonUp == null) {
+        	buttonUp = new StockButton("go-up.png", true);
+        	buttonUp.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    move(-1);
+                }
+            });
+        }
+        return buttonUp;
+    }
+
+    private JButton getButtonDown() {
+        if (buttonDown == null) {
+        	buttonDown = new StockButton("go-down.png", true);
+        	buttonDown.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    move(1);
+                }
+            });
+        }
+        return buttonDown;
     }
 
 	public void setParam(Map currentParameter) {

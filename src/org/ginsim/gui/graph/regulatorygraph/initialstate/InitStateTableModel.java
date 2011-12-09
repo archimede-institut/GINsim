@@ -309,6 +309,17 @@ public class InitStateTableModel extends AbstractTableModel {
 		fireTableDataChanged();
 	}
 	
+	/**
+	 * Move the selection.
+	 * 
+	 * @param sel
+	 * @param direction
+	 */
+	public void moveLine(int[] sel, int direction) {
+		imanager.move(sel, direction);
+		fireTableDataChanged();
+	}
+	
 	public String getColumnName(int columnIndex) {
 		if (columnIndex > nodeOrder.size()+1) {
 			return null;
