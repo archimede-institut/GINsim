@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.imports.txt;
+package org.ginsim.servicegui.imports.truthtable;
  
 import java.io.BufferedReader;
 import java.io.File;
