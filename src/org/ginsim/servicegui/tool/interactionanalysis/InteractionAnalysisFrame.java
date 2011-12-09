@@ -19,7 +19,7 @@ import org.ginsim.common.utils.gui.FileFormatFilter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
@@ -111,7 +111,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 
 		}
 		iaService = ServiceManager.getManager().getService( InteractionAnalysisService.class);
-		algoResult = iaService.run(regGraph, (RegulatoryMutantDef) mutantStore.getObject(0), selectedNodes);
+		algoResult = iaService.run(regGraph, (Perturbation) mutantStore.getObject(0), selectedNodes);
 	    saveReportButton.setEnabled(true);
 	    colorizerPanel.setNewColorizer(algoResult.getColorizer());
 	}

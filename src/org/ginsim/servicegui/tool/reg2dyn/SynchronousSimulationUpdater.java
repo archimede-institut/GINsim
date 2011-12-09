@@ -1,7 +1,7 @@
 package org.ginsim.servicegui.tool.reg2dyn;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 
 
 public class SynchronousSimulationUpdater extends SimulationUpdater {
@@ -10,7 +10,7 @@ public class SynchronousSimulationUpdater extends SimulationUpdater {
 		super(regGraph, params);
 	}
 
-	public SynchronousSimulationUpdater(RegulatoryGraph regGraph, RegulatoryMutantDef mutant) {
+	public SynchronousSimulationUpdater(RegulatoryGraph regGraph, Perturbation mutant) {
 		super(regGraph, mutant);
 	}
 
