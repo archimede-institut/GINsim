@@ -8,7 +8,6 @@ import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.servicegui.tool.decisionanalysis.DecisionOnEdge;
 
 
 public interface HierarchicalTransitionGraph extends Graph<HierarchicalNode, DecisionOnEdge>, GraphAssociation<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>{

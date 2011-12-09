@@ -6,9 +6,9 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.export.gna.GNAExportService;
 import org.ginsim.servicegui.ServiceGUI;
@@ -50,8 +50,7 @@ public class GNAExportServiceGUI implements ServiceGUI {
 class GNAExportAction extends ExportAction<RegulatoryGraph> {
 
 	private static final long serialVersionUID = 1184129217755724894L;
-	private static final GsFileFilter ffilter = new GsFileFilter(
-			new String[] { "gna" }, "gna (GNA) files");
+	private static final FileFormatDescription FORMAT = new FileFormatDescription("GNA", "gna");
 
 	public GNAExportAction(RegulatoryGraph graph) {
 		super(graph, "STR_GNA", "STR_GNA_descr");
@@ -66,7 +65,7 @@ class GNAExportAction extends ExportAction<RegulatoryGraph> {
 	}
 
 	@Override
-	protected GsFileFilter getFileFilter() {
-		return ffilter;
+	public FileFormatDescription getFileFilter() {
+		return FORMAT;
 	}
 }

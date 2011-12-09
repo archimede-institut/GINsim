@@ -10,7 +10,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
 
@@ -63,7 +63,7 @@ public class CircuitAlgo {
      * @param graph the studied graph
      * @param t_constraint constraints on the nodes
      */
-    public CircuitAlgo(RegulatoryGraph graph, byte[][] t_constraint, RegulatoryMutantDef mutant, boolean do_cleanup) {
+    public CircuitAlgo(RegulatoryGraph graph, byte[][] t_constraint, Perturbation mutant, boolean do_cleanup) {
         this.do_cleanup = do_cleanup;
         this.t_constraint = t_constraint;
         t_parameters = graph.getAllTrees(true);

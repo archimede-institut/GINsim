@@ -6,11 +6,11 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.utils.log.LogManager;
-import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.export.sbml.SBMLQualConfig;
@@ -24,6 +24,8 @@ import org.mangosdk.spi.ProviderFor;
 @GUIFor( SBMLQualExportService.class)
 public class SBMLQualExportServiceGUI implements ServiceGUI {
 
+	public static final FileFormatDescription FORMAT = new FileFormatDescription("SBML-qual", "sbml");
+	
 	@Override
 	public List<Action> getAvailableActions( Graph<?, ?> graph) {
 		
@@ -51,11 +53,8 @@ class SBMLQualExportAction extends ExportAction<RegulatoryGraph> {
 	}
 	
 	@Override
-	protected GsFileFilter getFileFilter() {
-		
-		GsFileFilter ffilter = new GsFileFilter( new String[] { "sbml" }, "SBML files");
-
-		return ffilter;
+	public FileFormatDescription getFileFilter() {
+		return SBMLQualExportServiceGUI.FORMAT;
 	}
 	
 	protected void doExport( String filename) {

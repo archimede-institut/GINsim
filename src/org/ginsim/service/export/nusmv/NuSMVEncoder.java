@@ -16,7 +16,7 @@ import java.util.TreeMap;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.service.ServiceManager;
@@ -242,7 +242,7 @@ public class NuSMVEncoder {
 
 		// Definition of the OMDD trees
 		OMDDNode[] t_tree = config.getGraph().getAllTrees(true);
-		RegulatoryMutantDef mutant = (RegulatoryMutantDef) config.store
+		Perturbation mutant = (Perturbation) config.store
 				.getObject(0);
 		if (mutant != null) {
 			mutant.apply(t_tree, config.getGraph());
@@ -604,7 +604,7 @@ public class NuSMVEncoder {
 	}
 
 	private String writeStableStates(List<RegulatoryNode> origOrder,
-			RegulatoryMutantDef mutant, NuSMVConfig config, boolean bWeakSS) {
+			Perturbation mutant, NuSMVConfig config, boolean bWeakSS) {
 		List<RegulatoryNode> sortedVars = new ArrayList<RegulatoryNode>();
 		List<RegulatoryNode> orderStateVars = new ArrayList<RegulatoryNode>();
 		List<RegulatoryNode> orderInputVars = new ArrayList<RegulatoryNode>();

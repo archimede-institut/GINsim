@@ -33,9 +33,8 @@ import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.tree.Tree;
-import org.ginsim.core.graph.tree.TreeImpl;
 import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromCircuit;
 import org.ginsim.core.utils.data.ObjectStore;
@@ -680,7 +679,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
 
     protected void runAnalyse() {
     	brun.setEnabled(false);
-        treemodel.analyse(graph, config, (RegulatoryMutantDef)mutantstore.getObject(0), cb_cleanup.isSelected());
+        treemodel.analyse(graph, config, (Perturbation)mutantstore.getObject(0), cb_cleanup.isSelected());
         brun.setEnabled(true);
 
         if (sp2 == null) {
@@ -797,7 +796,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
         m_parent.put(s_root, v_root);
     }
 
-    protected void analyse(RegulatoryGraph graph, CircuitSearchStoreConfig config, RegulatoryMutantDef mutant, boolean do_cleanup) {
+    protected void analyse(RegulatoryGraph graph, CircuitSearchStoreConfig config, Perturbation mutant, boolean do_cleanup) {
         CircuitAlgo circuitAlgo = new CircuitAlgo(graph, config == null ? null : config.t_constraint, mutant, do_cleanup);
         Vector v_functionnal = new Vector();
         Vector v_positive = new Vector();

@@ -6,8 +6,8 @@ import java.awt.GridBagLayout;
 import javax.swing.JLabel;
 
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.hierachicaltransitiongraph.DecisionOnEdge;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
-import org.ginsim.servicegui.tool.decisionanalysis.DecisionOnEdge;
 
 
 public class HierarchicalEdgeParameterPanel  extends AbstractParameterPanel<DecisionOnEdge> {
