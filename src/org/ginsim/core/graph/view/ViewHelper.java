@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.utils.log.LogManager;
 
 /**
  * Common logics to manage bounding boxes, anchor points and related tricks for edge routing.
@@ -21,9 +22,9 @@ public class ViewHelper {
 	 * @param bounds
 	 * @return the list of points for a loop.
 	 */
-	private static List<Point> getPoints(Rectangle bounds) {
+	private static PointList getPoints(Rectangle bounds) {
 
-		List<Point> points = new ArrayList<Point>();
+		PointList points = new PointList();
 		
 		int x = (int)bounds.getCenterX();
 		int y = (int)bounds.getMinY();
@@ -34,13 +35,13 @@ public class ViewHelper {
 		return points;
 	}
 	
-	private static List<Point> getPoints(Rectangle srcBounds, Rectangle targetBounds, List<Point> middlePoints, int w) {
+	private static PointList getPoints(Rectangle srcBounds, Rectangle targetBounds, List<Point> middlePoints, int w) {
 
 		if (middlePoints == null) {
 			return getPoints(srcBounds, targetBounds, w);
 		}
 		
-		List<Point> points = new ArrayList<Point>();
+		PointList points = new PointList();
 
 		points.add(new Point());
 		for (Point p: middlePoints) {
@@ -51,8 +52,8 @@ public class ViewHelper {
 		return points;
 	}
 
-	private static List<Point> getPoints(Rectangle srcBounds, Rectangle targetBounds, int w) {
-		List<Point> points = new ArrayList<Point>();
+	private static PointList getPoints(Rectangle srcBounds, Rectangle targetBounds, int w) {
+		PointList points = new PointList();
 
 		Point p = new Point((int)targetBounds.getCenterX(), (int)targetBounds.getCenterY());
 		p = getIntersection(srcBounds, p, true, w);
@@ -143,7 +144,7 @@ public class ViewHelper {
 		return getIntersection(bounds, target, true, w);
 	}
 
-	private static List<Point> getPoints(NodeAttributesReader nodeReader, Object src) {
+	private static PointList getPoints(NodeAttributesReader nodeReader, Object src) {
 		Rectangle bounds = getBounds(nodeReader, src);
 		return getPoints(bounds);
 	}
@@ -176,6 +177,12 @@ public class ViewHelper {
 	 * @return the list of points forming the edge
 	 */
 	public static List<Point> getPoints(NodeAttributesReader nodeReader, EdgeAttributesReader edgeReader, Edge<?> edge) {
+		PointList points = doGetPoints(nodeReader, edgeReader, edge);
+		points.setEdge(edgeReader, edge);
+		return points;
+	}
+
+	public static PointList doGetPoints(NodeAttributesReader nodeReader, EdgeAttributesReader edgeReader, Edge<?> edge) {
 		Object source = edge.getSource();
 		Object target = edge.getTarget();
 		
@@ -195,5 +202,42 @@ public class ViewHelper {
 		}
 		
 		return getPoints(b1, b2, realPoints, w);
+	}
+}
+
+class PointList extends ArrayList<Point> {
+	
+	private EdgeAttributesReader reader;
+	private Edge<?> edge;
+	
+	protected void setEdge(EdgeAttributesReader reader, Edge<?> edge) {
+		this.reader = reader;
+		this.edge = edge;
+	}
+	
+	public void add(int index, Point p) {
+		if (edge == null) {
+			super.add(index, p);
+			return;
+		}
+		
+		LogManager.debug("Adding point to "+ edge + " -- ("+index+") --> "+p);
+		reader.setEdge(edge);
+		List<Point> points = reader.getPoints();
+		if (points == null) {
+			points = new ArrayList<Point>();
+			reader.setPoints(points);
+		}
+		points.add(index-1, p);
+		super.add(index, p);
+	}
+
+	public Point remove(int index) {
+		LogManager.debug("Remove point: "+index);
+		List<Point> points = reader.getPoints();
+		if (points != null) {
+			points.remove(index-1);
+		}
+		return super.remove(index);
 	}
 }
