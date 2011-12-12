@@ -6,13 +6,13 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.imports.truthtable.TruthTableImportService;
 import org.ginsim.service.layout.LayoutService;
@@ -29,6 +29,8 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor(ServiceGUI.class)
 @GUIFor(TruthTableImportService.class)
 public class TruthTableImportServiceGUI implements ServiceGUI {
+
+	public static final FileFormatDescription FORMAT = new FileFormatDescription("TruthTable", "tt");
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
@@ -51,16 +53,14 @@ public class TruthTableImportServiceGUI implements ServiceGUI {
 class TruthTableImportAction extends ImportAction {
 
 	private static final long serialVersionUID = 2590387719278822097L;
-	private static final GsFileFilter ffilter = new GsFileFilter(
-			new String[] { "tt" }, "tt (TruthTable) files");
 
 	public TruthTableImportAction() {
 		super("STR_TruthTable", "STR_TruthTable_descr");
 	}
 
 	@Override
-	protected GsFileFilter getFileFilter() {
-		return ffilter;
+	public FileFormatDescription getFileFilter() {
+		return TruthTableImportServiceGUI.FORMAT;
 	}
 
 	@Override

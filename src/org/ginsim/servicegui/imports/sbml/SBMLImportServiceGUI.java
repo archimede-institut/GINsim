@@ -5,11 +5,11 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.imports.sbml.SBMLImportService;
 import org.ginsim.servicegui.ServiceGUI;
@@ -20,6 +20,8 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor(ServiceGUI.class)
 @GUIFor(SBMLImportService.class)
 public class SBMLImportServiceGUI implements ServiceGUI {
+
+	public static final FileFormatDescription FORMAT = new FileFormatDescription("SBML", "sbml");
 
 	@Override
 	public List<Action> getAvailableActions( Graph<?, ?> graph) {
@@ -41,16 +43,14 @@ public class SBMLImportServiceGUI implements ServiceGUI {
 class SBMLImportAction extends ImportAction {
 
 	private static final long serialVersionUID = -4775775151225210628L;
-	private static final GsFileFilter ffilter = new GsFileFilter(
-			new String[] { "sbml" }, "sbml (SBML) files");
 
 	public SBMLImportAction() {
 		super("STR_SBML_L3_IMP", "STR_SBML_L3_IMP_descr");
 	}
 
 	@Override
-	protected GsFileFilter getFileFilter() {
-		return ffilter;
+	protected FileFormatDescription getFileFilter() {
+		return SBMLImportServiceGUI.FORMAT;
 	}
 
 	@Override

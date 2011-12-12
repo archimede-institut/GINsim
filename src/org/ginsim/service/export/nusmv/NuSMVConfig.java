@@ -6,7 +6,7 @@ import java.util.Map;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.servicegui.tool.reg2dyn.PriorityClassDefinition;
 
@@ -25,7 +25,7 @@ public class NuSMVConfig implements InitialStateStore {
 	
 	// Store has two objects: 0- Mutant & 1- PriorityClass
 	public ObjectStore store = new ObjectStore(2);
-	public RegulatoryMutantDef mutant;
+	public Perturbation mutant;
 	private int updatePolicy;
 	private int exportType;
 

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
@@ -47,7 +48,7 @@ public class GraphvizExportServiceGUI implements ServiceGUI {
  */
 class ExportGraphVizAction extends ExportAction {
 
-	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"dot"}, "dot (graphviz) files");
+	private static final FileFormatDescription FORMAT = new FileFormatDescription("graphviz", "dot");
 	
 	public ExportGraphVizAction( Graph graph) {
 		super( graph, "STR_graphviz", "STR_graphviz_descr");
@@ -61,8 +62,8 @@ class ExportGraphVizAction extends ExportAction {
 	}
 
 	@Override
-	protected GsFileFilter getFileFilter() {
-		return ffilter;
+	public FileFormatDescription getFileFilter() {
+		return FORMAT;
 	}
 }
 

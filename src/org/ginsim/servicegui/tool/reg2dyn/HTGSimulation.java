@@ -15,6 +15,7 @@ import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalSigmaSetFact
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.servicegui.tool.reg2dyn.helpers.HTGSimulationHelper;
@@ -435,14 +436,14 @@ public class HTGSimulation extends Simulation {
 		vreader.setNode(hnode);
 		switch (hnode.getType()) {
 		case HierarchicalNode.TYPE_STABLE_STATE:
-			vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
+			vreader.setShape(NodeShape.ELLIPSE);
 			vreader.setBackgroundColor(HierarchicalNode.TYPE_STABLE_STATE_COLOR);
 			break;
 		case HierarchicalNode.TYPE_TRANSIENT_CYCLE:
 			vreader.setBackgroundColor(HierarchicalNode.TYPE_TRANSIENT_CYCLE_COLOR);
 			break;
 		case HierarchicalNode.TYPE_TERMINAL_CYCLE:
-			vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
+			vreader.setShape(NodeShape.ELLIPSE);
 			vreader.setBackgroundColor(HierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
 			break;
 		case HierarchicalNode.TYPE_TRANSIENT_COMPONENT:

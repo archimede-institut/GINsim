@@ -6,20 +6,22 @@ import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.gui.FileFormatFilter;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.shell.FileSelectionHelper;
-import org.ginsim.gui.shell.GsFileFilter;
 
 public abstract class ImportAction extends BaseAction {
 
+	private static final long serialVersionUID = 4466248789435823349L;
 	private final String id;
 
 	public ImportAction(String name) {
 		this(name, null, null, null);
 	}
-
+		
 	/**
 	 * 
 	 * @param name
@@ -66,7 +68,7 @@ public abstract class ImportAction extends BaseAction {
 	 */
 	public void selectFile() {
 		String filename = FileSelectionHelper.selectOpenFilename(null,
-				getFileFilter());
+				new FileFormatFilter(getFileFilter()));
 		if (filename == null) {
 			return;
 		}
@@ -90,7 +92,7 @@ public abstract class ImportAction extends BaseAction {
 	 * 
 	 * @return the active file filter
 	 */
-	abstract protected GsFileFilter getFileFilter();
+	abstract protected FileFormatDescription getFileFilter();
 
 	/**
 	 * Main import function: will be called after the target file was selected

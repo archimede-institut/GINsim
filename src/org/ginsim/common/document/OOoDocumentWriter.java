@@ -19,16 +19,17 @@ import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.utils.DataUtils;
 
 
-
-
 /**
  * OOoDocumentWriter is a backend to write openOffice.org (odt) documents
  * 
  * @see DocumentWriter
  * @author Naldi Aurelien
  *
- */public class OOoDocumentWriter extends DocumentWriter {
+ */
+public class OOoDocumentWriter extends DocumentWriter {
 
+	public static final DocumentWriterFactory FACTORY = new OOoDocumentWriterFactory();
+	
 	XMLWriter xmlw;
 	ZipOutputStream zo;
 	OutputStreamWriter writer;
@@ -317,4 +318,12 @@ class OOoTable {
 	String name;
 	String style;
 	String[] t_colStyle;
+}
+
+class OOoDocumentWriterFactory implements DocumentWriterFactory {
+
+	@Override
+	public DocumentWriter getDocumentWriter() {
+		return new OOoDocumentWriter();
+	}
 }

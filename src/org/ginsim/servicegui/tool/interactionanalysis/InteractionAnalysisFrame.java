@@ -7,31 +7,31 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import org.ginsim.common.document.DocumentWriter;
-import org.ginsim.common.document.GenericDocumentFileChooser;
 import org.ginsim.common.document.GenericDocumentFormat;
 import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.gui.FileFormatFilter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.utils.data.ObjectStore;
+import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.graph.view.css.ColorizerPanel;
 import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.tool.interactionanalysis.InteractionAnalysisAlgoResult;
 import org.ginsim.service.tool.interactionanalysis.InteractionAnalysisService;
-
 
 
 public class InteractionAnalysisFrame extends StackDialog implements ActionListener {
@@ -111,21 +111,26 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 
 		}
 		iaService = ServiceManager.getManager().getService( InteractionAnalysisService.class);
-		algoResult = iaService.run(regGraph, (RegulatoryMutantDef) mutantStore.getObject(0), selectedNodes);
+		algoResult = iaService.run(regGraph, (Perturbation) mutantStore.getObject(0), selectedNodes);
 	    saveReportButton.setEnabled(true);
 	    colorizerPanel.setNewColorizer(algoResult.getColorizer());
 	}
 	
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == saveReportButton){
+			if (algoResult == null) {
+				LogManager.error("Trying to save a report without result");
+				return;
+			}
 			try {
-				Vector<GenericDocumentFormat> format = new Vector<GenericDocumentFormat>(1);
-				format.add(GenericDocumentFormat.XHTMLDocumentFormat);
-				Object[] fileAndFormat = GenericDocumentFileChooser.saveDialog(OPT_REPORTDIRECTORY, this, format);
-				if (fileAndFormat != null) {
-					DocumentWriter doc = (DocumentWriter)((GenericDocumentFormat)fileAndFormat[1]).documentWriterClass.newInstance();
-					doc.setOutput((File)fileAndFormat[0]);
-					if (algoResult != null) algoResult.getReport().saveReport(doc, regGraph);
+				GenericDocumentFormat format = GenericDocumentFormat.XHTMLDocumentFormat;
+				String dest = FileSelectionHelper.selectSaveFilename(frame, new FileFormatFilter(format));
+				
+				//Object[] fileAndFormat = GenericDocumentFileChooser.saveDialog(OPT_REPORTDIRECTORY, this, format);
+				if (dest != null) {
+					DocumentWriter doc = format.factory.getDocumentWriter();
+					doc.setOutput(new File(dest));
+					algoResult.getReport().saveReport(doc, regGraph);
 				}
 			} catch (Exception ex) {
 				ex.printStackTrace();

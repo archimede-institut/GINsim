@@ -7,6 +7,7 @@ import javax.swing.JOptionPane;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.resource.Translator;
 
 public class GUIMessageUtils {
 
@@ -60,7 +61,7 @@ public class GUIMessageUtils {
 	 */
 	public static void openErrorDialog(String message, Component main) {
 
-		JOptionPane.showMessageDialog(main, message + "\n", "error", JOptionPane.ERROR_MESSAGE);
+		JOptionPane.showMessageDialog(main, Translator.getString( message), Translator.getString( "STR_error"), JOptionPane.ERROR_MESSAGE);
 	}
 	
 	/**
@@ -72,7 +73,7 @@ public class GUIMessageUtils {
 	 */
 	public static boolean openConfirmationDialog(String msg, String title) {
 		
-		int ret = JOptionPane.showConfirmDialog(null, msg, title, JOptionPane.OK_CANCEL_OPTION);
+		int ret = JOptionPane.showConfirmDialog(null,  Translator.getString( msg), Translator.getString( title), JOptionPane.OK_CANCEL_OPTION);
 		return ret == JOptionPane.OK_OPTION;
 	}
 }

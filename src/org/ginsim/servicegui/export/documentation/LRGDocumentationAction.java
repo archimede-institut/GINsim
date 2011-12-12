@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JSeparator;
 
 import org.ginsim.common.document.GenericDocumentFormat;
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.utils.data.ValueList;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
@@ -42,8 +43,8 @@ public class LRGDocumentationAction  extends ExportAction<RegulatoryGraph> {
 	}
 
 	@Override
-	protected GsFileFilter getFileFilter() {
-		return new GsFileFilter(config.format);
+	public FileFormatDescription getFileFilter() {
+		return config.format;
 	}
 }
 

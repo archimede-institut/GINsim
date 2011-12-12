@@ -33,6 +33,8 @@ import javax.swing.plaf.basic.BasicTreeUI;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
@@ -42,6 +44,7 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamod
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeString;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
+import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.BooleanFunctionTreeEditor;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.BooleanFunctionTreeRenderer;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.PanelFactory;
@@ -141,7 +144,7 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
     super(graph);
     panelFactory = new PanelFactory(p);
     setLayout(new BorderLayout());
-    add(new JScrollPane(getJTree(graph)), BorderLayout.CENTER);
+    add( new JScrollPane(getJTree(graph)), BorderLayout.CENTER);
     menu = new TreeMenu(this);
     tree.addMouseListener(this);
     tree.getSelectionModel().addTreeSelectionListener(this);
@@ -160,7 +163,7 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
     tree.setModel(interactionList);
  }
 
-  private JTree getJTree(RegulatoryGraph graph) {
+  private JTree getJTree(RegulatoryGraph graph){
     if (tree == null) {
       interactionList = new TreeInteractionsModel(graph);
       tree = new JTree(interactionList);
@@ -172,9 +175,12 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
       tree.addKeyListener(this);
       dragSource = DragSource.getDefaultDragSource();
       GlassPane glasspanel = null;
-      if (this.frame instanceof MainFrame) {
-    	  // TODO : REFACTORING ACTION
-    	  // FIXME: get the Glass panel from the main frame
+      if (this.frame != null && this.frame instanceof MainFrame) {
+    	  glasspanel = (GlassPane) ((MainFrame) this.frame).getGlassPane();
+      }
+      else{
+    	  GUIMessageUtils.openErrorDialog( "STR_treeviewer_noMainFrame");
+    	  return null;
       }
       dropListener = new DropListener(this, glasspanel);
       dragSourceListener = new GsDragSourceListener(tree, glasspanel);

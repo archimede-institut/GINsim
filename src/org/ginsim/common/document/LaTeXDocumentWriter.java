@@ -18,6 +18,8 @@ import javax.imageio.ImageIO;
  */
 public class LaTeXDocumentWriter extends DocumentWriter {
 
+	public final static DocumentWriterFactory FACTORY = new LaTeXDocumentWriterFactory();
+	
 	OutputStreamWriter writer;
 	
 	Map m_style = new HashMap();
@@ -28,7 +30,7 @@ public class LaTeXDocumentWriter extends DocumentWriter {
 	static Map m_stylesWriters = new HashMap();
 	// FIXME: add latex style writers ?
 
-	public LaTeXDocumentWriter() {
+	protected LaTeXDocumentWriter() {
 		registerForDocumentExtra("javascript");
 	}
 
@@ -297,5 +299,13 @@ class LaTeXTable {
 		this.t_colStyle = t_colStyle;
 		this.row = 0;
 		this.col = 0;
+	}
+}
+
+class LaTeXDocumentWriterFactory implements DocumentWriterFactory {
+
+	@Override
+	public DocumentWriter getDocumentWriter() {
+		return new LaTeXDocumentWriter();
 	}
 }

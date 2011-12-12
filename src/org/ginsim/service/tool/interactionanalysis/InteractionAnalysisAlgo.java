@@ -10,7 +10,7 @@ import java.util.Map;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.utils.log.LogManager;
 
@@ -44,7 +44,7 @@ public class InteractionAnalysisAlgo {
 	 * @return 
 	 * 
 	 */
-	protected InteractionAnalysisAlgoResult run(RegulatoryGraph  regGraph, RegulatoryMutantDef mutant, List<RegulatoryNode> selectedNodes) {
+	protected InteractionAnalysisAlgoResult run(RegulatoryGraph  regGraph, Perturbation mutant, List<RegulatoryNode> selectedNodes) {
 		before = new Date().getTime();//measuring the time spend for this algorithm
 		
 		int total_level;		//The total number of node in a complete omdd tree. (products of levels of each interactor)

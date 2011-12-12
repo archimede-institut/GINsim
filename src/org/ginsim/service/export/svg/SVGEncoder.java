@@ -135,7 +135,7 @@ public class SVGEncoder {
         
 	    out.write("  <g id=\""+id+"\">\n");
         switch (vreader.getShape()) {
-            case NodeAttributesReader.SHAPE_ELLIPSE:
+            case ELLIPSE:
                 out.write("    <ellipse " +
                         " id=\""+id+"_shape\"" +
                         " rx=\""+w/2+"\"" +

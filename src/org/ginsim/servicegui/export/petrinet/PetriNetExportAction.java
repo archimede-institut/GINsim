@@ -4,6 +4,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.io.IOException;
 
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.utils.log.LogManager;
@@ -49,7 +50,7 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> {
 	}
 
 	@Override
-	protected GsFileFilter getFileFilter() {
+	protected FileFormatDescription getFileFilter() {
 		// FIXME return the filter associated to the selected format
 		// return config.format.ffilter
 		

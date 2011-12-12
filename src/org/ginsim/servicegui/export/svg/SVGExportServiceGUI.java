@@ -6,9 +6,9 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.export.svg.SVGExportService;
 import org.ginsim.servicegui.ServiceGUI;
@@ -48,15 +48,15 @@ public class SVGExportServiceGUI implements ServiceGUI {
  */
 class ExportSVGAction extends ExportAction {
 
-	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"svg"}, "SVG files");
+	private static final FileFormatDescription FORMAT = new FileFormatDescription("SVG image", "svg");
 	
 	public ExportSVGAction( Graph graph) {
 		super( graph, "STR_SVG", "STR_SVG_descr");
 	}
 
 	@Override
-	protected GsFileFilter getFileFilter() {
-		return ffilter;
+	public FileFormatDescription getFileFilter() {
+		return FORMAT;
 	}
 
 	@Override
