@@ -9,53 +9,61 @@ import java.awt.Shape;
 import javax.swing.JLabel;
 
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.jgraph.JGraph;
 
 
 class RawNodeRenderer extends JLabel {
-
-	public static final int SW = 5;      // width of the selection mark
+	private static final long serialVersionUID = -1665537691798585356L;
+	
+	public static final int SW = 6;      // width of the selection mark
 	public static final int hSW = SW/2;  // half width of the selection mark
 	
 	private final NodeAttributesReader reader;
+	private final JGraph jgraph;
 	
-	private Color fgColor, bgColor;
-	private boolean selected, preview;
+	private boolean selected;
 
-	private int pcount;
+	private boolean dirty = false;
 	
-	
-	public RawNodeRenderer(NodeAttributesReader vertexAttributeReader) {
+	public RawNodeRenderer(JGraph jgraph, NodeAttributesReader vertexAttributeReader) {
 		this.reader = vertexAttributeReader;
+		this.jgraph = jgraph;
 		setHorizontalTextPosition(CENTER);
 		setHorizontalAlignment(CENTER);
 	}
 
 	public void setView(RawNodeView view, boolean selected, boolean preview) {
-		
+
 		setText(view.toString());
 		this.selected = selected;
-		this.preview = preview;
 		
 		Rectangle rect = view.getBounds();
 		super.setBounds(rect.x, rect.y, rect.width, rect.height);
-		if (selected) {
-			super.setBounds(rect.x-hSW, rect.y-hSW, rect.width+SW, rect.height+SW);
-		} else {
-		}
 		reader.setNode(view.user);
+		
+		if (dirty && !preview) {
+			dirty = false;
+			System.out.println("Forcing refresh.. why does it fail?");
+			jgraph.refresh();
+			jgraph.graphDidChange();
+		}
 	}
 	
 	public Rectangle getBounds(Object user) {
 		reader.setNode(user);
-		return reader.getBounds();
+		
+		int x = reader.getX()-hSW;
+		int y = reader.getY()-hSW;
+		int w = reader.getWidth() + SW;
+		int h = reader.getHeight() + SW;
+		return new Rectangle(x,y, w,h);
 	}
 
 	@Override
 	public void paint(Graphics g) {
-		// TODO: pick some other shape
-		int w = getWidth()-1;
-		int h = getHeight()-1;
-		Shape s = new Rectangle(w, h);
+		int w = getWidth()-SW;
+		int h = getHeight()-SW;
+		Shape s = reader.getShape().getShape(hSW, hSW, w, h);
 
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.setColor(reader.getBackgroundColor());
@@ -65,19 +73,27 @@ class RawNodeRenderer extends JLabel {
 
 		if (selected) {
 			g2d.setColor(Color.red);
-			g2d.fillRect(0-hSW, 0-hSW, SW, SW);
-			g2d.fillRect(0-hSW, h-hSW, SW, SW);
-			g2d.fillRect(w-hSW, h-hSW, SW, SW);
-			g2d.fillRect(w-hSW, 0-hSW, SW, SW);
+			g2d.fillRect(0, 0, SW, SW);
+			g2d.fillRect(0, h, SW, SW);
+			g2d.fillRect(w, h, SW, SW);
+			g2d.fillRect(w, 0, SW, SW);
 		}
 
 		super.paint(g);
 	}
 
-	public Rectangle setBounds(Object user, Rectangle bounds) {
+	public void translate(Object user, double dx, double dy) {
+		
 		reader.setNode(user);
-		Rectangle old = reader.getBounds();
-		reader.setBounds(bounds);
-		return old;
+		
+		int x = reader.getX();
+		int y = reader.getY();
+		int w = reader.getWidth();
+		int h = reader.getHeight();
+
+		Rectangle oldBounds = new Rectangle(x, y, w, h);
+		reader.setPos(x+(int)dx, y+(int)dy);
+		
+		dirty = true;
 	}
 }

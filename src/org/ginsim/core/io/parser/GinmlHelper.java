@@ -126,7 +126,11 @@ public class GinmlHelper {
             }
             if (s.length() > 1) {
                 svs += " points=\""+s.substring(0, s.length()-1)+"\"";
+            } else {
+            	svs += " points=\"\"";
             }
+        } else {
+        	svs += " points=\"\"";
         }
         switch (eReader.getStyle()) {
 	    	case EdgeAttributesReader.STYLE_CURVE:

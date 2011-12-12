@@ -217,13 +217,6 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
     }
 
 	@Override
-	public Rectangle getBounds() {
-		if (vvsd != null) {
-			return vvsd.bounds;
-		}
-		return null;
-	}
-	@Override
 	public Rectangle setBounds(Rectangle bounds) {
 		if (vvsd != null) {
 			Rectangle old = vvsd.bounds;

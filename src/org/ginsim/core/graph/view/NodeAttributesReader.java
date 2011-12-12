@@ -67,7 +67,7 @@ public interface NodeAttributesReader extends AttributesReader {
      */
     void setSize(int w, int h);
     
-    Rectangle getBounds();
+//    Rectangle getBounds();
     
     /**
      * set the default background color for vertices.

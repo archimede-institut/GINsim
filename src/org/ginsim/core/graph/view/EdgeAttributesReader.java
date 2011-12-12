@@ -1,6 +1,7 @@
 package org.ginsim.core.graph.view;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.util.List;
 
 
@@ -140,7 +141,7 @@ public interface EdgeAttributesReader extends AttributesReader {
 	/**
 	 * @return the list of points used by this edge.
 	 */
-	List getPoints();
+	List<Point> getPoints();
 
     /**
      * set points used by this edge

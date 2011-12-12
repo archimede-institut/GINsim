@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.view.ViewHelper;
 import org.ginsim.core.utils.log.LogManager;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.CellViewRenderer;
@@ -17,14 +18,14 @@ import org.jgraph.graph.GraphLayoutCache;
 import org.jgraph.graph.GraphModel;
 
 
-
 /**
- * a jgraph edge viewer
+ * Edge view for jgraph.
+ * It extract visual parameters from the attribute reader into jgraph's (convoluted) rendering system.
  */
 public class GsEdgeView extends EdgeView {
 	private static final long serialVersionUID = 875785889768955L;
 
-	private final GsEdgeRenderer renderer;
+	protected final GsEdgeRenderer renderer;
 	protected final Edge<?> edge;
 	
 	/**
@@ -35,7 +36,7 @@ public class GsEdgeView extends EdgeView {
 	 */
 	public GsEdgeView(Object cell, GsEdgeRenderer renderer) {
 		super(cell);
-		this.edge = (Edge)((DefaultGraphCell)cell).getUserObject();
+		this.edge = (Edge<?>)((DefaultGraphCell)cell).getUserObject();
 		this.renderer = renderer;
 	}
 
@@ -55,8 +56,8 @@ public class GsEdgeView extends EdgeView {
 	/**
 	 * Adds <code>p</code> at position <code>index</code>.
 	 */
-	public void addPoint(int index, Point2D p) {
-		List realPoints = getRealPoints(true);
+	public void addPoint(int index, Point p) {
+		List<Point> realPoints = getRealPoints(true);
 		realPoints.add(index-1, p);
 		super.addPoint(index, p);
 	}
@@ -76,14 +77,14 @@ public class GsEdgeView extends EdgeView {
 		renderer.reader.setEdge(edge);
 		renderer.reader.setPoints(points);
 	}
-	public List getRealPoints() {
+	public List<Point> getRealPoints() {
 		return getRealPoints(false);
 	}
-	public List getRealPoints(boolean create) {
+	public List<Point> getRealPoints(boolean create) {
 		renderer.reader.setEdge(edge);
-		List points = renderer.reader.getPoints();
+		List<Point> points = renderer.reader.getPoints();
 		if (create && points == null) {
-			points = new ArrayList();
+			points = new ArrayList<Point>();
 			renderer.reader.setPoints(points);
 		}
 		return points;
@@ -128,28 +129,15 @@ class GsEdgeRouter extends DefaultEdge.DefaultRouting {
 
 	public static final GsEdgeRouter router = new GsEdgeRouter();
 
-	
 	@Override
-	public List route(GraphLayoutCache cache, EdgeView edge) {
+	public List<Point> route(GraphLayoutCache cache, EdgeView edge) {
 		
 		if (!(edge instanceof GsEdgeView)) {
 			return null;
 		}
-
 		GsEdgeView view = (GsEdgeView)edge;
-		
-		List realPoints = view.getRealPoints();
-		List points = new ArrayList();
-		points.add(new Point());
-		if (realPoints != null) {
-			for (Object p: realPoints) {
-				points.add(p);
-			}
-		}
-		points.add(new Point());
-		return points;
+		return ViewHelper.getPoints(view.renderer.nodeReader, view.renderer.reader, view.edge);
 	}
-
 
 	@Override
 	protected int getLoopStyle() {

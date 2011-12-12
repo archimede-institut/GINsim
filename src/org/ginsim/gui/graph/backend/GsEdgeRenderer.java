@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.CellView;
 import org.jgraph.graph.EdgeRenderer;
@@ -20,10 +21,12 @@ public class GsEdgeRenderer extends EdgeRenderer {
 	private static final long serialVersionUID = 6746746786967887L;
 	private GsJgraph jgraph;
 	protected final EdgeAttributesReader reader;
+	protected final NodeAttributesReader nodeReader;
 	
-	protected GsEdgeRenderer(GsJgraph jgraph, EdgeAttributesReader reader) {
+	protected GsEdgeRenderer(GsJgraph jgraph, EdgeAttributesReader reader, NodeAttributesReader nodeReader) {
 		this.jgraph = jgraph;
 		this.reader = reader;
+		this.nodeReader = nodeReader;
 	}
 	
 	@Override
