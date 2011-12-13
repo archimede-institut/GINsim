@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.List;
 
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
-import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.graph.view.css.NodeStyle;
@@ -48,7 +47,8 @@ public class ConnectivitySelector extends Selector {
 				if (!nrd.isTrivial()){
 					saturation += 200/totalComplexComponents;
 				}
- 				if (nrd.getContent().contains(obj)) {
+
+				if (nrd.getContent().contains(obj)) {
 					if (nrd.isTrivial()) {
 						return CAT_TRIVIAL;
 					} else {

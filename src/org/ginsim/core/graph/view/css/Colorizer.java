@@ -1,7 +1,5 @@
 package org.ginsim.core.graph.view.css;
 
-import javax.print.DocPrintJob;
-
 import org.ginsim.core.graph.common.Graph;
 
 /**
