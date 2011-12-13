@@ -13,6 +13,7 @@ import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.WhatToDoWithGraph;
 import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.AboutDialog;
@@ -73,25 +74,29 @@ public class TestRefactor {
         }
 		
 		initGUI();
-		if (open.size() == 0) {
-			RegulatoryGraph graph = GUIManager.getInstance().newFrame();
-			// Test of Notifications
-//			String[] options_names = new String[]{ "STR_OK", "STR_cancel"};
-//			NotificationResolution resolution = new NotificationResolution( options_names);
-//			NotificationManager.publishResolvableError( graph, "STR_unableToOpen", graph, null, resolution);
-//			NotificationManager.publishWarning( graph, "STR_unableToSave");
-//			NotificationManager.publishError( graph, "STR_wantToStop_title");
-		} else {
+		Graph graph = null;
+		if (open.size() > 0) {
 			for (String filename: open) {
 				try {
-					Graph<?,?> g = GraphManager.getInstance().open(filename);
-					GUIManager.getInstance().newFrame(g);
+					graph = GraphManager.getInstance().open(filename);
+					GUIManager.getInstance().newFrame( graph);
 
 				} catch (GsException e) {
 					LogManager.error(e);
 				}
 			}
 		}
+		if( graph == null){
+			graph = GUIManager.getInstance().newFrame();
+		}
+		// Test whatToDoWithGraph frame
+		new WhatToDoWithGraph( graph);
+		// Test of Notifications
+//		String[] options_names = new String[]{ "STR_OK", "STR_cancel"};
+//		NotificationResolution resolution = new NotificationResolution( options_names);
+//		NotificationManager.publishResolvableError( graph, "STR_unableToOpen", graph, null, resolution);
+//		NotificationManager.publishWarning( graph, "STR_unableToSave");
+//		NotificationManager.publishError( graph, "STR_wantToStop_title");
 		
 	}
 
