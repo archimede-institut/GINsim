@@ -11,6 +11,7 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeShape;
 
 
 
@@ -98,7 +99,7 @@ public class ConnectivityAlgo extends Thread {
 		for (NodeReducedData component : components) {				//For each component
             if (graph.getOutgoingEdges(component).size() == 0) {	//  set the node's shape to ellipse if the node has no outgoing edges (is terminal).
             	vreader.setNode(component);
-                vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
+                vreader.setShape(NodeShape.ELLIPSE);
             }
             if (cancel) return null;
         }

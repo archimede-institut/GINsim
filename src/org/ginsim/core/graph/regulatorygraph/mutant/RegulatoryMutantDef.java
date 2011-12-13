@@ -1,7 +1,8 @@
 package org.ginsim.core.graph.regulatorygraph.mutant;
 
 import java.io.IOException;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
@@ -16,7 +17,7 @@ import org.ginsim.core.utils.data.NamedObject;
  */
 public class RegulatoryMutantDef implements NamedObject, Perturbation {
     String name;
-    Vector v_changes = new Vector();
+    List<RegulatoryMutantChange> v_changes = new ArrayList<RegulatoryMutantChange>();
     Annotation annotation = new Annotation();
 
     boolean check(RegulatoryGraph graph) {
@@ -33,7 +34,7 @@ public class RegulatoryMutantDef implements NamedObject, Perturbation {
         return true;
     }
     
-    public Vector getChanges() {
+    public List<RegulatoryMutantChange> getChanges() {
 		return v_changes;
 	}
     
@@ -89,7 +90,7 @@ public class RegulatoryMutantDef implements NamedObject, Perturbation {
         if (src < 0 || dst < 0 || src >= v_changes.size() || dst >= v_changes.size()) {
             return false;
         }
-        Object o = v_changes.remove(src);
+        RegulatoryMutantChange o = v_changes.remove(src);
         v_changes.add(dst, o);
         return true;
     }

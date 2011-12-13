@@ -24,8 +24,8 @@ public class GsCellViewFactory extends DefaultCellViewFactory {
 	 * @param g 
 	 */
 	public GsCellViewFactory(GsJgraph jgraph, Graph<?, ?> g) {
-		this.edgeRenderer = new GsEdgeRenderer(jgraph, g.getEdgeAttributeReader());
-		this.rawNodeRenderer = new RawNodeRenderer(g.getNodeAttributeReader());
+		this.edgeRenderer = new GsEdgeRenderer(jgraph, g.getEdgeAttributeReader(), g.getNodeAttributeReader());
+		this.rawNodeRenderer = new RawNodeRenderer(jgraph, g.getNodeAttributeReader());
 	}
 
 	public CellView createView(GraphModel model, Object cell) {

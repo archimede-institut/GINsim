@@ -7,6 +7,8 @@ import java.util.regex.PatternSyntaxException;
 
 import org.ginsim.core.graph.view.AttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeBorder;
+import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.utils.DataUtils;
 
 
@@ -20,25 +22,28 @@ import org.ginsim.core.utils.DataUtils;
  *     - shape : the shape = ellipse or rectangle
  */
 public class NodeStyle implements Style {
-	public static final Color NULL_BACKGROUND = null;
-	public static final Color NULL_FOREGROUND = null;
-	public static final int NULL_BORDER = -99;
-	public static final int NULL_SHAPE = -99;
+	@Deprecated
+	public static final Color NULL_FOREGROUND  = null;
+	@Deprecated
+	public static final NodeBorder NULL_BORDER = null;
+	@Deprecated
+	public static final NodeShape  NULL_SHAPE  = null;
 
 	public final static String CSS_BACKGROUND		= "background";
 	public final static String CSS_FOREGROUND		= "foreground";
 	public final static String CSS_SHAPE			= "shape";
+	public final static String CSS_BORDER			= "border";
+	
 	public final static String CSS_SHAPE_ELLIPSE	= "ellipse";
 	public final static String CSS_SHAPE_RECTANGLE	= "rectangle";
-	public final static String CSS_BORDER			= "border";
 	public final static String CSS_BORDER_SIMPLE	= "simple";
 	public final static String CSS_BORDER_RAISED	= "raised";
 	public final static String CSS_BORDER_STRONG	= "strong";
 
 	public Color background;
 	public Color foreground;
-	public int border;
-	public int shape;
+	public NodeBorder border;
+	public NodeShape shape;
 	
 	static Pattern parserPattern = null;
 
@@ -46,10 +51,17 @@ public class NodeStyle implements Style {
 	 * A new style from the with all values to NULL
 	 */
 	public NodeStyle() {
-		this.background = NULL_BACKGROUND;
-		this.foreground = NULL_FOREGROUND;
-		this.border 	= NULL_BORDER;
-		this.shape 		= NULL_SHAPE;
+		this(null, null, null, null);
+	}
+
+	/**
+	 * A new Style defining only colors.
+	 * 
+	 * @param background
+	 * @param foreground
+	 */
+	public NodeStyle(Color background, Color foreground) {
+		this(background, foreground, null, null);
 	}
 
 	/**
@@ -61,13 +73,14 @@ public class NodeStyle implements Style {
 	 * 
 	 * @see NodeAttributesReader
 	 */
-	public NodeStyle(Color background, Color foreGround, int border, int shape) {
+	public NodeStyle(Color background, Color foreGround, NodeBorder border, NodeShape shape) {
 		this.background = background;
 		this.foreground = foreGround;
 		this.border 	= border;
 		this.shape 		= shape;
 	}
 
+	
 	/**
 	 * A new style from a GsAttributesReader areader
  	 * @param areader
@@ -90,19 +103,28 @@ public class NodeStyle implements Style {
 		shape 		= ((NodeStyle) s).shape;
 	}
 	
-	public void merge(Style s) {
-		if (s == null) return;
-		if (((NodeStyle) s).background != NULL_BACKGROUND)	background 	= ((NodeStyle) s).background;
-		if (((NodeStyle) s).foreground != NULL_FOREGROUND)	foreground 	= ((NodeStyle) s).foreground;
-		if (((NodeStyle) s).border != NULL_BORDER)			border 		= ((NodeStyle) s).border;		
-		if (((NodeStyle) s).shape != NULL_SHAPE)				shape 		= ((NodeStyle) s).shape;
+	public void merge(Style sa) {
+		if (!(sa instanceof NodeStyle)) {
+			return;
+		}
+		
+		NodeStyle s = (NodeStyle)sa; 
+		if (s.background != null)   background = s.background;
+		if (s.foreground != null)   foreground = s.foreground;
+		if (s.border != null)       border     = s.border;		
+		if (s.shape != null)        shape      = s.shape;
 	}
 
 	public void apply(AttributesReader areader) {
-		if (background != NULL_BACKGROUND) 	((NodeAttributesReader) areader).setBackgroundColor(background);
-		if (foreground != NULL_FOREGROUND) 	((NodeAttributesReader) areader).setForegroundColor(foreground);
-		if (border != NULL_BORDER) 			((NodeAttributesReader) areader).setBorder(border);
-		if (shape != NULL_SHAPE)			((NodeAttributesReader) areader).setShape(shape);
+		if (areader instanceof NodeAttributesReader) {
+			return;
+		}
+		
+		NodeAttributesReader nreader = (NodeAttributesReader)areader;
+		if (background != null) nreader.setBackgroundColor(background);
+		if (foreground != null) nreader.setForegroundColor(foreground);
+		if (border != null)     nreader.setBorder(border);
+		if (shape != null)      nreader.setShape(shape);
 		areader.refresh();
 	}
 	
@@ -123,24 +145,24 @@ public class NodeStyle implements Style {
 		for (int i = 1; i < tabs_count; i++) {
 			tabs += "\t";
 		}
-		if (background != NULL_BACKGROUND) s += tabs+CSS_BACKGROUND+": "+DataUtils.getColorCode(background)+"\n"; 
-		if (foreground != NULL_FOREGROUND) s += tabs+CSS_FOREGROUND+": "+DataUtils.getColorCode(foreground)+"\n";
-		if (border != NULL_BORDER) {
+		if (background != null) s += tabs+CSS_BACKGROUND+": "+DataUtils.getColorCode(background)+"\n"; 
+		if (foreground != null) s += tabs+CSS_FOREGROUND+": "+DataUtils.getColorCode(foreground)+"\n";
+		if (border != null) {
 			s += tabs+CSS_BORDER+": ";
 			switch (border) {
-			case NodeAttributesReader.BORDER_SIMPLE:
+			case SIMPLE:
 				s += CSS_BORDER_SIMPLE;
 				break;
-			case NodeAttributesReader.BORDER_RAISED:
+			case RAISED:
 				s += CSS_BORDER_RAISED;
 				break;
-			case NodeAttributesReader.BORDER_STRONG:
+			case STRONG:
 				s += CSS_BORDER_STRONG;
 				break;
 			}
 			s += "\n";
 		}
-		if (shape != NULL_SHAPE) s += tabs+CSS_SHAPE+": "+(shape == NodeAttributesReader.SHAPE_ELLIPSE?CSS_SHAPE_ELLIPSE:CSS_SHAPE_RECTANGLE)+"\n";
+		if (shape != null) s += tabs+CSS_SHAPE+": "+(shape == NodeShape.ELLIPSE?CSS_SHAPE_ELLIPSE:CSS_SHAPE_RECTANGLE)+"\n";
 		return s;
 	}
 	
@@ -154,10 +176,10 @@ public class NodeStyle implements Style {
 	 * @throws CSSSyntaxException if there is an error in the syntax
 	 */
 	public static Style fromString(String []lines) throws PatternSyntaxException, CSSSyntaxException {
-		Color background = NULL_BACKGROUND;
-		Color foreground = NULL_FOREGROUND;
-		int shape = NULL_SHAPE;
-		int border = NULL_BORDER;
+		Color background  = null;
+		Color foreground  = null;
+		NodeShape shape   = null;
+		NodeBorder border = null;
 		
 		if (parserPattern == null) parserPattern = Pattern.compile("([a-zA-Z0-9\\-_]+):\\s*#?([a-zA-Z0-9\\-_]+);");
 		
@@ -179,13 +201,13 @@ public class NodeStyle implements Style {
 					throw new CSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
 				}
 			} else if (key.equals(CSS_SHAPE)) {
-				if 		(value.equals(CSS_SHAPE_ELLIPSE)) 	shape = NodeAttributesReader.SHAPE_ELLIPSE;
-				else if (value.equals(CSS_SHAPE_RECTANGLE)) shape = NodeAttributesReader.SHAPE_RECTANGLE;
+				if 		(value.equals(CSS_SHAPE_ELLIPSE)) 	shape = NodeShape.ELLIPSE;
+				else if (value.equals(CSS_SHAPE_RECTANGLE)) shape = NodeShape.RECTANGLE;
 				else throw new CSSSyntaxException("Unknown vertex shape at line "+i+" : "+lines[i]+". Must be "+CSS_SHAPE_ELLIPSE+" or "+CSS_SHAPE_RECTANGLE);
 			} else if (key.equals(CSS_BORDER)) {
-				if 		(value.equals(CSS_BORDER_SIMPLE)) 	border = NodeAttributesReader.BORDER_SIMPLE;
-				else if (value.equals(CSS_BORDER_RAISED)) 	border = NodeAttributesReader.BORDER_RAISED;
-				else if (value.equals(CSS_BORDER_STRONG)) 	border = NodeAttributesReader.BORDER_STRONG;
+				if 		(value.equals(CSS_BORDER_SIMPLE)) 	border = NodeBorder.SIMPLE;
+				else if (value.equals(CSS_BORDER_RAISED)) 	border = NodeBorder.RAISED;
+				else if (value.equals(CSS_BORDER_STRONG)) 	border = NodeBorder.STRONG;
 				else throw new CSSSyntaxException("Unknown vertex border at line "+i+" : "+lines[i]+". Must be "+CSS_BORDER_SIMPLE+", "+CSS_BORDER_RAISED+" or "+CSS_BORDER_STRONG);
 			} else {
 				throw new CSSSyntaxException("Node has no key "+key+" at line "+i+" : "+lines[i]+". Must be "+CSS_BACKGROUND+", "+CSS_FOREGROUND+", "+CSS_SHAPE+" or "+CSS_BORDER);

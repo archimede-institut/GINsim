@@ -19,6 +19,8 @@ import org.ginsim.common.utils.EnvUtils;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.exception.GsException;
+import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
+import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.gui.shell.callbacks.FileCallBack;
@@ -132,8 +134,8 @@ public class OptionStore extends DefaultHandler {
     public static void saveOptions() {
         
         // FIXME hacky: first call some components that need to save some options
-        EdgeAttributesReader.saveOptions();
-        NodeAttributesReader.saveOptions();
+        EdgeAttributeReaderImpl.saveOptions();
+        NodeAttributeReaderImpl.saveOptions();
         
         List<String> recents = FileCallBack.getRecentFiles();
         if (recents.size() == 0 && m_option.size() == 0) {

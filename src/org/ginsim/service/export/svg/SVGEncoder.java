@@ -3,7 +3,6 @@ package org.ginsim.service.export.svg;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -17,6 +16,7 @@ import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.ViewHelper;
 import org.ginsim.core.utils.DataUtils;
 import org.jgraph.util.Bezier;
 
@@ -51,7 +51,7 @@ public class SVGEncoder {
         out.write("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20001102//EN\" \"http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd\">\n");
         out.write("<svg width=\""+tmax[0]+"\" height=\""+tmax[1]+"\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n");
         
-        Map boxes = new HashMap();
+        Map<Object, Rectangle> boxes = new HashMap<Object, Rectangle>();
         Map m_marker = new HashMap();
         for (Object obj: nodes) {
             vreader.setNode(obj);
@@ -59,10 +59,9 @@ public class SVGEncoder {
             boxes.put(obj, new Rectangle(vreader.getX(), vreader.getY(), vreader.getWidth(), vreader.getHeight()));
         }
         
-        for (Edge edge: edges) {
-            Rectangle2D box1=null,  box2=null;
-            box1 = (Rectangle2D)boxes.get(edge.getSource());
-            box2 = (Rectangle2D)boxes.get(edge.getTarget());
+        for (Edge<?> edge: edges) {
+            Rectangle box1 = boxes.get(edge.getSource());
+            Rectangle box2 = boxes.get(edge.getTarget());
             ereader.setEdge(edge);
             writeEdge(out, box1, box2, ereader, m_marker);
         }
@@ -135,7 +134,7 @@ public class SVGEncoder {
         
 	    out.write("  <g id=\""+id+"\">\n");
         switch (vreader.getShape()) {
-            case NodeAttributesReader.SHAPE_ELLIPSE:
+            case ELLIPSE:
                 out.write("    <ellipse " +
                         " id=\""+id+"_shape\"" +
                         " rx=\""+w/2+"\"" +
@@ -180,7 +179,7 @@ public class SVGEncoder {
      * @param markers
      * @throws IOException
      */
-    private void writeEdge(FileWriter out, Rectangle2D box1, Rectangle2D box2, EdgeAttributesReader ereader, Map markers) throws IOException {
+    private void writeEdge(FileWriter out, Rectangle box1, Rectangle box2, EdgeAttributesReader ereader, Map markers) throws IOException {
         String color = "#"+DataUtils.getColorCode(ereader.getLineColor());
         float w = ereader.getLineWidth();
         String marker = addMarker(out, markers, ereader.getLineEnd(), color, true);
@@ -200,7 +199,7 @@ public class SVGEncoder {
             out.write(s);
         }
         
-        List l_point = ereader.getPoints();
+        List<Point> l_point = ereader.getPoints();
         if (l_point == null) {
             l_point = new ArrayList();
             l_point.add(0, new Point((int)box1.getCenterX(), (int)box1.getCenterY()));
@@ -209,10 +208,10 @@ public class SVGEncoder {
         boolean intersect = l_point.size() < 3 || ereader.getStyle() == EdgeAttributesReader.STYLE_CURVE;
         // replace first and last points by bounding box points
         if (box1 != null) {
-            l_point.set(0, getIntersection(box1, (Point2D)l_point.get(1), intersect, w));
+            l_point.set(0, ViewHelper.getIntersection(box1, l_point.get(1), intersect, w));
         }
         if (box2 != null) {
-            l_point.set(l_point.size()-1, getIntersection(box2, (Point2D)l_point.get(l_point.size()-2), intersect, w));
+            l_point.set(l_point.size()-1, ViewHelper.getIntersection(box2, l_point.get(l_point.size()-2), intersect, w));
         }
         Point2D pt1 = (Point2D)l_point.get(l_point.size()-2);
         Point2D pt2 = (Point2D)l_point.get(l_point.size()-1);
@@ -259,75 +258,6 @@ public class SVGEncoder {
     	out.write("\"/>\n");
     }
     
-    /**
-     * 
-     * @param box
-     * @param point
-     * @param intersect
-     * @param width
-     * @return
-     */
-    private Point2D getIntersection(Rectangle2D box, Point2D point, boolean intersect, float width) {
-        if (box == null || box.contains(point)) {
-            return point;
-        }
-        
-        double minx, miny, maxx, maxy, px, py, resultx, resulty;
-        minx = box.getMinX();
-        miny = box.getMinY();
-        maxx = box.getMaxX();
-        maxy = box.getMaxY();
-        px = point.getX();
-        py = point.getY();
-        double offset = width/2 + 2;
-
-        if (intersect) {        // compute intersection of the box with the line from its center to the point
-            double centerx = box.getCenterX(), centery = box.getCenterY();
-            double dx = px-centerx, dy = py-centery;
-            if (dy == 0) {
-                resulty = centery;
-                resultx = dx > 0 ? minx : maxx;
-            }
-            double ratio = dx/dy;
-            double boxRatio = box.getWidth() / box.getHeight();
-            if (Math.abs(ratio) > boxRatio) {     // crosses on one of the vertical sides
-                if (dx > 0) {
-                    resultx = maxx + offset;
-                    resulty = centery + (maxx-centerx)/ratio;
-                } else {
-                    resultx = minx - offset;
-                    resulty = centery - (maxx-centerx)/ratio;
-                }
-            } else {                    // crosses on one of the horizontal sides
-                if (dy > 0) {
-                    resulty = maxy + offset;
-                    resultx = centerx + (maxy-centery)*ratio;
-                } else {
-                    resulty = miny - offset;
-                    resultx = centerx - (maxy-centery)*ratio;
-                }
-            }
-            
-        } else {                        // find the closest point in the bounding box
-            if (px > maxx) {
-                resultx = maxx + offset;
-            } else if (px < minx) {
-                resultx = minx - offset;
-            } else {
-                resultx = px;
-            }
-    
-            if (py > maxy) {
-                resulty = maxy + offset;
-            } else if (py < miny) {
-                resulty = miny - offset;
-            } else {
-                resulty = py;
-            }
-        }
-        Point r = new Point((int)resultx, (int)resulty);
-        return r;
-    }
 
     
     /**

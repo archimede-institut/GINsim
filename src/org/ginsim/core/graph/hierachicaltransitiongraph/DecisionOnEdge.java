@@ -1,11 +1,10 @@
-package org.ginsim.servicegui.tool.decisionanalysis;
+package org.ginsim.core.graph.hierachicaltransitiongraph;
 
 import java.util.List;
 
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.common.ToolTipsable;
-import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
 
 
 /**

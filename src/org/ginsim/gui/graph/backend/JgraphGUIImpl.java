@@ -95,11 +95,13 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	protected void setProperty(GUIProperties property, boolean b) {
 		switch (property) {
 		case GRID:
-			// FIXME: Grid visibility flag does not work
 			jgraph.setGridVisible(b);
 			break;
 		case GRIDACTIVE:
 			jgraph.setGridEnabled(b);
+			break;
+		case VERTEXFRONT:
+			vertexToFront(b);
 			break;
 		}
 	}
@@ -223,7 +225,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	public boolean saveAs() {
 		Frame frame = GUIManager.getInstance().getFrame(graph);
 		GsFileFilter ffilter = new GsFileFilter();
-		ffilter.setExtensionList(new String[] { "ginml", "zginml" }, "GINsim files");
+		ffilter.setExtensionList(new String[] { "zginml" }, "GINsim files");
 		String filename = FileSelectionHelper.selectSaveFilename(frame, ffilter);
 		if (filename != null) {
 			GraphManager.getInstance().registerGraph( graph, filename);
@@ -312,20 +314,20 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
         }
     }
 
-    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void vertexToFront(boolean b) {
-//        // move all vertex to front;
-//        Object[] t = getNodeArray();
-//        for (int i=0 ; i<t.length ; i++) {
-//            t[i] = m_jgAdapter.getNodeCell(t[i]);
-//        }
-//        if (b) {
-//            m_jgAdapter.toFront(t);
-//        } else {
-//            m_jgAdapter.toBack(t);
-//        }
+        // move all vertex to front;
+        Object[] t = new Object[graph.getNodeCount()];
+        int i=0;
+        for (V node: graph.getNodes()) {
+            t[i++] = m_jgAdapter.getVertexCell(node);
+        }
+        if (b) {
+            m_jgAdapter.toFront(t);
+        } else {
+            m_jgAdapter.toBack(t);
+        }
     }
-    
+
     // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
     public void invertSelection() {
 		Object[] selects = jgraph.getSelectionCells();
@@ -394,13 +396,13 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 			m_jgAdapter.cellsChanged(new Object[] {cell});
 		}
 	}
-
 }
 
 enum GUIProperties {
 	
 	GRID("Grid Visible"),
-	GRIDACTIVE("Grid Active");
+	GRIDACTIVE("Grid Active"),
+	VERTEXFRONT("Vertex to Front");
 	
 	public final String name;
 	

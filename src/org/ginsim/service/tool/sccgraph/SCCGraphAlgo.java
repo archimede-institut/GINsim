@@ -12,6 +12,7 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeShape;
 
 
 
@@ -104,9 +105,9 @@ public class SCCGraphAlgo extends Thread {
             	vreader.setBackgroundColor(Color.getHSBColor(0, (200/totalComplexComponents)*index++, 80));
 			}
             if (reducedGraph.getOutgoingEdges(component) == null) {	//  set the node's shape to ellipse if the node has no outgoing edges (is terminal).
-                vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
+                vreader.setShape(NodeShape.ELLIPSE);
             } else {
-                vreader.setShape(NodeAttributesReader.SHAPE_RECTANGLE);
+                vreader.setShape(NodeShape.ELLIPSE);
             }
         }
 

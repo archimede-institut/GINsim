@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeBorder;
+import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.graph.view.css.NodeStyle;
 import org.ginsim.core.graph.view.css.Selector;
 import org.ginsim.core.graph.view.css.Style;
@@ -14,8 +16,8 @@ public class ConnectivitySelector extends Selector {
 	public static final String CAT_TRIVIAL = "trivial";
 	public static final String CAT_COMPLEX = "complex";
 	
-	public static final NodeStyle STYLE_TRIVIAL		= new NodeStyle(Color.green.darker(), null, 1, NodeAttributesReader.SHAPE_RECTANGLE);
-	public static final NodeStyle STYLE_COMPLEX 	= new NodeStyle(Color.red.darker(), null, 1, NodeAttributesReader.SHAPE_ELLIPSE);
+	public static final NodeStyle STYLE_TRIVIAL		= new NodeStyle(Color.green.darker(), null, NodeBorder.SIMPLE, NodeShape.ELLIPSE);
+	public static final NodeStyle STYLE_COMPLEX 	= new NodeStyle(Color.red.darker(), null, NodeBorder.SIMPLE, NodeShape.RECTANGLE);
 	
 	private List<NodeReducedData> cache;
 	private int totalComplexComponents;

@@ -21,6 +21,7 @@ import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.NotificationListener;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.dnd.GlassPane;
 import org.ginsim.gui.notifications.NotificationPanel;
 import org.ginsim.gui.notifications.NotificationSource;
 import org.ginsim.gui.resource.Translator;
@@ -71,6 +72,7 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 	public MainFrame(String id, int w, int h, GraphGUI graph_gui) {
 		super(id, w, h);
         this.graphGUI = graph_gui;
+        GUIManager.getInstance().registerGUI( graph_gui, this);
         
         setJMenuBar(menubar);
         
@@ -93,13 +95,14 @@ public class MainFrame extends Frame implements NotificationSource, Notification
         cst.weightx = 1; 
         cst.weighty = 1;
         cst.fill = GridBagConstraints.BOTH;
+		setGlassPane( new GlassPane());
 		contentPanel.add(getMainSplitPane(), cst);
 
         setContentPane(contentPanel);
         
     	actionManager.buildActions( graphGUI, menubar, toolbar);
     	fillGraphPane( graphGUI.getGraphComponent());
-    	
+		
         setVisible(true);
 	}
 

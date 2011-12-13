@@ -12,7 +12,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -31,6 +30,7 @@ import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.resource.Translator;
@@ -237,7 +237,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	 * Enabled component for node shape
 	 */
 	private void shapeEnabled() {
-		jComboBox_shape.setSelectedIndex(vReader.getShape());
+		jComboBox_shape.setSelectedItem(vReader.getShape());
 		jComboBox_shape.setEnabled(true);
 	}
 
@@ -856,14 +856,13 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	private void reload() {
 		// apply shape list
 		jComboBox_shape.removeAllItems();
-		Vector v_tmp = vReader.getShapeList();
-		for (int i=0 ; i<v_tmp.size() ; i++) {
-			jComboBox_shape.addItem(v_tmp.get(i));
+		for (NodeShape shape: NodeShape.values()) {
+			jComboBox_shape.addItem(shape);
 		}
 
 		// apply routing list
 		jCB_edgeRouting.removeAllItems();
-		v_tmp = eReader.getRoutingList();
+		List<String> v_tmp = eReader.getRoutingList();
 		for (int i=0 ; i<v_tmp.size() ; i++) {
 			jCB_edgeRouting.addItem(v_tmp.get(i));
 		}
@@ -900,7 +899,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	 * apply change on shape
 	 */
 	protected void applyShape() {
-		vReader.setShape(jComboBox_shape.getSelectedIndex());
+		vReader.setShape(NodeShape.values()[jComboBox_shape.getSelectedIndex()]);
 		vReader.refresh();
 	}
 
@@ -945,7 +944,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			for (Object vertex: vertices) {
 				vReader.setNode(vertex);
 				if (jCB_selectShape.isSelected()) {
-					vReader.setShape(jComboBox_shape.getSelectedIndex());
+					vReader.setShape(NodeShape.values()[jComboBox_shape.getSelectedIndex()]);
 				}
 				if (jCB_selectForeground.isSelected()) {
 					vReader.setForegroundColor(jButton_fgcolor.getBackground());
@@ -988,7 +987,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 		case VERTEXSELECTED:
 			refreshSize();
 			if (jCB_selectShape.isSelected()) {
-				vReader.setDefaultNodeShape(jComboBox_shape.getSelectedIndex());
+				vReader.setDefaultNodeShape(NodeShape.values()[jComboBox_shape.getSelectedIndex()]);
 			}
 			if (jCB_selectForeground.isSelected()) {
 				vReader.setDefaultNodeForeground(jButton_fgcolor.getBackground());

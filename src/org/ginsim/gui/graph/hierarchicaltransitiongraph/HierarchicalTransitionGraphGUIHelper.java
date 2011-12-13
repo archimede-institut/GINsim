@@ -5,6 +5,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.core.graph.hierachicaltransitiongraph.DecisionOnEdge;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.gui.GUIManager;
@@ -15,7 +16,6 @@ import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.widgets.Frame;
-import org.ginsim.servicegui.tool.decisionanalysis.DecisionOnEdge;
 import org.mangosdk.spi.ProviderFor;
 
 

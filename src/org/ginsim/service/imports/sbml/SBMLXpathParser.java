@@ -764,7 +764,7 @@ public final class SBMLXpathParser {
 		}
 	}
 
-	public Graph getGraph() {
+	public RegulatoryGraph getGraph() {
 		return graph;
 	}
 

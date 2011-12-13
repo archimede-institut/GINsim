@@ -13,6 +13,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.utils.DataUtils;
 
 
@@ -97,9 +98,9 @@ public class CytoscapeEncoder {
 			out.addAttr("fill", '#'+DataUtils.getColorCode(vertexAttributeReader.getBackgroundColor()));
 			out.addAttr("y", String.valueOf(vertexAttributeReader.getY()));
 			out.addAttr("x", String.valueOf(vertexAttributeReader.getX()));
-			if (vertexAttributeReader.getShape() == NodeAttributesReader.SHAPE_RECTANGLE) {
+			if (vertexAttributeReader.getShape() == NodeShape.RECTANGLE) {
 				out.addAttr("type", "rectangle");
-			} else if (vertexAttributeReader.getShape() == NodeAttributesReader.SHAPE_ELLIPSE) {
+			} else if (vertexAttributeReader.getShape() == NodeShape.ELLIPSE) {
 				out.addAttr("type", "ellipse");
 			}			
 			out.openTag("att");

@@ -15,7 +15,7 @@ import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.GraphicalAttributesStore;
-import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.css.Colorizer;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
@@ -188,7 +188,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
             Object target = edge.getTarget();
             dynGas.ensureStoreEdge(edge);
             dynGas.ensureStoreNode(target);
-            dynGas.vreader.setBorder(NodeAttributesReader.BORDER_STRONG);
+            dynGas.vreader.setBorder(NodeBorder.STRONG);
             dynGas.vreader.setForegroundColor(Color.RED);
             dynGas.vreader.refresh();
             dynGas.ereader.setLineColor(Color.GREEN);
