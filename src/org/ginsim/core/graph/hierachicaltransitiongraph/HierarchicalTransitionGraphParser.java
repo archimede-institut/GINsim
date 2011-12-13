@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
@@ -15,7 +14,6 @@ import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.io.parser.GsXMLHelper;
-import org.ginsim.gui.GUIManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
