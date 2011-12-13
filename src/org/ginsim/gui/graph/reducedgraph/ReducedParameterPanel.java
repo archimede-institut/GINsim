@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.connectivity;
+package org.ginsim.gui.graph.reducedgraph;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -31,7 +31,7 @@ public class ReducedParameterPanel extends AbstractParameterPanel<NodeReducedDat
 	
 	@Override
 	public void setEditedItem(NodeReducedData obj) {
-		((ConnectivityTableModel)getJTable().getModel()).setContent( obj.getContent() );
+		((ReducedGraphTableModel)getJTable().getModel()).setContent( obj.getContent() );
 	}
 
 	/**
@@ -50,7 +50,7 @@ public class ReducedParameterPanel extends AbstractParameterPanel<NodeReducedDat
 	private JTable getJTable() {
 		if(jTable == null) {
 			jTable = new javax.swing.JTable();
-			jTable.setModel( new ConnectivityTableModel());
+			jTable.setModel( new ReducedGraphTableModel());
 		}
 		return jTable;
 	}

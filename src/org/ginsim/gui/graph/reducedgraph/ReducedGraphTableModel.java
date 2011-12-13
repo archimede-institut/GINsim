@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.connectivity;
+package org.ginsim.gui.graph.reducedgraph;
 
 import java.util.Vector;
 
@@ -9,7 +9,7 @@ import javax.swing.table.AbstractTableModel;
  * it's not editable.
  * it will display the content of a vetor in a table, with maxrow (ie 10) elements per line
  */
-public class ConnectivityTableModel extends AbstractTableModel {
+public class ReducedGraphTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 9012745010038236066L;
 	private Vector content = null;

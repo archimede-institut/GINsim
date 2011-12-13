@@ -35,7 +35,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.core.graph.tree.Tree;
-import org.ginsim.core.graph.tree.TreeImpl;
 import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromCircuit;
 import org.ginsim.core.utils.data.ObjectStore;
@@ -54,7 +53,7 @@ import org.ginsim.service.tool.circuit.CircuitDescr;
 import org.ginsim.service.tool.circuit.CircuitDescrInTree;
 import org.ginsim.service.tool.circuit.FunctionalityContext;
 import org.ginsim.service.tool.circuit.OmsddNode;
-import org.ginsim.service.tool.connectivity.AlgoConnectivity;
+import org.ginsim.service.tool.connectivity.ConnectivityAlgo;
 
 
 
@@ -65,7 +64,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
 
     private static final long serialVersionUID = 2671795894716799300L;
 
-    private AlgoConnectivity algoC = null;
+    private ConnectivityAlgo algoC = null;
     protected RegulatoryGraph graph;
 
     protected static final int STATUS_NONE = 0;
@@ -364,8 +363,8 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
         switch (status) {
         case STATUS_NONE:
             updateStatus(STATUS_SCC);
-            algoC = new AlgoConnectivity();
-            algoC.configure(graph, this, AlgoConnectivity.MODE_COMPO);
+            algoC = new ConnectivityAlgo();
+            algoC.configure(graph);
             algoC.start();
             break;
         case STATUS_SCC:

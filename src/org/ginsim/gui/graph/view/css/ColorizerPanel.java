@@ -48,10 +48,6 @@ public class ColorizerPanel extends JPanel {
 	private JCheckBox initialColorizationCheckbox;
 	private JButton colorizeButton;
 
-	/**
-	 * Store if the style has been applied or not
-	 */
-	private boolean isColored = false;
 
 	/**
 	 * The graph to colorize
@@ -126,7 +122,7 @@ public class ColorizerPanel extends JPanel {
 		    colorizeButton.addActionListener(new ActionListener() {			
 				@Override
 				public void actionPerformed(ActionEvent arg0) {
-					if (isColored) {
+					if (colorizer.isColored()) {
 						undoColorize();
 					} else {
 						doColorize();
@@ -143,7 +139,6 @@ public class ColorizerPanel extends JPanel {
 	protected void doColorize() {
 		colorizer.doColorize(graph);
 		colorizeButton.setText(Translator.getString("STR_colorizer_undo_colorize"));
-		isColored = true;
 	}
 
 	/**
@@ -152,7 +147,6 @@ public class ColorizerPanel extends JPanel {
 	protected void undoColorize() {
 		colorizer.undoColorize(graph);
 		colorizeButton.setText(Translator.getString("STR_colorizer_do_colorize"));
-		isColored = false;
 	}
 	
 	/**
@@ -169,7 +163,7 @@ public class ColorizerPanel extends JPanel {
 	 * @param colorizer the colorizer returned by the algorithm
 	 */
 	public void setNewColorizer(Colorizer colorizer) {
-		if (this.colorizer != null && this.isColored) {
+		if (this.colorizer != null && colorizer.isColored()) {
 			undoColorize();
 		}
 		this.colorizer = colorizer;
@@ -195,7 +189,7 @@ public class ColorizerPanel extends JPanel {
 	 * @return true if the frame can be closed, false if the CANCEL button has been pressed
 	 */
 	public boolean frameIsClosing() {
-		if (isColored) {
+		if (colorizer.isColored()) {
 			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_colorizer_sure_close_undo_colorize"));
 			if (res == JOptionPane.CANCEL_OPTION) {
 				return false;
