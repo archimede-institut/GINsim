@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.ginsim.common.OpenHelper;
 import org.ginsim.common.utils.IOUtils;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.gui.utils.HttpHelper;
