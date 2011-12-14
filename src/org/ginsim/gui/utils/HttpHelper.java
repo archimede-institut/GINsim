@@ -8,14 +8,12 @@ import org.ginsim.common.OpenHelper;
 import org.ginsim.common.utils.IOUtils;
 
 
-
-
 public class HttpHelper implements OpenHelper {
 
   static Map m_proto = new HashMap();
 
   public boolean open(String proto, String value) {
-    return GUIIOUtils.openURI(getLink(proto, value));
+    return IOUtils.openURI(getLink(proto, value));
   }
   public void add(String proto, String value) {
   }

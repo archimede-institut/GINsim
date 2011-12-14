@@ -9,11 +9,11 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 
 import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.IOUtils;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.AboutDialog;
 import org.ginsim.gui.shell.FileSelectionHelper;
-import org.ginsim.gui.utils.GUIIOUtils;
 
 
 
@@ -59,7 +59,7 @@ class HelpAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO: search for local help
-		GUIIOUtils.openURI("http://gin.univ-mrs.fr/GINsim/doc.html");
+		IOUtils.openURI("http://gin.univ-mrs.fr/GINsim/doc.html");
 		// GsEnv.error(new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_docPathError")), null);
 	}
 }

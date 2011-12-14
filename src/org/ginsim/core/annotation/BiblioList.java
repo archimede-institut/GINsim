@@ -18,26 +18,17 @@ import java.util.TreeMap;
 import javax.swing.JFileChooser;
 
 import org.ginsim.common.OpenHelper;
-import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.IOUtils;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.GraphEventCascade;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphListener;
-import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.core.notification.resolvable.ResolvableErrorNotification;
-import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 import org.ginsim.core.utils.log.LogManager;
-
-
-import org.ginsim.gui.resource.Translator;
-import org.ginsim.gui.utils.GUIIOUtils;
 import org.xml.sax.Attributes;
 
 import bibtex.dom.BibtexAbstractValue;
@@ -112,7 +103,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 		curRef.addLink(proto, value);
 	}
 
-	public void add(String proto, String value) {
+	public void add(String proto, String value){
 		if (!proto.equals("ref")) {
 			return;
 		}
@@ -122,7 +113,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 		}
 	}
 
-	protected void addFile() {
+	protected void addFile(){
 		JFileChooser jfc = new JFileChooser();
 		int r = jfc.showOpenDialog(null);
 		if (r != JFileChooser.APPROVE_OPTION) {
@@ -156,7 +147,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 		}
 	}
 	
-	public void addMissingRefWarning(String value) {
+	public void addMissingRefWarning(String value){
 		if (parsing) {
 			return;
 		}
@@ -220,7 +211,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 		return null;
 	}
 
-	public void addFile(String fileName) {
+	public void addFile(String fileName){
 		files.put(fileName, new Date());
 		
 		File f = new File(fileName);
@@ -295,13 +286,13 @@ class Ref {
 	}
 
 	public void open() {
-		if (links.containsKey("file") && GUIIOUtils.open("file", links.get("file"))) {
+		if (links.containsKey("file") && IOUtils.open("file", links.get("file"))) {
 			return;
 		}
 		Iterator it = links.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry e = (Entry)it.next();
-			if (GUIIOUtils.open(e.getKey(), e.getValue())) {
+			if (IOUtils.open(e.getKey(), e.getValue())) {
 				return;
 			}
 		}
@@ -344,7 +335,7 @@ class ReferencerParser extends XMLHelper {
     /**
      * @param graph expected node order
      */
-    public ReferencerParser(BiblioList bibList, String path) {
+    public ReferencerParser(BiblioList bibList, String path){
     	this.bibList = bibList;
     	this.m_call = CALLMAP;
     	
@@ -353,7 +344,7 @@ class ReferencerParser extends XMLHelper {
 			baseDir = f.getParent();
 			startParsing(IOUtils.getStreamForPath(path), false);
 		} catch (Exception e) {
-			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e), null);
+			LogManager.error( "Unable to parse file : " + path);
 		}
     }
     
@@ -449,7 +440,7 @@ class BibTexParser {
 				}
 			}
 		} catch (Exception e) {
-			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e), null);
+			LogManager.error( "Unable to parse file : " + path);
 		}
 	}
 }

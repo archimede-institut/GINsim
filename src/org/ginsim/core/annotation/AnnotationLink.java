@@ -4,9 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ginsim.common.OpenHelper;
+import org.ginsim.common.utils.IOUtils;
+import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.gui.utils.GUIIOUtils;
 import org.ginsim.gui.utils.HttpHelper;
 
 
@@ -29,7 +30,7 @@ public class AnnotationLink {
 	public AnnotationLink(String s, Graph graph) {
 		setText(s, graph);
 	}
-	public void setText(String s, Graph graph) {
+	public void setText(String s, Graph graph){
 		String[] ts = s.split(":", 2);
 		if (ts.length == 1) {
 			this.helper = null;
@@ -53,7 +54,7 @@ public class AnnotationLink {
 			return;
 		}
 		// no helper, use a generic open call
-		GUIIOUtils.open(proto, value);
+		IOUtils.open(proto, value);
 	}
 	
 	public String toString() {
