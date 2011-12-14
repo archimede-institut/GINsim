@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
+import org.ginsim.common.OptionStore;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphViewListener;
@@ -33,7 +34,6 @@ import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.FrameActionManager;
 import org.ginsim.gui.shell.GsFileFilter;
-import org.ginsim.gui.shell.callbacks.FileCallBack;
 import org.jgraph.JGraph;
 import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.event.GraphSelectionListener;
@@ -209,7 +209,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		
 		try {
 			graph.save(savePath);
-			FileCallBack.addRecentFile(savePath);
+			OptionStore.addRecentFile(savePath);
 			isSaved = true;
 			return true;
 		} catch (Exception e) {

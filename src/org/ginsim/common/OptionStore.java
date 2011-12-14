@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,12 +19,8 @@ import javax.xml.parsers.SAXParserFactory;
 import org.ginsim.common.utils.EnvUtils;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
-import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.gui.shell.callbacks.FileCallBack;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -41,6 +38,7 @@ public class OptionStore extends DefaultHandler {
     // some static stuff
     private static Map m_option = new HashMap();
     private static String optionFile = null;
+	private static List<String> recentFiles = new ArrayList<String>();
     
     static {
     	switch (EnvUtils.os) {
@@ -66,21 +64,49 @@ public class OptionStore extends DefaultHandler {
                 FileReader r = new FileReader(f_option);
                 xr.parse(new InputSource(r));
             } catch (FileNotFoundException e) { 
-            	GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile+"\n"+
+            	GUIMessageUtils.openErrorDialog(new Exception( "Error in the configuration file: "+optionFile+"\n"+
                         e.getLocalizedMessage()), null);
             } catch (IOException e) {
-            	GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile+"\n"+
+            	GUIMessageUtils.openErrorDialog(new Exception( "Error in the configuration file: "+optionFile+"\n"+
                         e.getLocalizedMessage()), null);
             } catch (ParserConfigurationException e) {
-            	GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile+"\n"+
+            	GUIMessageUtils.openErrorDialog(new Exception( "Error in the configuration file: "+optionFile+"\n"+
                         e.getLocalizedMessage()), null);
             } catch (SAXParseException e) {
-            	GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile), null);
+            	GUIMessageUtils.openErrorDialog(new Exception( "Error in the configuration file: "+optionFile), null);
             } catch (SAXException e) {
-            	GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, "Error in the configuration file: "+optionFile), null);
+            	GUIMessageUtils.openErrorDialog(new Exception( "Error in the configuration file: "+optionFile), null);
             }
         }
     }
+    
+    /**
+     * Add file path to recent file list
+     * 
+     * @param path the path to add to the list
+     */
+	public static void addRecentFile(String path) {
+		// add this file on top of the list
+		recentFiles.remove(path);
+		recentFiles.add(0, path);
+		
+		// trim the list size
+		while (recentFiles.size() > 10) {
+			recentFiles.remove(10);
+		}
+		
+	}
+	
+	/**
+	 * Get the list of recent files.
+	 * Note: the recent menu will be managed by this class directly,
+	 * this method should only be used to save the list of recent files before closing GINsim
+	 * 
+	 * @return the list of recent files
+	 */
+	public static List<String> getRecentFiles() {
+		return recentFiles;
+	}
     
     /**
      * save the value of an option. accepted types: Boolean, Integer, String
@@ -134,10 +160,15 @@ public class OptionStore extends DefaultHandler {
     public static void saveOptions() {
         
         // FIXME hacky: first call some components that need to save some options
-        EdgeAttributeReaderImpl.saveOptions();
-        NodeAttributeReaderImpl.saveOptions();
+    	OptionStore.setOption("vs.edgecolor", new Integer( EdgeAttributeReaderImpl.default_color.getRGB()));
+        OptionStore.setOption("vs.vertexfg", NodeAttributeReaderImpl.fg.getRGB());
+        OptionStore.setOption("vs.vertexbg", NodeAttributeReaderImpl.bg.getRGB());
+        OptionStore.setOption("vs.vertexshape", NodeAttributeReaderImpl.shape);
+        OptionStore.setOption("vs.vertexborder", NodeAttributeReaderImpl.border);
+        OptionStore.setOption("vs.vertexheight", NodeAttributeReaderImpl.height);
+        OptionStore.setOption("vs.vertexwidth", NodeAttributeReaderImpl.width);
         
-        List<String> recents = FileCallBack.getRecentFiles();
+        List<String> recents = OptionStore.getRecentFiles();
         if (recents.size() == 0 && m_option.size() == 0) {
             return;
         }
@@ -188,7 +219,7 @@ public class OptionStore extends DefaultHandler {
     public void startElement(String uri, String localName, String qName,
             Attributes attributes) throws SAXException {
         if (qName.equals("recent")) {
-            FileCallBack.addRecentFile(attributes.getValue("filename"));
+        	OptionStore.addRecentFile(attributes.getValue("filename"));
         } else if (qName.equals("option")) {
             String k = attributes.getValue("key");
             String sv = attributes.getValue("value");

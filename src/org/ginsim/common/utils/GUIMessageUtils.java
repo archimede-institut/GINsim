@@ -4,7 +4,6 @@ import java.awt.Component;
 
 import javax.swing.JOptionPane;
 
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.Translator;
@@ -17,19 +16,9 @@ public class GUIMessageUtils {
 	 * @param e the exception to display
 	 * @param main the parent component
 	 */
-	public static void openErrorDialog( GsException e, Component main) {
+	public static void openErrorDialog( Exception e, Component main) {
 		
-		int i = -1;
-		switch (e.getGravity()) {
-		case GsException.GRAVITY_INFO:
-		case GsException.GRAVITY_NORMAL:
-			i = JOptionPane.INFORMATION_MESSAGE;
-			break;
-		default:
-			i = JOptionPane.ERROR_MESSAGE;
-		}
-		
-		JOptionPane.showMessageDialog( main, e.getMessage() + "\n", e.getTitle(), i);
+		JOptionPane.showMessageDialog( main, e.getMessage() + "\n", e.getMessage(), JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**

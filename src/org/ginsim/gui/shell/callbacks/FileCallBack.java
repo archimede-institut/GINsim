@@ -2,7 +2,6 @@ package org.ginsim.gui.shell.callbacks;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -10,6 +9,7 @@ import javax.swing.JMenu;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
+import org.ginsim.common.OptionStore;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
@@ -27,25 +27,6 @@ import org.ginsim.gui.shell.GsFileFilter;
 public class FileCallBack {
 	
 	private static JMenu recentMenu = new JMenu( Translator.getString( "STR_RecentFiles"));
-	private static List<String> recentFiles = new ArrayList<String>();
-	
-	public static void addRecentFile(String path) {
-		// add this file on top of the list
-		recentFiles.remove(path);
-		recentFiles.add(0, path);
-		
-		// trim the list size
-		while (recentFiles.size() > 10) {
-			recentFiles.remove(10);
-		}
-		
-		// rebuild the recent menu
-		recentMenu.removeAll();
-		for (String recent: recentFiles) {
-			// TODO: real recent action with better title
-			recentMenu.add(new OpenAction(recent));
-		}
-	}
 	
 	/**
 	 * Create and populate a File menu
@@ -76,17 +57,19 @@ public class FileCallBack {
 		
 		return menu;
 	}
-
-	/**
-	 * Get the list of recent files.
-	 * Note: the recent menu will be managed by this class directly,
-	 * this method should only be used to save the list of recent files before closing GINsim
-	 * 
-	 * @return the list of recent files
-	 */
-	public static List<String> getRecentFiles() {
-		return recentFiles;
+	
+	public static void updateRecentFiles(){
+		
+		 List<String> recentFiles = OptionStore.getRecentFiles();
+		// rebuild the recent menu
+		recentMenu.removeAll();
+		for (String recent: recentFiles) {
+			// TODO: real recent action with better title
+			recentMenu.add(new OpenAction(recent));
+		}
 	}
+	
+
 }
 
 class NewAction extends AbstractAction {
@@ -134,7 +117,8 @@ class OpenAction extends AbstractAction {
 		if (path != null) {
 			try {
 				Graph g = GraphManager.getInstance().open(path);
-				FileCallBack.addRecentFile(path);
+				OptionStore.addRecentFile(path);
+				FileCallBack.updateRecentFiles();
 				GUIManager.getInstance().newFrame(g);
 			} catch (GsException e) {
 				e.printStackTrace();
