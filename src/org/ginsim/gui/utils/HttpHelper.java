@@ -10,7 +10,7 @@ import org.ginsim.common.utils.IOUtils;
 
 public class HttpHelper implements OpenHelper {
 
-  static Map m_proto = new HashMap();
+  static Map<String,String> m_proto = new HashMap<String,String>();
 
   public boolean open(String proto, String value) {
     return IOUtils.openURI(getLink(proto, value));
@@ -36,9 +36,9 @@ public class HttpHelper implements OpenHelper {
     m_proto.put("uniprot", "http://www.uniprot.org/uniprot/");
 
     HttpHelper h = new HttpHelper();
-    Iterator it = m_proto.keySet().iterator();
+    Iterator<String> it = m_proto.keySet().iterator();
     while (it.hasNext()) {
-      IOUtils.addHelperClass((String)it.next(), h);
+      IOUtils.addHelperClass( it.next(), h);
     }
   }
   public String getLink(String proto, String value) {
