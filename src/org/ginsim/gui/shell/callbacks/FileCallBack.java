@@ -42,6 +42,7 @@ public class FileCallBack {
 		menu.add(new NewAction());
 		menu.add(new OpenAction());
 		menu.add(recentMenu);
+		FileCallBack.updateRecentFiles();
 		menu.add(importMenu);
 
 		menu.add(new JSeparator());
@@ -65,7 +66,7 @@ public class FileCallBack {
 		recentMenu.removeAll();
 		for (String recent: recentFiles) {
 			// TODO: real recent action with better title
-			recentMenu.add(new OpenAction(recent));
+			recentMenu.add( new OpenAction(recent));
 		}
 	}
 	
