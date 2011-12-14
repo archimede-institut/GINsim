@@ -451,19 +451,31 @@ public class GUIManager {
 		whatToDoWithGraph( new_graph, null, b);
 	}
 
-	public void whatToDoWithGraph(Graph<?, ?> new_graph, Graph<?,?> parentGraph, boolean b) {
+	/**
+	 * Manage the action to execute on the new graph (that was generated
+	 * from the parent graph). According to the size of teh graph, a WhatToDoWithGraph frame may be
+	 * opened to ask user what he wants to do with the new graph.
+	 * 
+	 * @param new_graph the graph to manage
+	 * @param parentGraph the graph from which the new graph was generated
+	 * @param b 
+	 */
+	public void whatToDoWithGraph(Graph<?, ?> new_graph, Graph<?,?> parent_graph, boolean b) {
 		
-		// TODO : REFACTORING ACTION
-		// Why does this limit of 21 node exist?
-		//if (new_graph != null && new_graph.getNodeOrderSize() < 21) {
-		if( new_graph != null && new_graph.getNodeCount() < 1000){
+		// If the new graph is null, an error message is displayed
+		if( new_graph == null){
+			GUIMessageUtils.openErrorDialog( Translator.getString("STR_computedNullGraph"));
+			return;
+		}
+		
+		// If the graph is below the limit, a new frame is opened
+		if( new_graph.getNodeCount() < WhatToDoWithGraph.LITMIT_ASK_QUESTION){
 			newFrame( new_graph);
 			return;
 		}
 		
-		// TODO : REFACTORING ACTION
-		// TODO : create a new WhatToDo frame
-		LogManager.error( "TODO: implement a new whattodo frame");
+		// If the graph is above the limit, a  WhatToDoWithGraph frame is opened to obtain the user chosen action
+		new WhatToDoWithGraph( new_graph);
 	}
 
 }

@@ -90,7 +90,7 @@ public class TestRefactor {
 			graph = GUIManager.getInstance().newFrame();
 		}
 		// Test whatToDoWithGraph frame
-		new WhatToDoWithGraph( graph);
+//		new WhatToDoWithGraph( graph);
 		// Test of Notifications
 //		String[] options_names = new String[]{ "STR_OK", "STR_cancel"};
 //		NotificationResolution resolution = new NotificationResolution( options_names);

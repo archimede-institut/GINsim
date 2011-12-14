@@ -33,9 +33,29 @@ import java.awt.event.MouseEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 
+/**
+ * This class define a frame that is opened when a graph is computed from an other one.
+ * This frame propose to do one of the following actions:
+ *  - Layout and display the graph
+ *  - Apply a tool to the graph (one of the entry of the Tool menu)
+ *  - Export the graph to a specified file format
+ *  - Save the graph to a file (zginml)
+ *  
+ *  If the graph size exceed a given number (LIMIT_WARNING), a warning message explain that displaying the graph
+ *  may be very resource consuming
+ *  If the graph size exceed an other given number (LIMIT_DISABLE_DISPLAY), a warning message explain that the display
+ *  of the graph is disabled because the graph is too large
+ * 
+ * 
+ * @author spinelli
+ *
+ */
+
 public class WhatToDoWithGraph extends JFrame {
 
-	private static final int LIMIT_DISPLAY = 1000;
+	public static final int LITMIT_ASK_QUESTION = 50;
+	private static final int LIMIT_WARNING = 500;
+	private static final int LIMIT_DISABLE_DISPLAY = 1000;
 	
 	private JPanel contentPane;
 
@@ -76,6 +96,7 @@ public class WhatToDoWithGraph extends JFrame {
 	public WhatToDoWithGraph( Graph graph) {
 
 		this.graph = graph;
+		// Retrieve the list of available actions for the graph type
 		List<Action> available_actions = ServiceGUIManager.getManager().getAvailableActions( graph);
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -87,9 +108,13 @@ public class WhatToDoWithGraph extends JFrame {
 		
 		this.setTitle( Translator.getString( "STR_whatToDo_title"));
 		
+		// Display the right message according to the graph size
 		int graph_size = graph.getNodeCount();
-		JLabel lbl_Alert = new JLabel( "<html>" + Translator.getString( "STR_whatToDo_alert1", "" + graph_size) + "</html>");
-		if (graph_size >= LIMIT_DISPLAY){
+		JLabel lbl_Alert = new JLabel( "<html>" + Translator.getString( "STR_whatToDo_message", "" + graph_size) + "</html>");
+		if( graph_size >= LIMIT_WARNING && graph_size < LIMIT_DISABLE_DISPLAY){
+			lbl_Alert.setText(  "<html>" + Translator.getString( "STR_whatToDo_alert1", "" + graph_size) + "</html>");
+		}
+		else if (graph_size >= LIMIT_DISABLE_DISPLAY){
 			lbl_Alert.setText(  "<html>" + Translator.getString( "STR_whatToDo_alert2", "" + graph_size) + "</html>");
 		}
 		lbl_Alert.setBounds(56, 12, 368, 42);
@@ -99,6 +124,8 @@ public class WhatToDoWithGraph extends JFrame {
 		lbl_MainQuestion.setBounds(56, 66, 368, 15);
 		contentPane.add(lbl_MainQuestion);
 		
+
+		// Build the Layout radio button and the Layout combo box
 		rdbtn_applyLayoutAndOpen = new JRadioButton( Translator.getString( "STR_whatToDo_applyLayoutAndOpen"));
 		buttonGroup.add(rdbtn_applyLayoutAndOpen);
 		rdbtn_applyLayoutAndOpen.setBounds(80, 96, 344, 23);
@@ -113,11 +140,13 @@ public class WhatToDoWithGraph extends JFrame {
 		comboBox_Layouts.setBounds(127, 127, 231, 24);
 		fillLayouts( comboBox_Layouts, available_actions);
 		contentPane.add(comboBox_Layouts);
-		if( graph_size >= LIMIT_DISPLAY){
+		// If display limit is reached, display option is grayed out
+		if( graph_size >= LIMIT_DISABLE_DISPLAY){
 			rdbtn_applyLayoutAndOpen.setEnabled( false);
 			comboBox_Layouts.setEnabled( false);
 		}
-		
+
+		// Build the Tool radio button and the Tool combo box
 		rdbtn_ApplyATool = new JRadioButton(  Translator.getString( "STR_whatToDo_applyTool"));
 		buttonGroup.add(rdbtn_ApplyATool);
 		rdbtn_ApplyATool.setBounds(80, 170, 344, 23);
@@ -133,11 +162,7 @@ public class WhatToDoWithGraph extends JFrame {
 		fillTools( comboBox_Tools, available_actions);
 		contentPane.add(comboBox_Tools);
 		
-		rdbtn_Save = new JRadioButton( Translator.getString( "STR_whatToDo_Save"));
-		buttonGroup.add(rdbtn_Save);
-		rdbtn_Save.setBounds(80, 317, 344, 23);
-		contentPane.add(rdbtn_Save);
-		
+		// Build the Export radio button and the Export combo box
 		rdbtn_Export = new JRadioButton( Translator.getString( "STR_whatToDo_Export"));
 		buttonGroup.add(rdbtn_Export);
 		rdbtn_Export.setBounds(80, 246, 344, 23);
@@ -153,6 +178,13 @@ public class WhatToDoWithGraph extends JFrame {
 		comboBox_Exports.setBounds(127, 277, 231, 24);
 		contentPane.add(comboBox_Exports);
 		
+		// Build the Save radio button
+		rdbtn_Save = new JRadioButton( Translator.getString( "STR_whatToDo_Save"));
+		buttonGroup.add(rdbtn_Save);
+		rdbtn_Save.setBounds(80, 317, 344, 23);
+		contentPane.add(rdbtn_Save);
+		
+		// Build the OK button
 		JButton btn_Ok = new JButton( Translator.getString( "STR_OK"));
 		btn_Ok.addMouseListener(new MouseAdapter() {
 			@Override
@@ -166,6 +198,7 @@ public class WhatToDoWithGraph extends JFrame {
 		btn_Ok.setBounds(115, 362, 117, 25);
 		contentPane.add(btn_Ok);
 		
+		//Build the Cancel button 
 		JButton btn_Cancel = new JButton( Translator.getString( "STR_cancel"));
 		btn_Cancel.addMouseListener(new MouseAdapter() {
 			@Override
@@ -176,7 +209,8 @@ public class WhatToDoWithGraph extends JFrame {
 		btn_Cancel.setBounds(244, 362, 117, 25);
 		contentPane.add(btn_Cancel);
 		
-		if( graph_size < LIMIT_DISPLAY){
+		// If display limit is reached, default selected option is "apply tool" instead of "display"
+		if( graph_size < LIMIT_DISABLE_DISPLAY){
 			rdbtn_applyLayoutAndOpen.setSelected( true);
 		}
 		else{
