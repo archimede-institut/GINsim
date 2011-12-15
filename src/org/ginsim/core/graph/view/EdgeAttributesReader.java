@@ -13,18 +13,15 @@ import java.util.List;
 public interface EdgeAttributesReader extends AttributesReader {
 
     /**  */
-    public static final int NBSTYLE = 2;
-    /**  */
     public static final int STYLE_CURVE = 0;
     /**  */
     public static final int STYLE_STRAIGHT = 1;
     
     /**  */
-    public static final int NBROUTING = 2;
-    /**  */
     public static final int ROUTING_NONE = 0;
     /**  */
     public static final int ROUTING_AUTO = 1;
+
     /**  */
     public static final int ARROW_POSITIVE = 0;
     /**  */
@@ -51,9 +48,10 @@ public interface EdgeAttributesReader extends AttributesReader {
 	 */
 	void setDefaultEdgeEndFill(boolean b);
     /**
-     * @param selectedIndex
+     * Change the default curved flag
+     * @param b
      */
-    void setDefaultStyle(int selectedIndex);
+    void setDefaultCurve(boolean b);
 	
 	/**
 	 * @return the default edge color
@@ -71,7 +69,7 @@ public interface EdgeAttributesReader extends AttributesReader {
 	 * @return the default line style
 	 *
 	 */
-    int getDefaultStyle();
+    boolean getDefaultCurve();
 	/**
 	 * @return the width of this edge
 	 */
@@ -96,41 +94,45 @@ public interface EdgeAttributesReader extends AttributesReader {
 	 */
 	Color getLineColor();
 
-	/**
-	 * @return the list of available routing.
-	 */
-	List<String> getRoutingList();
+//	/**
+//	 * @return the list of available routing.
+//	 */
+//	List<String> getRoutingList();
+//	
+//	/**
+//	 * @return the list of available draw style
+//	 */
+//	List<String> getStyleList();
+//	
+//	/**
+//	 * @return the list of available draw style
+//	 */
+//	List<String> getPatternList();
+//	
+//	/**
+//	 * @return the routing of this edge.
+//	 */
+//	int getRouting();
+//	/**
+//	 * @return the style of this edge.
+//	 */
+//	int getStyle();
+//	/**
+//	 * change the routing of this edge.
+//	 * @param index index of the routing in the list.
+//	 * @see #getRoutingList()
+//	 */
+//	void setRouting(int index);
+//	/**
+//	 * change the style of this edge.
+//	 * @param index index of the style in the list.
+//	 * @see #getStyleList()
+//	 */
+//	void setStyle(int index);
 	
-	/**
-	 * @return the list of available draw style
-	 */
-	List<String> getStyleList();
-	
-	/**
-	 * @return the list of available draw style
-	 */
-	List<String> getPatternList();
-	
-	/**
-	 * @return the routing of this edge.
-	 */
-	int getRouting();
-	/**
-	 * @return the style of this edge.
-	 */
-	int getStyle();
-	/**
-	 * change the routing of this edge.
-	 * @param index index of the routing in the list.
-	 * @see #getRoutingList()
-	 */
-	void setRouting(int index);
-	/**
-	 * change the style of this edge.
-	 * @param index index of the style in the list.
-	 * @see #getStyleList()
-	 */
-	void setStyle(int index);
+	boolean isCurve();
+
+	void setCurve(boolean curve);
 	
 	/**
 	 * set the end of the line
@@ -167,17 +169,15 @@ public interface EdgeAttributesReader extends AttributesReader {
      * set the edge as dashed.
      * @param dashID
      */
-    void setDash(String dashID);
+    void setDash(EdgePattern dashID);
     
     /**
      * set the edge as dashed.
      * @return the dash motif
      */
-    String getDashID();
+    EdgePattern getDash();
     
-	float[] getPattern(int i);
-	
-	float[] getDash();
-	
-	void setDash(float[] dashArray);
+//	float[] getPattern(int i);
+//	float[] getDash();
+//	void setDash(float[] dashArray);
 }

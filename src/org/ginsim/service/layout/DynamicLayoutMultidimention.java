@@ -147,12 +147,7 @@ public class DynamicLayoutMultidimention {
 		
 		ereader.setLineColor(colorPalette[change]);
 		ereader.setLineWidth(reduceChange(change)*0.5f+1.5f);
-		ereader.setRouting(EdgeAttributesReader.ROUTING_NONE);
-		if (p2 != null) {
-			ereader.setStyle(EdgeAttributesReader.STYLE_STRAIGHT);
-		} else {
-			ereader.setStyle(EdgeAttributesReader.STYLE_CURVE);
-		}
+		ereader.setCurve(p2 == null);
 		ereader.refresh();
 	}
 

@@ -25,6 +25,7 @@ import javax.swing.JTextArea;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.css.CascadingStyle;
@@ -49,7 +50,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	private JButton automaticRoutingButton;
 	private GraphComparatorResult gcResult;
 	
-	private static final EdgeStyle clearEdgeStyle = new EdgeStyle(Color.black, EdgeStyle.NULL_SHAPE, EdgeStyle.NULL_LINEEND, 1);
+	private static final EdgeStyle clearEdgeStyle = new EdgeStyle(Color.black, EdgeStyle.NULL_LINEEND, EdgeStyle.NULL_SHAPE, 1);
 	private static final NodeStyle clearNodeStyle = new NodeStyle(Color.white, Color.gray, NodeBorder.SIMPLE, null);
 	
 	public GraphComparatorCaptionFrame(GraphComparatorResult gcResult) {
@@ -308,10 +309,10 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 			if (o instanceof Edge) { 	//edge
 				ereader.setEdge(o);
 				if (style != null) {
-					ereader.setDash(ereader.getPattern(0)); //FIXME : thats dirty, but copy/paste from DynamicGraph.
+					ereader.setDash(EdgePattern.SIMPLE); //FIXME : thats dirty, but copy/paste from DynamicGraph.
 					cs.applyOnEdge((EdgeStyle)style, o, ereader);
 				} else {
-					ereader.setDash(ereader.getPattern(1)); //FIXME : thats dirty, but copy/paste from DynamicGraph.
+					ereader.setDash(EdgePattern.DASH); //FIXME : thats dirty, but copy/paste from DynamicGraph.
 					cs.applyOnEdge(clearEdgeStyle, o, ereader);
 				}
 			} else { //vertex

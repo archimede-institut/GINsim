@@ -85,7 +85,6 @@ public class RegulatoryGraphComparator extends GraphComparator {
 			
 			String comment = "The edge "+edge_new.toToolTip()+" ";
 			new_ereader.setEdge(edge_new);
-			new_ereader.setRouting(EdgeAttributesReader.ROUTING_AUTO);
 			Color col = new_ereader.getLineColor();
 			if (col == SPECIFIC_G1_COLOR) comment+= "is specific to g1";
 			else if (col == SPECIFIC_G2_COLOR) comment+= "is specific to g2";

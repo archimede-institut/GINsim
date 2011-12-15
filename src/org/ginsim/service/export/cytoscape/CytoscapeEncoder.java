@@ -162,10 +162,10 @@ public class CytoscapeEncoder {
 			out.addTag("att", new String[] {"name", "edgeLineType", "value", "SOLID"});
 			out.addTag("att", new String[] {"name", "sourceArrowColor", "value", '#'+DataUtils.getColorCode(edgeAttributeReader.getLineColor())});
 			out.addTag("att", new String[] {"name", "targetArrowColor", "value", '#'+DataUtils.getColorCode(edgeAttributeReader.getLineColor())});
-			if (edgeAttributeReader.getStyle() == EdgeAttributesReader.STYLE_STRAIGHT) {
-				out.addTag("att", new String[] {"name", "curved", "value", "STRAIGHT_LINES"});
-			} else {
+			if (edgeAttributeReader.isCurve()) {
 				out.addTag("att", new String[] {"name", "curved", "value", "CURVED_LINES"});
+			} else {
+				out.addTag("att", new String[] {"name", "curved", "value", "STRAIGHT_LINES"});
 			}
 			out.closeTag();//att
 			out.closeTag();//graphics

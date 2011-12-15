@@ -21,6 +21,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GinmlHelper;
 
@@ -33,7 +34,6 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	private String dtdFile = GinmlHelper.DEFAULT_URL_DTD_FILE;
 
 	protected List v_stables = null;
-    private float[] dashpattern = null;
 
     private List<NodeInfo> nodeOrder;
     
@@ -65,7 +65,6 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	public DynamicGraphImpl( boolean parsing) {
 		
         super( parsing);
-        dashpattern = getEdgeAttributeReader().getPattern(1);
 	}
 
 	/**
@@ -277,7 +276,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 		if (multiple) {
 			EdgeAttributesReader eReader = getEdgeAttributeReader();
 			eReader.setEdge(edge);
-			eReader.setDash(dashpattern);
+			eReader.setDash(EdgePattern.DASH);
 		}
 		return edge;
 	}

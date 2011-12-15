@@ -15,6 +15,7 @@ import java.util.Map;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.ViewHelper;
 import org.ginsim.core.utils.DataUtils;
@@ -189,7 +190,11 @@ public class SVGEncoder {
                 " fill=\"none\""+
         		" marker-end=\"url(#"+marker+")\"");
         
-        float[] dashPattern = ereader.getDash();
+        float[] dashPattern = null;
+        EdgePattern pattern = ereader.getDash();
+        if (pattern != null) {
+        	dashPattern = pattern.getPattern();
+        }
         if (dashPattern != null && dashPattern.length > 0) {
             String s = " style=\"stroke-dasharray:"+dashPattern[0];
         		for (int i=1 ; i<dashPattern.length ; i++) {
@@ -205,7 +210,7 @@ public class SVGEncoder {
             l_point.add(0, new Point((int)box1.getCenterX(), (int)box1.getCenterY()));
             l_point.add(new Point((int)box2.getCenterX(), (int)box2.getCenterY()));
         }
-        boolean intersect = l_point.size() < 3 || ereader.getStyle() == EdgeAttributesReader.STYLE_CURVE;
+        boolean intersect = l_point.size() < 3 || ereader.isCurve();
         // replace first and last points by bounding box points
         if (box1 != null) {
             l_point.set(0, ViewHelper.getIntersection(box1, l_point.get(1), intersect, w));
@@ -226,34 +231,32 @@ public class SVGEncoder {
         pt1 = (Point2D)l_point.get(0);
         out.write(" d=\"M "+pt1.getX()+" "+pt1.getY());
         Iterator it = l_point.iterator();
-        switch (ereader.getStyle()) {
-	    	case EdgeAttributesReader.STYLE_CURVE:
-                Point2D[] p = new Point2D[l_point.size()];
-                for (int i=0 ; it.hasNext() ; i++) {
-                    p[i] = (Point2D)it.next();
-                }
-                Point2D[] b = new Bezier(p).getPoints();
-                if (b != null && b.length > 1) {
-                    out.write(" Q "+b[0].getX() +","+ b[0].getY() +" "+ p[1].getX() +","+ p[1].getY());
-                    for(int i = 2; i < p.length - 1; i++ ) {
-                        Point2D b0 = b[2*i-3];
-                        Point2D b1 = b[2*i-2];
-                        out.write(" C "+b0.getX()+","+ b0.getY()+" "+ b1.getX() +","+ b1.getY() +" "+ p[i].getX() +","+ p[i].getY());
-                    }
-                    out.write(" Q "+b[b.length-1].getX() +","+ b[b.length-1].getY() +" "+ p[p.length - 1].getX() +","+ p[p.length - 1].getY());
-                } else {
-                    for (int i=1 ; i<l_point.size() ; i++) {
-                        pt1 = (Point2D)l_point.get(i);
-                        out.write(" L "+pt1.getX()+" "+pt1.getY());
-                    }
-                }
-        		break;
-        	default:
-        		it.next();
-		        for (int i=1 ; it.hasNext() ; i++) {
-		            pt1 = (Point2D)it.next();
-		            out.write(" L "+pt1.getX()+" "+pt1.getY());
-		        }
+        if (ereader.isCurve()) {
+	        Point2D[] p = new Point2D[l_point.size()];
+	        for (int i=0 ; it.hasNext() ; i++) {
+	            p[i] = (Point2D)it.next();
+	        }
+	        Point2D[] b = new Bezier(p).getPoints();
+	        if (b != null && b.length > 1) {
+	            out.write(" Q "+b[0].getX() +","+ b[0].getY() +" "+ p[1].getX() +","+ p[1].getY());
+	            for(int i = 2; i < p.length - 1; i++ ) {
+	                Point2D b0 = b[2*i-3];
+	                Point2D b1 = b[2*i-2];
+	                out.write(" C "+b0.getX()+","+ b0.getY()+" "+ b1.getX() +","+ b1.getY() +" "+ p[i].getX() +","+ p[i].getY());
+	            }
+	            out.write(" Q "+b[b.length-1].getX() +","+ b[b.length-1].getY() +" "+ p[p.length - 1].getX() +","+ p[p.length - 1].getY());
+	        } else {
+	            for (int i=1 ; i<l_point.size() ; i++) {
+	                pt1 = (Point2D)l_point.get(i);
+	                out.write(" L "+pt1.getX()+" "+pt1.getY());
+	            }
+	        }
+        } else {
+    		it.next();
+	        for (int i=1 ; it.hasNext() ; i++) {
+	            pt1 = (Point2D)it.next();
+	            out.write(" L "+pt1.getX()+" "+pt1.getY());
+	        }
         }        
     	out.write("\"/>\n");
     }

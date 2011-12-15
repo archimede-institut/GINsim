@@ -62,7 +62,7 @@ public class GraphComparatorResult {
 			if (e1 == null) {//The edge is (only or not) in the first graph. So its intermediary point are right.
 				EdgeAttributesReader ereader = graph_new.getEdgeAttributeReader();
 				ereader.setEdge(e);
-				ereader.setRouting(EdgeAttributesReader.ROUTING_AUTO);
+				ereader.setPoints(null);  // FIXME: not sure this is the right way to do this, needs testing
 				ereader.refresh();
 			}
 		}

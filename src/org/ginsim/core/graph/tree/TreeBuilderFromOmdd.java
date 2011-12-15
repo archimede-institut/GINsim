@@ -9,6 +9,7 @@ import org.ginsim.common.ColorPalette;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
@@ -305,7 +306,7 @@ public abstract class TreeBuilderFromOmdd extends TreeBuilder {
 		ereader.setEdge(e);
 		ereader.setLineColor(ColorPalette.defaultPalette[colorIndex+1]);
     	if (target.isLeaf()) {
-    		ereader.setDash(new float[] {10, 4, 3, 5});
+    		ereader.setDash(EdgePattern.DASH);
     	}
 		ereader.refresh();
 	}

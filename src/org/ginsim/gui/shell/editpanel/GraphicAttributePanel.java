@@ -29,6 +29,7 @@ import javax.swing.event.ChangeListener;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.gui.graph.GraphGUI;
@@ -61,8 +62,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	private JButton jButton_linecolor = null;
 	private JTextField jTF_width = null;
 	private JTextField jTF_height = null;
-	private JComboBox jCB_edgeRouting = null;
-	private JComboBox jCB_lineStyle = null;
+	private JCheckBox jCB_lineStyle = null;
 	private JComboBox jCB_linePattern = null;
 
 	private JPanel jP_edge = null;
@@ -89,8 +89,6 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	private List v_selection;
 
 	private JCheckBox jCB_selectLinewidth;
-
-	private JCheckBox jCB_selectLinerouting;
 
 	private JSpinner jSpinner_linewidth;
 
@@ -215,22 +213,13 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	 * Enabled component for line style
 	 */
 	private void lineStyleEnabled() {
-		jCB_lineStyle.setSelectedIndex(eReader.getStyle());
+		jCB_lineStyle.setSelected(eReader.isCurve());
 		jCB_lineStyle.setEnabled(true);
 	}
 
 	private void linePatternEnabled() {
-		jCB_linePattern.setSelectedItem(eReader.getDashID());
+		jCB_linePattern.setSelectedItem(eReader.getDash());
 		jCB_linePattern.setEnabled(true);
-	}
-
-	/**
-	 * Enabled component for edge routing
-	 */
-	private void edgeRoutingEnabled() {
-		jCB_edgeRouting.setSelectedIndex(eReader.getRouting());
-		jCB_edgeRouting.setEnabled(true);
-
 	}
 
 	/**
@@ -287,7 +276,6 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 		jComboBox_shape.setEnabled(false);
 		jTF_height.setEnabled(false);
 		jTF_width.setEnabled(false);
-		jCB_edgeRouting.setEnabled(false);
 		jCB_lineStyle.setEnabled(false);
 		jCB_linePattern.setEnabled(false);
 	}
@@ -511,31 +499,13 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	}
 
 	/**
-	 * This method initializes jCB_edgeRouting
-	 *
-	 * @return javax.swing.JComboBox
-	 */
-	private JComboBox getJCB_edgeRouting() {
-		if(jCB_edgeRouting == null) {
-			jCB_edgeRouting = new JComboBox();
-			jCB_edgeRouting.setEnabled(false);
-			jCB_edgeRouting.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					applyEdgeRouting();
-				}
-			});
-		}
-		return jCB_edgeRouting;
-	}
-
-	/**
 	 * This method initializes jCB_lineStyle
 	 *
 	 * @return javax.swing.JComboBox
 	 */
-	private JComboBox getJCB_lineStyle() {
+	private JCheckBox getJCB_lineStyle() {
 		if(jCB_lineStyle == null) {
-			jCB_lineStyle = new JComboBox();
+			jCB_lineStyle = new JCheckBox();
 			jCB_lineStyle.setEnabled(false);
 			jCB_lineStyle.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -563,14 +533,14 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	 * apply the current line style
 	 */
 	protected void applyLineStyle() {
-		eReader.setStyle(jCB_lineStyle.getSelectedIndex());
+		eReader.setCurve(jCB_lineStyle.isSelected());
 		eReader.refresh();
 	}
 
 
 
 	protected void applyLinePattern() {
-		eReader.setDash((String)jCB_linePattern.getSelectedItem());
+		eReader.setDash((EdgePattern)jCB_linePattern.getSelectedItem());
 		eReader.refresh();
 	}
 
@@ -628,56 +598,37 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			jP_edge.add(getJCB_selectLinewidth(), c);
 
 			c = new GridBagConstraints();
-			c.gridx = 3;
-			c.gridy = 0;
-			c.fill = java.awt.GridBagConstraints.BOTH;
-			c.weightx = 0;
-			jP_edge.add(new JLabel(Translator.getString("STR_edgeRouting")), c);
-
-			c = new GridBagConstraints();
-			c.gridx = 4;
-			c.gridy = 0;
-			c.weightx = 0;
-			c.fill = java.awt.GridBagConstraints.BOTH;
-			jP_edge.add(getJCB_edgeRouting(), c);
-
-			c = new GridBagConstraints();
-			c.gridx = 5;
-			c.gridy = 0;
-			jP_edge.add(getJCB_selectLinerouting(), c);
-
-			c = new GridBagConstraints();
 			c.fill = java.awt.GridBagConstraints.BOTH;
 			c.weightx = 0;
 			c.gridx = 3;
-			c.gridy = 1;
+			c.gridy = 0;
 			jP_edge.add(new JLabel(Translator.getString("STR_lineStyle")), c);
 
 			c = new GridBagConstraints();
 			c.gridx = 4;
-			c.gridy = 1;
+			c.gridy = 0;
 			c.weightx = 0;
 			c.fill = java.awt.GridBagConstraints.BOTH;
 			jP_edge.add(getJCB_lineStyle(), c);
 
 			c = new GridBagConstraints();
 			c.gridx = 5;
-			c.gridy = 1;
+			c.gridy = 0;
 			jP_edge.add(getJCB_selectLineStyle(), c);
 
 			c = new GridBagConstraints();
 			c.gridx = 3;
-			c.gridy = 2;
+			c.gridy = 1;
 			jP_edge.add(new JLabel(Translator.getString("STR_linePattern")), c);
 			c = new GridBagConstraints();
 			c.gridx = 4;
-			c.gridy = 2;
+			c.gridy = 1;
 			c.weightx = 0;
 			c.fill = java.awt.GridBagConstraints.BOTH;
 			jP_edge.add(getJCB_linePattern(), c);
 			c = new GridBagConstraints();
 			c.gridx = 5;
-			c.gridy = 2;
+			c.gridy = 1;
 			jP_edge.add(getJCB_selectLinePattern(), c);
 		}
 		return jP_edge;
@@ -803,13 +754,6 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 		}
 		return jCB_selectLinewidth;
 	}
-	private JCheckBox getJCB_selectLinerouting() {
-		if (jCB_selectLinerouting == null) {
-			jCB_selectLinerouting = new JCheckBox();
-			jCB_selectLinerouting.setSelected(true);
-		}
-		return jCB_selectLinerouting;
-	}
 	private JCheckBox getJCB_selectLineStyle() {
 		if (jCB_selectLineStyle == null) {
 			jCB_selectLineStyle = new JCheckBox();
@@ -860,25 +804,10 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			jComboBox_shape.addItem(shape);
 		}
 
-		// apply routing list
-		jCB_edgeRouting.removeAllItems();
-		List<String> v_tmp = eReader.getRoutingList();
-		for (int i=0 ; i<v_tmp.size() ; i++) {
-			jCB_edgeRouting.addItem(v_tmp.get(i));
-		}
-
-		// apply line style list
-		jCB_lineStyle.removeAllItems();
-		v_tmp = eReader.getStyleList();
-		for (int i=0 ; i<v_tmp.size() ; i++) {
-			jCB_lineStyle.addItem(v_tmp.get(i));
-		}
-
 		// apply line pattern list
 		jCB_linePattern.removeAllItems();
-		v_tmp = eReader.getPatternList();
-		for (int i=0 ; i<v_tmp.size() ; i++) {
-			jCB_linePattern.addItem(v_tmp.get(i));
+		for (EdgePattern pattern: EdgePattern.values()) {
+			jCB_linePattern.addItem(pattern);
 		}
 	}
 
@@ -920,13 +849,10 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 					eReader.setLineColor(jButton_linecolor.getBackground());
 				}
 				if (jCB_selectLineStyle.isSelected()) {
-					eReader.setStyle( jCB_lineStyle.getSelectedIndex());
+					eReader.setCurve( jCB_lineStyle.isSelected());
 				}
 				if (jCB_selectLinePattern.isSelected()) {
-					eReader.setDash((String)jCB_linePattern.getSelectedItem());
-				}
-				if (jCB_selectLinerouting.isSelected()) {
-					eReader.setRouting(jCB_edgeRouting.getSelectedIndex());
+					eReader.setDash((EdgePattern)jCB_linePattern.getSelectedItem());
 				}
 				if (jCB_selectLinewidth.isSelected()) {
 					eReader.setLineWidth( ((Integer)jSpinner_linewidth.getValue()).intValue() );
@@ -975,7 +901,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 				eReader.setDefaultEdgeColor(jButton_linecolor.getBackground());
 			}
 			if (jCB_selectLineStyle.isSelected()) {
-				eReader.setDefaultStyle( jCB_lineStyle.getSelectedIndex());
+				eReader.setDefaultCurve( jCB_lineStyle.isSelected());
 			}
 			if (jCB_selectLinePattern.isSelected()) {
 				// TODO: make it work
@@ -1017,16 +943,6 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			vReader.refresh();
 		} catch (NumberFormatException e) {}
 		refreshSize();
-	}
-
-	/**
-	 * apply the current edge routing
-	 */
-	protected void applyEdgeRouting() {
-		if (eReader.getRouting() != jCB_edgeRouting.getSelectedIndex()) {
-			eReader.setRouting(jCB_edgeRouting.getSelectedIndex());
-			eReader.refresh();
-		}
 	}
 
 	protected void applyLineColor() {
@@ -1104,7 +1020,6 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			lineColorEnabled();
 			lineStyleEnabled();
 			linePatternEnabled();
-			edgeRoutingEnabled();
 			lineWidthEnabled();
 			cards.show(jP_attr,getJP_edge().getName());
 		} else {
