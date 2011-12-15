@@ -16,44 +16,31 @@ import org.ginsim.core.utils.log.LogManager;
  */
 public class NodeAttributeReaderImpl implements NodeAttributesReader {
 
-    public static Color bg = new Color(((Integer)OptionStore.getOption("vs.vertexbg", new Integer(-26368))).intValue());
-    public static Color fg = new Color(((Integer)OptionStore.getOption("vs.vertexfg", new Integer(Color.WHITE.getRGB()))).intValue());
+    public static Color bg = new Color(((Integer)OptionStore.getOption("vs.vertexbg")).intValue());
+    public static Color fg = new Color(((Integer)OptionStore.getOption("vs.vertexfg")).intValue());
     
     public static NodeShape  shape;
     public static NodeBorder border;
     
-    public static int height = ((Integer)OptionStore.getOption("vs.vertexheight", new Integer(30))).intValue();
-    public static int width = ((Integer)OptionStore.getOption("vs.vertexwidth", new Integer(55))).intValue();
+    public static int height = ((Integer)OptionStore.getOption("vs.vertexheight")).intValue();
+    public static int width = ((Integer)OptionStore.getOption("vs.vertexwidth")).intValue();
     
     static {
     	
-    	String s = OptionStore.getOption("vs.vertexshape", NodeShape.RECTANGLE.name()).toString();
+    	String s = OptionStore.getOption("vs.vertexshape").toString();
     	shape = NodeShape.valueOf(s);
     	if (shape == null) {
     		LogManager.error("Invalid shape in option: "+ s);
     		shape = NodeShape.RECTANGLE;
     	}
     	
-    	s = OptionStore.getOption("vs.vertexborder", NodeBorder.SIMPLE.name()).toString();
+    	s = OptionStore.getOption("vs.vertexborder").toString();
     	border = NodeBorder.valueOf(s);
     	if (border == null) {
     		LogManager.error("Invalid border in option: "+ s);
     		border = NodeBorder.SIMPLE;
     	}
     	
-    }
-
-
-    /**
-     * remember default values
-     */
-    public static void saveOptions() {
-        OptionStore.setOption("vs.vertexfg", fg.getRGB());
-        OptionStore.setOption("vs.vertexbg", bg.getRGB());
-        OptionStore.setOption("vs.vertexshape", shape);
-        OptionStore.setOption("vs.vertexborder", border);
-        OptionStore.setOption("vs.vertexheight", height);
-        OptionStore.setOption("vs.vertexwidth", width);
     }
 
 
@@ -70,6 +57,8 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
     public NodeAttributeReaderImpl(AbstractGraph backend, Map map) {
     	this.backend = backend;
         this.dataMap = map;
+        
+        
     }
 
     @Override
@@ -229,14 +218,22 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 	
 	@Override
 	public void setDefaultNodeBackground(Color color) {
+		
+		OptionStore.setOption( "vs.vertexbg", color.getRGB());
 		bg = color;
 	}
+	
 	@Override
 	public void setDefaultNodeForeground(Color color) {
+		
+		OptionStore.setOption( "vs.vertexfg", color.getRGB());
 		fg = color;
 	}
+	
 	@Override
 	public void setDefaultNodeBorder(NodeBorder border) {
+		
+		OptionStore.setOption("vs.vertexborder", border.name());
 		this.border = border;
 	}
 	/**
@@ -245,6 +242,9 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 	 * @param h
 	 */
 	public void setDefaultNodeSize(int w, int h) {
+		
+		OptionStore.getOption( "vs.vertexheight", h);
+		OptionStore.getOption( "vs.vertexwidth", h);
 		width = w;
 		height = h;
 	}
@@ -253,6 +253,8 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 	 * @param shape
 	 */
 	public void setDefaultNodeShape(NodeShape shape) {
+		
+		OptionStore.setOption("vs.vertexshape", shape.name());
 		this.shape = shape;
 	}
 

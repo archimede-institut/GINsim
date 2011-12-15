@@ -19,8 +19,6 @@ import javax.xml.parsers.SAXParserFactory;
 import org.ginsim.common.utils.EnvUtils;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
-import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -34,13 +32,14 @@ import org.xml.sax.helpers.DefaultHandler;
  * and save them when exiting.
  */
 public class OptionStore extends DefaultHandler {
-
+	
     // some static stuff
     private static Map m_option = new HashMap();
     private static String optionFile = null;
 	private static List<String> recentFiles = new ArrayList<String>();
     
-    static {
+    public static void init() {
+    	
     	switch (EnvUtils.os) {
 		case EnvUtils.SYS_MACOSX:
 	        optionFile = System.getProperty("user.home")+"/Library/Preferences/fr.univmrs.tagc.GINsim.xml";
@@ -50,7 +49,7 @@ public class OptionStore extends DefaultHandler {
 			break;
 		}
     	
-        File f_option = new File(optionFile);
+        File f_option = new File( optionFile);
         if (f_option.exists()) {
             SAXParserFactory spf = SAXParserFactory.newInstance();
             OptionStore options = new OptionStore();
@@ -158,15 +157,6 @@ public class OptionStore extends DefaultHandler {
      * save all options in a file, to restore them at next run.
      */
     public static void saveOptions() {
-        
-        // FIXME hacky: first call some components that need to save some options
-    	OptionStore.setOption("vs.edgecolor", new Integer( EdgeAttributeReaderImpl.default_color.getRGB()));
-        OptionStore.setOption("vs.vertexfg", NodeAttributeReaderImpl.fg.getRGB());
-        OptionStore.setOption("vs.vertexbg", NodeAttributeReaderImpl.bg.getRGB());
-        OptionStore.setOption("vs.vertexshape", NodeAttributeReaderImpl.shape);
-        OptionStore.setOption("vs.vertexborder", NodeAttributeReaderImpl.border);
-        OptionStore.setOption("vs.vertexheight", NodeAttributeReaderImpl.height);
-        OptionStore.setOption("vs.vertexwidth", NodeAttributeReaderImpl.width);
         
         List<String> recents = OptionStore.getRecentFiles();
         if (recents.size() == 0 && m_option.size() == 0) {

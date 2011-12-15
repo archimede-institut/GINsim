@@ -1,5 +1,6 @@
 package org.ginsim.gui;
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -7,13 +8,14 @@ import javax.swing.JOptionPane;
 
 import org.ginsim.common.OptionStore;
 import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.backend.JgraphtBackendImpl;
 import org.ginsim.core.graph.common.AbstractGraph;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.view.NodeBorder;
+import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.graph.GraphGUI;
@@ -24,10 +26,23 @@ import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.MainFrame;
 import org.ginsim.gui.utils.widgets.Frame;
 
-
-
 public class GUIManager {
-
+    
+	/**
+	 * This method initialize the OptionStore by setting the default values to not defined nodes and edges attributes
+	 * 
+	 */
+    public static void initializeOptions() {
+    	
+    	OptionStore.getOption( "vs.edgecolor", new Integer(-13395457));
+    	OptionStore.getOption( "vs.vertexbg", new Integer(-26368));
+    	OptionStore.getOption( "vs.vertexfg", new Integer(Color.WHITE.getRGB()));
+    	OptionStore.getOption( "vs.vertexheight", new Integer(30));
+    	OptionStore.getOption( "vs.vertexwidth", new Integer(55));
+    	OptionStore.getOption( "vs.vertexshape", NodeShape.RECTANGLE.name());
+    	OptionStore.getOption( "vs.vertexborder", NodeBorder.SIMPLE.name());	
+    }
+	
 	private static GUIManager manager;
 	
 	private HashMap<Graph,GUIObject> graphToGUIObject = new HashMap<Graph, GUIObject>();
