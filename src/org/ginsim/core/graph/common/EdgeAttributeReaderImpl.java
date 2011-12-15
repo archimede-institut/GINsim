@@ -14,9 +14,11 @@ import org.ginsim.core.graph.view.EdgePattern;
  */
 public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
+	public static final String EDGE_COLOR = "vs.edgecolor";
+	
     protected static Map<String, float[]> m_pattern = null;
 	
-    public static Color default_color = new Color(((Integer)OptionStore.getOption("vs.edgecolor")).intValue());
+    public static Color default_color = new Color(((Integer)OptionStore.getOption( EDGE_COLOR)).intValue());
     
     protected float defaultLineWidth;
     
@@ -42,7 +44,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     
     public void setDefaultEdgeColor(Color color) {
     	
-    	OptionStore.getOption("vs.edgecolor", color.getRGB());
+    	OptionStore.getOption( EDGE_COLOR, color.getRGB());
     	this.default_color = color;
     }
 
