@@ -67,7 +67,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
     public void endSimu( Graph graph, Exception e) {
     	isRunning = false;
         if (null == graph) {
-            GUIMessageUtils.openErrorDialog(e.getMessage(), this.graph);
+            GUIMessageUtils.openErrorDialog(e.getMessage(), GUIManager.getInstance().getFrame(graph));
             brun.setEnabled(true);
         } else {
             GUIManager.getInstance().whatToDoWithGraph(this.graph, graph, false);

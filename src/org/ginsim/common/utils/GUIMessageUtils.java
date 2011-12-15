@@ -4,8 +4,6 @@ import java.awt.Component;
 
 import javax.swing.JOptionPane;
 
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.Translator;
 
 public class GUIMessageUtils {
@@ -19,17 +17,6 @@ public class GUIMessageUtils {
 	public static void openErrorDialog( Exception e, Component main) {
 		
 		JOptionPane.showMessageDialog( main, e.getMessage() + "\n", e.getMessage(), JOptionPane.ERROR_MESSAGE);
-	}
-
-	/**
-	 * Open a Message Dialog box to indicate users an error occurred and give some feedback.
-	 * 
-	 * @param message the message to show to the user
-	 * @param graph the graph related to the error
-	 */
-	public static void openErrorDialog( String message, Graph<?, ?> graph) {
-		
-		openErrorDialog( message, GUIManager.getInstance().getFrame(graph));
 	}
 	
 	/**
