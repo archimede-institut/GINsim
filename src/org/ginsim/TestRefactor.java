@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.common.OptionStore;
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
@@ -135,7 +136,11 @@ public class TestRefactor {
 		ImageLoader.pushSearchPath("/org/ginsim/gui/resource/icon");
 		ImageLoader.pushSearchPath("/org/ginsim/gui/resource/icon/action");
 		AboutDialog.setDOAPFile("/org/ginsim/gui/resource/GINsim-about.rdf");
-		OptionStore.init();
+		try {
+			OptionStore.init(TestRefactor.class.getPackage().getName());
+		} catch (Exception e) {
+			GUIMessageUtils.openErrorDialog(e, null);
+		}
 		GUIManager.initializeOptions();
 		
 	}

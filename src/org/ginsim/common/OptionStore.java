@@ -19,6 +19,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.ginsim.common.utils.EnvUtils;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.core.utils.log.LogManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -38,16 +39,27 @@ public class OptionStore extends DefaultHandler {
     private static String optionFile = null;
 	private static List<String> recentFiles = new ArrayList<String>();
     
-    public static void init() {
+    public static void init(String name) throws Exception {
     	
+    	String home = System.getProperty("user.home");
+    	String prefix = home;
     	switch (EnvUtils.os) {
 		case EnvUtils.SYS_MACOSX:
-	        optionFile = System.getProperty("user.home")+"/Library/Preferences/fr.univmrs.tagc.GINsim.xml";
+			prefix = home+"/Library/Preferences/";
 			break;
-		default:
-	        optionFile = System.getProperty("user.home") + File.separator + ".ginsimrc";
+		case EnvUtils.SYS_LINUX:
+			prefix = home+"/.config/";
+			break;
+		case EnvUtils.SYS_WINDOWS:
+			prefix = home+"\\Application Data\\";
 			break;
 		}
+    	
+    	File f = new File(prefix);
+    	if (!f.isDirectory()) {
+    		throw new Exception("Could not find the base directory for option file: "+prefix);
+    	}
+    	optionFile = prefix + name + ".xml";
     	
         File f_option = new File( optionFile);
         if (f_option.exists()) {
@@ -62,19 +74,8 @@ public class OptionStore extends DefaultHandler {
                 xr.setErrorHandler(options);
                 FileReader r = new FileReader(f_option);
                 xr.parse(new InputSource(r));
-            } catch (FileNotFoundException e) { 
-            	GUIMessageUtils.openErrorDialog(new Exception( "Error in the configuration file: "+optionFile+"\n"+
-                        e.getLocalizedMessage()), null);
-            } catch (IOException e) {
-            	GUIMessageUtils.openErrorDialog(new Exception( "Error in the configuration file: "+optionFile+"\n"+
-                        e.getLocalizedMessage()), null);
-            } catch (ParserConfigurationException e) {
-            	GUIMessageUtils.openErrorDialog(new Exception( "Error in the configuration file: "+optionFile+"\n"+
-                        e.getLocalizedMessage()), null);
-            } catch (SAXParseException e) {
-            	GUIMessageUtils.openErrorDialog(new Exception( "Error in the configuration file: "+optionFile), null);
-            } catch (SAXException e) {
-            	GUIMessageUtils.openErrorDialog(new Exception( "Error in the configuration file: "+optionFile), null);
+            } catch (Exception e) { 
+            	throw new Exception( "Error in the configuration file: "+optionFile+"\n"+ e.getLocalizedMessage());
             }
         }
     }
