@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.modelsimplifier;
+package org.ginsim.service.tool.modelsimplifier;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -34,26 +34,14 @@ import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.utils.log.LogManager;
+import org.ginsim.servicegui.tool.modelsimplifier.ModelSimplifierConfigDialog;
+import org.ginsim.servicegui.tool.modelsimplifier.RemovedInfo;
 import org.ginsim.servicegui.tool.reg2dyn.PriorityClassDefinition;
 import org.ginsim.servicegui.tool.reg2dyn.PriorityClassManager;
 import org.ginsim.servicegui.tool.reg2dyn.Reg2dynPriorityClass;
 import org.ginsim.servicegui.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.servicegui.tool.reg2dyn.SimulationParameters;
 import org.ginsim.servicegui.tool.reg2dyn.SimulationParametersManager;
-
-
-
-class RemovedInfo {
-	RegulatoryNode vertex;
-	int pos;
-	Collection<RegulatoryMultiEdge> targets;
-	public RemovedInfo(RegulatoryNode vertex, int pos, Collection<RegulatoryMultiEdge> targets) {
-		super();
-		this.vertex = vertex;
-		this.pos = pos;
-		this.targets = targets;
-	}
-}
 
 /**
  * Build a simplified model, based on a complete one, by removing some nodes.

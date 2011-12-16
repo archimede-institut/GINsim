@@ -6,8 +6,8 @@ import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.servicegui.tool.modelsimplifier.ModelSimplifier;
-import org.ginsim.servicegui.tool.modelsimplifier.ModelSimplifierConfig;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifier;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
 
 
 public class TestModifier extends TestCase {

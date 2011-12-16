@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.modelsimplifier;
+package org.ginsim.service.tool.modelsimplifier;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -15,10 +15,10 @@ import org.ginsim.core.utils.data.NamedObject;
 
 
 public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelper<RegulatoryNode> {
-	String name;
+	private String name;
 	Annotation note = new Annotation();
 	Map<RegulatoryNode, List<RegulatoryNode>> m_removed = new HashMap<RegulatoryNode, List<RegulatoryNode>>();
-	boolean	strict = true;
+	public boolean strict = true;
 
 	@Override
 	public String getName() {
@@ -70,5 +70,9 @@ public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelpe
 			return true;
 		}
 		return false;
+	}
+	
+	public void remove(RegulatoryNode vertex) {
+		m_removed.put(vertex, null);
 	}
 }

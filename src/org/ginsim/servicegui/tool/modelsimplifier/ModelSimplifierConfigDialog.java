@@ -24,6 +24,9 @@ import org.ginsim.core.utils.data.SimpleGenericList;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.utils.data.GenericListPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifier;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
 
 
 

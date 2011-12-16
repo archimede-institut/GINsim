@@ -18,6 +18,8 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.notification.NotificationManager;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierService;
 import org.ginsim.servicegui.ServiceGUI;
 import org.ginsim.servicegui.common.GUIFor;
@@ -131,15 +133,6 @@ class ModelSimplifierConfigManager implements GraphAssociatedObjectManager {
  */
 class ModelSimplifierConfigParser extends XMLHelper {
 
-    public Graph getGraph() {
-        // doesn't create a graph!
-        return null;
-    }
-    public String getFallBackDTD() {
-        // doesn't use a DTD either
-        return null;
-    }
-    
     List<RegulatoryNode> nodeOrder;
     ModelSimplifierConfigList paramList;
     
@@ -155,7 +148,7 @@ class ModelSimplifierConfigParser extends XMLHelper {
         super.startElement(uri, localName, qName, attributes);
         if (qName.equals("simplificationConfig")) {
         	ModelSimplifierConfig cfg = (ModelSimplifierConfig)paramList.getElement(null, paramList.add());
-        	cfg.name = attributes.getValue("name");
+        	cfg.setName(attributes.getValue("name"));
         	String s_strict = attributes.getValue("strict");
         	if (s_strict != null) {
         		cfg.strict = "true".equals(s_strict);
@@ -166,7 +159,7 @@ class ModelSimplifierConfigParser extends XMLHelper {
         	for (int i=0 ; i<t_remove.length ; i++) {
         		for (RegulatoryNode vertex: nodeOrder) {
         			if (vertex.getId().equals(t_remove[i])) {
-        				cfg.m_removed.put(vertex, null);
+        				cfg.remove(vertex);
         			}
         		}
         	}
@@ -176,6 +169,7 @@ class ModelSimplifierConfigParser extends XMLHelper {
     public void endElement (String uri, String localName, String qName) throws SAXException {
         super.endElement(uri, localName, qName);
     }
+
     /**
      * @return the list of parameters read by this parser.
      */
