@@ -10,6 +10,7 @@ import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.ToolTipsable;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgeEnd;
 
 
 /**
@@ -27,6 +28,8 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
 	static public final byte SIGN_NEGATIVE = 1;
 	/** an unknown edge */
 	static public final byte SIGN_UNKNOWN = 2;
+	/** an contradictory edge */
+	static public final byte SIGN_DOUBLE = 3;
 
 	private RegulatoryEdge[] edges = new RegulatoryEdge[RegulatoryNode.MAXVALUE+1];
 	private int edgecount = 0;
@@ -302,12 +305,26 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
                     this.sign = SIGN_UNKNOWN;
                     break;
                 }
-                this.sign = EdgeAttributesReader.ARROW_DOUBLE;
+                this.sign = SIGN_DOUBLE;
 			}
 		}
+		
+		// TODO: explicitly setting the line end is wrong, we should have some kind of vizmapper for this
 		EdgeAttributesReader ereader = graph.getEdgeAttributeReader();
 		ereader.setEdge(this);
-		ereader.setLineEnd(sign);
+		EdgeEnd end = EdgeEnd.POSITIVE;
+		switch (sign) {
+		case SIGN_NEGATIVE:
+			end = EdgeEnd.NEGATIVE;
+			break;
+		case SIGN_UNKNOWN:
+			end = EdgeEnd.UNKNOWN;
+			break;
+		case SIGN_DOUBLE:
+			end = EdgeEnd.DOUBLE;
+			break;
+		}
+		ereader.setLineEnd(end);
 		ereader.refresh();
 	}
 

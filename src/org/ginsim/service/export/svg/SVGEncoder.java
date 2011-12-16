@@ -15,6 +15,7 @@ import java.util.Map;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.ViewHelper;
@@ -273,21 +274,23 @@ public class SVGEncoder {
      * @return the id of the corresponding marker
      * @throws IOException
      */
-	private String addMarker(FileWriter out, Map m_marker, int markerType, String color,
+	private String addMarker(FileWriter out, Map m_marker, EdgeEnd markerType, String color,
 			boolean fill) throws IOException {
 		String id = "Marker_" + markerType + "_" + color.substring(1) + "_" + fill;
 		if (!m_marker.containsKey(id)) {
 			out.write("  <defs>\n");
 			out.write("    <marker id=\"" + id + "\" viewBox=\"-7 -7 12 15\" orient=\"auto\" markerHeight=\"5\" markerWidth=\"5\">\n"
 					+ "      <path stroke=\"" + color + "\" fill=\"" + color + "\" ");
+			
+			// TODO: if the lineEnd could return a shape, that can be saved in SVG it would be cleaner...
 			switch (markerType) {
-			case EdgeAttributesReader.ARROW_NEGATIVE:
+			case NEGATIVE:
 				out.write("d=\"M -1 -7 L 1 -7 L 1 7 L -1 7 z\"/>\n");
 				break;
-			case EdgeAttributesReader.ARROW_UNKNOWN:
+			case UNKNOWN:
 				out.write("d=\"M -3 -1 C  7,-15 7,15 -3,1\"/>\n");
 				break;
-			case EdgeAttributesReader.ARROW_DOUBLE:
+			case DOUBLE:
 				out.write("d=\"M -3 -7 L 3 0 L -3 7 z  M -6 -7 L -5 -7 L -5 7 L -6 7 z\"/>\n");
 				break;
 			default:

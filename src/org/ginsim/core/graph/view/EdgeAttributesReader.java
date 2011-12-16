@@ -12,26 +12,6 @@ import java.util.List;
  */
 public interface EdgeAttributesReader extends AttributesReader {
 
-    /**  */
-    public static final int STYLE_CURVE = 0;
-    /**  */
-    public static final int STYLE_STRAIGHT = 1;
-    
-    /**  */
-    public static final int ROUTING_NONE = 0;
-    /**  */
-    public static final int ROUTING_AUTO = 1;
-
-    /**  */
-    public static final int ARROW_POSITIVE = 0;
-    /**  */
-    public static final int ARROW_NEGATIVE = 1;
-    /**  */
-    public static final int ARROW_UNKNOWN = 2;
-    /**  */
-    public static final int ARROW_DOUBLE = 20;
-
-
     /**
      * set the default color for edges
      * @param color
@@ -94,51 +74,26 @@ public interface EdgeAttributesReader extends AttributesReader {
 	 */
 	Color getLineColor();
 
-//	/**
-//	 * @return the list of available routing.
-//	 */
-//	List<String> getRoutingList();
-//	
-//	/**
-//	 * @return the list of available draw style
-//	 */
-//	List<String> getStyleList();
-//	
-//	/**
-//	 * @return the list of available draw style
-//	 */
-//	List<String> getPatternList();
-//	
-//	/**
-//	 * @return the routing of this edge.
-//	 */
-//	int getRouting();
-//	/**
-//	 * @return the style of this edge.
-//	 */
-//	int getStyle();
-//	/**
-//	 * change the routing of this edge.
-//	 * @param index index of the routing in the list.
-//	 * @see #getRoutingList()
-//	 */
-//	void setRouting(int index);
-//	/**
-//	 * change the style of this edge.
-//	 * @param index index of the style in the list.
-//	 * @see #getStyleList()
-//	 */
-//	void setStyle(int index);
-	
+	/**
+	 * Is this edge curve?
+	 * This only affects edges with intermediate points.
+	 * 
+	 * @return true if the edge is curve
+	 */
 	boolean isCurve();
 
+	/**
+	 * Set the edge as curve property.
+	 * 
+	 * @param curve
+	 */
 	void setCurve(boolean curve);
 	
 	/**
 	 * set the end of the line
 	 * @param index
 	 */
-	void setLineEnd(int index);
+	void setLineEnd(EdgeEnd index);
 	
 	/**
 	 * @return the list of points used by this edge.
@@ -163,7 +118,7 @@ public interface EdgeAttributesReader extends AttributesReader {
     /**
      * @return the lineEnd
      */
-    int getLineEnd();
+    EdgeEnd getLineEnd();
     
     /**
      * set the edge as dashed.
@@ -177,7 +132,4 @@ public interface EdgeAttributesReader extends AttributesReader {
      */
     EdgePattern getDash();
     
-//	float[] getPattern(int i);
-//	float[] getDash();
-//	void setDash(float[] dashArray);
 }

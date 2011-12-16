@@ -7,6 +7,7 @@ import java.util.regex.PatternSyntaxException;
 
 import org.ginsim.core.graph.view.AttributesReader;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.utils.DataUtils;
 
 
@@ -20,9 +21,6 @@ import org.ginsim.core.utils.DataUtils;
  *     - lineEnd : the line end = positive, negative, double or unknown
  */
 public class EdgeStyle implements Style {
-	public final static Color NULL_LINECOLOR = null;
-	public final static boolean NULL_SHAPE = false;
-	public final static int NULL_LINEEND = -99;
 	public final static float NULL_BORDER = -99;
 
 	public final static String CSS_LINECOLOR		= "line-color";
@@ -37,8 +35,8 @@ public class EdgeStyle implements Style {
 	public final static String CSS_BORDER			= "border";
 	
 	public Color lineColor;
-	public boolean curve; //to prevent the use of the word style
-	public int lineEnd;
+	public boolean curve;
+	public EdgeEnd lineEnd;
 	public float border;
 	
 	
@@ -48,10 +46,11 @@ public class EdgeStyle implements Style {
 	 * A new style from the with all values to NULL
 	 */
 	public EdgeStyle() {
-		this.lineColor 	= NULL_LINECOLOR;
-		this.lineEnd 	= NULL_LINEEND;
-		this.curve 		= NULL_SHAPE;
-		this.border		= NULL_BORDER;
+		this(null, null, false, NULL_BORDER);
+	}
+
+	public EdgeStyle(Color lineColor) {
+		this(lineColor, null, false, NULL_BORDER);
 	}
 
 	
@@ -63,7 +62,7 @@ public class EdgeStyle implements Style {
 	 * 
 	 * @see EdgeAttributesReader
 	 */
-	public EdgeStyle(Color lineColor, int lineEnd, boolean curve, float border) {
+	public EdgeStyle(Color lineColor, EdgeEnd lineEnd, boolean curve, float border) {
 		this.lineColor	= lineColor;
 		this.lineEnd 	= lineEnd;
 		this.curve 		= curve;
@@ -94,16 +93,16 @@ public class EdgeStyle implements Style {
 	
 	public void merge(Style s) {
 		if (s == null) return;
-		if (((EdgeStyle) s).lineColor != NULL_LINECOLOR)	lineColor 	= ((EdgeStyle) s).lineColor;
-		if (((EdgeStyle) s).lineEnd != NULL_LINEEND)		lineEnd 	= ((EdgeStyle) s).lineEnd;		
+		if (((EdgeStyle) s).lineColor != null)	lineColor 	= ((EdgeStyle) s).lineColor;
+		if (((EdgeStyle) s).lineEnd != null)		lineEnd 	= ((EdgeStyle) s).lineEnd;		
 		if (((EdgeStyle) s).border != NULL_BORDER)			border 		= ((EdgeStyle) s).border;
 		curve = ((EdgeStyle) s).curve;
 	}
 
 	public void apply(AttributesReader areader) {
-		if (lineColor != NULL_LINECOLOR)	((EdgeAttributesReader) areader).setLineColor(lineColor);
+		if (lineColor != null)	((EdgeAttributesReader) areader).setLineColor(lineColor);
 		((EdgeAttributesReader) areader).setCurve(curve);
-		if (lineEnd != NULL_LINEEND) 		((EdgeAttributesReader) areader).setLineEnd(lineEnd);
+		if (lineEnd != null) 		((EdgeAttributesReader) areader).setLineEnd(lineEnd);
 		if (border != NULL_BORDER) 			((EdgeAttributesReader) areader).setLineWidth(border);
 		areader.refresh();
 	}
@@ -124,22 +123,22 @@ public class EdgeStyle implements Style {
 		for (int i = 1; i < tabs_count; i++) {
 			tabs += "\t";
 		}
-		if (lineColor!= NULL_LINECOLOR) s += tabs+CSS_LINECOLOR+": "+DataUtils.getColorCode(lineColor)+"\n";
+		if (lineColor!= null) s += tabs+CSS_LINECOLOR+": "+DataUtils.getColorCode(lineColor)+"\n";
 		if (curve) s += tabs+CSS_SHAPE+": "+(curve ? CSS_SHAPE_CURVE:CSS_SHAPE_STRAIGHT)+"\n";
 		if (border != NULL_BORDER) s += tabs+CSS_BORDER+": "+border+"\n";
-		if (lineEnd != NULL_LINEEND) {
+		if (lineEnd != null) {
 			s += tabs+CSS_LINEEND+": ";
 			switch (lineEnd) {
-			case EdgeAttributesReader.ARROW_POSITIVE:
+			case POSITIVE:
 				s += CSS_LINEEND_POSITIVE;
 				break;
-			case EdgeAttributesReader.ARROW_NEGATIVE:
+			case NEGATIVE:
 				s += CSS_LINEEND_NEGATIVE;
 				break;
-			case EdgeAttributesReader.ARROW_DOUBLE:
+			case DOUBLE:
 				s += CSS_LINEEND_DOUBLE;
 				break;
-			case EdgeAttributesReader.ARROW_UNKNOWN:
+			case UNKNOWN:
 				s += CSS_LINEEND_UNKNOWN;
 				break;
 			}
@@ -157,9 +156,9 @@ public class EdgeStyle implements Style {
 	 * @throws CSSSyntaxException if there is an error in the syntax
 	 */
 	public static Style fromString(String []lines) throws PatternSyntaxException, CSSSyntaxException {
-		Color lineColor = NULL_LINECOLOR;
-		boolean shape = NULL_SHAPE;
-		int lineEnd = NULL_LINEEND;
+		Color lineColor = null;
+		boolean curve = false;
+		EdgeEnd lineEnd = null;
 		float border = NULL_BORDER;
 		
 		if (parserPattern == null) parserPattern = Pattern.compile("([a-zA-Z0-9\\-_]+):\\s*#?([a-zA-Z0-9\\-_]+);");
@@ -176,20 +175,20 @@ public class EdgeStyle implements Style {
 					throw new CSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
 				}
 			} else if (key.equals(CSS_SHAPE)) {
-				if 		(value.equals(CSS_SHAPE_CURVE)) 	shape = true;
-				else if (value.equals(CSS_SHAPE_STRAIGHT)) 	shape = false;
+				if 		(value.equals(CSS_SHAPE_CURVE)) 	curve = true;
+				else if (value.equals(CSS_SHAPE_STRAIGHT)) 	curve = false;
 				else throw new CSSSyntaxException("Unknown edge shape at line "+i+" : "+lines[i]+". Must be "+CSS_SHAPE_CURVE+" or "+CSS_SHAPE_STRAIGHT);
 			} else if (key.equals(CSS_LINEEND)) {
-				if 		(value.equals(CSS_LINEEND_POSITIVE)) 	lineEnd = EdgeAttributesReader.ARROW_POSITIVE;
-				else if (value.equals(CSS_LINEEND_NEGATIVE)) 	lineEnd = EdgeAttributesReader.ARROW_NEGATIVE;
-				else if (value.equals(CSS_LINEEND_DOUBLE))	 	lineEnd = EdgeAttributesReader.ARROW_DOUBLE;
-				else if (value.equals(CSS_LINEEND_UNKNOWN)) 	lineEnd = EdgeAttributesReader.ARROW_UNKNOWN;
+				if 		(value.equals(CSS_LINEEND_POSITIVE)) 	lineEnd = EdgeEnd.POSITIVE;
+				else if (value.equals(CSS_LINEEND_NEGATIVE)) 	lineEnd = EdgeEnd.NEGATIVE;
+				else if (value.equals(CSS_LINEEND_DOUBLE))	 	lineEnd = EdgeEnd.DOUBLE;
+				else if (value.equals(CSS_LINEEND_UNKNOWN)) 	lineEnd = EdgeEnd.UNKNOWN;
 				else throw new CSSSyntaxException("Unknown edge lineEnd at line "+i+" : "+lines[i]+". Must be "+CSS_LINEEND_POSITIVE+", "+CSS_LINEEND_NEGATIVE+", "+CSS_LINEEND_DOUBLE+" or "+CSS_LINEEND_UNKNOWN);
 			} else {
 				throw new CSSSyntaxException("Edge has no key "+key+" at line "+i+" : "+lines[i]+". Must be "+CSS_LINECOLOR+", "+CSS_SHAPE+" or "+CSS_LINEEND);
 			}
 		}
-		return new EdgeStyle(lineColor, lineEnd, shape, border);
+		return new EdgeStyle(lineColor, lineEnd, curve, border);
 	}
 
 	public Object clone() {

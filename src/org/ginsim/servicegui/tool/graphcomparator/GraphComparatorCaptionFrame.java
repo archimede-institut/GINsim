@@ -50,7 +50,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	private JButton automaticRoutingButton;
 	private GraphComparatorResult gcResult;
 	
-	private static final EdgeStyle clearEdgeStyle = new EdgeStyle(Color.black, EdgeStyle.NULL_LINEEND, EdgeStyle.NULL_SHAPE, 1);
+	private static final EdgeStyle clearEdgeStyle = new EdgeStyle(Color.black, null, false, 1);
 	private static final NodeStyle clearNodeStyle = new NodeStyle(Color.white, Color.gray, NodeBorder.SIMPLE, null);
 	
 	public GraphComparatorCaptionFrame(GraphComparatorResult gcResult) {

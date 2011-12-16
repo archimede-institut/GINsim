@@ -6,6 +6,7 @@ import java.awt.geom.Point2D;
 import java.util.List;
 
 import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.jgraph.graph.AttributeMap;
@@ -36,7 +37,7 @@ public class GsEdgeRenderer extends EdgeRenderer {
     
 	@Override
     protected Shape createLineEnd(int size, int style, Point2D src, Point2D dst) {
-        if (style == EdgeAttributesReader.ARROW_DOUBLE) {
+        if (style == RegulatoryMultiEdge.SIGN_DOUBLE) {
             
             Shape pl = createLineEnd(size, GraphConstants.ARROW_TECHNICAL, src, dst);
             if (pl == null) {

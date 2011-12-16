@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.ginsim.common.OptionStore;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
 
 
@@ -107,16 +108,16 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     	}
     }
 
-    public void setLineEnd(int index) {
+    public void setLineEnd(EdgeEnd index) {
         if (evsd == null) {
             return;
         }
         evsd.end = index;
     }
 
-    public int getLineEnd() {
-        if (evsd == null) {
-            return 0;
+    public EdgeEnd getLineEnd() {
+        if (evsd == null || evsd.end == null) {
+            return EdgeEnd.POSITIVE;
         }
         return evsd.end;
     }
@@ -138,7 +139,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     class EdgeVSdata {
         protected Color color;
         protected float size;
-        protected int end;
+        protected EdgeEnd end;
         protected boolean fill;
         protected boolean curve;
         protected List points;
@@ -217,5 +218,4 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 		return defaultcurve;
 	}
 
-	
 }

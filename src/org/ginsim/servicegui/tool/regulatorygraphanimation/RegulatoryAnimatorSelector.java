@@ -24,8 +24,8 @@ public class RegulatoryAnimatorSelector extends Selector {
 	public static final String CAT_EDGE_ON	 = "on";
 	public static final String CAT_EDGE_OFF	 = "off";
 
-	public static final EdgeStyle STYLE_EDGE_ON		= new EdgeStyle(EdgeStyle.NULL_LINECOLOR, 	EdgeStyle.NULL_LINEEND, EdgeStyle.NULL_SHAPE,  EdgeStyle.NULL_BORDER);
-	public static final EdgeStyle STYLE_EDGE_OFF 	= new EdgeStyle(new Color(192, 192, 192), 	EdgeStyle.NULL_LINEEND, EdgeStyle.NULL_SHAPE,  EdgeStyle.NULL_BORDER);
+	public static final EdgeStyle STYLE_EDGE_ON		= new EdgeStyle();
+	public static final EdgeStyle STYLE_EDGE_OFF 	= new EdgeStyle(new Color(192, 192, 192));
 
 	public static final int MAX_STYLES = 9; 
 	public static final int STAR = MAX_STYLES+1;

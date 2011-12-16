@@ -1,6 +1,7 @@
 package org.ginsim.gui.graph.backend;
 
 import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.ViewHelper;
 import org.jgraph.graph.AttributeMap;
@@ -56,15 +57,19 @@ public class GsEdgeView extends EdgeView {
 		GraphConstants.setLineWidth(attributes, renderer.reader.getLineWidth());
 
 		int lineEnd = GraphConstants.ARROW_CLASSIC;
-		switch (renderer.reader.getLineEnd()) {
-		case 0:
+		EdgeEnd end = renderer.reader.getLineEnd();
+		switch (end) {
+		case POSITIVE:
 			lineEnd = GraphConstants.ARROW_TECHNICAL;
 			break;
-		case 1:
+		case NEGATIVE:
 			lineEnd = GraphConstants.ARROW_LINE;
 			break;
-		case 2:
+		case UNKNOWN:
 			lineEnd = GraphConstants.ARROW_CIRCLE;
+			break;
+		case DOUBLE:
+			lineEnd = GraphConstants.ARROW_DIAMOND;
 			break;
 		}
 		GraphConstants.setLineEnd(attributes, lineEnd);
