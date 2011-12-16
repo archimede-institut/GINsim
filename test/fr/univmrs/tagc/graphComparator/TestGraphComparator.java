@@ -10,6 +10,7 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.service.tool.graphcomparator.DynamicGraphComparator;
@@ -122,12 +123,12 @@ class GraphExamples {
 		g.addNewNode("E", "E", (byte)1);
 		
 		try {
-			g.addNewEdge("A", "B", (byte)0, RegulatoryMultiEdge.SIGN_NEGATIVE);
-			g.addNewEdge("A", "C", (byte)0, RegulatoryMultiEdge.SIGN_NEGATIVE);  //added
-			g.addNewEdge("B", "C", (byte)0, RegulatoryMultiEdge.SIGN_POSITIVE);
-			g.addNewEdge("C", "D", (byte)0, RegulatoryMultiEdge.SIGN_POSITIVE);
-			g.addNewEdge("D", "A", (byte)0, RegulatoryMultiEdge.SIGN_POSITIVE);
-			g.addNewEdge("C", "E", (byte)0, RegulatoryMultiEdge.SIGN_POSITIVE);  //added
+			g.addNewEdge("A", "B", (byte)0, RegulatoryEdgeSign.NEGATIVE);
+			g.addNewEdge("A", "C", (byte)0, RegulatoryEdgeSign.NEGATIVE);  //added
+			g.addNewEdge("B", "C", (byte)0, RegulatoryEdgeSign.POSITIVE);
+			g.addNewEdge("C", "D", (byte)0, RegulatoryEdgeSign.POSITIVE);
+			g.addNewEdge("D", "A", (byte)0, RegulatoryEdgeSign.POSITIVE);
+			g.addNewEdge("C", "E", (byte)0, RegulatoryEdgeSign.POSITIVE);  //added
 		} catch (GsException e) {
 			e.printStackTrace();
 		}
@@ -156,14 +157,14 @@ class GraphExamples {
 		g.addNewNode("G", "G", (byte)1); //added
 		
 		try {
-			g.addNewEdge("A", "B", (byte)0, RegulatoryMultiEdge.SIGN_NEGATIVE);
-			g.addNewEdge("B", "C", (byte)0, RegulatoryMultiEdge.SIGN_NEGATIVE); //different sign
-			g.addNewEdge("C", "D", (byte)0, RegulatoryMultiEdge.SIGN_POSITIVE); //multiarc
-			g.addNewEdge("C", "D", (byte)1, RegulatoryMultiEdge.SIGN_NEGATIVE); //multiarc
-			g.addNewEdge("D", "A", (byte)1, RegulatoryMultiEdge.SIGN_POSITIVE); //different minvalue
-			g.addNewEdge("C", "F", (byte)0, RegulatoryMultiEdge.SIGN_POSITIVE); //added
-			g.addNewEdge("F", "B", (byte)0, RegulatoryMultiEdge.SIGN_POSITIVE); //added
-			g.addNewEdge("F", "G", (byte)0, RegulatoryMultiEdge.SIGN_POSITIVE); //added
+			g.addNewEdge("A", "B", (byte)0, RegulatoryEdgeSign.NEGATIVE);
+			g.addNewEdge("B", "C", (byte)0, RegulatoryEdgeSign.NEGATIVE); //different sign
+			g.addNewEdge("C", "D", (byte)0, RegulatoryEdgeSign.POSITIVE); //multiarc
+			g.addNewEdge("C", "D", (byte)1, RegulatoryEdgeSign.NEGATIVE); //multiarc
+			g.addNewEdge("D", "A", (byte)1, RegulatoryEdgeSign.POSITIVE); //different minvalue
+			g.addNewEdge("C", "F", (byte)0, RegulatoryEdgeSign.POSITIVE); //added
+			g.addNewEdge("F", "B", (byte)0, RegulatoryEdgeSign.POSITIVE); //added
+			g.addNewEdge("F", "G", (byte)0, RegulatoryEdgeSign.POSITIVE); //added
 		} catch (GsException e) {
 			e.printStackTrace();
 		}
