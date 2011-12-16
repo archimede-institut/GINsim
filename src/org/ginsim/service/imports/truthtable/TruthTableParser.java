@@ -16,6 +16,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterList;
+import org.ginsim.gui.resource.Translator;
 
 public final class TruthTableParser {
 
@@ -61,8 +62,8 @@ public final class TruthTableParser {
 		}
 		if (tmLines.size() == 0 || tmLines.size() < getTableLines()) {
 			// components are at least boolean and there are lines missing
-			throw new GsException(GsException.GRAVITY_ERROR,
-					"TruthTableParser.error: not enough lines");
+			throw new GsException(GsException.GRAVITY_NORMAL,
+					Translator.getString("STR_TruthTable_incomplete"));
 		}
 		baTruthTable = new byte[tmLines.size()][];
 		ArrayList<String> alTmp = new ArrayList<String>(tmLines.keySet());
@@ -79,16 +80,64 @@ public final class TruthTableParser {
 		return size;
 	}
 
-	public RegulatoryGraph buildGraph() {
+	public RegulatoryGraph buildNonCompactLRG() {
 		RegulatoryGraph graph = new RegulatoryGraphFactory().create();
 
-		for (int i = 0; i < baTruthTable.length; i++) {
-			for (int j = 0; j < baTruthTable[i].length; j++) {
-				System.out.print(" " + baTruthTable[i][j]);
-			}
-			System.out.println();
+		// Add each RegNode with corresponding Max value
+		RegulatoryNode[] naNodes = new RegulatoryNode[iN];
+		for (int i = 0; i < iN; i++) {
+			naNodes[i] = graph.addNewNode("g" + i, null, iMax[i]);
 		}
-		
+
+		for (int gi = 0; gi < iN; gi++) {
+			for (int line = 0; line < baTruthTable.length; line++) {
+				int target = baTruthTable[line][gi + iN];
+				if (target > 0) {
+					ArrayList<RegulatoryEdge> inEdges = new ArrayList<RegulatoryEdge>();
+					for (int reg = 0; reg < iN; reg++) {
+						byte min = baTruthTable[line][reg];
+						int sign = (min == 0) ? RegulatoryMultiEdge.SIGN_NEGATIVE
+								: RegulatoryMultiEdge.SIGN_POSITIVE;
+						RegulatoryMultiEdge edge = graph.getEdge(naNodes[reg],
+								naNodes[gi]);
+						if (edge == null) {
+							edge = graph.addEdge(naNodes[reg], naNodes[gi],
+									sign);
+							edge.setMin(0, min);
+							if (RegulatoryMultiEdge.SIGN_POSITIVE == sign)
+								inEdges.add(edge.getEdge(0));
+						} else {
+							if (RegulatoryMultiEdge.SIGN_POSITIVE == sign) {
+								boolean hasEdge = false;
+								int index = 0;
+								for (int e = 0; e < edge.getEdgeCount(); e++) {
+									if (edge.getMin(e) == min) {
+										hasEdge = true;
+										index = e;
+									}
+								}
+								if (!hasEdge) {
+									index = edge.addEdge(sign, min, graph);
+								}
+								inEdges.add(edge.getEdge(index));
+							}
+						}
+					}
+					LogicalParameter newParam;
+					if (inEdges.isEmpty())
+						newParam = new LogicalParameter(target);
+					newParam = new LogicalParameter(inEdges, target);
+					naNodes[gi].addLogicalParameter(newParam, true);
+				}
+			}
+		}
+
+		return graph;
+	}
+
+	public RegulatoryGraph buildCompactLRG() {
+		RegulatoryGraph graph = new RegulatoryGraphFactory().create();
+
 		// Add each RegNode with corresponding Max value
 		RegulatoryNode[] naNodes = new RegulatoryNode[iN];
 		for (int i = 0; i < iN; i++) {
@@ -117,7 +166,6 @@ public final class TruthTableParser {
 
 		ArrayList<RegulatoryEdge> incoming_edges[] = new ArrayList[iN];
 		ArrayList<Integer> table_interactors[] = new ArrayList[iN];
-		byte sign;
 		for (int i = 0; i < iN; i++) {
 			// instantiate one list for each component
 			// to store the incoming edges
@@ -139,26 +187,44 @@ public final class TruthTableParser {
 						// component (second column of image states)
 						for (int u = iN; u < 2 * iN; u++) {
 							// sign defines the type of the interaction
-							// (1 positive/-1 negative/ 0 unknown)
-							sign = 0; 
-System.out.println("i:"+i + " j:"+j+" k:"+k+" L1:"+L1+" l:"+l+" u:"+u
-		+ " b:"+iBlock[i] + " m:" + iMax[i]);
+							byte sign = RegulatoryMultiEdge.SIGN_UNKNOWN;
 							if (baTruthTable[l][u] > baTruthTable[l + iBlock[i]][u]) {
-								sign = -1;
+								sign = RegulatoryMultiEdge.SIGN_NEGATIVE;
 							} else if (baTruthTable[l][u] < baTruthTable[l
 									+ iBlock[i]][u]) {
-								sign = 1;
+								sign = RegulatoryMultiEdge.SIGN_POSITIVE;
 							}
-							if (sign != -1) {
+
+							if (sign != RegulatoryMultiEdge.SIGN_UNKNOWN) {
 								RegulatoryMultiEdge edge = graph.getEdge(
 										naNodes[i], naNodes[u - iN]);
+								byte threshold = baTruthTable[l + iBlock[i]][i];
 								if (edge == null) {
 									edge = graph.addEdge(naNodes[i], naNodes[u
 											- iN], sign);
 									incoming_edges[u - iN].add(edge.getEdge(0));
-									edge.setMin(0, (byte) baTruthTable[l
-											+ iBlock[i]][i]);
+									edge.setMin(0, threshold);
 									table_interactors[u - iN].add(i);
+								} else {
+									boolean hasEdgeSameThreshold = false;
+									int e;
+									for (e = 0; e < edge.getEdgeCount(); e++) {
+										if (edge.getMin(e) == threshold) {
+											hasEdgeSameThreshold = true;
+											break;
+										}
+									}
+									if (!hasEdgeSameThreshold) {
+										e = edge.addEdge(sign, threshold, graph);
+										incoming_edges[u - iN].add(edge
+												.getEdge(e));
+										table_interactors[u - iN].add(i);
+									} else if (edge.getSign(e) != sign) {
+										edge.setSign(
+												e,
+												RegulatoryMultiEdge.SIGN_UNKNOWN,
+												graph);
+									}
 								}
 							}
 						}
@@ -170,7 +236,7 @@ System.out.println("i:"+i + " j:"+j+" k:"+k+" L1:"+L1+" l:"+l+" u:"+u
 		// defining the logical parameters
 		for (int i = 0; i < iN; i++) {
 			int deg = incoming_edges[i].size();
-			for (int j = 0; j < baTruthTable.length; j++) { 
+			for (int j = 0; j < baTruthTable.length; j++) {
 				// search for the lines where the
 				// target value of i > 0
 				if (baTruthTable[j][i + iN] > 0) {
@@ -180,12 +246,14 @@ System.out.println("i:"+i + " j:"+j+" k:"+k+" L1:"+L1+" l:"+l+" u:"+u
 					// state of line j
 					for (int k = 0; k < deg; k++) {
 						// get the index of the k.th regulator of i
-						int reg = ((Integer) table_interactors[i].get(k))
-								.intValue(); 
-						if (baTruthTable[j][reg] != 0) { // TODO >= threshold
-							RegulatoryMultiEdge me = graph.getEdge(
-									naNodes[reg], naNodes[i]);
-							activeInteractions.add(me.getEdge(0));
+						int reg = table_interactors[i].get(k);
+						RegulatoryEdge edge = incoming_edges[i].get(k);
+						if (baTruthTable[j][reg] >= edge.getMin()
+								&& (baTruthTable[j][reg] <= edge.getMax() || edge
+										.getMax() == -1)) {
+							// WTF!? why should getMax() be -1 instead of
+							// Byte.MAX_VALUE
+							activeInteractions.add(edge);
 						}
 					}
 					LogicalParameterList listOfParam = naNodes[i]
@@ -193,10 +261,8 @@ System.out.println("i:"+i + " j:"+j+" k:"+k+" L1:"+L1+" l:"+l+" u:"+u
 					if (!listOfParam.contains(activeInteractions)) {
 						// check if the parameter already exists
 						// in the list, if not create it
-//	System.out.println("i:"+i+" j:"+j + " <- " + baTruthTable[j][i+iN]);
-						// TODO: replace value, not create a new LogicalParameter
 						LogicalParameter newParam = new LogicalParameter(
-								activeInteractions, baTruthTable[j][i+iN]);
+								activeInteractions, baTruthTable[j][i + iN]);
 						naNodes[i].addLogicalParameter(newParam, true);
 
 					}

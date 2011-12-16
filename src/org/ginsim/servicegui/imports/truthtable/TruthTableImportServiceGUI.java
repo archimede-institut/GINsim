@@ -7,10 +7,10 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.common.utils.FileFormatDescription;
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.service.ServiceManager;
@@ -82,10 +82,10 @@ class TruthTableImportAction extends ImportAction {
 			GUIManager.getInstance().newFrame(newGraph);
 			LayoutService.runLayout(LayoutService.RING, newGraph);
 		} catch (IOException e) {
-			NotificationManager.publishError(e, e.getMessage());
+			GUIMessageUtils.openErrorDialog(e, null);
 			LogManager.error(e);
 		} catch (GsException e) {
-			NotificationManager.publishError(e, e.getMessage());
+			GUIMessageUtils.openErrorDialog(e, null);
 			LogManager.error(e);
 		}
 	}

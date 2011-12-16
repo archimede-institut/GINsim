@@ -24,8 +24,9 @@ public class TruthTableImportService implements Service {
 
 		FileReader fReader = new FileReader(filename);
 		TruthTableParser ttParser = new TruthTableParser(fReader);
-		RegulatoryGraph graph = ttParser.buildGraph();
-
+		RegulatoryGraph graph = ttParser.buildCompactLRG();
+//		RegulatoryGraph graph = ttParser.buildNonCompactLRG();
+		
 		fReader.close();
 		return graph;
 	}
