@@ -19,6 +19,7 @@ import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -391,15 +392,15 @@ public final class SBMLXpathParser {
 				RegulatoryNode input_node = graph.getNodeByName( input_node_name);
 				if( input_node != null){
 					String sign_code = input_node_names.get( input_node_name);
-					int sign;
+					RegulatoryEdgeSign sign;
 					if ( "SBO:0000020".equals(sign_code)){
-						sign = -1;
+						sign = RegulatoryEdgeSign.NEGATIVE;
 					}
 					else if ( "SBO:0000459".equals(sign_code)){
-						sign = 1;
+						sign = RegulatoryEdgeSign.POSITIVE;
 					}
 					else{
-						sign = 0;
+						sign = RegulatoryEdgeSign.UNKNOWN;
 					}	
 					
 					RegulatoryMultiEdge new_me = graph.addEdge( input_node, output_node, sign);
@@ -432,15 +433,15 @@ public final class SBMLXpathParser {
 				Expression expression = it_exp.next();
 				String node_from_id = expression.getNode();
 				String sign_code = input_to_sign.get( node_from_id);
-				byte sign;
+				RegulatoryEdgeSign sign;
 				if ( "SBO:0000020".equals(sign_code)){
-					sign = RegulatoryMultiEdge.SIGN_NEGATIVE;
+					sign = RegulatoryEdgeSign.NEGATIVE;
 				}
 				else if ( "SBO:0000459".equals(sign_code)){
-					sign = RegulatoryMultiEdge.SIGN_POSITIVE;
+					sign = RegulatoryEdgeSign.POSITIVE;
 				}
 				else{
-					sign = RegulatoryMultiEdge.SIGN_UNKNOWN;
+					sign = RegulatoryEdgeSign.UNKNOWN;
 				}	
 				Vector<String> list_cases = expression.getAllCases();
 				

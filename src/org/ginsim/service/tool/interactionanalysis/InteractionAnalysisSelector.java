@@ -20,7 +20,7 @@ public class InteractionAnalysisSelector extends Selector {
 	public static final EdgeStyle STYLE_NONFUNCTIONNAL	= new EdgeStyle(Color.yellow, 	EdgeEnd.UNKNOWN,  false,  5);
 	public static final EdgeStyle STYLE_POSITIVE 		= new EdgeStyle(Color.green, 	EdgeEnd.POSITIVE, false,  5);
 	public static final EdgeStyle STYLE_NEGATIVE 		= new EdgeStyle(Color.red, 		EdgeEnd.NEGATIVE, false,  5);
-	public static final EdgeStyle STYLE_DUAL	 		= new EdgeStyle(Color.blue, 	EdgeEnd.DOUBLE,   false,  5);
+	public static final EdgeStyle STYLE_DUAL	 		= new EdgeStyle(Color.blue, 	EdgeEnd.DUAL,     false,  5);
 	
 	private Map<RegulatoryMultiEdge, String> cache = null;
 

@@ -125,11 +125,11 @@ public class CytoscapeEncoder {
 			String edge_type; //inhibit | activate | undefined
 			String edge_cyt_id; //15 | 3 | 12
 			switch (edge.getSign()) {
-				case RegulatoryMultiEdge.SIGN_NEGATIVE: 
+				case NEGATIVE: 
 					edge_type = "inhibit";
 					edge_cyt_id = "15";
 					break;
-				case RegulatoryMultiEdge.SIGN_POSITIVE: 
+				case POSITIVE: 
 					edge_type = "activate"; 
 					edge_cyt_id = "3";
 					break;

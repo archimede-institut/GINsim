@@ -290,7 +290,7 @@ public class SVGEncoder {
 			case UNKNOWN:
 				out.write("d=\"M -3 -1 C  7,-15 7,15 -3,1\"/>\n");
 				break;
-			case DOUBLE:
+			case DUAL:
 				out.write("d=\"M -3 -7 L 3 0 L -3 7 z  M -6 -7 L -5 -7 L -5 7 L -6 7 z\"/>\n");
 				break;
 			default:

@@ -68,7 +68,7 @@ public class GsEdgeView extends EdgeView {
 		case UNKNOWN:
 			lineEnd = GraphConstants.ARROW_CIRCLE;
 			break;
-		case DOUBLE:
+		case DUAL:
 			lineEnd = GraphConstants.ARROW_DIAMOND;
 			break;
 		}

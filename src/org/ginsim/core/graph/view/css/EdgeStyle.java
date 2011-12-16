@@ -30,7 +30,7 @@ public class EdgeStyle implements Style {
 	public final static String CSS_LINEEND			= "line-end";
 	public final static String CSS_LINEEND_POSITIVE	= "positive";
 	public final static String CSS_LINEEND_NEGATIVE	= "negative";
-	public final static String CSS_LINEEND_DOUBLE	= "double";
+	public final static String CSS_LINEEND_DUAL		= "double";
 	public final static String CSS_LINEEND_UNKNOWN	= "unknown";
 	public final static String CSS_BORDER			= "border";
 	
@@ -135,8 +135,8 @@ public class EdgeStyle implements Style {
 			case NEGATIVE:
 				s += CSS_LINEEND_NEGATIVE;
 				break;
-			case DOUBLE:
-				s += CSS_LINEEND_DOUBLE;
+			case DUAL:
+				s += CSS_LINEEND_DUAL;
 				break;
 			case UNKNOWN:
 				s += CSS_LINEEND_UNKNOWN;
@@ -181,9 +181,9 @@ public class EdgeStyle implements Style {
 			} else if (key.equals(CSS_LINEEND)) {
 				if 		(value.equals(CSS_LINEEND_POSITIVE)) 	lineEnd = EdgeEnd.POSITIVE;
 				else if (value.equals(CSS_LINEEND_NEGATIVE)) 	lineEnd = EdgeEnd.NEGATIVE;
-				else if (value.equals(CSS_LINEEND_DOUBLE))	 	lineEnd = EdgeEnd.DOUBLE;
+				else if (value.equals(CSS_LINEEND_DUAL))	 	lineEnd = EdgeEnd.DUAL;
 				else if (value.equals(CSS_LINEEND_UNKNOWN)) 	lineEnd = EdgeEnd.UNKNOWN;
-				else throw new CSSSyntaxException("Unknown edge lineEnd at line "+i+" : "+lines[i]+". Must be "+CSS_LINEEND_POSITIVE+", "+CSS_LINEEND_NEGATIVE+", "+CSS_LINEEND_DOUBLE+" or "+CSS_LINEEND_UNKNOWN);
+				else throw new CSSSyntaxException("Unknown edge lineEnd at line "+i+" : "+lines[i]+". Must be "+CSS_LINEEND_POSITIVE+", "+CSS_LINEEND_NEGATIVE+", "+CSS_LINEEND_DUAL+" or "+CSS_LINEEND_UNKNOWN);
 			} else {
 				throw new CSSSyntaxException("Edge has no key "+key+" at line "+i+" : "+lines[i]+". Must be "+CSS_LINECOLOR+", "+CSS_SHAPE+" or "+CSS_LINEEND);
 			}

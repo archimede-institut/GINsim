@@ -52,7 +52,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param sign
      * @return the new edge.
      */
-    public RegulatoryEdge addNewEdge(String from, String to, byte minvalue, byte sign) throws GsException;
+    public RegulatoryEdge addNewEdge(String from, String to, byte minvalue, RegulatoryEdgeSign sign) throws GsException;
     
     /**
      * add an edge from textual parameters (for the parser).
@@ -74,7 +74,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param sign
      * @return
      */
-    public RegulatoryMultiEdge addEdge(RegulatoryNode source, RegulatoryNode target, int sign);
+    public RegulatoryMultiEdge addEdge(RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign sign);
     
     
     /**

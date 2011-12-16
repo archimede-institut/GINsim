@@ -138,7 +138,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
      * @return
      */
     @Override
-    public RegulatoryMultiEdge addEdge(RegulatoryNode source, RegulatoryNode target, int sign) {
+    public RegulatoryMultiEdge addEdge(RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign sign) {
     	RegulatoryMultiEdge obj = getEdge(source, target);
     	if (obj != null) {
     		
@@ -160,13 +160,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     		NotificationManager.publishResolvableWarning( this, "STR_usePanelToAddMoreEdges", this, new Object[] {obj}, resolution);
     		
     		return obj;
-    	}
-    	if (sign < 0) {
-    		sign = RegulatoryMultiEdge.SIGN_NEGATIVE;
-    	} else if (sign > 0) {
-    		sign = RegulatoryMultiEdge.SIGN_POSITIVE;
-    	} else {
-    		sign = RegulatoryMultiEdge.SIGN_UNKNOWN;
     	}
     	obj = new RegulatoryMultiEdge(source, target, sign);
     	addEdge(obj);
@@ -395,10 +388,10 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
      */
     @Override
     public RegulatoryEdge addNewEdge(String from, String to, byte minvalue, String sign)  throws GsException{
-    	byte vsign = RegulatoryMultiEdge.SIGN_UNKNOWN;
-    	for (byte i=0 ; i<RegulatoryMultiEdge.SIGN.length ; i++) {
-    		if (RegulatoryMultiEdge.SIGN[i].equals(sign)) {
-    			vsign = i;
+    	RegulatoryEdgeSign vsign = RegulatoryEdgeSign.UNKNOWN;
+    	for (RegulatoryEdgeSign s : RegulatoryEdgeSign.values()) {
+    		if (s.getLongDesc().equals(sign)) {
+    			vsign = s;
     			break;
     		}
     	}
@@ -415,7 +408,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
      * @return the new edge.
      */
     @Override
-    public RegulatoryEdge addNewEdge(String from, String to, byte minvalue, byte sign) throws GsException {
+    public RegulatoryEdge addNewEdge(String from, String to, byte minvalue, RegulatoryEdgeSign sign) throws GsException {
         RegulatoryNode source = null;
         RegulatoryNode target = null;
 
@@ -498,7 +491,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         EdgeAttributesReader cereader = otherGraph.getEdgeAttributeReader();
         while (it2.hasNext()) {
         	RegulatoryMultiEdge deOri = it2.next();
-        	RegulatoryMultiEdge edge = addEdge((RegulatoryNode)copyMap.get(deOri.getSource()), (RegulatoryNode)copyMap.get(deOri.getTarget()), 0);
+        	RegulatoryMultiEdge edge = addEdge((RegulatoryNode)copyMap.get(deOri.getSource()), (RegulatoryNode)copyMap.get(deOri.getTarget()), RegulatoryEdgeSign.POSITIVE);
             edge.copyFrom(deOri);
             cereader.setEdge(deOri);
             eReader.setEdge(edge);
@@ -557,7 +550,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         	EdgeAttributesReader eReader = getEdgeAttributeReader();
             EdgeAttributesReader cereader = copiedGraph.getEdgeAttributeReader();
 	        for (RegulatoryMultiEdge edgeOri: v_edges) {
-	        	RegulatoryMultiEdge edge = copiedGraph.addEdge((RegulatoryNode)copyMap.get(edgeOri.getSource()), (RegulatoryNode)copyMap.get(edgeOri.getTarget()), 0);
+	        	RegulatoryMultiEdge edge = copiedGraph.addEdge((RegulatoryNode)copyMap.get(edgeOri.getSource()), (RegulatoryNode)copyMap.get(edgeOri.getTarget()), RegulatoryEdgeSign.POSITIVE);
 	            edge.copyFrom(edgeOri);
 	            copyMap.put(edgeOri, edge);
                 eReader.setEdge(edgeOri);

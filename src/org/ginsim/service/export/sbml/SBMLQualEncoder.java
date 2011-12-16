@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -129,12 +130,11 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
             out.openTag("listOfInputs");               
             String edgeSign = null;
             for (RegulatoryMultiEdge me: graph.getIncomingEdges(v_no.get(i))) {
-                int sign = me.getSign(); 
-                switch (sign) {
-				case 0:
+                switch (me.getSign()) {
+				case POSITIVE:
 					edgeSign = "SBO:0000459";
 					break;
-				case 1:
+				case NEGATIVE:
 					edgeSign = "SBO:0000020";
 					break;
 				default:

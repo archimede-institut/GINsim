@@ -30,6 +30,7 @@ import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -275,7 +276,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
     	            int dst = no.indexOf(me.getTarget());
     	            s.append("("+src+","+dst+","
     	                     + me.getMin(idx)+","
-    	                     + (me.getSign(idx)==RegulatoryMultiEdge.SIGN_NEGATIVE?"-1":"1")
+    	                     + (me.getSign(idx)==RegulatoryEdgeSign.NEGATIVE?"-1":"1")
     	                     + "),");
     	        }
     	        s.append("), ");

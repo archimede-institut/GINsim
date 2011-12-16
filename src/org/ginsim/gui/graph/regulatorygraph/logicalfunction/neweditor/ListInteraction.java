@@ -44,7 +44,7 @@ public class ListInteraction {
 	public String getSign() {
 		String s = "";
 		if (index >= 0)
-			s = RegulatoryMultiEdge.SIGN_SHORT[grme.getSign(index)];
+			s = grme.getSign(index).getLongDesc();
 		return s;
 	}
 	public boolean equals(Object o) {

@@ -10,6 +10,7 @@ import java.util.Vector;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -189,7 +190,7 @@ public class BooleanParser extends TBooleanParser {
 				Edge edge = graph.getEdge(source, this.vertex);
 				if (edge == null) {
 					try{
-						edge = graph.addNewEdge(nodeID, this.vertex.getId(), (byte)1, RegulatoryMultiEdge.SIGN[0]).me;
+						edge = graph.addNewEdge(nodeID, this.vertex.getId(), (byte)1, RegulatoryEdgeSign.POSITIVE.getLongDesc()).me;
 						shouldReInit = true;
 					}
 					catch( GsException gs_exception){

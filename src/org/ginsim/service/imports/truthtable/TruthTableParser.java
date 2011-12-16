@@ -10,6 +10,7 @@ import java.util.TreeMap;
 
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphFactory;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -96,18 +97,18 @@ public final class TruthTableParser {
 					ArrayList<RegulatoryEdge> inEdges = new ArrayList<RegulatoryEdge>();
 					for (int reg = 0; reg < iN; reg++) {
 						byte min = baTruthTable[line][reg];
-						int sign = (min == 0) ? RegulatoryMultiEdge.SIGN_NEGATIVE
-								: RegulatoryMultiEdge.SIGN_POSITIVE;
+						RegulatoryEdgeSign sign = (min == 0) ? RegulatoryEdgeSign.NEGATIVE
+								: RegulatoryEdgeSign.POSITIVE;
 						RegulatoryMultiEdge edge = graph.getEdge(naNodes[reg],
 								naNodes[gi]);
 						if (edge == null) {
 							edge = graph.addEdge(naNodes[reg], naNodes[gi],
 									sign);
 							edge.setMin(0, min);
-							if (RegulatoryMultiEdge.SIGN_POSITIVE == sign)
+							if (RegulatoryEdgeSign.POSITIVE == sign)
 								inEdges.add(edge.getEdge(0));
 						} else {
-							if (RegulatoryMultiEdge.SIGN_POSITIVE == sign) {
+							if (RegulatoryEdgeSign.POSITIVE == sign) {
 								boolean hasEdge = false;
 								int index = 0;
 								for (int e = 0; e < edge.getEdgeCount(); e++) {
@@ -187,15 +188,15 @@ public final class TruthTableParser {
 						// component (second column of image states)
 						for (int u = iN; u < 2 * iN; u++) {
 							// sign defines the type of the interaction
-							byte sign = RegulatoryMultiEdge.SIGN_UNKNOWN;
+							RegulatoryEdgeSign sign = RegulatoryEdgeSign.UNKNOWN;
 							if (baTruthTable[l][u] > baTruthTable[l + iBlock[i]][u]) {
-								sign = RegulatoryMultiEdge.SIGN_NEGATIVE;
+								sign = RegulatoryEdgeSign.NEGATIVE;
 							} else if (baTruthTable[l][u] < baTruthTable[l
 									+ iBlock[i]][u]) {
-								sign = RegulatoryMultiEdge.SIGN_POSITIVE;
+								sign = RegulatoryEdgeSign.POSITIVE;
 							}
 
-							if (sign != RegulatoryMultiEdge.SIGN_UNKNOWN) {
+							if (sign != RegulatoryEdgeSign.UNKNOWN) {
 								RegulatoryMultiEdge edge = graph.getEdge(
 										naNodes[i], naNodes[u - iN]);
 								byte threshold = baTruthTable[l + iBlock[i]][i];
@@ -222,7 +223,7 @@ public final class TruthTableParser {
 									} else if (edge.getSign(e) != sign) {
 										edge.setSign(
 												e,
-												RegulatoryMultiEdge.SIGN_UNKNOWN,
+												RegulatoryEdgeSign.UNKNOWN,
 												graph);
 									}
 								}

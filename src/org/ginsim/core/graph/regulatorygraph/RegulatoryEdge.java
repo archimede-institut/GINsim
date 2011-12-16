@@ -5,7 +5,7 @@ import org.ginsim.core.annotation.Annotation;
 
 public class RegulatoryEdge {
 	public byte threshold;
-	public byte sign;
+	private RegulatoryEdgeSign sign;
 	
 	public byte index;
 	public RegulatoryMultiEdge me;
@@ -27,6 +27,14 @@ public class RegulatoryEdge {
 	
 	public Annotation getAnnotation() {
 		return annotation;
+	}
+	
+	public RegulatoryEdgeSign getSign() {
+		return sign;
+	}
+	
+	public void setSign(RegulatoryEdgeSign sign) {
+		this.sign = sign;
 	}
 	
 	public byte getMin() {
@@ -71,7 +79,7 @@ public class RegulatoryEdge {
 		return prefix+threshold;
 	}
 	private String getRangeAndSign() {
-		return "["+threshold+","+getMaxAsString()+"] ; "+RegulatoryMultiEdge.SIGN[sign];
+		return "["+threshold+","+getMaxAsString()+"] ; "+sign.getLongDesc();
 	}
 	public String getMaxAsString() {
 		String smax;

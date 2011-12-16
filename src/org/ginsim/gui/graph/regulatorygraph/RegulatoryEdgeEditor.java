@@ -8,6 +8,7 @@ import javax.swing.Action;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -178,7 +179,7 @@ class EdgeList extends GenericList {
 	}
 
     protected void addEdge(int value) {
-		int index = medge.addEdge(RegulatoryMultiEdge.SIGN_POSITIVE, value, graph);
+		int index = medge.addEdge(RegulatoryEdgeSign.POSITIVE, value, graph);
 		if (index != -1) {
 			setMEdge(medge);
 		}

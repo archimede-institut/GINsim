@@ -3,19 +3,12 @@ package org.ginsim.gui.graph.backend;
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
-import java.util.List;
 
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.jgraph.graph.AttributeMap;
-import org.jgraph.graph.CellView;
 import org.jgraph.graph.EdgeRenderer;
-import org.jgraph.graph.EdgeView;
 import org.jgraph.graph.GraphConstants;
-import org.jgraph.util.Bezier;
-import org.jgraph.util.Spline2D;
 
 public class GsEdgeRenderer extends EdgeRenderer {
 
@@ -37,7 +30,7 @@ public class GsEdgeRenderer extends EdgeRenderer {
     
 	@Override
     protected Shape createLineEnd(int size, int style, Point2D src, Point2D dst) {
-        if (style == RegulatoryMultiEdge.SIGN_DOUBLE) {
+        if (style == RegulatoryEdgeSign.DUAL.getIndexForGUI()) {
             
             Shape pl = createLineEnd(size, GraphConstants.ARROW_TECHNICAL, src, dst);
             if (pl == null) {
