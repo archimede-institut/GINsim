@@ -2,6 +2,7 @@ package org.ginsim.core.graph.regulatorygraph.logicalfunction.neweditor.qmc;
 
 import java.util.Collection;
 
+import javax.swing.JButton;
 import javax.swing.JProgressBar;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
@@ -10,7 +11,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
-import org.ginsim.gui.utils.widgets.GsButton;
 
 
 public class QMCThread extends Thread {
@@ -21,9 +21,9 @@ public class QMCThread extends Thread {
 	private QMCAlgo algo;
 	private JTree tree;
 	private JProgressBar progressBar;
-	private GsButton cancelButton;
+	private JButton cancelButton;
 
-	public QMCThread(boolean cnf, RegulatoryGraph g, RegulatoryNode v, TreeExpression e, JTree t, JProgressBar jpb, GsButton b) {
+	public QMCThread(boolean cnf, RegulatoryGraph g, RegulatoryNode v, TreeExpression e, JTree t, JProgressBar jpb, JButton b) {
 		this.cnf = cnf;
 		vertex = v;
 		expression = e;

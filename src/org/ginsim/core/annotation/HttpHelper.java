@@ -1,4 +1,4 @@
-package org.ginsim.gui.utils;
+package org.ginsim.core.annotation;
 
 import java.util.HashMap;
 import java.util.Iterator;
