@@ -56,7 +56,22 @@ public class MarqueeHandler extends BasicMarqueeHandler {
 		Point tmp = new Point(point);
 				
 		//return the object
-		return jgraph.getFirstCellForLocation(tmp.x, tmp.y);
+		Object selected = jgraph.getFirstCellForLocation(tmp.x, tmp.y);
+		if (editManager.getSelectedAction().getMode() == EditMode.EDGE) {
+			Object next = null;
+			while (selected instanceof Edge) {
+				next = jgraph.getNextCellForLocation(selected, tmp.x, tmp.y);
+				if (next == selected) {
+					break;
+				}
+				if (!(next instanceof Edge)) {
+					selected = next;
+					break;
+				}
+			}
+		} 
+
+		return selected;
 	}
 
 	@Override
