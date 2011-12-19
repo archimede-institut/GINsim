@@ -22,6 +22,10 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.service.tool.reg2dyn.Simulation;
+import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
+import org.ginsim.service.tool.reg2dyn.SimulationParameters;
+import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 
 
 /**

@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.reg2dyn.helpers;
+package org.ginsim.service.tool.reg2dyn.helpers;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -10,8 +10,8 @@ import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGr
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraphImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParameters;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationQueuedState;
+import org.ginsim.service.tool.reg2dyn.SimulationParameters;
+import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 
 
 public class HTGSimulationHelper  extends SimulationHelper {

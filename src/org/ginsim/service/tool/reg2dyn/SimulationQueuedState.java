@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.reg2dyn;
+package org.ginsim.service.tool.reg2dyn;
 
 public class SimulationQueuedState {
 	public byte[] state;
@@ -6,7 +6,7 @@ public class SimulationQueuedState {
 	public boolean multiple = false;
 	public int depth;
 	
-	SimulationQueuedState(byte[] state, int depth, Object previous, boolean multiple) {
+	public SimulationQueuedState(byte[] state, int depth, Object previous, boolean multiple) {
 		this.state = state;
 		this.previous = previous;
 		this.depth = depth;

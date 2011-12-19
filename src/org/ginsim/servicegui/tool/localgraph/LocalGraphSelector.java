@@ -7,7 +7,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.css.EdgeStyle;
 import org.ginsim.core.graph.view.css.Selector;
 import org.ginsim.core.graph.view.css.Style;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationUpdater;
+import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
 
 
 public class LocalGraphSelector extends Selector {

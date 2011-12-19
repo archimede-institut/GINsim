@@ -9,9 +9,9 @@ import org.ginsim.core.graph.hierachicaltransitiongraph.DecisionOnEdge;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParameters;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationQueuedState;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationUpdater;
+import org.ginsim.service.tool.reg2dyn.SimulationParameters;
+import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
+import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
 
 
 /**

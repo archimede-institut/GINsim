@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.reg2dyn;
+package org.ginsim.service.tool.reg2dyn;
 
 import java.io.File;
 import java.io.IOException;
@@ -17,6 +17,9 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
 import org.ginsim.core.utils.data.NamedObject;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
+import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
 
 
 /**
@@ -161,7 +164,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
 		PriorityClassDefinition pcdef = (PriorityClassDefinition)store.getObject(PCLASS);
 		out.openTag("parameter");
 		out.addAttr("name", name);
-		out.addAttr("updating", pcdef.name);
+		out.addAttr("updating", pcdef.getName());
 		out.addAttr("breadthFirst", ""+breadthFirst);
 		out.addAttr("maxdepth", ""+maxdepth);
 		out.addAttr("maxnodes", ""+maxnodes);

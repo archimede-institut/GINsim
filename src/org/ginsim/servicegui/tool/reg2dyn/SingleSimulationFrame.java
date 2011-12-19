@@ -33,6 +33,10 @@ import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.utils.data.GenericListPanel;
 import org.ginsim.gui.utils.data.GenericListSelectionPanel;
 import org.ginsim.gui.utils.widgets.SplitPane;
+import org.ginsim.service.tool.reg2dyn.Simulation;
+import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
+import org.ginsim.service.tool.reg2dyn.SimulationParameters;
+import org.ginsim.service.tool.reg2dyn.htg.HTGSimulation;
 
 
 

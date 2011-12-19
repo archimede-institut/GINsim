@@ -6,6 +6,8 @@ import java.awt.Insets;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.service.tool.reg2dyn.SimulationManager;
+import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 
 
 

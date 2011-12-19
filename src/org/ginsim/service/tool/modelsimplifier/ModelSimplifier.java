@@ -34,14 +34,13 @@ import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
+import org.ginsim.service.tool.reg2dyn.SimulationParameters;
+import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
+import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
 import org.ginsim.servicegui.tool.modelsimplifier.ModelSimplifierConfigDialog;
-import org.ginsim.servicegui.tool.modelsimplifier.RemovedInfo;
-import org.ginsim.servicegui.tool.reg2dyn.PriorityClassDefinition;
-import org.ginsim.servicegui.tool.reg2dyn.PriorityClassManager;
-import org.ginsim.servicegui.tool.reg2dyn.Reg2dynPriorityClass;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParameterList;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParameters;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParametersManager;
 
 /**
  * Build a simplified model, based on a complete one, by removing some nodes.

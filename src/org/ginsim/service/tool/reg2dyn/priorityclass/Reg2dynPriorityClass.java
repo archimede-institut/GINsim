@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.reg2dyn;
+package org.ginsim.service.tool.reg2dyn.priorityclass;
 
 import org.ginsim.core.utils.data.MultiColObject;
 import org.ginsim.core.utils.data.NamedObject;

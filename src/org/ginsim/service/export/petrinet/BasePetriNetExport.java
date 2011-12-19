@@ -10,7 +10,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStatesIterator;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.servicegui.tool.reg2dyn.PriorityClassDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 
 
 

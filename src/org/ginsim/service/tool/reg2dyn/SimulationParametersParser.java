@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.reg2dyn;
+package org.ginsim.service.tool.reg2dyn;
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,6 +15,9 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
+import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 

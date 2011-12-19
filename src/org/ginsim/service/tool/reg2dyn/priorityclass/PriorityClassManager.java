@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.reg2dyn;
+package org.ginsim.service.tool.reg2dyn.priorityclass;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ public class PriorityClassManager extends SimpleGenericList<PriorityClassDefinit
 
 	public static final String SYNCHRONOUS = "synchronous", ASYNCHRONOUS = "asynchronous"; 
 	
-	List<RegulatoryNode> nodeOrder;
+	public final List<RegulatoryNode> nodeOrder;
 	public static final String FILTER_NO_SYNCHRONOUS = "[no-synchronous]";
 	
 	private List<RegulatoryNode> filterInputVariables(List<RegulatoryNode> nodeOrder) {

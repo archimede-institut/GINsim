@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.reg2dyn;
+package org.ginsim.service.tool.reg2dyn.htg;
 
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
 
@@ -30,58 +30,40 @@ public class HTGSimulationQueueSCC implements HTGSimulationQueueItem {
 		this.setLow_index(low_index);
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ginsim.servicegui.tool.reg2dyn.HTGSimulationQueueItem#toString()
-	 */
+	@Override
 	public String toString() {
 		return "["+scc.toString()+", i:"+getIndex()+", li:"+getLow_index()+"]";
 	}
 		
-	/* (non-Javadoc)
-	 * @see org.ginsim.servicegui.tool.reg2dyn.HTGSimulationQueueItem#setIndex(int)
-	 */
+	@Override
 	public void setIndex(int index) {
 		this.index = index;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ginsim.servicegui.tool.reg2dyn.HTGSimulationQueueItem#getIndex()
-	 */
+	@Override
 	public int getIndex() {
 		return index;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ginsim.servicegui.tool.reg2dyn.HTGSimulationQueueItem#setLow_index(int)
-	 */
+	@Override
 	public void setLow_index(int low_index) {
 		this.low_index = low_index;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ginsim.servicegui.tool.reg2dyn.HTGSimulationQueueItem#getLow_index()
-	 */
+	@Override
 	public int getLow_index() {
 		return low_index;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ginsim.servicegui.tool.reg2dyn.HTGSimulationQueueItem#setState(byte[])
-	 */
 	public void setSCC(HierarchicalNode scc) {
 		this.scc = scc;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ginsim.servicegui.tool.reg2dyn.HTGSimulationQueueItem#getState()
-	 */
 	public HierarchicalNode getSCC() {
 		return scc;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.ginsim.servicegui.tool.reg2dyn.HTGSimulationQueueItem#containsState(byte[])
-	 */
+	@Override
 	public boolean containsState(byte[] state) {
 		return scc.contains(state);
 	}

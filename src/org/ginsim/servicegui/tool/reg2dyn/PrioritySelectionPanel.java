@@ -7,6 +7,8 @@ import org.ginsim.common.utils.Translator;
 import org.ginsim.gui.utils.data.GenericListPanel;
 import org.ginsim.gui.utils.data.GenericListSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
 
 
 public class PrioritySelectionPanel extends GenericListSelectionPanel {

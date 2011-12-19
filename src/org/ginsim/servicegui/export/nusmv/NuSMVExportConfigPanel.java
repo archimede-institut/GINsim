@@ -30,9 +30,9 @@ import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.service.export.nusmv.NuSMVConfig;
+import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
+import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
 import org.ginsim.servicegui.tool.reg2dyn.PrioritySelectionPanel;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParameterList;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParametersManager;
 
 public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	private static final long serialVersionUID = -7398674287463858306L;

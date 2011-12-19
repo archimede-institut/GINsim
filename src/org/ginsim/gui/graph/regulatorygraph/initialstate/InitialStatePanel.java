@@ -27,7 +27,7 @@ import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.Label;
 import org.ginsim.gui.utils.widgets.StockButton;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParameterList;
+import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
 
 
 

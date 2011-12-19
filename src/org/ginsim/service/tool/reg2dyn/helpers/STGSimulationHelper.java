@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.reg2dyn.helpers;
+package org.ginsim.service.tool.reg2dyn.helpers;
 
 import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
@@ -7,8 +7,8 @@ import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParameters;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationQueuedState;
+import org.ginsim.service.tool.reg2dyn.SimulationParameters;
+import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 
 
 

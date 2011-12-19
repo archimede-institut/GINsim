@@ -1,11 +1,11 @@
-package org.ginsim.servicegui.tool.reg2dyn.helpers;
+package org.ginsim.service.tool.reg2dyn.helpers;
 
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParameters;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationQueuedState;
+import org.ginsim.service.tool.reg2dyn.SimulationParameters;
+import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 
 
 public class ReachabilitySetHelper extends SimulationHelper {

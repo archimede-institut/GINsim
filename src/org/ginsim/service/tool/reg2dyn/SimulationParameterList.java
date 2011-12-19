@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.reg2dyn;
+package org.ginsim.service.tool.reg2dyn;
 
 import java.util.Collection;
 
@@ -16,6 +16,8 @@ import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantListener;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.SimpleGenericList;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
 
 
 /**
@@ -25,10 +27,9 @@ import org.ginsim.core.utils.data.SimpleGenericList;
 public class SimulationParameterList extends SimpleGenericList<SimulationParameters> 
 	implements GraphListener<RegulatoryNode, RegulatoryMultiEdge>, RegulatoryMutantListener, GenericListListener {
 
-    String s_current;
-    RegulatoryGraph graph;
-    GsInitialStateList imanager;
-    public PriorityClassManager pcmanager;
+    public final RegulatoryGraph graph;
+    public final GsInitialStateList imanager;
+    public final PriorityClassManager pcmanager;
 
     /**
      * @param graph

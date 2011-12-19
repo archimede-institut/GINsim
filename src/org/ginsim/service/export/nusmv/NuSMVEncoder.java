@@ -20,10 +20,10 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.service.ServiceManager;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
 import org.ginsim.service.tool.stablestates.StableStateSearcher;
 import org.ginsim.service.tool.stablestates.StableStatesService;
-import org.ginsim.servicegui.tool.reg2dyn.PriorityClassDefinition;
-import org.ginsim.servicegui.tool.reg2dyn.Reg2dynPriorityClass;
 
 /**
  * Exports a GINsim Regulatory graph into a NuSMV model description.

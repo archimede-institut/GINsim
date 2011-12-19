@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.reg2dyn;
+package org.ginsim.service.tool.reg2dyn;
 
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -12,8 +12,9 @@ import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStatesIterator;
-import org.ginsim.servicegui.tool.reg2dyn.helpers.STGSimulationHelper;
-import org.ginsim.servicegui.tool.reg2dyn.helpers.SimulationHelper;
+import org.ginsim.service.tool.reg2dyn.helpers.STGSimulationHelper;
+import org.ginsim.service.tool.reg2dyn.helpers.SimulationHelper;
+import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
 
 
 

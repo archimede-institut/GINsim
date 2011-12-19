@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.reg2dyn;
+package org.ginsim.service.tool.reg2dyn.priorityclass;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -19,6 +19,12 @@ import org.ginsim.core.utils.data.SimpleGenericList;
 
 public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityClass> implements NamedObject, XMLize {
 
+    public static final int UP = 0;
+    public static final int DOWN = 1;
+    public static final int NONE = 2;
+    
+
+	
 	public Map<RegulatoryNode,Object> m_elt;
 	String name;
 	boolean locked;
@@ -157,7 +163,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 		if (locked) {
 			return;
 		}
-        int[][] index = getMovingRows(Reg2dynPriorityClassConfig.UP, selection);
+        int[][] index = getMovingRows(UP, selection);
         if (index == null) {
             return;
         }
@@ -197,7 +203,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 		if (locked) {
 			return;
 		}
-        int[][] index = getMovingRows(Reg2dynPriorityClassConfig.DOWN, selection);
+        int[][] index = getMovingRows(DOWN, selection);
         if (index == null) {
             return;
         }
@@ -235,7 +241,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
      * @param index 
      * @return moving ranges or null if nothing should move
      */
-    int[][] getMovingRows(int key, int[] index) {
+    public int[][] getMovingRows(int key, int[] index) {
         if (index == null) {
         	return null;
         }
@@ -256,7 +262,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
                 start++;
                 stop--;
                 // if moving up and already on top or moving down and already on bottom: don't do anything
-                if (key==Reg2dynPriorityClassConfig.UP && start == 0 || key==Reg2dynPriorityClassConfig.DOWN && stop == end-1) {
+                if (key==UP && start == 0 || key==DOWN && stop == end-1) {
                     return null;
                 }
                 count++;

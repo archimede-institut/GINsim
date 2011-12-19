@@ -27,6 +27,7 @@ import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifier;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
+import org.ginsim.service.tool.modelsimplifier.RemovedInfo;
 
 
 

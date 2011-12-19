@@ -35,7 +35,7 @@ import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.utils.data.SimpleStateListTableModel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
-import org.ginsim.servicegui.tool.reg2dyn.SynchronousSimulationUpdater;
+import org.ginsim.service.tool.reg2dyn.updater.SynchronousSimulationUpdater;
 
 
 public class LocalGraphFrame extends StackDialog implements ActionListener, TableModelListener, ListSelectionListener {

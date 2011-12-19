@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.reg2dyn;
+package org.ginsim.service.tool.reg2dyn.htg;
 
 import java.awt.Color;
 import java.util.Iterator;
@@ -18,7 +18,12 @@ import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGr
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.servicegui.tool.reg2dyn.helpers.HTGSimulationHelper;
+import org.ginsim.service.tool.reg2dyn.Simulation;
+import org.ginsim.service.tool.reg2dyn.SimulationManager;
+import org.ginsim.service.tool.reg2dyn.SimulationParameters;
+import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
+import org.ginsim.service.tool.reg2dyn.helpers.HTGSimulationHelper;
+import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
 
 
 

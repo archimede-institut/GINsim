@@ -1,7 +1,8 @@
-package org.ginsim.servicegui.tool.reg2dyn;
+package org.ginsim.service.tool.reg2dyn.updater;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
+import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 
 
 public class SynchronousSimulationUpdater extends SimulationUpdater {
