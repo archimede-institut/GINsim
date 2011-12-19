@@ -2,9 +2,9 @@ package org.ginsim.core.graph.tree;
 
 import java.util.Collection;
 
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.utils.log.LogManager;
-import org.ginsim.service.export.Dotify;
+import org.ginsim.core.utils.Dotify;
 
 
 public class TreeNode implements Dotify {

@@ -18,11 +18,11 @@ import javax.swing.JTable;
 import javax.swing.JTextField;
 import javax.swing.table.AbstractTableModel;
 
+import org.ginsim.common.utils.Translator;
+import org.ginsim.commongui.dialog.SimpleDialog;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
-import org.ginsim.gui.resource.Translator;
-import org.ginsim.gui.utils.dialog.SimpleDialog;
 
 
 

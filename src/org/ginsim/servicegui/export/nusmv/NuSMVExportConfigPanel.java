@@ -20,6 +20,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.table.AbstractTableModel;
 
+import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
@@ -27,7 +28,6 @@ import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.service.export.nusmv.NuSMVConfig;
 import org.ginsim.servicegui.tool.reg2dyn.PrioritySelectionPanel;

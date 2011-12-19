@@ -3,6 +3,7 @@ package org.ginsim.servicegui.tool.reg2dyn;
 import java.util.HashMap;
 import java.util.List;
 
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
@@ -14,7 +15,6 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
-import org.ginsim.core.utils.log.LogManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 

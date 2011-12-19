@@ -10,12 +10,12 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
 import org.ginsim.common.OptionStore;
+import org.ginsim.common.utils.Translator;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.FrameActionManager;
 import org.ginsim.gui.shell.GsFileFilter;

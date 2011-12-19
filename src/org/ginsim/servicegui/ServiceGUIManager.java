@@ -9,8 +9,8 @@ import java.util.Set;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.service.Service;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.servicegui.common.GUIFor;

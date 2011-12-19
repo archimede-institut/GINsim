@@ -10,8 +10,8 @@ import javax.swing.Action;
 
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.IOUtils;
-import org.ginsim.core.utils.log.LogManager;
-import org.ginsim.gui.resource.Translator;
+import org.ginsim.common.utils.Translator;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.gui.shell.AboutDialog;
 import org.ginsim.gui.shell.FileSelectionHelper;
 

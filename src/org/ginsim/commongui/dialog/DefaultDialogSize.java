@@ -1,4 +1,4 @@
-package org.ginsim.gui.utils.dialog;
+package org.ginsim.commongui.dialog;
 
 public class DefaultDialogSize {
 

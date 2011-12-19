@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.GraphManager;
@@ -15,7 +16,6 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
 import org.ginsim.core.utils.data.NamedObject;
 import org.ginsim.core.utils.data.ObjectStore;
-import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
 
 

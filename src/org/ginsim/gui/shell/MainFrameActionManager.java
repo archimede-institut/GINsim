@@ -7,10 +7,10 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JToolBar;
 
+import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GraphGUI;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.callbacks.FileCallBack;
 import org.ginsim.gui.shell.callbacks.HelpCallBack;
 import org.ginsim.servicegui.ServiceGUIManager;

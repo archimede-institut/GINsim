@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
@@ -16,7 +17,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBooleanParser;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBooleanTreeNode;
-import org.ginsim.core.utils.log.LogManager;
 
 
 public class BooleanParser extends TBooleanParser {

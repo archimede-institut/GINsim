@@ -7,10 +7,10 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
-import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.service.tool.decisionanalysis.DecisionAnalysisService;
 import org.ginsim.servicegui.ServiceGUI;

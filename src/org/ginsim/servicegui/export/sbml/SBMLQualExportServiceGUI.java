@@ -8,9 +8,9 @@ import javax.swing.Action;
 
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.export.sbml.SBMLQualConfig;

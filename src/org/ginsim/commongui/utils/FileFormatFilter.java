@@ -1,4 +1,4 @@
-package org.ginsim.common.utils.gui;
+package org.ginsim.commongui.utils;
 
 import java.io.File;
 import java.util.List;

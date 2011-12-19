@@ -12,7 +12,7 @@ import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.service.tool.circuit.OmsddNode;
+import org.ginsim.core.mdd.OmsddNode;
 
 
 /**

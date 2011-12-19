@@ -5,10 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
+import org.ginsim.common.utils.DataUtils;
 import org.ginsim.core.graph.view.AttributesReader;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgeEnd;
-import org.ginsim.core.utils.DataUtils;
 
 
 

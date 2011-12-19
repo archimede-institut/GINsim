@@ -19,6 +19,7 @@ import javax.swing.JFileChooser;
 
 import org.ginsim.common.OpenHelper;
 import org.ginsim.common.utils.IOUtils;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
@@ -28,7 +29,6 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
-import org.ginsim.core.utils.log.LogManager;
 import org.xml.sax.Attributes;
 
 import bibtex.dom.BibtexAbstractValue;

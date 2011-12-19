@@ -1,4 +1,4 @@
-package org.ginsim.common;
+package org.ginsim.commongui.dialog;
 
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -14,8 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
-import org.ginsim.gui.resource.Translator;
-import org.ginsim.gui.utils.dialog.SimpleDialog;
+import org.ginsim.common.utils.Translator;
 
 
 /**

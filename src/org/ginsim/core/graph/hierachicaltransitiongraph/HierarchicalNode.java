@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.ginsim.service.export.Dotify;
+import org.ginsim.core.utils.Dotify;
 import org.xml.sax.SAXException;
 
 

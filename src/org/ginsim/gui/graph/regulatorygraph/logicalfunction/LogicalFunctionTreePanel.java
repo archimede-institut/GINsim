@@ -34,7 +34,6 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
@@ -44,7 +43,6 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamod
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeString;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
-import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.BooleanFunctionTreeEditor;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.BooleanFunctionTreeRenderer;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.PanelFactory;

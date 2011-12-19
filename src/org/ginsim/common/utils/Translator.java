@@ -18,16 +18,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-package org.ginsim.gui.resource;
+package org.ginsim.common.utils;
 
 import java.text.MessageFormat;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.Vector;
 
-import org.ginsim.core.utils.log.LogManager;
+import org.ginsim.common.utils.log.LogManager;
 
 /** 
  * Contains ResourceBundle objects.
@@ -291,4 +293,58 @@ public class Translator {
 	public static void setLogNotFoundResources(boolean logNotFoundResources) {
 		Translator.logNotFoundResources = logNotFoundResources;
 	}
+}
+
+
+/**
+ * Defaultresourcebundle for proper names. (e.g. Locales and
+ * Look And Feel names are equal in any language. Therefore
+ * this Class contains this proper names.)
+ */
+class DefaultResourceBundle extends ResourceBundle  {
+
+  /** 
+   * Hashtable with languageskeys as key and
+   * propername as value
+   */
+  Hashtable defaultNames = new Hashtable();
+
+  /** 
+   * Creates a new Instance an requerys all default names.
+   */
+  public DefaultResourceBundle() {
+    super();
+    requeryDefaultNames();
+  }
+
+
+  /** 
+   * Quires the default names. Therefore any registered
+   * Propernameprovider is queried.
+   */
+  public void requeryDefaultNames(){
+    defaultNames.clear();
+
+    Locale[] locales = Locale.getAvailableLocales();
+    for (int i = 0; i < locales.length; i++){
+      defaultNames.put("Component." + locales[i].toString() + ".Text",        locales[i].getDisplayName());
+      defaultNames.put("Component." + locales[i].toString() + ".ToolTipText", locales[i].getDisplayName());
+      defaultNames.put("Component." + locales[i].toString() + ".Mnemonic",    locales[i].getDisplayName());
+    }
+  }
+
+  /** 
+   * @return the merged keys of any registered ProperNameProvider
+   */
+  public Enumeration getKeys() {
+    return defaultNames.elements();
+  }
+
+  /** 
+   * @param key
+   * @return the object for the key or null
+   */
+  public Object handleGetObject(String key) {
+    return defaultNames.get(key);
+  }
 }

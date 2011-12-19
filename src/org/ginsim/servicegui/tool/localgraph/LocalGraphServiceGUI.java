@@ -7,12 +7,12 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.css.Selector;
-import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.service.tool.localgraph.LocalGraphService;
 import org.ginsim.servicegui.ServiceGUI;

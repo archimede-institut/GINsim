@@ -1,4 +1,4 @@
-package org.ginsim.core.utils.log;
+package org.ginsim.common.utils.log;
 
 import java.io.File;
 import java.io.FileInputStream;

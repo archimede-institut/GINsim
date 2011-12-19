@@ -3,7 +3,7 @@ package org.ginsim.servicegui.tool.reg2dyn;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ginsim.gui.resource.Translator;
+import org.ginsim.common.utils.Translator;
 import org.ginsim.gui.utils.data.GenericListPanel;
 import org.ginsim.gui.utils.data.GenericListSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;

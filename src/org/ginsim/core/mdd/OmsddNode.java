@@ -1,4 +1,4 @@
-package org.ginsim.service.tool.circuit;
+package org.ginsim.core.mdd;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

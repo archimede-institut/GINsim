@@ -7,9 +7,9 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.utils.log.LogManager;
 
 
 

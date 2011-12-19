@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
@@ -33,7 +34,6 @@ import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.servicegui.tool.modelsimplifier.ModelSimplifierConfigDialog;
 import org.ginsim.servicegui.tool.modelsimplifier.RemovedInfo;
 import org.ginsim.servicegui.tool.reg2dyn.PriorityClassDefinition;

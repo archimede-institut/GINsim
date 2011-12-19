@@ -3,9 +3,9 @@ package org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.tre
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.utils.log.LogManager;
 
 
 

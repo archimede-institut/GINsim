@@ -4,10 +4,9 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Vector;
 
+import org.ginsim.common.utils.DataUtils;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.utils.DataUtils;
-import org.ginsim.gui.resource.Translator;
 
 
 

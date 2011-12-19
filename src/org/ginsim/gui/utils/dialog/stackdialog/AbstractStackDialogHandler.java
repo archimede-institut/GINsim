@@ -4,7 +4,7 @@ import java.awt.Component;
 
 import javax.swing.JPanel;
 
-import org.ginsim.gui.utils.dialog.DefaultDialogSize;
+import org.ginsim.commongui.dialog.DefaultDialogSize;
 
 
 abstract public class AbstractStackDialogHandler extends JPanel implements StackDialogHandler {

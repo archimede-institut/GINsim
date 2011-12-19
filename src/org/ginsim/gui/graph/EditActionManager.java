@@ -15,7 +15,7 @@ import javax.swing.JToolBar;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
-import org.ginsim.core.utils.log.LogManager;
+import org.ginsim.common.utils.log.LogManager;
 
 
 /**

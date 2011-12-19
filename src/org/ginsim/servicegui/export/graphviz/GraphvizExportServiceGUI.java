@@ -8,7 +8,6 @@ import javax.swing.Action;
 
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.export.graphviz.GraphvizExportService;
 import org.ginsim.servicegui.ServiceGUI;

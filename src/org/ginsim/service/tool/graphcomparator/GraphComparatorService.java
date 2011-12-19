@@ -7,7 +7,6 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.service.Service;
 import org.mangosdk.spi.ProviderFor;
 

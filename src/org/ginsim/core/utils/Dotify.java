@@ -1,4 +1,4 @@
-package org.ginsim.service.export;
+package org.ginsim.core.utils;
 
 /**
  * Indicates a class can be dumped into dot (graphviz language)

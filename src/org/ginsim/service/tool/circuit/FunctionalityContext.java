@@ -1,5 +1,7 @@
 package org.ginsim.service.tool.circuit;
 
+import org.ginsim.core.mdd.OmsddNode;
+
 
 
 public class FunctionalityContext {

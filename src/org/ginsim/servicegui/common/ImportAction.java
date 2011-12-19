@@ -8,9 +8,9 @@ import javax.swing.KeyStroke;
 
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.common.utils.gui.FileFormatFilter;
+import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.commongui.utils.FileFormatFilter;
 import org.ginsim.core.exception.GsException;
-import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.shell.FileSelectionHelper;
 
 public abstract class ImportAction extends BaseAction {

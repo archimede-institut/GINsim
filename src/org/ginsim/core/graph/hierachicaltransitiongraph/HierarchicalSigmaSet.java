@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.core.utils.log.LogManager;
+import org.ginsim.common.utils.log.LogManager;
 
 
 public class HierarchicalSigmaSet {

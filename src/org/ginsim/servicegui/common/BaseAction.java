@@ -7,8 +7,8 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
+import org.ginsim.common.utils.Translator;
 import org.ginsim.gui.resource.ImageLoader;
-import org.ginsim.gui.resource.Translator;
 
 
 /**

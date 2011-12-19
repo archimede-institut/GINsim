@@ -5,8 +5,8 @@ import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
+import org.ginsim.common.utils.Translator;
 import org.ginsim.gui.resource.ImageLoader;
-import org.ginsim.gui.resource.Translator;
 
 
 public class Label extends JLabel {

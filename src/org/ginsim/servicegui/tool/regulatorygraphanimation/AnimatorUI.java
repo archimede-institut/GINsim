@@ -14,7 +14,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.ginsim.gui.resource.Translator;
+import org.ginsim.common.utils.Translator;
 
 
 /**

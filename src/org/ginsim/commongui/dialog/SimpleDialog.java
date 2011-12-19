@@ -1,4 +1,4 @@
-package org.ginsim.gui.utils.dialog;
+package org.ginsim.commongui.dialog;
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;

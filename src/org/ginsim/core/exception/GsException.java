@@ -2,7 +2,7 @@ package org.ginsim.core.exception;
 
 import java.util.Vector;
 
-import org.ginsim.gui.resource.Translator;
+import org.ginsim.common.utils.Translator;
 
 /**
  * When something bad happen, a GsException must be raised.

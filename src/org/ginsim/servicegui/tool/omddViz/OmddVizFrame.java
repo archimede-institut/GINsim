@@ -15,16 +15,16 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.tree.Tree;
-import org.ginsim.core.graph.tree.TreeImpl;
 import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromManualOmdd;
+import org.ginsim.core.graph.tree.TreeImpl;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 
 

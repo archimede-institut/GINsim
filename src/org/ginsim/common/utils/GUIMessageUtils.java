@@ -4,7 +4,6 @@ import java.awt.Component;
 
 import javax.swing.JOptionPane;
 
-import org.ginsim.gui.resource.Translator;
 
 public class GUIMessageUtils {
 

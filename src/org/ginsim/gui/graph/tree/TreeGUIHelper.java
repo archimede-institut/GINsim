@@ -5,6 +5,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeNode;
@@ -13,7 +14,6 @@ import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.widgets.Frame;
 import org.ginsim.servicegui.tool.regulatorytreefunction.TreeActionPanel;

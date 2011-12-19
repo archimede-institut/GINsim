@@ -5,8 +5,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.ginsim.core.exception.GsException;
-import org.ginsim.core.utils.log.LogManager;
+import org.ginsim.common.utils.log.LogManager;
 
 
 public class SimpleGenericList<T> extends GenericList<T> {

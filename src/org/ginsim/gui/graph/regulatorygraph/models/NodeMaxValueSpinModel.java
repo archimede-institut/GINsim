@@ -1,9 +1,9 @@
 package org.ginsim.gui.graph.regulatorygraph.models;
 
+import org.ginsim.common.utils.DataUtils;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.utils.DataUtils;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.utils.data.models.SpinModel;

@@ -2,7 +2,7 @@ package org.ginsim.gui.utils.dialog.stackdialog;
 
 import java.awt.Component;
 
-import org.ginsim.gui.utils.dialog.DefaultDialogSize;
+import org.ginsim.commongui.dialog.DefaultDialogSize;
 
 
 public interface StackDialogHandler {
