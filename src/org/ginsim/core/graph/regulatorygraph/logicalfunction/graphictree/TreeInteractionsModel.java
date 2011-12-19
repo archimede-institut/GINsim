@@ -29,7 +29,6 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamod
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBooleanTreeNode;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.gui.GUIManager;
 
 
 public class TreeInteractionsModel implements TreeModel {
@@ -233,7 +232,7 @@ public class TreeInteractionsModel implements TreeModel {
 			addExpression(val, currentNode, tbp);
 			fireTreeStructureChanged(root);
 			if (tree != null) tree.expandPath(getPath(val, tbp.getRoot().toString(false)));
-			GUIManager.getInstance().getGraphGUI(graph).getNodeEditionPanel().setEditedItem(currentNode);
+			view.refresh();
 		}
 	}
 	public void setRootInfos() {
@@ -282,7 +281,7 @@ public class TreeInteractionsModel implements TreeModel {
 			if (newExp.equals("")) {
 				exp.clearChilds();
 				fireTreeStructureChanged(this.root);
-				GUIManager.getInstance().getGraphGUI(graph).getNodeEditionPanel().setEditedItem(node);
+				view.refresh();
 				return true;
 			}
 			BooleanParser parser = new BooleanParser(graph.getIncomingEdges(node), isAutoAddEnabled());
@@ -316,7 +315,7 @@ public class TreeInteractionsModel implements TreeModel {
 			parseFunctions();
 			exp.setRoot(root);
 			fireTreeStructureChanged(this.root);
-			GUIManager.getInstance().getGraphGUI(graph).getNodeEditionPanel().setEditedItem(node);
+			view.refresh();
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
@@ -326,7 +325,9 @@ public class TreeInteractionsModel implements TreeModel {
 
 	public void fireTreeStructureChanged(TreeElement element) {
 		TreeModelEvent e = new TreeModelEvent(this, new Object[] {element});
-		for (Iterator it = treeModelListeners.iterator(); it.hasNext(); ) ((TreeModelListener)it.next()).treeStructureChanged(e);
+		for (Iterator it = treeModelListeners.iterator(); it.hasNext(); ) {
+			((TreeModelListener)it.next()).treeStructureChanged(e);	
+		}
 	}
 	public void refreshNode() {
 		boolean dis = false;
@@ -334,7 +335,7 @@ public class TreeInteractionsModel implements TreeModel {
 		parseFunctions();
 		if (node != null) {
 			node.setInteractionsModel(this);
-			GUIManager.getInstance().getGraphGUI(graph).getNodeEditionPanel().setEditedItem(node);
+			view.refresh();
 			for (int p = 0 ; p <= node.getMaxValue(); p++) {
 				dis = false;
 				for (int k = 0; k < root.getChildCount(); k++)

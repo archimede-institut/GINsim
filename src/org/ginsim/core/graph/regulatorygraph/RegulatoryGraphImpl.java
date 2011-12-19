@@ -15,7 +15,6 @@ import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.BiblioManager;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.AbstractGraph;
-import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
@@ -26,7 +25,6 @@ import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
-import org.ginsim.gui.GUIManager;
 
 
 public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, RegulatoryMultiEdge> 
@@ -141,21 +139,23 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     public RegulatoryMultiEdge addEdge(RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign sign) {
     	RegulatoryMultiEdge obj = getEdge(source, target);
     	if (obj != null) {
-    		
-    		NotificationResolution resolution = new NotificationResolution(){
-    			
-    			public boolean perform( Graph graph, Object[] data, int index) {
-    				
-    				GUIManager.getInstance().getGraphGUI(graph).selectEdge((Edge<?>)data[0]);
-    				return true;
-    			}
-    			
-    			public String[] getOptionsName(){
-    				
-    				String[] t_option = {"Go"};
-    				return t_option;
-    			}
-    		};
+
+    		// TODO: restore this action without requiring to know the GUIManager?
+    		NotificationResolution resolution = null;
+//    		NotificationResolution resolution = new NotificationResolution(){
+//    			
+//    			public boolean perform( Graph graph, Object[] data, int index) {
+//    				
+//    				GUIManager.getInstance().getGraphGUI(graph).selectEdge((Edge<?>)data[0]);
+//    				return true;
+//    			}
+//    			
+//    			public String[] getOptionsName(){
+//    				
+//    				String[] t_option = {"Go"};
+//    				return t_option;
+//    			}
+//    		};
     		
     		NotificationManager.publishResolvableWarning( this, "STR_usePanelToAddMoreEdges", this, new Object[] {obj}, resolution);
     		
