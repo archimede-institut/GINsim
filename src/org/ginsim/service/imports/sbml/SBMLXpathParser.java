@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+//import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -31,6 +32,7 @@ import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.InvalidFunctionResolution;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
+import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -62,10 +64,17 @@ public final class SBMLXpathParser {
 
 	private Hashtable<RegulatoryNode, Hashtable<String, Vector<String>>> values;
 	private Vector<String> v_function;
+	
+	
+	/* **************** CONSTRUCTORS ************/	
 
 	public SBMLXpathParser() {
 	}
 
+	/**
+	 * Parse a SBML file from a given file.
+	 * @param filename
+	 */
 	public SBMLXpathParser(String filename) {
 
 		this.filePath = new File(filename);
@@ -92,8 +101,12 @@ public final class SBMLXpathParser {
 		} catch (JDOMException e) {
 			e.printStackTrace();
 		}
+		
+		TransitionList transListClass = null;
+		
+		QualitativeSpeciesList qualSpeciesListClass = null;
 
-		try {
+		try {		
 			
 			/** initialization of the root element. **/			
 			Element racine = document.getRootElement();
@@ -105,188 +118,350 @@ public final class SBMLXpathParser {
 					"http://www.sbml.org/sbml/level3/version1/core");
 			
 			/** to get the model ID. */
-			XPath xpa1 = XPath.newInstance("//sbml:model/@id");
+			XPath xpa1 = XPath.newInstance("//sbml:model");
 			
 			/** add this namespace (namespace1) from xpath namespace list **/ 		 
 			xpa1.addNamespace(namespace1);
 			
-			// Retrieve the model ID of the graph and set the name of the graph with it
 			String model_name = xpa1.valueOf(racine);
-			graph.setGraphName( model_name);
-			
-			vareader = graph.getNodeAttributeReader();
-			ereader = graph.getEdgeAttributeReader();
 
 			Namespace namespace = Namespace.getNamespace("qual",
-					"http://sbml.org/Community/Wiki/SBML_Level_3_Proposals/Qualitative_Models");
+					"http://www.sbml.org/sbml/level3/version1/qual/version1");
 			
 			/** Search the list of species.**/
-			XPath xpa = XPath.newInstance("//qual:listOfQualitativeSpecies");
-			xpa.addNamespace(namespace);
+			XPath xpathQualSpecies = XPath.newInstance("//qual:listOfQualitativeSpecies");
+			xpathQualSpecies.addNamespace(namespace);
 
 			/** Search the transitions list **/
-			XPath xpa2 = XPath.newInstance("//qual:listOfTransitions");
-			xpa2.addNamespace(namespace);
+
+			XPath xpathTransition = XPath.newInstance("//qual:listOfTransitions");
+			xpathTransition.addNamespace(namespace);
+			
+			/**
+			 *  Get for model id
+			 */
+			List<Element> modelList = xpa1.selectNodes(racine);
+			Element model = modelList.get(0);
+			String modelId = model.getAttributeValue("id");
+			
+			if(modelId != null) {
+				graph.setGraphName(modelId);
+			}
+
 			
 			/** retrieves all nodes corresponding to the path:/model/listOfQualitativeSpecies. **/
-			@SuppressWarnings("unchecked")
-			List<Element> results = xpa.selectNodes(racine);
+			
+			// Getting a transition list.
+			List<Element> transList = xpathTransition.selectNodes(racine);
+			Element transContent = transList.get(0);
+			List<Element> transListElements = transContent.getChildren();
+			
+			// getting a qualitativeSpecies list.
+			List<Element> qualSpeciesList = xpathQualSpecies.selectNodes(racine);
+			
+			/**
+			 * Get listOfQualitativeSpecies <Element>
+			 * allSpecies <Element> is a similar to listOfQualitativeSpecies.
+			 */
 
-			/** to retrieve species data **/	
-			Vector<String> v_nodeOrder = null;
-			for (int i = 0; i < results.size(); i++) {
-				Element obElement = results.get(i);
-				@SuppressWarnings("unchecked")
-				List<Element> elList = obElement.getChildren();
-				Iterator<Element> it = elList.iterator();
-				v_nodeOrder = new Vector<String>();
-				while (it.hasNext()) {
+			Element allSpecies = qualSpeciesList.get(0);
+			
+			/**
+			 * speciesList contain every qualitativeSpecies <Element>.
+			 */
+			List<Element> speciesList = allSpecies.getChildren();
+
+			
+			
+	//*************  dealing a qualitativeSpecies list  ***********************
+			
+			/** to retrieve species data **/
+
+			qualSpeciesListClass = new QualitativeSpeciesList();
+			
+			/**
+			 * A vector for nodeOrder
+			 */
+			List<RegulatoryNode> v_nodeOrder = new ArrayList<RegulatoryNode>();
+			
+			for(int k=0; k<speciesList.size(); k++) {
+				
+				Element obElement = speciesList.get(k);
+				QualitativeSpecies qualClass = new QualitativeSpecies();
+				
+				Attribute att_id = obElement.getAttribute( "id", namespace);
+				if( att_id != null){
+					qualClass.setId( att_id.getValue());	
+				}
+				
+				Attribute att_name = obElement.getAttribute( "name", namespace);
+				if( att_name != null){
+					qualClass.setName( att_name.getValue());	
+				}
+				
+				Attribute att_compartment = obElement.getAttribute( "compartment", namespace);
+				if( att_compartment != null){
+					qualClass.setCompartment( att_compartment.getValue());	
+				}
+				
+				Attribute att_maxlevel = obElement.getAttribute( "maxLevel", namespace);
+				if( att_maxlevel != null){
+					qualClass.setMaxLevel( att_maxlevel.getValue());	
+				}
+				
+				Attribute att_init = obElement.getAttribute( "initialLevel", namespace);
+				if( att_init != null){
+					qualClass.setInitialLevel( att_init.getValue());	
+				}
+				
+				Attribute att_bound = obElement.getAttribute( "boundaryCondition", namespace);
+				if( att_bound != null){
+					qualClass.setBoundaryCondition( att_bound.getValue());	
+				}
+				
+				Attribute att_constant = obElement.getAttribute( "constant", namespace);
+				if( att_constant != null){
+					qualClass.setConstant( att_constant.getValue());	
+				}
+
+				/** we need construct a string character with different nodes from the graph **/
+				s_nodeOrder += qualClass.getId() + " ";
+				
+				if (s_nodeOrder == null) {
+					throw new JDOMException("missing nodeOrder");
+				}
+				
+				RegulatoryNode node = new RegulatoryNode(qualClass.getId(), graph);
+				v_nodeOrder.add(node);
+				qualSpeciesListClass.getListOfQualitativeSpecies().add(qualClass);
+
+				/** 
+				 * set a node with a species data 
+				 */
+				byte maxval; 
+				
+				if(qualClass.getMaxLevel() == null) {
+					maxval = 1;
+				}else {
+					maxval = (byte) Integer.parseInt(qualClass.getMaxLevel());
+				}
+				
+				// Ici, il faut que je lance une exception si l'id, le nom ou la maxvalue est null ???
+
+				vertex = graph.addNewNode(qualClass.getId(), qualClass.getName(), maxval);
+				vertex.getV_logicalParameters().setUpdateDup(false);
+				
+				String s_basal = qualClass.getBasevalue();
+				
+				if(null != s_basal)
+				{
 					try {
-						Element elcurrent = it.next();						
-						/** we need construct a string character with different nodes from the graph **/
-						s_nodeOrder += elcurrent.getAttributeValue("id") + " ";
-						v_nodeOrder.add(elcurrent.getAttributeValue("id"));
-						if (s_nodeOrder == null) {
-							throw new JDOMException("missing nodeOrder");
-						}
-						/** get species ID and species name **/
-						String id = elcurrent.getAttributeValue("id");
-						String name = elcurrent.getAttributeValue("name");
-						if (name == null || name.equals("")) {
-							name = null;
-						}
-						byte maxval = (byte) Integer.parseInt(elcurrent
-								.getAttributeValue("maxLevel"));
 						
-						/** set a node with a species data **/
-						vertex = graph.addNewNode(id, name, maxval);
-						vertex.getV_logicalParameters().setUpdateDup(false);
-
-						String s_basal = elcurrent.getAttributeValue("basevalue");
-						if(s_basal != null)
+						byte basevalue = (byte)Integer.parseInt(s_basal);
+						
+						if(basevalue != 0)
 						{
-							byte basevalue = (byte)Integer.parseInt(s_basal);
-							if(basevalue !=0)
-							{
-								vertex.addLogicalParameter(new LogicalParameter(basevalue), true);
-							}
+							vertex.addLogicalParameter(new LogicalParameter(basevalue), true);
 						}
-						
-						String input = elcurrent.getAttributeValue("boundaryCondition");
-						
-						if (input != null) {
-							vertex.setInput(input.equalsIgnoreCase("true") || input.equals("1"),
-									graph);
-						}
-						
-						/** add this node in a node collection **/
-						values.put(vertex, new Hashtable<String, Vector<String>>());
 					} catch (NumberFormatException e) {
-						throw new JDOMException("mal formed node's parameter");// TODO:
-																				// handle
-																				// exception
+						e.printStackTrace();
 					}
 				}
-			}
-			// TODO : REFACTORING ACTION
-			// The NodeOrder of a regulatory graph is now a List of RegulatoryNode
-			// Moreover the graph.addNewNode already update the NodeOrder of the graph
-			// So the command below seems strange : remove it for the moment
-			// graph.setNodeOrder(v_nodeOrder);
+				
+				String input = qualClass.getBoundaryCondition();			
+				if (null != input) {
+					vertex.setInput(input.equalsIgnoreCase("true") || input.equals("1"),
+							graph);
+				}
+				
+				/**
+				 * add this node in a node collection 
+				*/
+				
+				values.put(vertex, new Hashtable<String, Vector<String>>());
+											
+			} // premier for
+			graph.setNodeOrder(v_nodeOrder);
 			
-			/** to deal transition list in order to retrieve his all data **/
-			@SuppressWarnings("unchecked")
-			List<Element> listOfTransition = xpa2.selectNodes(racine);
-			for (int i = 0; i < listOfTransition.size(); i++) {
-				Element transition = listOfTransition.get(i);
-				@SuppressWarnings("unchecked")
-				List<Element> allTransitionElement = transition.getChildren();
-				Element transElem = null;
+			
+			//*****************   dealing a transition list   ********************//
+			
+			Transition transitionClass = null;
+			transListClass = new TransitionList();
+			
+			for(int i=0; i<transListElements.size(); i++) {
+				
+				/**
+				 *  Get a transition <Element>
+				 */
+				Element transition = transListElements.get(i);
+				
+				/**
+				 * This Map contains every input name with its sign.
+				 */
+				HashMap<String, String> intput_to_sign = new HashMap<String, String>();
+				
+			/**
+			 * get a transition Id
+			 */
+				String trans_Id = transition.getAttributeValue("id", namespace); 
+				transitionClass = new Transition(trans_Id);
+				
+				/**
+				 * Get Attributes for one transition <element>.
+				 */
+				List<Element> transChildren = transition.getChildren(); // = listOfInputs + listOfOutputs + listOfFunctionTerms
+				
+				for(int ind = 0; ind < transChildren.size(); ind++) {
+					
+					Element transitionChild = transChildren.get(ind); // listOfInputs ou listOfOutputs ou listOfFunctionTerms
+					
+					if("listOfInputs".equals(transitionChild.getName())) {
 
-				for (int k = 0; k < allTransitionElement.size(); k++) {
-					/** retrieve a transition element */
-					transElem = allTransitionElement.get(k);
-					String trans_Id = transElem.getAttributeValue("id"); //transition id
-					
-					/** retrieve children of transition element */
-					@SuppressWarnings("unchecked")
-					List<Element> transChildren = transElem.getChildren(); 	
-					
-					/** Retrieve the list of inputs **/
-					Element listOfInput = transChildren.get(0);
-					@SuppressWarnings("unchecked")
-					List<Element> inputElemList = listOfInput.getChildren();
-					HashMap<String, String> intput_to_sign = new HashMap<String, String>();
-					for (int p = 0; p < inputElemList.size(); p++) { 
-						Element input = inputElemList.get(p);
-						String node_from = ((Element) input)
-								.getAttributeValue("qualitativeSpecies");
-						/** to get the SBOTerm value from the current edge **/
-						String sign = ((Element) input).getAttributeValue("sign");
-						intput_to_sign.put( node_from, sign);
-					}
-					
-					/** retrieve output data **/
-					Element listOfOutput = transChildren.get(1);
-					@SuppressWarnings("unchecked")
-					List<Element> outputElemList = listOfOutput.getChildren();
-					Element output = outputElemList.get(0); // output element
-					String qualSpecies = output.getAttributeValue("qualitativeSpecies");
-					
-					createEdges( intput_to_sign, qualSpecies);
-					
-					/** retrieve the lits of function terms **/
-					Element listOfFunctionTerm = transChildren.get(2);
-					@SuppressWarnings("unchecked")
-					List<Element> functTermChildren = listOfFunctionTerm.getChildren();				
-					/** retrieve <defaultTerm> element */
-					Element defaultTerm = functTermChildren.get(0);
-					String dft_resulLevel = defaultTerm.getAttributeValue("resultLevel");
-					byte dft_value = (byte)Integer.parseInt(dft_resulLevel);		
-					if(!(dft_resulLevel.equals("0"))){
-						//for (Enumeration enumvertex = values.keys(); enumvertex.hasMoreElements();) 
-						for (Enumeration<RegulatoryNode> enumvertex = values.keys(); enumvertex.hasMoreElements();) 
-						{
-							vertex = enumvertex.nextElement();
-							String vertexName = vertex.toString();
-							if(qualSpecies.equals(vertexName))
-							{								
-								vertex.addLogicalParameter(new LogicalParameter(dft_value), true); 
+						List<Element> inpList = transitionChild.getChildren();
+											
+						for(int it=0; it<inpList.size(); it++) {
+										
+							Input inputClass = new Input();
+							Element input = (Element) inpList.get(it);
+
+							Attribute att_id = input.getAttribute( "id", namespace);
+							if( att_id != null) {
+								inputClass.setId( att_id.getValue());
 							}
-						}
-					}
+							
+							Attribute att_qual = input.getAttribute( "qualitativeSpecies", namespace);
+							if( att_qual != null) {
+								inputClass.setQualitativeSpecies( att_qual.getValue());
+							}
+							
+							Attribute att_tresh = input.getAttribute( "tresholdLevel", namespace);
+							if( att_tresh != null) {
+								inputClass.setTresholdLevel( att_tresh.getValue());
+							}
+							
+							Attribute att_transEf = input.getAttribute( "transitionEffect", namespace);
+							if( att_transEf != null) {
+								inputClass.setTransitionEffect( att_transEf.getValue());
+							}
+							
+							Attribute att_sign = input.getAttribute( "sign", namespace);
+							if( att_sign != null) {
+								inputClass.setSign( att_sign.getValue());
+							}
+							
+							/**
+							 * Add input <element> to input list
+							 */
+							transitionClass.addInput(inputClass);
+							intput_to_sign.put( att_qual.getValue(), att_sign.getValue());
+							
+						} // for every <input>
+
+					} //listOfInputs
+
+					else if ("listOfOutputs".equals(transitionChild.getName())) {
 					
-					String fctResultLevel = null;					
-					for (int j = 1; j < functTermChildren.size(); j++) 
-					{
-						v_function = new Vector<String>();	
+						Output outputClass = new Output();
+						List<Element> children_list = transitionChild.getChildren();
+						for(int outInd=0; outInd<children_list.size(); outInd++) {
+							Element output = children_list.get(outInd);
+							
+							/**
+							 * Get attributes list for output <element>.
+							 */
+							
+							Attribute att_qualit = output.getAttribute( "qualitativeSpecies", namespace);
+							if( att_qualit != null) {
+								outputClass.setQualitativeSpecies(att_qualit.getValue());
+							}
+							
+							Attribute att_transit = output.getAttribute( "transitionEffect", namespace);
+							if( att_transit != null) {
+								outputClass.setTransitionEffect(att_transit.getValue());
+							}
+							
+						}
 						
-						/** to get all data in every <functionTerm> element **/
-						Element function_term_element = functTermChildren.get(j);
-						fctResultLevel = function_term_element.getAttributeValue("resultLevel");
-						FunctionTerm function_term = deal( function_term_element);
-						if( function_term != null) {
-							addEdgesToMutliEdges( function_term, getNodeId(trans_Id), intput_to_sign, graph);
-							v_function.addElement( function_term.getLogicalFunction());
-						}
-			
-						//for (Enumeration enumvertex = values.keys(); enumvertex.hasMoreElements();) 
-						for (Enumeration<RegulatoryNode> enumvertex = values.keys(); enumvertex.hasMoreElements();) 
-						{
-							vertex = enumvertex.nextElement();
-							String vertexName = vertex.getId();
-							if(qualSpecies.equals(vertexName))
-							{		
-								// Ce Hashtable est le 2i�me m� pas "values".
-								// normalement : ((Hashtable<String, Vector<String>>) values.get(vertex)).put(fctResultLevel, v_function);			
-								//((Hashtable) values.get(vertex)).put(fctResultLevel, v_function);
-								values.get(vertex).put(fctResultLevel, v_function);	
-							}
-						}						
-					} // </functionTerm>
-				} // </transition> 
-			}  
-		} 
+						transitionClass.setOutput(outputClass);	
+						createEdges( intput_to_sign, outputClass.getQualitativeSpecies());
+					}
+					
+					else if("listOfFunctionTerms".equals(transitionChild.getName()) || "listOfFunctionTerms".equals(null)) {
+
+						List<Element> functionTChildren = transitionChild.getChildren();
+						String outputName = transitionClass.getOutput().getQualitativeSpecies();
+						v_function = new Vector<String>();	
+						for(int fctIndex = 0; fctIndex < functionTChildren.size(); fctIndex++ ) { 
+							
+							/**
+							 * Get every functionTerm <Element>.
+							 */
+							Element child = functionTChildren.get(fctIndex);
+							
+							/**
+							 * Check defaultTerm value
+							 */
+							if("defaultTerm".equals(child.getName())) {
+								List<Attribute> fctDftAttribList = child.getAttributes();
+								if("resultLevel".equals(fctDftAttribList.get(0).getName())) {
+									String dftRsl = fctDftAttribList.get(0).getValue();
+									byte dft_value = (byte)Integer.parseInt(dftRsl);
+									
+									
+									  	if(!(dftRsl.equals("0"))){
+										for (Enumeration<RegulatoryNode> enumvertex = values.keys(); enumvertex.hasMoreElements();) 
+										{
+											vertex = enumvertex.nextElement();
+											String vertexName = vertex.toString();
+											
+											if(outputName.equals(vertexName))
+											{								
+												vertex.addLogicalParameter(new LogicalParameter(dft_value), true); 
+											}
+										}
+									}
+									
+								} // if								
+							} // if
+							
+							if("functionTerm".equals(child.getName())) {
+								List<Attribute> fctAttribList = child.getAttributes();
+								
+								/**
+								 * Get <functionTerm> resultLevel attribute
+								 */
+								List<Attribute> fctAt = child.getAttributes();
+								String fctResultLevel = fctAt.get(0).getValue();
+								
+								List<Element> rootConv = child.getChildren();
+								Element math = rootConv.get(0);
+							
+								FunctionTerm function_term = deal( child);
+								if( function_term != null) {
+									addEdgesToMutliEdges( function_term, getNodeId(trans_Id), intput_to_sign, graph);
+									v_function.addElement( function_term.getLogicalFunction());
+								}
+ 
+								for (Enumeration<RegulatoryNode> enumvertex = values.keys(); enumvertex.hasMoreElements();) 
+								{
+									vertex = enumvertex.nextElement();
+									String vertexName = vertex.getId();
+									if(outputName.equals(vertexName))
+									{		
+										values.get(vertex).put(fctResultLevel, v_function);	
+									}
+								}
+							} // functionTerm
+						} // for
+					} // listOfFunctionTerms
+				} // transition <element>
+			} // listOfTransition			
+		} // try			
+		catch (JDOMException e) { 
+			// An error occurred while parsing the document
+			e.printStackTrace();
+		}			
 		catch (Exception e) {
 			// TODO: handle exception
 			e.printStackTrace();
@@ -392,10 +567,10 @@ public final class SBMLXpathParser {
 				if( input_node != null){
 					String sign_code = input_node_names.get( input_node_name);
 					int sign;
-					if ( "SBO:0000020".equals(sign_code)){
+					if ( "negative".equals(sign_code)){
 						sign = -1;
 					}
-					else if ( "SBO:0000459".equals(sign_code)){
+					else if ( "positive".equals(sign_code)){
 						sign = 1;
 					}
 					else{
@@ -424,6 +599,7 @@ public final class SBMLXpathParser {
 		
 		List<Condition> l_condition = function_term.getConditionList();
 		Iterator<Condition> it_cond = l_condition.iterator();
+		
 		while( it_cond.hasNext()){
 			Condition condition = it_cond.next(); 
 			List<Expression> l_exp = condition.getExpressionList();
@@ -433,10 +609,10 @@ public final class SBMLXpathParser {
 				String node_from_id = expression.getNode();
 				String sign_code = input_to_sign.get( node_from_id);
 				byte sign;
-				if ( "SBO:0000020".equals(sign_code)){
+				if ( "negative".equals(sign_code)){
 					sign = RegulatoryMultiEdge.SIGN_NEGATIVE;
 				}
-				else if ( "SBO:0000459".equals(sign_code)){
+				else if ( "positive".equals(sign_code)){
 					sign = RegulatoryMultiEdge.SIGN_POSITIVE;
 				}
 				else{
@@ -453,7 +629,7 @@ public final class SBMLXpathParser {
 							edge = graph.addNewEdge( node_from_id, node_to_id, threshold, sign);
 							m_edges.put(sign_code, edge);
 							edge.me.rescanSign(graph);
-							ereader.setEdge(edge.me);
+							graph.getEdgeAttributeReader().setEdge(edge.me);
 						}
 						catch (GsException gs_exception) {
 							LogManager.error( "Unable to create new edge between vertices '" + node_from_id + "' and '" + node_to_id + "' : one of the vertex was not found in the graph");
@@ -467,7 +643,7 @@ public final class SBMLXpathParser {
 	
 	
 	/** This class parse a JSci String that correspond to all data located in <math> element from every
-	 *  <functionTerm> element of a <transition> tag. **/
+	 *  <functionTerm> element of a <transition> tag. */
 	
 	static class MathMLCodeParser {
 		
@@ -490,7 +666,13 @@ public final class SBMLXpathParser {
 			return final_result;
 		}
 		
-		/** **/
+		/**
+		 * This method delete an "&" operator located in a String.
+		 * for instance if the string is like : "CycD>=1&",
+		 * a returned list will be : " [CycD>=1,... ]".
+		 * @param code
+		 * @return a list that contain strings without "&" operators.
+		 */
 		private static ArrayList<String> getExpressions( String code){
 			
 			ArrayList<String> expressions = new ArrayList<String>();
@@ -547,6 +729,26 @@ public final class SBMLXpathParser {
 			return code ;
 		}
 		
+		
+		private static String changeString(String code) {
+			
+			//Pattern p = Pattern.compile( "new MathDouble\\((\\d)\\)");
+			Pattern p = Pattern.compile( "(input_[^\\)]*_\\d)");
+			System.out
+					.println("SBMLXpathParser.MathMLCodeParser.changeString() : new pattern = " + p.pattern());
+			Matcher m = p.matcher( code);
+			
+			StringBuffer sb = new StringBuffer();
+			while (m.find()) {
+				m.appendReplacement(sb, m.group(1));
+			}
+			m.appendTail(sb);
+			
+			return sb.toString();
+		}
+		
+		
+		
 		/**
 		 * Replace some caracters identify by "new MathDouble(int)" in a JSci String by an Integer.
 		 * i.e : if we have a JSci String like this :" G0.lt(new MathDouble(1)) ", thus we can
@@ -554,13 +756,14 @@ public final class SBMLXpathParser {
 		 * @return String.
 		 */		
 		private static String replaceMathDouble( String code){
-			
-			Pattern p = Pattern.compile( "new MathDouble\\((\\d)\\)");
+					
+			Pattern p = Pattern.compile( "\\(input_[^\\)]*_(\\d)\\)");
 			Matcher m = p.matcher( code);
 			
 			StringBuffer sb = new StringBuffer();
 			while (m.find()) {
-				m.appendReplacement(sb, m.group(1));
+				
+				m.appendReplacement(sb, "(" + m.group(1) + ")");
 			}
 			m.appendTail(sb);
 			
@@ -776,83 +979,6 @@ public final class SBMLXpathParser {
 	    }
 	    return defValue;
 	}
-	
-    // TODO : REFACTORING ACTION
-    // TODO : Are the two classes below useful? 
-//	/**  **/
-//	class InteractionInconsistencyAction implements NotificationMessageAction {
-//		public String[] getActionName() {
-//			String t[] = { "view" };
-//			return t;
-//		}
-//
-//		public boolean perform( NotificationMessageHolder graph, Object data, int index) {
-//			
-//			StackDialog d = new InteractionInconsistencyDialog((Map) data, (Graph) graph,
-//					"interactionInconststancy", 200, 150);
-//			d.setVisible(true);
-//			return true;
-//		}
-//
-//		public boolean timeout( NotificationMessageHolder graph, Object data) {
-//			
-//			return true;
-//		}
-//		
-//	} // class InteractionInconsistencyAction
-
-//	class InteractionInconsistencyDialog extends StackDialog {
-//		private static final long serialVersionUID = 4607140440879983498L;
-//
-//		RegulatoryGraph graph;
-//		Map m;
-//		JPanel panel = null;
-//
-//		public InteractionInconsistencyDialog(Map m, Graph graph, String msg, int w, int h) {
-//			
-//			super( GUIManager.getInstance().getFrame( graph), msg, w, h);
-//			this.graph = (RegulatoryGraph) graph;
-//			this.m = m;
-//			setMainPanel(getMainPanel());
-//		}
-//
-//		private JPanel getMainPanel() {
-//			if (panel == null) {
-//				panel = new JPanel();
-//				JTextArea txt = new JTextArea();
-//				String s1 = "";
-//				String s2 = "";
-//				Iterator it = m.entrySet().iterator();
-//				while (it.hasNext()) {
-//					Entry entry = (Entry) it.next();
-//					Entry e2 = (Entry) entry.getKey();
-//					RegulatoryEdge edge = (RegulatoryEdge) e2.getKey();
-//					byte oldmax = ((Integer) e2.getValue()).byteValue();
-//					if (entry.getValue() == null) {
-//						s1 += edge.getLongDetail(" ") + ": max should be "
-//								+ (oldmax == -1 ? "max" : "" + oldmax) + "\n";
-//					} else {
-//						s2 += edge.getLongDetail(" ") + ": max was explicitely set to " + oldmax
-//								+ "\n";
-//					}
-//				}
-//				if (s1 != "") {
-//					s1 = "potential problems:\n" + s1 + "\n\n";
-//				}
-//				if (s2 != "") {
-//					s1 = s1 + "warnings only:\n" + s2;
-//				}
-//				txt.setText(s1);
-//				txt.setEditable(false);
-//				panel.add(txt);
-//			}
-//			return panel;
-//		}
-//
-//		public void run() {
-//			// TODO: propose some automatic corrections
-//		}
-//	} // class InteractionInconsistencyDialog
 
 	
 	/** <p> An object Expression represent the contain of last "single" <apply> element.
@@ -971,8 +1097,10 @@ public final class SBMLXpathParser {
 			Vector<String> cases = new Vector<String>();
 			
 			if(op.equals("geq")){
-				String cas = node + ":" + minvalue;
-				cases.add( cas);
+				for( int i = minvalue; i <= maxvalue; i++){
+					String cas = node + ":" + i;
+					cases.add( cas);
+				}
 			}
 			else if(op.equals("gt") && maxvalue > minvalue){
 				for( int i = minvalue + 1; i <= maxvalue; i++){
@@ -1005,7 +1133,22 @@ public final class SBMLXpathParser {
  
  /** An object Condition represent every first <apply> tag under the <or/> tag in SBML file.
   *  A condition contains mainly an operator ("and" operator always) and a list of Expression.
-  * */
+  *  i.e : <apply>
+  *  		  <and/>
+  *           <apply>
+  *	            <geq/>
+  *              <ci>node_id1</ci> 
+  *	             <cn>threshold_value1</cn> 
+  *	          </apply>        
+  *	          <apply>
+  *	            <lt/>
+  *	             <ci>node_id2</ci> 
+  *	             <cn>threshold_value2</cn> 
+  *	          </apply>
+  *	       </apply>
+  ** @author Guy-Ross ASSOUMOU
+  **/
+ 
  class Condition {
 	 
 		private List<Expression> expressionList;
@@ -1025,8 +1168,7 @@ public final class SBMLXpathParser {
 			}
 			else{
 				op_symbol="UNKNOWN";
-			}
-			
+			}			
 			
 		}
 		
@@ -1078,7 +1220,7 @@ public final class SBMLXpathParser {
 				}
 				all_cases.clear();
 				all_cases.addAll( temp_all_cases);
-			}			
+			}	
 		
 			return all_cases;
 		}
@@ -1135,17 +1277,24 @@ class FunctionTerm {
 			this.op = op;
 		}
 
-
+		/**
+		 * 
+		 * @return a list of conditions
+		 */
 		public List<Condition> getConditionList() {
 			return conditionList;
 		}	
-		
+		/**
+		 * add a condition to a list of conditions
+		 * @param cond
+		 */
 		public void addCondition(Condition cond) {
 			conditionList.add(cond);
 			
 		}
 	
-		/** @return a logical fiunction that correspond to  
+		/** @return a logical function that corresponds to the all
+		 *  conditions list located in the <functionTerm> element of a transition.
 		 * **/
 		public String getLogicalFunction(){
 			
@@ -1157,6 +1306,10 @@ class FunctionTerm {
 				String new_entry = "";
 				Iterator<String> case_ite = cond_cases.iterator();
 				
+				/**
+				 * Build the logical function corresponding to data of functionTerm element 
+				 */
+				
 				while( case_ite.hasNext()){				
 					String cas = case_ite.next();								
 					new_entry += "(" + cas + ")|";
@@ -1166,8 +1319,16 @@ class FunctionTerm {
 				logical_function += new_entry + op_symbol;	
 
 			} // while
+			
+			/**
+			 * Delete the last "|" (or operator) caracter.
+			 */
 			logical_function = logical_function.substring(0, logical_function.length() - 1);
+			/**
+			 * Surround the last logical function by parentheses.
+			 */
 			logical_function = "(" + logical_function + ")";
+			
 			return logical_function;
 		}
 		
@@ -1183,5 +1344,323 @@ class FunctionTerm {
 		}
 		
 	} // class FunctionTerm
+
+
+
+/* **************** QUALITATIVESPECIESLIST CLASS ************/
+
+class QualitativeSpeciesList {
+
+private List<QualitativeSpecies> listOfQualitativeSpecies;
+
+public QualitativeSpeciesList() {	
+
+this.listOfQualitativeSpecies = new ArrayList<QualitativeSpecies>();
+}
+
+public List<QualitativeSpecies> getListOfQualitativeSpecies() {
+return listOfQualitativeSpecies;
+}
+
+public void setListOfQualitativeSpecies(
+	List<QualitativeSpecies> listOfQualitativeSpecies) {
+this.listOfQualitativeSpecies = listOfQualitativeSpecies;
+}	
+}// QualitativeSpeciesList
+
+
+/* **************** QUALITATIVESPECIES CLASS ************/
+
+class QualitativeSpecies {
+ 
+private String id;
+private String metaid;
+private String sboTerm;
+private String name;
+private String compartment;
+private String maxLevel;
+private String basevalue;
+private String initialLevel;
+private String boundaryCondition;
+private String constant;
+
+public QualitativeSpecies() {
+	
+	this.name = null;
+	this.id= null;
+	this.metaid = null;
+	this.sboTerm = null;
+	this.compartment = null;
+	this.maxLevel = null;
+	this.basevalue = null;
+	this.initialLevel = null;
+	this.boundaryCondition = null;
+	this.constant = null;
+}
+
+public String getId() {
+	return id;
+}
+
+public void setId(String idValue) {
+	this.id = idValue;
+}
+
+public String getMetaid() {
+	return metaid;
+}
+
+public void setMetaid(String metaid) {
+	this.metaid = metaid;
+}
+
+public String getSboTerm() {
+	return sboTerm;
+}
+
+public void setSboTerm(String sboTerm) {
+	this.sboTerm = sboTerm;
+}
+
+public String getName() {
+	return name;
+}
+
+public void setName(String name) {
+	this.name = name;
+}
+
+public String getCompartment() {
+	return compartment;
+}
+
+public void setCompartment(String compartment) {
+	this.compartment = compartment;
+}
+
+public String getMaxLevel() {
+	return maxLevel;
+}
+
+public void setMaxLevel(String maxLevel) {
+	this.maxLevel = maxLevel;
+}
+
+public String getInitialLevel() {
+	return initialLevel;
+}
+
+public void setInitialLevel(String initialLevel) {
+	this.initialLevel = initialLevel;
+}
+
+public String getBasevalue() {
+	return basevalue;
+}
+
+public void setBasevalue(String basevalue) {
+	this.basevalue = basevalue;
+}
+
+public String getBoundaryCondition() {
+	return boundaryCondition;
+}
+
+public void setBoundaryCondition(String boundaryCondition) {
+	this.boundaryCondition = boundaryCondition;
+}
+
+public String getConstant() {
+	return constant;
+}
+
+public void setConstant(String constant) {
+	this.constant = constant;
+}
+
+public String toString() {
+	
+	return "id : " + this.getId() + 
+			" \nMetaid : " + this.getMetaid() +  
+			" \nSboTerm : " + this.getSboTerm() +  
+			" \nName : " + this.getName() +  
+			" \nCompartment : " + this.getCompartment() +
+			" \nBoudarycondition : " + this.getBoundaryCondition() +
+			" \nInitialLevel : " + this.getInitialLevel() +
+			" \nMaxLevel : " + this.getMaxLevel()+
+			" \nBasevalue: " + this.getBasevalue()+
+			" \nConstantV : " + this.getConstant();
+	
+}	
+}
+
+/* **************** INPUT CLASS ************/
+
+class Input {
+ 
+ private String id;
+ private String qualitativeSpecies;
+ private String tresholdLevel;
+ private String transitionEffect;
+ private String sign;
+ 	 
+public Input() {
+	this.id = null;
+	this.qualitativeSpecies = null;
+	this.tresholdLevel = null;
+	this.transitionEffect = null;
+	this.sign = null;
+}
+
+public String getId() {
+	return id;
+}
+
+public void setId(String id) {
+	this.id = id;
+}
+
+public String getQualitativeSpecies() {
+	return qualitativeSpecies;
+}
+
+public void setQualitativeSpecies(String qualitativeSpecies) {
+	this.qualitativeSpecies = qualitativeSpecies;
+}
+
+public String getThresholdLevel() {
+	return tresholdLevel;
+}
+
+public void setTresholdLevel(String tresholdLevel) {
+	this.tresholdLevel = tresholdLevel;
+}
+
+public String getTransitionEffect() {
+	return transitionEffect;
+}
+
+public void setTransitionEffect(String transitionEffect) {
+	this.transitionEffect = transitionEffect;
+}
+
+public String getSign() {
+	return sign;
+}
+
+public void setSign(String sign) {
+	this.sign = sign;
+}
+
+public String toString() {
+	return "id : " + id +
+		   " \nqualitativeSpecies : " + qualitativeSpecies +
+		   " \ntresholdLevel      : " + tresholdLevel +
+		   " \ntransitionEffect   : " + transitionEffect +
+		   " \nsign : " + sign ;
+}
+}
+
+
+/* **************** OUTPUT CLASS ************/
+
+class Output {
+ 
+ private String qualitativeSpecies;
+ private String transitionEffect;
+ 
+public Output() {		
+	this.qualitativeSpecies = null;
+	this.transitionEffect = null;
+}
+
+public String getQualitativeSpecies() {
+	return qualitativeSpecies;
+}
+
+public void setQualitativeSpecies(String qualitativeSpecies) {
+	this.qualitativeSpecies = qualitativeSpecies;
+}
+
+public String getTransitionEffect() {
+	return transitionEffect;
+}
+
+public void setTransitionEffect(String transitionEffect) {
+	this.transitionEffect = transitionEffect;
+}	 
+
+public String toString() {
+	return 
+		   "qualitativeSpecies : " + qualitativeSpecies +
+		   " \ntransitionEffect   : " + transitionEffect  ;
+}
+
+} // Output
+
+
+
+/* **************** TRANSITION CLASS ************/
+
+class Transition {
+ 
+private String id;	 
+private List<Input> listOfInputs;
+private Output output;
+ 
+public String getId() {
+	return id;
+}
+
+public void setId(String id) {
+	this.id = id;
+}
+
+public Transition(String id) {
+	this.id = id;
+	this.listOfInputs = new ArrayList<Input>();
+	this.output = null;
+}
+
+public List<Input> getListOfInputs() {
+	return listOfInputs;
+}
+public void setListOfInputs(List<Input> listOfInputs) {
+	this.listOfInputs = listOfInputs;
+}
+
+public void addInput( Input input){
+	this.listOfInputs.add( input);
+}
+
+public Output getOutput() {
+	return output;
+}
+
+public void setOutput(Output output) {
+	this.output = output;
+}
+
+} // Transition
+
+
+/* **************** TRANSITIONLIST CLASS ************/
+
+class TransitionList {
+ 
+ private List<Transition> listTransition;
+
+public TransitionList() {
+	this.listTransition = new ArrayList<Transition>();
+}
+
+public List<Transition> getListTransition() {
+	return listTransition;
+}
+
+public void setListTransition(List<Transition> listTransition) {
+	this.listTransition = listTransition;
+}		
+} // TransitionList
 
 }

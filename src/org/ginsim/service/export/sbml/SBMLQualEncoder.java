@@ -11,6 +11,7 @@ import java.util.Map;
 
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -24,7 +25,7 @@ import org.ginsim.core.utils.log.LogManager;
 
 public class SBMLQualEncoder implements OMDDBrowserListener{
 
-	public static final String L3_QUALI_URL = "http://sbml.org/Community/Wiki/SBML_Level_3_Proposals/Qualitative_Models";
+	public static final String L3_QUALI_URL = "http://www.sbml.org/sbml/level3/version1/qual/version1";
 
     List<RegulatoryNode> v_no;
     int len;
@@ -82,39 +83,40 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
         out.openTag("listOfCompartments");
         out.openTag("compartment");
         out.addAttr("id", s_compartment);
+        out.addAttr("constant", "false");
         out.closeTag();
         out.closeTag();
         
         // List all components
-        out.openTag("listOfQualitativeSpecies");
+        out.openTag("qual:listOfQualitativeSpecies");
         out.addAttr("xmlns", L3_QUALI_URL);
 
         for (int i=0 ; i<t_tree.length ; i++) {
             RegulatoryNode node = (RegulatoryNode)v_no.get(i);
             String s_id = node.getId();
             String s_name = node.getName();
-            out.openTag("qualitativeSpecies");
-            out.addAttr("id", s_id);
+            out.openTag("qual:qualitativeSpecies");
+            out.addAttr("qual:id", s_id);
             if ((s_name != null) && (!s_name.equals("noName"))) {
-            	out.addAttr("name",s_name);
+            	out.addAttr("qual:name",s_name);
             } 
-            out.addAttr("compartment",s_compartment);
-            out.addAttr("maxLevel",""+node.getMaxValue());
-            out.addAttr("initialLevel",""+t_markup[i][0]);
+            out.addAttr("qual:compartment",s_compartment);
+            out.addAttr("qual:maxLevel",""+node.getMaxValue());
+            out.addAttr("qual:initialLevel",""+t_markup[i][0]);
             if (node.isInput()) {
-                out.addAttr("boundaryCondition", "true");
-                out.addAttr("constant", "true");
+                out.addAttr("qual:boundaryCondition", "true");
+                out.addAttr("qual:constant", "true");
             }
             else {
-            	out.addAttr("boundaryCondition", "false");
-                out.addAttr("constant", "false");
+            	out.addAttr("qual:boundaryCondition", "false");
+                out.addAttr("qual:constant", "false");
             }
             out.closeTag();
         }
         out.closeTag(); // list of species
         
         // Dynamical rules: a transition for each component
-        out.openTag("listOfTransitions");
+        out.openTag("qual:listOfTransitions");
         out.addAttr("xmlns", L3_QUALI_URL);
         for (int i=0 ; i<t_tree.length ; i++) {
             RegulatoryNode regulatoryNode = (RegulatoryNode)v_no.get(i);
@@ -123,40 +125,71 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
             }
             OMDDNode node = t_tree[i];
             String s_node = regulatoryNode.getId();
-            out.openTag("transition");
-            out.addAttr("id", "tr_"+s_node);
+            out.openTag("qual:transition");
+            out.addAttr("qual:id", "tr_"+s_node);
             
-            out.openTag("listOfInputs");               
+            out.openTag("qual:listOfInputs");               
             String edgeSign = null;
-            for (RegulatoryMultiEdge me: graph.getIncomingEdges(v_no.get(i))) {
+            for (RegulatoryMultiEdge me: graph.getIncomingEdges(v_no.get(i))) { // output
                 int sign = me.getSign(); 
                 switch (sign) {
 				case 0:
-					edgeSign = "SBO:0000459";
+					edgeSign = "positive";
 					break;
 				case 1:
-					edgeSign = "SBO:0000020";
+					edgeSign = "negative";
 					break;
 				default:
 					break;
 				}                   
-                out.openTag("input");
-                out.addAttr("qualitativeSpecies", me.getSource().toString());
-                out.addAttr("transitionEffect","none");
-                out.addAttr("sign", ""+edgeSign);
-                out.closeTag();
+               //out.openTag("qual:input");
+                //out.addAttr("qual:qualitativeSpecies", me.getSource().toString());
+                
+  // DEBUT TEST              
+               if(me.getEdgeCount() > 1) {
+            	   System.out.println("OK, me.getEdgeCount() > 1");
+            	   RegulatoryEdge myEdge;
+            	   for(int k = 0; k < me.getEdgeCount(); k++) {
+            		   myEdge = me.getEdge(k);
+            		   out.openTag("qual:input");
+            		   out.addAttr("qual:id", "input_" + me.getSource().toString()+"_"+me.getMin(k));
+            		   out.addAttr("qual:qualitativeSpecies", me.getSource().toString());
+            		   out.addAttr("qual:tresholdLevel", ""+myEdge.getMin());
+            		   out.addAttr("qual:transitionEffect","none");
+            		   out.addAttr("qual:sign", ""+edgeSign);
+            		   out.closeTag();
+            	   } // for  
+            	  
+               } // if 
+               else {
+            	   out.openTag("qual:input");
+            	   out.addAttr("qual:id", "input_" + me.getSource().toString() + "_"+me.getMin(0));
+        		   out.addAttr("qual:qualitativeSpecies", me.getSource().toString());
+        		   out.addAttr("qual:tresholdLevel", ""+me.getMin(0));
+        		   out.addAttr("qual:transitionEffect","none");
+        		   out.addAttr("qual:sign", ""+edgeSign);
+        		   out.closeTag();
+			}
+
+                
+            
+   // FIN TEST                
+         
+/*                out.addAttr("qual:transitionEffect","none");
+                out.addAttr("qual:sign", ""+edgeSign);*/
+               // out.closeTag();
             }
             out.closeTag();
 
-            out.openTag("listOfOutputs");
-            out.openTag("output");
-            out.addAttr("qualitativeSpecies", s_node);
-            out.addAttr("transitionEffect","assignmentLevel");
+            out.openTag("qual:listOfOutputs");
+            out.openTag("qual:output");
+            out.addAttr("qual:qualitativeSpecies", s_node);
+            out.addAttr("qual:transitionEffect","assignmentLevel");
             out.closeTag();
             out.closeTag();
 
-            out.openTag("listOfFunctionTerms");
-            out.openTag("defaultTerm");
+            out.openTag("qual:listOfFunctionTerms");
+            out.openTag("qual:defaultTerm");
             
             boolean hasNoBasalValue = true;
             if (graph.getIncomingEdges(v_no.get(i)).size() == 0) {
@@ -165,18 +198,18 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
                 	LogicalParameter lp = (LogicalParameter) lpl.get(0);
                 	int value = lp.getValue();
                 	if (lpl.isManual(lp)) {
-       			    	out.addAttr("resultLevel", ""+value);
+       			    	out.addAttr("qual:resultLevel", ""+value);
                 	    out.closeTag(); 
                 	    hasNoBasalValue = false;
                 	}
                 }
             } 
             if (hasNoBasalValue) {
-            out.addAttr("resultLevel", ""+0);
+            out.addAttr("qual:resultLevel", ""+0);
             out.closeTag();
             for (curValue=1 ; curValue<=regulatoryNode.getMaxValue() ; curValue++) {
-                out.openTag("functionTerm");
-                out.addAttr("resultLevel", ""+curValue);
+                out.openTag("qual:functionTerm");
+                out.addAttr("qual:resultLevel", ""+curValue);
                 out.openTag("math");
                 out.addAttr("xmlns", "http://www.w3.org/1998/Math/MathML");
                 
@@ -236,12 +269,12 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
 		out.addTag(cst);
 		
 		out.openTag("ci");
-		out.addContent(""+v_no.get(idx));
+		out.addContent(""+v_no.get(idx)); // nom de l'input
         out.closeTag();  // ci
 		
-        out.openTag("cn");
-		out.addContent(""+value);
-        out.closeTag();  // cn
+        out.openTag("ci");
+		out.addContent("input_"+v_no.get(idx)+"_"+value); // thresholdLevel
+        out.closeTag();  // ci
 
         out.closeTag();  // apply
 	}
