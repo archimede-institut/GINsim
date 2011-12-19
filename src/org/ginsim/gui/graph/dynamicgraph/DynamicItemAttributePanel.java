@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.dynamicanalyser;
+package org.ginsim.gui.graph.dynamicgraph;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;

@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.service.Service;
+import org.ginsim.core.service.Service;
 
 public class PetrinetExportService implements Service {
 

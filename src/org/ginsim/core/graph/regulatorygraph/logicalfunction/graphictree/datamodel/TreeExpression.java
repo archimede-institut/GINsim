@@ -9,14 +9,14 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.BooleanGene;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.BooleanParser;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalFunctionList;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalFunctionListElement;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.FunctionEditorModel;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.tree.ParamTree;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBinaryOperator;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBooleanOperator;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBooleanTreeNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TUnaryOperator;
-import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
-import org.ginsim.gui.graph.regulatorygraph.logicalfunction.neweditor.FunctionEditorModel;
 
 
 public class TreeExpression extends TreeElement {
@@ -26,7 +26,7 @@ public class TreeExpression extends TreeElement {
   private FunctionEditorModel editorModel;
   private FunctionsCreator functionsCreator;
   private Point selection;
-	private FunctionPanel graphicPanel;
+  private FunctionPanel graphicPanel;
 
   public TreeExpression(TreeElement parent, TBooleanTreeNode root, FunctionsCreator fc) {
     super(parent);

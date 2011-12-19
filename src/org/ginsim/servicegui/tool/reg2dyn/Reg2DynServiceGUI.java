@@ -15,13 +15,13 @@ import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.gui.utils.widgets.Frame;
 import org.ginsim.service.tool.reg2dyn.Reg2DynService;
 import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
-import org.ginsim.servicegui.ServiceGUI;
-import org.ginsim.servicegui.common.GUIFor;
-import org.ginsim.servicegui.common.ToolAction;
 import org.mangosdk.spi.ProviderFor;
 
 

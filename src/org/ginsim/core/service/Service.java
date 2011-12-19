@@ -1,4 +1,4 @@
-package org.ginsim.service;
+package org.ginsim.core.service;
 
 /**
  * This interface is the central interface for GINsim services.

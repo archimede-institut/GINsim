@@ -17,7 +17,7 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamod
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.neweditor.qmc.QMCThread;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
-import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
+import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanelImpl;
 import org.ginsim.gui.utils.widgets.GsButton;
 
 
@@ -47,8 +47,8 @@ public class FunctionEditorControler {
 	public static final int QUINE_DNF = 23;
 	public static final int QUINE_CNF = 24;
 
-	private FunctionPanel functionPanel;
-	private FunctionEditorModel editorModel;
+	private FunctionPanelImpl functionPanel;
+	private FunctionEditorModelImpl editorModel;
 	private FunctionEditorEditPanel editPanel;
 	private FunctionEditorDisplayPanel displayPanel;
 	private RegulatoryNode vertex;
@@ -61,11 +61,11 @@ public class FunctionEditorControler {
 		displayPanel = p2;
 		displayPanel.setControler(this);
 	}
-	public void init(FunctionPanel p, FunctionEditorModel m) {
+	public void init(FunctionPanelImpl p, FunctionEditorModelImpl m) {
   	functionPanel = p;
     editorModel = m;
 	}
-	public void init(RegulatoryNode v, RegulatoryGraph g, JTree t, FunctionEditorModel m) {
+	public void init(RegulatoryNode v, RegulatoryGraph g, JTree t, FunctionEditorModelImpl m) {
 		vertex = v;
 		graph = g;
 		tree = t;

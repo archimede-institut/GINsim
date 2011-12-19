@@ -1,4 +1,4 @@
-package org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree;
+package org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -30,7 +30,6 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.Func
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBooleanTreeNode;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.graph.regulatorygraph.logicalfunction.LogicalFunctionTreePanel;
 
 
 public class TreeInteractionsModel implements TreeModel {
@@ -39,7 +38,7 @@ public class TreeInteractionsModel implements TreeModel {
 	private RegulatoryGraph graph;
 	private TreeString root;
 
-	private LogicalFunctionTreePanel view = null;
+	private LogicalFunctionView view = null;
 	private Vector treeModelListeners = new Vector();
 
 	public TreeInteractionsModel(RegulatoryGraph graph) {
@@ -47,7 +46,7 @@ public class TreeInteractionsModel implements TreeModel {
 		root.setProperty("add", new Boolean(true));
 		this.graph = graph;
 	}
-	public void setView(LogicalFunctionTreePanel v) {
+	public void setView(LogicalFunctionView v) {
 		view = v;
 	}
 	public void refreshView() {

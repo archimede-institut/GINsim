@@ -10,11 +10,11 @@ import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.service.ServiceManager;
+import org.ginsim.core.service.ServiceManager;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.service.export.snakes.SnakesExportService;
-import org.ginsim.servicegui.ServiceGUI;
-import org.ginsim.servicegui.common.ExportAction;
-import org.ginsim.servicegui.common.GUIFor;
 import org.mangosdk.spi.ProviderFor;
 
 

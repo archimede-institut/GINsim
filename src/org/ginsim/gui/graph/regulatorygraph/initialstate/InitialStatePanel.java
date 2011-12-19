@@ -27,7 +27,6 @@ import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.Label;
 import org.ginsim.gui.utils.widgets.StockButton;
-import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
 
 
 
@@ -73,8 +72,6 @@ class StateListPanel extends JPanel {
     private JButton buttonCopyStateRow = null;
     private JButton buttonUp = null;
     private JButton buttonDown = null;
-
-    SimulationParameterList paramList;
 
     Insets topInset = new Insets(20,0,0,0);
 	private InitialStateList stateList;

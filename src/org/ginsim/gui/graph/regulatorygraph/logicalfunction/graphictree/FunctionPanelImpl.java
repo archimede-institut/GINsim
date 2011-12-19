@@ -23,6 +23,8 @@ import javax.swing.UIManager;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 import javax.swing.tree.TreePath;
 
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
@@ -31,7 +33,7 @@ import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.utils.widgets.GsButton;
 
 
-public class FunctionPanel extends BooleanFunctionTreePanel implements ActionListener, KeyListener, PropertyChangeListener, MouseListener {
+public class FunctionPanelImpl extends BooleanFunctionTreePanel implements FunctionPanel, ActionListener, KeyListener, PropertyChangeListener, MouseListener {
   private static final long serialVersionUID = 8900639275182677150L;
   private static final Color editColor = new Color(204, 255, 204);
   private JButton editButton;
@@ -40,7 +42,7 @@ public class FunctionPanel extends BooleanFunctionTreePanel implements ActionLis
   private boolean toUpdate = false;
   private LogicalFunctionPanel panel;
 
-  public FunctionPanel(LogicalFunctionPanel p, TreeElement value, JTree tree, boolean sel, int width, boolean edit) {
+  public FunctionPanelImpl(LogicalFunctionPanel p, TreeElement value, JTree tree, boolean sel, int width, boolean edit) {
     super(value, tree, sel, width);
     panel = p;
     setLayout(new BorderLayout(2, 2));

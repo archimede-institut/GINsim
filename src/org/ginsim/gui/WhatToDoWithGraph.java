@@ -25,12 +25,12 @@ import org.ginsim.common.utils.Translator;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.gui.service.ServiceGUIManager;
+import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.service.common.LayoutAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.GsFileFilter;
-import org.ginsim.servicegui.ServiceGUIManager;
-import org.ginsim.servicegui.common.ExportAction;
-import org.ginsim.servicegui.common.LayoutAction;
-import org.ginsim.servicegui.common.ToolAction;
 
 /**
  * This class define a frame that is opened when a graph is computed from an other one.

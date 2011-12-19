@@ -4,22 +4,22 @@ import javax.swing.JTree;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
-import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
-import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
+import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanelImpl;
 
 
 public class FunctionEditor {
   private FunctionEditorEditPanel editPanel;
 	private FunctionEditorDisplayPanel displayPanel;
-  private FunctionEditorModel model;
+  private FunctionEditorModelImpl model;
   private FunctionEditorControler controler;
 
   public FunctionEditor() {
   	editPanel = new FunctionEditorEditPanel();
 		displayPanel = new FunctionEditorDisplayPanel();
     controler = new FunctionEditorControler(editPanel, displayPanel);
-    model = new FunctionEditorModel(controler);
+    model = new FunctionEditorModelImpl(controler);
   }
   public FunctionEditorEditPanel getEditPanel() {
     return editPanel;
@@ -37,7 +37,7 @@ public class FunctionEditor {
 		editPanel.setVisible(b);
 		displayPanel.setVisible(b);
 	}
-  public void init(TreeInteractionsModel m, FunctionPanel p) {
+  public void init(TreeInteractionsModel m, FunctionPanelImpl p) {
   	model.init(m, p);
     controler.init(p, model);
   	editPanel.init(model);
@@ -47,7 +47,7 @@ public class FunctionEditor {
 		controler.init(v, graph, t, model);
 		displayPanel.init(e);
 	}
-	public FunctionEditorModel getModel() {
+	public FunctionEditorModelImpl getModel() {
   	return model;
   }
 }

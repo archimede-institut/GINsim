@@ -17,6 +17,7 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.ToolTipsable;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterList;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeString;
@@ -24,7 +25,6 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamod
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
-import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 
 
 

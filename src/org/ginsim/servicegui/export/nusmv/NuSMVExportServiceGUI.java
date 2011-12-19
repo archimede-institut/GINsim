@@ -10,13 +10,13 @@ import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.service.ServiceManager;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.service.common.StandaloneGUI;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
-import org.ginsim.service.ServiceManager;
 import org.ginsim.service.export.nusmv.NuSMVConfig;
 import org.ginsim.service.export.nusmv.NuSMVExportService;
-import org.ginsim.servicegui.ServiceGUI;
-import org.ginsim.servicegui.common.ExportAction;
-import org.ginsim.servicegui.common.StandaloneGUI;
 import org.mangosdk.spi.ProviderFor;
 
 

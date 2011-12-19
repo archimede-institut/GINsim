@@ -18,6 +18,7 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.BooleanParser;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeParam;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -26,7 +27,6 @@ import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.io.parser.GsXMLHelper;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.InvalidFunctionResolution;
-import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 

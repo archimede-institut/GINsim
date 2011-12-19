@@ -7,11 +7,12 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
-import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.FunctionEditorModel;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 
 
-public class FunctionEditorModel {
+public class FunctionEditorModelImpl implements FunctionEditorModel {
 	private FunctionPanel functionPanel;
 	private String oldExp;
 	private Vector interactions, interactionList;
@@ -19,7 +20,7 @@ public class FunctionEditorModel {
 	private FunctionEditorControler controler;
 	private Vector allowedTerms;
 
-  public FunctionEditorModel(FunctionEditorControler c) {
+  public FunctionEditorModelImpl(FunctionEditorControler c) {
   	interactions = new Vector();
   	controler = c;
 		selectedArea = new Point(-1, -2);
@@ -122,6 +123,7 @@ public class FunctionEditorModel {
   public String getOldExp() {
   	return oldExp;
   }
+  @Override
   public Point getSelectedArea() {
   	return selectedArea;
   }

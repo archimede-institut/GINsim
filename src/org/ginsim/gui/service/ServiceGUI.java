@@ -1,4 +1,4 @@
-package org.ginsim.servicegui;
+package org.ginsim.gui.service;
 
 import java.util.List;
 

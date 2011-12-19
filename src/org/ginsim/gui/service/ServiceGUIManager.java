@@ -1,4 +1,4 @@
-package org.ginsim.servicegui;
+package org.ginsim.gui.service;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -11,10 +11,10 @@ import javax.swing.Action;
 
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.service.Service;
-import org.ginsim.service.ServiceManager;
-import org.ginsim.servicegui.common.GUIFor;
-import org.ginsim.servicegui.common.StandaloneGUI;
+import org.ginsim.core.service.Service;
+import org.ginsim.core.service.ServiceManager;
+import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.StandaloneGUI;
 
 
 

@@ -27,11 +27,12 @@ import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifier;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
+import org.ginsim.service.tool.modelsimplifier.ReductionLauncher;
 import org.ginsim.service.tool.modelsimplifier.RemovedInfo;
 
 
 
-public class ModelSimplifierConfigDialog extends StackDialog implements ListSelectionListener {
+public class ModelSimplifierConfigDialog extends StackDialog implements ListSelectionListener, ReductionLauncher {
 	private static final long	serialVersionUID	= 3618855894072951620L;
 
 	RegulatoryGraph graph;
@@ -68,7 +69,8 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 		}
 	}
 	
-    public void endSimu( Graph graph, Exception e) {
+	@Override
+	public void endSimu( Graph graph, Exception e) {
     	isRunning = false;
         if (null == graph) {
             GUIMessageUtils.openErrorDialog(e.getMessage(), GUIManager.getInstance().getFrame(graph));
@@ -84,6 +86,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 		ctlist.refresh();
 	}
 
+	@Override
 	public boolean showPartialReduction(List<RemovedInfo> l_todo) {
 
         int choice = JOptionPane.showConfirmDialog(this, "show result of partial reduction?", "Reduction failed",

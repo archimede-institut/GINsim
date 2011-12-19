@@ -12,13 +12,13 @@ import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.service.ServiceManager;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ImportAction;
 import org.ginsim.service.imports.truthtable.TruthTableImportService;
 import org.ginsim.service.layout.LayoutService;
-import org.ginsim.servicegui.ServiceGUI;
-import org.ginsim.servicegui.common.GUIFor;
-import org.ginsim.servicegui.common.ImportAction;
 import org.mangosdk.spi.ProviderFor;
 
 /**

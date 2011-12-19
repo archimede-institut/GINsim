@@ -14,12 +14,12 @@ import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.utils.data.ValueList;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
+import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.utils.data.models.ValueListComboModel;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 import org.ginsim.service.export.documentation.DocumentExportConfig;
 import org.ginsim.service.export.documentation.LRGDocumentationService;
-import org.ginsim.servicegui.common.ExportAction;
 
 public class LRGDocumentationAction  extends ExportAction<RegulatoryGraph> {
 

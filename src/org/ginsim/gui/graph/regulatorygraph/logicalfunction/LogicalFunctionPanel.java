@@ -11,8 +11,8 @@ import javax.swing.JPanel;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
-import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
+import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanelImpl;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.neweditor.FunctionEditor;
 import org.ginsim.gui.graph.regulatorygraph.models.IncomingEdgeListModel;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
@@ -65,7 +65,7 @@ public class LogicalFunctionPanel extends AbstractParameterPanel implements Obje
 	public FunctionEditor getFunctionEditor() {
 		return functionEditor;
 	}
-	public void initEditor(TreeInteractionsModel m, FunctionPanel fp) {
+	public void initEditor(TreeInteractionsModel m, FunctionPanelImpl fp) {
 		functionEditor.init(m, fp);
 	}
 	public void setEditedItem(Object obj) {

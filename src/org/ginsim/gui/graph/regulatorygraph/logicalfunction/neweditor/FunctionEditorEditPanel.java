@@ -83,7 +83,7 @@ public class FunctionEditorEditPanel extends GsPanel implements ItemListener, Ac
 	private GsButton previousButton, nextButton, deleteButton, andButton, orButton, clearButton, cancelButton, okButton;
 	private JRadioButton andRadioButton, orRadioButton;
 	private JCheckBox parCheckBox, notCheckBox;
-	private FunctionEditorModel editorModel;
+	private FunctionEditorModelImpl editorModel;
 	private Color darkGreen = new Color(13, 87, 37);
 	private Color lightGreen = new Color(12, 122, 52);
 	private ImageIcon ic_on, ic_off;
@@ -105,7 +105,7 @@ public class FunctionEditorEditPanel extends GsPanel implements ItemListener, Ac
 	public void setControler(FunctionEditorControler c) {
 		controler = c;
 	}
-  public void init(FunctionEditorModel m) {
+  public void init(FunctionEditorModelImpl m) {
   	editorModel = m;
     Point p = editorModel.getSelectedArea();
     if (p.x == p.y) {

@@ -3,7 +3,7 @@ package org.ginsim.service.export.documentation;
 import java.io.IOException;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.service.Service;
+import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( Service.class)

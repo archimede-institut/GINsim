@@ -9,12 +9,12 @@ import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.service.ServiceManager;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ImportAction;
 import org.ginsim.service.imports.sbml.SBMLImportService;
-import org.ginsim.servicegui.ServiceGUI;
-import org.ginsim.servicegui.common.GUIFor;
-import org.ginsim.servicegui.common.ImportAction;
 import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor(ServiceGUI.class)

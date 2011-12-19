@@ -11,13 +11,13 @@ import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.service.ServiceGUIManager;
+import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.service.common.GenericGraphAction;
+import org.ginsim.gui.service.common.ImportAction;
+import org.ginsim.gui.service.common.LayoutAction;
 import org.ginsim.gui.shell.callbacks.FileCallBack;
 import org.ginsim.gui.shell.callbacks.HelpCallBack;
-import org.ginsim.servicegui.ServiceGUIManager;
-import org.ginsim.servicegui.common.ExportAction;
-import org.ginsim.servicegui.common.GenericGraphAction;
-import org.ginsim.servicegui.common.ImportAction;
-import org.ginsim.servicegui.common.LayoutAction;
 
 public class MainFrameActionManager implements FrameActionManager {
 

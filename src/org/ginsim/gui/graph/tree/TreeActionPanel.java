@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.regulatorytreefunction;
+package org.ginsim.gui.graph.tree;
 
 import java.awt.Component;
 import java.awt.Dimension;

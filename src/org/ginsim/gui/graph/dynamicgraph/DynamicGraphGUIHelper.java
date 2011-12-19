@@ -26,7 +26,6 @@ import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.Frame;
-import org.ginsim.servicegui.tool.dynamicanalyser.DynamicItemAttributePanel;
 import org.ginsim.servicegui.tool.stablestates.StableTableModel;
 import org.mangosdk.spi.ProviderFor;
 

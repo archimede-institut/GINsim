@@ -16,7 +16,6 @@ import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.widgets.Frame;
-import org.ginsim.servicegui.tool.regulatorytreefunction.TreeActionPanel;
 import org.mangosdk.spi.ProviderFor;
 
 

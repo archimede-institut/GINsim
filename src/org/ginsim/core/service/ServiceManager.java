@@ -1,4 +1,4 @@
-package org.ginsim.service;
+package org.ginsim.core.service;
 
 import java.util.HashMap;
 import java.util.Iterator;

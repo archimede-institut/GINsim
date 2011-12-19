@@ -22,6 +22,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
+import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
@@ -29,7 +30,6 @@ import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.graph.view.css.ColorizerPanel;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
-import org.ginsim.service.ServiceManager;
 import org.ginsim.service.tool.interactionanalysis.InteractionAnalysisAlgoResult;
 import org.ginsim.service.tool.interactionanalysis.InteractionAnalysisService;
 

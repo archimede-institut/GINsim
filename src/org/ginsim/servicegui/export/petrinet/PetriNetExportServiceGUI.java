@@ -1,9 +1,9 @@
 package org.ginsim.servicegui.export.petrinet;
 
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.SimpleServiceGUI;
+import org.ginsim.gui.service.common.StandaloneGUI;
 import org.ginsim.service.export.petrinet.PetrinetExportService;
-import org.ginsim.servicegui.ServiceGUI;
-import org.ginsim.servicegui.SimpleServiceGUI;
-import org.ginsim.servicegui.common.StandaloneGUI;
 import org.mangosdk.spi.ProviderFor;
 
 

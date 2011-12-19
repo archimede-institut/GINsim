@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.dynamicanalyser;
+package org.ginsim.gui.graph.dynamicgraph;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
