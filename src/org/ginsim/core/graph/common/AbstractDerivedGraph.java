@@ -91,17 +91,17 @@ abstract public class AbstractDerivedGraph<V, E extends Edge<V>, AG extends Grap
         if (associatedGraph != null) {
             associatedID = GraphManager.getInstance().getGraphPath( associatedGraph);
             if (associatedID == null) {
-                throw new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_save"));
+                throw new GsException(GsException.GRAVITY_INFO, "STR_associate_save");
             }
         }
 
         if (associatedID != null) {
             File f = new File(associatedID);
             if (!f.exists() || !f.canRead()) {
-            	throw new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_notfound")+associatedID);
+            	throw new GsException(GsException.GRAVITY_INFO, new String[]{"STR_associate_notfound",associatedID});
             }
         } else {
-        	throw new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_associate_manual"));
+        	throw new GsException(GsException.GRAVITY_INFO, "STR_associate_manual");
         }
 
         return associatedID;

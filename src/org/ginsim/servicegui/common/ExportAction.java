@@ -3,8 +3,11 @@ package org.ginsim.servicegui.common;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
+import org.ginsim.common.utils.FileFormatDescription;
+import org.ginsim.common.utils.gui.FileFormatFilter;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.GsFileFilter;
@@ -48,15 +51,17 @@ public abstract class ExportAction<G extends Graph> extends BaseAction {
 	 */
 	public void selectFile() {
 		// TODO: restore file filters
-		String filename = FileSelectionHelper.selectSaveFilename( null, getFileFilter());
+		String filename = FileSelectionHelper.selectSaveFilename( null, new FileFormatFilter(getFileFilter()));
 		if (filename == null) {
 			return;
 		}
 		try {
 			doExport(filename);
+			NotificationManager.publishInformation( graph, "Export finished");
 		} catch (Exception e) {
 			LogManager.error("Error in export "+getID());
 			LogManager.error(e);
+			NotificationManager.publishError( graph, "Export failed: " + e.getLocalizedMessage() + ". See logs for details");
 		}
 	}
 
@@ -81,7 +86,7 @@ public abstract class ExportAction<G extends Graph> extends BaseAction {
 	 * 
 	 * @return the active file filter
 	 */
-	abstract protected GsFileFilter getFileFilter();
+	abstract protected FileFormatDescription getFileFilter();
 	
 	/**
 	 * Main export function: will be called after the target file was selected

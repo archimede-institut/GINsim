@@ -310,8 +310,8 @@ public class DynamicSearchPathConfig extends JDialog {
     }
     private JButton getBut_gp() {
         if (but_gp == null) {
-            but_gp = new JButton("gnuplot");
-            but_gp.setToolTipText(Translator.getString("STR_gnuplot_descr"));
+            but_gp = new JButton(  Translator.getString("STR_gnuplot"));
+            but_gp.setToolTipText( Translator.getString("STR_gnuplot_descr"));
             but_gp.setEnabled(false);
             but_gp.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {

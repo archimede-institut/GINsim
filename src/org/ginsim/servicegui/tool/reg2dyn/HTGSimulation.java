@@ -1,7 +1,6 @@
 package org.ginsim.servicegui.tool.reg2dyn;
 
 import java.awt.Color;
-import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Set;
@@ -16,6 +15,7 @@ import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalSigmaSetFact
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.servicegui.tool.reg2dyn.helpers.HTGSimulationHelper;
@@ -45,7 +45,6 @@ public class HTGSimulation extends Simulation {
 	private static final int DBG_ALL = DBG_MAINLOOPS | DBG_POSTTREATMENT | DBG_APPARTENANCETESTS | DBG_QUEUE | DBG_SIGMA | DBG_MERGE; 
 	
 	private static final byte debug = DBG_DEPLOYMENT; //Work as a mask, use val | val | val ....
-	private PrintStream debug_o = System.err;
 	private StringBuffer log_tabdepth = new StringBuffer();
 	
 	/**
@@ -134,18 +133,18 @@ public class HTGSimulation extends Simulation {
 //		} catch (FileNotFoundException e1) {
 //			e1.printStackTrace();
 //		}
-		LogManager.debug(DBG_MAINLOOPS,log_tabdepth+"Begin algorithm with param, shouldCompactSCC:"+shouldCompactSCC);               						
+		LogManager.info("Begin HTG, shouldCompactSCC:"+shouldCompactSCC);               						
 		ready = true;
 		try {
 			runSimulationOnInitialStates();									// run the simulation for each initial states
 		} catch (GsException e) {
-			debug_o.println("Error : "+e.getMessage());
-            debug_o.println("simulation was interrupted");
+			LogManager.error("Error, the simulation was interrupted : "+e.getMessage());
 		} catch (OutOfMemoryError e) {
 		    GUIMessageUtils.openErrorDialog("Out Of Memory");
+		    LogManager.error("Simulation of the HTG : Out of memory");
 		    return null;
 		} catch (Exception e) {
-			debug_o.println("Error : "+e.getMessage());
+			LogManager.error("Error : "+e.getMessage());
 			e.printStackTrace();
 		}
 		LogManager.info("Simulation done in : "+(System.currentTimeMillis()-time)+"ms");
@@ -330,7 +329,7 @@ public class HTGSimulation extends Simulation {
 			if (isCycle) sigmaFactory.addToNewSigma(scc);
 		}
 		boolean isTerminal = true;
-		for (Iterator it = scc.statesSet.statesToFullList().iterator(); it.hasNext();) { //compute the edges and the sigma
+		for (Iterator<byte[]> it = scc.statesSet.statesToFullList().iterator(); it.hasNext();) { //compute the edges and the sigma
 			byte[] state = (byte[]) it.next();
 			SimulationUpdater updater = getUpdaterForState(state);						//    Get the updater of the state
 			while (updater.hasNext()) {
@@ -409,7 +408,7 @@ public class HTGSimulation extends Simulation {
 	 * @return
 	 */
 	private HTGSimulationQueueItem getTripletInQueueForState(byte[] state) {
-		for (ListIterator it = queue.listIterator(queue.size()); it.hasPrevious();) {
+		for (ListIterator<HTGSimulationQueueItem> it = queue.listIterator(queue.size()); it.hasPrevious();) {
 			HTGSimulationQueueItem triplet = (HTGSimulationQueueItem) it.previous();
 			if (triplet.containsState(state)) {
 				return triplet;
@@ -437,14 +436,14 @@ public class HTGSimulation extends Simulation {
 		vreader.setNode(hnode);
 		switch (hnode.getType()) {
 		case HierarchicalNode.TYPE_STABLE_STATE:
-			vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
+			vreader.setShape(NodeShape.ELLIPSE);
 			vreader.setBackgroundColor(HierarchicalNode.TYPE_STABLE_STATE_COLOR);
 			break;
 		case HierarchicalNode.TYPE_TRANSIENT_CYCLE:
 			vreader.setBackgroundColor(HierarchicalNode.TYPE_TRANSIENT_CYCLE_COLOR);
 			break;
 		case HierarchicalNode.TYPE_TERMINAL_CYCLE:
-			vreader.setShape(NodeAttributesReader.SHAPE_ELLIPSE);
+			vreader.setShape(NodeShape.ELLIPSE);
 			vreader.setBackgroundColor(HierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
 			break;
 		case HierarchicalNode.TYPE_TRANSIENT_COMPONENT:
@@ -468,7 +467,7 @@ public class HTGSimulation extends Simulation {
 	 * Add all the nodes to the graph, update their size and set their graphical properties
 	 */
 	private void addAllNodeTo() {
-		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
+		for (Iterator<HierarchicalNode> it = nodeSet.iterator(); it.hasNext();) {
 			HierarchicalNode node = (HierarchicalNode) it.next();
 			node.updateSize();
 			htg.addNode(node);
@@ -481,12 +480,13 @@ public class HTGSimulation extends Simulation {
 	 */
 	private void addAllEdgesTo() {
 		LogManager.debug(DBG_POSTTREATMENT,"Adding all arcs to the graph...");
+		LogManager.info("posttreatment, adding the real edges to the graph");
 		int nbarc = 0;
-		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
+		for (Iterator<HierarchicalNode> it = nodeSet.iterator(); it.hasNext();) {
 			HierarchicalNode from = (HierarchicalNode) it.next();
 			LogManager.debug(DBG_POSTTREATMENT,"\tto "+from);
-			Set tos = from.getOut();
-			for (Iterator it2 = tos.iterator(); it2.hasNext();) {
+			Set<HierarchicalNode> tos = from.getOut();
+			for (Iterator<HierarchicalNode> it2 = tos.iterator(); it2.hasNext();) {
 				HierarchicalNode to = (HierarchicalNode) it2.next();
 				Object b = htg.addEdge(from, to);
 				if (b != null) nbarc++;
@@ -524,7 +524,7 @@ public class HTGSimulation extends Simulation {
 	 */
 	private void checkStopConditions() throws Exception { 
 		if (maxnodes != 0 && nbnode >= maxnodes){
-		    debug_o.println("maxnodes reached: " + maxnodes);
+			LogManager.error("Simulation of the HTG : maxnodes reached @" + nbnode);
 		    throw new GsException(GsException.GRAVITY_NORMAL, "Reached the maximum count of node");
 		}
 		if (maxdepth > 0 && depth >= maxdepth) {

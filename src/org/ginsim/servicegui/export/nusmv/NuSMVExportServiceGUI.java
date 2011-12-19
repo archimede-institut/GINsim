@@ -6,10 +6,10 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.export.nusmv.NuSMVConfig;
@@ -38,6 +38,11 @@ public class NuSMVExportServiceGUI implements ServiceGUI {
 		}
 		return null;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_MANIPULATION;
+	}
 }
 
 /**
@@ -48,8 +53,8 @@ public class NuSMVExportServiceGUI implements ServiceGUI {
 class NuSMVExportAction extends ExportAction<RegulatoryGraph> {
 
 	private static final long serialVersionUID = -3615904375655037276L;
-	private static final GsFileFilter ffilter = new GsFileFilter(
-			new String[] { "smv" }, "smv (NuSMV) files");
+	private static final FileFormatDescription FORMAT = new FileFormatDescription("NuSMV", "smv");
+	
 	private NuSMVConfig config;
 
 	public NuSMVExportAction(RegulatoryGraph graph) {
@@ -57,8 +62,8 @@ class NuSMVExportAction extends ExportAction<RegulatoryGraph> {
 	}
 
 	@Override
-	protected GsFileFilter getFileFilter() {
-		return ffilter;
+	public FileFormatDescription getFileFilter() {
+		return FORMAT;
 	}
 
 	@Override

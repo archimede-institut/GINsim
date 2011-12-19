@@ -7,13 +7,13 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JDialog;
 
 import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.IOUtils;
 import org.ginsim.core.utils.log.LogManager;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.AboutDialog;
 import org.ginsim.gui.shell.FileSelectionHelper;
-import org.ginsim.gui.utils.GUIIOUtils;
 
 
 
@@ -42,7 +42,7 @@ public class HelpCallBack {
 
 class AboutAction extends AbstractAction {
 	public AboutAction() {
-		super("About");
+		super( Translator.getString( "STR_About"));
 	}
 	
 	@Override
@@ -59,7 +59,7 @@ class HelpAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO: search for local help
-		GUIIOUtils.openURI("http://gin.univ-mrs.fr/GINsim/doc.html");
+		IOUtils.openURI("http://gin.univ-mrs.fr/GINsim/doc.html");
 		// GsEnv.error(new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_docPathError")), null);
 	}
 }
@@ -73,7 +73,7 @@ class HelpAction extends AbstractAction {
 class ProvideLogAction extends AbstractAction {
 	
 	public ProvideLogAction() {
-		super("Export logs");
+		super(Translator.getString( "STR_Help_ExportLogs"));
 	}
 	
 	@Override
@@ -106,7 +106,7 @@ class ToggleTraceAction extends AbstractAction{
 	
 	public ToggleTraceAction() {
 		
-		super( LogManager.getVerboseLevel() ==0?"Enable Traces":"Disable Traces");
+		super( LogManager.getVerboseLevel() ==0?Translator.getString( "STR_Help_EnableTraces"):Translator.getString( "STR_Help_DisableTraces"));
 	}
 	
 	@Override
@@ -114,11 +114,11 @@ class ToggleTraceAction extends AbstractAction{
 		
 		if( LogManager.getVerboseLevel() == 0){
 			LogManager.setVerbose( 2);
-			putValue( Action.NAME, "Disable Traces");
+			putValue( Action.NAME, Translator.getString( "STR_Help_DisableTraces"));
 		}
 		else{
 			LogManager.setVerbose( 0);
-			putValue( Action.NAME, "Enable Traces");
+			putValue( Action.NAME, Translator.getString( "STR_Help_EnableTraces"));
 		}
 	}
 }

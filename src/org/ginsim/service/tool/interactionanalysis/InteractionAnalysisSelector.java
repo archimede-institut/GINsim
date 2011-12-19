@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.util.Map;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.css.EdgeStyle;
 import org.ginsim.core.graph.view.css.Selector;
 import org.ginsim.core.graph.view.css.Style;
@@ -17,10 +17,10 @@ public class InteractionAnalysisSelector extends Selector {
 	public static final String CAT_NEGATIVE = "negative";
 	public static final String CAT_DUAL = "dual";
 	
-	public static final EdgeStyle STYLE_NONFUNCTIONNAL	= new EdgeStyle(Color.yellow, 	EdgeAttributesReader.ARROW_UNKNOWN,EdgeStyle.NULL_SHAPE,  5);
-	public static final EdgeStyle STYLE_POSITIVE 		= new EdgeStyle(Color.green, 	EdgeAttributesReader.ARROW_POSITIVE, EdgeStyle.NULL_SHAPE,  5);
-	public static final EdgeStyle STYLE_NEGATIVE 		= new EdgeStyle(Color.red, 		EdgeAttributesReader.ARROW_NEGATIVE, EdgeStyle.NULL_SHAPE,  5);
-	public static final EdgeStyle STYLE_DUAL	 		= new EdgeStyle(Color.blue, 	EdgeAttributesReader.ARROW_DOUBLE, EdgeStyle.NULL_SHAPE,  5);
+	public static final EdgeStyle STYLE_NONFUNCTIONNAL	= new EdgeStyle(Color.yellow, 	EdgeEnd.UNKNOWN,  false,  5);
+	public static final EdgeStyle STYLE_POSITIVE 		= new EdgeStyle(Color.green, 	EdgeEnd.POSITIVE, false,  5);
+	public static final EdgeStyle STYLE_NEGATIVE 		= new EdgeStyle(Color.red, 		EdgeEnd.NEGATIVE, false,  5);
+	public static final EdgeStyle STYLE_DUAL	 		= new EdgeStyle(Color.blue, 	EdgeEnd.DUAL,     false,  5);
 	
 	private Map<RegulatoryMultiEdge, String> cache = null;
 

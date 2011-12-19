@@ -35,6 +35,11 @@ public class LayoutServiceGUI implements ServiceGUI {
 		}
 		return actions;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_GENERIC;
+	}
 }
 
 enum LayoutType {

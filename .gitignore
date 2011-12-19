@@ -12,7 +12,6 @@ dist/
 bin/
 GINsim-*.jar
 GINsim.app
-core/
 bak/
 testCase/tmp
 .factorypath

@@ -12,12 +12,13 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.core.utils.data.GenericPropertyInfo;
-import org.ginsim.core.utils.data.ObjectPropertyEditorUI;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.data.GenericPropertyHolder;
+import org.ginsim.gui.utils.data.GenericPropertyInfo;
+import org.ginsim.gui.utils.data.ObjectPropertyEditorUI;
 
 
 
@@ -34,7 +35,7 @@ public class RegulatoryEdgeEditPanel extends JPanel
 
 	public RegulatoryEdgeEditPanel() {
         thmodel = new EdgeThresholdModel();
-        signcombo = new JComboBox(RegulatoryMultiEdge.SIGN_SHORT);
+        signcombo = new JComboBox(RegulatoryEdgeSign.getShortDescForGUI());
         setLayout(new GridBagLayout());
         
         GridBagConstraints c = new GridBagConstraints();
@@ -62,12 +63,12 @@ public class RegulatoryEdgeEditPanel extends JPanel
 	public void setEdge(RegulatoryEdge edge) {
 		this.edge = edge;
 		thmodel.setSelection(edge);
-		signcombo.setSelectedIndex(edge.sign);
+		signcombo.setSelectedIndex(edge.getSign().getIndexForGUI());
 	}
 	public void actionPerformed(ActionEvent e) {
 		byte s = (byte)signcombo.getSelectedIndex();
-		if (s != edge.sign && s >= 0 && s<RegulatoryMultiEdge.SIGN_SHORT.length) {
-			edge.me.setSign(edge.index, s, graph);
+		if (s != edge.getSign().getIndexForGUI() && s >= 0 && s<RegulatoryEdgeSign.values().length) {
+			edge.me.setSign(edge.index, RegulatoryEdgeSign.getFromPos(s), graph);
 		}
 	}
 	public void apply() {

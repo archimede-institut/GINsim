@@ -53,9 +53,19 @@ public class ServiceGUIManager{
         while (service_list.hasNext()) {
             try {
             	ServiceGUI service = service_list.next();
-            	if( service != null){
-            		services.add( service);
+            	if( service == null){
+            		LogManager.error("Got a null service");
+            		continue;
             	}
+            	int weight = service.getWeight();
+            	int position = 0;
+        		for (ServiceGUI s: services) {
+        			if (s.getWeight() > weight) {
+        				break;
+        			}
+        			position++;
+        		}
+        		services.add( position, service);
             }
             catch (ServiceConfigurationError e){
 

@@ -35,6 +35,10 @@ public class JythonServiceGUI implements ServiceGUI {
 		return actions;
 	}
 
+	@Override
+	public int getWeight() {
+		return W_MANIPULATION + 10;
+	}
 }
 
 class JythonAction extends ToolAction {

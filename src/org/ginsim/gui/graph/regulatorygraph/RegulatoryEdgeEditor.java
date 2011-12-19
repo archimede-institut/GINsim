@@ -8,18 +8,19 @@ import javax.swing.Action;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 import org.ginsim.core.utils.data.GenericList;
-import org.ginsim.core.utils.data.GenericPropertyInfo;
-import org.ginsim.core.utils.data.ObjectEditor;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.data.GenericPropertyEditorPanel;
+import org.ginsim.gui.utils.data.GenericPropertyInfo;
+import org.ginsim.gui.utils.data.ObjectEditor;
 
 
 public class RegulatoryEdgeEditor extends ObjectEditor<RegulatoryMultiEdge> {
@@ -178,7 +179,7 @@ class EdgeList extends GenericList {
 	}
 
     protected void addEdge(int value) {
-		int index = medge.addEdge(RegulatoryMultiEdge.SIGN_POSITIVE, value, graph);
+		int index = medge.addEdge(RegulatoryEdgeSign.POSITIVE, value, graph);
 		if (index != -1) {
 			setMEdge(medge);
 		}

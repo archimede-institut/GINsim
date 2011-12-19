@@ -4,6 +4,8 @@ import java.io.File;
 
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.common.utils.FileFormatDescription;
+
 /**
  * GINMLFilter.java filter the file to chose for saving/opening
  * 
@@ -17,6 +19,10 @@ public class GsFileFilter extends FileFilter {
 	public GsFileFilter() {
 		
 	}
+	public GsFileFilter(FileFormatDescription format) {
+		// TODO: filter based on a format
+	}
+	
 	public GsFileFilter(String[] extensions, String descr) {
 		this();
 		setExtensionList(extensions, descr);

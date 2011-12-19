@@ -13,6 +13,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.utils.DataUtils;
 
 
@@ -97,9 +98,9 @@ public class CytoscapeEncoder {
 			out.addAttr("fill", '#'+DataUtils.getColorCode(vertexAttributeReader.getBackgroundColor()));
 			out.addAttr("y", String.valueOf(vertexAttributeReader.getY()));
 			out.addAttr("x", String.valueOf(vertexAttributeReader.getX()));
-			if (vertexAttributeReader.getShape() == NodeAttributesReader.SHAPE_RECTANGLE) {
+			if (vertexAttributeReader.getShape() == NodeShape.RECTANGLE) {
 				out.addAttr("type", "rectangle");
-			} else if (vertexAttributeReader.getShape() == NodeAttributesReader.SHAPE_ELLIPSE) {
+			} else if (vertexAttributeReader.getShape() == NodeShape.ELLIPSE) {
 				out.addAttr("type", "ellipse");
 			}			
 			out.openTag("att");
@@ -124,11 +125,11 @@ public class CytoscapeEncoder {
 			String edge_type; //inhibit | activate | undefined
 			String edge_cyt_id; //15 | 3 | 12
 			switch (edge.getSign()) {
-				case RegulatoryMultiEdge.SIGN_NEGATIVE: 
+				case NEGATIVE: 
 					edge_type = "inhibit";
 					edge_cyt_id = "15";
 					break;
-				case RegulatoryMultiEdge.SIGN_POSITIVE: 
+				case POSITIVE: 
 					edge_type = "activate"; 
 					edge_cyt_id = "3";
 					break;
@@ -161,10 +162,10 @@ public class CytoscapeEncoder {
 			out.addTag("att", new String[] {"name", "edgeLineType", "value", "SOLID"});
 			out.addTag("att", new String[] {"name", "sourceArrowColor", "value", '#'+DataUtils.getColorCode(edgeAttributeReader.getLineColor())});
 			out.addTag("att", new String[] {"name", "targetArrowColor", "value", '#'+DataUtils.getColorCode(edgeAttributeReader.getLineColor())});
-			if (edgeAttributeReader.getStyle() == EdgeAttributesReader.STYLE_STRAIGHT) {
-				out.addTag("att", new String[] {"name", "curved", "value", "STRAIGHT_LINES"});
-			} else {
+			if (edgeAttributeReader.isCurve()) {
 				out.addTag("att", new String[] {"name", "curved", "value", "CURVED_LINES"});
+			} else {
+				out.addTag("att", new String[] {"name", "curved", "value", "STRAIGHT_LINES"});
 			}
 			out.closeTag();//att
 			out.closeTag();//graphics

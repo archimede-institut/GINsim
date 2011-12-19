@@ -81,7 +81,7 @@ public class GraphicalAttributesStore {
 class StoreColor {
     private final Color background;
     private final Color foreGround;
-    private final int border;
+    private final NodeBorder border;
        
     /**
      * @param vreader
@@ -93,7 +93,7 @@ class StoreColor {
         
         vreader.setBackgroundColor(Color.WHITE);
         vreader.setForegroundColor(Color.BLACK);
-        vreader.setBorder(0);
+        vreader.setBorder(NodeBorder.SIMPLE);
         vreader.refresh();
     }
     
@@ -101,7 +101,7 @@ class StoreColor {
 
         foreGround = ereader.getLineColor();
         background = null;
-        border = 0;
+        border = NodeBorder.SIMPLE;
     }
     
     protected void restore (NodeAttributesReader vreader) {

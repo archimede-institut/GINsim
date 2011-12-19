@@ -5,16 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.annotation.AnnotationPanel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.DataUtils;
-import org.ginsim.core.utils.data.GenericPropertyInfo;
-import org.ginsim.core.utils.data.ObjectEditor;
+import org.ginsim.gui.annotation.AnnotationPanel;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.LogicalFunctionPanel;
 import org.ginsim.gui.graph.regulatorygraph.models.NodeMaxValueSpinModel;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.data.GenericPropertyEditorPanel;
+import org.ginsim.gui.utils.data.GenericPropertyInfo;
+import org.ginsim.gui.utils.data.ObjectEditor;
 import org.ginsim.gui.utils.data.models.SpinModel;
 
 

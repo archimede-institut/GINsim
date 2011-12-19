@@ -37,10 +37,10 @@ public class GraphComparatorService implements Service {
 
 		switch (g_type) {
 		case GRAPH_TYPE_UNCOMPATIBLE:
-			NotificationManager.publishError(graph_frame, Translator.getString("STR_gcmp_graphFromDiffTypes"));
+			NotificationManager.publishError(graph_frame, "STR_gcmp_graphFromDiffTypes");
 			return null;
 		case GRAPH_TYPE_NULL:
-			NotificationManager.publishError(graph_frame, Translator.getString("STR_gcmp_graphFromDiffTypes"));
+			NotificationManager.publishError(graph_frame, "STR_gcmp_graphFromDiffTypes");
 			return null;
 		case GRAPH_TYPE_REGULATORY:
 			graph_new = GraphManager.getInstance().getNewGraph();
@@ -52,7 +52,7 @@ public class GraphComparatorService implements Service {
 				graph_new = GraphManager.getInstance().getNewGraph( DynamicGraph.class, nodeOrder);
 				graphComparator = new DynamicGraphComparator(graph_1, graph_2, graph_new);
 			} else {
-				NotificationManager.publishError(graph_frame, Translator.getString("STR_gcmp_graphFromDiffTypes"));
+				NotificationManager.publishError(graph_frame, "STR_gcmp_graphFromDiffTypes");
 				return null;
 			}
 			break;

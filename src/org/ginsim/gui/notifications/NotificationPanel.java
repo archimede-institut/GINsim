@@ -17,6 +17,7 @@ import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.resolvable.ResolvableErrorNotification;
 import org.ginsim.core.notification.resolvable.ResolvableNotification;
 import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
+import org.ginsim.gui.resource.Translator;
 
 
 /**
@@ -83,7 +84,7 @@ public class NotificationPanel extends JPanel {
 		c.gridy = 0;
         c.insets = new Insets(0,10,0,0);
 		c.anchor = GridBagConstraints.EAST;
-		bcloseNotification = new JButton("close");
+		bcloseNotification = new JButton(Translator.getString( "STR_close"));
 		add(bcloseNotification, c);
 		bcloseNotification.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -136,10 +137,10 @@ public class NotificationPanel extends JPanel {
             }
 
 			setVisible(true);
-			notificationMessage.setText(notification.toString());
+			notificationMessage.setText( Translator.getString( notification.getMessage()));
             String[] t_text = null;
             if( notification instanceof ResolvableNotification){
-            	t_text = ((ResolvableNotification) notification).getOptionNames();
+            	t_text = Translator.getStrings(((ResolvableNotification) notification).getOptionNames());
             }
             else{
             	t_text = new String[0];
@@ -149,18 +150,18 @@ public class NotificationPanel extends JPanel {
                 if ( t_text.length == 1) {
                     cNotificationAction.setVisible(false);
                     bNotificationAction2.setVisible(false);
-                    bNotificationAction.setText(t_text[0]);
+                    bNotificationAction.setText( t_text[0]);
                     bNotificationAction.requestFocusInWindow();
                 } else if ( t_text.length == 2) {
-                    bNotificationAction.setText(t_text[0]);
-                    bNotificationAction2.setText(t_text[1]);
+                    bNotificationAction.setText( t_text[0]);
+                    bNotificationAction2.setText( t_text[1]);
                     bNotificationAction2.setVisible(true);
                     cNotificationAction.setVisible(false);
                     bNotificationAction2.requestFocusInWindow();
                 } else {
                     cNotificationAction.setVisible(true);
                     bNotificationAction2.setVisible(false);
-                    bNotificationAction.setText("OK");
+                    bNotificationAction.setText( Translator.getString( "STR_OK"));
                     cNotificationAction.setModel(new DefaultComboBoxModel(t_text));
                     cNotificationAction.requestFocusInWindow();
                 }

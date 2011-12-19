@@ -46,6 +46,11 @@ public class LocalGraphServiceGUI implements ServiceGUI {
 		}
 		return actions;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_INFO + 5;
+	}
 }
 
 class LocalGraphAction extends ToolAction {

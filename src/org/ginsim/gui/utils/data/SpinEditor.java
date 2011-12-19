@@ -3,8 +3,6 @@ package org.ginsim.gui.utils.data;
 import javax.swing.JLabel;
 import javax.swing.JSpinner;
 
-import org.ginsim.core.utils.data.GenericPropertyInfo;
-import org.ginsim.core.utils.data.ObjectPropertyEditorUI;
 import org.ginsim.gui.utils.data.models.SpinModel;
 
 

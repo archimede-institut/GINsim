@@ -83,9 +83,7 @@ public class DynamicLayout3D {
 
 	private void moveEdge(Edge edge, byte[] maxValues) {
 		ereader.setEdge(edge);		
-		ereader.setRouting(EdgeAttributesReader.ROUTING_AUTO);
 		ereader.setPoints(null);
-		ereader.setStyle(EdgeAttributesReader.STYLE_STRAIGHT);
 		
 		byte[] diffstate = getDiffStates((DynamicNode)edge.getSource(), (DynamicNode)edge.getTarget());
 		int change = get_change(diffstate);

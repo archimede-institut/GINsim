@@ -1,11 +1,13 @@
 package org.ginsim.gui.graph.backend;
 
 import java.awt.Component;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Map;
 
+import org.ginsim.core.graph.view.ViewHelper;
 import org.ginsim.core.utils.log.LogManager;
 import org.jgraph.JGraph;
 import org.jgraph.graph.AbstractCellView;
@@ -33,7 +35,7 @@ public class RawNodeView extends AbstractCellView implements CellView {
 	private final RawNodeRenderer renderer;
 	public final Object user;
 
-	private final FakeAttributeMap attributes;
+	private FakeAttributeMap attributes = null;
 	
 	private Rectangle bounds = null;
 	
@@ -41,8 +43,6 @@ public class RawNodeView extends AbstractCellView implements CellView {
 		this.cell = (DefaultGraphCell)cell;
 		this.user = ((DefaultGraphCell)cell).getUserObject();
 		this.renderer = vertexRenderer;
-		
-		attributes = new FakeAttributeMap(this);
 	}
 
 	@Override
@@ -57,10 +57,7 @@ public class RawNodeView extends AbstractCellView implements CellView {
 
 	@Override
 	public Rectangle getBounds() {
-		if (bounds == null) {
-			bounds = renderer.getBounds(user);
-		}
-		return bounds;
+		return renderer.getBounds(user);
 	}
 
 	@Override
@@ -70,51 +67,28 @@ public class RawNodeView extends AbstractCellView implements CellView {
 
 	@Override
 	public Point2D getPerimeterPoint(EdgeView edge, Point2D source, Point2D p) {
-		Rectangle2D bounds = getBounds();
-		double x = bounds.getX();
-		double y = bounds.getY();
-		double width = bounds.getWidth();
-		double height = bounds.getHeight();
-		double xCenter = x + width / 2;
-		double yCenter = y + height / 2;
-		double dx = p.getX() - xCenter; // Compute Angle
-		double dy = p.getY() - yCenter;
-		double alpha = Math.atan2(dy, dx);
-		double xout = 0, yout = 0;
-		double pi = Math.PI;
-		double pi2 = Math.PI / 2.0;
-		double beta = pi2 - alpha;
-		double t = Math.atan2(height, width);
-		if (alpha < -pi + t || alpha > pi - t) { // Left edge
-			xout = x;
-			yout = yCenter - width * Math.tan(alpha) / 2;
-		} else if (alpha < -t) { // Top Edge
-			yout = y;
-			xout = xCenter - height * Math.tan(beta) / 2;
-		} else if (alpha < t) { // Right Edge
-			xout = x + width;
-			yout = yCenter + width * Math.tan(alpha) / 2;
-		} else { // Bottom Edge
-			yout = y + height;
-			xout = xCenter + height * Math.tan(beta) / 2;
-		}
-		return new Point2D.Double(xout, yout);
+		Rectangle bounds = getBounds();
+		Point target = new Point((int)p.getX(), (int)p.getY());
+		return ViewHelper.getIntersection(bounds, target);
 	}
 
 	@Override
 	public Map changeAttributes(GraphLayoutCache cache, Map map) {
 		// just ignore it, we don't support undo anyway
-		return attributes;
+		return getAttributes();
 	}
 
 	@Override
 	public AttributeMap getAttributes() {
+		if (attributes == null) {
+			attributes = new FakeAttributeMap(this);
+		}
 		return attributes;
 	}
 
 	@Override
 	public AttributeMap getAllAttributes() {
-		return attributes;
+		return getAttributes();
 	}
 
 	@Override
@@ -134,8 +108,12 @@ public class RawNodeView extends AbstractCellView implements CellView {
 
 	@Override
 	public CellViewRenderer getRenderer() {
-		LogManager.error( "Get renderer through abstractcellview method");
+		LogManager.error( "Trying to get a renderer through the abstractcellview method, should not happen");
 		return null;
+	}
+	
+	public void translate(double dx, double dy) {
+		renderer.translate(user, dx, dy);
 	}
 }
 

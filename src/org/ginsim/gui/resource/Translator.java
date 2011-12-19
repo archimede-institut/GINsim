@@ -125,6 +125,40 @@ public class Translator {
 		}
 	}
 
+	/**
+	 * Return the String array of key translations of the given String array
+	 * 
+	 * @param keys the array of string to translate
+	 * @return the String array of key translations of the given String array
+	 */
+	public static String[] getStrings( String[] keys){
+		
+		String[] translated = new String[ keys.length];
+		for( int i = 0 ; i < keys.length; i++){
+			translated[i] = getString( keys[i]);
+		}
+		
+		return translated;
+	}
+	
+	/**
+	 * Return the string composed by replacing the "%s" string in the given key by the given params
+	 * 
+	 * @param key
+	 * @param params
+	 * @return
+	 */
+	public static String getString( String key, String... params){
+		
+		String result = getString( key);
+		
+		for( String param : params){
+			result = result.replaceFirst( "%s", param);
+		}
+		
+		return result;
+	}
+	
 	/** 
 	 * get the localized String for the key. If
 	 * the String wasn't found the method will return

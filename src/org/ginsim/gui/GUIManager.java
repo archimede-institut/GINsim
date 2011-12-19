@@ -1,5 +1,6 @@
 package org.ginsim.gui;
 
+import java.awt.Color;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -7,13 +8,16 @@ import javax.swing.JOptionPane;
 
 import org.ginsim.common.OptionStore;
 import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.backend.JgraphtBackendImpl;
 import org.ginsim.core.graph.common.AbstractGraph;
+import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.view.NodeBorder;
+import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.graph.GraphGUI;
@@ -24,14 +28,11 @@ import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.MainFrame;
 import org.ginsim.gui.utils.widgets.Frame;
 
-
-
 public class GUIManager {
-
+    
 	private static GUIManager manager;
 	
 	private HashMap<Graph,GUIObject> graphToGUIObject = new HashMap<Graph, GUIObject>();
-	
 
 	/**
 	 * Give access to the manager singleton
@@ -45,6 +46,16 @@ public class GUIManager {
 		}
 		
 		return manager; 
+	}
+	
+	public void registerGUI( GraphGUI graph_gui, MainFrame frame){
+		
+		if( graph_gui!= null && frame != null){
+			Graph graph = graph_gui.getGraph();
+			if( graph != null){
+				graphToGUIObject.put( graph, new GUIObject( graph, graph_gui, frame));
+			}
+		}
 	}
 
 	/**
@@ -75,8 +86,6 @@ public class GUIManager {
 			graph_gui = createGraphGUI( graph);
 			MainFrame frame = new MainFrame("test", 800, 600, graph_gui);
 			frame.setVisible(true);
-			
-			graphToGUIObject.put( graph, new GUIObject( graph, graph_gui, frame));
 			
 			NotificationManager.getManager().registerListener( frame, graph);
 			return frame;
@@ -170,7 +179,7 @@ public class GUIManager {
 				name = "NAME_HERE";
 			}
 			o.frame.toFront();
-            int aw = JOptionPane.showConfirmDialog(o.frame, Translator.getString("STR_saveQuestion1")+ name +Translator.getString("STR_saveQuestion2"),
+            int aw = JOptionPane.showConfirmDialog(o.frame, Translator.getString("STR_saveQuestion", name),
                     Translator.getString("STR_closeConfirm"),
                     JOptionPane.YES_NO_CANCEL_OPTION);
             switch (aw) {
@@ -308,8 +317,60 @@ public class GUIManager {
 		}
 	}
 
-
 	
+	// ---------------------- METHODS LINKED TO THE whatToDoWithGraph FRAME -----------------------------------
+
+
+	public void whatToDoWithGraph(Graph<?, ?> new_graph, boolean b) {
+		whatToDoWithGraph( new_graph, null, b);
+	}
+
+	/**
+	 * Manage the action to execute on the new graph (that was generated
+	 * from the parent graph). According to the size of teh graph, a WhatToDoWithGraph frame may be
+	 * opened to ask user what he wants to do with the new graph.
+	 * 
+	 * @param new_graph the graph to manage
+	 * @param parentGraph the graph from which the new graph was generated
+	 * @param b 
+	 */
+	public void whatToDoWithGraph(Graph<?, ?> new_graph, Graph<?,?> parent_graph, boolean b) {
+		
+		// If the new graph is null, an error message is displayed
+		if( new_graph == null){
+			GUIMessageUtils.openErrorDialog( Translator.getString("STR_computedNullGraph"));
+			return;
+		}
+		
+		// If the graph is below the limit, a new frame is opened
+		if( new_graph.getNodeCount() < WhatToDoWithGraph.LITMIT_ASK_QUESTION){
+			newFrame( new_graph);
+			return;
+		}
+		
+		// If the graph is above the limit, a  WhatToDoWithGraph frame is opened to obtain the user chosen action
+		new WhatToDoWithGraph( new_graph);
+	}
+	
+	
+	// ---------------------- METHODS LINKED TO THE OptionStore -----------------------------------
+	
+	/**
+	 * This method initialize the OptionStore by setting the default values to not defined nodes and edges attributes
+	 * 
+	 */
+    public static void initializeOptions() {
+    	
+    	OptionStore.getOption( EdgeAttributeReaderImpl.EDGE_COLOR, new Integer(-13395457));
+    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_BG, new Integer(-26368));
+    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_FG, new Integer(Color.WHITE.getRGB()));
+    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_HEIGHT, new Integer(30));
+    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_WIDTH, new Integer(55));
+    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_SHAPE, NodeShape.RECTANGLE.name());
+    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_BORDER, NodeBorder.SIMPLE.name());	
+    }
+    
+    
 	
 	/**
 	 * Class containing the relationship between a Graph, its GraphGUI the corresponding Frame
@@ -437,25 +498,6 @@ public class GUIManager {
 	        return blockClose == null;
 	    }
 		
-	}
-
-	public void whatToDoWithGraph(Graph<?, ?> new_graph, boolean b) {
-		whatToDoWithGraph( new_graph, null, b);
-	}
-
-	public void whatToDoWithGraph(Graph<?, ?> new_graph, Graph<?,?> parentGraph, boolean b) {
-		
-		// TODO : REFACTORING ACTION
-		// Why does this limit of 21 node exist?
-		//if (new_graph != null && new_graph.getNodeOrderSize() < 21) {
-		if( new_graph != null && new_graph.getNodeCount() < 1000){
-			newFrame( new_graph);
-			return;
-		}
-		
-		// TODO : REFACTORING ACTION
-		// TODO : create a new WhatToDo frame
-		LogManager.error( "TODO: implement a new whattodo frame");
 	}
 
 }

@@ -30,12 +30,12 @@ import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.tree.Tree;
-import org.ginsim.core.graph.tree.TreeImpl;
 import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromCircuit;
 import org.ginsim.core.utils.data.ObjectStore;
@@ -49,7 +49,12 @@ import org.ginsim.gui.utils.widgets.treetable.AbstractTreeTableModel;
 import org.ginsim.gui.utils.widgets.treetable.JTreeTable;
 import org.ginsim.gui.utils.widgets.treetable.TreeTableModel;
 import org.ginsim.gui.utils.widgets.treetable.TreeTableModelAdapter;
-import org.ginsim.service.tool.connectivity.AlgoConnectivity;
+import org.ginsim.service.tool.circuit.CircuitAlgo;
+import org.ginsim.service.tool.circuit.CircuitDescr;
+import org.ginsim.service.tool.circuit.CircuitDescrInTree;
+import org.ginsim.service.tool.circuit.FunctionalityContext;
+import org.ginsim.service.tool.circuit.OmsddNode;
+import org.ginsim.service.tool.connectivity.ConnectivityAlgo;
 
 
 
@@ -60,7 +65,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
 
     private static final long serialVersionUID = 2671795894716799300L;
 
-    private AlgoConnectivity algoC = null;
+    private ConnectivityAlgo algoC = null;
     protected RegulatoryGraph graph;
 
     protected static final int STATUS_NONE = 0;
@@ -223,7 +228,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
     
     protected void pyExport() {
     	List no = graph.getNodeOrder();
-    	List l_func = (List)treemodel.m_parent.get(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONNAL]);
+    	List l_func = (List)treemodel.m_parent.get(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONAL]);
     	if (l_func == null) {
     		LogManager.trace(" No func...");
     		return;
@@ -271,7 +276,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
     	            int dst = no.indexOf(me.getTarget());
     	            s.append("("+src+","+dst+","
     	                     + me.getMin(idx)+","
-    	                     + (me.getSign(idx)==RegulatoryMultiEdge.SIGN_NEGATIVE?"-1":"1")
+    	                     + (me.getSign(idx)==RegulatoryEdgeSign.NEGATIVE?"-1":"1")
     	                     + "),");
     	        }
     	        s.append("), ");
@@ -359,8 +364,8 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
         switch (status) {
         case STATUS_NONE:
             updateStatus(STATUS_SCC);
-            algoC = new AlgoConnectivity();
-            algoC.configure(graph, this, AlgoConnectivity.MODE_COMPO);
+            algoC = new ConnectivityAlgo();
+            algoC.configure(graph);
             algoC.start();
             break;
         case STATUS_SCC:
@@ -613,7 +618,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
                 case CircuitDescr.ALL:
                     index = 0;
                     break;
-                case CircuitDescr.FUNCTIONNAL:
+                case CircuitDescr.FUNCTIONAL:
                     index = ((CircuitDescrInTree)cdtree.getCircuit().v_functionnal.get(0)).key;
                     break;
                 case CircuitDescr.POSITIVE:
@@ -675,7 +680,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
 
     protected void runAnalyse() {
     	brun.setEnabled(false);
-        treemodel.analyse(graph, config, (RegulatoryMutantDef)mutantstore.getObject(0), cb_cleanup.isSelected());
+        treemodel.analyse(graph, config, (Perturbation)mutantstore.getObject(0), cb_cleanup.isSelected());
         brun.setEnabled(true);
 
         if (sp2 == null) {
@@ -792,7 +797,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
         m_parent.put(s_root, v_root);
     }
 
-    protected void analyse(RegulatoryGraph graph, CircuitSearchStoreConfig config, RegulatoryMutantDef mutant, boolean do_cleanup) {
+    protected void analyse(RegulatoryGraph graph, CircuitSearchStoreConfig config, Perturbation mutant, boolean do_cleanup) {
         CircuitAlgo circuitAlgo = new CircuitAlgo(graph, config == null ? null : config.t_constraint, mutant, do_cleanup);
         Vector v_functionnal = new Vector();
         Vector v_positive = new Vector();
@@ -818,7 +823,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
                 m_parent.put(v_circuit.get(i), cdescr.v_all);
             }
             if (cdescr.v_functionnal != null) {
-                cdtree = new CircuitDescrInTree(cdescr, true, CircuitDescr.FUNCTIONNAL);
+                cdtree = new CircuitDescrInTree(cdescr, true, CircuitDescr.FUNCTIONAL);
                 placeCircuit(v_functionnal, cdtree);
                 if (cdescr.v_functionnal.size() > 1) {
                     m_parent.put(cdtree, cdescr.v_functionnal);
@@ -847,8 +852,8 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
             }
         }
         if (v_functionnal.size() > 0) {
-            v_root.add(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONNAL]);
-            m_parent.put(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONNAL], v_functionnal);
+            v_root.add(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONAL]);
+            m_parent.put(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONAL], v_functionnal);
             if (v_positive.size() > 0) {
                 v_root.add(CircuitDescr.SIGN_NAME[CircuitDescr.POSITIVE]);
                 m_parent.put(CircuitDescr.SIGN_NAME[CircuitDescr.POSITIVE], v_positive);
@@ -956,7 +961,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
 	                    case CircuitDescr.ALL:
 	                        index = 0;
 	                        break;
-	                    case CircuitDescr.FUNCTIONNAL:
+	                    case CircuitDescr.FUNCTIONAL:
 	                        index = ((CircuitDescrInTree)cdtree.getCircuit().v_functionnal.get(0)).key;
 	                        break;
 	                    case CircuitDescr.POSITIVE:

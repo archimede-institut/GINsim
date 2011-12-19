@@ -25,6 +25,7 @@ import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
@@ -185,7 +186,7 @@ public class FunctionEditorEditPanel extends GsPanel implements ItemListener, Ac
 				node.setUserObject(new ListInteraction(o, j, false));
 				al.setNode(node);
 				nb.addLabel(o.getEdge(j).getShortInfo(), lightGreen);
-    		nb.addValue(RegulatoryMultiEdge.SIGN_SHORT[o.getSign(j)], false).addValue(new Integer(o.getMin(j)), false).addValue(o.getEdge(j).getMaxAsString(), false);
+    		nb.addValue(o.getSign(j).getLongDesc(), false).addValue(new Integer(o.getMin(j)), false).addValue(o.getEdge(j).getMaxAsString(), false);
     		node = nb.getNode();
     		tb.addNode(node);
       }

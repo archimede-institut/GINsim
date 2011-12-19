@@ -11,6 +11,7 @@ import java.util.Map;
 import org.ginsim.common.document.DocumentStyle;
 import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.common.utils.IOUtils;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -204,11 +205,23 @@ public class InteractionAnalysisReport {
 				dw.openTableRow();
 				dw.openTableCell(sourceItem.source.getId());
 				dw.openTableCell(target.getId());
-				if (e.getSign() == RegulatoryMultiEdge.SIGN_UNKNOWN) {
+				switch (e.getSign()) {
+				case UNKNOWN:
+					dw.openTableCell(1, 1, RegulatoryEdgeSign.UNKNOWN.getLongDesc(), STYLE_NONFUNCTIONAL, false);
+					break;
+				case POSITIVE:
+					dw.openTableCell(1, 1, RegulatoryEdgeSign.POSITIVE.getLongDesc(), STYLE_POSITIVE, false);
+					break;
+				case NEGATIVE:
+					dw.openTableCell(1, 1, RegulatoryEdgeSign.NEGATIVE.getLongDesc(), STYLE_NEGATIVE, false);
+					break;
+					
+				}
+				if (e.getSign() == RegulatoryEdgeSign.UNKNOWN) {
 					dw.openTableCell(1, 1, "unknown", STYLE_NONFUNCTIONAL, false);
-				} else if (e.getSign() == RegulatoryMultiEdge.SIGN_POSITIVE) {
+				} else if (e.getSign() == RegulatoryEdgeSign.POSITIVE) {
 					dw.openTableCell(1, 1, "positive", STYLE_POSITIVE, false);
-				} else if (e.getSign() == RegulatoryMultiEdge.SIGN_NEGATIVE) {
+				} else if (e.getSign() == RegulatoryEdgeSign.NEGATIVE) {
 					dw.openTableCell(1, 1, "negative", STYLE_NEGATIVE, false);
 				} else {
 					dw.openTableCell(1, 1, "dual", STYLE_DUAL, false);

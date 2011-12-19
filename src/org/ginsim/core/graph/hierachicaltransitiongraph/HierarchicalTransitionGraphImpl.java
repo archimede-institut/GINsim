@@ -23,8 +23,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GinmlHelper;
-import org.ginsim.gui.resource.Translator;
-import org.ginsim.servicegui.tool.decisionanalysis.DecisionOnEdge;
 
 
 public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<HierarchicalNode, DecisionOnEdge, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
@@ -183,7 +181,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	  		out.write("\t</graph>\n");
 	  		out.write("</gxl>\n");
         } catch (IOException e) {
-            throw new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_unableToSave")+": " +e.getMessage());
+            throw new GsException( "STR_unableToSave", e);
         }
 	}
 	

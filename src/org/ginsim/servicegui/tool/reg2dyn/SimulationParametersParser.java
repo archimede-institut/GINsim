@@ -12,9 +12,9 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
+import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
+import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.core.utils.log.LogManager;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
-import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 

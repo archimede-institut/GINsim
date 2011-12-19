@@ -1,14 +1,12 @@
 package org.ginsim.servicegui.export.graphviz;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.Action;
 
-import org.ginsim.core.exception.GsException;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
@@ -34,6 +32,11 @@ public class GraphvizExportServiceGUI implements ServiceGUI {
 		actions.add( new ExportGraphVizAction( graph));
 		return actions;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_GENERIC + 1;
+	}
 }
 
 
@@ -45,7 +48,7 @@ public class GraphvizExportServiceGUI implements ServiceGUI {
  */
 class ExportGraphVizAction extends ExportAction {
 
-	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"dot"}, "dot (graphviz) files");
+	private static final FileFormatDescription FORMAT = new FileFormatDescription("graphviz", "dot");
 	
 	public ExportGraphVizAction( Graph graph) {
 		super( graph, "STR_graphviz", "STR_graphviz_descr");
@@ -59,8 +62,8 @@ class ExportGraphVizAction extends ExportAction {
 	}
 
 	@Override
-	protected GsFileFilter getFileFilter() {
-		return ffilter;
+	public FileFormatDescription getFileFilter() {
+		return FORMAT;
 	}
 }
 

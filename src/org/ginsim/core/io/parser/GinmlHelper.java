@@ -7,7 +7,9 @@ import java.util.List;
 
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.utils.DataUtils;
 import org.xml.sax.Attributes;
 
@@ -37,13 +39,13 @@ public class GinmlHelper {
             return 1;
         } 
         if (qName.equals("rect")) {
-        	vareader.setShape(0);
+        	vareader.setShape(NodeShape.RECTANGLE);
         	vareader.setBackgroundColor(DataUtils.getColorFromCode(attributes.getValue("backgroundColor")));
         	vareader.setForegroundColor(DataUtils.getColorFromCode(attributes.getValue("foregroundColor")));
         	vareader.setSize(Integer.parseInt(attributes.getValue("width")), Integer.parseInt(attributes.getValue("height")));
             vareader.setPos(Integer.parseInt(attributes.getValue("x")),Integer.parseInt(attributes.getValue("y")));
         } else if (qName.equals("ellipse")) {
-        	vareader.setShape(1);
+        	vareader.setShape(NodeShape.ELLIPSE);
         	vareader.setBackgroundColor(DataUtils.getColorFromCode(attributes.getValue("backgroundColor")));
         	vareader.setForegroundColor(DataUtils.getColorFromCode(attributes.getValue("foregroundColor")));
         	vareader.setSize(Integer.parseInt(attributes.getValue("width")), Integer.parseInt(attributes.getValue("height")));
@@ -63,23 +65,17 @@ public class GinmlHelper {
 	public static void applyEdgeVisualSettings(EdgeAttributesReader ereader, String qName, Attributes attributes) {
 		if (qName.equals("polyline")) {
 			ereader.setLineColor(DataUtils.getColorFromCode(attributes.getValue("line_color")));
-			int i = EdgeAttributesReader.STYLE_STRAIGHT;
+			boolean isCurved = false;
 			String s = attributes.getValue("line_style");
 			if (s.equals("curve") || s.equals("13") || s.equals("12") || s.equals("bezier") || s.equals("spline")) {
-			    i = EdgeAttributesReader.STYLE_CURVE;
+			    isCurved = true;
 			}
             try {
                 ereader.setLineWidth(Integer.parseInt(attributes.getValue("line_width")));
             } catch (NullPointerException e) {}
               catch (NumberFormatException e) {}
               
-			ereader.setStyle(i);
-			i = EdgeAttributesReader.ROUTING_AUTO;
-			s = attributes.getValue("routage");
-			if (s.equals("manual") || s.equals("none") || s.equals("simple")) {
-			    i = EdgeAttributesReader.ROUTING_NONE;
-			}
-			ereader.setRouting(i);
+			ereader.setCurve(isCurved);
 			
 			s = attributes.getValue("points");
 			if (s != null) {
@@ -102,7 +98,7 @@ public class GinmlHelper {
 			
 			s = attributes.getValue("pattern");
 			if (s != null) {
-			    ereader.setDash(ereader.getPattern(1));
+			    ereader.setDash(EdgePattern.DASH);
 			}
 
 			ereader.refresh();
@@ -125,30 +121,25 @@ public class GinmlHelper {
             }
             if (s.length() > 1) {
                 svs += " points=\""+s.substring(0, s.length()-1)+"\"";
+            } else {
+            	svs += " points=\"\"";
             }
+        } else {
+        	svs += " points=\"\"";
         }
-        switch (eReader.getStyle()) {
-	    	case EdgeAttributesReader.STYLE_CURVE:
-	    	    s = "curve";
-	    	    break;
-        	default:
-        	    s = "straight";
+        if (eReader.isCurve()) {
+    	    s = "curve";
+        } else {
+    	    s = "straight";
         }
         svs += " line_style=\""+s+"\"";
         svs += " line_color=\"#"+DataUtils.getColorCode(eReader.getLineColor())+"\"";
-        float[] pattern = eReader.getDash();
-        if (pattern != null) {
+        EdgePattern pattern = eReader.getDash();
+        if (pattern == EdgePattern.DASH) {
             svs += " pattern=\"dash\"";
         }
-        switch (eReader.getRouting()) {
-        	case EdgeAttributesReader.ROUTING_AUTO:
-        	    s = "auto";
-        	    break;
-        	default:
-        	    s = "manual";
-        }
         svs += " line_width=\""+(int)eReader.getLineWidth()+"\"";
-        svs += " routage=\""+s+"\"";
+        // svs += " routage=\"auto\""; // FIXME: should we remove it completely or need a new system?
         svs += "/>\n";
         svs += "\t\t\t</edgevisualsetting>\n";
 		return svs;
@@ -172,7 +163,7 @@ public class GinmlHelper {
 	public static String getFullNodeVS(NodeAttributesReader vReader) {
         String svs = "\t\t\t<nodevisualsetting>\n";
         switch (vReader.getShape()) {
-        	case NodeAttributesReader.SHAPE_RECTANGLE:
+        	case RECTANGLE:
         		svs += "\t\t\t\t<rect x=\""+vReader.getX()+
 					"\" y=\""+vReader.getY()+
 					"\" width=\""+vReader.getWidth()+
@@ -181,7 +172,7 @@ public class GinmlHelper {
 					"\" foregroundColor=\"#"+DataUtils.getColorCode(vReader.getForegroundColor()) +
 					"\"/>\n";
         		break;
-            case NodeAttributesReader.SHAPE_ELLIPSE:
+            case ELLIPSE:
         		svs += "\t\t\t\t<ellipse x=\""+vReader.getX()+
 				"\" y=\""+vReader.getY()+
 				"\" width=\""+vReader.getWidth()+

@@ -20,7 +20,7 @@ import org.ginsim.core.graph.tree.TreeBuilderFromCircuit;
 import org.ginsim.core.graph.tree.TreeBuilderFromRegulatoryGraph;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.resource.Translator;
-import org.ginsim.servicegui.tool.circuit.FunctionalityContext;
+import org.ginsim.service.tool.circuit.FunctionalityContext;
 
 
 /**

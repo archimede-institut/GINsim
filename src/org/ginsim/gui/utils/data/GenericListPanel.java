@@ -31,9 +31,7 @@ import javax.swing.table.TableCellEditor;
 
 import org.ginsim.core.utils.data.GenericList;
 import org.ginsim.core.utils.data.GenericListListener;
-import org.ginsim.core.utils.data.GenericPropertyInfo;
 import org.ginsim.core.utils.data.MultiColObject;
-import org.ginsim.core.utils.data.ObjectPropertyEditorUI;
 import org.ginsim.gui.utils.widgets.ButtonPopup;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.SplitPane;

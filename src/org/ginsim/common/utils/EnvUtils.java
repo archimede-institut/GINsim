@@ -1,5 +1,7 @@
 package org.ginsim.common.utils;
 
+import org.ginsim.core.utils.log.LogManager;
+
 public class EnvUtils {
 
 	public final static int os;
@@ -18,6 +20,7 @@ public class EnvUtils {
 		} else if (os_name.startsWith( "linux")) {
 			os = SYS_LINUX;
 		} else {
+			LogManager.debug("Unrecognized OS: "+ os_name);
 			os = SYS_UNKNOWN;
 		}
 	}

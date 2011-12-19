@@ -22,12 +22,11 @@ import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
-import org.ginsim.core.utils.log.LogManager;
+import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
+import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
-import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.service.export.nusmv.NuSMVConfig;
@@ -145,9 +144,9 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	/**
 	 * @return the selected mutant (can be null)
 	 */
-	public RegulatoryMutantDef getMutant() {
-		if (mutantModel.getSelectedItem() instanceof RegulatoryMutantDef) {
-			return (RegulatoryMutantDef) mutantModel.getSelectedItem();
+	public Perturbation getMutant() {
+		if (mutantModel.getSelectedItem() instanceof Perturbation) {
+			return (Perturbation) mutantModel.getSelectedItem();
 		}
 		return null;
 	}
@@ -342,8 +341,8 @@ class GsNuSMVMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
 
 	public void setSelectedItem(Object anObject) {
 		super.setSelectedItem(anObject);
-		if (anObject instanceof RegulatoryMutantDef) {
-			cfg.mutant = (RegulatoryMutantDef) anObject;
+		if (anObject instanceof Perturbation) {
+			cfg.mutant = (Perturbation) anObject;
 		} else {
 			cfg.mutant = null;
 		}

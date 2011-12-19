@@ -1,36 +1,10 @@
 package org.ginsim.core.graph.regulatorygraph;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
-import javax.swing.filechooser.FileFilter;
-
-import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.annotation.BiblioManager;
 import org.ginsim.core.exception.GsException;
-import org.ginsim.core.graph.common.AbstractGraph;
-import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
-import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.io.parser.GinmlHelper;
-import org.ginsim.core.notification.Notification;
-
-
-import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
-import org.ginsim.gui.resource.Translator;
-import org.ginsim.gui.shell.GsFileFilter;
 
 
 /**
@@ -78,7 +52,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param sign
      * @return the new edge.
      */
-    public RegulatoryEdge addNewEdge(String from, String to, byte minvalue, byte sign) throws GsException;
+    public RegulatoryEdge addNewEdge(String from, String to, byte minvalue, RegulatoryEdgeSign sign) throws GsException;
     
     /**
      * add an edge from textual parameters (for the parser).
@@ -100,7 +74,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param sign
      * @return
      */
-    public RegulatoryMultiEdge addEdge(RegulatoryNode source, RegulatoryNode target, int sign);
+    public RegulatoryMultiEdge addEdge(RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign sign);
     
     
     /**

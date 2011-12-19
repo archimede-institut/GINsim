@@ -10,6 +10,7 @@ import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.ToolTipsable;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgeEnd;
 
 
 /**
@@ -17,33 +18,22 @@ import org.ginsim.core.graph.view.EdgeAttributesReader;
  */
 public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize, ToolTipsable {
 
-	/** array of sign's names */
-	static public final String[] SIGN = {"positive","negative","unknown"};
-	/** array of sign's byte names */
-	static public final String[] SIGN_SHORT = {"+","-","?"};
-	/** a positive edge */
-	static public final byte SIGN_POSITIVE = 0;
-	/** a negative edge */
-	static public final byte SIGN_NEGATIVE = 1;
-	/** an unknown edge */
-	static public final byte SIGN_UNKNOWN = 2;
-
 	private RegulatoryEdge[] edges = new RegulatoryEdge[RegulatoryNode.MAXVALUE+1];
 	private int edgecount = 0;
-    private int sign = 0;
+    private RegulatoryEdgeSign sign = RegulatoryEdgeSign.POSITIVE;
 
     /**
      * @param source
      * @param target
      * @param param
      */
-    public RegulatoryMultiEdge(RegulatoryNode source, RegulatoryNode target, int param) {
+    public RegulatoryMultiEdge(RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign param) {
     	this(source, target, param, (byte)1);
     }
-    public RegulatoryMultiEdge(RegulatoryNode source, RegulatoryNode target, int param, byte threshold) {
+    public RegulatoryMultiEdge(RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign param, byte threshold) {
     	super(source, target);
         RegulatoryEdge edge = new RegulatoryEdge(this);
-        edge.sign = (byte)param;
+        edge.setSign(param);
         if (threshold <= source.getMaxValue()) {
         	edge.threshold = threshold;
         } else {
@@ -59,16 +49,16 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
      *
      */
     public RegulatoryMultiEdge(RegulatoryNode source, RegulatoryNode target) {
-    	this(source, target, 0, (byte)1);
+    	this(source, target, RegulatoryEdgeSign.POSITIVE, (byte)1);
     }
 
     public void addEdge( Graph graph) {
-    	addEdge(SIGN_POSITIVE, 1, graph);
+    	addEdge(RegulatoryEdgeSign.POSITIVE, 1, graph);
     }
-    public void addEdge(int sign, Graph graph) {
+    public void addEdge(RegulatoryEdgeSign sign, Graph graph) {
     	addEdge(sign, 1, graph);
     }
-    public int addEdge(int sign, int threshold, Graph graph) {
+    public int addEdge(RegulatoryEdgeSign sign, int threshold, Graph graph) {
     	int index = doAddEdge(sign, threshold);
     	if (index != -1) {
     		rescanSign(graph);
@@ -76,12 +66,12 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
     	}
     	return index;
     }
-    private int doAddEdge(int sign, int threshold) {
+    private int doAddEdge(RegulatoryEdgeSign sign, int threshold) {
     	if (edgecount >= edges.length) {
     		return -1;
     	}
     	RegulatoryEdge edge = new RegulatoryEdge(this);
-    	edge.sign = (byte)sign;
+    	edge.setSign(sign);
     	edge.threshold = (byte)threshold;
     	for (int i=0 ; i<edgecount ; i++) {
     		if (threshold < edges[i].threshold) {
@@ -159,7 +149,7 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
             RegulatoryEdge edge = edges[i];
 
             int max = i<edgecount-1 ? edges[i+1].threshold-1 : -1;
-            out.write("\t\t<edge id=\""+ edge.getLongInfo(":") + "\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.threshold+"\""+ (max == -1 ? "" : " maxvalue=\""+max+"\"")+" sign=\""+ SIGN[edge.sign] +"\">\n");
+            out.write("\t\t<edge id=\""+ edge.getLongInfo(":") + "\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.threshold+"\""+ (max == -1 ? "" : " maxvalue=\""+max+"\"")+" sign=\""+ edge.getSign().getLongDesc() +"\">\n");
             edge.annotation.toXML(out, null, mode);
             if (param != null) {
                 out.write(""+param);
@@ -177,18 +167,18 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
 	/**
 	 * @return Returns the sign.
 	 */
-	public int getSign() {
+	public RegulatoryEdgeSign getSign() {
 		return sign;
 	}
 	/**
 	 * @param index
 	 * @return the sign of this subedge
 	 */
-	public byte getSign(int index) {
+	public RegulatoryEdgeSign getSign(int index) {
 		if (index >= edgecount) {
-			return 0;
+			return RegulatoryEdgeSign.UNKNOWN;
 		}
-		return edges[index].sign;
+		return edges[index].getSign();
 	}
 	/**
 	 * change the sign of a sub edge.
@@ -197,11 +187,11 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
 	 * @param sign the new sign
 	 * @param graph
 	 */
-	public void setSign(int index, byte sign, Graph graph) {
+	public void setSign(int index, RegulatoryEdgeSign sign, Graph graph) {
 		if (index >= edgecount) {
 			return;
 		}
-		edges[index].sign = sign;
+		edges[index].setSign(sign);
 		rescanSign(graph);
 	}
 	/**
@@ -295,19 +285,33 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
 
 	//protected void rescanSign(Graph graph) {
 	public void rescanSign( Graph graph) {
-		this.sign = edges[0].sign;
+		this.sign = edges[0].getSign();
 		for (int i=0 ; i<edgecount ; i++) {
-			if ( edges[i].sign != sign) {
-                if (this.sign == SIGN_UNKNOWN || edges[i].sign == SIGN_UNKNOWN) {
-                    this.sign = SIGN_UNKNOWN;
+			if ( edges[i].getSign() != sign) {
+                if (this.sign == RegulatoryEdgeSign.UNKNOWN || edges[i].getSign() == RegulatoryEdgeSign.UNKNOWN) {
+                    this.sign = RegulatoryEdgeSign.UNKNOWN;
                     break;
                 }
-                this.sign = EdgeAttributesReader.ARROW_DOUBLE;
+                this.sign = RegulatoryEdgeSign.DUAL;
 			}
 		}
+		
+		// TODO: explicitly setting the line end is wrong, we should have some kind of vizmapper for this
 		EdgeAttributesReader ereader = graph.getEdgeAttributeReader();
 		ereader.setEdge(this);
-		ereader.setLineEnd(sign);
+		EdgeEnd end = EdgeEnd.POSITIVE;
+		switch (sign) {
+		case NEGATIVE:
+			end = EdgeEnd.NEGATIVE;
+			break;
+		case UNKNOWN:
+			end = EdgeEnd.UNKNOWN;
+			break;
+		case DUAL:
+			end = EdgeEnd.DUAL;
+			break;
+		}
+		ereader.setLineEnd(end);
 		ereader.refresh();
 	}
 
@@ -365,13 +369,13 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
      */
     public void copyFrom(boolean[] t_required) {
     	edgecount = 0;
-    	sign = SIGN_UNKNOWN;
+    	sign = RegulatoryEdgeSign.UNKNOWN;
     	for (int i=0 ; i<t_required.length ; i++) {
     		if (t_required[i]) {
     			RegulatoryEdge edge = new RegulatoryEdge(this);
     			edge.index = (byte)edgecount;
     			edge.threshold = (byte)i;
-    			edge.sign = SIGN_UNKNOWN;
+    			edge.setSign(RegulatoryEdgeSign.UNKNOWN);
         		edges[edgecount++] = edge;
     		}
     	}

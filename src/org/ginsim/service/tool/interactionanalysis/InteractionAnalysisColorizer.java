@@ -3,6 +3,7 @@ package org.ginsim.service.tool.interactionanalysis;
 import java.util.Map;
 
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.css.Colorizer;
@@ -27,11 +28,11 @@ public class InteractionAnalysisColorizer extends Colorizer {
 		
 		for (RegulatoryMultiEdge me: functionalityMap.keySet()) {
 			ereader.setEdge(me);
-			if (functionalityMap.get(me) == InteractionAnalysisSelector.CAT_POSITIVE && me.getSign() != RegulatoryMultiEdge.SIGN_POSITIVE) {
+			if (functionalityMap.get(me) == InteractionAnalysisSelector.CAT_POSITIVE && me.getSign() != RegulatoryEdgeSign.POSITIVE) {
 				cs.applyOnEdge(selector, me, ereader);
-			} else if (functionalityMap.get(me) == InteractionAnalysisSelector.CAT_NEGATIVE && me.getSign() != RegulatoryMultiEdge.SIGN_NEGATIVE) {
+			} else if (functionalityMap.get(me) == InteractionAnalysisSelector.CAT_NEGATIVE && me.getSign() != RegulatoryEdgeSign.NEGATIVE) {
 				cs.applyOnEdge(selector, me, ereader);
-			} else if (functionalityMap.get(me) == InteractionAnalysisSelector.CAT_NONFUNCTIONNAL && me.getSign() != RegulatoryMultiEdge.SIGN_UNKNOWN) {
+			} else if (functionalityMap.get(me) == InteractionAnalysisSelector.CAT_NONFUNCTIONNAL && me.getSign() != RegulatoryEdgeSign.UNKNOWN) {
 				cs.applyOnEdge(selector, me, ereader);
 			} else if (functionalityMap.get(me) == InteractionAnalysisSelector.CAT_DUAL) {
 				cs.applyOnEdge(selector, me, ereader);

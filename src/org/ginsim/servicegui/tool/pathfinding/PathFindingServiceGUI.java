@@ -28,6 +28,11 @@ public class PathFindingServiceGUI implements ServiceGUI {
 		actions.add(new PathSearchAction(graph));
 		return actions;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_GENERIC + 5;
+	}
 }
 
 class PathSearchAction extends ToolAction {

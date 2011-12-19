@@ -10,6 +10,11 @@ import org.ginsim.core.graph.common.Graph;
  */
 public class Colorizer {
 	
+	/**
+	 * Store if the style has been applied or not
+	 */
+	private boolean isColored;
+
 	protected Selector selector;
 	protected CascadingStyle cs = null;
 
@@ -20,6 +25,7 @@ public class Colorizer {
 	 */
 	public Colorizer(Selector selector) {
 		this.selector = selector;
+		this.isColored = false;
 	}
 	
 	/**
@@ -35,6 +41,7 @@ public class Colorizer {
             cs.shouldStoreOldStyle = false;
         }
 		colorize(graph);
+		isColored = true;
 	}
 	
 	/**
@@ -63,6 +70,30 @@ public class Colorizer {
 		if (cs == null) return;
 		if (selector.respondToEdges()) cs.restoreAllEdges(graph.getEdgeAttributeReader());
 		if (selector.respondToNodes()) cs.restoreAllNodes(graph.getNodeAttributeReader());
+		isColored = false;
+	}
+
+	public Selector getSelector() {
+		return selector;
+	}
+
+	/**
+	 * Call doColorize() if the graph is not already colored, undoColorize() otherwise.
+	 * Return the new status of the colorization (true => the graph is colored)
+	 * @param graph
+	 * @return the new status of the colorization (true => the graph is colored)
+	 */
+	public boolean toggleColorize(Graph<?, ?> graph) {
+		if (isColored) {
+			undoColorize(graph);
+		} else {
+			doColorize(graph);
+		}
+		return isColored;
+	}
+
+	public boolean isColored() {
+		return isColored;
 	}
 		
 }

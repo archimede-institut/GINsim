@@ -6,9 +6,9 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.export.biolayout.BioLayoutExportService;
 import org.ginsim.servicegui.ServiceGUI;
@@ -32,6 +32,11 @@ public class BiolayoutExportServiceGUI implements ServiceGUI {
 		actions.add( new ExportBioLayoutAction( graph));
 		return actions;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_GENERIC + 2;
+	}
 }
 
 
@@ -43,16 +48,16 @@ public class BiolayoutExportServiceGUI implements ServiceGUI {
  */
 class ExportBioLayoutAction extends ExportAction {
 
-	static GsFileFilter ffilter = new GsFileFilter(new String[] {"layout"}, "biolayout files");
+	static final FileFormatDescription FORMAT = new FileFormatDescription("biolayout", "layout");
 	
 	public ExportBioLayoutAction( Graph graph) {
 		
 		super( graph, "STR_biolayout", "STR_biolayout_descr");
 	}
 
-	public GsFileFilter getFileFilter() {
-		
-		return ffilter;
+	@Override
+	public FileFormatDescription getFileFilter() {
+		return FORMAT;
 	}
 
 	@Override

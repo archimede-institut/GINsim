@@ -380,7 +380,7 @@ public class InteractionsPanel extends GsPanel implements ItemListener, ActionLi
 							nb.addButton(show, null, al, null);
 							nb.setSelectable(false, this);
 						}
-						nb.addValue(RegulatoryMultiEdge.SIGN_SHORT[edge.getSign(k)], false);
+						nb.addValue(edge.getSign(k).getShortDesc(), false);
 						nb.addValue(new Integer(edge.getEdge(k).getMin()), false);
 						nb.addValue(edge.getEdge(k).getMaxAsString(), false);
 						nb.addValue("?", false);
@@ -400,7 +400,7 @@ public class InteractionsPanel extends GsPanel implements ItemListener, ActionLi
 							nb.addButton(show, null, al, null);
 							nb.setSelectable(false, this);
 						}
-						nb.addValue(RegulatoryMultiEdge.SIGN_SHORT[edge.getSign(k)], false);
+						nb.addValue(edge.getSign(k).getShortDesc(), false);
 						nb.addValue(new Integer(edge.getEdge(k).getMin()), false);
 						nb.addValue(edge.getEdge(k).getMaxAsString(), false);
 						nb.addValue("?", false);

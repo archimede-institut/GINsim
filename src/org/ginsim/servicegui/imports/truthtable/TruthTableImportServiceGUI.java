@@ -1,0 +1,92 @@
+package org.ginsim.servicegui.imports.truthtable;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.Action;
+
+import org.ginsim.common.utils.FileFormatDescription;
+import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.core.exception.GsException;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.utils.log.LogManager;
+import org.ginsim.gui.GUIManager;
+import org.ginsim.service.ServiceManager;
+import org.ginsim.service.imports.truthtable.TruthTableImportService;
+import org.ginsim.service.layout.LayoutService;
+import org.ginsim.servicegui.ServiceGUI;
+import org.ginsim.servicegui.common.GUIFor;
+import org.ginsim.servicegui.common.ImportAction;
+import org.mangosdk.spi.ProviderFor;
+
+/**
+ * GUI Action to import a Truth Table model description
+ * 
+ * @author Pedro T. Monteiro
+ */
+@ProviderFor(ServiceGUI.class)
+@GUIFor(TruthTableImportService.class)
+public class TruthTableImportServiceGUI implements ServiceGUI {
+
+	public static final FileFormatDescription FORMAT = new FileFormatDescription("TruthTable", "tt");
+
+	@Override
+	public List<Action> getAvailableActions(Graph<?, ?> graph) {
+		List<Action> actions = new ArrayList<Action>();
+		actions.add(new TruthTableImportAction());
+		return actions;
+	}
+	
+	@Override
+	public int getWeight() {
+		return W_MANIPULATION + 1;
+	}
+}
+
+/**
+ * Import to TruthTable file Action
+ * 
+ * @author Pedro T. Monteiro
+ */
+class TruthTableImportAction extends ImportAction {
+
+	private static final long serialVersionUID = 2590387719278822097L;
+
+	public TruthTableImportAction() {
+		super("STR_TruthTable", "STR_TruthTable_descr");
+	}
+
+	@Override
+	public FileFormatDescription getFileFilter() {
+		return TruthTableImportServiceGUI.FORMAT;
+	}
+
+	@Override
+	protected void doImport(String filename) {
+		if (filename == null) {
+			return;
+		}
+
+		TruthTableImportService service = ServiceManager.getManager()
+				.getService(TruthTableImportService.class);
+		if (service == null) {
+			LogManager
+					.error("TruthTableImportService service is not available");
+			return;
+		}
+
+		try {
+			RegulatoryGraph newGraph = service.run(filename);
+			GUIManager.getInstance().newFrame(newGraph);
+			LayoutService.runLayout(LayoutService.RING, newGraph);
+		} catch (IOException e) {
+			GUIMessageUtils.openErrorDialog(e, null);
+			LogManager.error(e);
+		} catch (GsException e) {
+			GUIMessageUtils.openErrorDialog(e, null);
+			LogManager.error(e);
+		}
+	}
+}

@@ -15,14 +15,14 @@ import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.GraphicalAttributesStore;
-import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeBorder;
+import org.ginsim.core.graph.view.css.Colorizer;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.shell.editpanel.SelectionType;
-import org.ginsim.servicegui.tool.stateinregulatorygraph.StateInRegGraph;
 
 
 /**
@@ -49,7 +49,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
 
     private JFrame frame;
 
-	private StateInRegGraph colorizer;
+	private Colorizer colorizer;
     
     /**
      * @param frame
@@ -99,7 +99,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
         this.regGraph = regGraph;
         this.dynGraph = null;
         nodeOrder = regGraph.getNodeOrder();
-        colorizer = new StateInRegGraph(regGraph);
+        colorizer = new Colorizer(new RegulatoryAnimatorSelector(regGraph));
     }
 
     /**
@@ -111,7 +111,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
         GUIManager.getInstance().addBlockEdit( regGraph, this);
         GUIManager.getInstance().addBlockClose( dynGraph, this);
         GUIManager.getInstance().addBlockEdit( dynGraph, this);
-        colorizer = new StateInRegGraph(regGraph);
+        colorizer = new Colorizer(new RegulatoryAnimatorSelector(regGraph));
         GUIManager.getInstance().getGraphGUI(dynGraph).addGraphGUIListener(this);
         ui = new AnimatorUI(frame, this);      
     }
@@ -126,7 +126,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
         
         GUIManager.getInstance().getGraphGUI(dynGraph).removeGraphGUIListener(this);
         revertPath(0);
-        colorizer.restoreColorization();
+        colorizer.undoColorize(regGraph);
         
         GUIManager.getInstance().removeBlockClose( regGraph, this);
         GUIManager.getInstance().removeBlockEdit( regGraph, this);
@@ -188,7 +188,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
             Object target = edge.getTarget();
             dynGas.ensureStoreEdge(edge);
             dynGas.ensureStoreNode(target);
-            dynGas.vreader.setBorder(NodeAttributesReader.BORDER_STRONG);
+            dynGas.vreader.setBorder(NodeBorder.STRONG);
             dynGas.vreader.setForegroundColor(Color.RED);
             dynGas.vreader.refresh();
             dynGas.ereader.setLineColor(Color.GREEN);
@@ -290,7 +290,8 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
      * @param i index of the selected element in the path list
      */
     public void colorizeGraph(int i) {
-        colorizer.colorizeGraph(((DynamicNode)path.get(i)).state);
+    	((RegulatoryAnimatorSelector) colorizer.getSelector()).setState(((DynamicNode)path.get(i)).state);
+        colorizer.doColorize(regGraph);
         ui.setSelected(i);
     }
     
@@ -316,7 +317,8 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
 		GraphSelection<DynamicNode, ?> selection = gui.getSelection();
         if (selection.getSelectionType() == SelectionType.SEL_NODE) {
         	DynamicNode sel = selection.getSelectedNodes().get(0);
-            colorizer.colorizeGraph( sel.state );
+        	((RegulatoryAnimatorSelector) colorizer.getSelector()).setState(sel.state);
+            colorizer.doColorize(regGraph);
             add2path( sel);
         }
 	}

@@ -1,9 +1,7 @@
 package org.ginsim.core.graph.tree;
 
-import java.util.Iterator;
 import java.util.List;
 
-import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -18,10 +16,10 @@ public class TreeBuilderFromRegulatoryGraph extends TreeBuilderFromOmdd {
 
 	public void init() {
 		int initial_gene_id = ((Integer)getParameter(PARAM_INITIALVERTEXINDEX)).intValue();
-		nodeOrder = (List)getParameter(PARAM_NODEORDER);
+		nodeOrder = (List<RegulatoryNode>)getParameter(PARAM_NODEORDER);
 		regGraph = (RegulatoryGraph)getParameter(PARAM_REGGRAPH);
 
-		RegulatoryNode initialNode = (RegulatoryNode) nodeOrder.get(initial_gene_id);
+		RegulatoryNode initialNode = nodeOrder.get(initial_gene_id);
 		
 		this.root = initialNode.getTreeParameters(regGraph).reduce();
 		widthPerDepth = widthPerDepth_acc = realDetph = null;
@@ -56,7 +54,7 @@ public class TreeBuilderFromRegulatoryGraph extends TreeBuilderFromOmdd {
 	}
 	
 	protected String getNodeName(int level) {
-		return ((RegulatoryNode)nodeOrder.get(level)).getId();
+		return nodeOrder.get(level).getId();
 	}
 
 }

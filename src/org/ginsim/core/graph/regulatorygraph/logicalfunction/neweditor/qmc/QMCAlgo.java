@@ -6,10 +6,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Vector;
 
+import javax.swing.JButton;
 import javax.swing.JProgressBar;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.gui.utils.widgets.GsButton;
 
 
 public class QMCAlgo implements ActionListener {
@@ -17,10 +17,10 @@ public class QMCAlgo implements ActionListener {
 	private String function;
 	private boolean cnf;
 	private JProgressBar progressBar;
-	private GsButton cancelButton;
+	private JButton cancelButton;
 	private boolean toKill = false;
 
-	public QMCAlgo(boolean cnf, JProgressBar jpb, GsButton b) {
+	public QMCAlgo(boolean cnf, JProgressBar jpb, JButton b) {
 		super();
 		this.cnf = cnf;
 		progressBar = jpb;

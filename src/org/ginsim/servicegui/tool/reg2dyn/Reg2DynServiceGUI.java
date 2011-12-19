@@ -10,10 +10,10 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
+import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.widgets.Frame;
 import org.ginsim.service.tool.reg2dyn.Reg2DynService;
@@ -75,10 +75,15 @@ public class Reg2DynServiceGUI implements ServiceGUI {
 		
 		if( graph instanceof RegulatoryGraph){
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new Reg2DynAction( (RegulatoryGraph) graph));
+			actions.add( new Reg2DynAction( (RegulatoryGraph) graph));
 			return actions;
 		}
 		return null;
+	}
+
+	@Override
+	public int getWeight() {
+		return W_MAIN + 1;
 	}
 }
 

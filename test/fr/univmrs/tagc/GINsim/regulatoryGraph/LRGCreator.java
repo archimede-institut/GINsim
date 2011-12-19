@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -43,8 +44,8 @@ public class LRGCreator {
 		g0.setMaxValue((byte)2, lrg);
 		
 		// add positive and negative interactions
-		lrg.addEdge(g0, g2, 1);
-		lrg.addEdge(g1, g2, -1);
+		lrg.addEdge(g0, g2, RegulatoryEdgeSign.POSITIVE);
+		lrg.addEdge(g1, g2, RegulatoryEdgeSign.NEGATIVE);
 		
 		// get an edge (interactiveAddEdge does not return it)
 		RegulatoryMultiEdge me = lrg.getEdge(g0, g2);

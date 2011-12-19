@@ -243,7 +243,7 @@ public class GsMainFrame extends BaseMainFrame implements GraphChangeListener {
                 s_add = s_add.substring(s_add.lastIndexOf(File.separator)+1);
             }
             
-            int aw = JOptionPane.showConfirmDialog(this, Translator.getString("STR_saveQuestion1")+ s_add +Translator.getString("STR_saveQuestion2"),
+            int aw = JOptionPane.showConfirmDialog(this, Translator.getString("STR_saveQuestion", s_add),
                     Translator.getString("STR_closeConfirm"),
                     JOptionPane.YES_NO_CANCEL_OPTION);
             switch (aw) {

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -36,6 +37,11 @@ public class SnakesExportServiceGUI implements ServiceGUI {
 		}
 		return null;
 	}
+
+	@Override
+	public int getWeight() {
+		return W_MANIPULATION + 1;
+	}
 }
 
 
@@ -45,7 +51,7 @@ public class SnakesExportServiceGUI implements ServiceGUI {
  */
 class SnakesExportAction<G extends Graph> extends ExportAction {
 	private static final long serialVersionUID = 7934695744239100292L;
-	private static final GsFileFilter ffilter = new GsFileFilter(new String[] {"dot"}, "dot (graphviz) files");
+	private static final FileFormatDescription FORMAT = new FileFormatDescription("Python code", "py");
 	
 	public SnakesExportAction(G graph) {
 		
@@ -63,8 +69,8 @@ class SnakesExportAction<G extends Graph> extends ExportAction {
 	}
 
 	@Override
-	protected GsFileFilter getFileFilter() {
-		return ffilter;
+	public FileFormatDescription getFileFilter() {
+		return FORMAT;
 	}
 }
 

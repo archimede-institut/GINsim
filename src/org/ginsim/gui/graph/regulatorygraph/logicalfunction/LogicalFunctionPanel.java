@@ -11,14 +11,14 @@ import javax.swing.JPanel;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.utils.data.GenericPropertyInfo;
-import org.ginsim.core.utils.data.ObjectPropertyEditorUI;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.neweditor.FunctionEditor;
 import org.ginsim.gui.graph.regulatorygraph.models.IncomingEdgeListModel;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 import org.ginsim.gui.utils.data.GenericPropertyHolder;
+import org.ginsim.gui.utils.data.GenericPropertyInfo;
+import org.ginsim.gui.utils.data.ObjectPropertyEditorUI;
 
 
 public class LogicalFunctionPanel extends AbstractParameterPanel implements ObjectPropertyEditorUI, MouseListener, KeyListener {

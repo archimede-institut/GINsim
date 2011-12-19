@@ -27,12 +27,13 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
+import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantListManager;
-import org.ginsim.gui.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.service.ServiceManager;
 import org.ginsim.service.tool.stablestates.StableStateSearcher;
 import org.ginsim.service.tool.stablestates.StableStatesService;
@@ -141,8 +142,14 @@ public class LRGDocumentationWriter {
 		
 		StableTableModel model = new StableTableModel(nodeOrder);
 		for (int i=-1 ; i<mutantList.getNbElements(null) ; i++) {
-			RegulatoryMutantDef mutant = 
-				i<0 ? null : (RegulatoryMutantDef)mutantList.getElement(null, i);
+			Object perturbation = mutantList.getElement(null, i);
+			RegulatoryMutantDef mutant = null;
+			if (perturbation instanceof RegulatoryMutantDef) {
+				mutant = i<0 ? null : (RegulatoryMutantDef)perturbation;
+			} else {
+				// TODO: find a way to document all perturbation types
+				continue;
+			}
 			
 			if (config.searchStableStates) {
 				stableSearcher.setPerturbation(mutant);

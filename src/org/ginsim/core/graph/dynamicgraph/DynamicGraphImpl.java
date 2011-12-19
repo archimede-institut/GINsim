@@ -21,12 +21,9 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GinmlHelper;
-import org.ginsim.core.utils.data.ObjectEditor;
-import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
-import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphEditor;
-import org.ginsim.gui.resource.Translator;
 
 
 public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Edge<DynamicNode>, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> implements DynamicGraph{
@@ -35,11 +32,8 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	public static final String GRAPH_ZIP_NAME = "stateTransitionGraph.ginml";
 	
 	private String dtdFile = GinmlHelper.DEFAULT_URL_DTD_FILE;
-	private RegulatoryGraphOptionPanel optionPanel;
 
 	protected List v_stables = null;
-    private ObjectEditor graphEditor = null;
-    private float[] dashpattern = null;
 
     private List<NodeInfo> nodeOrder;
     
@@ -71,7 +65,6 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	public DynamicGraphImpl( boolean parsing) {
 		
         super( parsing);
-        dashpattern = getEdgeAttributeReader().getPattern(1);
 	}
 
 	/**
@@ -161,7 +154,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	  		out.write("\t</graph>\n");
 	  		out.write("</gxl>\n");
         } catch (IOException e) {
-            throw new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_unableToSave")+": "+ e.getMessage());
+            throw new GsException( "STR_unableToSave", e);
         }
 	}
 
@@ -283,7 +276,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 		if (multiple) {
 			EdgeAttributesReader eReader = getEdgeAttributeReader();
 			eReader.setEdge(edge);
-			eReader.setDash(dashpattern);
+			eReader.setDash(EdgePattern.DASH);
 		}
 		return edge;
 	}
@@ -339,15 +332,6 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
     public Graph getSubgraph(Collection vertex, Collection edges) {
         // no copy for state transition graphs
         return null;
-    }
-
-
-    public ObjectEditor getGraphEditor() {
-		if (graphEditor == null) {
-			graphEditor = new RegulatoryGraphEditor();
-			graphEditor.setEditedItem(this);
-		}
-		return graphEditor;
     }
 
     /**

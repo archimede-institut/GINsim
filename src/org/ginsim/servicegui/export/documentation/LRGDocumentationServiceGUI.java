@@ -20,7 +20,7 @@ import org.mangosdk.spi.ProviderFor;
 public class LRGDocumentationServiceGUI extends SimpleServiceGUI<LRGDocumentationService> {
 
 	public LRGDocumentationServiceGUI() {
-		super(LRGDocumentationAction.class);
+		super(LRGDocumentationAction.class, W_INFO+3);
 	}
 
 }

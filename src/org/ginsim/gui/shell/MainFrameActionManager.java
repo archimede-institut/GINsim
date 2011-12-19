@@ -10,6 +10,7 @@ import javax.swing.JToolBar;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.callbacks.FileCallBack;
 import org.ginsim.gui.shell.callbacks.HelpCallBack;
 import org.ginsim.servicegui.ServiceGUIManager;
@@ -35,11 +36,11 @@ public class MainFrameActionManager implements FrameActionManager {
 		List<Action> actions = ServiceGUIManager.getManager().getAvailableActions(graph);
 
 		// add them to the right menus
-		JMenu importMenu = new JMenu( "Import");
-		JMenu exportMenu = new JMenu( "Export");
-		JMenu layoutMenu = new JMenu( "Layout");
-		JMenu graphMenu = new JMenu( "Graph");
-		JMenu toolsMenu = new JMenu( "Tools");
+		JMenu importMenu = new JMenu( Translator.getString( "STR_Import"));
+		JMenu exportMenu = new JMenu( Translator.getString( "STR_Export"));
+		JMenu layoutMenu = new JMenu( Translator.getString( "STR_Layout"));
+		JMenu graphMenu = new JMenu( Translator.getString( "STR_Graph"));
+		JMenu toolsMenu = new JMenu( Translator.getString( "STR_Tools"));
 		for (Action action: actions) {
 			if (action instanceof ImportAction) {
 				importMenu.add( action);
@@ -67,9 +68,10 @@ public class MainFrameActionManager implements FrameActionManager {
 		EditActionManager editManager = gui.getEditActionManager();
 		editManager.addEditButtons( toolbar);
 		
-		JMenu menu = new JMenu( "Edit");
-		// TODO: edit menu
-		// menubar.add( menu);
+		JMenu menu = new JMenu( Translator.getString( "STR_Edit"));
+		menubar.add( menu);
+		// TODO: REFACTORING ACTION
+		// TODO: edit menu to fill
 		
 		menubar.add( gui.getViewMenu( layoutMenu));
 		
@@ -80,10 +82,10 @@ public class MainFrameActionManager implements FrameActionManager {
 			menubar.add( toolsMenu);
 		}
 		
-		menu = new JMenu("Help");
+		menu = new JMenu( Translator.getString( "STR_Help"));
 		fillMenu(menu, HelpCallBack.getActions());
 		menu.addSeparator();
-		JMenu support_menu = new JMenu( "Support");
+		JMenu support_menu = new JMenu( Translator.getString( "STR_Help_Support"));
 		menu.add( support_menu);
 		fillMenu( support_menu, HelpCallBack.getSupportActions());
 		menubar.add(menu);

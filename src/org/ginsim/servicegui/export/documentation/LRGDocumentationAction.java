@@ -6,8 +6,11 @@ import java.io.IOException;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JSeparator;
 
 import org.ginsim.common.document.GenericDocumentFormat;
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.utils.data.ValueList;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
@@ -40,8 +43,8 @@ public class LRGDocumentationAction  extends ExportAction<RegulatoryGraph> {
 	}
 
 	@Override
-	protected GsFileFilter getFileFilter() {
-		return config.format.ffilter;
+	public FileFormatDescription getFileFilter() {
+		return config.format;
 	}
 }
 
@@ -85,9 +88,18 @@ class GDExportConfigPanel extends AbstractStackDialogHandler {
     	setLayout(new GridBagLayout());
     	GridBagConstraints c = new GridBagConstraints();
         c.gridx = c.gridy = 0;
+        add( new JLabel("Format"), c);
+    	
+        c.gridx++;
+        c.weightx = 1;
+        c.fill = GridBagConstraints.HORIZONTAL;
         JComboBox combo_format = new JComboBox(new ValueListComboModel(format));
         add(combo_format, c);
         
+        c.gridwidth = 2;
+        c.gridy++;
+        c.gridx = 0;
+        add(new JSeparator(), c);
         
         c.gridy++;
         c.weightx = c.weighty = 1;

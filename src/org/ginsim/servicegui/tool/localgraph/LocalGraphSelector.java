@@ -17,10 +17,10 @@ public class LocalGraphSelector extends Selector {
 	public static final String CAT_NEGATIVE = "negative";
 	public static final String CAT_DUAL = "dual";
 	
-	public static final EdgeStyle STYLE_NONFUNCTIONNAL	= new EdgeStyle(Color.white, 	EdgeStyle.NULL_LINEEND, EdgeStyle.NULL_SHAPE,  1);
-	public static final EdgeStyle STYLE_POSITIVE 		= new EdgeStyle(Color.green, 	EdgeStyle.NULL_LINEEND, EdgeStyle.NULL_SHAPE,  2);
-	public static final EdgeStyle STYLE_NEGATIVE 		= new EdgeStyle(Color.red, 		EdgeStyle.NULL_LINEEND, EdgeStyle.NULL_SHAPE,  2);
-	public static final EdgeStyle STYLE_DUAL	 		= new EdgeStyle(Color.blue,		EdgeStyle.NULL_LINEEND, EdgeStyle.NULL_SHAPE,  2);
+	public static final EdgeStyle STYLE_NONFUNCTIONNAL	= new EdgeStyle(Color.white, 	null, false,  1);
+	public static final EdgeStyle STYLE_POSITIVE 		= new EdgeStyle(Color.green, 	null, false,  2);
+	public static final EdgeStyle STYLE_NEGATIVE 		= new EdgeStyle(Color.red, 		null, false,  2);
+	public static final EdgeStyle STYLE_DUAL	 		= new EdgeStyle(Color.blue,		null, false,  2);
 	
 	private Map cache = null;
 

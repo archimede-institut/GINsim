@@ -19,7 +19,7 @@ public class PNConfig implements InitialStateStore {
 
 	public PNConfig( RegulatoryGraph graph) {
 		this.graph = graph;
-		format = BasePetriNetExport.FORMATS.get(0);
+		format = PetrinetExportService.FORMATS.get(0);
 	}
 	
 	public Map getInitialState() {

@@ -15,7 +15,6 @@ import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
 import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.widgets.Frame;
-import org.ginsim.servicegui.tool.connectivity.ReducedParameterPanel;
 import org.mangosdk.spi.ProviderFor;
 
 

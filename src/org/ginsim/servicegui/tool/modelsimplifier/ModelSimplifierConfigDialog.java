@@ -24,6 +24,9 @@ import org.ginsim.core.utils.data.SimpleGenericList;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.utils.data.GenericListPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifier;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
 
 
 
@@ -67,7 +70,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
     public void endSimu( Graph graph, Exception e) {
     	isRunning = false;
         if (null == graph) {
-            GUIMessageUtils.openErrorDialog(e.getMessage(), this.graph);
+            GUIMessageUtils.openErrorDialog(e.getMessage(), GUIManager.getInstance().getFrame(graph));
             brun.setEnabled(true);
         } else {
             GUIManager.getInstance().whatToDoWithGraph(this.graph, graph, false);

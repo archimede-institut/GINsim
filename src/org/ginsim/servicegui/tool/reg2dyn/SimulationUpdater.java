@@ -3,7 +3,7 @@ package org.ginsim.servicegui.tool.reg2dyn;
 import java.util.Iterator;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
 
@@ -34,14 +34,14 @@ abstract public class SimulationUpdater implements Iterator {
 	
 	public SimulationUpdater(RegulatoryGraph regGraph, SimulationParameters params) {
         t_tree = regGraph.getParametersForSimulation(true);
-        RegulatoryMutantDef mutant = (RegulatoryMutantDef)params.store.getObject(SimulationParameters.MUTANT);
+        Perturbation mutant = (Perturbation)params.store.getObject(SimulationParameters.MUTANT);
         if (mutant != null) {
             mutant.apply(t_tree, regGraph);
         }
 		this.length = t_tree.length;
 	}
 
-	public SimulationUpdater(RegulatoryGraph regGraph, RegulatoryMutantDef mutant) {
+	public SimulationUpdater(RegulatoryGraph regGraph, Perturbation mutant) {
         t_tree = regGraph.getParametersForSimulation(true);
         if (mutant != null) {
             mutant.apply(t_tree, regGraph);

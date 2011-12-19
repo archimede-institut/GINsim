@@ -1,14 +1,13 @@
 package org.ginsim.service.export.petrinet;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStatesIterator;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.servicegui.tool.reg2dyn.PriorityClassDefinition;
@@ -44,14 +43,6 @@ import org.ginsim.servicegui.tool.reg2dyn.PriorityClassDefinition;
  */
 public abstract class BasePetriNetExport {
 
-	public static final List<BasePetriNetExport> FORMATS = new ArrayList<BasePetriNetExport>();
-	
-	static {
-		FORMATS.add(new PetriNetExportINA());
-		FORMATS.add(new PetriNetExportPNML());
-		FORMATS.add(new PetriNetExportAPNN());
-	}
-	
 	// TODO: make extension data available
 	
 	private final String extension;
@@ -170,7 +161,7 @@ public abstract class BasePetriNetExport {
 		byte[] t_state = (byte[])it_state.next();
 
 		// apply mutant
-		RegulatoryMutantDef mutant = (RegulatoryMutantDef)config.store.getObject(0);
+		Perturbation mutant = (Perturbation)config.store.getObject(0);
 		if (mutant != null) {
 			mutant.apply(t_tree, config.graph);
 		}
@@ -256,11 +247,11 @@ class TransitionData {
      */
     public int[][] t_cst;
     
-    public RegulatoryMutantDef mutant;
-    public RegulatoryMutantDef getMutant() {
+    public Perturbation mutant;
+    public Perturbation getMutant() {
         return mutant;
     }
-	public void setMutant(RegulatoryMutantDef mutant) {
+	public void setMutant(Perturbation mutant) {
 		this.mutant = mutant;
 	}
 	

@@ -20,7 +20,6 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamod
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeString;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.core.notification.ErrorNotification;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 import org.ginsim.core.utils.DataUtils;
@@ -54,9 +53,9 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	private TreeInteractionsModel interactionsModel;
 	private RegulatoryGraph graph;
 
-    private static final String S_ID   = Translator.getString("STR_id")+" : ";
-    private static final String S_NAME = " | "+ Translator.getString("STR_name")+" : ";
-    private static final String S_MAX  = " | "+ Translator.getString("STR_max") +" : ";
+    private static final String S_ID   = "STR_id";
+    private static final String S_NAME = "STR_name";
+    private static final String S_MAX  = "STR_max";
 
     public static final int MAXVALUE = 9;
 
@@ -312,9 +311,9 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
     }
 
 	public String toToolTip() {
-		return    S_ID  + id
-				+ S_NAME+ name
-                + S_MAX + maxValue;
+		return    Translator.getString( S_ID) + ":" + id + "|"
+				+ Translator.getString( S_NAME) + ":" + name + "|"
+                + Translator.getString( S_MAX) + ":" + maxValue;
 	}
 
 	public void toXML(XMLWriter out, Object param, int mode) throws IOException {

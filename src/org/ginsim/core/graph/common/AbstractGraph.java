@@ -24,7 +24,7 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.backend.JgraphtBackendImpl;
-import org.ginsim.core.graph.common.FallbackNodeAttributeReader.NodeVSdata;
+import org.ginsim.core.graph.common.NodeAttributeReaderImpl.NodeVSdata;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -404,12 +404,12 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	
 	@Override
 	public EdgeAttributesReader getEdgeAttributeReader() {
-		return new FallBackEdgeAttributeReader(this, getEdgeVSMap());
+		return new EdgeAttributeReaderImpl(this, getEdgeVSMap());
 	}
 	
 	@Override
 	public NodeAttributesReader getNodeAttributeReader() {
-		return new FallbackNodeAttributeReader(this, getNodeVSMap());
+		return new NodeAttributeReaderImpl(this, getNodeVSMap());
 	}
 	
 	
