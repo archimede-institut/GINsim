@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.swing.Action;
 
-import org.ginsim.core.exception.GsException;
+import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.service.layout.LayoutService;

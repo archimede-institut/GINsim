@@ -1,4 +1,4 @@
-package org.ginsim.core.exception;
+package org.ginsim.common.exception;
 
 import java.util.Vector;
 

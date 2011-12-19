@@ -16,10 +16,10 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.GraphEventCascade;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.backend.GraphViewListener;

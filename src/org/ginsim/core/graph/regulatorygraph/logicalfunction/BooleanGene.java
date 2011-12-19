@@ -1,6 +1,6 @@
 package org.ginsim.core.graph.regulatorygraph.logicalfunction;
 
-import org.ginsim.core.exception.GsException;
+import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBooleanData;

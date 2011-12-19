@@ -10,10 +10,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.BooleanParser;

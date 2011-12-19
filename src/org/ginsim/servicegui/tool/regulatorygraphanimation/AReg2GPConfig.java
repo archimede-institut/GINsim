@@ -19,10 +19,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.Translator;
 import org.ginsim.common.utils.log.LogManager;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.gui.shell.FileSelectionHelper;
 

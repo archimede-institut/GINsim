@@ -3,9 +3,9 @@ package org.ginsim.servicegui.tool.reg2dyn;
 import java.util.HashMap;
 import java.util.List;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.common.xml.XMLHelper;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;

@@ -6,8 +6,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.log.LogManager;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;

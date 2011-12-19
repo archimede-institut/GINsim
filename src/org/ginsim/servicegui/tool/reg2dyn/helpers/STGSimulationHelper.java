@@ -1,6 +1,6 @@
 package org.ginsim.servicegui.tool.reg2dyn.helpers;
 
-import org.ginsim.core.exception.GsException;
+import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;

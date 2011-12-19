@@ -4,8 +4,8 @@ import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.xml.XMLHelper;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.io.parser.GsXMLHelper;
 import org.xml.sax.Attributes;

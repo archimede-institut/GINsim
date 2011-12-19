@@ -3,10 +3,10 @@ package org.ginsim.servicegui.common;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.commongui.utils.FileFormatFilter;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.shell.FileSelectionHelper;

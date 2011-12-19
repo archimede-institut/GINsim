@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.ginsim.core.exception.GsException;
+import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.hierachicaltransitiongraph.DecisionOnEdge;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;

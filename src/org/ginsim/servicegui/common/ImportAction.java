@@ -6,11 +6,11 @@ import java.io.IOException;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.commongui.utils.FileFormatFilter;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.gui.shell.FileSelectionHelper;
 
 public abstract class ImportAction extends BaseAction {

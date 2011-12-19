@@ -1,6 +1,6 @@
 package org.ginsim.service.layout;
 
-import org.ginsim.core.exception.GsException;
+import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.service.Service;

@@ -3,9 +3,9 @@ package org.ginsim.core.graph.objectassociation;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 
 
