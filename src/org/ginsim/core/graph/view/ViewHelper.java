@@ -37,7 +37,7 @@ public class ViewHelper {
 	
 	private static PointList getPoints(Rectangle srcBounds, Rectangle targetBounds, List<Point> middlePoints, int w) {
 
-		if (middlePoints == null) {
+		if (middlePoints == null || middlePoints.size() < 1) {
 			return getPoints(srcBounds, targetBounds, w);
 		}
 		
@@ -47,7 +47,10 @@ public class ViewHelper {
 		for (Point p: middlePoints) {
 			points.add(p);
 		}
-		points.add(new Point());
+		points.add(getIntersection(targetBounds, middlePoints.get(middlePoints.size()-1), true, w));
+		
+		// replace the first point
+		points.set(0, getIntersection(srcBounds, middlePoints.get(0), true, w));
 		
 		return points;
 	}
