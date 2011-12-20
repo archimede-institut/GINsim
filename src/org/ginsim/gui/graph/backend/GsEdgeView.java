@@ -24,6 +24,8 @@ import org.jgraph.graph.GraphModel;
 public class GsEdgeView extends EdgeView {
 	private static final long serialVersionUID = 875785889768955L;
 
+	private static boolean CUSTOMBOUNDS = false;
+	
 	protected final GsEdgeRenderer renderer;
 	protected final Edge<?> edge;
 	
@@ -84,17 +86,23 @@ public class GsEdgeView extends EdgeView {
 	}
 	
 	public Rectangle2D getBounds() {
-		if (false) {
+		if (!CUSTOMBOUNDS) {
 			return super.getBounds();
 		}
 		
 		List<Point> points = ViewHelper.getPoints(renderer.nodeReader, renderer.reader, edge);
-		int delta = 4*(int)renderer.reader.getLineWidth();
+		int delta = 5*(int)renderer.reader.getLineWidth();
 		
 		Rectangle rect = new Rectangle(points.get(0));
 		for (Point p: points) {
 			rect.add(p);
 		}
+		
+		
+		// add a rectange arround the last point
+		Point last = points.get(points.size()-1);
+		Rectangle2D arrow = new Rectangle2D.Double(last.x-delta, last.y-delta, 2*delta, 2*delta);
+		//rect.add(arrow);
 		
 		// extend the bounding box to include selection marks and edge end
 		rect.setBounds(rect.x-delta, rect.y-delta, rect.width+2*delta, rect.height+2*delta);

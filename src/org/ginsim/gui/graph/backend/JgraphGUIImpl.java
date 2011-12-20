@@ -75,6 +75,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		// create the action manager and marquee handler
 		editActionManager = new EditActionManager(helper.getEditActions(graph));
 		new MarqueeHandler(this);
+		vertexToFront(true);
 	}
 	
 	public JGraph getJGraph() {
