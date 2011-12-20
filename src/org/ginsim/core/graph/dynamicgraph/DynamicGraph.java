@@ -15,6 +15,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
  */
 public interface DynamicGraph extends Graph<DynamicNode, Edge<DynamicNode>>, GraphAssociation<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>{
 
+	public static final int MAXLEVEL = 9;
+	public static final int STARLEVEL = MAXLEVEL+1;
 
 	
 	/**

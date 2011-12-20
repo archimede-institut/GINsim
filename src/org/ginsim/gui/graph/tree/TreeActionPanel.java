@@ -19,8 +19,8 @@ import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromCircuit;
 import org.ginsim.core.graph.tree.TreeBuilderFromRegulatoryGraph;
+import org.ginsim.core.mdd.MDDContext;
 import org.ginsim.gui.graph.GUIEditor;
-import org.ginsim.service.tool.circuit.FunctionalityContext;
 
 
 /**
@@ -128,7 +128,7 @@ public class TreeActionPanel extends JPanel implements GUIEditor<Tree> {
 			tree.getParser().setParameter(TreeBuilderFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX, geneIndex);
 		} else if (tree.getParser() instanceof TreeBuilderFromCircuit) {
 			int contextIndex = sourceList.getSelectedIndex();
-			FunctionalityContext fcontext = (FunctionalityContext) ((List)tree.getParser().getParameter(TreeBuilderFromCircuit.PARAM_ALLCONTEXTS)).get(contextIndex);
+			MDDContext fcontext = ((List<MDDContext>)tree.getParser().getParameter(TreeBuilderFromCircuit.PARAM_ALLCONTEXTS)).get(contextIndex);
 			tree.getParser().setParameter(TreeBuilderFromCircuit.PARAM_INITIALCIRCUITDESC, fcontext.getContext());
 		}
 		tree.getParser().run(treeMode);

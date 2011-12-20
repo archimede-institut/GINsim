@@ -1,10 +1,11 @@
 package org.ginsim.service.tool.circuit;
 
+import org.ginsim.core.mdd.MDDContext;
 import org.ginsim.core.mdd.OmsddNode;
 
 
 
-public class FunctionalityContext {
+public class FunctionalityContext implements MDDContext {
 
 	public CircuitDescr circuitDesc;
 	public int contextIndex;

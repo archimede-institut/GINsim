@@ -6,9 +6,9 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.servicegui.tool.stateinregulatorygraph.StateInRegGraphSelector;
 
 
 
@@ -71,8 +71,8 @@ public class SimpleStateListTableModel extends AbstractTableModel {
 
 		byte[] state = (byte[]) data.get(rowIndex);
 		int val = state[columnIndex];
-		if (val == StateInRegGraphSelector.STAR) {
-			return "0";
+		if (val == DynamicGraph.STARLEVEL) {
+			return "*";
 		}
 		if (val == statemax[columnIndex]) {
 			return "M"+String.valueOf(val);
