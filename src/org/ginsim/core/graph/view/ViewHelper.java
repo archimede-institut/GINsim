@@ -6,8 +6,8 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.utils.log.LogManager;
 
 /**
  * Common logics to manage bounding boxes, anchor points and related tricks for edge routing.
@@ -37,7 +37,7 @@ public class ViewHelper {
 	
 	private static PointList getPoints(Rectangle srcBounds, Rectangle targetBounds, List<Point> middlePoints, int w) {
 
-		if (middlePoints == null) {
+		if (middlePoints == null || middlePoints.size() < 1) {
 			return getPoints(srcBounds, targetBounds, w);
 		}
 		
@@ -47,7 +47,10 @@ public class ViewHelper {
 		for (Point p: middlePoints) {
 			points.add(p);
 		}
-		points.add(new Point());
+		points.add(getIntersection(targetBounds, middlePoints.get(middlePoints.size()-1), true, w));
+		
+		// replace the first point
+		points.set(0, getIntersection(srcBounds, middlePoints.get(0), true, w));
 		
 		return points;
 	}

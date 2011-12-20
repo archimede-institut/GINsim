@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -27,8 +28,9 @@ public class StateInRegGraphSelector extends Selector {
 	public static final EdgeStyle STYLE_EDGE_ON		= new EdgeStyle();
 	public static final EdgeStyle STYLE_EDGE_OFF 	= new EdgeStyle(new Color(192, 192, 192));
 
-	public static final int MAX_STYLES = 9; 
-	public static final int STAR = MAX_STYLES+1;
+	public static final int MAX_STYLES = DynamicGraph.MAXLEVEL; 
+	public static final int STAR = DynamicGraph.STARLEVEL;
+
 	public static final NodeStyle[] STYLE_NODES = new NodeStyle[MAX_STYLES+2];
 	public static final String[] CAT_NODES = new String[MAX_STYLES+2];
 

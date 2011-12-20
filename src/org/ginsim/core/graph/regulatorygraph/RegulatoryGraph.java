@@ -2,7 +2,7 @@ package org.ginsim.core.graph.regulatorygraph;
 
 import java.util.List;
 
-import org.ginsim.core.exception.GsException;
+import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 

@@ -5,10 +5,10 @@ import java.awt.Rectangle;
 import java.util.Map;
 
 import org.ginsim.common.OptionStore;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.core.utils.log.LogManager;
 
 
 /**

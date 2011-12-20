@@ -9,21 +9,21 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.notification.NotificationManager;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierService;
-import org.ginsim.servicegui.ServiceGUI;
-import org.ginsim.servicegui.common.GUIFor;
-import org.ginsim.servicegui.common.ToolAction;
 import org.mangosdk.spi.ProviderFor;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

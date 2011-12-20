@@ -3,7 +3,6 @@ package org.ginsim.service.export.biolayout;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Hashtable;
 
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;

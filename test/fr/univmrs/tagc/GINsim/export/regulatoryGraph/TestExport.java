@@ -7,10 +7,10 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
-import org.ginsim.core.exception.GsException;
+import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.GinmlParser;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.service.ServiceManager;
+import org.ginsim.core.service.ServiceManager;
 import org.ginsim.service.export.cytoscape.CytoscapeEncoder;
 import org.ginsim.service.export.gna.GNAExportService;
 import org.ginsim.service.export.snakes.SnakesEncoder;

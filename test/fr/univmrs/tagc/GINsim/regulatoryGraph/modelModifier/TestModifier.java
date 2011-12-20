@@ -2,7 +2,7 @@ package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
 
 import junit.framework.TestCase;
 
-import org.ginsim.core.exception.GsException;
+import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;

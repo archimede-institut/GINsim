@@ -8,7 +8,7 @@ import java.util.Date;
 
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.service.export.Dotify;
+import org.ginsim.core.utils.Dotify;
 
 public class GraphvizEncoder {
 

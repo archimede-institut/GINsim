@@ -1,24 +1,11 @@
 package org.ginsim.service.export.svg;
 
-import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.service.Service;
-import org.jgraph.util.Bezier;
+import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
 

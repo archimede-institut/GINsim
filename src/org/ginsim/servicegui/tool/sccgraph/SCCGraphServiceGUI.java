@@ -7,14 +7,14 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.service.ServiceManager;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.service.tool.connectivity.ConnectivityService;
 import org.ginsim.service.tool.sccgraph.SCCGraphResult;
 import org.ginsim.service.tool.sccgraph.SCCGraphService;
-import org.ginsim.servicegui.ServiceGUI;
-import org.ginsim.servicegui.common.GUIFor;
-import org.ginsim.servicegui.common.GenericGraphAction;
 import org.mangosdk.spi.ProviderFor;
 
 

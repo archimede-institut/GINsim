@@ -8,6 +8,8 @@ import javax.swing.JOptionPane;
 
 import org.ginsim.common.OptionStore;
 import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.Translator;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.backend.JgraphtBackendImpl;
@@ -19,12 +21,10 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.GraphGUIHelperFactory;
 import org.ginsim.gui.graph.backend.JgraphGUIImpl;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.MainFrame;
 import org.ginsim.gui.utils.widgets.Frame;
 

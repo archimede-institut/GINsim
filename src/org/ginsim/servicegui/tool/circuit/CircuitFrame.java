@@ -27,6 +27,8 @@ import javax.swing.tree.TreeSelectionModel;
 
 import org.ginsim.common.ProgressListener;
 import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.Translator;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
@@ -38,11 +40,10 @@ import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromCircuit;
+import org.ginsim.core.mdd.OmsddNode;
 import org.ginsim.core.utils.data.ObjectStore;
-import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.Label;
 import org.ginsim.gui.utils.widgets.treetable.AbstractTreeTableModel;
@@ -53,7 +54,6 @@ import org.ginsim.service.tool.circuit.CircuitAlgo;
 import org.ginsim.service.tool.circuit.CircuitDescr;
 import org.ginsim.service.tool.circuit.CircuitDescrInTree;
 import org.ginsim.service.tool.circuit.FunctionalityContext;
-import org.ginsim.service.tool.circuit.OmsddNode;
 import org.ginsim.service.tool.connectivity.ConnectivityAlgo;
 
 

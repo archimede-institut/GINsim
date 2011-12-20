@@ -1,10 +1,10 @@
 package org.ginsim.servicegui.export.documentation;
 
 import org.ginsim.common.document.DocumentWriter;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.SimpleServiceGUI;
+import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.service.export.documentation.LRGDocumentationService;
-import org.ginsim.servicegui.ServiceGUI;
-import org.ginsim.servicegui.SimpleServiceGUI;
-import org.ginsim.servicegui.common.GUIFor;
 import org.mangosdk.spi.ProviderFor;
 
 

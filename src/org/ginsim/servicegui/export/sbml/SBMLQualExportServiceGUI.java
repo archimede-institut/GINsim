@@ -8,16 +8,16 @@ import javax.swing.Action;
 
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.utils.log.LogManager;
+import org.ginsim.core.service.ServiceManager;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
-import org.ginsim.service.ServiceManager;
 import org.ginsim.service.export.sbml.SBMLQualConfig;
 import org.ginsim.service.export.sbml.SBMLQualExportService;
-import org.ginsim.servicegui.ServiceGUI;
-import org.ginsim.servicegui.common.ExportAction;
-import org.ginsim.servicegui.common.GUIFor;
 import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( ServiceGUI.class)

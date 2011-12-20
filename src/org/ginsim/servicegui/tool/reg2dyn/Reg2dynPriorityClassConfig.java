@@ -16,11 +16,13 @@ import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.SimpleGenericList;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.data.GenericListPanel;
 import org.ginsim.gui.utils.widgets.StockButton;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
 
 
 /**
@@ -30,9 +32,9 @@ public class Reg2dynPriorityClassConfig extends GenericListPanel implements List
 
     private static final long serialVersionUID = -3214357334096594239L;
 
-    protected static final int UP = 0;
-    protected static final int DOWN = 1;
-    protected static final int NONE = 2;
+    private static final int UP = PriorityClassDefinition.UP;
+    private static final int DOWN = PriorityClassDefinition.DOWN;
+    private static final int NONE = PriorityClassDefinition.NONE;
     
     protected static final String[] t_typeName = {" [+]", " [-]", ""};
     

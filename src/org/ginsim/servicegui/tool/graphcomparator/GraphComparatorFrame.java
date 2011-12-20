@@ -23,16 +23,16 @@ import javax.swing.JSeparator;
 import javax.swing.JTextField;
 
 import org.ginsim.common.OptionStore;
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.core.exception.GsException;
+import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.SeparatorComboBox;
-import org.ginsim.service.ServiceManager;
 import org.ginsim.service.tool.graphcomparator.GraphComparatorResult;
 import org.ginsim.service.tool.graphcomparator.GraphComparatorService;
 

@@ -24,10 +24,10 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.TableColumn;
 
+import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.servicegui.tool.regulatorygraphanimation.AReg2GPConfig;
 

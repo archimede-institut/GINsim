@@ -6,15 +6,15 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.gui.utils.dialog.stackdialog.HandledStackDialog;
 import org.ginsim.service.tool.stablestates.StableStatesService;
-import org.ginsim.servicegui.ServiceGUI;
-import org.ginsim.servicegui.common.GUIFor;
-import org.ginsim.servicegui.common.ToolAction;
 import org.mangosdk.spi.ProviderFor;
 
 

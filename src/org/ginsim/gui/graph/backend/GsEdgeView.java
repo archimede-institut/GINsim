@@ -1,5 +1,10 @@
 package org.ginsim.gui.graph.backend;
 
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
+import java.util.List;
+
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
@@ -76,5 +81,20 @@ public class GsEdgeView extends EdgeView {
 		GraphConstants.setEndFill(attributes, true);
 		
 		return attributes;
+	}
+	
+	public Rectangle2D getBounds() {
+		List<Point> points = ViewHelper.getPoints(renderer.nodeReader, renderer.reader, edge);
+		int delta = 4*(int)renderer.reader.getLineWidth();
+		
+		Rectangle rect = new Rectangle(points.get(0));
+		for (Point p: points) {
+			rect.add(p);
+		}
+		
+		// extend the bounding box to include selection marks and edge end
+		rect.setBounds(rect.x-delta, rect.y-delta, rect.width+2*delta, rect.height+2*delta);
+		
+		return rect;
 	}
 }

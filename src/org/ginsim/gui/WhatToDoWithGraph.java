@@ -1,12 +1,18 @@
 package org.ginsim.gui;
 
 import java.awt.EventQueue;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Vector;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -15,23 +21,16 @@ import javax.swing.JRadioButton;
 import javax.swing.border.EmptyBorder;
 
 import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.Translator;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.utils.log.LogManager;
-import org.ginsim.gui.resource.Translator;
+import org.ginsim.gui.service.ServiceGUIManager;
+import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.service.common.LayoutAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.GsFileFilter;
-import org.ginsim.servicegui.ServiceGUIManager;
-import org.ginsim.servicegui.common.ExportAction;
-import org.ginsim.servicegui.common.LayoutAction;
-import org.ginsim.servicegui.common.ToolAction;
-
-import javax.swing.JButton;
-import javax.swing.ButtonGroup;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ActionEvent;
 
 /**
  * This class define a frame that is opened when a graph is computed from an other one.

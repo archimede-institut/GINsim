@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.gui.resource.Translator;
+import org.ginsim.common.utils.Translator;
 
 
 /**

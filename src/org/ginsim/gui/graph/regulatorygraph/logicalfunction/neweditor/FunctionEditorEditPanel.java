@@ -8,7 +8,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.net.URL;
 import java.util.Enumeration;
 import java.util.Vector;
 
@@ -16,7 +15,6 @@ import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -25,17 +23,16 @@ import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
 import org.ginsim.gui.tbclient.decotreetable.DTreeTableBuilder;
 import org.ginsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
 import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElement;
+import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElementSelectable.JCB;
 import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElementToggleButton;
 import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeModel;
 import org.ginsim.gui.tbclient.decotreetable.decotree.DecoTree;
-import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElementSelectable.JCB;
 import org.ginsim.gui.tbclient.decotreetable.table.DecoTreeTable;
 import org.ginsim.gui.utils.widgets.GsButton;
 import org.ginsim.gui.utils.widgets.GsPanel;
@@ -86,7 +83,7 @@ public class FunctionEditorEditPanel extends GsPanel implements ItemListener, Ac
 	private GsButton previousButton, nextButton, deleteButton, andButton, orButton, clearButton, cancelButton, okButton;
 	private JRadioButton andRadioButton, orRadioButton;
 	private JCheckBox parCheckBox, notCheckBox;
-	private FunctionEditorModel editorModel;
+	private FunctionEditorModelImpl editorModel;
 	private Color darkGreen = new Color(13, 87, 37);
 	private Color lightGreen = new Color(12, 122, 52);
 	private ImageIcon ic_on, ic_off;
@@ -108,7 +105,7 @@ public class FunctionEditorEditPanel extends GsPanel implements ItemListener, Ac
 	public void setControler(FunctionEditorControler c) {
 		controler = c;
 	}
-  public void init(FunctionEditorModel m) {
+  public void init(FunctionEditorModelImpl m) {
   	editorModel = m;
     Point p = editorModel.getSelectedArea();
     if (p.x == p.y) {

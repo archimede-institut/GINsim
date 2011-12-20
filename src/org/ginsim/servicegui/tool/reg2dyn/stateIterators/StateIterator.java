@@ -3,9 +3,9 @@ package org.ginsim.servicegui.tool.reg2dyn.stateIterators;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.servicegui.tool.reg2dyn.PriorityClassDefinition;
-import org.ginsim.servicegui.tool.reg2dyn.Reg2dynPriorityClass;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParameters;
+import org.ginsim.service.tool.reg2dyn.SimulationParameters;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
 
 /**
  * An iterator on the successors of a state, from a regulatory graph

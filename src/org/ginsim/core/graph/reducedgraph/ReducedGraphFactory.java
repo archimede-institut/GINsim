@@ -2,7 +2,6 @@ package org.ginsim.core.graph.reducedgraph;
 
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphFactory;
-import org.ginsim.core.utils.log.LogManager;
 import org.mangosdk.spi.ProviderFor;
 
 

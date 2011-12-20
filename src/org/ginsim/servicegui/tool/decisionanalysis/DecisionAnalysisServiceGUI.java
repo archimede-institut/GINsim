@@ -6,16 +6,16 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.core.exception.GsException;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
-import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.decisionanalysis.DecisionAnalysisService;
-import org.ginsim.servicegui.ServiceGUI;
-import org.ginsim.servicegui.common.GUIFor;
-import org.ginsim.servicegui.common.ToolAction;
 import org.mangosdk.spi.ProviderFor;
 
 

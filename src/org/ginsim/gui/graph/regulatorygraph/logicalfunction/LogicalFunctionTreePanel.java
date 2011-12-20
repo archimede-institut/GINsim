@@ -34,21 +34,20 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.LogicalFunctionView;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeParam;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeString;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
-import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.BooleanFunctionTreeEditor;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.BooleanFunctionTreeRenderer;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.PanelFactory;
-import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.TreeMenu;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.dnd.ComponentAdapter;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.dnd.DropListener;
@@ -61,7 +60,7 @@ import org.ginsim.gui.shell.MainFrame;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 
-public class LogicalFunctionTreePanel extends AbstractParameterPanel implements KeyListener, MouseListener, ActionListener, TreeSelectionListener {
+public class LogicalFunctionTreePanel extends AbstractParameterPanel implements LogicalFunctionView, KeyListener, MouseListener, ActionListener, TreeSelectionListener {
   private static final long serialVersionUID = -8323666225199589729L;
 
   class GsTreeUI extends BasicTreeUI {
@@ -204,6 +203,7 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
     return tree;
   }
 
+  @Override
   public void refresh() {
     tree.stopEditing();
     Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));

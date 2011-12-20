@@ -3,7 +3,7 @@ package org.ginsim.service.export.nusmv;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.ginsim.service.Service;
+import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
 /**

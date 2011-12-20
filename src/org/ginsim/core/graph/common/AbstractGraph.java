@@ -2,7 +2,6 @@ package org.ginsim.core.graph.common;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -17,9 +16,10 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
+import org.ginsim.common.exception.GsException;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.GraphEventCascade;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.backend.GraphViewListener;
@@ -29,10 +29,6 @@ import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.notification.ErrorNotification;
-import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.core.notification.Notification;
-import org.ginsim.core.utils.log.LogManager;
 
 
 

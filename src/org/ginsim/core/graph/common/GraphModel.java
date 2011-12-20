@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.exception.GsException;
 
 
 /**

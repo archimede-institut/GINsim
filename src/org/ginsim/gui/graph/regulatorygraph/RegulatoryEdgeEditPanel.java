@@ -11,11 +11,10 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 
+import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.data.GenericPropertyHolder;
 import org.ginsim.gui.utils.data.GenericPropertyInfo;
 import org.ginsim.gui.utils.data.ObjectPropertyEditorUI;

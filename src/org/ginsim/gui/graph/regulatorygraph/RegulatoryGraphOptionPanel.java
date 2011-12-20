@@ -9,8 +9,8 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import org.ginsim.common.OptionStore;
+import org.ginsim.common.utils.Translator;
 import org.ginsim.gui.graph.GraphOptionPanel;
-import org.ginsim.gui.resource.Translator;
 
 
 /**

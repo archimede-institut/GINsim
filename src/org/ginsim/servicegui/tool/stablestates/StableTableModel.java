@@ -5,7 +5,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.core.exception.GsException;
+import org.ginsim.common.exception.GsException;
+import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphAssociation;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
@@ -15,7 +16,6 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.gui.resource.Translator;
 
 
 public class StableTableModel extends AbstractTableModel {

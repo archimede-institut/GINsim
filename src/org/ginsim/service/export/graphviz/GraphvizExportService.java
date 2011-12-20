@@ -1,16 +1,11 @@
 package org.ginsim.service.export.graphviz;
 
-import java.io.FileWriter;
 import java.io.IOException;
-import java.text.DateFormat;
 import java.util.Collection;
-import java.util.Date;
 
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.service.Service;
-import org.ginsim.service.export.Dotify;
+import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
 

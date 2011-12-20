@@ -22,6 +22,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
+import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -33,7 +34,6 @@ import org.ginsim.core.graph.view.css.EdgeStyle;
 import org.ginsim.core.graph.view.css.NodeStyle;
 import org.ginsim.core.graph.view.css.Style;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.service.tool.graphcomparator.GraphComparator;
 import org.ginsim.service.tool.graphcomparator.GraphComparatorResult;
 import org.ginsim.service.tool.graphcomparator.GraphComparatorStyleStore;

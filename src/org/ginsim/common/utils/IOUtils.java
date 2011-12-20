@@ -14,9 +14,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ginsim.common.OpenHelper;
-import org.ginsim.core.exception.GsException;
-import org.ginsim.core.utils.log.LogManager;
-import org.ginsim.gui.resource.Translator;
+import org.ginsim.common.exception.GsException;
+import org.ginsim.common.utils.log.LogManager;
 
 
 public class IOUtils {

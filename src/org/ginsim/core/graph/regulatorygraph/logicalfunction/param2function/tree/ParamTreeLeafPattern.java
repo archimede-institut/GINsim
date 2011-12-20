@@ -4,7 +4,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import org.ginsim.core.utils.log.LogManager;
+import org.ginsim.common.utils.log.LogManager;
 
 
 public class ParamTreeLeafPattern extends ParamTreeLeaf {

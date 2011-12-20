@@ -6,15 +6,15 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 
+import org.ginsim.common.exception.GsException;
+import org.ginsim.common.utils.DataUtils;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.core.utils.DataUtils;
 
 
 

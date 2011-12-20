@@ -5,21 +5,20 @@ import java.awt.GridBagLayout;
 import java.io.IOException;
 
 import org.ginsim.common.utils.FileFormatDescription;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
-import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 import org.ginsim.service.export.petrinet.PNConfig;
 import org.ginsim.service.export.petrinet.PetrinetExportService;
-import org.ginsim.servicegui.common.ExportAction;
-import org.ginsim.servicegui.tool.reg2dyn.PriorityClassManager;
+import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
+import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
 import org.ginsim.servicegui.tool.reg2dyn.PrioritySelectionPanel;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParameterList;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParametersManager;
 
 public class PetriNetExportAction extends ExportAction<RegulatoryGraph> {
 

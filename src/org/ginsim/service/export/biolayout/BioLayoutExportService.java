@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.service.Service;
+import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
 /**

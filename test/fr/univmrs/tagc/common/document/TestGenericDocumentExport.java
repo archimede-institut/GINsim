@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 
 import org.ginsim.core.graph.GinmlParser;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.service.ServiceManager;
+import org.ginsim.core.service.ServiceManager;
 import org.ginsim.service.export.documentation.LRGDocumentationService;
 
 import fr.univmrs.tagc.common.TestTools;

@@ -2,10 +2,11 @@ package org.ginsim.service.tool.circuit;
 import java.util.List;
 import java.util.Vector;
 
+import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.gui.resource.Translator;
+import org.ginsim.core.mdd.OmsddNode;
 
 
 public class CircuitDescr {

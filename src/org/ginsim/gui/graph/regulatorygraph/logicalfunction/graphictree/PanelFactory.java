@@ -27,11 +27,11 @@ public class PanelFactory {
         break;
       case 2 :
         if (value instanceof TreeExpression) {
-          p = new FunctionPanel(panel, value, tree, sel, width, edit);
-					((TreeExpression)value).setGraphicPanel((FunctionPanel)p);
+          p = new FunctionPanelImpl(panel, value, tree, sel, width, edit);
+					((TreeExpression)value).setGraphicPanel((FunctionPanelImpl)p);
           Point pt =((TreeExpression)value).getSelection();
           if (pt != null) {
-						((FunctionPanel)p).selectText(pt);
+						((FunctionPanelImpl)p).selectText(pt);
           }
         }
         break;

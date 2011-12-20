@@ -17,6 +17,7 @@ import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 
 import org.ginsim.common.OptionStore;
+import org.ginsim.common.utils.Translator;
 import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.NotificationListener;
 import org.ginsim.gui.GUIManager;
@@ -24,7 +25,6 @@ import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.dnd.GlassPane;
 import org.ginsim.gui.notifications.NotificationPanel;
 import org.ginsim.gui.notifications.NotificationSource;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.shell.editpanel.EditPanel;
 import org.ginsim.gui.utils.widgets.Frame;
 import org.ginsim.gui.utils.widgets.SplitPane;

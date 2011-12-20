@@ -11,14 +11,14 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.core.exception.GsException;
+import org.ginsim.common.utils.Translator;
+import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.commongui.dialog.DefaultDialogSize;
+import org.ginsim.commongui.dialog.SimpleDialog;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.resource.Translator;
-import org.ginsim.gui.utils.dialog.DefaultDialogSize;
-import org.ginsim.gui.utils.dialog.SimpleDialog;
 
 
 

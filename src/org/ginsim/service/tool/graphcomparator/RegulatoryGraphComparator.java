@@ -7,8 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.common.exception.GsException;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
@@ -20,7 +21,6 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterLis
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.css.NodeStyle;
-import org.ginsim.core.utils.log.LogManager;
 
 
 /**

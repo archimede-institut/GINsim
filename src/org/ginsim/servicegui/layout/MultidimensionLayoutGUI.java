@@ -27,11 +27,11 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableCellRenderer;
 
 import org.ginsim.common.ColorPalette;
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.core.exception.GsException;
+import org.ginsim.common.utils.Translator;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
-import org.ginsim.core.utils.log.LogManager;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.widgets.StockButton;
 import org.ginsim.service.layout.DynamicLayoutMultidimention;
 

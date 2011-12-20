@@ -13,8 +13,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.ginsim.common.exception.GsException;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
@@ -33,15 +34,12 @@ import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.utils.log.LogManager;
-import org.ginsim.servicegui.tool.modelsimplifier.ModelSimplifierConfigDialog;
-import org.ginsim.servicegui.tool.modelsimplifier.RemovedInfo;
-import org.ginsim.servicegui.tool.reg2dyn.PriorityClassDefinition;
-import org.ginsim.servicegui.tool.reg2dyn.PriorityClassManager;
-import org.ginsim.servicegui.tool.reg2dyn.Reg2dynPriorityClass;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParameterList;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParameters;
-import org.ginsim.servicegui.tool.reg2dyn.SimulationParametersManager;
+import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
+import org.ginsim.service.tool.reg2dyn.SimulationParameters;
+import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
+import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
 
 /**
  * Build a simplified model, based on a complete one, by removing some nodes.
@@ -59,7 +57,7 @@ import org.ginsim.servicegui.tool.reg2dyn.SimulationParametersManager;
 public class ModelSimplifier extends Thread implements Runnable {
 
 	//GsGraphManager manager;
-	ModelSimplifierConfigDialog dialog;
+	ReductionLauncher launcher;
 	int[] t_remove = null;
 
 	RegulatoryGraph graph;
@@ -79,10 +77,10 @@ public class ModelSimplifier extends Thread implements Runnable {
 	boolean strict;
 	ParameterGenerator pgen;
 
-	public ModelSimplifier(RegulatoryGraph graph, ModelSimplifierConfig config, ModelSimplifierConfigDialog dialog, boolean start) {
+	public ModelSimplifier(RegulatoryGraph graph, ModelSimplifierConfig config, ReductionLauncher launcher, boolean start) {
 		this.graph = graph;
 		this.oldNodeOrder = graph.getNodeOrder();
-		this.dialog = dialog;
+		this.launcher = launcher;
 		this.m_removed = new HashMap<RegulatoryNode, List<RegulatoryNode>>(config.m_removed);
 		this.it_targets = new TargetEdgesIterator(m_removed);
 		this.strict = config.strict;
@@ -98,8 +96,8 @@ public class ModelSimplifier extends Thread implements Runnable {
 	@Override
     public void run() {
 		RegulatoryGraph simplifiedGraph = do_reduction();
-        if (simplifiedGraph != null && dialog != null) {
-            dialog.endSimu(simplifiedGraph, null);
+        if (simplifiedGraph != null && launcher != null) {
+            launcher.endSimu(simplifiedGraph, null);
         }
 	}
 	
@@ -118,8 +116,8 @@ public class ModelSimplifier extends Thread implements Runnable {
 
 		// the "main" part is done, did it finish or fail ?
 		if (l_todo.size() > 0) {
-			if (dialog != null) {
-				if (!dialog.showPartialReduction(l_todo)) {
+			if (launcher != null) {
+				if (!launcher.showPartialReduction(l_todo)) {
 					return null;
 				}
 				

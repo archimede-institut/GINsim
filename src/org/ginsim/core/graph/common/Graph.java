@@ -2,7 +2,7 @@ package org.ginsim.core.graph.common;
 
 import java.util.Collection;
 
-import org.ginsim.core.exception.GsException;
+import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;

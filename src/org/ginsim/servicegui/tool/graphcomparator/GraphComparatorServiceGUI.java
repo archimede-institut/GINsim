@@ -8,10 +8,10 @@ import javax.swing.Action;
 
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.graphcomparator.GraphComparatorService;
-import org.ginsim.servicegui.ServiceGUI;
-import org.ginsim.servicegui.common.GUIFor;
-import org.ginsim.servicegui.common.ToolAction;
 import org.mangosdk.spi.ProviderFor;
 
 

@@ -1,6 +1,6 @@
 package org.ginsim.common.utils;
 
-import org.ginsim.core.utils.log.LogManager;
+import org.ginsim.common.utils.log.LogManager;
 
 public class EnvUtils {
 

@@ -26,10 +26,10 @@ import javax.swing.JTable;
 import javax.swing.JToggleButton;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.utils.log.LogManager;
 import org.ginsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
 import org.ginsim.gui.tbclient.decotreetable.DTreeTableBuilder;
 import org.ginsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import javax.swing.Action;
 
+import org.ginsim.common.utils.Translator;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
@@ -17,7 +18,6 @@ import org.ginsim.core.notification.resolvable.resolution.NotificationResolution
 import org.ginsim.core.utils.data.GenericList;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
-import org.ginsim.gui.resource.Translator;
 import org.ginsim.gui.utils.data.GenericPropertyEditorPanel;
 import org.ginsim.gui.utils.data.GenericPropertyInfo;
 import org.ginsim.gui.utils.data.ObjectEditor;

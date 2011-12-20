@@ -11,9 +11,9 @@ import javax.swing.JScrollPane;
 
 import org.ginsim.common.utils.IOUtils;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.servicegui.ServiceGUI;
-import org.ginsim.servicegui.common.StandaloneGUI;
-import org.ginsim.servicegui.common.ToolAction;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.common.StandaloneGUI;
+import org.ginsim.gui.service.common.ToolAction;
 import org.mangosdk.spi.ProviderFor;
 import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
