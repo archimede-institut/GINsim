@@ -7,6 +7,7 @@ import java.util.Vector;
 import org.ginsim.common.exception.GsException;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -36,7 +37,7 @@ public final class DynamicParser extends GsXMLHelper {
     private int vslevel = 0;
     
     private DynamicNode vertex = null;
-    private Object edge = null;
+    private Edge<?> edge = null;
     private NodeAttributesReader vareader = null;
     private EdgeAttributesReader ereader = null;
     private Annotation annotation = null;
@@ -223,7 +224,7 @@ public final class DynamicParser extends GsXMLHelper {
                 break; // POS_EDGE
                 
             case POS_EDGE_VS:
-            	GinmlHelper.applyEdgeVisualSettings(ereader, qName, attributes);
+            	GinmlHelper.applyEdgeVisualSettings(edge, ereader, vareader, qName, attributes);
                 break; // POS_EDGE_VS
             case POS_VERTEX_VS:
             	vslevel = GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);

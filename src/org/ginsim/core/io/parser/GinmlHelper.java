@@ -7,10 +7,12 @@ import java.util.List;
 
 import org.ginsim.common.utils.DataUtils;
 import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
+import org.ginsim.core.graph.view.ViewHelper;
 import org.xml.sax.Attributes;
 
 
@@ -62,7 +64,7 @@ public class GinmlHelper {
 	 * @param qName
 	 * @param attributes
 	 */
-	public static void applyEdgeVisualSettings(EdgeAttributesReader ereader, String qName, Attributes attributes) {
+	public static void applyEdgeVisualSettings(Edge<?> edge, EdgeAttributesReader ereader, NodeAttributesReader nreader, String qName, Attributes attributes) {
 		if (qName.equals("polyline")) {
 			ereader.setLineColor(DataUtils.getColorFromCode(attributes.getValue("line_color")));
 			boolean isCurved = false;
@@ -90,6 +92,7 @@ public class GinmlHelper {
     				        l.add(new Point(Integer.parseInt(t_point[0]),Integer.parseInt(t_point[1])));
     					}
     					ereader.setPoints(l);
+    					ViewHelper.trimPoints(edge, nreader, ereader);
     			    } catch (Exception e) {
     			        GUIMessageUtils.openErrorDialog("invalid points");
     			    }

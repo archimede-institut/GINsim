@@ -335,7 +335,7 @@ public final class RegulatoryParser extends GsXMLHelper {
                 break; // POS_EDGE
 
             case POS_EDGE_VS:
-            	GinmlHelper.applyEdgeVisualSettings(ereader, qName, attributes);
+            	GinmlHelper.applyEdgeVisualSettings(edge.me, ereader, vareader, qName, attributes);
                 break; // POS_EDGE_VS
             case POS_VERTEX_VS:
             	vslevel = GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);

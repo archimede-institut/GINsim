@@ -226,7 +226,7 @@ public class ReducedGraphParser extends GsXMLHelper {
                 break; // POS_EDGE
                 
             case POS_EDGE_VS:
-            	GinmlHelper.applyEdgeVisualSettings(ereader, qName, attributes);
+            	GinmlHelper.applyEdgeVisualSettings(null, ereader, vareader, qName, attributes);
                 break; // POS_EDGE_VS
             case POS_VERTEX_VS:
             	vslevel = GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);

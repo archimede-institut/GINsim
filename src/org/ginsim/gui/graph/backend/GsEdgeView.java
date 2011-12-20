@@ -84,6 +84,10 @@ public class GsEdgeView extends EdgeView {
 	}
 	
 	public Rectangle2D getBounds() {
+		if (false) {
+			return super.getBounds();
+		}
+		
 		List<Point> points = ViewHelper.getPoints(renderer.nodeReader, renderer.reader, edge);
 		int delta = 4*(int)renderer.reader.getLineWidth();
 		

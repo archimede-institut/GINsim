@@ -206,6 +206,33 @@ public class ViewHelper {
 		
 		return getPoints(b1, b2, realPoints, w);
 	}
+
+	/**
+	 * Remove the first and last points if they are inside the source and target bounding box
+	 * 
+	 * @param nreader
+	 * @param ereader
+	 * @param edge
+	 */
+	public static void trimPoints(Edge edge, NodeAttributesReader nreader, EdgeAttributesReader ereader) {
+		
+		Rectangle b1 = getBounds(nreader, edge.getSource());
+		Rectangle b2 = getBounds(nreader, edge.getTarget());
+		
+		ereader.setEdge(edge);
+		List<Point> points = ereader.getPoints();
+		if (points == null || points.size() < 1) {
+			return;
+		}
+		
+		if (b1.contains(points.get(0))) {
+			points.remove(0);
+		}
+		int last = points.size()-1;
+		if (b2.contains(points.get(last))) {
+			points.remove(last);
+		}
+	}
 }
 
 class PointList extends ArrayList<Point> {
