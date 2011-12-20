@@ -1,6 +1,8 @@
 package org.ginsim.gui.graph.backend;
 
+import java.awt.Graphics;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Rectangle2D;
 
 import org.ginsim.common.OptionStore;
 import org.ginsim.core.graph.common.Graph;
@@ -20,6 +22,8 @@ public class GsJgraph extends JGraph {
     private static final long serialVersionUID = 645635435678L;
 	private boolean edgeLabelDisplayed;
     private boolean nodeLabelDisplayed;
+    
+    private Rectangle2D dirty = null;
     
     public GsJgraph(JGraphModelAdapter ma, Graph<?,?> g) {
         super(ma);
@@ -90,4 +94,38 @@ public class GsJgraph extends JGraph {
 	public void setNodeLabelDisplayed(boolean b) {
 		nodeLabelDisplayed=b;
 	}
+
+	@Override
+	public Graphics getOffgraphics() {
+		if (dirty != null) {
+			// this should not happen
+			addOffscreenDirty(dirty);
+			dirty = null;
+		}
+		
+		Graphics g = super.getOffgraphics();
+		
+		if (dirty != null) {
+			// fully delete the offscreen buffer as it is the only working solution I found for now
+			offscreen = null;
+			g = super.getOffgraphics();
+
+			// the following is supposed to work... but doesn't
+			//addOffscreenDirty(dirty);
+			//clearOffscreen();
+			
+			dirty = null;
+		}
+		
+		return g;
+	}
+	
+	public void addCustomDirty(Rectangle2D rect) {
+		if (dirty == null) {
+			dirty = rect;
+		} else {
+			dirty.add(rect);
+		}
+	}
+	
 }

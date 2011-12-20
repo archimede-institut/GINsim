@@ -5,6 +5,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JLabel;
 
@@ -19,13 +22,13 @@ class RawNodeRenderer extends JLabel {
 	public static final int hSW = SW/2;  // half width of the selection mark
 	
 	private final NodeAttributesReader reader;
-	private final JGraph jgraph;
+	private final GsJgraph jgraph;
 	
 	private boolean selected;
 
-	private boolean dirty = false;
+	private Rectangle2D dirtyAreas = null;
 	
-	public RawNodeRenderer(JGraph jgraph, NodeAttributesReader vertexAttributeReader) {
+	public RawNodeRenderer(GsJgraph jgraph, NodeAttributesReader vertexAttributeReader) {
 		this.reader = vertexAttributeReader;
 		this.jgraph = jgraph;
 		setHorizontalTextPosition(CENTER);
@@ -41,11 +44,10 @@ class RawNodeRenderer extends JLabel {
 		super.setBounds(rect.x, rect.y, rect.width, rect.height);
 		reader.setNode(view.user);
 		
-		if (dirty && !preview) {
-			dirty = false;
-			System.out.println("Forcing refresh.. why does it fail?");
-			jgraph.refresh();
-			jgraph.graphDidChange();
+		if (!preview && dirtyAreas != null) {
+			// This probably fails as it jgraph clipped the view before...
+			jgraph.addCustomDirty(dirtyAreas);
+			dirtyAreas = null;
 		}
 	}
 	
@@ -83,7 +85,6 @@ class RawNodeRenderer extends JLabel {
 	}
 
 	public void translate(Object user, double dx, double dy) {
-		
 		reader.setNode(user);
 		
 		int x = reader.getX();
@@ -91,9 +92,14 @@ class RawNodeRenderer extends JLabel {
 		int w = reader.getWidth();
 		int h = reader.getHeight();
 
-		Rectangle oldBounds = new Rectangle(x, y, w, h);
+		Rectangle2D oldBounds = new Rectangle(x, y, w, h);
+		if (dirtyAreas == null) {
+			dirtyAreas = oldBounds;
+		} else {
+			dirtyAreas.add(oldBounds);
+		}
+		
 		reader.setPos(x+(int)dx, y+(int)dy);
 		
-		dirty = true;
 	}
 }
