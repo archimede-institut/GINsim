@@ -602,7 +602,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			c.weightx = 0;
 			c.gridx = 3;
 			c.gridy = 0;
-			jP_edge.add(new JLabel(Translator.getString("STR_lineStyle")), c);
+			jP_edge.add(new JLabel(Translator.getString("STR_curve")), c);
 
 			c = new GridBagConstraints();
 			c.gridx = 4;

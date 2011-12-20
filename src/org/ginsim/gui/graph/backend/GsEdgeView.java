@@ -63,6 +63,10 @@ public class GsEdgeView extends EdgeView {
 		}
 		GraphConstants.setLineWidth(attributes, renderer.reader.getLineWidth());
 
+		if (renderer.reader.isCurve()) {
+			GraphConstants.setLineStyle(attributes, GraphConstants.STYLE_SPLINE);
+		}
+		
 		int lineEnd = GraphConstants.ARROW_CLASSIC;
 		EdgeEnd end = renderer.reader.getLineEnd();
 		switch (end) {
