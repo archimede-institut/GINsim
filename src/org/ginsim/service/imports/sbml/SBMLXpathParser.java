@@ -1,6 +1,7 @@
 package org.ginsim.service.imports.sbml;
 
 import java.io.ByteArrayInputStream;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -43,6 +44,13 @@ import org.xml.sax.SAXException;
 
 import JSci.io.MathMLParser;
 
+/**
+ * This class allow to parse a SBML file. It use the Java XPath API and Jaxen library to manage the namespaces
+ * of this SBML file. It also use the JSci API (a science API for Java) mainly the "JSci.mathml" package to parse
+ * data located in every <fonctionTerm> element of SBML file.
+ * @author Guy-Ross ASSOUMOU
+ *
+ */
 
 public final class SBMLXpathParser {
 	
@@ -109,13 +117,11 @@ public final class SBMLXpathParser {
 			Namespace namespace1 = Namespace.getNamespace("sbml",
 					"http://www.sbml.org/sbml/level3/version1/core");
 			
-			/** to get the model ID. */
+			/** Allow to get the model ID. */
 			XPath xpa1 = XPath.newInstance("//sbml:model");
 			
 			/** add this namespace (namespace1) from xpath namespace list **/ 		 
 			xpa1.addNamespace(namespace1);
-			
-			String model_name = xpa1.valueOf(racine);
 
 			Namespace namespace = Namespace.getNamespace("qual",
 					"http://www.sbml.org/sbml/level3/version1/qual/version1");
@@ -238,8 +244,6 @@ public final class SBMLXpathParser {
 					maxval = (byte) Integer.parseInt(qualClass.getMaxLevel());
 				}
 				
-				// Ici, il faut que je lance une exception si l'id, le nom ou la maxvalue est null ???
-
 				vertex = graph.addNewNode(qualClass.getId(), qualClass.getName(), maxval);
 				vertex.getV_logicalParameters().setUpdateDup(false);
 				
@@ -383,13 +387,14 @@ public final class SBMLXpathParser {
 
 						List<Element> functionTChildren = transitionChild.getChildren();
 						String outputName = transitionClass.getOutput().getQualitativeSpecies();
-						v_function = new Vector<String>();	
+
 						for(int fctIndex = 0; fctIndex < functionTChildren.size(); fctIndex++ ) { 
 							
 							/**
 							 * Get every functionTerm <Element>.
 							 */
 							Element child = functionTChildren.get(fctIndex);
+							String fctResultLevel = null;
 							
 							/**
 							 * Check defaultTerm value
@@ -417,19 +422,19 @@ public final class SBMLXpathParser {
 								} // if								
 							} // if
 							
+							v_function = new Vector<String>();	
+							
 							if("functionTerm".equals(child.getName())) {
-								List<Attribute> fctAttribList = child.getAttributes();
+								List<Attribute> fctAttribList = child.getAttributes();	
 								
 								/**
 								 * Get <functionTerm> resultLevel attribute
 								 */
 								List<Attribute> fctAt = child.getAttributes();
-								String fctResultLevel = fctAt.get(0).getValue();
-								
-								List<Element> rootConv = child.getChildren();
-								Element math = rootConv.get(0);
+								fctResultLevel = fctAt.get(0).getValue();
 							
 								FunctionTerm function_term = deal( child);
+															
 								if( function_term != null) {
 									addEdgesToMutliEdges( function_term, getNodeId(trans_Id), intput_to_sign, graph);
 									v_function.addElement( function_term.getLogicalFunction());
@@ -439,8 +444,9 @@ public final class SBMLXpathParser {
 								{
 									vertex = enumvertex.nextElement();
 									String vertexName = vertex.getId();
+									
 									if(outputName.equals(vertexName))
-									{		
+									{	
 										values.get(vertex).put(fctResultLevel, v_function);	
 									}
 								}
@@ -722,25 +728,6 @@ public final class SBMLXpathParser {
 		}
 		
 		
-		private static String changeString(String code) {
-			
-			//Pattern p = Pattern.compile( "new MathDouble\\((\\d)\\)");
-			Pattern p = Pattern.compile( "(input_[^\\)]*_\\d)");
-			System.out
-					.println("SBMLXpathParser.MathMLCodeParser.changeString() : new pattern = " + p.pattern());
-			Matcher m = p.matcher( code);
-			
-			StringBuffer sb = new StringBuffer();
-			while (m.find()) {
-				m.appendReplacement(sb, m.group(1));
-			}
-			m.appendTail(sb);
-			
-			return sb.toString();
-		}
-		
-		
-		
 		/**
 		 * Replace some caracters identify by "new MathDouble(int)" in a JSci String by an Integer.
 		 * i.e : if we have a JSci String like this :" G0.lt(new MathDouble(1)) ", thus we can
@@ -874,14 +861,24 @@ public final class SBMLXpathParser {
 	
 	
 	/** To get node ID corresponding to the current <transition> element **/
-	public String getNodeId(String transId) {
+	public String getNodeId(String transId) {	
 		String nodeName = null;
-		pattern = Pattern.compile("tr_(.*)");
-		Matcher matcher = pattern.matcher(transId);
-		if(matcher.matches()){
-			nodeName = matcher.group(1);
-		}
+		int new_index;
+
+			new_index = transId.indexOf( "_", 0);
+			if( new_index >=0){
+				Pattern pattern = Pattern.compile("tr_(.*)");
+				Matcher matcher = pattern.matcher(transId);
+				if(matcher.matches()){
+					nodeName = matcher.group(1);
+				}
+			}
+			else{			
+				nodeName = transId;
+			}
+			
 		return nodeName;
+		
 	}
 
 
@@ -958,7 +955,10 @@ public final class SBMLXpathParser {
 			ex.printStackTrace();
 		}
 	}
-
+	
+/**
+ * @return a regulatory graph that corresponds to data of the SBML file
+ */
 	public RegulatoryGraph getGraph() {
 		return graph;
 	}
@@ -976,14 +976,14 @@ public final class SBMLXpathParser {
 	/** <p> An object Expression represent the contain of last "single" <apply> element.
 	 * i.e : <apply>
 	 *         <geq/>
-	 *           <ci>node id</ci> 
-	 *           <cn>threshold value</cn> 
+	 *           <ci>nodeId</ci> 
+	 *           <cn>thresholdValue</cn> 
 	 *       </apply>
 	 *  </p>     
 	 ** @author Guy-Ross ASSOUMOU
 	 **/	
  class Expression {
-	 	/** The node id*/	 
+	 	/** The node id */	 
 		private String node;
 		
 		/** The operator in this apply element, i.e : <geq/>. */
@@ -1007,7 +1007,8 @@ public final class SBMLXpathParser {
 
 		/** To create an Expression Object with the maxvalue of every regulatory node of the graph. 
 		 * @param str : a String that contains a needed data for an expression
-		 * For instance : str = "G0<1", where G0 is a node id and. "<" is an operator and "1" is a threshold value*/
+		 * For instance : str = "G0<1", where G0 is a node id and.
+		 * The caracter "<" is an operator and "1" is a threshold value*/
 		
 		public Expression(String str, RegulatoryGraph graph) {
 			
@@ -1032,7 +1033,7 @@ public final class SBMLXpathParser {
 				}
 			}
 			
-			/** To set a maxvalue for a regulatory node */
+			/** To set a maxvalue for a given regulatory node */
 			RegulatoryNode vertex = (RegulatoryNode) graph.getNodeByName(node);
 			if( vertex != null) {
 				maxvalue = vertex.getMaxValue();
@@ -1114,8 +1115,6 @@ public final class SBMLXpathParser {
 		} 
 
 		
-		
-		
 		@Override
 		public String toString() {
 			return node + " " + operator +" " + minvalue + "/" + maxvalue + "\n";
@@ -1177,6 +1176,7 @@ public final class SBMLXpathParser {
 			/** Generate an arraylist of vectors. Each vector contains all 
 			 * the situations described by an expression
 			 * For instance G0>=1 with G0={0,1,2} means G0:1 and G0:2 */
+			
 			ArrayList<Vector<String>> expressions = new ArrayList<Vector<String>>();
 			Iterator<Expression> it = expressionList.iterator();
 			while(it.hasNext()){
@@ -1234,7 +1234,7 @@ public final class SBMLXpathParser {
  	}// class Condition
 	
  
- /** A FunctionTerm object represent a collection of Condition object.
+ /** A FunctionTerm object represent a collection of Conditions object.
   *  It contains also an operator (mainly "or" operator) **/
  
 class FunctionTerm {		
@@ -1583,9 +1583,8 @@ public void setTransitionEffect(String transitionEffect) {
 }	 
 
 public String toString() {
-	return 
-		   "qualitativeSpecies : " + qualitativeSpecies +
-		   " \ntransitionEffect   : " + transitionEffect  ;
+	return  "qualitativeSpecies : " + qualitativeSpecies +		  
+		    " \ntransitionEffect   : " + transitionEffect;
 }
 
 } // Output
