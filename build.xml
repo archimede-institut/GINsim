@@ -16,16 +16,18 @@
 	<property name="src" location="./src"/>
 	<property name="build" location="./build"/>
 	<property name="dist" location="./dist"/>
-	<property name="lib.dir" value="../lib"/>
+	<property name="lib.dir" location="../lib"/>
+	
 	<property name="src.resources.ginsim" location="${src}/org/ginsim/gui/resource"/>
-	<property name="src.resources.jython" location="${src}/org/ginsim/gui/service/tool/jython/console"/>
+	<property name="src.resources.jython" location="${src}/org/ginsim/servicegui/tool/jython/console"/>
 	<property name="src.resources.common" location="${src}/fr/univmrs/tagc/common/resources"/>
 	<property name="build.resources.ginsim" location="${build}/org/ginsim/gui/resource"/>
-	<property name="build.resources.jython" location="${build}/org/ginsim/gui/service/tool/jython/console"/>
+	<property name="build.resources.jython" location="${build}/org/ginsim/servicegui/tool/jython/console"/>
 	<property name="build.resources.common" location="${build}/fr/univmrs/tagc/common/resources"/>
 
 	<property name="jar.name" value="${ant.project.name}-${version}.jar"/>
-	<property name="jar.file" value="${lib.dir}/../${jar.name}"/>
+	<property name="jar.file" value="${dist}/${jar.name}"/>
+	<!-- TODO: Correct the class after the refactoring... -->
 	<property name="main.class" value="org.ginsim.TestRefactor"/>
 	<property name="main.class.old" value="fr.univmrs.tagc.GINsim.global.GsMain"/>
 	
@@ -40,12 +42,16 @@
 	<!-- Setting the classpath with the necessary libraries -->
 	<available file="${GSLib}" type="dir" property="lib.dir" value="${GSLib}"/>
 	<path id="lib.classpath">
-		<fileset dir="${lib.dir}" includes="**/*.jar" />
+		<fileset dir="${lib.dir}" includes="**/*.jar"/>
 	</path>
+	<pathconvert property="string.classpath" pathsep=" ">
+		<map from="${lib.dir}" to="lib"/> 
+		<fileset dir="${lib.dir}" includes="**/*.jar"/>
+	</pathconvert>
 
 	<!-- Setting the JarBundler file location -->
 	<property name="jarbundle.file" value="/usr/share/ant/lib/jarbundler-2.2.0.jar"/>
-	<available file="${BUNDLER}" type="file" property="jarbundle.file" value="${BUNDLER}"/>
+	<available file="${Bundler}" type="file" property="jarbundle.file" value="${Bundler}"/>
 
 	<!-- ************************************************** -->
 	<!-- Display the list of all available targets          -->
@@ -55,13 +61,34 @@
   help        - Displays this help message
   clean       - Cleans all non-source files
   init        - Prepares directories for compilation
-  compile     - Compiles all the src/ files considering the GSLib libraries
-  jar         - Builds a stripped jar file for GINsim (looks for a lib/ directory)
-  jar.dist    - Builds an independent jar file for GINsim (containing the necessary libraries)
+
+  * Compilation of src/ files *
+  compile.common     - Compiles just the src/org/ginsim/common files
+  compile.commongui  - Compiles just the src/org/ginsim/commongui files
+  compile.core       - Compiles just the src/org/ginsim/core files
+  compile.gui        - Compiles just the src/org/ginsim/gui files
+  compile.service    - Compiles just the src/org/ginsim/service files
+  compile.servicegui - Compiles just the src/org/ginsim/servicegui files
+  compile            - Compiles all  the src/ files considering the GSLib libraries
+
+  * Independent jar files *
+  jar.common     - Builds a jar file containing only the package org.ginsim.common
+  jar.commongui  - Builds a jar file containing only the package org.ginsim.commongui
+  jar.core       - Builds a jar file containing only the package org.ginsim.core
+  jar.gui        - Builds a jar file containing only the package org.ginsim.gui
+  jar.service    - Builds a jar file containing only the package org.ginsim.service
+  jar.servicegui - Builds a jar file containing only the package org.ginsim.servicegui
+
+  * GINsim working versions *
+  jar           - Builds a stripped jar file (looks for the lib/ directory)
+  jar.dist      - Builds an independent jar file (contains all libraries)
+  jar.macbundle - Builds a GINsim.app for OSX (contains all libraries)
+
+  * Documentation *
   doc.all     - Builds all documentation (javadoc and docbook)
   doc.javadoc - Generates the Javadoc for all the src/ files
   doc.docbook	- Builds the user documentation (tutorial and manual)
-  .tocontinue. - ...</echo>
+</echo>
 	</target>
 	
 	<!-- ************************************************** -->
@@ -73,8 +100,6 @@
 		<tstamp/>
 		<!-- Create build and dist directory -->
 		<mkdir dir="${build}"/>
-		<mkdir dir="${build.resources.ginsim}"/>
-		<mkdir dir="${build.resources.jython}"/>
 		<mkdir dir="${dist}"/>
 	</target>
 
@@ -87,16 +112,20 @@
 		<delete dir="${build}"/>
 		<delete dir="${dist}"/>
 	</target>
-	
+
+	<!-- ****************** Compilation ******************* -->
 
 	<!-- ************************************************** -->
-	<!-- Compiles all core/ classes                         -->
+	<!-- Compiles all common/ classes                       -->
 	<!-- ************************************************** -->
-	<target name="compile.core" depends="init"
-		description="Compiles the core/ source files">
-		<echo message="--> Compiling ${ant.project.name} core/ files ..."/>
+	<target name="compile.common" depends="init"
+		description="Compiles the common/ source files">
+		<echo message="--> Compiling ${ant.project.name} common/ files ..."/>
 		<javac source="${compile.jversion}" target="${compile.jversion}" includeantruntime="false"
 			srcdir="${src}" destdir="${build}">
+			<include name="org/ginsim/common/**"/>
+			<exclude name="org/ginsim/commongui/**"/>
+			<exclude name="org/ginsim/core/**"/>
 			<exclude name="org/ginsim/service/**"/>
 			<exclude name="org/ginsim/gui/**"/>
 			<exclude name="org/ginsim/servicegui/**"/>
@@ -105,18 +134,20 @@
 			</classpath>
 		</javac>
 	</target>
-	
+
 	<!-- ************************************************** -->
-	<!-- Compiles all src.gui/ classes                      -->
+	<!-- Compiles all core/ classes                         -->
 	<!-- ************************************************** -->
-	<target name="compile.gui" depends="compile.core"
-		description="Compiles the gui/ source files">
-		<echo message="--> Compiling ${ant.project.name} gui/ files ..."/>
+	<target name="compile.core" depends="compile.common"
+		description="Compiles the core/ source files">
+		<echo message="--> Compiling ${ant.project.name} core/ files ..."/>
 		<javac source="${compile.jversion}" target="${compile.jversion}" includeantruntime="false"
 			srcdir="${src}" destdir="${build}">
 			<exclude name="org/ginsim/common/**"/>
-			<exclude name="org/ginsim/core/**"/>
+			<exclude name="org/ginsim/commongui/**"/>
+			<include name="org/ginsim/core/**"/>
 			<exclude name="org/ginsim/service/**"/>
+			<exclude name="org/ginsim/gui/**"/>
 			<exclude name="org/ginsim/servicegui/**"/>
 			<classpath location="${build}">
 				<path refid="lib.classpath"/>
@@ -133,7 +164,9 @@
 		<javac source="${compile.jversion}" target="${compile.jversion}" includeantruntime="false"
 			srcdir="${src}" destdir="${build}">
 			<exclude name="org/ginsim/common/**"/>
+			<exclude name="org/ginsim/commongui/**"/>
 			<exclude name="org/ginsim/core/**"/>
+			<include name="org/ginsim/service/**"/>
 			<exclude name="org/ginsim/gui/**"/>
 			<exclude name="org/ginsim/servicegui/**"/>
 			<classpath location="${build}">
@@ -141,7 +174,47 @@
 			</classpath>
 		</javac>
 	</target>
-	
+
+	<!-- ************************************************** -->
+	<!-- Compiles all commongui/ classes                    -->
+	<!-- ************************************************** -->
+	<target name="compile.commongui" depends="compile.common"
+		description="Compiles the commongui/ source files">
+		<echo message="--> Compiling ${ant.project.name} commongui/ files ..."/>
+		<javac source="${compile.jversion}" target="${compile.jversion}" includeantruntime="false"
+			srcdir="${src}" destdir="${build}">
+			<exclude name="org/ginsim/common/**"/>
+			<include name="org/ginsim/commongui/**"/>
+			<exclude name="org/ginsim/core/**"/>
+			<exclude name="org/ginsim/service/**"/>
+			<exclude name="org/ginsim/gui/**"/>
+			<exclude name="org/ginsim/servicegui/**"/>
+			<classpath location="${build}">
+				<path refid="lib.classpath"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<!-- ************************************************** -->
+	<!-- Compiles all src.gui/ classes                      -->
+	<!-- ************************************************** -->
+	<target name="compile.gui" depends="compile.commongui,compile.core"
+		description="Compiles the gui/ source files">
+		<echo message="--> Compiling ${ant.project.name} gui/ files ..."/>
+		<javac source="${compile.jversion}" target="${compile.jversion}" includeantruntime="false"
+			srcdir="${src}" destdir="${build}">
+			<exclude name="org/ginsim/common/**"/>
+			<exclude name="org/ginsim/commongui/**"/>
+			<exclude name="org/ginsim/core/**"/>
+			<exclude name="org/ginsim/service/**"/>
+			<include name="org/ginsim/gui/**"/>
+			<exclude name="org/ginsim/servicegui/**"/>
+			<classpath location="${build}">
+				<path refid="lib.classpath"/>
+			</classpath>
+		</javac>
+	</target>
+		
 	<!-- ************************************************** -->
 	<!-- Compiles all src.servicegui/ classes               -->
 	<!-- ************************************************** -->
@@ -151,9 +224,11 @@
 		<javac source="${compile.jversion}" target="${compile.jversion}" includeantruntime="false"
 			srcdir="${src}" destdir="${build}">
 			<exclude name="org/ginsim/common/**"/>
+			<exclude name="org/ginsim/commongui/**"/>
 			<exclude name="org/ginsim/core/**"/>
 			<exclude name="org/ginsim/service/**"/>
 			<exclude name="org/ginsim/gui/**"/>
+			<include name="org/ginsim/servicegui/**"/>
 			<classpath location="${build}">
 				<path refid="lib.classpath"/>
 			</classpath>
@@ -163,15 +238,31 @@
 	<!-- ************************************************** -->
 	<!-- Compiles all ${src} classes                        -->
 	<!-- ************************************************** -->
-	<target name="compile" description="Compiles the src files"
-		depends="compile.core,compile.gui,compile.service,compile.servicegui">
+	<target name="compile" depends="compile.servicegui"
+		description="Compiles all the src/ source files">
 		<echo message="--> Compiling the whole ${ant.project.name} project ..."/>
 
+		<javac source="${compile.jversion}" target="${compile.jversion}" includeantruntime="false"
+			srcdir="${src}" destdir="${build}">
+			<include name="org/ginsim/*.java"/>
+			<exclude name="org/ginsim/common/**"/>
+			<exclude name="org/ginsim/commongui/**"/>
+			<exclude name="org/ginsim/core/**"/>
+			<exclude name="org/ginsim/service/**"/>
+			<exclude name="org/ginsim/gui/**"/>
+			<exclude name="org/ginsim/servicegui/**"/>
+			<classpath location="${build}">
+				<path refid="lib.classpath"/>
+			</classpath>
+		</javac>
+
 		<echo message="--> Copying resources ..."/>
-		<!-- copy resources files TODO: how is this in the new version? -->
+		<mkdir dir="${build.resources.ginsim}"/>
 		<copy todir="${build.resources.ginsim}">
 			<fileset dir="${src.resources.ginsim}"/>
 		</copy>
+		<!-- TODO: pedro: I would change this location, still thinking on it... -->
+		<mkdir dir="${build.resources.jython}"/>
 		<copy todir="${build.resources.jython}">
 			<fileset dir="${src.resources.jython}"/>
 		</copy>
@@ -183,120 +274,139 @@
 		</exec>
 	</target>
 	
+	<!-- ***************** Jar creation ******************* -->
+	
 	<!-- ************************************************** -->
-	<!-- Generates GINsim-core.jar file without libs        -->
+	<!-- Generates GINsim-common.jar file                   -->
+	<!-- ************************************************** -->
+	<target name="jar.common" depends="compile.common"
+		description="Generates GINsim-common.jar file in ${dist} without ${lib.dir}">
+		<jar destfile="${dist}/${ant.project.name}-${version}-common.jar"
+			basedir="${build}">
+			<include name="org/ginsim/common/**"/>
+			<exclude name="org/ginsim/commongui/**"/>
+			<exclude name="org/ginsim/core/**"/>
+			<exclude name="org/ginsim/service/**"/>
+			<exclude name="org/ginsim/gui/**"/>
+			<exclude name="org/ginsim/servicegui/**"/>
+			<manifest>
+				<attribute name="${ant.project.name}-version" value="${baseversion}"/>
+				<attribute name="Compilation-Date" value="${CURDATE}"/>
+			</manifest>
+		</jar>
+	</target>
+	<!-- ************************************************** -->
+	<!-- Generates GINsim-core.jar file                     -->
 	<!-- ************************************************** -->
 	<target name="jar.core" depends="compile.core"
 		description="Generates GINsim-core.jar file in ${dist} without ${lib.dir}">
-		<manifestclasspath maxparentlevels="0" jarfile="${jar.file}" property="manifest.class.path">
-			<classpath refid="lib.classpath"/>
-		</manifestclasspath>
-		<jar destfile="${jar.file}"
+		<jar destfile="${dist}/${ant.project.name}-${version}-core.jar"
 			basedir="${build}">
-			<include name="org/ginsim/common/**"/>
+			<exclude name="org/ginsim/common/**"/>
+			<exclude name="org/ginsim/commongui/**"/>
 			<include name="org/ginsim/core/**"/>
-			<exclude name="org/ginsim/service/**"/>
 			<exclude name="org/ginsim/gui/**"/>
+			<exclude name="org/ginsim/service/**"/>
 			<exclude name="org/ginsim/servicegui/**"/>
 			<manifest>
-				<attribute name="Main-Class" value="${main.class}"/>
-				<attribute name="Class-Path" value="${manifest.class.path}"/>
 				<attribute name="${ant.project.name}-version" value="${baseversion}"/>
 				<attribute name="Compilation-Date" value="${CURDATE}"/>
 			</manifest>
 		</jar>
 	</target>
-	
 	<!-- ************************************************** -->
-	<!-- Generates GINsim-service.jar file without libs     -->
+	<!-- Generates GINsim-service.jar file                  -->
 	<!-- ************************************************** -->
 	<target name="jar.service" depends="compile.service"
 		description="Generates GINsim-service.jar file in ${dist} without ${lib.dir}">
-		<manifestclasspath maxparentlevels="0" jarfile="${jar.file}" property="manifest.class.path">
-			<classpath refid="lib.classpath"/>
-		</manifestclasspath>
-		<jar destfile="${jar.file}"
+		<jar destfile="${dist}/${ant.project.name}-${version}-service.jar"
 			basedir="${build}">
 			<exclude name="org/ginsim/common/**"/>
+			<exclude name="org/ginsim/commongui/**"/>
 			<exclude name="org/ginsim/core/**"/>
+			<exclude name="org/ginsim/gui/**"/>
 			<include name="org/ginsim/service/**"/>
-			<exclude name="org/ginsim/gui/**"/>
 			<exclude name="org/ginsim/servicegui/**"/>
 			<manifest>
-				<attribute name="Class-Path" value="${manifest.class.path}"/>
 				<attribute name="${ant.project.name}-version" value="${baseversion}"/>
 				<attribute name="Compilation-Date" value="${CURDATE}"/>
 			</manifest>
 		</jar>
 	</target>
-	
 	<!-- ************************************************** -->
-	<!-- Generates GINsim-gui.jar file without libs         -->
+	<!-- Generates GINsim-commongui.jar file                -->
 	<!-- ************************************************** -->
-	<target name="jar.gui" depends="compile.service"
+	<target name="jar.commongui" depends="compile.commongui"
+		description="Generates GINsim-commongui.jar file in ${dist} without ${lib.dir}">
+		<jar destfile="${dist}/${ant.project.name}-${version}-commongui.jar"
+			basedir="${build}">
+			<exclude name="org/ginsim/common/**"/>
+			<include name="org/ginsim/commongui/**"/>
+			<exclude name="org/ginsim/core/**"/>
+			<exclude name="org/ginsim/gui/**"/>
+			<exclude name="org/ginsim/service/**"/>
+			<exclude name="org/ginsim/servicegui/**"/>
+			<manifest>
+				<attribute name="${ant.project.name}-version" value="${baseversion}"/>
+				<attribute name="Compilation-Date" value="${CURDATE}"/>
+			</manifest>
+		</jar>
+	</target>
+	<!-- ************************************************** -->
+	<!-- Generates GINsim-gui.jar file                      -->
+	<!-- ************************************************** -->
+	<target name="jar.gui" depends="compile.gui"
 		description="Generates GINsim-gui.jar file in ${dist} without ${lib.dir}">
-		<manifestclasspath maxparentlevels="0" jarfile="${jar.file}" property="manifest.class.path">
-			<classpath refid="lib.classpath"/>
-		</manifestclasspath>
-		<jar destfile="${jar.file}"
+		<jar destfile="${dist}/${ant.project.name}-${version}-gui.jar"
 			basedir="${build}">
 			<exclude name="org/ginsim/common/**"/>
+			<exclude name="org/ginsim/commongui/**"/>
 			<exclude name="org/ginsim/core/**"/>
-			<exclude name="org/ginsim/service/**"/>
 			<include name="org/ginsim/gui/**"/>
+			<exclude name="org/ginsim/service/**"/>
 			<exclude name="org/ginsim/servicegui/**"/>
 			<manifest>
-				<attribute name="Class-Path" value="${manifest.class.path}"/>
 				<attribute name="${ant.project.name}-version" value="${baseversion}"/>
 				<attribute name="Compilation-Date" value="${CURDATE}"/>
 			</manifest>
 		</jar>
 	</target>
-	
 	<!-- ************************************************** -->
-	<!-- Generates GINsim-servicegui.jar file without libs   -->
+	<!-- Generates GINsim-servicegui.jar file               -->
 	<!-- ************************************************** -->
-	<target name="jar.servicegui" depends="compile.service"
+	<target name="jar.servicegui" depends="compile.servicegui"
 		description="Generates GINsim-servicegui.jar file in ${dist} without ${lib.dir}">
-		<manifestclasspath maxparentlevels="0" jarfile="${jar.file}" property="manifest.class.path">
-			<classpath refid="lib.classpath"/>
-		</manifestclasspath>
-		<jar destfile="${jar.file}"
+		<jar destfile="${dist}/${ant.project.name}-${version}-servicegui.jar"
 			basedir="${build}">
 			<exclude name="org/ginsim/common/**"/>
+			<exclude name="org/ginsim/commongui/**"/>
 			<exclude name="org/ginsim/core/**"/>
-			<exclude name="org/ginsim/service/**"/>
 			<exclude name="org/ginsim/gui/**"/>
+			<exclude name="org/ginsim/service/**"/>
 			<include name="org/ginsim/servicegui/**"/>
 			<manifest>
-				<attribute name="Class-Path" value="${manifest.class.path}"/>
 				<attribute name="${ant.project.name}-version" value="${baseversion}"/>
 				<attribute name="Compilation-Date" value="${CURDATE}"/>
 			</manifest>
 		</jar>
 	</target>
-	
 	<!-- ************************************************** -->
-	<!-- Generates GINsim-*.jar file without libs           -->
+	<!-- Generates GINsim-*.jar files                       -->
 	<!-- ************************************************** -->
-	<target name="jar.all" description="Generates GINsim jar file in ${dist} without ${lib.dir}"
-		depends="jar.core,jar.service,jar.gui,jar.servicegui">
+	<target name="jar.all" depends="jar.common,jar.core,jar.service,jar.commongui,jar.gui,jar.servicegui"
+		description="Generates GINsim-*.jar files in ${dist} without ${lib.dir}">
 	</target>
 
 	<!-- ************************************************** -->
 	<!-- Generates GINsim.jar file without libs             -->
 	<!-- ************************************************** -->
-	<target name="jar" description="Generates GINsim jar file in ${dist} without ${lib.dir}"
-		depends="compile.core,compile.service,compile.gui,compile.servicegui">
-		<manifestclasspath maxparentlevels="0" jarfile="${jar.file}" property="manifest.class.path">
-			<classpath refid="lib.classpath"/>
-		</manifestclasspath>
+	<target name="jar" depends="compile"
+		description="Generates GINsim.jar file in ${dist} without ${lib.dir}">
 		<jar destfile="${jar.file}"
-			basedir="${build}"
-			includes="**/*">
+			basedir="${build}">
 			<manifest>
 				<attribute name="Main-Class" value="${main.class}"/>
-				<attribute name="Class-Path" value="${manifest.class.path}"/>
+				<attribute name="Class-Path" value="${string.classpath}"/>
 				<attribute name="${ant.project.name}-version" value="${baseversion}"/>
 				<attribute name="Compilation-Date" value="${CURDATE}"/>
 			</manifest>
@@ -304,13 +414,11 @@
 	</target>
 	
 	<!-- ************************************************** -->
-	<!-- Generates GINsim jar file in ${dist} with libs     -->
+	<!-- Generates GINsim.jar file with libs                -->
 	<!-- ************************************************** -->
 	<target name="jar.dist" depends="compile"
-		description="Generates GINsim jar file in ${dist} with ${lib.dir}" >
-		<delete dir="${dist}"/>
-		<mkdir dir="${dist}"/>
-		<jar destfile="${dist}/${jar.name}"
+		description="Generates GINsim.jar file in ${dist} with ${lib.dir}">
+		<jar destfile="${jar.file}"
 			basedir="${build}"
 			includes="**/*">
 			<zipgroupfileset dir="${lib.dir}" includes="*.jar">
@@ -416,20 +524,20 @@
 	<!-- ************************************************** -->
 	<!-- Build an application bundle for Mac OS X           -->
 	<!-- ************************************************** -->
-	<target name="macbundle.check" description="Build an application for mac">
+	<target name="-macbundle.check" description="Build an application for mac">
 		<!--Fetch jarbundler at http://informagen.com/JarBundler/ and install it in /usr/share/ant/lib/ (default)  -->
 		<condition property="macbundle.cond">
 			<resourceexists><file file="${jarbundle.file}"/></resourceexists>
 		</condition>
 	</target>
-	<target name="macbundle.then" depends="macbundle.check,jar" if="macbundle.cond">
+	<target name="-macbundle.then" depends="-macbundle.check,jar" if="macbundle.cond">
 		<taskdef name="jarbundler" classpath="${jarbundle.file}"
 			classname="net.sourceforge.jarbundler.JarBundler"/>
 
 		<jarbundler dir="${dist}"
 			name="${ant.project.name}"
 			mainclass="fr.univmrs.tagc.GINsim.global.GsMain"
-			jar="${dist}/${jar.name}"
+			jar="${jar.file}"
 			jvmversion="${compile.jversion}"
 			version="${baseversion}"
 			build="${CURDATE}"
@@ -461,11 +569,11 @@
 			<fileset dir="${lib.dir}" includes="**/*.jar" />
 		</copy>
 	</target>
-	<target name="macbundle.else" depends="macbundle.check" unless="macbundle.cond">
+	<target name="-macbundle.else" depends="-macbundle.check" unless="macbundle.cond">
 		<echo>JarBundler not found at ${jarbundle.file}
-Please install it or pass its location to ant using the BUNDLER parameter:
-  ant -DBUNDLER=/path/to/bundler.jar macbundle</echo>
+Please install it or pass its location to ant using the Bundler parameter:
+  ant -DBundler=/path/to/bundler.jar jar.macbundle</echo>
 	</target>
-	<target name="macbundle" depends="macbundle.then, macbundle.else"/>
+	<target name="jar.macbundle" depends="-macbundle.then,-macbundle.else"/>
 	
 </project>
