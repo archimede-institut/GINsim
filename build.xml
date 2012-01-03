@@ -70,6 +70,7 @@
   compile.service    - Compiles just the src/org/ginsim/service files
   compile.servicegui - Compiles just the src/org/ginsim/servicegui files
   compile            - Compiles all  the src/ files considering the GSLib libraries
+      [-DGSLib=/path/to/external/libs]
 
   * Independent jar files *
   jar.common     - Builds a jar file containing only the package org.ginsim.common
@@ -82,12 +83,13 @@
   * GINsim working versions *
   jar           - Builds a stripped jar file (looks for the lib/ directory)
   jar.dist      - Builds an independent jar file (contains all libraries)
-  jar.macbundle - Builds a GINsim.app for OSX (contains all libraries)
+  jar.macbundle - Builds a ${ant.project.name}.app for OSX (contains all libraries)
+      [-DBundler=/path/to/jarbundler.jar]
 
   * Documentation *
   doc.all     - Builds all documentation (javadoc and docbook)
   doc.javadoc - Generates the Javadoc for all the src/ files
-  doc.docbook	- Builds the user documentation (tutorial and manual)
+  doc.docbook - Builds the user documentation (tutorial and manual)
 </echo>
 	</target>
 	
@@ -277,10 +279,10 @@
 	<!-- ***************** Jar creation ******************* -->
 	
 	<!-- ************************************************** -->
-	<!-- Generates GINsim-common.jar file                   -->
+	<!-- Generates ${ant.project.name}-common.jar file      -->
 	<!-- ************************************************** -->
 	<target name="jar.common" depends="compile.common"
-		description="Generates GINsim-common.jar file in ${dist} without ${lib.dir}">
+		description="Generates ${ant.project.name}-common.jar file in ${dist} without ${lib.dir}">
 		<jar destfile="${dist}/${ant.project.name}-${version}-common.jar"
 			basedir="${build}">
 			<include name="org/ginsim/common/**"/>
@@ -296,10 +298,10 @@
 		</jar>
 	</target>
 	<!-- ************************************************** -->
-	<!-- Generates GINsim-core.jar file                     -->
+	<!-- Generates ${ant.project.name}-core.jar file        -->
 	<!-- ************************************************** -->
 	<target name="jar.core" depends="compile.core"
-		description="Generates GINsim-core.jar file in ${dist} without ${lib.dir}">
+		description="Generates ${ant.project.name}-core.jar file in ${dist} without ${lib.dir}">
 		<jar destfile="${dist}/${ant.project.name}-${version}-core.jar"
 			basedir="${build}">
 			<exclude name="org/ginsim/common/**"/>
@@ -315,10 +317,10 @@
 		</jar>
 	</target>
 	<!-- ************************************************** -->
-	<!-- Generates GINsim-service.jar file                  -->
+	<!-- Generates ${ant.project.name}-service.jar file     -->
 	<!-- ************************************************** -->
 	<target name="jar.service" depends="compile.service"
-		description="Generates GINsim-service.jar file in ${dist} without ${lib.dir}">
+		description="Generates ${ant.project.name}-service.jar file in ${dist} without ${lib.dir}">
 		<jar destfile="${dist}/${ant.project.name}-${version}-service.jar"
 			basedir="${build}">
 			<exclude name="org/ginsim/common/**"/>
@@ -334,10 +336,10 @@
 		</jar>
 	</target>
 	<!-- ************************************************** -->
-	<!-- Generates GINsim-commongui.jar file                -->
+	<!-- Generates ${ant.project.name}-commongui.jar file   -->
 	<!-- ************************************************** -->
 	<target name="jar.commongui" depends="compile.commongui"
-		description="Generates GINsim-commongui.jar file in ${dist} without ${lib.dir}">
+		description="Generates ${ant.project.name}-commongui.jar file in ${dist} without ${lib.dir}">
 		<jar destfile="${dist}/${ant.project.name}-${version}-commongui.jar"
 			basedir="${build}">
 			<exclude name="org/ginsim/common/**"/>
@@ -353,10 +355,10 @@
 		</jar>
 	</target>
 	<!-- ************************************************** -->
-	<!-- Generates GINsim-gui.jar file                      -->
+	<!-- Generates ${ant.project.name}-gui.jar file         -->
 	<!-- ************************************************** -->
 	<target name="jar.gui" depends="compile.gui"
-		description="Generates GINsim-gui.jar file in ${dist} without ${lib.dir}">
+		description="Generates ${ant.project.name}-gui.jar file in ${dist} without ${lib.dir}">
 		<jar destfile="${dist}/${ant.project.name}-${version}-gui.jar"
 			basedir="${build}">
 			<exclude name="org/ginsim/common/**"/>
@@ -372,10 +374,10 @@
 		</jar>
 	</target>
 	<!-- ************************************************** -->
-	<!-- Generates GINsim-servicegui.jar file               -->
+	<!-- Generates ${ant.project.name}-servicegui.jar file  -->
 	<!-- ************************************************** -->
 	<target name="jar.servicegui" depends="compile.servicegui"
-		description="Generates GINsim-servicegui.jar file in ${dist} without ${lib.dir}">
+		description="Generates ${ant.project.name}-servicegui.jar file in ${dist} without ${lib.dir}">
 		<jar destfile="${dist}/${ant.project.name}-${version}-servicegui.jar"
 			basedir="${build}">
 			<exclude name="org/ginsim/common/**"/>
@@ -391,17 +393,17 @@
 		</jar>
 	</target>
 	<!-- ************************************************** -->
-	<!-- Generates GINsim-*.jar files                       -->
+	<!-- Generates ${ant.project.name}-*.jar files          -->
 	<!-- ************************************************** -->
 	<target name="jar.all" depends="jar.common,jar.core,jar.service,jar.commongui,jar.gui,jar.servicegui"
-		description="Generates GINsim-*.jar files in ${dist} without ${lib.dir}">
+		description="Generates ${ant.project.name}-*.jar files in ${dist} without ${lib.dir}">
 	</target>
 
 	<!-- ************************************************** -->
-	<!-- Generates GINsim.jar file without libs             -->
+	<!-- Generates ${ant.project.name}.jar file without libs-->
 	<!-- ************************************************** -->
 	<target name="jar" depends="compile"
-		description="Generates GINsim.jar file in ${dist} without ${lib.dir}">
+		description="Generates ${ant.project.name}.jar file in ${dist} without ${lib.dir}">
 		<jar destfile="${jar.file}"
 			basedir="${build}">
 			<manifest>
@@ -414,10 +416,10 @@
 	</target>
 	
 	<!-- ************************************************** -->
-	<!-- Generates GINsim.jar file with libs                -->
+	<!-- Generates ${ant.project.name}.jar file with libs   -->
 	<!-- ************************************************** -->
 	<target name="jar.dist" depends="compile"
-		description="Generates GINsim.jar file in ${dist} with ${lib.dir}">
+		description="Generates ${ant.project.name}.jar file in ${dist} with ${lib.dir}">
 		<jar destfile="${jar.file}"
 			basedir="${build}"
 			includes="**/*">
@@ -536,30 +538,22 @@
 
 		<jarbundler dir="${dist}"
 			name="${ant.project.name}"
-			mainclass="fr.univmrs.tagc.GINsim.global.GsMain"
+			bundleid="${ant.project.name}"
+			mainclass="${main.class}"
 			jar="${jar.file}"
 			jvmversion="${compile.jversion}"
 			version="${baseversion}"
 			build="${CURDATE}"
-			infostring="GINsim (Gene Interaction Network simulation) is a computer tool for the modeling and simulation of genetic regulatory networks. See http://gin.univ-mrs.fr/" 
+			infostring="GINsim (Gene Interaction Network simulation) is a computer tool for the modeling and simulation of genetic regulatory networks. See http://ginsim.org/" 
 			icon="${src.resources.ginsim}/icon/GINsim.icns"
-			>
-<!--
-			bundleid="fr.univmrs.tagc.GINsim"
-			stubfile="${ant.project.name}"
-			showPlist="false"
-			shortname="${ant.project.name}"
 			verbose="true"
-			signature="giml"
-			
--->
+			>
 			<!-- Adjust the look, feel and behavior -->
 			<javaproperty name="apple.laf.useScreenMenuBar" value="true"/>
-			<javaproperty name="apple.awt.brushMetal" value="false"/>
+			<javaproperty name="apple.awt.brushMetal" value="true"/>
 			<javaproperty name="apple.awt.showGrowBox" value="false"/>
 
 			<!-- Associate document types with this application -->
-			<!-- FIXME: add iconFile="${icons}/ginml.icns" -->
 			<documenttype name="GINML document" extensions="ginml" role="Editor"
 				iconFile="${src.resources.ginsim}/icon/GINsim.icns"/>
 			<documenttype name="zGINML document" extensions="zginml" role="Editor"
@@ -570,10 +564,10 @@
 		</copy>
 	</target>
 	<target name="-macbundle.else" depends="-macbundle.check" unless="macbundle.cond">
-		<echo>JarBundler not found at ${jarbundle.file}
-Please install it or pass its location to ant using the Bundler parameter:
-  ant -DBundler=/path/to/bundler.jar jar.macbundle</echo>
+		<echo message="Please pass the Jarbundle file location to ant using"/>
+		<echo message="the Bundler parameter: ant -DBundler=/path/to/bundler.jar jar.macbundle"/>
+		<fail message="JarBundler not found at ${jarbundle.file}"/>
 	</target>
-	<target name="jar.macbundle" depends="-macbundle.then,-macbundle.else"/>
+	<target name="jar.osx" depends="-macbundle.then,-macbundle.else"/>
 	
 </project>
