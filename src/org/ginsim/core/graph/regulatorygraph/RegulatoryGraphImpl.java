@@ -128,6 +128,23 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     }
     
     /**
+     * Add the node to the graph, updating the NodeOrder
+     * 
+     * @param node the node to add
+     * @return true if the node has been correctly added, false if not
+     */
+    @Override
+	public boolean addNode( RegulatoryNode node){
+		
+        if (node != null && graphBackend.addNodeInBackend(node)) {
+    		nodeOrder.add( node);
+    		return true;
+        }
+        
+        return false;
+	}
+    
+    /**
      * Add a signed edge
      * 
      * @param source
