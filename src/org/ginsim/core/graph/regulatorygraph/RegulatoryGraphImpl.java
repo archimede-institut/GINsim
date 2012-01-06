@@ -120,8 +120,8 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         		nextid++;
         }
         RegulatoryNode obj = new RegulatoryNode(nextid++, this);
-        if (addNode( obj)) {
-    		nodeOrder.add(obj);
+        if (super.addNode( obj)) {
+    		nodeOrder.add( obj);
     		return obj;
         }
         return null;
@@ -136,7 +136,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     @Override
 	public boolean addNode( RegulatoryNode node){
 		
-        if (node != null && graphBackend.addNodeInBackend(node)) {
+        if (node != null && super.addNode( node)) {
     		nodeOrder.add( node);
     		return true;
         }

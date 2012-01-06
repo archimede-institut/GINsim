@@ -35,7 +35,7 @@ import org.ginsim.core.graph.view.NodeAttributesReader;
 
 abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E> {
 	
-	protected final GraphBackend<V,E> graphBackend;
+	private final GraphBackend<V,E> graphBackend;
 	
 	// view data
 	private GraphViewListener listener;
