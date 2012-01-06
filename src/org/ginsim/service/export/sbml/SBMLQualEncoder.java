@@ -69,7 +69,7 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
         // FIXME: DTD for SBML ?
         OutputStreamWriter os = new OutputStreamWriter(new FileOutputStream(filename), "UTF-8");
         out = new XMLWriter(os, null);
-        String s_compartment = "c_"+graph.getGraphName();
+        String s_compartment = "c_" + graph.getGraphName();
         out.openTag("sbml");
         out.addAttr("xmlns", "http://www.sbml.org/sbml/level3/version1/core");
         out.addAttr("level", "3");
@@ -83,7 +83,7 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
         	out.addAttr("id", getPrevFilename( graph_path));
         }
         else{
-        	out.addAttr("id", "");
+        	out.addAttr("id", graph.getGraphName());
         }
         
         out.openTag("listOfCompartments");
