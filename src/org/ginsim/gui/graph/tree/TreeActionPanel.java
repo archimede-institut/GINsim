@@ -34,8 +34,9 @@ public class TreeActionPanel extends JPanel implements GUIEditor<Tree> {
 
 	private JComboBox sourceList;
 	private JComboBox treeModeList;
-	private Tree tree;
-
+	private Tree tree = null;
+	private boolean hasSelectionChanged = false;
+	
 	private static Vector<String> TREEMODES;
 
 	private JLabel labelChooseComboBox;
@@ -64,7 +65,6 @@ public class TreeActionPanel extends JPanel implements GUIEditor<Tree> {
         this.setLayout(new GridBagLayout());
         getContentPanel();
         this.setMinimumSize(new Dimension(20,20));
-		selectionChange();
 	}
 
 	private void getContentPanel() {
@@ -119,6 +119,10 @@ public class TreeActionPanel extends JPanel implements GUIEditor<Tree> {
 	}
 
 	protected void selectionChange() {
+		if (!hasSelectionChanged) {
+			hasSelectionChanged = true;
+			return;
+		}
 		if (tree == null) return;
 		int treeMode = treeModeList.getSelectedIndex();
 		if (treeMode < 0 && treeMode > 2) treeMode = 0;

@@ -13,7 +13,10 @@ public interface Tree extends Graph<TreeNode, Edge<TreeNode>>{
 	
 	public int getMode();
 	
-	
+	/**
+	 * Define the root (a TreeNode) of the tree
+	 * @param root define the root 
+	 */
 	public void setRoot( TreeNode root);
 	
 	/**
