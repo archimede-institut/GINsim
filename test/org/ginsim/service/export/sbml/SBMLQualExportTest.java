@@ -11,6 +11,7 @@ import org.ginsim.common.exception.GsException;
 import org.ginsim.core.TestFileUtils;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
+import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.regulatorygraph.BasicRegulatoryGraphTest;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
@@ -60,8 +61,47 @@ public class SBMLQualExportTest {
 		TestFileUtils.cleanTempTestFileDirectory( module);
 	}
 	
+	/**
+	 * Test to export an re-import a trivial graph builded from commands
+	 * 
+	 */
+	@Test
+	public void exportAndImportTrivialSBMLGraphTest(){
+	
+		RegulatoryGraph graph = createTrivialGraph();
+		exportGraphToSBML( graph);
+		reimportGraphFromSBML( graph);
+		
+		assertNotNull( "Re-import graph : graph is null", graph);
+		assertEquals( "Re-import graph : Graph node number is not correct", 2, graph.getNodeCount());
+		assertEquals( "Re-import graph : Graph edge number is not correct", 1, graph.getEdges().size());
+
+	}
+	
+	/**
+	 * Test to export an re-import a graph loaded from a ginml file
+	 * 
+	 */
 	@Test
 	public void exportAndImportSBMLGraphTest(){
+	
+		File file = new File( TestFileUtils.getTestFileDirectory( module), "exportGraphTest.zginml");
+		RegulatoryGraph graph = loadGraph( file);
+		exportGraphToSBML( graph);
+		reimportGraphFromSBML( graph);
+		
+		assertNotNull( "Re-import graph : graph is null", graph);
+		assertEquals( "Re-import graph : Graph node number is not correct", 4, graph.getNodeCount());
+		assertEquals( "Re-import graph : Graph edge number is not correct", 7, graph.getEdges().size());
+
+	}
+	
+	/**
+	 * 
+	 * 
+	 * @return
+	 */
+	private RegulatoryGraph createTrivialGraph(){
 		
 		// Create a new RegulatoryGraph
 		RegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
@@ -91,7 +131,17 @@ public class SBMLQualExportTest {
 			fail( "Add edge : Exception catched : " + gse);
 		}
 		
-		// Export the graph
+		return graph;
+	}
+	
+	
+	/**
+	 * Export the given graph to SBML file
+	 * 
+	 * @param graph
+	 */
+	private void exportGraphToSBML( RegulatoryGraph graph){
+		
 		try{
 			File file = new File( TestFileUtils.getTempTestFileDirectory( module), graph.getGraphName());
 			
@@ -105,17 +155,43 @@ public class SBMLQualExportTest {
 		catch ( IOException ioe) {
 			fail( "Export graph : Exception catched : " + ioe);
 		}
+	}
+	
+	/**
+	 * Re-import the given graph that was previously exported 
+	 * 
+	 * @param graph the graph to re-import
+	 */
+	private RegulatoryGraph reimportGraphFromSBML( RegulatoryGraph graph){
 		
-		// Re-import the graph
+		// import the graph
 		File file = new File( TestFileUtils.getTempTestFileDirectory( module), graph.getGraphName());
 		
 		SBMLXpathParser parser = new SBMLXpathParser( file.getPath());
 		RegulatoryGraph new_graph = parser.getGraph();
 		
-		assertNotNull( "Re-import graph : graph is null", new_graph);
-		assertEquals( "Re-import graph : Graph node number is not correct", 2, new_graph.getNodeCount());
-		assertEquals( "Re-import graph : Graph edge number is not correct", 1, new_graph.getEdges().size());
-
+		return new_graph;
+	}
+	
+	/**
+	 * Load a graph from the given file
+	 * 
+	 * @param file the file to load
+	 */
+	private RegulatoryGraph loadGraph( File file){
+		
+		try{
+			RegulatoryGraph graph = (RegulatoryGraph) GraphManager.getInstance().open( file);
+			
+			assertNotNull( "Load graph : graph is null", graph);
+			assertEquals( "Load graph : Graph node number is not correct", 4, graph.getNodeCount());
+			assertEquals( "Load graph : Graph edge number is not correct", 7, graph.getEdges().size());
+			return graph;
+		}
+		catch ( GsException gse) {
+			fail( "Save graph : Exception catched : " + gse);
+			return null;
+		}
 	}
 
 }
