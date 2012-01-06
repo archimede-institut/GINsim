@@ -1,26 +1,20 @@
 package org.ginsim.service.imports.sbml;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.awt.Color;
 import java.io.File;
-import java.io.IOException;
 
 import org.ginsim.common.OptionStore;
-import org.ginsim.common.exception.GsException;
 import org.ginsim.core.TestFileUtils;
-import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.regulatorygraph.BasicRegulatoryGraphTest;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.service.export.sbml.SBMLQualConfig;
-import org.ginsim.service.export.sbml.SBMLQualEncoder;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
