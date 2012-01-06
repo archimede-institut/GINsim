@@ -117,8 +117,6 @@ public class BasicRegulatoryGraphTest {
 		
 		int node_count = graph.getNodeCount();
 		assertEquals( "Add node : the graph does not contains the right number of node.", 1, node_count);
-		System.out
-				.println("BasicRegulatoryGraphTest.addAndRemoveNodeWithDefaultMethodTest() : nodeorder = " + graph.getNodeOrder());
 		int nodeorder_count = graph.getNodeOrderSize();
 		assertEquals( "Add node : the NodeOrder does not contains the right number of node.", 1, nodeorder_count);
 		
