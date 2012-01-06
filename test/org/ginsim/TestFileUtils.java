@@ -1,4 +1,4 @@
-package org.ginsim.core;
+package org.ginsim;
 
 import java.io.File;
 

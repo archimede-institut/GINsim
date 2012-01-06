@@ -37,23 +37,6 @@ public class BasicDynamicGraphTest {
 	}
 	
 	/**
-	 * Try to remove all the registered graphs from the GraphManager after each test
-	 * 
-	 */
-	@After
-	public void afterEachTest(){
-		
-		Set<Graph> graph_list = GraphManager.getInstance().getAllGraphs();
-		
-		if( graph_list != null && !graph_list.isEmpty()){
-			
-			for( Graph graph : graph_list){
-				GraphManager.getInstance().close( graph);
-			}
-		}
-	}
-	
-	/**
 	 * Create, register and close graph using specified class method
 	 * 
 	 */
@@ -64,14 +47,18 @@ public class BasicDynamicGraphTest {
 		DynamicGraph graph = GraphManager.getInstance().getNewGraph( DynamicGraph.class);
 		assertNotNull( "Create graph : the graph is null.", graph);
 		
-		int graph_list_count = GraphManager.getInstance().getAllGraphs().size();
-		assertEquals( "Registering graph : graph was not unregistered.", 1, graph_list_count);
+		Set graph_list = GraphManager.getInstance().getAllGraphs();
+		if( !graph_list.contains( graph)){
+			fail( "Registering graph : graph was not registered.");
+		}
 		
 		// Close the graph
 		GraphManager.getInstance().close( graph);
 		
-		graph_list_count = GraphManager.getInstance().getAllGraphs().size();
-		assertEquals( "Unregistering graph : graph was not unregistered.", 0, graph_list_count);
+		graph_list = GraphManager.getInstance().getAllGraphs();
+		if( graph_list.contains( graph)){
+			fail( "Unregistering graph : graph was not unregistered.");
+		}
 		
 	}
 	
