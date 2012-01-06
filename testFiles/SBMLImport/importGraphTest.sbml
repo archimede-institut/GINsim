@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sbml xmlns="http://www.sbml.org/sbml/level3/version1/core" level="3" version="1" xmlns:qual="http://www.sbml.org/sbml/level3/version1/qual/version1" qual:required="true">
+  <model id="importGraphTest">
+    <listOfCompartments>
+      <compartment id="c_default_name" constant="false"/>
+    </listOfCompartments>
+    <qual:listOfQualitativeSpecies xmlns="http://www.sbml.org/sbml/level3/version1/qual/version1">
+      <qual:qualitativeSpecies qual:id="G0" qual:name="" qual:compartment="c_default_name" qual:maxLevel="1" qual:initialLevel="0" qual:boundaryCondition="true" qual:constant="true"/>
+      <qual:qualitativeSpecies qual:id="G1" qual:name="" qual:compartment="c_default_name" qual:maxLevel="1" qual:initialLevel="0" qual:boundaryCondition="false" qual:constant="false"/>
+      <qual:qualitativeSpecies qual:id="G2" qual:name="" qual:compartment="c_default_name" qual:maxLevel="2" qual:initialLevel="0" qual:boundaryCondition="false" qual:constant="false"/>
+      <qual:qualitativeSpecies qual:id="G3" qual:name="" qual:compartment="c_default_name" qual:maxLevel="1" qual:initialLevel="0" qual:boundaryCondition="false" qual:constant="false"/>
+    </qual:listOfQualitativeSpecies>
+    <qual:listOfTransitions xmlns="http://www.sbml.org/sbml/level3/version1/qual/version1">
+      <qual:transition qual:id="tr_G1">
+        <qual:listOfInputs>
+          <qual:input qual:id="input_G2_1" qual:qualitativeSpecies="G2" qual:tresholdLevel="1" qual:transitionEffect="none" qual:sign="positive"/>
+          <qual:input qual:id="input_G2_2" qual:qualitativeSpecies="G2" qual:tresholdLevel="2" qual:transitionEffect="none" qual:sign="positive"/>
+          <qual:input qual:id="input_G3_1" qual:qualitativeSpecies="G3" qual:tresholdLevel="1" qual:transitionEffect="none" qual:sign="negative"/>
+          <qual:input qual:id="input_G0_1" qual:qualitativeSpecies="G0" qual:tresholdLevel="1" qual:transitionEffect="none" qual:sign="positive"/>
+        </qual:listOfInputs>
+        <qual:listOfOutputs>
+          <qual:output qual:qualitativeSpecies="G1" qual:transitionEffect="assignmentLevel"/>
+        </qual:listOfOutputs>
+        <qual:listOfFunctionTerms>
+          <qual:defaultTerm qual:resultLevel="0"/>
+          <qual:functionTerm qual:resultLevel="1">
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+              <apply>
+                <or/>
+                <apply>
+                  <and/>
+                  <apply>
+                    <lt/>
+                    <ci>G0</ci>
+                    <ci>input_G0_1</ci>
+                  </apply>
+                  <apply>
+                    <geq/>
+                    <ci>G2</ci>
+                    <ci>input_G2_2</ci>
+                  </apply>
+                  <apply>
+                    <lt/>
+                    <ci>G3</ci>
+                    <ci>input_G3_1</ci>
+                  </apply>
+                </apply>
+                <apply>
+                  <and/>
+                  <apply>
+                    <geq/>
+                    <ci>G0</ci>
+                    <ci>input_G0_1</ci>
+                  </apply>
+                  <apply>
+                    <geq/>
+                    <ci>G2</ci>
+                    <ci>input_G2_1</ci>
+                  </apply>
+                  <apply>
+                    <lt/>
+                    <ci>G3</ci>
+                    <ci>input_G3_1</ci>
+                  </apply>
+                </apply>
+              </apply>
+            </math>
+          </qual:functionTerm>
+        </qual:listOfFunctionTerms>
+      </qual:transition>
+      <qual:transition qual:id="tr_G2">
+        <qual:listOfInputs>
+          <qual:input qual:id="input_G0_1" qual:qualitativeSpecies="G0" qual:tresholdLevel="1" qual:transitionEffect="none" qual:sign="positive"/>
+          <qual:input qual:id="input_G3_1" qual:qualitativeSpecies="G3" qual:tresholdLevel="1" qual:transitionEffect="none" qual:sign="positive"/>
+        </qual:listOfInputs>
+        <qual:listOfOutputs>
+          <qual:output qual:qualitativeSpecies="G2" qual:transitionEffect="assignmentLevel"/>
+        </qual:listOfOutputs>
+        <qual:listOfFunctionTerms>
+          <qual:defaultTerm qual:resultLevel="0"/>
+          <qual:functionTerm qual:resultLevel="1">
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+              <apply>
+                <or/>
+                <apply>
+                  <and/>
+                  <apply>
+                    <lt/>
+                    <ci>G0</ci>
+                    <ci>input_G0_1</ci>
+                  </apply>
+                  <apply>
+                    <geq/>
+                    <ci>G3</ci>
+                    <ci>input_G3_1</ci>
+                  </apply>
+                </apply>
+                <apply>
+                  <and/>
+                  <apply>
+                    <geq/>
+                    <ci>G0</ci>
+                    <ci>input_G0_1</ci>
+                  </apply>
+                  <apply>
+                    <lt/>
+                    <ci>G3</ci>
+                    <ci>input_G3_1</ci>
+                  </apply>
+                </apply>
+              </apply>
+            </math>
+          </qual:functionTerm>
+          <qual:functionTerm qual:resultLevel="2">
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+              <apply>
+                <or/>
+                <apply>
+                  <and/>
+                  <apply>
+                    <geq/>
+                    <ci>G0</ci>
+                    <ci>input_G0_1</ci>
+                  </apply>
+                  <apply>
+                    <geq/>
+                    <ci>G3</ci>
+                    <ci>input_G3_1</ci>
+                  </apply>
+                </apply>
+              </apply>
+            </math>
+          </qual:functionTerm>
+        </qual:listOfFunctionTerms>
+      </qual:transition>
+      <qual:transition qual:id="tr_G3">
+        <qual:listOfInputs>
+          <qual:input qual:id="input_G0_1" qual:qualitativeSpecies="G0" qual:tresholdLevel="1" qual:transitionEffect="none" qual:sign="negative"/>
+          <qual:input qual:id="input_G1_1" qual:qualitativeSpecies="G1" qual:tresholdLevel="1" qual:transitionEffect="none" qual:sign="negative"/>
+        </qual:listOfInputs>
+        <qual:listOfOutputs>
+          <qual:output qual:qualitativeSpecies="G3" qual:transitionEffect="assignmentLevel"/>
+        </qual:listOfOutputs>
+        <qual:listOfFunctionTerms>
+          <qual:defaultTerm qual:resultLevel="0"/>
+          <qual:functionTerm qual:resultLevel="1">
+            <math xmlns="http://www.w3.org/1998/Math/MathML">
+              <apply>
+                <or/>
+                <apply>
+                  <and/>
+                  <apply>
+                    <lt/>
+                    <ci>G0</ci>
+                    <ci>input_G0_1</ci>
+                  </apply>
+                </apply>
+                <apply>
+                  <and/>
+                  <apply>
+                    <geq/>
+                    <ci>G0</ci>
+                    <ci>input_G0_1</ci>
+                  </apply>
+                  <apply>
+                    <lt/>
+                    <ci>G1</ci>
+                    <ci>input_G1_1</ci>
+                  </apply>
+                </apply>
+              </apply>
+            </math>
+          </qual:functionTerm>
+        </qual:listOfFunctionTerms>
+      </qual:transition>
+    </qual:listOfTransitions>
+  </model>
+</sbml>

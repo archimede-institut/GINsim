@@ -19,13 +19,14 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
+import org.ginsim.service.imports.sbml.SBMLXpathParser;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class SBMLQualExportTest {
 
-	private static final String module = "ExportSBML";
+	private static final String module = "SBMLExport";
 	
 	/**
 	 * Initialize the Option store and define the test file directory
@@ -60,7 +61,7 @@ public class SBMLQualExportTest {
 	}
 	
 	@Test
-	public void exportSBMLGraphTest(){
+	public void exportAndImportSBMLGraphTest(){
 		
 		// Create a new RegulatoryGraph
 		RegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
@@ -104,6 +105,16 @@ public class SBMLQualExportTest {
 		catch ( IOException ioe) {
 			fail( "Export graph : Exception catched : " + ioe);
 		}
+		
+		// Re-import the graph
+		File file = new File( TestFileUtils.getTempTestFileDirectory( module), graph.getGraphName());
+		
+		SBMLXpathParser parser = new SBMLXpathParser( file.getPath());
+		RegulatoryGraph new_graph = parser.getGraph();
+		
+		assertNotNull( "Re-import graph : graph is null", new_graph);
+		assertEquals( "Re-import graph : Graph node number is not correct", 2, new_graph.getNodeCount());
+		assertEquals( "Re-import graph : Graph edge number is not correct", 1, new_graph.getEdges().size());
 
 	}
 
