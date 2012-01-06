@@ -150,7 +150,6 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
 				}                   
                               
                 if(me.getEdgeCount() > 1) {
-                	System.out.println("OK, me.getEdgeCount() > 1");
                 	RegulatoryEdge myEdge;
                 	for(int k = 0; k < me.getEdgeCount(); k++) {
                 		myEdge = me.getEdge(k);
