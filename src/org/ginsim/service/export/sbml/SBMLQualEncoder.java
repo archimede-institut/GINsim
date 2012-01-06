@@ -78,7 +78,13 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
         out.addAttr("qual:required", "true");
         
         out.openTag("model");
-        out.addAttr("id", ""+ getPrevFilename( GraphManager.getInstance().getGraphPath( graph)));
+        String graph_path = GraphManager.getInstance().getGraphPath( graph);
+        if( graph_path != null){
+        	out.addAttr("id", getPrevFilename( graph_path));
+        }
+        else{
+        	out.addAttr("id", "");
+        }
         
         out.openTag("listOfCompartments");
         out.openTag("compartment");
