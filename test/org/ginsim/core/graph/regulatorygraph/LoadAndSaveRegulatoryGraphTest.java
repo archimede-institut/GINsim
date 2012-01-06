@@ -8,7 +8,7 @@ import java.util.Set;
 
 import org.ginsim.common.OptionStore;
 import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.IOUtils;
+import org.ginsim.core.TestFileUtils;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.common.Graph;
@@ -22,10 +22,8 @@ import org.junit.Test;
 
 public class LoadAndSaveRegulatoryGraphTest {
 
-	// The directory where are stored the predefined files for the tests
-	private static File testFileDirectory;
-	// The temporary directory where the output of the test will be stored
-	private static File testFileTmpDirectory;
+	private static final String module = "RegulatoryGraph";
+
 	
 	/**
 	 * Initialize the OPtion store and define the test file directory
@@ -47,20 +45,16 @@ public class LoadAndSaveRegulatoryGraphTest {
 			fail( "Initialisation of OptionStore failed : " + e);
 		}
 		
-		File file1 = new File( ".", "testFiles");
-		file1.mkdir();
-		testFileDirectory = new File( file1, "RegulatoryGraph");
-		testFileTmpDirectory = new File( testFileDirectory, "tmp");
 	}
 	
 	/**
-	 * Make the test file temp directory
+	 * Clean the test file temp directory
 	 * 
 	 */
 	@Before
 	public void beforeEachTest(){
 		
-		testFileTmpDirectory.mkdir();
+		TestFileUtils.cleanTempTestFileDirectory( module);
 	}
 	
 	/**
@@ -80,7 +74,6 @@ public class LoadAndSaveRegulatoryGraphTest {
 			}
 		}
 		
-		IOUtils.deleteDirectory( testFileTmpDirectory);
 	}
 	
 	/**
@@ -100,7 +93,7 @@ public class LoadAndSaveRegulatoryGraphTest {
 	@Test
 	public void loadGraphTest(){
 		
-		File file = new File( testFileDirectory, "loadGraphTest.zginml");
+		File file = new File( TestFileUtils.getTestFileDirectory( module), "loadGraphTest.zginml");
 		
 		loadGraph( file);
 		
@@ -152,8 +145,9 @@ public class LoadAndSaveRegulatoryGraphTest {
 			fail( "Add edge : Exception catched : " + gse);
 		}
 		
+		// Save the file
 		try{
-			File file = new File( testFileTmpDirectory, graph.getGraphName());
+			File file = new File( TestFileUtils.getTempTestFileDirectory( module), graph.getGraphName());
 			graph.save( file.getPath());
 			if( !file.exists()){
 				fail( "Save graph : the graph file was not created.");
