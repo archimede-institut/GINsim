@@ -1,9 +1,7 @@
-package fr.univmrs.tagc.graphComparator;
+package org.ginsim.service.tool.graphcomparator;
 
 import java.util.HashMap;
 import java.util.Iterator;
-
-import junit.framework.TestCase;
 
 import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
@@ -12,17 +10,18 @@ import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.service.tool.graphcomparator.DynamicGraphComparator;
 import org.ginsim.service.tool.graphcomparator.GraphComparator;
 import org.ginsim.service.tool.graphcomparator.RegulatoryGraphComparator;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Compare two models.
  * @author Duncan Berenguier
  *
  */
-public class TestGraphComparator extends TestCase  {
+public class TestGraphComparator {
 	RegulatoryGraph rg1, rg2, rgempty;
 	DynamicGraph dg1, dg2, dgempty;
 	
@@ -38,29 +37,37 @@ public class TestGraphComparator extends TestCase  {
  *   TESTS 
  */
 	
+	@Test
 	public void testCompareRegulatoryGraphOnTwoEmptyGraph() {
 		compareGraph(new RegulatoryGraphComparator(rgempty,rgempty), 0, 0);
 	}
+	@Test
 	public void testCompareRegulatoryGraphOnOneEmptyGraph() {
 		compareGraph(new RegulatoryGraphComparator(rg1,rgempty), 5, 6);
 	}
+	@Test
 	public void testCompareRegulatoryGraphOnTheSameGraph() {
 		compareGraph(new RegulatoryGraphComparator(rg1,rg1), 5, 6);
 	}
+	@Test
 	public void testCompareRegulatoryGraphOnDifferentGraphs() {
 		compareGraph(new RegulatoryGraphComparator(rg1, rg2), 7, 9);
 	}
 	
 	
+	@Test
 	public void testCompareDynamicGraphOnTwoEmptyGraph() {
 		compareGraph(new DynamicGraphComparator(dgempty,dgempty), 0, 0);
 	}
+	@Test
 	public void testCompareDynamicGraphOnOneEmptyGraph() {
 		compareGraph(new DynamicGraphComparator(dg1, dgempty), 3, 4);
 	}
+	@Test
 	public void testCompareDynamicGraphOnTheSameGraph() {
 		compareGraph(new DynamicGraphComparator(dg1, dg1), 3, 4);
 	}
+	@Test
 	public void testCompareDynamicGraphOnDifferentGraphs() {
 		compareGraph(new DynamicGraphComparator(dg1, dg2), 4, 6);
 	}
@@ -78,11 +85,11 @@ public class TestGraphComparator extends TestCase  {
 
 		
 		//printNodesMap(vm);
-		assertTrue("Wrong number of vertex in the vertex map. ("+vm.size()+" out of "+vertexCount+")", vm.size() == vertexCount);
+		Assert.assertTrue("Wrong number of vertex in the vertex map. ("+vm.size()+" out of "+vertexCount+")", vm.size() == vertexCount);
 		int diffNodeCount = gc.getDiffGraph().getNodeCount();
-		assertTrue("Wrong number of vertex in the diff graph.("+diffNodeCount+" out of "+vertexCount+")", diffNodeCount == vertexCount);
+		Assert.assertTrue("Wrong number of vertex in the diff graph.("+diffNodeCount+" out of "+vertexCount+")", diffNodeCount == vertexCount);
 		int diffEdgesCount = countEdges(gc);
-		assertTrue("Wrong number of edges in the diff graph.("+diffEdgesCount+" out of "+edgesCount+")", diffEdgesCount == edgesCount);
+		Assert.assertTrue("Wrong number of edges in the diff graph.("+diffEdgesCount+" out of "+edgesCount+")", diffEdgesCount == edgesCount);
 		
 	}
 		

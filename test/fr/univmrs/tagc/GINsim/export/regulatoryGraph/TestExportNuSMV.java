@@ -6,15 +6,15 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import junit.framework.TestCase;
-
 import org.ginsim.core.graph.GinmlParser;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.service.export.nusmv.NuSMVConfig;
 import org.ginsim.service.export.nusmv.NuSMVEncoder;
+import org.junit.Assert;
+import org.junit.Test;
 
 
-public class TestExportNuSMV extends TestCase {
+public class TestExportNuSMV {
 	
 	String[] sFiles;
 	RegulatoryGraph[] regGraph;
@@ -22,7 +22,7 @@ public class TestExportNuSMV extends TestCase {
 
 	public TestExportNuSMV() throws FileNotFoundException {
 		// sFiles = TestTools.getAllModels();
-		assertEquals(sFiles != null, true);
+		Assert.assertEquals(sFiles != null, true);
 		
 		regGraph = new RegulatoryGraph[sFiles.length];
 	}
@@ -31,6 +31,7 @@ public class TestExportNuSMV extends TestCase {
 	 * 
 	 * @throws FileNotFoundException
 	 */
+	@Test
 	public void testLoadModels() throws FileNotFoundException {
 		for (int i = 0; i < sFiles.length; i++) {
 			System.out.println("[" + sFiles[i] + "]");
@@ -46,7 +47,7 @@ public class TestExportNuSMV extends TestCase {
 				nusmvEncoder.write( config, writer);
 			}
 			catch( IOException ioe){
-				super.fail("TODO: finish NuSMV export test");
+				Assert.fail("TODO: finish NuSMV export test");
 			}
 		}
 	}
