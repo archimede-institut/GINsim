@@ -1,5 +1,8 @@
 package org.ginsim.core.service;
 
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.service.tool.reg2dyn.SimulationParameters;
+
 /**
  * This interface is the central interface for GINsim services.
  * GINsim services are separated in four kind of services, all of them represented by distinct abstract classes

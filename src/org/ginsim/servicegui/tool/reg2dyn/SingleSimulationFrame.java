@@ -26,6 +26,8 @@ import org.ginsim.common.OptionStore;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.service.Service;
+import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
@@ -33,6 +35,7 @@ import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.utils.data.GenericListPanel;
 import org.ginsim.gui.utils.data.GenericListSelectionPanel;
 import org.ginsim.gui.utils.widgets.SplitPane;
+import org.ginsim.service.tool.reg2dyn.Reg2DynService;
 import org.ginsim.service.tool.reg2dyn.Simulation;
 import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
@@ -391,11 +394,9 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 		isrunning = true;
 		currentParameter.simulationStrategy = simulationMethodsComboBox.getSelectedIndex();
 		OptionStore.setOption("simulation.defaultMethod", new Integer(simulationMethodsComboBox.getSelectedIndex()));
-		if (currentParameter.simulationStrategy == SimulationParameters.STRATEGY_STG) {
-			sim = new Simulation(paramList.graph, this, currentParameter);
-		} else {
-			sim = new HTGSimulation(paramList.graph, this, currentParameter);
-		}
+		Reg2DynService service = ServiceManager.getManager().getService( Reg2DynService.class);
+		sim = service.run( paramList.graph, this, currentParameter);
+
 		
 	}
 
