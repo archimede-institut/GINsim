@@ -21,9 +21,14 @@ public class TestFileUtils {
 
 	// The directory where are stored the predefined files for the tests
 	public static File testFileDirectory = new File( ".", "testFiles");
+	private static boolean isInit = false;
 	
 	
-	static {
+	public static void initOptionStore() {
+		if (isInit) {
+			return;
+		}
+		isInit = true;
 		try {
 			OptionStore.init( BasicRegulatoryGraphTest.class.getPackage().getName());
 	    	OptionStore.getOption( EdgeAttributeReaderImpl.EDGE_COLOR, new Integer(-13395457));
@@ -100,7 +105,7 @@ public class TestFileUtils {
 	 * @param file the file to load
 	 */
 	public static RegulatoryGraph loadGraph( File file){
-		
+		initOptionStore();
 		try{
 			RegulatoryGraph graph = (RegulatoryGraph) GraphManager.getInstance().open( file);
 			
