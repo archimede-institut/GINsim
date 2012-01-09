@@ -4,6 +4,8 @@ import static org.junit.Assert.*;
 
 import java.awt.Color;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.ginsim.TestFileUtils;
@@ -66,10 +68,10 @@ public class LoadAndSaveRegulatoryGraphTest {
 	public void afterEachTest(){
 		
 		Set<Graph> graph_list = GraphManager.getInstance().getAllGraphs();
-		
 		if( graph_list != null && !graph_list.isEmpty()){
 			
-			for( Graph graph : graph_list){
+			List<Graph> graphs = new ArrayList<Graph>(graph_list);
+			for( Graph graph : graphs){
 				GraphManager.getInstance().close( graph);
 			}
 		}
@@ -95,7 +97,7 @@ public class LoadAndSaveRegulatoryGraphTest {
 		
 		File file = new File( TestFileUtils.getTestFileDirectory( module), "loadGraphTest.zginml");
 		
-		loadGraph( file);
+		loadGraph( file, 4, 7);
 		
 	}
 	
@@ -107,7 +109,7 @@ public class LoadAndSaveRegulatoryGraphTest {
 	public void saveAndLoadTest(){
 		
 		File file = saveGraph();
-		loadGraph( file);
+		loadGraph( file, 2, 1);
 	}
 	
 	/**
@@ -167,14 +169,14 @@ public class LoadAndSaveRegulatoryGraphTest {
 	 * 
 	 * @param file the file to load
 	 */
-	private void loadGraph( File file){
+	private void loadGraph( File file, int expectedNodes, int expectedEdges){
 		
 		try{
 			Graph graph = GraphManager.getInstance().open( file);
 			
 			assertNotNull( "Load graph : graph is null", graph);
-			assertEquals( "Load graph : Graph node number is not correct", 4, graph.getNodeCount());
-			assertEquals( "Load graph : Graph edge number is not correct", 7, graph.getEdges().size());
+			assertEquals( "Load graph : Graph node number is not correct", expectedNodes, graph.getNodeCount());
+			assertEquals( "Load graph : Graph edge number is not correct", expectedEdges, graph.getEdges().size());
 		}
 		catch ( GsException gse) {
 			fail( "Save graph : Exception catched : " + gse);
