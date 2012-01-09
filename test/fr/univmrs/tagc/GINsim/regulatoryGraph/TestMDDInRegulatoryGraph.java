@@ -4,16 +4,16 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.TestCase;
-
+import org.ginsim.TestFileUtils;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
-import fr.univmrs.tagc.common.TestTools;
-
-
-public class TestMDDInRegulatoryGraph extends TestCase {
-	File file = new File(TestTools.getTestDir(), "graph.ginml");
+/**
+ * Test some MDD features.
+ * This is not a real test case yet..
+ */
+public class TestMDDInRegulatoryGraph {
+	File file = new File(TestFileUtils.getTestFileDir(), "graph.ginml");
 
 	RegulatoryGraph graph;
 

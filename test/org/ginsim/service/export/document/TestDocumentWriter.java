@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.common.document;
+package org.ginsim.service.export.document;
 
 
 import java.awt.Color;
@@ -11,19 +11,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.zip.ZipException;
 
-import junit.framework.TestCase;
-
+import org.ginsim.TestFileUtils;
 import org.ginsim.common.document.DocumentStyle;
 import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.common.document.GenericDocumentFormat;
+import org.junit.Test;
 
-import fr.univmrs.tagc.common.TestTools;
+public class TestDocumentWriter {
 
-public class TestDocumentWriter extends TestCase {
-
+	@Test
 	public void testDocumentWriters() throws FileNotFoundException {
 		List<GenericDocumentFormat> formats = GenericDocumentFormat.getAllFormats();
-		File baseDir = TestTools.getTempDir();
+		File baseDir = TestFileUtils.getTempTestFileDirectory("document");
 		for (GenericDocumentFormat f: formats) {
 			DocumentWriter doc = f.getWriter();
 			doc.setOutput(new FileOutputStream(new File(baseDir,"testme" + f.extension)));

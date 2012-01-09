@@ -1,16 +1,16 @@
 package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
 
-import junit.framework.TestCase;
-
 import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifier;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
+import org.junit.Assert;
+import org.junit.Test;
 
 
-public class TestModifier extends TestCase {
+public class TestModifier {
 
 	RegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
 	ModelSimplifierConfig cfg = new ModelSimplifierConfig();
@@ -20,6 +20,7 @@ public class TestModifier extends TestCase {
 	 * basic test of model simplification, without funny stuff
 	 * @throws GsException 
 	 */
+	@Test
     public void testBasicModification() throws GsException {
     	
     	/* deleted node (level 3):
@@ -70,7 +71,7 @@ public class TestModifier extends TestCase {
     	/*  expected result:
     	 *    A | B | D
     	 */
-        assertEquals(result.toString(), "((N[1]=0 && ((N[2]=0 && ((N[4]=0 && 0) ; (N[4]=1 && 1))) ; (N[2]=1 && 1))) ; (N[1]=1 && 1))");
+        Assert.assertEquals(result.toString(), "((N[1]=0 && ((N[2]=0 && ((N[4]=0 && 0) ; (N[4]=1 && 1))) ; (N[2]=1 && 1))) ; (N[1]=1 && 1))");
     }
     public void testUnNeededModification() throws GsException {
     	
@@ -108,14 +109,14 @@ public class TestModifier extends TestCase {
     	 *    A | B
     	 */
     	OMDDNode result = simplifier.remove(ori, deleted, 3);
-        assertEquals(result.toString(), "((N[1]=0 && ((N[2]=0 && 0) ; (N[2]=1 && 1))) ; (N[1]=1 && 1))");
+        Assert.assertEquals(result.toString(), "((N[1]=0 && ((N[2]=0 && 0) ; (N[2]=1 && 1))) ; (N[1]=1 && 1))");
         
         // some other trivial tests:
         tmp.level = 4;
     	result = simplifier.remove(tmp, deleted, 3);
-        assertEquals(result.toString(), "((N[4]=0 && 0) ; (N[4]=1 && 1))");
+    	Assert.assertEquals(result.toString(), "((N[4]=0 && 0) ; (N[4]=1 && 1))");
     	result = simplifier.remove(ori, deleted, 3);
-        assertEquals(result.toString(), "((N[1]=0 && ((N[4]=0 && 0) ; (N[4]=1 && 1))) ; (N[1]=1 && 1))");
+    	Assert.assertEquals(result.toString(), "((N[1]=0 && ((N[4]=0 && 0) ; (N[4]=1 && 1))) ; (N[1]=1 && 1))");
         
     }
     
@@ -147,8 +148,8 @@ public class TestModifier extends TestCase {
     	target.next[1] = tmp;
     	
     	OMDDNode result = simplifier.remove(target, deleted, 2);
-    	assertEquals(result.level, 1);
-    	assertEquals(result.next[0], OMDDNode.TERMINALS[0]);
-    	assertEquals(result.next[1], OMDDNode.TERMINALS[1]);
+    	Assert.assertEquals(result.level, 1);
+    	Assert.assertEquals(result.next[0], OMDDNode.TERMINALS[0]);
+    	Assert.assertEquals(result.next[1], OMDDNode.TERMINALS[1]);
     }
 }
