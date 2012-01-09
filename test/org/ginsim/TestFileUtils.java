@@ -43,8 +43,11 @@ public class TestFileUtils {
 	 * @return a directory under the main test file directory with the given name
 	 */
 	public static File getTempTestFileDirectory( String module){
-		
-		return new File( getTestFileDirectory( module), "tmp");
+		File f = new File( getTestFileDirectory( module), "tmp");
+		if (!f.exists()) {
+			f.mkdirs();
+		}
+		return f;
 	}
 	
 	/**

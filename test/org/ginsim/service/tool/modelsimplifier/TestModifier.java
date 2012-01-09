@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.regulatoryGraph.modelModifier;
+package org.ginsim.service.tool.modelsimplifier;
 
 import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
@@ -73,6 +73,8 @@ public class TestModifier {
     	 */
         Assert.assertEquals(result.toString(), "((N[1]=0 && ((N[2]=0 && ((N[4]=0 && 0) ; (N[4]=1 && 1))) ; (N[2]=1 && 1))) ; (N[1]=1 && 1))");
     }
+	
+	@Test
     public void testUnNeededModification() throws GsException {
     	
     	/* deleted node (level 3):
@@ -123,6 +125,7 @@ public class TestModifier {
     /**
      * This will be a more complex test, with consistency checks and so on.
      */
+	@Test
     public void testComplexStuff() throws GsException {
     	// can we remove a regulator with an auto-regulation if it is not functional ?
     	OMDDNode tmp = new OMDDNode();

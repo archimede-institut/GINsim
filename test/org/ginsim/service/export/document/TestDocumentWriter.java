@@ -22,12 +22,12 @@ public class TestDocumentWriter {
 	@Test
 	public void testDocumentWriters() throws FileNotFoundException {
 		List<GenericDocumentFormat> formats = GenericDocumentFormat.getAllFormats();
-		File baseDir = TestFileUtils.getTempTestFileDirectory("document");
+		File baseDir = TestFileUtils.getTempTestFileDirectory("DocumentationExport");
 		for (GenericDocumentFormat f: formats) {
 			DocumentWriter doc = f.getWriter();
-			doc.setOutput(new FileOutputStream(new File(baseDir,"testme" + f.extension)));
+			doc.setOutput(new FileOutputStream(new File(baseDir,"testme." + f.extension)));
 			doTestWriter(doc);
-		}		
+		}
 	}
 	/**
 	 * @param args

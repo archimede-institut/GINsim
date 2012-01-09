@@ -5,8 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-import junit.framework.TestCase;
-
 import org.ginsim.TestFileUtils;
 import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.GinmlParser;
@@ -15,8 +13,10 @@ import org.ginsim.core.service.ServiceManager;
 import org.ginsim.service.export.cytoscape.CytoscapeEncoder;
 import org.ginsim.service.export.gna.GNAExportService;
 import org.ginsim.service.export.snakes.SnakesEncoder;
+import org.junit.Assert;
+import org.junit.Test;
 
-public class TestExport extends TestCase {
+public class TestExport {
 	RegulatoryGraph graph;
 	File tmpDir = TestFileUtils.getTempTestFileDirectory("exports");
 
@@ -25,11 +25,15 @@ public class TestExport extends TestCase {
 		GinmlParser parser = new GinmlParser();
 		this.graph = (RegulatoryGraph)parser.parse(new FileInputStream(file), null);
 	}
+	
+	@Test
 	public void testGNAML() throws IOException {
 		GNAExportService export = ServiceManager.getManager().getService(GNAExportService.class);
 		String filename = tmpDir.getAbsolutePath()+File.separator+"graph.gnaml";
 		export.run(graph, filename);
 	}
+	
+	@Test
 	public void testSNAKES() throws IOException {
 		
 		String filename = tmpDir.getAbsolutePath()+File.separator+"graph.py";
@@ -38,9 +42,11 @@ public class TestExport extends TestCase {
 			export.encode( graph, filename);
 		}
 		catch( GsException exception){
-			super.fail( "Exception occured during testSnakes : " + exception);
+			Assert.fail( "Exception occured during testSnakes : " + exception);
 		}
 	}
+	
+	@Test
 	public void testCytoscape() throws IOException {
 
 		String filename = tmpDir.getAbsolutePath()+File.separator+"graph.xgmml";
@@ -49,15 +55,9 @@ public class TestExport extends TestCase {
 			encoder.encode( graph, filename);
 		}
 		catch( GsException exception){
-			super.fail( "Exception occured during testCytoscape : " + exception);
+			Assert.fail( "Exception occured during testCytoscape : " + exception);
 		}
-		super.fail("TODO: finish cytoscape export test");
+		Assert.fail("TODO: finish cytoscape export test");
 	}
 	
-/*	public void testSbml() {
-		SBML3Export export = new SBML3Export();
-		GsExportConfig config = new GsExportConfig(graph, export, 0);
-		config.setFilename(tmpDir.getAbsolutePath()+File.separator+"graph.sbml");
-		export.doExport(config);		
-	}*/
 }
