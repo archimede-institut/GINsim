@@ -17,6 +17,8 @@
 	<property name="build" location="./build"/>
 	<property name="dist" location="./dist"/>
 	<property name="lib.dir" location="../lib"/>
+	<property name="test.src" location="./test"/>
+	<property name="test.build" location="./testbuild"/>
 	
 	<property name="src.resources.ginsim" location="${src}/org/ginsim/gui/resource"/>
 	<property name="src.resources.jython" location="${src}/org/ginsim/servicegui/tool/jython/console"/>
@@ -113,6 +115,7 @@
 		<!-- Delete the ${build} and ${dist} directory trees -->
 		<delete dir="${build}"/>
 		<delete dir="${dist}"/>
+		<delete dir="${test.build}"/>
 	</target>
 
 	<!-- ****************** Compilation ******************* -->
@@ -569,5 +572,59 @@
 		<fail message="JarBundler not found at ${jarbundle.file}"/>
 	</target>
 	<target name="jar.osx" depends="-macbundle.then,-macbundle.else"/>
+	
+	<!-- ************************************************** -->
+	<!-- Compiles all ${test.src}/ classes                  -->
+	<!-- ************************************************** -->
+	<target name="test.compile" depends="compile"
+		description="Compiles the ${test.src}/ source files">
+		<echo message="--> Compiling ${ant.project.name} ${test.src}/ files ..."/>
+		<mkdir dir="${test.build}"/>
+		<javac source="${compile.jversion}" target="${compile.jversion}" includeantruntime="false"
+			srcdir="${test.src}" destdir="${test.build}">
+			<classpath location="${test.build}">
+				<path refid="lib.classpath"/>
+				<path location="${build}"/>
+			</classpath>
+		</javac>
+	</target>
+
+	<!-- ************************************************** -->
+	<!-- Runs all ${test.src}/core JUnit related tests      -->
+	<!-- ************************************************** -->
+	<target name="test.junit.core" depends="test.compile"
+		description="Runs all the tests relative to the core">
+		<junit printsummary="yes" failureproperty="junit.failed">
+			<classpath>
+				<path refid="lib.classpath"/>
+				<path location="${test.build}"/>
+			</classpath>
+			<batchtest>
+				<fileset dir="${test.build}">
+					<include name="org/ginsim/core/**/*Test.class"/>
+				</fileset>
+			</batchtest>
+		</junit>
+		<fail message="JUnit test failure" if="junit.failed"/>
+	</target>
+	
+	<!-- ************************************************** -->
+	<!-- Runs all ${test.src}/service JUnit related tests   -->
+	<!-- ************************************************** -->
+	<target name="test.junit.service" depends="test.junit.core"
+		description="Runs all the tests relative to the services">
+		<junit printsummary="yes" failureproperty="junit.failed">
+			<classpath>
+				<path refid="lib.classpath"/>
+				<path location="${test.build}"/>
+			</classpath>
+			<batchtest>
+				<fileset dir="${test.build}">
+					<include name="org/ginsim/service/**/*Test.class"/>
+				</fileset>
+			</batchtest>
+		</junit>
+		<fail message="JUnit test failure" if="junit.failed"/>
+	</target>
 	
 </project>

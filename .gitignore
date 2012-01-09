@@ -8,6 +8,7 @@
 *.so
 classes/
 build/
+testbuild/
 dist/
 bin/
 GINsim-*.jar

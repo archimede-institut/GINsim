@@ -26,7 +26,7 @@ public class LoadAndSaveRegulatoryGraphTest {
 
 	
 	/**
-	 * Initialize the OPtion store and define the test file directory
+	 * Initialize the Option store and define the test file directory
 	 * 
 	 */
 	@BeforeClass
@@ -77,7 +77,7 @@ public class LoadAndSaveRegulatoryGraphTest {
 	}
 	
 	/**
-	 * Test to build ans save a graph
+	 * Test to build and save a graph
 	 * 
 	 */
 	@Test

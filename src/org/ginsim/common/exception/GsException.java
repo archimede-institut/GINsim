@@ -88,7 +88,12 @@ public class GsException extends Exception {
     		result += "\n";
     	}
         if (exception != null) {
-        	result += "Exception is : " + Translator.getString(exception.getLocalizedMessage());
+        	String m = exception.getLocalizedMessage();
+        	if (m == null) {
+        		result += "Exception is : " + m;
+        	} else {
+        		result += "Exception is : " + Translator.getString(m);
+        	}
         }
         else{
         	// Remove the last ":" from the string

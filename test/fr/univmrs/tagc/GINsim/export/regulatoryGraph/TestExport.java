@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
+import org.ginsim.TestFileUtils;
 import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.GinmlParser;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -15,14 +16,12 @@ import org.ginsim.service.export.cytoscape.CytoscapeEncoder;
 import org.ginsim.service.export.gna.GNAExportService;
 import org.ginsim.service.export.snakes.SnakesEncoder;
 
-import fr.univmrs.tagc.common.TestTools;
-
 public class TestExport extends TestCase {
 	RegulatoryGraph graph;
-	File tmpDir = TestTools.getTempDir();
+	File tmpDir = TestFileUtils.getTempTestFileDirectory("exports");
 
 	public TestExport() throws FileNotFoundException {
-		File file = new File(TestTools.getTestDir(), "graph.ginml");
+		File file = new File(TestFileUtils.getTestFileDir(), "graph.ginml");
 		GinmlParser parser = new GinmlParser();
 		this.graph = (RegulatoryGraph)parser.parse(new FileInputStream(file), null);
 	}
