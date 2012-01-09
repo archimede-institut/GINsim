@@ -1,11 +1,8 @@
 package org.ginsim.service.export.document;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 
 import org.ginsim.TestFileUtils;
-import org.ginsim.core.graph.GinmlParser;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.service.export.documentation.LRGDocumentationService;
@@ -18,14 +15,8 @@ public class TestGenericDocumentExport {
 	
 	@BeforeClass
 	public static void init() {
-		File file = new File(TestFileUtils.getTestFileDir(), "graph.ginml");
-		GinmlParser parser = new GinmlParser();
-		try {
-			// FIXME: loading graph fails
-			graph = (RegulatoryGraph)parser.parse(new FileInputStream(file), null);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		File file = new File(TestFileUtils.getTestFileDir(), "graph.zginml");
+		graph = TestFileUtils.loadGraph(file);
 	}
 	
 	@Test

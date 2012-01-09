@@ -1,54 +1,26 @@
 package org.ginsim.core.graph.regulatorygraph;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
-import java.awt.Color;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.ginsim.TestFileUtils;
-import org.ginsim.common.OptionStore;
 import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
-import org.ginsim.core.graph.view.NodeBorder;
-import org.ginsim.core.graph.view.NodeShape;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class LoadAndSaveRegulatoryGraphTest {
 
 	private static final String module = "RegulatoryGraph";
 
-	
-	/**
-	 * Initialize the Option store and define the test file directory
-	 * 
-	 */
-	@BeforeClass
-	public static void beforeAllTests(){
-		
-		try {
-			OptionStore.init( BasicRegulatoryGraphTest.class.getPackage().getName());
-	    	OptionStore.getOption( EdgeAttributeReaderImpl.EDGE_COLOR, new Integer(-13395457));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_BG, new Integer(-26368));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_FG, new Integer(Color.WHITE.getRGB()));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_HEIGHT, new Integer(30));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_WIDTH, new Integer(55));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_SHAPE, NodeShape.RECTANGLE.name());
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_BORDER, NodeBorder.SIMPLE.name());
-		} catch (Exception e) {
-			fail( "Initialisation of OptionStore failed : " + e);
-		}
-		
-	}
-	
 	/**
 	 * Clean the test file temp directory
 	 * 
@@ -171,16 +143,11 @@ public class LoadAndSaveRegulatoryGraphTest {
 	 */
 	private void loadGraph( File file, int expectedNodes, int expectedEdges){
 		
-		try{
-			Graph graph = GraphManager.getInstance().open( file);
-			
-			assertNotNull( "Load graph : graph is null", graph);
-			assertEquals( "Load graph : Graph node number is not correct", expectedNodes, graph.getNodeCount());
-			assertEquals( "Load graph : Graph edge number is not correct", expectedEdges, graph.getEdges().size());
-		}
-		catch ( GsException gse) {
-			fail( "Save graph : Exception catched : " + gse);
-		}
+		Graph graph = TestFileUtils.loadGraph(file);
+		
+		assertNotNull( "Load graph : graph is null", graph);
+		assertEquals( "Load graph : Graph node number is not correct", expectedNodes, graph.getNodeCount());
+		assertEquals( "Load graph : Graph edge number is not correct", expectedEdges, graph.getEdges().size());
 	}
 
 }
