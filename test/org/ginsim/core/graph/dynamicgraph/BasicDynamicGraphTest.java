@@ -110,12 +110,6 @@ public class BasicDynamicGraphTest {
 		int edge_count = graph.getEdges().size();
 		assertEquals( "Add Edge : the Graph does not contains the right number of edges.", 1, edge_count);			
 		
-		// Remove Edge
-		graph.removeEdge( edge);
-		edge_count = graph.getEdges().size();
-		assertEquals( "Remove Edge : the graph does not contains the right number of edges.", 0, edge_count);
-		
-		
 	}
 	
 
