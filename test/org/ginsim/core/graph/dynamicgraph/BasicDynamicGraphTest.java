@@ -88,9 +88,11 @@ public class BasicDynamicGraphTest {
 	
 	/**
 	 * Create a edge from node endpoints and add/remove it from a graph
+	 * Note : edge removing is not tested because it is not implemented on DynamicGraph
 	 * 
 	 */
-	@Test public void addAndRemoveEdgeWithEndpointsTest() {
+	@Test
+	public void addEdgeWithEndpointsTest() {
 		
 		// Create a new RegulatoryGraph
 		DynamicGraph graph = GraphManager.getInstance().getNewGraph( DynamicGraph.class);
