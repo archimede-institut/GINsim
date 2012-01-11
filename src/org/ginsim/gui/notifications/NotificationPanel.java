@@ -138,7 +138,13 @@ public class NotificationPanel extends JPanel {
 			notificationMessage.setText( Translator.getString( notification.getMessage()));
             String[] t_text = null;
             if( notification instanceof ResolvableNotification){
-            	t_text = Translator.getStrings(((ResolvableNotification) notification).getOptionNames());
+            	String[] option_names = ((ResolvableNotification) notification).getOptionNames();
+            	if( option_names!= null && option_names.length > 0){
+            		t_text = Translator.getStrings( option_names);
+            	}
+            	else{
+            		t_text = new String[0];
+            	}
             }
             else{
             	t_text = new String[0];
