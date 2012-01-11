@@ -18,15 +18,38 @@ public class ResolvableWarningNotification extends WarningNotification  implemen
 		this.resolution = resolution;
 	}
 	
+	/**
+	 * Execute the chosen option of the resolution associated to the Notification
+	 * 
+	 * @param index the index of the chosen resolution option
+	 * @return true if the resolution was correctly applied, false if not
+	 */
 	@Override
 	public boolean performResolution( int index){
 		
-		return resolution.perform( graph, data, index);
+		if( resolution != null){
+			return resolution.perform( graph, data, index);
+		}
+		else{
+			return false;
+		}
 	}
 	
+	/**
+	 * Returns the list of the associated resolution options
+	 * 
+	 * @return the list of the associated resolution options
+	 */
 	@Override
 	public String[] getOptionNames() {
 		
-		return resolution.getOptionsName();
+		if( resolution != null){
+			return resolution.getOptionsName();
+		}
+		else{
+			return null;
+		}
+		
+		
 	}
 }
