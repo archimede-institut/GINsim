@@ -330,12 +330,17 @@ public class TreeInteractionsModel implements TreeModel {
 		}
 	}
 	public void refreshNode() {
+		refreshNode(true);
+	}
+	public void refreshNode(boolean refreshView) {
 		boolean dis = false;
 
 		parseFunctions();
 		if (node != null) {
 			node.setInteractionsModel(this);
-			view.refresh();
+			if (refreshView) {
+				view.refresh();
+			}
 			for (int p = 0 ; p <= node.getMaxValue(); p++) {
 				dis = false;
 				for (int k = 0; k < root.getChildCount(); k++)

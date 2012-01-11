@@ -208,7 +208,7 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
     tree.stopEditing();
     Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
     interactionList.fireTreeStructureChanged((TreeElement) interactionList.getRoot());
-    interactionList.refreshNode();
+    interactionList.refreshNode(false);
     if (enu != null)
       while (enu.hasMoreElements()) {
         TreePath tp = (TreePath) enu.nextElement();
