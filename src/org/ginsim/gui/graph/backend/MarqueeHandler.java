@@ -58,12 +58,14 @@ public class MarqueeHandler extends BasicMarqueeHandler {
 		//return the object
 		Object selected = jgraph.getFirstCellForLocation(tmp.x, tmp.y);
 		if (editManager.getSelectedAction().getMode() == EditMode.EDGE) {
-			Object next = null;
+			Object next = selected;
+			Object previous = selected;
 			while (selected instanceof Edge) {
-				next = jgraph.getNextCellForLocation(selected, tmp.x, tmp.y);
-				if (next == selected) {
+				next = jgraph.getNextCellForLocation(next, tmp.x, tmp.y);
+				if (next == selected || next == previous) {
 					break;
 				}
+				previous = next;
 				if (!(next instanceof Edge)) {
 					selected = next;
 					break;
