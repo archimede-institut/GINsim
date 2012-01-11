@@ -53,6 +53,10 @@ public class NuSMVConfig implements InitialStateStore {
 		} else
 			updatePolicy = CFG_PCLASS;
 	}
+	
+	public void setUpdatePolicy(int policy) {
+		updatePolicy = policy;
+	}
 
 	public int getUpdatePolicy() {
 		return updatePolicy;
