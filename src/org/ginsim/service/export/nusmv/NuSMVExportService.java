@@ -1,5 +1,6 @@
 package org.ginsim.service.export.nusmv;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -23,8 +24,12 @@ import org.mangosdk.spi.ProviderFor;
 public class NuSMVExportService implements Service {
 
 	public void run(NuSMVConfig config, String filename) throws IOException {
+		File f = new File(filename);
+		run(config, f);
+	}
+	public void run(NuSMVConfig config, File file) throws IOException {
 
-		FileWriter writer = new FileWriter(filename);
+		FileWriter writer = new FileWriter(file);
 
 		NuSMVEncoder encoder = new NuSMVEncoder();
 		encoder.write(config, writer);

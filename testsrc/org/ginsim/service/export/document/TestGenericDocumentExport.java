@@ -13,12 +13,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class TestGenericDocumentExport {
+	private static final String module = "DocumentationExport";
 	static RegulatoryGraph graph;
-	static File tmpDir = TestFileUtils.getTempTestFileDirectory("DocumentationExport");
+	static File tmpDir = TestFileUtils.getTempTestFileDirectory(module);
 	
 	@BeforeClass
 	public static void init() {
-		File file = new File(TestFileUtils.getTestFileDir(), "graph.ginml");
+		File file = new File(TestFileUtils.getTestFileDirectory(module), "graph.ginml");
 		graph = TestFileUtils.loadGraph(file);
 	}
 	

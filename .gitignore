@@ -9,6 +9,7 @@
 classes/
 build/
 testbuild/
+testreports/
 dist/
 bin/
 GINsim-*.jar

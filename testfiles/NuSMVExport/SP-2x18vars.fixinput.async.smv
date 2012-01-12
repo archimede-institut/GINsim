@@ -1,0 +1,852 @@
+-- January 11, 2012 12:39:27 PM WET
+-- GINsim implicit representation for NuSMV --
+-- NuSMV version 2.5.1 (or higher) required --
+-- Type I: Input variables are considered as FROZENVARs
+
+MODULE main
+
+IVAR
+-- Simulation mode declaration --
+-- Asynchronous
+  PCs : { PC_c1, PC_c2, PC_c3, PC_c4, PC_c5, PC_c6, PC_c7, PC_c8, PC_c9, PC_c10, PC_c11, PC_c12, PC_c13, PC_c14, PC_c15, PC_c16, PC_c17, PC_c18, PC_c19, PC_c20, PC_c21, PC_c22, PC_c23, PC_c24, PC_c25, PC_c26, PC_c27, PC_c28, PC_c29, PC_c30, PC_c31, PC_c32, PC_c33, PC_c34, PC_c35, PC_c36 };
+  PC_c1_vars : { PC_c1_Wg_p };
+  PC_c2_vars : { PC_c2_Wg_a };
+  PC_c3_vars : { PC_c3_Fz_p };
+  PC_c4_vars : { PC_c4_Fz_a };
+  PC_c5_vars : { PC_c5_Dsh_p };
+  PC_c6_vars : { PC_c6_Dsh_a };
+  PC_c7_vars : { PC_c7_Slp_p };
+  PC_c8_vars : { PC_c8_Slp_a };
+  PC_c9_vars : { PC_c9_Nkd_p };
+  PC_c10_vars : { PC_c10_Nkd_a };
+  PC_c11_vars : { PC_c11_Zw3_p };
+  PC_c12_vars : { PC_c12_Zw3_a };
+  PC_c13_vars : { PC_c13_Arm_p };
+  PC_c14_vars : { PC_c14_Arm_a };
+  PC_c15_vars : { PC_c15_En_p };
+  PC_c16_vars : { PC_c16_En_a };
+  PC_c17_vars : { PC_c17_Hh_p };
+  PC_c18_vars : { PC_c18_Hh_a };
+  PC_c19_vars : { PC_c19_Ci_p };
+  PC_c20_vars : { PC_c20_Ci_a };
+  PC_c21_vars : { PC_c21_Ciact_p };
+  PC_c22_vars : { PC_c22_Ciact_a };
+  PC_c23_vars : { PC_c23_Cirep_p };
+  PC_c24_vars : { PC_c24_Cirep_a };
+  PC_c25_vars : { PC_c25_Ptc_p };
+  PC_c26_vars : { PC_c26_Ptc_a };
+  PC_c27_vars : { PC_c27_Smo_p };
+  PC_c28_vars : { PC_c28_Smo_a };
+  PC_c29_vars : { PC_c29_Pka_p };
+  PC_c30_vars : { PC_c30_Pka_a };
+  PC_c31_vars : { PC_c31_Fu_p };
+  PC_c32_vars : { PC_c32_Fu_a };
+  PC_c33_vars : { PC_c33_SuFu_p };
+  PC_c34_vars : { PC_c34_SuFu_a };
+  PC_c35_vars : { PC_c35_Cos2_p };
+  PC_c36_vars : { PC_c36_Cos2_a };
+
+VAR
+-- State variables declaration
+  Dsh_p : {0, 1};
+  Zw3_p : {0, 1};
+  Arm_p : {0, 1};
+  Slp_p : {0, 1};
+  En_p : {0, 1};
+  Ci_p : {0, 1};
+  Nkd_p : {0, 1, 2};
+  Wg_p : {0, 1, 2};
+  Fz_a : {0, 1};
+  Dsh_a : {0, 1};
+  Zw3_a : {0, 1};
+  Arm_a : {0, 1};
+  Slp_a : {0, 1};
+  En_a : {0, 1};
+  Ci_a : {0, 1};
+  Hh_a : {0, 1, 2};
+  Smo_a : {0, 1, 2};
+  Fu_a : {0, 1};
+  Cos2_a : {0, 1};
+  SuFu_a : {0, 1};
+  Pka_a : {0, 1, 2};
+  Cirep_a : {0, 1};
+  Ciact_a : {0, 1, 2};
+  Ptc_a : {0, 1, 2};
+  Hh_p : {0, 1, 2};
+  Smo_p : {0, 1, 2};
+  Fu_p : {0, 1};
+  Cos2_p : {0, 1};
+  SuFu_p : {0, 1};
+  Pka_p : {0, 1, 2};
+  Cirep_p : {0, 1};
+  Ciact_p : {0, 1, 2};
+  Ptc_p : {0, 1, 2};
+  Nkd_a : {0, 1, 2};
+  Wg_a : {0, 1, 2};
+  Fz_p : {0, 1};
+
+ASSIGN
+-- Variable update if conditions are met
+next(Wg_p) := 
+  case
+    update_Wg_p_OK & (Wg_p_inc) : Wg_p + 1;
+    update_Wg_p_OK & (Wg_p_dec) : Wg_p - 1;
+    TRUE : Wg_p;
+  esac;
+next(Wg_a) := 
+  case
+    update_Wg_a_OK & (Wg_a_inc) : Wg_a + 1;
+    update_Wg_a_OK & (Wg_a_dec) : Wg_a - 1;
+    TRUE : Wg_a;
+  esac;
+next(Fz_p) := 
+  case
+    update_Fz_p_OK & (Fz_p_inc) : 1;
+    update_Fz_p_OK & (Fz_p_dec) : 0;
+    TRUE : Fz_p;
+  esac;
+next(Fz_a) := 
+  case
+    update_Fz_a_OK & (Fz_a_inc) : 1;
+    update_Fz_a_OK & (Fz_a_dec) : 0;
+    TRUE : Fz_a;
+  esac;
+next(Dsh_p) := 
+  case
+    update_Dsh_p_OK & (Dsh_p_inc) : 1;
+    update_Dsh_p_OK & (Dsh_p_dec) : 0;
+    TRUE : Dsh_p;
+  esac;
+next(Dsh_a) := 
+  case
+    update_Dsh_a_OK & (Dsh_a_inc) : 1;
+    update_Dsh_a_OK & (Dsh_a_dec) : 0;
+    TRUE : Dsh_a;
+  esac;
+next(Slp_p) := 
+  case
+    update_Slp_p_OK & (Slp_p_inc) : 1;
+    update_Slp_p_OK & (Slp_p_dec) : 0;
+    TRUE : Slp_p;
+  esac;
+next(Slp_a) := 
+  case
+    update_Slp_a_OK & (Slp_a_inc) : 1;
+    update_Slp_a_OK & (Slp_a_dec) : 0;
+    TRUE : Slp_a;
+  esac;
+next(Nkd_p) := 
+  case
+    update_Nkd_p_OK & (Nkd_p_inc) : Nkd_p + 1;
+    update_Nkd_p_OK & (Nkd_p_dec) : Nkd_p - 1;
+    TRUE : Nkd_p;
+  esac;
+next(Nkd_a) := 
+  case
+    update_Nkd_a_OK & (Nkd_a_inc) : Nkd_a + 1;
+    update_Nkd_a_OK & (Nkd_a_dec) : Nkd_a - 1;
+    TRUE : Nkd_a;
+  esac;
+next(Zw3_p) := 
+  case
+    update_Zw3_p_OK & (Zw3_p_inc) : 1;
+    update_Zw3_p_OK & (Zw3_p_dec) : 0;
+    TRUE : Zw3_p;
+  esac;
+next(Zw3_a) := 
+  case
+    update_Zw3_a_OK & (Zw3_a_inc) : 1;
+    update_Zw3_a_OK & (Zw3_a_dec) : 0;
+    TRUE : Zw3_a;
+  esac;
+next(Arm_p) := 
+  case
+    update_Arm_p_OK & (Arm_p_inc) : 1;
+    update_Arm_p_OK & (Arm_p_dec) : 0;
+    TRUE : Arm_p;
+  esac;
+next(Arm_a) := 
+  case
+    update_Arm_a_OK & (Arm_a_inc) : 1;
+    update_Arm_a_OK & (Arm_a_dec) : 0;
+    TRUE : Arm_a;
+  esac;
+next(En_p) := 
+  case
+    update_En_p_OK & (En_p_inc) : 1;
+    update_En_p_OK & (En_p_dec) : 0;
+    TRUE : En_p;
+  esac;
+next(En_a) := 
+  case
+    update_En_a_OK & (En_a_inc) : 1;
+    update_En_a_OK & (En_a_dec) : 0;
+    TRUE : En_a;
+  esac;
+next(Hh_p) := 
+  case
+    update_Hh_p_OK & (Hh_p_inc) : Hh_p + 1;
+    update_Hh_p_OK & (Hh_p_dec) : Hh_p - 1;
+    TRUE : Hh_p;
+  esac;
+next(Hh_a) := 
+  case
+    update_Hh_a_OK & (Hh_a_inc) : Hh_a + 1;
+    update_Hh_a_OK & (Hh_a_dec) : Hh_a - 1;
+    TRUE : Hh_a;
+  esac;
+next(Ci_p) := 
+  case
+    update_Ci_p_OK & (Ci_p_inc) : 1;
+    update_Ci_p_OK & (Ci_p_dec) : 0;
+    TRUE : Ci_p;
+  esac;
+next(Ci_a) := 
+  case
+    update_Ci_a_OK & (Ci_a_inc) : 1;
+    update_Ci_a_OK & (Ci_a_dec) : 0;
+    TRUE : Ci_a;
+  esac;
+next(Ciact_p) := 
+  case
+    update_Ciact_p_OK & (Ciact_p_inc) : Ciact_p + 1;
+    update_Ciact_p_OK & (Ciact_p_dec) : Ciact_p - 1;
+    TRUE : Ciact_p;
+  esac;
+next(Ciact_a) := 
+  case
+    update_Ciact_a_OK & (Ciact_a_inc) : Ciact_a + 1;
+    update_Ciact_a_OK & (Ciact_a_dec) : Ciact_a - 1;
+    TRUE : Ciact_a;
+  esac;
+next(Cirep_p) := 
+  case
+    update_Cirep_p_OK & (Cirep_p_inc) : 1;
+    update_Cirep_p_OK & (Cirep_p_dec) : 0;
+    TRUE : Cirep_p;
+  esac;
+next(Cirep_a) := 
+  case
+    update_Cirep_a_OK & (Cirep_a_inc) : 1;
+    update_Cirep_a_OK & (Cirep_a_dec) : 0;
+    TRUE : Cirep_a;
+  esac;
+next(Ptc_p) := 
+  case
+    update_Ptc_p_OK & (Ptc_p_inc) : Ptc_p + 1;
+    update_Ptc_p_OK & (Ptc_p_dec) : Ptc_p - 1;
+    TRUE : Ptc_p;
+  esac;
+next(Ptc_a) := 
+  case
+    update_Ptc_a_OK & (Ptc_a_inc) : Ptc_a + 1;
+    update_Ptc_a_OK & (Ptc_a_dec) : Ptc_a - 1;
+    TRUE : Ptc_a;
+  esac;
+next(Smo_p) := 
+  case
+    update_Smo_p_OK & (Smo_p_inc) : Smo_p + 1;
+    update_Smo_p_OK & (Smo_p_dec) : Smo_p - 1;
+    TRUE : Smo_p;
+  esac;
+next(Smo_a) := 
+  case
+    update_Smo_a_OK & (Smo_a_inc) : Smo_a + 1;
+    update_Smo_a_OK & (Smo_a_dec) : Smo_a - 1;
+    TRUE : Smo_a;
+  esac;
+next(Pka_p) := 
+  case
+    update_Pka_p_OK & (Pka_p_inc) : Pka_p + 1;
+    update_Pka_p_OK & (Pka_p_dec) : Pka_p - 1;
+    TRUE : Pka_p;
+  esac;
+next(Pka_a) := 
+  case
+    update_Pka_a_OK & (Pka_a_inc) : Pka_a + 1;
+    update_Pka_a_OK & (Pka_a_dec) : Pka_a - 1;
+    TRUE : Pka_a;
+  esac;
+next(Fu_p) := 
+  case
+    update_Fu_p_OK & (Fu_p_inc) : 1;
+    update_Fu_p_OK & (Fu_p_dec) : 0;
+    TRUE : Fu_p;
+  esac;
+next(Fu_a) := 
+  case
+    update_Fu_a_OK & (Fu_a_inc) : 1;
+    update_Fu_a_OK & (Fu_a_dec) : 0;
+    TRUE : Fu_a;
+  esac;
+next(SuFu_p) := 
+  case
+    update_SuFu_p_OK & (SuFu_p_inc) : 1;
+    update_SuFu_p_OK & (SuFu_p_dec) : 0;
+    TRUE : SuFu_p;
+  esac;
+next(SuFu_a) := 
+  case
+    update_SuFu_a_OK & (SuFu_a_inc) : 1;
+    update_SuFu_a_OK & (SuFu_a_dec) : 0;
+    TRUE : SuFu_a;
+  esac;
+next(Cos2_p) := 
+  case
+    update_Cos2_p_OK & (Cos2_p_inc) : 1;
+    update_Cos2_p_OK & (Cos2_p_dec) : 0;
+    TRUE : Cos2_p;
+  esac;
+next(Cos2_a) := 
+  case
+    update_Cos2_a_OK & (Cos2_a_inc) : 1;
+    update_Cos2_a_OK & (Cos2_a_dec) : 0;
+    TRUE : Cos2_a;
+  esac;
+
+DEFINE
+-- Variable next level regulation
+Wg_p_focal :=
+  case
+    (Slp_p = 0) : 0;
+    (Slp_p = 1) & (Nkd_p = 0) & (En_p = 0) & (Ciact_p = 0) : 0;
+    (Slp_p = 1) & (Nkd_p = 0) & (En_p = 0) & (Ciact_p = 1) : 1;
+    (Slp_p = 1) & (Nkd_p = 0) & (En_p = 0) & (Ciact_p = 2) : 2;
+    (Slp_p = 1) & (Nkd_p = 0) & (En_p = 1) : 0;
+    (Slp_p = 1) & (Nkd_p = 1) & (En_p = 0) & (Ciact_p = 0) : 0;
+    (Slp_p = 1) & (Nkd_p = 1) & (En_p = 0) & (Ciact_p = 1) : 1;
+    (Slp_p = 1) & (Nkd_p = 1) & (En_p = 0) & (Ciact_p = 2) : 2;
+    (Slp_p = 1) & (Nkd_p = 1) & (En_p = 1) : 0;
+    (Slp_p = 1) & (Nkd_p = 2) & (En_p = 0) & (Ciact_p = 0) : 0;
+    (Slp_p = 1) & (Nkd_p = 2) & (En_p = 0) & (Ciact_p = 1) : 0;
+    (Slp_p = 1) & (Nkd_p = 2) & (En_p = 0) & (Ciact_p = 2) : 2;
+    (Slp_p = 1) & (Nkd_p = 2) & (En_p = 1) : 0;
+  esac;
+Wg_a_focal :=
+  case
+    (Slp_a = 0) : 0;
+    (Slp_a = 1) & (Nkd_a = 0) & (En_a = 0) & (Ciact_a = 0) : 0;
+    (Slp_a = 1) & (Nkd_a = 0) & (En_a = 0) & (Ciact_a = 1) : 1;
+    (Slp_a = 1) & (Nkd_a = 0) & (En_a = 0) & (Ciact_a = 2) : 2;
+    (Slp_a = 1) & (Nkd_a = 0) & (En_a = 1) : 0;
+    (Slp_a = 1) & (Nkd_a = 1) & (En_a = 0) & (Ciact_a = 0) : 0;
+    (Slp_a = 1) & (Nkd_a = 1) & (En_a = 0) & (Ciact_a = 1) : 1;
+    (Slp_a = 1) & (Nkd_a = 1) & (En_a = 0) & (Ciact_a = 2) : 2;
+    (Slp_a = 1) & (Nkd_a = 1) & (En_a = 1) : 0;
+    (Slp_a = 1) & (Nkd_a = 2) & (En_a = 0) & (Ciact_a = 0) : 0;
+    (Slp_a = 1) & (Nkd_a = 2) & (En_a = 0) & (Ciact_a = 1) : 0;
+    (Slp_a = 1) & (Nkd_a = 2) & (En_a = 0) & (Ciact_a = 2) : 2;
+    (Slp_a = 1) & (Nkd_a = 2) & (En_a = 1) : 0;
+  esac;
+Fz_p_focal :=
+  case
+    (Wg_p = 0) & (Wg_a = 0) : 0;
+    (Wg_p = 0) & (Wg_a = 1) : 0;
+    (Wg_p = 0) & (Wg_a = 2) : 1;
+    (Wg_p = 1) : 1;
+    (Wg_p = 2) : 1;
+  esac;
+Fz_a_focal :=
+  case
+    (Wg_p = 0) & (Wg_a = 0) : 0;
+    (Wg_p = 0) & (Wg_a = 1) : 1;
+    (Wg_p = 0) & (Wg_a = 2) : 1;
+    (Wg_p = 1) & (Wg_a = 0) : 0;
+    (Wg_p = 1) & (Wg_a = 1) : 1;
+    (Wg_p = 1) & (Wg_a = 2) : 1;
+    (Wg_p = 2) : 1;
+  esac;
+Dsh_p_focal :=
+  case
+    (Fz_p = 0) : 0;
+    (Fz_p = 1) : 1;
+  esac;
+Dsh_a_focal :=
+  case
+    (Fz_a = 0) : 0;
+    (Fz_a = 1) : 1;
+  esac;
+Slp_p_focal :=
+  case
+    (Dsh_p = 0) : 0;
+    (Dsh_p = 1) & (En_p = 0) : 1;
+    (Dsh_p = 1) & (En_p = 1) : 0;
+  esac;
+Slp_a_focal :=
+  case
+    (Dsh_a = 0) : 0;
+    (Dsh_a = 1) & (En_a = 0) : 1;
+    (Dsh_a = 1) & (En_a = 1) : 0;
+  esac;
+Nkd_p_focal :=
+  case
+    (Dsh_p = 0) & (En_p = 0) : 1;
+    (Dsh_p = 0) & (En_p = 1) : 0;
+    (Dsh_p = 1) & (En_p = 0) : 2;
+    (Dsh_p = 1) & (En_p = 1) : 0;
+  esac;
+Nkd_a_focal :=
+  case
+    (Dsh_a = 0) & (En_a = 0) : 1;
+    (Dsh_a = 0) & (En_a = 1) : 0;
+    (Dsh_a = 1) & (En_a = 0) : 2;
+    (Dsh_a = 1) & (En_a = 1) : 0;
+  esac;
+Zw3_p_focal :=
+  case
+    (Dsh_p = 0) : 1;
+    (Dsh_p = 1) : 0;
+  esac;
+Zw3_a_focal :=
+  case
+    (Dsh_a = 0) : 1;
+    (Dsh_a = 1) : 0;
+  esac;
+Arm_p_focal :=
+  case
+    (Zw3_p = 0) : 1;
+    (Zw3_p = 1) : 0;
+  esac;
+Arm_a_focal :=
+  case
+    (Zw3_a = 0) : 1;
+    (Zw3_a = 1) : 0;
+  esac;
+En_p_focal :=
+  case
+    (Slp_p = 0) & (Arm_p = 0) : 0;
+    (Slp_p = 0) & (Arm_p = 1) : 1;
+    (Slp_p = 1) : 0;
+  esac;
+En_a_focal :=
+  case
+    (Slp_a = 0) & (Arm_a = 0) : 0;
+    (Slp_a = 0) & (Arm_a = 1) : 1;
+    (Slp_a = 1) : 0;
+  esac;
+Hh_p_focal :=
+  case
+    (En_p = 0) & (Hh_a = 0) : 0;
+    (En_p = 0) & (Hh_a = 1) & (Cirep_p = 0) & (Ptc_a = 0) : 1;
+    (En_p = 0) & (Hh_a = 1) & (Cirep_p = 0) & (Ptc_a = 1) : 1;
+    (En_p = 0) & (Hh_a = 1) & (Cirep_p = 0) & (Ptc_a = 2) : 0;
+    (En_p = 0) & (Hh_a = 1) & (Cirep_p = 1) : 0;
+    (En_p = 0) & (Hh_a = 2) & (Cirep_p = 0) & (Ptc_a = 0) : 2;
+    (En_p = 0) & (Hh_a = 2) & (Cirep_p = 0) & (Ptc_a = 1) : 2;
+    (En_p = 0) & (Hh_a = 2) & (Cirep_p = 0) & (Ptc_a = 2) : 1;
+    (En_p = 0) & (Hh_a = 2) & (Cirep_p = 1) : 0;
+    (En_p = 1) & (Cirep_p = 0) : 2;
+    (En_p = 1) & (Cirep_p = 1) : 0;
+  esac;
+Hh_a_focal :=
+  case
+    (En_a = 0) & (Hh_p = 0) : 0;
+    (En_a = 0) & (Hh_p = 1) & (Cirep_a = 0) : 1;
+    (En_a = 0) & (Hh_p = 1) & (Cirep_a = 1) : 0;
+    (En_a = 0) & (Hh_p = 2) & (Cirep_a = 0) & (Ptc_p = 0) : 2;
+    (En_a = 0) & (Hh_p = 2) & (Cirep_a = 0) & (Ptc_p = 1) : 2;
+    (En_a = 0) & (Hh_p = 2) & (Cirep_a = 0) & (Ptc_p = 2) : 0;
+    (En_a = 0) & (Hh_p = 2) & (Cirep_a = 1) : 0;
+    (En_a = 1) & (Cirep_a = 0) : 2;
+    (En_a = 1) & (Cirep_a = 1) : 0;
+  esac;
+Ci_p_focal :=
+  case
+    (En_p = 0) : 1;
+    (En_p = 1) : 0;
+  esac;
+Ci_a_focal :=
+  case
+    (En_a = 0) : 1;
+    (En_a = 1) : 0;
+  esac;
+Ciact_p_focal :=
+  case
+    (Dsh_p = 0) & (Ci_p = 0) : 0;
+    (Dsh_p = 0) & (Ci_p = 1) & (Pka_p = 0) & (SuFu_p = 0) : 1;
+    (Dsh_p = 0) & (Ci_p = 1) & (Pka_p = 0) & (SuFu_p = 1) : 0;
+    (Dsh_p = 0) & (Ci_p = 1) & (Pka_p = 1) : 0;
+    (Dsh_p = 0) & (Ci_p = 1) & (Pka_p = 2) : 0;
+    (Dsh_p = 1) & (Ci_p = 0) : 0;
+    (Dsh_p = 1) & (Ci_p = 1) & (Pka_p = 0) & (SuFu_p = 0) : 2;
+    (Dsh_p = 1) & (Ci_p = 1) & (Pka_p = 0) & (SuFu_p = 1) : 1;
+    (Dsh_p = 1) & (Ci_p = 1) & (Pka_p = 1) : 1;
+    (Dsh_p = 1) & (Ci_p = 1) & (Pka_p = 2) : 1;
+  esac;
+Ciact_a_focal :=
+  case
+    (Dsh_a = 0) & (Ci_a = 0) : 0;
+    (Dsh_a = 0) & (Ci_a = 1) & (Pka_a = 0) & (SuFu_a = 0) : 1;
+    (Dsh_a = 0) & (Ci_a = 1) & (Pka_a = 0) & (SuFu_a = 1) : 0;
+    (Dsh_a = 0) & (Ci_a = 1) & (Pka_a = 1) : 0;
+    (Dsh_a = 0) & (Ci_a = 1) & (Pka_a = 2) : 0;
+    (Dsh_a = 1) & (Ci_a = 0) : 0;
+    (Dsh_a = 1) & (Ci_a = 1) & (Pka_a = 0) & (SuFu_a = 0) : 2;
+    (Dsh_a = 1) & (Ci_a = 1) & (Pka_a = 0) & (SuFu_a = 1) : 1;
+    (Dsh_a = 1) & (Ci_a = 1) & (Pka_a = 1) : 1;
+    (Dsh_a = 1) & (Ci_a = 1) & (Pka_a = 2) : 1;
+  esac;
+Cirep_p_focal :=
+  case
+    (Zw3_p = 0) : 0;
+    (Zw3_p = 1) & (Ci_p = 0) : 0;
+    (Zw3_p = 1) & (Ci_p = 1) & (Pka_p = 0) : 0;
+    (Zw3_p = 1) & (Ci_p = 1) & (Pka_p = 1) : 0;
+    (Zw3_p = 1) & (Ci_p = 1) & (Pka_p = 2) & (Cos2_p = 0) : 0;
+    (Zw3_p = 1) & (Ci_p = 1) & (Pka_p = 2) & (Cos2_p = 1) : 1;
+  esac;
+Cirep_a_focal :=
+  case
+    (Zw3_a = 0) : 0;
+    (Zw3_a = 1) & (Ci_a = 0) : 0;
+    (Zw3_a = 1) & (Ci_a = 1) & (Pka_a = 0) : 0;
+    (Zw3_a = 1) & (Ci_a = 1) & (Pka_a = 1) : 0;
+    (Zw3_a = 1) & (Ci_a = 1) & (Pka_a = 2) & (Cos2_a = 0) : 0;
+    (Zw3_a = 1) & (Ci_a = 1) & (Pka_a = 2) & (Cos2_a = 1) : 1;
+  esac;
+Ptc_p_focal :=
+  case
+    (En_p = 0) & (Ciact_p = 0) : 1;
+    (En_p = 0) & (Ciact_p = 1) : 2;
+    (En_p = 0) & (Ciact_p = 2) : 2;
+    (En_p = 1) : 0;
+  esac;
+Ptc_a_focal :=
+  case
+    (En_a = 0) & (Ciact_a = 0) : 1;
+    (En_a = 0) & (Ciact_a = 1) : 2;
+    (En_a = 0) & (Ciact_a = 2) : 2;
+    (En_a = 1) : 0;
+  esac;
+Smo_p_focal :=
+  case
+    (Hh_p = 0) & (Ptc_p = 0) : 2;
+    (Hh_p = 0) & (Ptc_p = 1) : 0;
+    (Hh_p = 0) & (Ptc_p = 2) : 0;
+    (Hh_p = 1) & (Ptc_p = 0) : 2;
+    (Hh_p = 1) & (Ptc_p = 1) : 2;
+    (Hh_p = 1) & (Ptc_p = 2) : 1;
+    (Hh_p = 2) : 2;
+  esac;
+Smo_a_focal :=
+  case
+    (Hh_a = 0) & (Ptc_a = 0) : 2;
+    (Hh_a = 0) & (Ptc_a = 1) : 0;
+    (Hh_a = 0) & (Ptc_a = 2) : 0;
+    (Hh_a = 1) & (Ptc_a = 0) : 2;
+    (Hh_a = 1) & (Ptc_a = 1) : 2;
+    (Hh_a = 1) & (Ptc_a = 2) : 1;
+    (Hh_a = 2) : 2;
+  esac;
+Pka_p_focal :=
+  case
+    (Smo_p = 0) : 2;
+    (Smo_p = 1) : 0;
+    (Smo_p = 2) : 0;
+  esac;
+Pka_a_focal :=
+  case
+    (Smo_a = 0) : 2;
+    (Smo_a = 1) : 0;
+    (Smo_a = 2) : 0;
+  esac;
+Fu_p_focal :=
+  case
+    (Smo_p = 0) : 0;
+    (Smo_p = 1) : 1;
+    (Smo_p = 2) : 1;
+  esac;
+Fu_a_focal :=
+  case
+    (Smo_a = 0) : 0;
+    (Smo_a = 1) : 1;
+    (Smo_a = 2) : 1;
+  esac;
+SuFu_p_focal :=
+  case
+    (Fu_p = 0) : 1;
+    (Fu_p = 1) : 0;
+  esac;
+SuFu_a_focal :=
+  case
+    (Fu_a = 0) : 1;
+    (Fu_a = 1) : 0;
+  esac;
+Cos2_p_focal :=
+  case
+    (Fu_p = 0) : 1;
+    (Fu_p = 1) : 0;
+  esac;
+Cos2_a_focal :=
+  case
+    (Fu_a = 0) : 1;
+    (Fu_a = 1) : 0;
+  esac;
+
+Wg_p_inc := Wg_p_focal > Wg_p;
+Wg_p_dec := Wg_p_focal < Wg_p;
+Wg_p_std := Wg_p_focal = Wg_p;
+
+Wg_a_inc := Wg_a_focal > Wg_a;
+Wg_a_dec := Wg_a_focal < Wg_a;
+Wg_a_std := Wg_a_focal = Wg_a;
+
+Fz_p_inc := Fz_p_focal > Fz_p;
+Fz_p_dec := Fz_p_focal < Fz_p;
+Fz_p_std := Fz_p_focal = Fz_p;
+
+Fz_a_inc := Fz_a_focal > Fz_a;
+Fz_a_dec := Fz_a_focal < Fz_a;
+Fz_a_std := Fz_a_focal = Fz_a;
+
+Dsh_p_inc := Dsh_p_focal > Dsh_p;
+Dsh_p_dec := Dsh_p_focal < Dsh_p;
+Dsh_p_std := Dsh_p_focal = Dsh_p;
+
+Dsh_a_inc := Dsh_a_focal > Dsh_a;
+Dsh_a_dec := Dsh_a_focal < Dsh_a;
+Dsh_a_std := Dsh_a_focal = Dsh_a;
+
+Slp_p_inc := Slp_p_focal > Slp_p;
+Slp_p_dec := Slp_p_focal < Slp_p;
+Slp_p_std := Slp_p_focal = Slp_p;
+
+Slp_a_inc := Slp_a_focal > Slp_a;
+Slp_a_dec := Slp_a_focal < Slp_a;
+Slp_a_std := Slp_a_focal = Slp_a;
+
+Nkd_p_inc := Nkd_p_focal > Nkd_p;
+Nkd_p_dec := Nkd_p_focal < Nkd_p;
+Nkd_p_std := Nkd_p_focal = Nkd_p;
+
+Nkd_a_inc := Nkd_a_focal > Nkd_a;
+Nkd_a_dec := Nkd_a_focal < Nkd_a;
+Nkd_a_std := Nkd_a_focal = Nkd_a;
+
+Zw3_p_inc := Zw3_p_focal > Zw3_p;
+Zw3_p_dec := Zw3_p_focal < Zw3_p;
+Zw3_p_std := Zw3_p_focal = Zw3_p;
+
+Zw3_a_inc := Zw3_a_focal > Zw3_a;
+Zw3_a_dec := Zw3_a_focal < Zw3_a;
+Zw3_a_std := Zw3_a_focal = Zw3_a;
+
+Arm_p_inc := Arm_p_focal > Arm_p;
+Arm_p_dec := Arm_p_focal < Arm_p;
+Arm_p_std := Arm_p_focal = Arm_p;
+
+Arm_a_inc := Arm_a_focal > Arm_a;
+Arm_a_dec := Arm_a_focal < Arm_a;
+Arm_a_std := Arm_a_focal = Arm_a;
+
+En_p_inc := En_p_focal > En_p;
+En_p_dec := En_p_focal < En_p;
+En_p_std := En_p_focal = En_p;
+
+En_a_inc := En_a_focal > En_a;
+En_a_dec := En_a_focal < En_a;
+En_a_std := En_a_focal = En_a;
+
+Hh_p_inc := Hh_p_focal > Hh_p;
+Hh_p_dec := Hh_p_focal < Hh_p;
+Hh_p_std := Hh_p_focal = Hh_p;
+
+Hh_a_inc := Hh_a_focal > Hh_a;
+Hh_a_dec := Hh_a_focal < Hh_a;
+Hh_a_std := Hh_a_focal = Hh_a;
+
+Ci_p_inc := Ci_p_focal > Ci_p;
+Ci_p_dec := Ci_p_focal < Ci_p;
+Ci_p_std := Ci_p_focal = Ci_p;
+
+Ci_a_inc := Ci_a_focal > Ci_a;
+Ci_a_dec := Ci_a_focal < Ci_a;
+Ci_a_std := Ci_a_focal = Ci_a;
+
+Ciact_p_inc := Ciact_p_focal > Ciact_p;
+Ciact_p_dec := Ciact_p_focal < Ciact_p;
+Ciact_p_std := Ciact_p_focal = Ciact_p;
+
+Ciact_a_inc := Ciact_a_focal > Ciact_a;
+Ciact_a_dec := Ciact_a_focal < Ciact_a;
+Ciact_a_std := Ciact_a_focal = Ciact_a;
+
+Cirep_p_inc := Cirep_p_focal > Cirep_p;
+Cirep_p_dec := Cirep_p_focal < Cirep_p;
+Cirep_p_std := Cirep_p_focal = Cirep_p;
+
+Cirep_a_inc := Cirep_a_focal > Cirep_a;
+Cirep_a_dec := Cirep_a_focal < Cirep_a;
+Cirep_a_std := Cirep_a_focal = Cirep_a;
+
+Ptc_p_inc := Ptc_p_focal > Ptc_p;
+Ptc_p_dec := Ptc_p_focal < Ptc_p;
+Ptc_p_std := Ptc_p_focal = Ptc_p;
+
+Ptc_a_inc := Ptc_a_focal > Ptc_a;
+Ptc_a_dec := Ptc_a_focal < Ptc_a;
+Ptc_a_std := Ptc_a_focal = Ptc_a;
+
+Smo_p_inc := Smo_p_focal > Smo_p;
+Smo_p_dec := Smo_p_focal < Smo_p;
+Smo_p_std := Smo_p_focal = Smo_p;
+
+Smo_a_inc := Smo_a_focal > Smo_a;
+Smo_a_dec := Smo_a_focal < Smo_a;
+Smo_a_std := Smo_a_focal = Smo_a;
+
+Pka_p_inc := Pka_p_focal > Pka_p;
+Pka_p_dec := Pka_p_focal < Pka_p;
+Pka_p_std := Pka_p_focal = Pka_p;
+
+Pka_a_inc := Pka_a_focal > Pka_a;
+Pka_a_dec := Pka_a_focal < Pka_a;
+Pka_a_std := Pka_a_focal = Pka_a;
+
+Fu_p_inc := Fu_p_focal > Fu_p;
+Fu_p_dec := Fu_p_focal < Fu_p;
+Fu_p_std := Fu_p_focal = Fu_p;
+
+Fu_a_inc := Fu_a_focal > Fu_a;
+Fu_a_dec := Fu_a_focal < Fu_a;
+Fu_a_std := Fu_a_focal = Fu_a;
+
+SuFu_p_inc := SuFu_p_focal > SuFu_p;
+SuFu_p_dec := SuFu_p_focal < SuFu_p;
+SuFu_p_std := SuFu_p_focal = SuFu_p;
+
+SuFu_a_inc := SuFu_a_focal > SuFu_a;
+SuFu_a_dec := SuFu_a_focal < SuFu_a;
+SuFu_a_std := SuFu_a_focal = SuFu_a;
+
+Cos2_p_inc := Cos2_p_focal > Cos2_p;
+Cos2_p_dec := Cos2_p_focal < Cos2_p;
+Cos2_p_std := Cos2_p_focal = Cos2_p;
+
+Cos2_a_inc := Cos2_a_focal > Cos2_a;
+Cos2_a_dec := Cos2_a_focal < Cos2_a;
+Cos2_a_std := Cos2_a_focal = Cos2_a;
+
+update_Wg_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p);
+update_Wg_a_OK := (PCs = PC_c2) & (PC_c2_vars = PC_c2_Wg_a);
+update_Fz_p_OK := (PCs = PC_c3) & (PC_c3_vars = PC_c3_Fz_p);
+update_Fz_a_OK := (PCs = PC_c4) & (PC_c4_vars = PC_c4_Fz_a);
+update_Dsh_p_OK := (PCs = PC_c5) & (PC_c5_vars = PC_c5_Dsh_p);
+update_Dsh_a_OK := (PCs = PC_c6) & (PC_c6_vars = PC_c6_Dsh_a);
+update_Slp_p_OK := (PCs = PC_c7) & (PC_c7_vars = PC_c7_Slp_p);
+update_Slp_a_OK := (PCs = PC_c8) & (PC_c8_vars = PC_c8_Slp_a);
+update_Nkd_p_OK := (PCs = PC_c9) & (PC_c9_vars = PC_c9_Nkd_p);
+update_Nkd_a_OK := (PCs = PC_c10) & (PC_c10_vars = PC_c10_Nkd_a);
+update_Zw3_p_OK := (PCs = PC_c11) & (PC_c11_vars = PC_c11_Zw3_p);
+update_Zw3_a_OK := (PCs = PC_c12) & (PC_c12_vars = PC_c12_Zw3_a);
+update_Arm_p_OK := (PCs = PC_c13) & (PC_c13_vars = PC_c13_Arm_p);
+update_Arm_a_OK := (PCs = PC_c14) & (PC_c14_vars = PC_c14_Arm_a);
+update_En_p_OK := (PCs = PC_c15) & (PC_c15_vars = PC_c15_En_p);
+update_En_a_OK := (PCs = PC_c16) & (PC_c16_vars = PC_c16_En_a);
+update_Hh_p_OK := (PCs = PC_c17) & (PC_c17_vars = PC_c17_Hh_p);
+update_Hh_a_OK := (PCs = PC_c18) & (PC_c18_vars = PC_c18_Hh_a);
+update_Ci_p_OK := (PCs = PC_c19) & (PC_c19_vars = PC_c19_Ci_p);
+update_Ci_a_OK := (PCs = PC_c20) & (PC_c20_vars = PC_c20_Ci_a);
+update_Ciact_p_OK := (PCs = PC_c21) & (PC_c21_vars = PC_c21_Ciact_p);
+update_Ciact_a_OK := (PCs = PC_c22) & (PC_c22_vars = PC_c22_Ciact_a);
+update_Cirep_p_OK := (PCs = PC_c23) & (PC_c23_vars = PC_c23_Cirep_p);
+update_Cirep_a_OK := (PCs = PC_c24) & (PC_c24_vars = PC_c24_Cirep_a);
+update_Ptc_p_OK := (PCs = PC_c25) & (PC_c25_vars = PC_c25_Ptc_p);
+update_Ptc_a_OK := (PCs = PC_c26) & (PC_c26_vars = PC_c26_Ptc_a);
+update_Smo_p_OK := (PCs = PC_c27) & (PC_c27_vars = PC_c27_Smo_p);
+update_Smo_a_OK := (PCs = PC_c28) & (PC_c28_vars = PC_c28_Smo_a);
+update_Pka_p_OK := (PCs = PC_c29) & (PC_c29_vars = PC_c29_Pka_p);
+update_Pka_a_OK := (PCs = PC_c30) & (PC_c30_vars = PC_c30_Pka_a);
+update_Fu_p_OK := (PCs = PC_c31) & (PC_c31_vars = PC_c31_Fu_p);
+update_Fu_a_OK := (PCs = PC_c32) & (PC_c32_vars = PC_c32_Fu_a);
+update_SuFu_p_OK := (PCs = PC_c33) & (PC_c33_vars = PC_c33_SuFu_p);
+update_SuFu_a_OK := (PCs = PC_c34) & (PC_c34_vars = PC_c34_SuFu_a);
+update_Cos2_p_OK := (PCs = PC_c35) & (PC_c35_vars = PC_c35_Cos2_p);
+update_Cos2_a_OK := (PCs = PC_c36) & (PC_c36_vars = PC_c36_Cos2_a);
+
+weakSS := 
+  FALSE;
+strongSS := 
+  | Wg_p=0 & Wg_a=0 & Fz_p=0 & Fz_a=0 & Dsh_p=0 & Dsh_a=0 & Slp_p=0 & Slp_a=0 & Nkd_p=1 & Nkd_a=1 & Zw3_p=1 & Zw3_a=1 & Arm_p=0 & Arm_a=0 & En_p=0 & En_a=0 & Hh_p=0 & Hh_a=0 & Ci_p=1 & Ci_a=1 & Ciact_p=0 & Ciact_a=0 & Cirep_p=1 & Cirep_a=1 & Ptc_p=1 & Ptc_a=1 & Smo_p=0 & Smo_a=0 & Pka_p=2 & Pka_a=2 & Fu_p=0 & Fu_a=0 & SuFu_p=1 & SuFu_a=1 & Cos2_p=1 & Cos2_a=1
+  | Wg_p=0 & Wg_a=2 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=0 & Slp_a=1 & Nkd_p=0 & Nkd_a=2 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=1 & En_a=0 & Hh_p=2 & Hh_a=2 & Ci_p=0 & Ci_a=1 & Ciact_p=0 & Ciact_a=2 & Cirep_p=0 & Cirep_a=0 & Ptc_p=0 & Ptc_a=2 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0
+  | Wg_p=2 & Wg_a=0 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=1 & Slp_a=0 & Nkd_p=2 & Nkd_a=0 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=0 & En_a=1 & Hh_p=2 & Hh_a=2 & Ci_p=1 & Ci_a=0 & Ciact_p=2 & Ciact_a=0 & Cirep_p=0 & Cirep_a=0 & Ptc_p=2 & Ptc_a=0 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
+
+TRANS
+next(Wg_p) != Wg_p |
+next(Wg_a) != Wg_a |
+next(Fz_p) != Fz_p |
+next(Fz_a) != Fz_a |
+next(Dsh_p) != Dsh_p |
+next(Dsh_a) != Dsh_a |
+next(Slp_p) != Slp_p |
+next(Slp_a) != Slp_a |
+next(Nkd_p) != Nkd_p |
+next(Nkd_a) != Nkd_a |
+next(Zw3_p) != Zw3_p |
+next(Zw3_a) != Zw3_a |
+next(Arm_p) != Arm_p |
+next(Arm_a) != Arm_a |
+next(En_p) != En_p |
+next(En_a) != En_a |
+next(Hh_p) != Hh_p |
+next(Hh_a) != Hh_a |
+next(Ci_p) != Ci_p |
+next(Ci_a) != Ci_a |
+next(Ciact_p) != Ciact_p |
+next(Ciact_a) != Ciact_a |
+next(Cirep_p) != Cirep_p |
+next(Cirep_a) != Cirep_a |
+next(Ptc_p) != Ptc_p |
+next(Ptc_a) != Ptc_a |
+next(Smo_p) != Smo_p |
+next(Smo_a) != Smo_a |
+next(Pka_p) != Pka_p |
+next(Pka_a) != Pka_a |
+next(Fu_p) != Fu_p |
+next(Fu_a) != Fu_a |
+next(SuFu_p) != SuFu_p |
+next(SuFu_a) != SuFu_a |
+next(Cos2_p) != Cos2_p |
+next(Cos2_a) != Cos2_a |
+strongSS | weakSS;
+
+-- State variables initialization
+--  INIT Wg_p = 0;
+--  INIT Wg_a = 0;
+--  INIT Fz_p = 0;
+--  INIT Fz_a = 0;
+--  INIT Dsh_p = 0;
+--  INIT Dsh_a = 0;
+--  INIT Slp_p = 0;
+--  INIT Slp_a = 0;
+--  INIT Nkd_p = 0;
+--  INIT Nkd_a = 0;
+--  INIT Zw3_p = 0;
+--  INIT Zw3_a = 0;
+--  INIT Arm_p = 0;
+--  INIT Arm_a = 0;
+--  INIT En_p = 0;
+--  INIT En_a = 0;
+--  INIT Hh_p = 0;
+--  INIT Hh_a = 0;
+--  INIT Ci_p = 0;
+--  INIT Ci_a = 0;
+--  INIT Ciact_p = 0;
+--  INIT Ciact_a = 0;
+--  INIT Cirep_p = 0;
+--  INIT Cirep_a = 0;
+--  INIT Ptc_p = 0;
+--  INIT Ptc_a = 0;
+--  INIT Smo_p = 0;
+--  INIT Smo_a = 0;
+--  INIT Pka_p = 0;
+--  INIT Pka_a = 0;
+--  INIT Fu_p = 0;
+--  INIT Fu_a = 0;
+--  INIT SuFu_p = 0;
+--  INIT SuFu_a = 0;
+--  INIT Cos2_p = 0;
+--  INIT Cos2_a = 0;
+
+-- Property specification examples
+-- SPEC !EF ( strongSS )
