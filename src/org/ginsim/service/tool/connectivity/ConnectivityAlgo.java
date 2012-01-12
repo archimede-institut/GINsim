@@ -12,13 +12,15 @@ import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
+import org.ginsim.core.notification.NotificationManager;
 
 
 
 /**
  * the class with the algorithms for strongest connected component
  */
-public class ConnectivityAlgo extends Thread {
+public class ConnectivityAlgo implements Runnable {
+	public static final String COMPUTATION_DONE_MESSAGE = "Connectivity computation done";
 	private Graph graph;
 	private ConnectivityResult algoResult;
 	private boolean cancel;
@@ -27,7 +29,6 @@ public class ConnectivityAlgo extends Thread {
 	 * get ready to run.
 	 * 
 	 * @param graph
-     * @param searchMode MODE_COMPONENTS=only find components; MODE_CONSTRUCT_GRAPH=also search for path and create the reduced graph
 	 */
 	public ConnectivityResult configure( Graph graph) {
 		this.graph = graph;
@@ -39,6 +40,8 @@ public class ConnectivityAlgo extends Thread {
 	public void run() {
 		List<NodeReducedData> components = getStronglyConnectedComponents();
 		algoResult.setComponents(components);
+		algoResult.algoIsComputed();
+		NotificationManager.getManager().publishInformation(algoResult, COMPUTATION_DONE_MESSAGE);
 	}
 
 	/**

@@ -3,7 +3,7 @@ package org.ginsim.common;
 /**
  * listen for progress messages.
  */
-public interface ProgressListener {
+public interface ProgressListener<R> {
 
     /**
      * @param text
@@ -13,5 +13,5 @@ public interface ProgressListener {
     /**
      * @param result
      */
-    public void setResult(Object result);
+    public void setResult(R result);
 }

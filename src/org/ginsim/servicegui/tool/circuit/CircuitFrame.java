@@ -41,6 +41,10 @@ import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromCircuit;
 import org.ginsim.core.mdd.OmsddNode;
+import org.ginsim.core.notification.Notification;
+import org.ginsim.core.notification.NotificationListener;
+import org.ginsim.core.notification.NotificationManager;
+import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
@@ -55,17 +59,18 @@ import org.ginsim.service.tool.circuit.CircuitDescr;
 import org.ginsim.service.tool.circuit.CircuitDescrInTree;
 import org.ginsim.service.tool.circuit.FunctionalityContext;
 import org.ginsim.service.tool.connectivity.ConnectivityAlgo;
+import org.ginsim.service.tool.connectivity.ConnectivityResult;
+import org.ginsim.service.tool.connectivity.ConnectivityService;
 
 
 
 /**
  * configuration/status frame for circuit search/analyse
  */
-public class CircuitFrame extends StackDialog implements ProgressListener {
+public class CircuitFrame extends StackDialog implements ProgressListener<List>, NotificationListener {
 
     private static final long serialVersionUID = 2671795894716799300L;
 
-    private ConnectivityAlgo algoC = null;
     protected RegulatoryGraph graph;
 
     protected static final int STATUS_NONE = 0;
@@ -97,6 +102,10 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
 
 	private JButton viewContextButton;
 
+	private Thread threadAlgoConnectivity;
+
+	private ConnectivityResult resultAlgoConnectivity;
+
     /**
      * This is the default constructor
      * 
@@ -126,15 +135,16 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
                 cancel();
             }
         });
+        getJTextArea();
     }
     /**
      * close the circuit search/analyse dialog. stop running algo and close
      * configuration dialog if appropriate.
      */
     protected void cancel() {
-        if (algoC != null && algoC.isAlive()) {
-            algoC.cancel();
-        }
+    	if (resultAlgoConnectivity != null) {
+    		resultAlgoConnectivity.cancel();
+    	}
         graph = null;
         super.cancel();
         dispose();
@@ -364,12 +374,13 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
         switch (status) {
         case STATUS_NONE:
             updateStatus(STATUS_SCC);
-            algoC = new ConnectivityAlgo();
-            algoC.configure(graph);
-            algoC.start();
+    		ConnectivityService service = ServiceManager.getManager().getService(ConnectivityService.class);
+            threadAlgoConnectivity = new Thread();
+            resultAlgoConnectivity = service.run(graph, true);
+            NotificationManager.getManager().registerListener(this, resultAlgoConnectivity);
             break;
         case STATUS_SCC:
-            algoC.cancel();
+        	resultAlgoConnectivity.cancel();
             cancel();
             break;
         case STATUS_SEARCH_CIRCUIT:
@@ -409,7 +420,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
         }
     }
 
-    public void setResult(Object result) {
+    public void setResult(List result) {
         updateStatus(STATUS_SEARCH_CIRCUIT);
         if (result != null && result instanceof List) {
             List l = (List) result;
@@ -771,6 +782,17 @@ public class CircuitFrame extends StackDialog implements ProgressListener {
             return circuitDescrInTree;
         }
 		return (CircuitDescrInTree)selected;
+	}
+
+	@Override
+	public void receiveNotification(Notification message) {
+		if (message.getMessage().equals(ConnectivityAlgo.COMPUTATION_DONE_MESSAGE)) {
+			setResult(resultAlgoConnectivity.getComponents());
+		}
+	}
+
+	@Override
+	public void deleteNotification(Notification message) {
 	}
 }
 

@@ -8,18 +8,33 @@ import org.mangosdk.spi.ProviderFor;
 public class ConnectivityService implements Service {
 
 	/**
-	 * Compute the SCC of graph.
+	 * Compute the SCC of graph in another thread.
 	 * 
 	 * 
 	 * @param graph the graph to compute the SCC on
-     * @param searchMode MODE_COMPO=only find components; MODE_FULL=also search for path and create the reduced graph
-	 * @return
+	 * @return a ConnectivityResult object holding the SCC
 	 */
 	public ConnectivityResult run(Graph graph) {
+		return run(graph, true);
+	}
+	/**
+	 * Compute the SCC of graph in another thread.
+	 * 
+	 * 
+	 * @param graph the graph to compute the SCC on
+	 * @param inThread indicates if the algo should run on a separate thread
+	 * @return a ConnectivityResult object holding the SCC
+	 */
+	public ConnectivityResult run(Graph graph, boolean inThread) {
 		ConnectivityAlgo algo = new ConnectivityAlgo();
 		ConnectivityResult result = algo.configure(graph);
-		algo.run();
+		result.setAlgo(algo);
+		if (inThread) {
+			Thread th = new Thread(algo);
+			th.run();
+		} else {
+			algo.run();
+		}
 		return result;
-	}
-	
+	}	
 }
