@@ -16,6 +16,7 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.AbstractDerivedGraph;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphAssociation;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -34,7 +35,22 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edg
 	public ReducedGraphImpl( Graph parent) {
 		
 	    this( false);
-        setAssociatedGraph( (RegulatoryGraph) parent);
+	    if( parent instanceof RegulatoryGraph){
+	    	setAssociatedGraph( (RegulatoryGraph) parent);
+	    }
+	    else if( parent instanceof GraphAssociation){
+	    	
+	    	try{
+	    		Graph associated_graph = ((GraphAssociation) parent).getAssociatedGraph();
+	    	    if( associated_graph instanceof RegulatoryGraph){
+	    	    	setAssociatedGraph( (RegulatoryGraph) associated_graph);
+	    	    }
+	    	}
+	    	catch( GsException gse){
+	    		//No graph to associate
+	    	}
+	    	
+	    }
 	}
 
 	/**
