@@ -34,31 +34,23 @@ public class NodeMaxValueSpinModel extends SpinModel {
 	}
 
 	public Object getNextValue() {
-		if (graph == null || vertex == null) {
-			return DataUtils.IZ;
+		if (graph == null || vertex == null || !gui.isEditAllowed()) {
+			return getValue();
 		}
-		if (!gui.isEditAllowed()) {
-			return new Integer(vertex.getMaxValue());
-		}
-		vertex.setMaxValue((byte) (vertex.getMaxValue()+1), graph);
-		return new Integer(vertex.getMaxValue());
+		return new Integer(vertex.getMaxValue()+1);
 	}
 
 
 	public Object getPreviousValue() {
-        if (graph == null || vertex == null) {
-            return DataUtils.IZ;
-        }
-	    if (!gui.isEditAllowed()) {
-	        return new Integer(vertex.getMaxValue());
-	    }
-	    vertex.setMaxValue((byte) (vertex.getMaxValue()-1), graph);
-	    return new Integer(vertex.getMaxValue());
+		if (graph == null || vertex == null || !gui.isEditAllowed()) {
+			return getValue();
+		}
+	    return new Integer(vertex.getMaxValue()-1);
 	}
 
 
 	public Object getValue() {
-        if (vertex == null) {
+        if (graph == null || vertex == null) {
             return DataUtils.IZ;
         }
         return new Integer(vertex.getMaxValue());
@@ -74,9 +66,10 @@ public class NodeMaxValueSpinModel extends SpinModel {
         }
         if (value instanceof String) {
             try {
-                vertex.setMaxValue((byte)Integer.parseInt(value.toString()), graph);
+                vertex.setMaxValue(Byte.parseByte(value.toString()), graph);
             } catch (NumberFormatException e) {}
         }
+        fireStateChanged();
 	}
 	
 }
