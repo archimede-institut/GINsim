@@ -16,12 +16,17 @@ public class PropertySwitch extends JComboBox implements ObjectPropertyEditorUI,
 	CardLayout cards = new CardLayout();
 	JPanel stack = new JPanel();
 	
+	@Override
 	public void apply() {
 	}
-
+	@Override
+	public void release() {
+	}
+	@Override
 	public void refresh(boolean force) {
 	}
 
+	@Override
 	public void setEditedProperty(GenericPropertyInfo pinfo,
 			GenericPropertyHolder panel) {
 		GenericPropertyInfo[] t = (GenericPropertyInfo[])pinfo.data;
@@ -37,11 +42,13 @@ public class PropertySwitch extends JComboBox implements ObjectPropertyEditorUI,
 		panel.addField(stack, pinfo, 1);
 	}
 
+	@Override
 	protected void selectedItemChanged() {
 		super.selectedItemChanged();
 		cards.show(stack, (String)getSelectedItem());
 	}
 
+	@Override
 	public void addField(Component cmp, GenericPropertyInfo pinfo, int index) {
 		stack.add(cmp, pinfo.name);
 	}

@@ -20,13 +20,19 @@ public class PropertyActionButton extends JButton
 		setBorder(BorderFactory.createEtchedBorder());
 	}
 	
+	@Override
 	public void apply() {
 	}
-
+	@Override
+	public void release() {
+	}
+	
+	@Override
 	public void refresh(boolean force) {
 		setText(pinfo.getStringValue());
 	}
 
+	@Override
 	public void setEditedProperty(GenericPropertyInfo pinfo,
 			GenericPropertyHolder panel) {
 		this.pinfo = pinfo;
@@ -38,6 +44,7 @@ public class PropertyActionButton extends JButton
 		panel.addField(this, pinfo, pos);
 	}
 
+	@Override
 	public void actionPerformed(ActionEvent e) {
 		pinfo.run();
 	}

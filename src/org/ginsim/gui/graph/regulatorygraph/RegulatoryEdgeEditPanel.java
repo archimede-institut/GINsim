@@ -72,6 +72,9 @@ public class RegulatoryEdgeEditPanel extends JPanel
 	}
 	public void apply() {
 	}
+	@Override
+	public void release() {
+	}
 	public void refresh(boolean force) {
 		setEdge((RegulatoryEdge)pinfo.getRawValue());
 	}

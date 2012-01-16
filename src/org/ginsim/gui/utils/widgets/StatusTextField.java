@@ -173,4 +173,8 @@ public class StatusTextField extends JTextField implements FocusListener,
 			panel.addField(this, pinfo, pos);
 		}
 	}
+	@Override
+	public void release() {
+		apply();
+	}
 }

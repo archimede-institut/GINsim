@@ -132,4 +132,8 @@ public class LogicalFunctionPanel extends AbstractParameterPanel implements Obje
 	}
 	public void keyReleased(KeyEvent e) {
 	}
+
+	@Override
+	public void release() {
+	}
 }

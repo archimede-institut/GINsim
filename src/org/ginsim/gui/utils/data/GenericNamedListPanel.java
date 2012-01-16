@@ -407,6 +407,9 @@ public class GenericNamedListPanel<T> extends JPanel
 	public void actionPerformed(ActionEvent e, int mode) {
 		doAdd(mode);
 	}
+	@Override
+	public void release() {
+	}
 }
 
 class SimpleRowFilter<M,I> extends RowFilter<M, I> {

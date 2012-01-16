@@ -436,6 +436,9 @@ public class GenericListPanel<T> extends JPanel
 		this.model.startIndex = startIndex;
 		this.model.contentChanged();
 	}
+	@Override
+	public void release() {
+	}
 }
 
 class listModel<T> extends AbstractTableModel implements GenericListListener, TableActionListener {

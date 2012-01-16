@@ -51,4 +51,8 @@ public class BooleanEditor extends JCheckBox implements ObjectPropertyEditorUI, 
     public void stateChanged(ChangeEvent change) {
         pinfo.setValue(isSelected() ? 1 : 0);
     }
+
+	@Override
+	public void release() {
+	}
 }
