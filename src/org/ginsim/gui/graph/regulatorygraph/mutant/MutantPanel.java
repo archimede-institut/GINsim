@@ -334,7 +334,11 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
         }
         
         if (columnIndex == 3) {
-        	curMutant.setCondition(rowIndex, graph, (String)aValue);
+        	String condition = (String)aValue;
+        	if (condition != null && condition.trim().equals("")) {
+        		condition = null;
+        	}
+        	curMutant.setCondition(rowIndex, graph, condition);
         }
         
         if ("".equals(aValue) || "-".equals(aValue)) {
