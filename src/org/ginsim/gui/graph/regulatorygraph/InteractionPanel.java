@@ -588,6 +588,9 @@ public class InteractionPanel extends AbstractParameterPanel
 		initialize();
 		panel.addField(this, pinfo, 0);
 	}
+	@Override
+	public void release() {
+	}
 }
 
 class LogicalParameterCellRenderer extends DefaultTableCellRenderer {

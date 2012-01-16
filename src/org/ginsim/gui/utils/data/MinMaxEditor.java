@@ -13,6 +13,10 @@ public class MinMaxEditor implements ObjectPropertyEditorUI {
 	public void apply() {
 	}
 
+	@Override
+	public void release() {
+	}
+	
 	public void refresh(boolean force) {
 		model.setEditedObject(pinfo.getRawValue());
 	}

@@ -164,7 +164,12 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	@Override
 	public boolean addNode( V node) {
 		
-		return graphBackend.addNodeInBackend(node);
+		if (graphBackend.addNodeInBackend(node)) {
+			fireGraphChange(CHANGE_VERTEXADDED, node);
+			return true;
+		}
+		
+		return false;
 	}
 	
 	/**

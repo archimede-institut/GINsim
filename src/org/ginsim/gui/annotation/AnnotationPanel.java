@@ -155,6 +155,9 @@ public class AnnotationPanel extends JPanel
 		this.graph = graph;
 		linkList.graph = graph;
 	}
+	@Override
+	public void release() {
+	}
 }
 
 class LinkList extends SimpleGenericList {

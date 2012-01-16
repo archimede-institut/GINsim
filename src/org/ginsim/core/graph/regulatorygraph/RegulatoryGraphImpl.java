@@ -120,8 +120,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         		nextid++;
         }
         RegulatoryNode obj = new RegulatoryNode(nextid++, this);
-        if (super.addNode( obj)) {
-    		nodeOrder.add( obj);
+        if (addNode(obj)) {
     		return obj;
         }
         return null;

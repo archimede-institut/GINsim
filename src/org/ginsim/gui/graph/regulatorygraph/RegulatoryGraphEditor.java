@@ -1,5 +1,6 @@
 package org.ginsim.gui.graph.regulatorygraph;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.util.Collection;
 
@@ -31,7 +32,7 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener
 	RegulatoryGraph graph;
 	private GsGraphOrderList nodeList;
 
-	public RegulatoryGraphEditor() {
+	public RegulatoryGraphEditor(RegulatoryGraph graph) {
 		GenericPropertyInfo pinfo = new GenericPropertyInfo(this, PROP_ID, Translator.getString("STR_name"), String.class);
 		v_prop.add(pinfo);
 		pinfo = new GenericPropertyInfo(this, PROP_NODEORDER, null, GenericList.class);
@@ -41,21 +42,23 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener
 		pinfo = new GenericPropertyInfo(this, PROP_ANNOTATION, Translator.getString("STR_notes"), Annotation.class);
 		pinfo.addPosition(3, 0, 1, 2, 4, 1, GridBagConstraints.SOUTH);
 		v_prop.add(pinfo);
+		
+		setEditedObject(graph);
 	}
 
-	public void setEditedObject(Object o) {
-		if (o != this.graph) {
+	private void setEditedObject(RegulatoryGraph g) {
+		if (g != this.graph) {
 			if (this.graph != null) {
 				this.graph.removeGraphListener( this);
 			}
-			this.graph = (RegulatoryGraph) o;
+			this.graph = g;
 			this.nodeList = new GsGraphOrderList( graph);
 			if (this.graph != null) {
 				this.graph.addGraphListener(this);
 			}
 		}
-		master = o;
-		super.setEditedItem(o);
+		master = g;
+		super.setEditedItem(g);
 	}
 	
 	public int getIntValue(int prop) {
@@ -108,6 +111,14 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener
 		return null;
 	}
 
+	@Override
+	public Component getComponent() {
+		Component component = super.getComponent();
+		refresh(true);
+		return component;
+	}
+
+	
 	public GraphEventCascade edgeAdded(RegulatoryMultiEdge data) {
 		return null;
 	}

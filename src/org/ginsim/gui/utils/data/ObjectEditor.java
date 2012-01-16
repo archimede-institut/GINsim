@@ -16,7 +16,7 @@ import org.ginsim.gui.graph.GUIEditor;
  */
 public abstract class ObjectEditor<T> implements GUIEditor<T> {
 
-	protected List v_listener = null;
+	protected List<ObjectPropertyEditorUI> v_listener = null;
 	protected List v_prop = new ArrayList();
 	protected T o;
 	protected Object master;
@@ -36,15 +36,26 @@ public abstract class ObjectEditor<T> implements GUIEditor<T> {
 	abstract public boolean setValue(int prop, int value);
 	
 	public void setEditedItem (T o) {
+		release();
 		this.o = o;
 		refresh(true);
 	}
 	
 	public void refresh(boolean force) {
 		if (v_listener != null) {
-			Iterator it = v_listener.iterator();
-			while (it.hasNext()) {
-				((ObjectPropertyEditorUI)it.next()).refresh(force);
+			for (ObjectPropertyEditorUI editor: v_listener) {
+				editor.refresh(force);
+			}
+		}
+	}
+	
+	public void release() {
+		if (o == null) {
+			return;
+		}
+		if (v_listener != null) {
+			for (ObjectPropertyEditorUI editor: v_listener) {
+				editor.release();
 			}
 		}
 	}

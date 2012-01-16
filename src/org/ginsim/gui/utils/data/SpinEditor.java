@@ -11,13 +11,19 @@ public class SpinEditor implements ObjectPropertyEditorUI {
 	SpinModel model;
 	GenericPropertyInfo pinfo;
 	
+	@Override
 	public void apply() {
 	}
+	@Override
+	public void release() {
+	}
 
+	@Override
 	public void refresh(boolean force) {
 		model.setEditedObject(pinfo.getRawValue());
 	}
 
+	@Override
 	public void setEditedProperty(GenericPropertyInfo pinfo,
 			GenericPropertyHolder panel) {
 		this.model = (SpinModel)pinfo.data;
