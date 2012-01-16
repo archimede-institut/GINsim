@@ -21,8 +21,9 @@ public class HandledStackDialog extends StackDialog {
 	
 	@Override
 	protected void run() throws GsException {
-		handler.run();
-		doClose();
+		if (handler.run()) {
+			doClose();
+		}
 	}
 
 }

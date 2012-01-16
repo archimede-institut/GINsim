@@ -152,8 +152,9 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	}
 
 	@Override
-	public void run() {
+	public boolean run() {
 		action.selectFile();
+		return true;
 	}
 }
 

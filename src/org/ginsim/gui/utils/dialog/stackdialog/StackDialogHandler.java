@@ -11,7 +11,7 @@ public interface StackDialogHandler {
 	
 	Component getMainComponent();
 	
-	void run();
+	boolean run();
 	
 	void close();
 

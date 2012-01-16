@@ -107,7 +107,8 @@ class PNExportConfigPanel extends AbstractStackDialogHandler {
     }
 
 	@Override
-	public void run() {
+	public boolean run() {
 		action.selectFile();
+		return true;
 	}
 }

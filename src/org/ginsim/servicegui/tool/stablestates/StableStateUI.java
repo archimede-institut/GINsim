@@ -73,9 +73,10 @@ public class StableStateUI extends AbstractStackDialogHandler {
 		add(sp, c);
 	}
 	
-	public void run() {
+	public boolean run() {
 		algo.setPerturbation((Perturbation)mutantstore.getObject(0));
 		setResult(algo.getStables());
+		return false;
 	}
 	
 	public void setResult(OMDDNode stable) {

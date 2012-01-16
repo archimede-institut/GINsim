@@ -66,7 +66,7 @@ class GDExportConfigPanel extends AbstractStackDialogHandler {
 	}
 	
 	@Override
-	public void run() {
+	public boolean run() {
 		// read the current status
         cfg.searchStableStates = cb_stable.isSelected();
         cfg.putComment = cb_comment.isSelected();
@@ -77,6 +77,7 @@ class GDExportConfigPanel extends AbstractStackDialogHandler {
         cfg.format = format.get(format.getSelectedIndex());
         
 		action.selectFile();
+		return true;
 	}
 	
 	@Override
