@@ -18,6 +18,7 @@ import javax.swing.WindowConstants;
 
 import org.ginsim.common.OptionStore;
 import org.ginsim.common.utils.Translator;
+import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.NotificationListener;
 import org.ginsim.gui.GUIManager;
@@ -74,6 +75,7 @@ public class MainFrame extends Frame implements NotificationSource, Notification
         this.graphGUI = graph_gui;
         GUIManager.getInstance().registerGUI( graph_gui, this);
         
+        setFrameTitle( graphGUI.getGraph(), graphGUI.isSaved());
         setJMenuBar(menubar);
         
 		contentPanel = new JPanel();

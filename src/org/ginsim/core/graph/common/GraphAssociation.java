@@ -7,7 +7,7 @@ public interface GraphAssociation<AG extends Graph<AV, AE>, AV, AE extends Edge<
     //----------------------   ASSOCIATED GRAPH METHODS --------------------------------------------
 	
     
-    /**
+    /**  
      * Associate the given graph to the current one
      * 
      * @param associated_graph

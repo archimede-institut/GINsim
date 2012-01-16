@@ -1,9 +1,9 @@
 package org.ginsim.gui.graph.backend;
 
 import java.awt.Component;
-import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,6 +16,7 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
 import org.ginsim.common.OptionStore;
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.GraphManager;
@@ -33,6 +34,7 @@ import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.FrameActionManager;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.gui.utils.widgets.Frame;
 import org.jgraph.JGraph;
 import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.event.GraphSelectionListener;
@@ -195,6 +197,16 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	public boolean isSaved() {
 		return isSaved;
 	}
+	
+	@Override
+	public void setSaved( boolean isSaved) {
+		
+		this.isSaved = isSaved;
+		Frame main_frame = GUIManager.getInstance().getFrame( graph);
+		if( main_frame != null){
+			main_frame.setFrameTitle( graph, isSaved);
+		}
+	}
 
 	@Override
 	public boolean save() {
@@ -208,7 +220,11 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		}
 		
 		try {
-			graph.save(savePath);
+			graph.save( savePath);
+			Frame main_frame = GUIManager.getInstance().getFrame( graph);
+			if( main_frame != null){
+				main_frame.setFrameTitle( graph, true);
+			}
 			OptionStore.addRecentFile(savePath);
 			isSaved = true;
 			return true;
@@ -228,6 +244,21 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		ffilter.setExtensionList(new String[] { "zginml" }, "GINsim files");
 		String filename = FileSelectionHelper.selectSaveFilename(frame, ffilter);
 		if (filename != null) {
+			String graph_name = (new File( filename)).getName();
+			int dot_index = graph_name.indexOf( ".");
+			if( dot_index > 0){
+				graph_name = graph_name.substring( 0, dot_index);
+			}
+			try {
+				graph.setGraphName( graph_name);
+				Frame main_frame = GUIManager.getInstance().getFrame( graph);
+				if( main_frame != null){
+					main_frame.setFrameTitle( graph, true);
+				}
+			} catch (GsException gse) {
+				LogManager.error( "Unable to set graph name: " + graph_name);
+				LogManager.error( gse);
+			}
 			GraphManager.getInstance().registerGraph( graph, filename);
 			return save();
 		}

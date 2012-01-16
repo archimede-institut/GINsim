@@ -3,6 +3,7 @@ package org.ginsim.gui.utils.widgets;
 import javax.swing.JFrame;
 
 import org.ginsim.common.OptionStore;
+import org.ginsim.core.graph.common.Graph;
 
 
 public abstract class Frame extends JFrame {
@@ -27,6 +28,22 @@ public abstract class Frame extends JFrame {
 		OptionStore.setOption(id+".width", new Integer(getWidth()));
 		OptionStore.setOption(id+".height", new Integer(getHeight()));
 		super.dispose();
+	}
+	
+	/**
+	 * Set the title of the frame
+	 * 
+	 * @param graph the graph the frame is currently opening
+	 */
+	public void setFrameTitle( Graph graph, boolean saved){
+		
+		String title = "GINsim - " + graph.getGraphName();
+		
+		if( !saved){
+			title += " *";
+		}
+		
+		setTitle( title);
 	}
 
 	abstract public void close();

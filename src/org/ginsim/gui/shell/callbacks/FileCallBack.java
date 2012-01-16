@@ -16,9 +16,11 @@ import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.FrameActionManager;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.gui.utils.widgets.Frame;
 
 
 /**
@@ -120,7 +122,12 @@ class OpenAction extends AbstractAction {
 				Graph g = GraphManager.getInstance().open(path);
 				OptionStore.addRecentFile(path);
 				FileCallBack.updateRecentFiles();
-				GUIManager.getInstance().newFrame(g);
+				Frame frame = GUIManager.getInstance().newFrame( g);
+				GraphGUI graph_gui = GUIManager.getInstance().getGraphGUI( g);
+				if( graph_gui != null){
+					graph_gui.setSaved( true);
+				}
+				
 			} catch (GsException e) {
 				e.printStackTrace();
 			}

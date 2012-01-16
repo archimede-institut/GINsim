@@ -46,10 +46,19 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	EditActionManager getEditActionManager();
 
 	/**
+	 * Returns true if this graph has not been modified since the last change
+	 * 
 	 * @return true if this graph has not been modified since the last change
 	 */
 	boolean isSaved();
 
+	/**
+	 * Set the graph has been saved or has not been modified since opened
+	 * 
+	 * @param isSaved
+	 */
+	void setSaved( boolean isSaved);
+	
 	/**
 	 * Save the graph.
 	 * 
@@ -107,6 +116,7 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 * Update selection to reflect the internal selection object
 	 */
 	void selectionChanged();
+
 	
 //    /**
 //     * Move all nodes to front if boolean is true.
