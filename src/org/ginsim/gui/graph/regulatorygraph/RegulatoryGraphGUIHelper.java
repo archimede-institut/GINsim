@@ -47,8 +47,7 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph,
 
 	@Override
 	public GUIEditor<RegulatoryGraph> getMainEditionPanel( RegulatoryGraph graph) {
-		RegulatoryGraphEditor editor = new RegulatoryGraphEditor();
-		editor.setEditedObject(graph);
+		RegulatoryGraphEditor editor = new RegulatoryGraphEditor(graph);
 		return editor;
 	}
 
