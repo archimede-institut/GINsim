@@ -93,7 +93,6 @@ public class Reg2DynServiceGUI implements ServiceGUI {
 class Reg2DynAction extends ToolAction {
 
 	private final RegulatoryGraph graph;
-	private final boolean batch = false;
 	
 	public Reg2DynAction( RegulatoryGraph graph) {
 		super( "STR_reg2dyn", "STR_reg2dyn_descr");
@@ -117,13 +116,8 @@ class Reg2DynAction extends ToolAction {
 		}
 
 		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, SimulationParametersManager.key, true);
-		// TODO : Restore the 
-		//if (ref == 0 || ref == 1) {
-		if (batch) {
-			new BatchSimulationFrame(mainFrame, paramList).setVisible(true);
-		} else {
-			new SingleSimulationFrame(mainFrame, paramList).setVisible(true);
-		}
+		new SingleSimulationFrame(mainFrame, paramList).setVisible(true);
+
 	}
 		
 }
