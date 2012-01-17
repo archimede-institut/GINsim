@@ -55,4 +55,10 @@ public class NodeInfo {
 			return false;
 		}
 	}
+	
+	@Override
+	public String toString() {
+		
+		return nodeID;
+	}
 }
