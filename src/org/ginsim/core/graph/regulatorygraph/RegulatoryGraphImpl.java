@@ -382,6 +382,10 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
      */
     @Override
     public RegulatoryNode addNewNode(String id, String name, byte max) {
+    	RegulatoryNode existing = getNodeByName(id);
+    	if (existing != null) {
+    		throw new RuntimeException("A node with id \""+id+"\" already exists");
+    	}
         RegulatoryNode vertex = new RegulatoryNode(id, this);
         if (name != null) {
             vertex.setName(name);
