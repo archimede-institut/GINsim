@@ -327,8 +327,12 @@ class GsRegulatoryMutantModel extends AbstractTableModel {
         if (rowIndex == curMutant.getNbChanges()) {
             if (columnIndex == 0) {
                     ValueList value = (ValueList)getValueAt(rowIndex, columnIndex);
-                    curMutant.addChange((RegulatoryNode)value.get(value.getSelectedIndex()));
-                    fireTableDataChanged();
+                    int idx = value.getSelectedIndex();
+                    if (idx >= 0) {
+	                    curMutant.addChange((RegulatoryNode)value.get(idx));
+	                    value.setSelectedIndex(-1);
+	                    fireTableDataChanged();
+                    }
             }
             return;
         }
