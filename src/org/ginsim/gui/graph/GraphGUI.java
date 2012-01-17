@@ -117,6 +117,11 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 */
 	void selectionChanged();
 
+	/**
+	 * Force a repaint (should be used only by layout actions)
+	 */
+	void repaint();
+
 	
 //    /**
 //     * Move all nodes to front if boolean is true.

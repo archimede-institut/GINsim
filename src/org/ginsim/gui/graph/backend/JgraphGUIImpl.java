@@ -402,6 +402,11 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 			m_jgAdapter.cellsChanged(new Object[] {cell});
 		}
 	}
+
+	@Override
+	public void repaint() {
+		jgraph.clearOffscreen();
+	}
 }
 
 enum GUIProperties {

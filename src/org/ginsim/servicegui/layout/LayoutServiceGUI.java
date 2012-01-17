@@ -57,19 +57,17 @@ enum LayoutType {
 	}
 }
 
-class BasicLayoutAction extends LayoutAction {
+class BasicLayoutAction extends LayoutAction<Graph<?,?>> {
 
-	private final Graph<?,?> graph;
 	private final LayoutType type;
 	
 	protected BasicLayoutAction( Graph<?,?> graph, LayoutType type) {
-		super(type.name);
-		this.graph = graph;
+		super(graph, type.name);
 		this.type = type;
 	}
 	
 	@Override
-	public void actionPerformed( ActionEvent arg0) {
+	public void doLayout( ActionEvent arg0) {
 		try {
 			LayoutService.runLayout(type.key, graph);
 		} catch (GsException e) {
@@ -92,19 +90,17 @@ enum DynamicalLayoutType {
 	}
 }
 
-class DynamicalLayoutAction extends LayoutAction {
+class DynamicalLayoutAction extends LayoutAction<DynamicGraph> {
 
-	private final DynamicGraph graph;
 	private final DynamicalLayoutType type;
 	
 	protected DynamicalLayoutAction( DynamicGraph graph, DynamicalLayoutType type) {
-		super(type.name);
-		this.graph = graph;
+		super(graph, type.name);
 		this.type = type;
 	}
 	
 	@Override
-	public void actionPerformed( ActionEvent arg0) {
+	public void doLayout( ActionEvent arg0) {
 		switch (type) {
 		case LAYOUT_3D:
 			// FIXME: run 3D layout
