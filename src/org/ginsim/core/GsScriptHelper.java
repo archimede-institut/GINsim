@@ -12,6 +12,7 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
+import org.ginsim.core.service.ServiceManager;
 
 /**
  * A helper when running GINsim without a GUI.
@@ -46,13 +47,14 @@ public class GsScriptHelper {
 		}
 	}
 
-	
 	public static GsScriptHelper getInstance() {
 		if (instance == null) {
 			instance = new GsScriptHelper();
 		}
 		return instance;
 	}
+
+	ServiceManager srvManager = ServiceManager.getManager();
 	
 	private GsScriptHelper() {
 		initOptionStore();

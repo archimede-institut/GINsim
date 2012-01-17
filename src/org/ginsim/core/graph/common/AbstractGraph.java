@@ -600,7 +600,9 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 			if (v_specManager != null) {
 				for (int i=0 ; i<v_specManager.size() ; i++) {
 					GraphAssociatedObjectManager manager = (GraphAssociatedObjectManager)v_specManager.get(i);
+					System.out.println("saving: "+manager+"?");
 					if (manager.needSaving(this)) {
+						System.out.println("  YES!!");
 						zos.putNextEntry(new ZipEntry(ZIP_PREFIX+manager.getObjectName()));
 						manager.doSave(osw, this);
 						osw.flush();
