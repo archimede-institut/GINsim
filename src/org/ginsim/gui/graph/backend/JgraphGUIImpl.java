@@ -57,9 +57,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
     
     private final List<GraphGUIListener<G, V, E>> listeners = new ArrayList<GraphGUIListener<G,V,E>>();
     
-    // saving memory
-    // FIXME: listen for graph changes and set it as false when needed
-    private boolean isSaved = false;
+    private boolean isSaved = true;
     
 	public JgraphGUIImpl(G g, JgraphtBackendImpl<V, E> backend, GraphGUIHelper<G,V,E> helper) {
 		this.graph = g;
