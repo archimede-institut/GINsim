@@ -27,6 +27,28 @@ public class FileFormatFilter extends FileFilter {
 		this.format = null;
 	}
 	
+	public String[] getExtensionList(){
+		
+		String[] result;
+		if( formats != null){
+			result = new String[ formats.size()];
+			int count = 0;
+			for( FileFormatDescription format : formats){
+				result[ count] = format.extension;
+				count++;
+			}
+		}
+		else if( format != null){
+			result = new String[1];
+			result[0] = format.extension;
+		}
+		else{
+			result = null;
+		}
+		
+		return result;
+	}
+	
 	@Override
 	public boolean accept(File pathname) {
 		if (pathname == null) {

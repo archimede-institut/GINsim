@@ -2,9 +2,12 @@ package org.ginsim.gui.shell;
 
 import java.awt.Frame;
 import java.io.File;
+import java.util.Vector;
 
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
+
+import org.ginsim.commongui.utils.FileFormatFilter;
 
 
 public class FileSelectionHelper {
@@ -26,11 +29,41 @@ public class FileSelectionHelper {
 			chooser.setFileFilter( file_filter);
 		}
 		chooser.showSaveDialog(parent);
-		// TODO: file filter and automatic extension
+		// Coose the file
 		File f = chooser.getSelectedFile();
 		if (f == null) {
 			return null;
 		}
+		// List the available extensions in the provided File Filter
+		String[] extensions;
+		if( file_filter instanceof GsFileFilter){
+			extensions = ((GsFileFilter) file_filter).getExtensionList();
+		}
+		else if( file_filter instanceof FileFormatFilter){
+			extensions =  ((FileFormatFilter) file_filter).getExtensionList();
+		}
+		else{
+			extensions = null;
+		}
+		// If some extensions are provided, detect if the file has one of them and
+		// add the first extension if it is not the case
+		if( extensions != null && extensions.length > 0){
+			boolean authorized = false;
+			int dot_index = f.getName().lastIndexOf( ".");
+			if( dot_index >= 0 && dot_index < f.getName().length()-1){
+				String file_ext = f.getName().substring( dot_index + 1);
+				for( String extension : extensions){
+					if( extension != null && extension.equals( file_ext)){
+						authorized = true;
+						break;
+					}
+				}
+			}
+			if( !authorized){
+				f = new File( f.getParent(), f.getName() + "." + extensions[0]);
+			}
+		}
+
 		return f.getAbsolutePath();
 	}
 	

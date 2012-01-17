@@ -36,6 +36,16 @@ public class GsFileFilter extends FileFilter {
 		this.extdescr = descr;
 		this.extensionList = list;
 	}
+	
+	/**
+	 * Returns the array of available extensions for this filter
+	 * 
+	 * @return the array of available extensions for this filter
+	 */
+	public String[] getExtensionList() {
+		
+		return extensionList;
+	}
 
 
 	/**
