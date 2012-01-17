@@ -17,6 +17,7 @@ GINsim.app
 bak/
 testCase/tmp
 .factorypath
+testfiles/*/tmp
 
 # compressed files #
 ############
