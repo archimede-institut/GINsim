@@ -127,6 +127,7 @@ class OpenAction extends AbstractAction {
 				if( graph_gui != null){
 					graph_gui.setSaved( true);
 				}
+				GUIManager.getInstance().closeEmptyGraphs();
 				
 			} catch (GsException e) {
 				e.printStackTrace();

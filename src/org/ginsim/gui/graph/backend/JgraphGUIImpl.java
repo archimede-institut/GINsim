@@ -47,7 +47,6 @@ import org.jgrapht.ext.JGraphModelAdapter;
 public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphGUI<G,V, E>, GraphSelectionListener, GraphViewListener {
 
 	private final G graph;
-	private final JgraphtBackendImpl<V, E> backend;
     private JGraphModelAdapter<V,E> m_jgAdapter;
     private GsJgraph jgraph;
     private final GraphGUIHelper<G,V,E> helper;
@@ -57,13 +56,10 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
     
     private final List<GraphGUIListener<G, V, E>> listeners = new ArrayList<GraphGUIListener<G,V,E>>();
     
-    // saving memory
-    // FIXME: listen for graph changes and set it as false when needed
-    private boolean isSaved = false;
+    private boolean isSaved = true;
     
 	public JgraphGUIImpl(G g, JgraphtBackendImpl<V, E> backend, GraphGUIHelper<G,V,E> helper) {
 		this.graph = g;
-		this.backend = backend;
 		this.m_jgAdapter = new JGraphModelAdapter<V, E>(backend);
 		this.jgraph = new GsJgraph(m_jgAdapter, g);
 		
@@ -401,6 +397,11 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		if (cell != null) {
 			m_jgAdapter.cellsChanged(new Object[] {cell});
 		}
+	}
+
+	@Override
+	public void repaint() {
+		jgraph.clearOffscreen();
 	}
 }
 

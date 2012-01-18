@@ -10,8 +10,6 @@ import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
-import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
@@ -31,15 +29,6 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor( ServiceGUI.class)
 @GUIFor( Reg2DynService.class)
 public class Reg2DynServiceGUI implements ServiceGUI {
-
-    static {
-    	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( RegulatoryGraph.class, MutantListManager.key)){
-    		ObjectAssociationManager.getInstance().registerObjectManager(RegulatoryGraph.class, new MutantListManager());
-    	}
-        ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new InitialStateManager());
-        ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new SimulationParametersManager());
-    }
-    
 
 //    public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
 //        if (actionType != ACTION_ACTION) {

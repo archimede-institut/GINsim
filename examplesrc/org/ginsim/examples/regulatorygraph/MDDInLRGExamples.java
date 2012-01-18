@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.regulatoryGraph;
+package org.ginsim.examples.regulatorygraph;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -12,7 +12,7 @@ import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
  * Test some MDD features.
  * This is not a real test case yet..
  */
-public class TestMDDInRegulatoryGraph {
+public class MDDInLRGExamples {
 	File file = new File(TestFileUtils.getTestFileDir(), "graph.ginml");
 
 	RegulatoryGraph graph;

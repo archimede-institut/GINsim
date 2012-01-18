@@ -225,6 +225,27 @@ public class GUIManager {
 		}
 	}
 	
+	/**
+	 * Close all the windows of graphs that are empty
+	 * 
+	 */
+	public void closeEmptyGraphs(){
+		
+		// Construction of the Vector of graph is required to avoid the ConcurrentModificationException
+		// a loop on the graphToGUIObject.keySet() will generate due to the graphToGUIObject.remove( graph)
+		// call in the close() method
+		Vector<Graph> graph_list = new Vector<Graph>();
+		graph_list.addAll( graphToGUIObject.keySet());
+		for ( Graph g: graph_list) {
+			if( g.getNodeCount() == 0){
+				if ( !close( g)) {
+					break;
+				}
+			}
+		}
+	}
+
+	
 	
 	// ---------------------- METHODS ON BLOCKS MANAGEMENT -----------------------------------
 	

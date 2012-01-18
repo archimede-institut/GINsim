@@ -11,6 +11,7 @@ import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.commongui.utils.FileFormatFilter;
+import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.shell.FileSelectionHelper;
 
 public abstract class ImportAction extends BaseAction {
@@ -84,7 +85,9 @@ public abstract class ImportAction extends BaseAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		
 		selectFile();
+		GUIManager.getInstance().closeEmptyGraphs();
 	}
 
 	/**

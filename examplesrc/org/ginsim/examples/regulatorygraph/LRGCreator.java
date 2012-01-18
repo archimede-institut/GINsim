@@ -1,4 +1,4 @@
-package fr.univmrs.tagc.GINsim.regulatoryGraph;
+package org.ginsim.examples.regulatorygraph;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,8 +15,6 @@ import org.ginsim.gui.GUIManager;
 /**
  * Simple example showing how to create and fill a regulatory graph.
  * It is meant to be used as reminder for authors of import filters.
- * 
- * TODO: move it to a "code example" section instead of "test"
  * 
  * @author Aurelien Naldi
  */

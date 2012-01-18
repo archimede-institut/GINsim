@@ -3,6 +3,7 @@ package org.ginsim;
 import java.io.File;
 
 import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.core.GsScriptHelper;
 import org.python.util.PythonInterpreter;
 
 
@@ -24,12 +25,12 @@ public class GINsimPy {
         PythonInterpreter pi = new PythonInterpreter();
         
 		try {
-			// FIXME: helper file for script mode
+			String s_scriptHelper = GsScriptHelper.class.getSimpleName();
+			String s_scriptHelper_package = GsScriptHelper.class.getPackage().getName();
+			System.out.println("load script helper: "+s_scriptHelper_package + " --> "+s_scriptHelper);
+			pi.exec("from "+s_scriptHelper_package + " import "+s_scriptHelper);
+			pi.exec("gs = "+s_scriptHelper+".getInstance()");
 			
-            //InputStream is = IOUtils.getStreamForPath("/org/ginsim/gui/service/tool/jython/GINsim.py");
-            //pi.execfile(is, "GS.py");
-            //is.close();
-            //pi.exec("GINsim = GINsim()");
 		} catch (Exception e) {
             LogManager.error("Script mode failed");
             LogManager.error(e);

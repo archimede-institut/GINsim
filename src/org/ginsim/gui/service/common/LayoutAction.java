@@ -1,12 +1,20 @@
 package org.ginsim.gui.service.common;
 
+import java.awt.event.ActionEvent;
+
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
-public abstract class LayoutAction extends BaseAction {
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
 
-	public LayoutAction(String name) {
-		super(name, null, null, null);
+public abstract class LayoutAction<G extends Graph<?,?>> extends BaseAction {
+
+	public final G graph;
+	
+	public LayoutAction(G graph, String name) {
+		this(graph, name, null, null, null);
 	}
 
 	/**
@@ -14,9 +22,9 @@ public abstract class LayoutAction extends BaseAction {
      * @param name Entry to insert in the menu
      * @param tooltip Long description of the action
      */
-	public LayoutAction(String name, String tooltip) {
+	public LayoutAction(G graph, String name, String tooltip) {
 		
-		this(name, null, tooltip, null);
+		this(graph, name, null, tooltip, null);
 	}
 	
 	/**
@@ -26,8 +34,21 @@ public abstract class LayoutAction extends BaseAction {
      * @param tooltip Long description of the action
      * @param accelerator the keyboard bytecut
      */
-	public LayoutAction(String name, ImageIcon icon, String tooltip, KeyStroke accelerator) {
+	public LayoutAction(G graph, String name, ImageIcon icon, String tooltip, KeyStroke accelerator) {
 		
 		super(name, icon, tooltip, accelerator, null);
+		this.graph = graph;
 	}
+	
+	@Override
+	public void actionPerformed( ActionEvent arg) {
+		
+		doLayout(arg);
+		GraphGUI<G, ?, ?> gui = GUIManager.getInstance().getGraphGUI(graph);
+		if (gui != null) {
+			gui.repaint();
+		}
+	}
+
+	abstract public void doLayout(ActionEvent arg);
 }
