@@ -60,6 +60,13 @@ public class EditCallBack {
 		smenu.add(new InvertEdgesSelectionAction(graph));
 		menu.add(smenu);
 		
+		smenu = new JMenu(Translator.getString( "STR_ExtendSelection"));
+		smenu.add(new ExtendSelectionToOutgoingNodesAction(graph));
+		smenu.add(new ExtendSelectionToOutgoingEdgesAction(graph));
+		smenu.add(new ExtendSelectionToIncomingNodesAction(graph));
+		smenu.add(new ExtendSelectionToIncomingEdgesAction(graph));
+		menu.add(smenu);
+		
 		return menu;
 	}
 }
@@ -283,6 +290,74 @@ class InvertEdgesSelectionAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		GUIManager.getInstance().getGraphGUI(graph).getSelection().invertEdgesSelection();
+	}
+}
+
+class ExtendSelectionToOutgoingNodesAction extends AbstractAction {
+	
+	private final Graph<?,?> graph;
+	
+	public ExtendSelectionToOutgoingNodesAction(Graph<?,?> graph) {
+		super( Translator.getString( "STR_ExtendSelectionToOutgoingNodes"));
+		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_ExtendSelectionToOutgoingNodes_descr"));
+		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, FrameActionManager.MASK | KeyEvent.SHIFT_MASK));
+		this.graph = graph;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		GUIManager.getInstance().getGraphGUI(graph).getSelection().extendSelectionToOutgoingNodes();
+	}
+}
+
+class ExtendSelectionToOutgoingEdgesAction extends AbstractAction {
+	
+	private final Graph<?,?> graph;
+	
+	public ExtendSelectionToOutgoingEdgesAction(Graph<?,?> graph) {
+		super( Translator.getString( "STR_ExtendSelectionToOutgoingEdges"));
+		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_ExtendSelectionToOutgoingEdges_descr"));
+		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, FrameActionManager.MASK | KeyEvent.SHIFT_MASK));
+		this.graph = graph;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		GUIManager.getInstance().getGraphGUI(graph).getSelection().extendSelectionToOutgoingEdges();
+	}
+}
+
+class ExtendSelectionToIncomingNodesAction extends AbstractAction {
+	
+	private final Graph<?,?> graph;
+	
+	public ExtendSelectionToIncomingNodesAction(Graph<?,?> graph) {
+		super( Translator.getString( "STR_ExtendSelectionToIncomingNodes"));
+		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_ExtendSelectionToIncomingNodes_descr"));
+		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, FrameActionManager.MASK | KeyEvent.SHIFT_MASK));
+		this.graph = graph;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		GUIManager.getInstance().getGraphGUI(graph).getSelection().extendSelectionToIncomingNodes();
+	}
+}
+
+class ExtendSelectionToIncomingEdgesAction extends AbstractAction {
+	
+	private final Graph<?,?> graph;
+	
+	public ExtendSelectionToIncomingEdgesAction(Graph<?,?> graph) {
+		super( Translator.getString( "STR_ExtendSelectionToIncomingEdges"));
+		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_ExtendSelectionToIncomingEdges_descr"));
+		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, FrameActionManager.MASK | KeyEvent.SHIFT_MASK));
+		this.graph = graph;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		GUIManager.getInstance().getGraphGUI(graph).getSelection().extendSelectionToIncomingEdges();
 	}
 }
 

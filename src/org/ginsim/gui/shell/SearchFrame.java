@@ -137,7 +137,7 @@ public class SearchFrame extends SimpleDialog {
 		for (int i = 0; i < t.length; i++) {
 			l.add(tableModel.getNodeAt(t[i]));
 		}
-		gui.getSelection().selectNodes(l);
+		gui.getSelection().addNodesToSelection(l);
 	}
 		
 	public void doClose() {
