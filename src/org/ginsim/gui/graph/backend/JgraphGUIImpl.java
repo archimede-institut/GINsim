@@ -5,9 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
@@ -285,37 +283,6 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		return GUIManager.getInstance().isEditAllowed( graph);
 	}
 
-	@Override
-	public void selectNode(V vertex) {
-		jgraph.setSelectionCell(m_jgAdapter.getVertexCell(vertex));
-	}
-	@Override
-	public void selectEdge(E edge) {
-		jgraph.setSelectionCell(m_jgAdapter.getVertexCell(edge));
-	}
-
-    public void selectAll() {
-        jgraph.setSelectionCells(jgraph.getRoots());
-    }
-
-    public void select(Collection<?> l) {
-        jgraph.setSelectionCells( new Object[0]);
-        addSelection(l);
-    }
-    
-    public void addSelection(Collection<?> l) {
-        if (l == null) {
-            return;
-        }
-        for (Object o: l) {
-            if (o instanceof Edge) {
-                jgraph.addSelectionCell(m_jgAdapter.getEdgeCell((E)o));
-            } else {
-                jgraph.addSelectionCell(m_jgAdapter.getVertexCell((V)o));
-            }
-        }
-    }
-    
     public void vertexToFront(boolean b) {
         // move all vertex to front;
         Object[] t = new Object[graph.getNodeCount()];
@@ -328,30 +295,6 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
         } else {
             m_jgAdapter.toBack(t);
         }
-    }
-
-    // TODO : defined in GraphGUI. Move the code to JgraphGUIImpl
-    public void invertSelection() {
-		Object[] selects = jgraph.getSelectionCells();
-		Object roots[] = jgraph.getRoots();
-		int len = roots.length;
-		int nbsel = selects.length;
-		Vector toselect = new Vector(len - nbsel);
-		for (int i=0 ; i<len ; i++) {
-			toselect.add(roots[i]);
-		}
-		
-		for (int i=len-1 ; i>=0 ; i--) {
-			Object cur = roots[i];
-			for (int j=0 ; j<nbsel ; j++) {
-				if (selects[j] == cur) {
-					toselect.remove(i);
-					break;
-				}
-			}
-		}
-		jgraph.setSelectionCells(toselect.toArray());
-
     }
 
 	@Override
@@ -369,7 +312,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 			}
 		}
 
-		selection.setSelection(nodes, edges);
+		selection.backendSelectionUpdated(nodes, edges);
 		for (GraphGUIListener<G, V, E> listener: listeners) {
 			listener.graphSelectionChanged(this);
 		}
@@ -377,7 +320,20 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 
 	@Override
 	public void selectionChanged() {
-		// TODO: update jgraph selection based on user request
+		List<Object> new_selection = new ArrayList<Object>();
+		List<V> nodes = selection.getSelectedNodes();
+		if (nodes != null) {
+			for (V n: nodes) {
+				new_selection.add(m_jgAdapter.getVertexCell(n));
+			}
+		}
+		List<E> edges = selection.getSelectedEdges();
+		if (edges != null) {
+			for (E e: edges) {
+				new_selection.add(m_jgAdapter.getEdgeCell(e));
+			}
+		}
+		jgraph.setSelectionCells(new_selection.toArray());
 	}
 
 	@Override

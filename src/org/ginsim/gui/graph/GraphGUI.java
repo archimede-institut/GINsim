@@ -101,34 +101,10 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	boolean isEditAllowed();
 	
 	/**
-	 * reset selection and select a single node.
-	 * 
-	 * @param node
-	 */
-	void selectNode(V node);
-	/**
-	 * reset selection and select a single edge.
-	 * 
-	 * @param edge
-	 */
-	void selectEdge(E edge);
-
-	/**
 	 * Update selection to reflect the internal selection object
 	 */
 	void selectionChanged();
 	
-	/**
-	 * Add all the elements (nodes and arcs) from the list l to the current selection
-	 * @param l
-	 */
-    void addSelection(Collection<?> l);
-    
-    /**
-     * Select all the nodes and edges
-     */
-    void selectAll();
-
 	/**
 	 * Force a repaint (should be used only by layout actions)
 	 */

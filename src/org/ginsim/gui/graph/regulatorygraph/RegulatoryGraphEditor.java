@@ -177,7 +177,7 @@ class GsGraphOrderList extends SimpleGenericList {
 	}
 
 	protected void doRun(int row, int col) {
-		GUIManager.getInstance().getGraphGUI(graph).selectNode(v_data.get(row));
+		GUIManager.getInstance().getGraphGUI(graph).getSelection().selectNode(v_data.get(row));
 	}
 	
 }

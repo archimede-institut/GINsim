@@ -12,6 +12,7 @@ import org.ginsim.gui.shell.editpanel.SelectionType;
  * Manage the selection for a GraphGUI
  * 
  * @author Aurelien Naldi
+ * @author Duncan Berenguier
  *
  * @param <V>
  * @param <E>
@@ -28,7 +29,7 @@ public class GraphSelection<V, E extends Edge<V>> {
 
 	public GraphSelection(GraphGUI gui) {
 		this.gui = gui;
-		updateType();
+		updateType(true);
 	}
 
 	public SelectionType getSelectionType() {
@@ -50,14 +51,14 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 * @param nodes
 	 * @param edges
 	 */
-	public void setSelection(List<V> nodes, List<E> edges) {
+	public void backendSelectionUpdated(List<V> nodes, List<E> edges) {
 		this.nodes = nodes;
 		this.edges = edges;
 
-		updateType();
+		updateType(true);
 	}
 
-	private void updateType() {
+	private void updateType(boolean fromBackend) {
 		if (edges == null || edges.size() == 0) {
 			edges = null;
 			edgeCount = 0;
@@ -73,6 +74,10 @@ public class GraphSelection<V, E extends Edge<V>> {
 		}
 
 		type = findType();
+		
+		if (!fromBackend) {
+			gui.selectionChanged();
+		}
 	}
 
 	/**
@@ -98,55 +103,68 @@ public class GraphSelection<V, E extends Edge<V>> {
 		return SelectionType.SEL_MULTIPLE;
 	}
 
+	/**
+	 * Select a single node.
+	 * 
+	 * @param node
+	 */
+	public void selectNode(V node) {
+		nodes = new ArrayList<V>();
+		nodes.add(node);
+		gui.selectionChanged();
+	}
 
 	/**
 	 * Select all the edges and 
 	 */
 	public void selectAll() {
-		nodes.addAll(gui.getGraph().getNodes());
-		edges.addAll(gui.getGraph().getEdges());
-		updateType();
+		nodes = new ArrayList<V>(gui.getGraph().getNodes());
+		edges = new ArrayList<E>(gui.getGraph().getEdges());
+		findType();
+		gui.selectionChanged();
 	}
 	
 	/**
 	 * Select all the nodes
 	 */
 	public void selectAllNodes() {
-		nodes.addAll(gui.getGraph().getNodes());
-		updateType();
+		nodes = new ArrayList<V>(gui.getGraph().getNodes());
+		edges = null;
+		updateType(false);
 	}
 
 	/**
 	 * Select all the edges
 	 */
 	public void selectAllEdges() {
-		edges.addAll(gui.getGraph().getEdges());
-		updateType();
+		nodes = null;
+		edges = new ArrayList<E>(gui.getGraph().getEdges());
+		updateType(false);
 	}
 	
 	/**
 	 * Unselect all the edges and nodes
 	 */
 	public void unselectAll() {
-		this.nodes.clear();
-		this.edges.clear();
-		updateType();
+		nodes = null;
+		edges = null;
+		updateType(false);
 	}
 
 	/**
 	 * Unselect all the nodes
 	 */
 	public void unselectAllNodes() {
-		this.nodes.clear();
-		updateType();
+		nodes = null;
+		updateType(false);
 	}
 
 	/**
 	 * Unselect all the edges
 	 */
 	public void unselectAllEdges() {
-		this.edges.clear();
-		updateType();
+		edges = null;
+		updateType(false);
 	}
 
 	/**
@@ -154,8 +172,12 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 * @param l the list of nodes to select
 	 */
 	public void addNodesToSelection(Collection<V> l) {
-		nodes.addAll(l);
-		updateType();
+		if (nodes == null) {
+			nodes = new ArrayList<V>(l);
+		} else {
+			nodes.addAll(l);
+		}
+		updateType(false);
 	}
 
 	/**
@@ -163,8 +185,12 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 * @param l the list of edges to select
 	 */
 	public void addEdgesToSelection(Collection<E> l) {
-		edges.addAll(l);
-		updateType();
+		if (edges == null) {
+			edges = new ArrayList<E>(l);
+		} else {
+			edges.addAll(l);
+		}
+		updateType(false);
 	}
 
 	
@@ -173,9 +199,8 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 * @param l the list of nodes to select
 	 */
 	public void setSelectedNodes(Collection<V> l) {
-		unselectAllNodes();
-		nodes.addAll(l);
-		updateType();
+		nodes = new ArrayList<V>(l);
+		updateType(false);
 	}
 	
 	/**
@@ -183,9 +208,8 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 * @param l the list of edges to select
 	 */
 	public void setSelectedEdges(Collection<E> l) {
-		unselectAllEdges();
-		edges.addAll(l);
-		updateType();
+		edges = new ArrayList<E>(l);
+		updateType(false);
 	}
 
 	/**
@@ -197,7 +221,7 @@ public class GraphSelection<V, E extends Edge<V>> {
 				nodes.add(edge.getSource());
 			}
 		}
-		updateType();
+		updateType(false);
 	}
 
 	/**
@@ -207,7 +231,7 @@ public class GraphSelection<V, E extends Edge<V>> {
 		for (V node : nodes) {
 			addEdgesToSelection(gui.getGraph().getIncomingEdges(node));
 		}
-		updateType();
+		updateType(false);
 	}
 
 	/**
@@ -219,7 +243,7 @@ public class GraphSelection<V, E extends Edge<V>> {
 				nodes.add(edge.getTarget());
 			}
 		}
-		updateType();
+		updateType(false);
 	}
 
 	/**
@@ -229,6 +253,7 @@ public class GraphSelection<V, E extends Edge<V>> {
 		for (V node : nodes) {
 			addEdgesToSelection(gui.getGraph().getOutgoingEdges(node));
 		}
+		updateType(false);
 	}
 
 	/**
@@ -237,7 +262,7 @@ public class GraphSelection<V, E extends Edge<V>> {
 	public void invertSelection() {
 		invertNodesSelection();
 		invertEdgesSelection();
-		updateType();
+		updateType(false);
 	}
 		
 	/**
@@ -246,7 +271,7 @@ public class GraphSelection<V, E extends Edge<V>> {
 	public void invertNodesSelection() {
 		nodes = new ArrayList<V>(gui.getGraph().getNodes());
 		nodes.removeAll(nodes);
-		updateType();
+		updateType(false);
 	}
 
 	/**
@@ -255,8 +280,7 @@ public class GraphSelection<V, E extends Edge<V>> {
 	public void invertEdgesSelection() {
 		edges = new ArrayList<E>(gui.getGraph().getEdges());
 		edges.removeAll(edges);
-		updateType();
+		updateType(false);
 	}
-
 
 }
