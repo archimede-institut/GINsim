@@ -1,6 +1,7 @@
 package org.ginsim.gui.graph;
 
 import java.awt.Component;
+import java.util.Collection;
 
 import javax.swing.JMenu;
 import javax.swing.JPanel;
@@ -116,6 +117,17 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 * Update selection to reflect the internal selection object
 	 */
 	void selectionChanged();
+	
+	/**
+	 * Add all the elements (nodes and arcs) from the list l to the current selection
+	 * @param l
+	 */
+    void addSelection(Collection<?> l);
+    
+    /**
+     * Select all the nodes and edges
+     */
+    void selectAll();
 
 	/**
 	 * Force a repaint (should be used only by layout actions)
