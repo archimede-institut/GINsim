@@ -12,7 +12,7 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.ServiceManagerProxy;
 
 /**
  * A helper when running GINsim without a GUI.
@@ -54,7 +54,7 @@ public class GsScriptHelper {
 		return instance;
 	}
 
-	ServiceManager srvManager = ServiceManager.getManager();
+	public final ServiceManagerProxy services = new ServiceManagerProxy();
 	
 	private GsScriptHelper() {
 		initOptionStore();
@@ -64,6 +64,5 @@ public class GsScriptHelper {
 		File file = new File(filename);
 		return GraphManager.getInstance().open( file);
 	}
-	
 	
 }
