@@ -16,6 +16,7 @@ import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.ImportAction;
 import org.ginsim.gui.service.common.LayoutAction;
+import org.ginsim.gui.shell.callbacks.EditCallBack;
 import org.ginsim.gui.shell.callbacks.FileCallBack;
 import org.ginsim.gui.shell.callbacks.HelpCallBack;
 
@@ -64,14 +65,12 @@ public class MainFrameActionManager implements FrameActionManager {
 		toolbar.removeAll();
 		menubar.add( FileCallBack.getFileMenu(graph, importMenu, exportMenu));
 		// TODO: the file menu should add some stuff to the toolbar as well
+
 		
 		EditActionManager editManager = gui.getEditActionManager();
 		editManager.addEditButtons( toolbar);
 		
-		JMenu menu = new JMenu( Translator.getString( "STR_Edit"));
-		menubar.add( menu);
-		// TODO: REFACTORING ACTION
-		// TODO: edit menu to fill
+		menubar.add( EditCallBack.getEditMenu(graph));
 		
 		menubar.add( gui.getViewMenu( layoutMenu));
 		
@@ -82,7 +81,7 @@ public class MainFrameActionManager implements FrameActionManager {
 			menubar.add( toolsMenu);
 		}
 		
-		menu = new JMenu( Translator.getString( "STR_Help"));
+		JMenu menu = new JMenu( Translator.getString( "STR_Help"));
 		fillMenu(menu, HelpCallBack.getActions());
 		menu.addSeparator();
 		JMenu support_menu = new JMenu( Translator.getString( "STR_Help_Support"));
