@@ -94,6 +94,7 @@ public class GenericListPanel<T> extends JPanel
     		cards.show(p_right, "empty");
     		split.setRightComponent(p_right);
     		split.setLeftComponent(targetpanel);
+    		split.setDividerLocation( 150);
     		this.add(split);
     		split.setName(name+".split");
     	}
