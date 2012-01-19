@@ -142,7 +142,7 @@ public class GinmlHelper {
             svs += " pattern=\"dash\"";
         }
         svs += " line_width=\""+(int)eReader.getLineWidth()+"\"";
-        // svs += " routage=\"auto\""; // FIXME: should we remove it completely or need a new system?
+        svs += " routage=\"auto\""; // FIXME: should we remove it completely or need a new system?
         svs += "/>\n";
         svs += "\t\t\t</edgevisualsetting>\n";
 		return svs;
