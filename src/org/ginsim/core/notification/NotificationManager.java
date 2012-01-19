@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Vector;
 
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.notification.detailed.DetailedErrorNotification;
+import org.ginsim.core.notification.detailed.DetailedInformationNotification;
+import org.ginsim.core.notification.detailed.DetailedWarningNotification;
 import org.ginsim.core.notification.resolvable.ResolvableErrorNotification;
 import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
@@ -98,6 +101,20 @@ public class NotificationManager {
 	}
 	
 	/**
+	 * Publish an error message with details
+	 * 
+	 * @param topic the topic of the notification
+	 * @param message the message of the notification
+	 * @param details the details associated to the notification
+	 */
+	public static void publishDetailedError( Object topic, String message, String details){
+		
+		if( topic != null && message != null){
+			getManager().publish( new DetailedErrorNotification( topic, message, details));
+		}
+	}
+	
+	/**
 	 * Publish a Java exception 
 	 * 
 	 * @param topic the topic of the notification
@@ -125,6 +142,20 @@ public class NotificationManager {
 	}
 	
 	/**
+	 * Publish an warning message with details
+	 * 
+	 * @param topic the topic of the notification
+	 * @param message the message of the notification
+	 * @param details the details associated to the notification
+	 */
+	public static void publishDetailedWarning( Object topic, String message, String details){
+		
+		if( topic != null && message != null){
+			getManager().publish( new DetailedWarningNotification( topic, message, details));
+		}
+	}
+	
+	/**
 	 * Publish an information message
 	 * 
 	 * @param topic the topic of the notification
@@ -134,6 +165,20 @@ public class NotificationManager {
 		
 		if( topic != null && message != null){
 			getManager().publish( new InformationNotification( topic, message));
+		}
+	}
+	
+	/**
+	 * Publish an information message with details
+	 * 
+	 * @param topic the topic of the notification
+	 * @param message the message of the notification
+	 * @param details the details associated to the notification
+	 */
+	public static void publishDetailedInformation( Object topic, String message, String details){
+		
+		if( topic != null && message != null){
+			getManager().publish( new DetailedInformationNotification( topic, message, details));
 		}
 	}
 	

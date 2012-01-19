@@ -33,6 +33,7 @@ public class TestRefactor {
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
 		detectGSDir();
 		
+		
         List<String> open = new ArrayList<String>();
 
         /*
@@ -95,6 +96,7 @@ public class TestRefactor {
 //		NotificationManager.publishResolvableError( graph, "STR_unableToOpen", graph, null, resolution);
 //		NotificationManager.publishWarning( graph, "STR_unableToSave");
 //		NotificationManager.publishError( graph, "STR_wantToStop_title");
+//		NotificationManager.publishDetailedError( graph, "STR_wantToStop_title", "<HTML> essai <br> essai </HTML>");
 		
 	}
 
@@ -140,5 +142,7 @@ public class TestRefactor {
 		GUIManager.initializeOptions();
 		
 	}
+	
+	
 
 }

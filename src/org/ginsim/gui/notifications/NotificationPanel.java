@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 
 import org.ginsim.common.utils.Translator;
 import org.ginsim.core.notification.Notification;
+import org.ginsim.core.notification.detailed.DetailedNotification;
 import org.ginsim.core.notification.resolvable.ResolvableNotification;
 
 
@@ -92,15 +93,26 @@ public class NotificationPanel extends JPanel {
 	}
 
 	protected void notificationAction(int index) {
-		if (notification != null && notification instanceof ResolvableNotification) {
-            if (index == 0) {
-                if (cNotificationAction.isVisible()) {
-                    ((ResolvableNotification) notification).performResolution( cNotificationAction.getSelectedIndex());
-                    return;
-                }
-            }
-            ((ResolvableNotification) notification).performResolution(index);
+		
+		if (notification != null){
+			
+			if( notification instanceof ResolvableNotification) {
+	            if (index == 0) {
+	                if (cNotificationAction.isVisible()) {
+	                    ((ResolvableNotification) notification).performResolution( cNotificationAction.getSelectedIndex());
+	                    return;
+	                }
+	            }
+	            ((ResolvableNotification) notification).performResolution(index);
+			}
+			else if( notification instanceof DetailedNotification){
+				if (index == 0){
+					new NotificationDetailFrame( ((DetailedNotification) notification).getDetails()); 
+				}
+			}
 		}
+		
+		
 		
 		_source.closeNotification();
 		
@@ -145,6 +157,10 @@ public class NotificationPanel extends JPanel {
             	else{
             		t_text = new String[0];
             	}
+            }
+            else if( notification instanceof DetailedNotification){
+            	t_text = new String[1];
+            	t_text[0] = Translator.getString( "STR_showNotificationDetails");
             }
             else{
             	t_text = new String[0];
