@@ -6,10 +6,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.swing.JOptionPane;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -17,7 +18,6 @@ import javax.xml.parsers.SAXParserFactory;
 import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.IOUtils;
-import org.ginsim.common.utils.Translator;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
@@ -25,7 +25,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
-
 
 
 abstract public class XMLHelper extends DefaultHandler implements EntityResolver {
@@ -65,49 +64,54 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 	protected String s_filename;
 	
 	protected XMLReader xr;
-	private boolean showError = true;
+	private List<ParsingWarning> warnings = null;
 	
 	protected Map m_call = null;
 	
 	public void error(SAXParseException e) throws SAXException {
 	    //FIXME: once logical functions, input and patterns become part of the DTD, remove this hack
         if (e.getMessage().startsWith("Element type \"value\"")) {
-            showError = false;
+            return;
         }
         if (e.getMessage().startsWith("Attribute \"input\"") || e.getMessage().startsWith("Attribute \"pattern\"")) {
-            showError = false;
+            return;
         }
-	    if (!showError) {
-	        return;
-	    }
-        Object[] t = {Translator.getString("STR_stop"), Translator.getString("STR_goOn"), Translator.getString("STR_ignoreNext")};
-	    int ret = JOptionPane.showOptionDialog(null, 
-                Translator.getString("STR_errorOccured")+":\n\n"+
-	            e.getLocalizedMessage()+"\n"
-				+ "\nline: "+e.getLineNumber()
-				+ "\ncolumn: "+e.getColumnNumber()+"\n"+
-                Translator.getString("STR_wantToStop_title"),
-                Translator.getString("STR_wantToStop"),
-				JOptionPane.YES_NO_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, t, t[0]);
-	    switch (ret) {
-	    	case 0:
-	    	    showError = false;
-    	    throw e;
-	    	case 1:
-	    	    break;
-	    	case 2:
-	    	    showError = false;
-	    	    break;
-	    }
+        
+        addWarning(e);
 	}
 
 	public void warning(SAXParseException e) throws SAXException {
 		
-		GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_NORMAL, e.getLocalizedMessage()
-				+ "\nline: "+e.getLineNumber()
-				+ "\ncolumn: "+e.getColumnNumber()), null);
+        addWarning(e);
 	}
 
+	/**
+	 * Get the list of warning encountered during parsing if any.
+	 * 
+	 * @return the list of warnings or null if none was encountered
+	 */
+	public List<ParsingWarning> getWarnings() {
+		return warnings;
+	}
+
+	private void addWarning(SAXParseException e) {
+        if (warnings == null) {
+        	warnings = new ArrayList<ParsingWarning>();
+        }
+        boolean merged = false;
+        for (ParsingWarning warning: warnings) {
+        	if (warning.merge(e)) {
+        		merged = true;
+        		break;
+        	}
+        }
+        
+        if (!merged) {
+        	warnings.add(new ParsingWarning(e));
+        }
+	}
+	
+	
     /**
      * if <code>curVal</code> is not null, read characters will be appended there.
      * a bit less work for other implementors, they just have to set curVal to null or ""

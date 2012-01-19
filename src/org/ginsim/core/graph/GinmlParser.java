@@ -2,12 +2,15 @@ package org.ginsim.core.graph;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Map;
 
 import org.ginsim.common.exception.GsException;
+import org.ginsim.common.xml.ParsingWarning;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.io.parser.GsXMLHelper;
+import org.ginsim.core.notification.WarningNotification;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -42,7 +45,15 @@ public final class GinmlParser extends XMLHelper {
 		if (realParser == null) {
 		    return null;
 		}
-		return realParser.getGraph();
+		Graph g = realParser.getGraph();
+		
+		// Notification for parsing errors.
+		// Note: warnings are collected by the generic parser, not the real one
+		List<ParsingWarning> warnings = getWarnings();
+		if (warnings != null) {
+			new WarningNotification(g, "pending parsing warnings");
+		}
+		return g;
     }
 
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
