@@ -10,6 +10,7 @@ import org.ginsim.common.xml.ParsingWarning;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.io.parser.GsXMLHelper;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.WarningNotification;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
@@ -51,7 +52,7 @@ public final class GinmlParser extends XMLHelper {
 		// Note: warnings are collected by the generic parser, not the real one
 		List<ParsingWarning> warnings = getWarnings();
 		if (warnings != null) {
-			new WarningNotification(g, "pending parsing warnings");
+			NotificationManager.getManager().publishWarning(g, "pending parsing warnings");
 		}
 		return g;
     }
