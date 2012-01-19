@@ -84,7 +84,7 @@ public class GUIManager {
 		GraphGUI graph_gui;
 		try {
 			graph_gui = createGraphGUI( graph);
-			MainFrame frame = new MainFrame("test", 800, 600, graph_gui);
+			MainFrame frame = new MainFrame("test", 800, 700, graph_gui);
 			frame.setVisible(true);
 			
 			NotificationManager.getManager().registerListener( frame, graph);

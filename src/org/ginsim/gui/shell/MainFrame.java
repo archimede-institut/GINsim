@@ -47,6 +47,9 @@ import org.ginsim.gui.utils.widgets.SplitPane;
 public class MainFrame extends Frame implements NotificationSource, NotificationListener {
 	private static final long serialVersionUID = 3002680535567580439L;
 	
+	private static final int SECONDARY_SPLIT_PANEL_MIN_HEIGHT = 250;
+	private static final int MINI_MAP_MIN_WIDTH = 100;
+	
     private JDialog secondaryFrame = null;
 	private JPanel contentPanel = null;
 	private JSplitPane mainSplitPane = null;
@@ -98,13 +101,13 @@ public class MainFrame extends Frame implements NotificationSource, Notification
         cst.weighty = 1;
         cst.fill = GridBagConstraints.BOTH;
 		setGlassPane( new GlassPane());
-		contentPanel.add(getMainSplitPane(), cst);
 
         setContentPane(contentPanel);
-        
+		contentPanel.add(getMainSplitPane(), cst);
+
     	actionManager.buildActions( graphGUI, menubar, toolbar);
     	fillGraphPane( graphGUI.getGraphComponent());
-		
+    	
         setVisible(true);
 	}
 
@@ -119,7 +122,8 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 			mainSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 			mainSplitPane.setTopComponent(getGraphPanel());
 			mainSplitPane.setBottomComponent(getSecondarySplitPanel());
-			mainSplitPane.setResizeWeight(1.0);
+			//mainSplitPane.setResizeWeight(0);
+			mainSplitPane.setDividerLocation( this.getHeight() - 100 - SECONDARY_SPLIT_PANEL_MIN_HEIGHT);
 			mainSplitPane.setName("mainFrameSeparator");
 			mainSplitPane.setOneTouchExpandable(true);
 		}
@@ -182,9 +186,11 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 			secondarySplitPanel = new SplitPane();
 			secondarySplitPanel.setLeftComponent(getEditTabbedPane());
 			secondarySplitPanel.setRightComponent(getMiniMapPanel());
-			secondarySplitPanel.setDividerSize(2);
-			secondarySplitPanel.setResizeWeight(0.7);
+			secondarySplitPanel.setDividerSize(8);
+			//secondarySplitPanel.setResizeWeight(0.7);
+			secondarySplitPanel.setDividerLocation( this.getWidth() - MINI_MAP_MIN_WIDTH);
 			secondarySplitPanel.setName("mapSeparator");
+			secondarySplitPanel.setMinimumSize( new Dimension( this.getWidth(), SECONDARY_SPLIT_PANEL_MIN_HEIGHT));
 		}
 		return secondarySplitPanel;
 	}
@@ -197,6 +203,7 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 	private JPanel getMiniMapPanel() {
 		if (miniMapPanel == null) {
 			miniMapPanel = new JPanel();
+			miniMapPanel.setMinimumSize( new Dimension(MINI_MAP_MIN_WIDTH, 0));
 		}
 		return miniMapPanel;
 	}
