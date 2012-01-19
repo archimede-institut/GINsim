@@ -112,6 +112,7 @@ public class InteractionPanel extends AbstractParameterPanel
 			jSplitPane.setResizeWeight(1);
 			jSplitPane.setLeftComponent(getJPanel());
 			jSplitPane.setRightComponent(getJScrollPane1());
+			jSplitPane.setDividerLocation( 350);
 			jSplitPane.setName("logicalParametersPanel");
 		}
 		return jSplitPane;
