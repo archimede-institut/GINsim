@@ -11,6 +11,7 @@ import javax.swing.KeyStroke;
 
 import org.ginsim.common.OptionStore;
 import org.ginsim.common.exception.GsException;
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.Translator;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.GraphManager;
@@ -130,7 +131,7 @@ class OpenAction extends AbstractAction {
 				GUIManager.getInstance().closeEmptyGraphs();
 				
 			} catch (GsException e) {
-				e.printStackTrace();
+				GUIMessageUtils.openErrorDialog( "STR_error_noFileOnPath");
 			}
 		}
 	}
