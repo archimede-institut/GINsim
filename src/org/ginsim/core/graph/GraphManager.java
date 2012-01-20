@@ -257,7 +257,6 @@ public class GraphManager {
         List<GraphEventCascade> l_cascade = new ArrayList<GraphEventCascade>();
 		for (GraphListener<G> l: info.listeners) {
 			GraphEventCascade gec = l.graphChanged(graph, type, data);
-			System.out.println("propagating...");
             if (gec != null) {
                 l_cascade.add(gec);
             }
