@@ -2,14 +2,19 @@ package org.ginsim.gui.shell.callbacks;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
 import org.ginsim.common.utils.Translator;
 import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
@@ -22,7 +27,7 @@ import org.ginsim.gui.shell.SearchFrame;
  */
 public class EditCallBack {
 	
-	private static JMenu historyMenu = new JMenu( Translator.getString( "STR_RecentFiles"));
+	protected static Graph copiedSubGraph = null;
 	
 	/**
 	 * Create and populate an Edit menu
@@ -37,14 +42,12 @@ public class EditCallBack {
 		menu.add(new PasteAction(graph));
 
 		menu.add(new JSeparator());
-
-		menu.add(new UndoAction(graph));
-		menu.add(new RedoAction(graph));
-
-		menu.add(new JSeparator());
+//
+//		menu.add(new UndoAction(graph));
+//		menu.add(new RedoAction(graph));
+//
+//		menu.add(new JSeparator());
 		
-		// TODO: the edit menu should add some stuff from the toolbar as well
-
 		menu.add(new SearchNodeAction(graph));
 
 		menu.add(new JSeparator());
@@ -84,9 +87,42 @@ class CopyAction extends AbstractAction {
 	}
 	
 	public void copy() {
-		//TODO Recfactoring action
-		//FIXME : find where to copy
-		LogManager.error("Unimplemented menu : paste");
+		GraphSelection graphSelection = GUIManager.getInstance().getGraphGUI(graph).getSelection();
+		Collection nodes, edges;
+		if (graphSelection.getSelectedNodes() == null) {
+			nodes = new ArrayList();
+		} else {
+			nodes = new ArrayList(graphSelection.getSelectedNodes());
+		}
+		if (graphSelection.getSelectedEdges() == null) {
+			edges = new ArrayList();
+			EditCallBack.copiedSubGraph = graph.getSubgraph(nodes, edges);
+			return;
+		}
+		edges = new ArrayList(graphSelection.getSelectedEdges());
+		Collection selectedEdges = graphSelection.getSelectedEdges();
+		int questionHasBeenAsked = -1; //-1 = Not asked, 0 = asked and extend, 1 = asked and restraint
+		for (Iterator it = selectedEdges.iterator(); it.hasNext();) {
+			Edge edge = (Edge) it.next();
+			questionHasBeenAsked = nodeFound(nodes, edges, edge, edge.getSource(), questionHasBeenAsked);
+			questionHasBeenAsked = nodeFound(nodes, edges, edge, edge.getTarget(), questionHasBeenAsked);
+		}
+		
+		EditCallBack.copiedSubGraph = graph.getSubgraph(nodes, edges);
+	}
+	
+	private int nodeFound(Collection nodes, Collection edges, Edge edge, Object node, int questionHasBeenAsked) {
+		if (! nodes.contains(node)) {
+			if (questionHasBeenAsked == -1) {//not asked
+				questionHasBeenAsked = JOptionPane.showConfirmDialog(null, Translator.getString( "STR_Copy_shouldExtend"),"",JOptionPane.YES_NO_OPTION);
+			}
+			if (questionHasBeenAsked == 0) { //extend
+				nodes.add(node);
+			} else if (questionHasBeenAsked == 1){ //restraint
+				edges.remove(edge);
+			}
+		}
+		return questionHasBeenAsked;
 	}
 	
 	@Override
@@ -107,9 +143,7 @@ class PasteAction extends AbstractAction {
 	}
 	
 	public void paste() {
-		//TODO Recfactoring action
-		//FIXME : find where to paste
-		LogManager.error("Unimplemented menu : paste");
+		graph.merge(EditCallBack.copiedSubGraph);
 	}
 	
 	@Override
