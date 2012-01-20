@@ -107,7 +107,7 @@ public class NotificationPanel extends JPanel {
 			}
 			else if( notification instanceof DetailedNotification){
 				if (index == 0){
-					new NotificationDetailFrame( ((DetailedNotification) notification).getDetails()); 
+					new NotificationDetailFrame( ((DetailedNotification) notification).getDetails());
 				}
 			}
 		}
