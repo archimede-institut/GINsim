@@ -2,7 +2,7 @@ package org.ginsim.gui.shell.callbacks;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.List;
+import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
@@ -29,23 +29,22 @@ import org.ginsim.gui.utils.widgets.Frame;
  */
 public class FileCallBack {
 	
-	private static JMenu recentMenu = new JMenu( Translator.getString( "STR_RecentFiles"));
-	
 	/**
-	 * Create and populate a File menu
+	 * Create and populate a File menu.
 	 * 
-	 * @param recentMenu
-	 * @param importmenu
-	 * @param exportmenu
-	 * @return
+	 * @param g
+	 * @param importMenu
+	 * @param exportMenu
+	 * 
+	 * @return a full file menu
 	 */
 	public static JMenu getFileMenu(Graph<?, ?> g, JMenu importMenu, JMenu exportMenu) {
 		JMenu menu = new JMenu( Translator.getString( "STR_File"));
 		
 		menu.add(new NewAction());
 		menu.add(new OpenAction());
-		menu.add(recentMenu);
-		FileCallBack.updateRecentFiles();
+		JMenu recent = new RecentMenu();
+		menu.add(recent);
 		menu.add(importMenu);
 
 		menu.add(new JSeparator());
@@ -62,19 +61,32 @@ public class FileCallBack {
 		return menu;
 	}
 	
-	public static void updateRecentFiles(){
-		
-		 List<String> recentFiles = OptionStore.getRecentFiles();
-		// rebuild the recent menu
-		recentMenu.removeAll();
-		for (String recent: recentFiles) {
-			// TODO: real recent action with better title
-			recentMenu.add( new OpenAction(recent));
-		}
+}
+/**
+ * Recent menu: update its content when opened.
+ * 
+ * @author Aurelien Naldi
+ */
+class RecentMenu extends JMenu {
+
+	public RecentMenu() {
+		super(Translator.getString( "STR_RecentFiles"));
 	}
 	
+	@Override
+	public void setSelected(boolean b) {
 
+		if (b) {
+			// rebuild the recent menu
+			removeAll();
+			for (String recent: OptionStore.getRecentFiles()) {
+				add( new OpenAction(recent));
+			}
+		}
+		super.setSelected(b);
+	}
 }
+
 
 class NewAction extends AbstractAction {
 	public NewAction() {
@@ -106,7 +118,6 @@ class OpenAction extends AbstractAction {
 	
 	public OpenAction(String filename) {
 		super(filename);
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, FrameActionManager.MASK));
 		this.filename = filename;
 	}
 	
@@ -122,7 +133,6 @@ class OpenAction extends AbstractAction {
 			try {
 				Graph g = GraphManager.getInstance().open(path);
 				OptionStore.addRecentFile(path);
-				FileCallBack.updateRecentFiles();
 				Frame frame = GUIManager.getInstance().newFrame( g);
 				GraphGUI graph_gui = GUIManager.getInstance().getGraphGUI( g);
 				if( graph_gui != null){
