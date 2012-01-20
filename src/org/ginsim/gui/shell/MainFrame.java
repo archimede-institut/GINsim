@@ -4,6 +4,8 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.util.PriorityQueue;
 
 import javax.swing.JComponent;
@@ -107,6 +109,14 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 
     	actionManager.buildActions( graphGUI, menubar, toolbar);
     	fillGraphPane( graphGUI.getGraphComponent());
+    	
+		addComponentListener( new ComponentAdapter() {
+			@Override
+			public void componentResized(ComponentEvent e) {
+				mainSplitPane.setDividerLocation( e.getComponent().getHeight() - 100 - SECONDARY_SPLIT_PANEL_MIN_HEIGHT);
+				secondarySplitPanel.setDividerLocation( e.getComponent().getWidth() - MINI_MAP_MIN_WIDTH);
+			}
+		});
     	
         setVisible(true);
 	}
