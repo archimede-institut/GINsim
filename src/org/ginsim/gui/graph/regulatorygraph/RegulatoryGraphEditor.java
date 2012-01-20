@@ -2,13 +2,15 @@ package org.ginsim.gui.graph.regulatorygraph;
 
 import java.awt.Component;
 import java.awt.GridBagConstraints;
-import java.util.Collection;
 
 import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.DataUtils;
 import org.ginsim.common.utils.Translator;
 import org.ginsim.core.GraphEventCascade;
 import org.ginsim.core.annotation.Annotation;
+import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -22,7 +24,7 @@ import org.ginsim.gui.utils.data.ObjectEditor;
 
 
 
-public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener<RegulatoryNode, RegulatoryMultiEdge> {
+public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener<RegulatoryGraph> {
 
 	public static final int PROP_ID = 0;
 	public static final int PROP_NODEORDER = 1;
@@ -49,12 +51,12 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener
 	private void setEditedObject(RegulatoryGraph g) {
 		if (g != this.graph) {
 			if (this.graph != null) {
-				this.graph.removeGraphListener( this);
+		        GraphManager.getInstance().removeGraphListener( this.graph, this);
 			}
 			this.graph = g;
 			this.nodeList = new GsGraphOrderList( graph);
 			if (this.graph != null) {
-				this.graph.addGraphListener(this);
+		        GraphManager.getInstance().addGraphListener( this.graph, this);
 			}
 		}
 		master = g;
@@ -118,39 +120,15 @@ public class RegulatoryGraphEditor extends ObjectEditor implements GraphListener
 		return component;
 	}
 
-	
-	public GraphEventCascade edgeAdded(RegulatoryMultiEdge data) {
+	@Override
+	public GraphEventCascade graphChanged(RegulatoryGraph g, GraphChangeType type, Object data) {
+		switch (type) {
+		case NODEADDED:
+		case NODEREMOVED:
+		case NODEUPDATED:
+			refresh(true);
+		}
 		return null;
-	}
-
-	public GraphEventCascade edgeRemoved(RegulatoryMultiEdge data) {
-		return null;
-	}
-
-	public GraphEventCascade edgeUpdated(RegulatoryMultiEdge data) {
-		return null;
-	}
-
-	public GraphEventCascade graphMerged(Collection<RegulatoryNode> data) {
-		return null;
-	}
-
-	public GraphEventCascade nodeAdded(RegulatoryNode data) {
-		refresh(true);
-		return null;
-	}
-
-	public GraphEventCascade nodeRemoved(RegulatoryNode data) {
-		refresh(true);
-		return null;
-	}
-
-	public GraphEventCascade nodeUpdated(RegulatoryNode data) {
-		refresh(true);
-		return null;
-	}
-
-	public void endParsing() {
 	}
 }
 

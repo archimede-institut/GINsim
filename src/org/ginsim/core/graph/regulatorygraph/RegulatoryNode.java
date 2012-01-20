@@ -14,6 +14,7 @@ import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.common.AbstractGraph;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.ToolTipsable;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterList;
@@ -86,7 +87,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
     public void setInput(boolean input, Graph graph) {
         if (input != this.isInput) {
             this.isInput = input;
-            ((AbstractGraph) graph).fireGraphChange( Graph.CHANGE_VERTEXUPDATED, this);
+            ((AbstractGraph) graph).fireGraphChange( GraphChangeType.NODEUPDATED, this);
         }
     }
 	/**
@@ -169,7 +170,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	    		}
 	    	}
 	    	maxValue = max;
-    		((AbstractGraph) graph).fireGraphChange( Graph.CHANGE_VERTEXUPDATED, this);
+    		((AbstractGraph) graph).fireGraphChange( GraphChangeType.NODEUPDATED, this);
     		getInteractionsModel().refreshNode();
 	    }
 	}

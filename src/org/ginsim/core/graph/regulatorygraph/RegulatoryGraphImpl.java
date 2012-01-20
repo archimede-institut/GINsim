@@ -16,6 +16,7 @@ import org.ginsim.core.annotation.BiblioManager;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.AbstractGraph;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
@@ -358,7 +359,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
        edge.markRemoved();
        super.removeEdge(edge);
        edge.getTarget().removeEdgeFromInteraction(edge);
-       fireGraphChange(CHANGE_EDGEREMOVED, edge);
+       fireGraphChange(GraphChangeType.EDGEREMOVED, edge);
        return true;
     }
 
@@ -368,7 +369,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         }
         super.removeNode( obj);
         nodeOrder.remove(obj);
-        fireGraphChange(CHANGE_VERTEXREMOVED, obj);
+        fireGraphChange(GraphChangeType.NODEREMOVED, obj);
         return true;
     }
 

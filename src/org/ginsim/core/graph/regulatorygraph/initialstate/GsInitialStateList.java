@@ -1,19 +1,19 @@
 package org.ginsim.core.graph.regulatorygraph.initialstate;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
 import org.ginsim.core.GraphEventCascade;
+import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
 
-public class GsInitialStateList implements GraphListener<RegulatoryNode, RegulatoryMultiEdge> {
+public class GsInitialStateList implements GraphListener<RegulatoryGraph> {
 	RegulatoryGraph graph;
 
 	List nodeOrder;
@@ -27,7 +27,7 @@ public class GsInitialStateList implements GraphListener<RegulatoryNode, Regulat
     	
         this.graph = (RegulatoryGraph) graph;
     	nodeOrder = this.graph.getNodeOrder();
-        graph.addGraphListener( (GraphListener) this);
+        GraphManager.getInstance().addGraphListener( (RegulatoryGraph)graph, this);
         updateLists();
         
         initialStates = new InitialStateList(normalNodes, false);
@@ -58,65 +58,49 @@ public class GsInitialStateList implements GraphListener<RegulatoryNode, Regulat
 		return inputNodes;
 	}
 
-	public GraphEventCascade edgeAdded(RegulatoryMultiEdge data) {
-		return null;
-	}
-
-	public GraphEventCascade edgeRemoved(RegulatoryMultiEdge data) {
-		return null;
-	}
-
-	public GraphEventCascade edgeUpdated(RegulatoryMultiEdge data) {
-		return null;
-	}
-
-	public GraphEventCascade nodeAdded(RegulatoryNode data) {
-	    if (((RegulatoryNode)data).isInput()) {
-            inputNodes.add(data);
-        } else {
-            normalNodes.add(data);
-        }
-		return null;
-	}
-
-	public GraphEventCascade graphMerged(Collection<RegulatoryNode> data) {
-		return null;
-	}
-
-	public GraphEventCascade nodeRemoved(RegulatoryNode data) {
-	    // update lists
-        inputNodes.remove(data);
-        normalNodes.remove(data);
-        
-        List l_changes = new ArrayList();
-        initialStates.vertexRemoved(data, l_changes);
-        inputConfigs.vertexRemoved(data, l_changes);
-        if (l_changes.size() > 0) {
-            return new InitialStateCascadeUpdate(l_changes);
-        }
-        return null;
-	}
-
-	public GraphEventCascade nodeUpdated(RegulatoryNode data) {
-        List l_changes = new ArrayList();
-	    // update lists
-	    if (data.isInput() ? normalNodes.contains(data) : inputNodes.contains(data)) {
-	        updateLists();
-	        if (data.isInput()) {
-	            initialStates.vertexRemoved(data, l_changes);
+	@Override
+	public GraphEventCascade graphChanged(RegulatoryGraph g, GraphChangeType type, Object data) {
+		List l_changes;
+		switch (type) {
+		case NODEADDED:
+		    if (((RegulatoryNode)data).isInput()) {
+	            inputNodes.add(data);
 	        } else {
-                inputConfigs.vertexRemoved(data, l_changes);
+	            normalNodes.add(data);
 	        }
-	    }
-        initialStates.vertexUpdated(data, l_changes);
-        inputConfigs.vertexUpdated(data, l_changes);
-        if (l_changes.size() > 0) {
-            return new InitialStateCascadeUpdate(l_changes);
-        }
-        return null;
-	}
-
-	public void endParsing() {
+			break;
+		case NODEREMOVED:
+		    // update lists
+	        inputNodes.remove(data);
+	        normalNodes.remove(data);
+	        
+	        l_changes = new ArrayList();
+	        initialStates.vertexRemoved(data, l_changes);
+	        inputConfigs.vertexRemoved(data, l_changes);
+	        if (l_changes.size() > 0) {
+	            return new InitialStateCascadeUpdate(l_changes);
+	        }
+	        break;
+		case NODEUPDATED:
+			RegulatoryNode node = (RegulatoryNode)data;
+	        l_changes = new ArrayList();
+		    // update lists
+		    if (node.isInput() ? normalNodes.contains(data) : inputNodes.contains(data)) {
+		        updateLists();
+		        if (node.isInput()) {
+		            initialStates.vertexRemoved(data, l_changes);
+		        } else {
+	                inputConfigs.vertexRemoved(data, l_changes);
+		        }
+		    }
+	        initialStates.vertexUpdated(data, l_changes);
+	        inputConfigs.vertexUpdated(data, l_changes);
+	        if (l_changes.size() > 0) {
+	            return new InitialStateCascadeUpdate(l_changes);
+	        }
+	        break;
+		}
+		return null;
 	}
 
     public boolean isEmpty() {

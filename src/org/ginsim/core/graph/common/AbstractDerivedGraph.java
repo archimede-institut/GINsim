@@ -1,7 +1,6 @@
 package org.ginsim.core.graph.common;
 
 import java.io.File;
-import java.util.Collection;
 
 import org.ginsim.common.exception.GsException;
 import org.ginsim.core.GraphEventCascade;
@@ -11,7 +10,7 @@ import org.ginsim.core.graph.GraphManager;
 
 abstract public class AbstractDerivedGraph<V, E extends Edge<V>, AG extends Graph<AV, AE>, AV, AE extends Edge<AV>>
 			 extends AbstractGraph<V,E>
-			 implements GraphAssociation<AG, AV, AE>, GraphListener<AV,AE> {
+			 implements GraphAssociation<AG, AV, AE>, GraphListener<AG> {
 
     protected AG associatedGraph = null;
     protected String associatedID = null;
@@ -42,12 +41,12 @@ abstract public class AbstractDerivedGraph<V, E extends Edge<V>, AG extends Grap
         }
 
         if (associatedGraph != null) {
-            associatedGraph.removeGraphListener( this);
+            GraphManager.getInstance().removeGraphListener( associatedGraph, this);
             associatedGraph = null;
             return;
         }
         associatedGraph = associated_graph;
-        associatedGraph.addGraphListener(this);
+        GraphManager.getInstance().addGraphListener( associatedGraph, this);
     }
 	
     /**
@@ -124,34 +123,20 @@ abstract public class AbstractDerivedGraph<V, E extends Edge<V>, AG extends Grap
         associatedID = value;
     }
 
-    public GraphEventCascade edgeAdded(AE data) {
-        setAssociatedGraph(null);
-        return null;
-    }
-    public GraphEventCascade edgeRemoved(AE data) {
-        setAssociatedGraph(null);
-        return null;
-    }
-    public GraphEventCascade edgeUpdated(AE data) {
-        return null;
-    }
-
-
-    public GraphEventCascade nodeAdded(AV data) {
-        setAssociatedGraph(null);
-        return null;
-    }
-
-	public GraphEventCascade graphMerged(Collection<AV> data) {
-        setAssociatedGraph(null);
-		return null;
-	}
-    public GraphEventCascade nodeUpdated(AV data) {
-        return null;
-    }
-
-    public GraphEventCascade nodeRemoved(AV data) {
-        setAssociatedGraph(null);
+	@Override
+	public GraphEventCascade graphChanged(Graph g, GraphChangeType type, Object data) {
+		if (g != this) {
+			return null;
+		}
+		switch (type) {
+		case EDGEADDED:
+		case EDGEREMOVED:
+		case NODEADDED:
+		case NODEREMOVED:
+		case GRAPHMERGED:
+			setAssociatedGraph(null);
+			break;
+		}
         return null;
     }
 

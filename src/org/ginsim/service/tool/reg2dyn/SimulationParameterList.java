@@ -3,7 +3,9 @@ package org.ginsim.service.tool.reg2dyn;
 import java.util.Collection;
 
 import org.ginsim.core.GraphEventCascade;
+import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -25,7 +27,7 @@ import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
  * Also deals with updating them when the graph is changed
  */
 public class SimulationParameterList extends SimpleGenericList<SimulationParameters> 
-	implements GraphListener<RegulatoryNode, RegulatoryMultiEdge>, RegulatoryMutantListener, GenericListListener {
+	implements GraphListener<RegulatoryGraph>, RegulatoryMutantListener, GenericListListener {
 
     public final RegulatoryGraph graph;
     public final GsInitialStateList imanager;
@@ -51,7 +53,7 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
     	canEdit = true;
     	canRemove = true;
     	canOrder = true;
-        graph.addGraphListener(this);
+        GraphManager.getInstance().addGraphListener( this.graph, this);
         RegulatoryMutants mutants = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.key, true);
         mutants.addListener(this);
         if (param == null) {
@@ -61,19 +63,33 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
         }
     }
 
-    public GraphEventCascade edgeAdded(RegulatoryMultiEdge data) {
-        return null;
-    }
+    @Override
+	public GraphEventCascade graphChanged(RegulatoryGraph g, GraphChangeType type, Object data) {
+		switch (type) {
+		case NODEADDED:
+			nodeAdded(data);
+			break;
+		case NODEREMOVED:
+	        // remove it from priority classes
+	        for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
+	        	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
+	    		if (pcdef.m_elt != null) {
+	    			pcdef.m_elt.remove(data);
+	    		}
+	        }
+			break;
+		case GRAPHMERGED:
+			Collection<?> nodes = (Collection<?>)data;
+			for (Object v: nodes) {
+				nodeAdded(v);
+			}
+			break;
 
-    public GraphEventCascade edgeRemoved(RegulatoryMultiEdge data) {
-        return null;
-    }
-
-    public GraphEventCascade edgeUpdated(RegulatoryMultiEdge data) {
-        return null;
-    }
-
-    public GraphEventCascade nodeAdded(RegulatoryNode data) {
+		}
+		return null;
+	}
+	
+	private void nodeAdded(Object data) {
         // if needed, add it to the default priority class!
         for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
         	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
@@ -81,30 +97,7 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
     			pcdef.m_elt.put((RegulatoryNode)data, pcdef.getElement(null, 0));
     		}
         }
-        return null;
-    }
-
-	public GraphEventCascade graphMerged(Collection<RegulatoryNode> nodes) {
-		for (RegulatoryNode v: nodes) {
-			nodeAdded(v);
-		}
-		return null;
 	}
-    
-    public GraphEventCascade nodeRemoved(RegulatoryNode data) {
-        // remove it from priority classes
-        for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
-        	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
-    		if (pcdef.m_elt != null) {
-    			pcdef.m_elt.remove(data);
-    		}
-        }
-        return null;
-    }
-
-    public GraphEventCascade nodeUpdated(RegulatoryNode data) {
-    	return null;
-    }
 
     public int add(SimulationParameters param, int index) {
     	v_data.add(index, param);
@@ -147,7 +140,5 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
 	public void contentChanged() {
 	}
 	public void structureChanged() {
-	}
-	public void endParsing() {
 	}
 }

@@ -5,7 +5,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,9 +23,11 @@ import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.GraphEventCascade;
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphListener;
+import org.ginsim.core.graph.common.GraphModel;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 import org.xml.sax.Attributes;
@@ -38,7 +39,7 @@ import bibtex.parser.BibtexParser;
 
 
 
-public class BiblioList implements XMLize, OpenHelper, GraphListener {
+public class BiblioList implements XMLize, OpenHelper, GraphListener<GraphModel<?, ?>> {
 
 	private final Map<String, Date> files = new TreeMap<String, Date>();
 	private final Map<String, Ref> m_references = new HashMap<String, Ref>();
@@ -51,7 +52,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 	public BiblioList( Graph<?,?> graph, boolean parsing) {
 		this.graph = graph;
 		this.parsing = parsing;
-		graph.addGraphListener(this);
+		GraphManager.getInstance().addGraphListener(graph, this);
 	}
 	/**
 	 * FIXME: don't use this constructor
@@ -136,17 +137,6 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 		return true;
 	}
 
-	@Override
-	public void endParsing() {
-		parsing = false;
-		for (String key: m_used) {
-			if (!m_references.containsKey(key)) {
-				addMissingRefWarning(key);
-				break;
-			}
-		}
-	}
-	
 	public void addMissingRefWarning(String value){
 		if (parsing) {
 			return;
@@ -222,7 +212,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 			} else {
 				new ReferencerParser(this, fileName);
 			}
-			endParsing();
+			graphChanged(graph, GraphChangeType.PARSINGENDED, null);
 		} else {
 			
 			NotificationResolution resolution = new NotificationResolution(){
@@ -247,34 +237,20 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener {
 	public void removeFile(String fileName) {
 		files.remove(fileName);
 	}
-
-	public GraphEventCascade edgeAdded(Edge data) {
+	@Override
+	public GraphEventCascade graphChanged(GraphModel<?,?> g, GraphChangeType type, Object data) {
+		if (type == GraphChangeType.PARSINGENDED) {
+			parsing = false;
+			for (String key: m_used) {
+				if (!m_references.containsKey(key)) {
+					addMissingRefWarning(key);
+					break;
+				}
+			}
+		}
 		return null;
 	}
 
-	public GraphEventCascade edgeRemoved(Edge data) {
-		return null;
-	}
-
-	public GraphEventCascade edgeUpdated(Edge data) {
-		return null;
-	}
-
-	public GraphEventCascade graphMerged(Collection data) {
-		return null;
-	}
-
-	public GraphEventCascade nodeAdded(Object data) {
-		return null;
-	}
-
-	public GraphEventCascade nodeRemoved(Object data) {
-		return null;
-	}
-
-	public GraphEventCascade nodeUpdated(Object data) {
-		return null;
-	}
 }
 
 class Ref {

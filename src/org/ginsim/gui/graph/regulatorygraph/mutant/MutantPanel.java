@@ -30,6 +30,10 @@ import org.ginsim.gui.utils.data.GenericListPanel;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.SplitPane;
 import org.ginsim.gui.utils.widgets.StockButton;
+import org.jgrapht.event.GraphEdgeChangeEvent;
+import org.jgrapht.event.GraphListener;
+import org.jgrapht.event.GraphVertexChangeEvent;
+
 
 class MutantPanel extends SplitPane {
     private static final long serialVersionUID = 2625670418830465925L;

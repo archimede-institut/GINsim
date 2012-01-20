@@ -3,7 +3,9 @@ package org.ginsim.service.tool.modelsimplifier;
 import java.util.Collection;
 
 import org.ginsim.core.GraphEventCascade;
+import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -16,7 +18,7 @@ import org.ginsim.core.utils.data.SimpleGenericList;
  * Also deals with updating them when the graph is changed
  */
 public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifierConfig>
-	implements GraphListener<RegulatoryNode, RegulatoryMultiEdge> {
+	implements GraphListener<RegulatoryGraph> {
 
     String s_current;
     RegulatoryGraph graph;
@@ -29,26 +31,7 @@ public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifier
     	canEdit = true;
     	canRemove = true;
     	canOrder = true;
-        graph.addGraphListener(this);
-    }
-
-    public GraphEventCascade nodeAdded(RegulatoryNode data) {
-        return null;
-    }
-	public GraphEventCascade graphMerged(Collection<RegulatoryNode> data) {
-		return null;
-	}
-    
-    public GraphEventCascade nodeRemoved(RegulatoryNode data) {
-    	for (int i=0 ; i<v_data.size() ; i++) {
-    		ModelSimplifierConfig cfg = (ModelSimplifierConfig)v_data.get(i);
-    		cfg.m_removed.remove(data);
-    	}
-        return null;
-    }
-
-    public GraphEventCascade nodeUpdated(RegulatoryNode data) {
-    	return null;
+        GraphManager.getInstance().addGraphListener( this.graph, this);
     }
 
 	protected ModelSimplifierConfig doCreate(String name, int pos) {
@@ -56,15 +39,16 @@ public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifier
 		config.setName(name);
 		return config;
 	}
-	public GraphEventCascade edgeAdded(RegulatoryMultiEdge data) {
-		return null;
-	}
-	public GraphEventCascade edgeRemoved(RegulatoryMultiEdge data) {
-		return null;
-	}
-	public GraphEventCascade edgeUpdated(RegulatoryMultiEdge data) {
-		return null;
-	}
-	public void endParsing() {
+
+	@Override
+	public GraphEventCascade graphChanged(RegulatoryGraph g,
+			GraphChangeType type, Object data) {
+		if (type == GraphChangeType.NODEREMOVED) {
+	    	for (int i=0 ; i<v_data.size() ; i++) {
+	    		ModelSimplifierConfig cfg = (ModelSimplifierConfig)v_data.get(i);
+	    		cfg.m_removed.remove(data);
+	    	}
+		}
+        return null;
 	}
 }

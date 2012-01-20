@@ -27,24 +27,6 @@ import org.ginsim.core.annotation.Annotation;
 
 public interface GraphModel<V,E extends Edge<V>> {
 
-	// TODO: this should be done in an enum
-    /**  an edged has been added */
-    static final int CHANGE_EDGEADDED = 0;
-    /**  an edged has been removed */
-    static final int CHANGE_EDGEREMOVED = 1;
-    /** a node has been added  */
-    static final int CHANGE_VERTEXADDED = 2;
-    /**  a node has been removed */
-    static final int CHANGE_VERTEXREMOVED = 3;
-    /**  an edge has been modified */
-    static final int CHANGE_EDGEUPDATED = 4;
-    /**  a node has been modified */
-    static final int CHANGE_VERTEXUPDATED = 5;
-    /**  a node has been modified */
-    static final int CHANGE_MERGED = 6;
-    /**  other kind of change */
-    static final int CHANGE_METADATA = 7;
-	
 	/*
 	 * so, what do we want to be able to do here?
 	 * 
@@ -255,24 +237,6 @@ public interface GraphModel<V,E extends Edge<V>> {
      * @param graph The graph to merge with the current graph
      */
     List<?> merge( Graph<V,E> graph);
-    
-	
-    //----------------------   EVENT MANAGEMENT METHODS --------------------------------------------
-	
-	/**
-	 * Register a listener on this graph
-	 * 
-	 * @param g_listener the graph listener
-	 */
-    void addGraphListener(GraphListener<V,E> g_listener);
-    
-    
-	/**
-	 * Remove a graph listener from this graph
-	 * 
-	 * @param g_listener the graph listener to remove
-	 */
-    void removeGraphListener(GraphListener<V,E> g_listener);
     
 	
     

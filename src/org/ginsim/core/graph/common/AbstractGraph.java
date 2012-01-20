@@ -18,7 +18,6 @@ import java.util.zip.ZipOutputStream;
 
 import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.log.LogManager;
-import org.ginsim.core.GraphEventCascade;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphBackend;
@@ -29,7 +28,6 @@ import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-
 
 
 
@@ -46,9 +44,6 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	// The name of the graph
 	protected String graphName = "default_name";
 	
-	// List of the registered graph listeners
-	protected List< GraphListener<V,E>> listeners = new ArrayList<GraphListener<V,E>>();
-    
     // The annotation associated with the graph
     protected Annotation graphAnnotation = null;
     
@@ -165,7 +160,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	public boolean addNode( V node) {
 		
 		if (graphBackend.addNodeInBackend(node)) {
-			fireGraphChange(CHANGE_VERTEXADDED, node);
+			fireGraphChange(GraphChangeType.NODEADDED, node);
 			return true;
 		}
 		
@@ -181,7 +176,11 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	@Override
 	public boolean addEdge(E edge) {
 		
-		return graphBackend.addEdgeInBackend(edge);
+		if (graphBackend.addEdgeInBackend(edge)) {
+			fireGraphChange(GraphChangeType.EDGEADDED, edge);
+			return true;
+		}
+		return false;
 	}
 	
     /**
@@ -434,7 +433,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		
 		List<?> v = this.doMerge(graph);
         if (v != null) {
-        	fireGraphChange( CHANGE_MERGED, v);
+        	fireGraphChange( GraphChangeType.GRAPHMERGED, v);
         	//TODO Move the select on the GUI side
         	//graphManager.select(v);
         }
@@ -465,32 +464,6 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	public abstract Graph<V, E> getSubgraph(Collection<V> node, Collection<E> edges);
     
     
-	
-    //----------------------   EVENT MANAGEMENT METHODS --------------------------------------------
-	
-	/**
-	 * Register a listener on this graph
-	 * 
-	 * @param g_listener the graph listener
-	 */
-	public void addGraphListener(GraphListener<V,E> g_listener) {
-		
-		listeners.add( g_listener);
-	}
-	
-	
-	/**
-	 * Remove a graph listener from this graph
-	 * 
-	 * @param g_listener the graph listener to remove
-	 */
-	public void removeGraphListener( GraphListener<V,E> g_listener) {
-		
-		listeners.remove( g_listener);
-	}
-
-
-
     //----------------------   ANNOTATION METHODS --------------------------------------------
 
     
@@ -652,84 +625,15 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     
 	// -------------------------  EVENT MANAGEMENT METHODS ---------------------------------
 
-    public void fireMetaChange() {
+	public void fireMetaChange() {
     	
-        fireGraphChange(CHANGE_METADATA, null);
+        fireGraphChange(GraphChangeType.METADATACHANGE, null);
     }
-	
-	/**
-	 * the graph has changed, all listeners will be notified.
-	 * it will also be marked as unsaved.
-	 * @param change
-     * @param data
-	 */
-	public void fireGraphChange(int change, Object data) {
-		
-        List<GraphEventCascade> l_cascade = new ArrayList<GraphEventCascade>();
-		switch (change) {
-		case CHANGE_EDGEADDED:
-			for (GraphListener<V, E> l: listeners) {
-				GraphEventCascade gec = l.edgeAdded((E) data);
-                if (gec != null) {
-                    l_cascade.add(gec);
-                }
-			}
-			break;
-		case CHANGE_EDGEREMOVED:
-			for (GraphListener<V, E> l: listeners) {
-				GraphEventCascade gec = l.edgeRemoved((E) data);
-                if (gec != null) {
-                    l_cascade.add(gec);
-                }
-			}
-			break;
-		case CHANGE_VERTEXADDED:
-			for (GraphListener<V, E> l: listeners) {
-				GraphEventCascade gec = l.nodeAdded((V) data);
-                if (gec != null) {
-                    l_cascade.add(gec);
-                }
-			}
-			break;
-        case CHANGE_VERTEXREMOVED:
-			for (GraphListener<V, E> l: listeners) {
-				GraphEventCascade gec = l.nodeRemoved((V) data);
-                if (gec != null) {
-                    l_cascade.add(gec);
-                }
-            }
-            break;
-        case CHANGE_MERGED:
-			for (GraphListener<V, E> l: listeners) {
-				GraphEventCascade gec = l.graphMerged((List<V>) data);
-                if (gec != null) {
-                    l_cascade.add(gec);
-                }
-            }
-            break;
-        case CHANGE_VERTEXUPDATED:
-			for (GraphListener<V, E> l: listeners) {
-				GraphEventCascade gec = l.nodeUpdated((V) data);
-                if (gec != null) {
-                    l_cascade.add(gec);
-                }
-            }
-            break;
-        case CHANGE_EDGEUPDATED:
-			for (GraphListener<V, E> l: listeners) {
-				GraphEventCascade gec = l.edgeUpdated((E) data);
-                if (gec != null) {
-                    l_cascade.add(gec);
-                }
-            }
-            break;
-		}
-        if (l_cascade.size() > 0) {
-        	// FIXME: add back message upon modification cascade
-            //addNotificationMessage(new GsGraphNotificationMessage(this, "cascade update", new GraphEventCascadeNotificationAction(), l_cascade, GsGraphNotificationMessage.NOTIFICATION_INFO_LONG));
-        }
+
+	@Override
+	public void fireGraphChange(GraphChangeType type, Object data) {
+		GraphManager.getInstance().fireGraphChange(this, type, data);
 	}
-	
 
     /**
      * 
@@ -739,15 +643,4 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     	return isParsing;
     }
 	
-    /**
-     * Inform the listeners of the graph that the parsing is finished
-     * 
-     */
-	public void endParsing() {
-    	isParsing = false;
-    	for (GraphListener<V,E> l: listeners) {
-    		l.endParsing();
-    	}
-    }
-
 }

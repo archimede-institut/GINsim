@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -18,10 +19,14 @@ import java.util.zip.ZipFile;
 
 import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.core.GraphEventCascade;
 import org.ginsim.core.graph.common.AbstractGraph;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphAssociation;
+import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphFactory;
+import org.ginsim.core.graph.common.GraphListener;
+import org.ginsim.core.graph.common.GraphModel;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraphImpl;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraphImpl;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
@@ -29,6 +34,7 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.reducedgraph.ReducedGraphImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphImpl;
+import org.ginsim.core.notification.NotificationManager;
 
 
 /**
@@ -38,7 +44,7 @@ public class GraphManager {
 
     private static GraphManager instance = null;
     private HashMap<Class<Graph>, GraphFactory> graphFactories = new HashMap<Class<Graph>, GraphFactory>();
-    private HashMap<Graph, String> graphFilepath = new HashMap<Graph, String>();
+    private HashMap<Graph, GraphInfo<?>> graphFilepath = new HashMap<Graph, GraphInfo<?>>();
     
     public String getGraphType() {
         return "regulatory";
@@ -212,9 +218,10 @@ public class GraphManager {
      * @param graph the graph
      * @param file_path the path of the file the graph has been loaded from or saved to
      */
-    public void registerGraph( Graph graph, String file_path){
-    	
-    	graphFilepath.put( graph, file_path);
+    public <G extends Graph<?,?>> void registerGraph( G graph, String file_path){
+    	GraphInfo<G> info = new GraphInfo<G>();
+    	info.path = file_path;
+    	graphFilepath.put( graph, info);
     }
     
     
@@ -228,6 +235,40 @@ public class GraphManager {
 		return graphFilepath.keySet();
 	}
     
+	public <G extends GraphModel<?, ?>> void addGraphListener(G graph, GraphListener<G> listener) {
+		GraphInfo<G> info = (GraphInfo<G>)graphFilepath.get(graph);
+		if (info != null) {
+			info.addListener(listener);
+		}
+	}
+	public <G extends GraphModel<?, ?>> void removeGraphListener(G graph, GraphListener<G> listener) {
+		GraphInfo<G> info = (GraphInfo<G>)graphFilepath.get(graph);
+		if (info != null) {
+			info.removeListener(listener);
+		}
+	}
+	
+	public <G extends GraphModel<?, ?>> void fireGraphChange(G graph, GraphChangeType type, Object data) {
+		GraphInfo<G> info = (GraphInfo<G>)graphFilepath.get(graph);
+		if (info == null || info.listeners == null) {
+			return;
+		}
+		
+        List<GraphEventCascade> l_cascade = new ArrayList<GraphEventCascade>();
+		for (GraphListener<G> l: info.listeners) {
+			GraphEventCascade gec = l.graphChanged(graph, type, data);
+			System.out.println("propagating...");
+            if (gec != null) {
+                l_cascade.add(gec);
+            }
+		}
+		
+        if (l_cascade.size() > 0) {
+        	// TODO: detail in cascade update notification...
+        	NotificationManager.publishInformation(this, "Cascade update");
+        }
+
+	}
     
     /**
      * Return the path of the file the graph has been loaded from or saved to (if it exists)
@@ -236,8 +277,8 @@ public class GraphManager {
      * @return the path of the file the graph has been loaded from or saved to if it exsists, null if not.
      */
     public String getGraphPath( Graph graph){
-    	
-    	return graphFilepath.get( graph);
+    	GraphInfo<?> info = graphFilepath.get( graph);
+    	return info.path;
     }
     
     /**
@@ -249,9 +290,9 @@ public class GraphManager {
     public Graph getGraphFromPath( String path){
     	
     	if( path != null){
-	    	for (Iterator<Entry<Graph,String>> iterator = graphFilepath.entrySet().iterator(); iterator.hasNext();) {
-	    		Entry<Graph,String> entry = iterator.next();
-				if( path.equals( entry.getValue())){
+	    	for (Iterator<Entry<Graph,GraphInfo<?>>> iterator = graphFilepath.entrySet().iterator(); iterator.hasNext();) {
+	    		Entry<Graph,GraphInfo<?>> entry = iterator.next();
+				if( path.equals( entry.getValue().path)){
 					return entry.getKey();
 				}
 			}
@@ -396,4 +437,22 @@ public class GraphManager {
 		}
 	}
 
+}
+
+class GraphInfo<G extends GraphModel<?, ?>> {
+	public String path;
+	public boolean saved;
+	public List<GraphListener<G>> listeners = null;
+	
+	public void addListener(GraphListener<G> l) {
+		if (listeners == null) {
+			listeners = new ArrayList<GraphListener<G>>();
+		}
+		listeners.add(l);
+	}
+	public void removeListener(GraphListener<G> l) {
+		if (listeners != null) {
+			listeners.remove(l);
+		}
+	}
 }

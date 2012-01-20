@@ -62,4 +62,13 @@ public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 	 * @param listener
 	 */
 	void addViewListener(GraphViewListener listener);
+	
+	/**
+	 * the graph has changed, all listeners will be notified.
+	 * it will also be marked as unsaved.
+	 * @param type
+     * @param data
+	 */
+	void fireGraphChange(GraphChangeType type, Object data);
+
 }
