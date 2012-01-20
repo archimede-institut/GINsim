@@ -216,7 +216,8 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 * Add all the incoming nodes of the selected nodes to the list of selected nodes
 	 */
 	public void extendSelectionToIncomingNodes() {
-		for (V node : nodes) {
+		ArrayList<V> new_nodes = new ArrayList<V>(nodes);
+		for (V node : new_nodes) {
 			for (E edge : gui.getGraph().getIncomingEdges(node)) {
 				nodes.add(edge.getSource());
 			}
@@ -238,7 +239,8 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 * Add all the outgoing nodes of the selected nodes to the list of selected nodes
 	 */
 	public void extendSelectionToOutgoingNodes() {
-		for (V node : nodes) {
+		ArrayList<V> new_nodes = new ArrayList<V>(nodes);
+		for (V node : new_nodes) {
 			for (E edge : gui.getGraph().getOutgoingEdges(node)) {
 				nodes.add(edge.getTarget());
 			}
@@ -269,8 +271,11 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 * Invert the selection of nodes
 	 */
 	public void invertNodesSelection() {
-		nodes = new ArrayList<V>(gui.getGraph().getNodes());
-		nodes.removeAll(nodes);
+		ArrayList<V> new_nodes = new ArrayList<V>(gui.getGraph().getNodes());
+		if (nodes != null) {
+			new_nodes.removeAll(nodes);
+		}
+		nodes = new_nodes;
 		updateType(false);
 	}
 
@@ -278,8 +283,12 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 * Invert the selection of edges
 	 */
 	public void invertEdgesSelection() {
-		edges = new ArrayList<E>(gui.getGraph().getEdges());
-		edges.removeAll(edges);
+		System.out.println(gui.getGraph().getEdges().size());
+		ArrayList<E> new_edges = new ArrayList<E>(gui.getGraph().getEdges());
+		if (edges != null) {
+			new_edges.removeAll(edges);
+		}
+		edges = new_edges;
 		updateType(false);
 	}
 
