@@ -5,6 +5,7 @@ import java.io.File;
 import java.util.Vector;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.commongui.utils.FileFormatFilter;
@@ -64,6 +65,13 @@ public class FileSelectionHelper {
 			}
 		}
 
+		if (f.exists()) {
+			int confirm = JOptionPane.showConfirmDialog(parent, "The file exists, do you want to overwrite it?");
+			if (confirm != JOptionPane.OK_OPTION) {
+				return null;
+			}
+		}
+		
 		return f.getAbsolutePath();
 	}
 	
