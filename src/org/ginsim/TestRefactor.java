@@ -96,7 +96,8 @@ public class TestRefactor {
 //		NotificationManager.publishResolvableError( graph, "STR_unableToOpen", graph, null, resolution);
 //		NotificationManager.publishWarning( graph, "STR_unableToSave");
 //		NotificationManager.publishError( graph, "STR_wantToStop_title");
-//		NotificationManager.publishDetailedError( graph, "STR_wantToStop_title", "<HTML> essai <br> essai </HTML>");
+//		NotificationManager.publishDetailedError( graph, "STR_wantToStop_title", 
+//				"<HTML> essaiD <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai F</HTML>");
 		
 	}
 

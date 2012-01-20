@@ -2,10 +2,14 @@ package org.ginsim.gui.notifications;
 
 import java.awt.Dimension;
 
+import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JLabel;
 import javax.swing.JButton;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingConstants;
 
 import org.ginsim.common.utils.Translator;
 import java.awt.event.ComponentAdapter;
@@ -27,13 +31,15 @@ public class NotificationDetailFrame extends JFrame {
 		getContentPane().setLayout(null);
 		setSize( new Dimension( 500, 500));
 		
-		// Add a scroll pane containing a JLable with the details text
+		// Add a scroll pane containing a JtextArea with the details text
 		scrollPane = new JScrollPane();
 		scrollPane.setBounds( 12, 12, this.getWidth() - 24, this.getHeight() - 80);
 		getContentPane().add( scrollPane);
 		
-		JLabel lbl_detailstext = new JLabel( text);
-		scrollPane.setViewportView( lbl_detailstext);
+		JEditorPane editpane_detailstext = new JEditorPane( "text/html", text);
+		editpane_detailstext.setEditable( false);
+		scrollPane.setViewportView( editpane_detailstext);
+		scrollPane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		// Add the close button
 		btn_close = new JButton( Translator.getString( "STR_Close"));
