@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ginsim.common.OSXAdapter;
 import org.ginsim.common.OptionStore;
 import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.GUIMessageUtils;
@@ -141,9 +142,25 @@ public class TestRefactor {
 			GUIMessageUtils.openErrorDialog(e, null);
 		}
 		GUIManager.initializeOptions();
+		registerForMacOSXEvents();
 		
 	}
 	
+    public static void registerForMacOSXEvents() {
+        if (System.getProperty("os.name").toLowerCase().startsWith("mac os x")) {
+            try {
+            	OSXCallBack osxCallBack = new OSXCallBack();
+                // Generate and register the OSXAdapter, passing it a hash of all the methods we wish to
+                // use as delegates for various com.apple.eawt.ApplicationListener methods
+                OSXAdapter.setQuitHandler(osxCallBack, osxCallBack.getClass().getDeclaredMethod("quit", (Class[])null));
+                //OSXAdapter.setAboutHandler(this, getClass().getDeclaredMethod("about", (Class[])null));
+                //OSXAdapter.setPreferencesHandler(this, getClass().getDeclaredMethod("preferences", (Class[])null));
+                OSXAdapter.setFileHandler(osxCallBack, osxCallBack.getClass().getDeclaredMethod("loadGINMLfile", new Class[] { String.class }));
+            } catch (Exception e) {
+                System.err.println("Error while loading the OSXAdapter:");
+                e.printStackTrace();
+            }
+        }
+    }
 	
-
-}
+ }

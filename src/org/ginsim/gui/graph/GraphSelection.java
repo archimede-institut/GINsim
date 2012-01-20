@@ -272,9 +272,7 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 */
 	public void invertNodesSelection() {
 		ArrayList<V> new_nodes = new ArrayList<V>(gui.getGraph().getNodes());
-		if (nodes != null) {
-			new_nodes.removeAll(nodes);
-		}
+		new_nodes.removeAll(nodes);
 		nodes = new_nodes;
 		updateType(false);
 	}
@@ -283,11 +281,8 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 * Invert the selection of edges
 	 */
 	public void invertEdgesSelection() {
-		System.out.println(gui.getGraph().getEdges().size());
 		ArrayList<E> new_edges = new ArrayList<E>(gui.getGraph().getEdges());
-		if (edges != null) {
-			new_edges.removeAll(edges);
-		}
+		new_edges.removeAll(edges);
 		edges = new_edges;
 		updateType(false);
 	}
