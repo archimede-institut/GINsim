@@ -22,4 +22,15 @@ public class ParsingWarning {
 		return false;
 	}
 
+	public String getMessage() {
+		return message;
+	}
+	
+	public int getFirstLine() {
+		return firstLine;
+	}
+	
+	public int getExtraCount() {
+		return extraCount;
+	}
 }

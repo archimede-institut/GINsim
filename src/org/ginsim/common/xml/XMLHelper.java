@@ -6,8 +6,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -64,7 +62,7 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 	protected String s_filename;
 	
 	protected XMLReader xr;
-	private List<ParsingWarning> warnings = null;
+	private ParsingWarningReport warnings = null;
 	
 	protected Map m_call = null;
 	
@@ -90,13 +88,13 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 	 * 
 	 * @return the list of warnings or null if none was encountered
 	 */
-	public List<ParsingWarning> getWarnings() {
+	public ParsingWarningReport getWarnings() {
 		return warnings;
 	}
 
 	private void addWarning(SAXParseException e) {
         if (warnings == null) {
-        	warnings = new ArrayList<ParsingWarning>();
+        	warnings = new ParsingWarningReport();
         }
         boolean merged = false;
         for (ParsingWarning warning: warnings) {
