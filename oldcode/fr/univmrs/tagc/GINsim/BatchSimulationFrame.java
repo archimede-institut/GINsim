@@ -26,6 +26,7 @@ import org.ginsim.service.tool.reg2dyn.Simulation;
 import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
+import org.ginsim.servicegui.tool.reg2dyn.BaseSimulationFrame;
 
 
 /**
@@ -146,7 +147,6 @@ public class BatchSimulationFrame extends BaseSimulationFrame {
     }
     
     public void addStableState(SimulationQueuedState item) {
-        super.addStableState(item);
         byte[] stable = item.state;
         String name = nameState(stable, paramList.graph);
         result.append("   " + name + ": ");

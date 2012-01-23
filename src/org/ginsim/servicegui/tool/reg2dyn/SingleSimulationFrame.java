@@ -39,6 +39,7 @@ import org.ginsim.service.tool.reg2dyn.Reg2DynService;
 import org.ginsim.service.tool.reg2dyn.Simulation;
 import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
+import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 import org.ginsim.service.tool.reg2dyn.htg.HTGSimulation;
 
 
@@ -500,6 +501,10 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 			textMaxNodes.setEnabled(true);
 		}
 		refreshing = false;
+	}
+
+	@Override
+	public void addStableState(SimulationQueuedState item) {
 	}
 
 }

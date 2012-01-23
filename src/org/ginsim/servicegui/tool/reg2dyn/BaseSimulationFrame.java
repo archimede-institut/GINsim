@@ -18,6 +18,10 @@ public abstract class BaseSimulationFrame extends StackDialog implements Simulat
     Insets indentInset = new Insets(0, 30, 0, 0);
 //    protected boolean isrunning = false;
 
+    /**
+     * Callback when the simulation is complete.
+     * @param graph the simulated graph
+     */
     public abstract void endSimu( Graph graph);
 
 
@@ -36,7 +40,9 @@ public abstract class BaseSimulationFrame extends StackDialog implements Simulat
 //      }
   }
 
-    public void addStableState(SimulationQueuedState item) {
-    	LogManager.trace("stable (depth "+item.depth+"): ");
-    }
+    /**
+     * Callback when a stable state is encountered during the simulation.
+     * @param item the stable state
+     */
+    public abstract void addStableState(SimulationQueuedState item);
 }
