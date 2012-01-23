@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import javax.swing.AbstractAction;
@@ -20,6 +21,8 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.shell.FrameActionManager;
 import org.ginsim.gui.shell.SearchFrame;
+
+import com.sun.xml.internal.xsom.impl.scd.Iterators.Map;
 
 
 /**
@@ -131,11 +134,11 @@ class CopyAction extends AbstractAction {
 	}
 }
 
-class PasteAction extends AbstractAction {
+class PasteAction<V, E extends Edge<V>> extends AbstractAction {
 	
-	private final Graph<?,?> graph;
+	private final Graph<V,E> graph;
 	
-	public PasteAction(Graph<?,?> graph) {
+	public PasteAction(Graph<V,E> graph) {
 		super( Translator.getString( "STR_Paste"));
 		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_Paste_descr"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_V, FrameActionManager.MASK));
@@ -144,6 +147,27 @@ class PasteAction extends AbstractAction {
 	
 	public void paste() {
 		graph.merge(EditCallBack.copiedSubGraph);
+		GraphSelection<V,E> graphSelection = GUIManager.getInstance().getGraphGUI(graph).getSelection();
+		Collection<E> edges = new ArrayList<E>();
+		HashMap<V, V> old_to_new_nodes = new HashMap<V, V>();
+		for (Object oldNode : EditCallBack.copiedSubGraph.getNodes()) {
+			for (Object newNode : graph.getNodes()) {
+				if (newNode.toString().startsWith(oldNode.toString())) {
+					Object mappedNode = old_to_new_nodes.get(oldNode);
+					if (mappedNode == null || mappedNode.toString().compareTo(newNode.toString()) < 0) {
+						old_to_new_nodes.put((V) oldNode, (V) newNode);
+					}
+				}
+			}
+		}
+		Collection<Edge> oldEdges = EditCallBack.copiedSubGraph.getEdges();
+		for (Edge edge : oldEdges) {
+			edges.add(graph.getEdge(old_to_new_nodes.get(edge.getSource()), old_to_new_nodes.get(edge.getTarget())));
+		}
+		
+		graphSelection.setSelectedNodes(old_to_new_nodes.values());
+		graphSelection.setSelectedEdges(edges);
+
 	}
 	
 	@Override

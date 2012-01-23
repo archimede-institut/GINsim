@@ -327,10 +327,12 @@ class EdgeSet<V,E extends Edge<V>> implements Set<E> {
 		this.g = graphManager;
 	}
 
+    @Override
 	public int size() {
         return g.getEdgesCount();
     }
 
+    @Override
     public boolean isEmpty() {
         return (size() == 0);
     }
@@ -339,17 +341,26 @@ class EdgeSet<V,E extends Edge<V>> implements Set<E> {
         return g.containsEdge(edge);
     }
 
+    @Override
     public Iterator<E> iterator() {
         return new EdgeIterator<V,E>(g.getVInfoSet());
     }
 
+    @Override
     public Object[] toArray() {
-        return null;
+    	Object[] array = new Object[this.size()];
+    	int i = 0;
+    	for (E edge : this) {
+			array[i++] = edge;
+		}
+        return array;
     }
 
+    @Override
     public boolean add(E edge) {
         return false;
     }
+    @Override
     public void clear() {
     }
 

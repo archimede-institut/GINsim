@@ -217,6 +217,9 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 */
 	public void extendSelectionToIncomingNodes() {
 		ArrayList<V> new_nodes = new ArrayList<V>(nodes);
+		if (nodes == null) {
+			nodes = new ArrayList<V>();
+		}
 		for (V node : new_nodes) {
 			for (E edge : gui.getGraph().getIncomingEdges(node)) {
 				nodes.add(edge.getSource());
@@ -229,6 +232,9 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 * Add all the incoming edges of the selected nodes to the list of selected edges
 	 */
 	public void extendSelectionToIncomingEdges() {
+		if (nodes == null) {
+			return;
+		}
 		for (V node : nodes) {
 			addEdgesToSelection(gui.getGraph().getIncomingEdges(node));
 		}
@@ -240,6 +246,9 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 */
 	public void extendSelectionToOutgoingNodes() {
 		ArrayList<V> new_nodes = new ArrayList<V>(nodes);
+		if (nodes == null) {
+			nodes = new ArrayList<V>();
+		}
 		for (V node : new_nodes) {
 			for (E edge : gui.getGraph().getOutgoingEdges(node)) {
 				nodes.add(edge.getTarget());
@@ -252,6 +261,9 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 * Add all the outgoing edges of the selected nodes to the list of selected edges
 	 */
 	public void extendSelectionToOutgoingEdges() {
+		if (nodes == null) {
+			return;
+		}
 		for (V node : nodes) {
 			addEdgesToSelection(gui.getGraph().getOutgoingEdges(node));
 		}
@@ -272,7 +284,9 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 */
 	public void invertNodesSelection() {
 		ArrayList<V> new_nodes = new ArrayList<V>(gui.getGraph().getNodes());
-		new_nodes.removeAll(nodes);
+		if (nodes!= null) {
+			new_nodes.removeAll(nodes);
+		}
 		nodes = new_nodes;
 		updateType(false);
 	}
@@ -282,7 +296,9 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 */
 	public void invertEdgesSelection() {
 		ArrayList<E> new_edges = new ArrayList<E>(gui.getGraph().getEdges());
-		new_edges.removeAll(edges);
+		if (edges != null) {
+			new_edges.removeAll(edges);
+		}
 		edges = new_edges;
 		updateType(false);
 	}
