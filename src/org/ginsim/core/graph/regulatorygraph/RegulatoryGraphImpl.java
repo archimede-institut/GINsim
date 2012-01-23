@@ -537,7 +537,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         String id = node.getId();
         if (getNodeByName(id) == null) {
             addNode(node);
-            nodeOrder.add(node);
             return;
         }
         int addon = 1;
@@ -546,7 +545,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         }
         node.setId(id+"_"+addon);
         addNode(node);
-        nodeOrder.add(node);
     }
 
     @Override

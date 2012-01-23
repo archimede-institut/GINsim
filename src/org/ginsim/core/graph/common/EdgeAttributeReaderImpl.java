@@ -1,6 +1,8 @@
 package org.ginsim.core.graph.common;
 
 import java.awt.Color;
+import java.awt.Point;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -179,10 +181,20 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 	public void copyFrom(EdgeAttributesReader fereader) {
 		setLineColor(fereader.getLineColor());
 		setCurve(fereader.isCurve());
-		setPoints(fereader.getPoints());
 		setLineEnd(fereader.getLineEnd());
 		setLineWidth(fereader.getLineWidth());
 		setDash(fereader.getDash());
+		
+		List<Point> oldPoints = fereader.getPoints();
+		if (oldPoints != null) {
+			List<Point> points = new ArrayList<Point>(oldPoints.size());
+			for (Point point : oldPoints) {
+				points.add((Point) point.clone());
+			}
+			setPoints(points);			
+		} else {
+			setPoints(null);
+		}
  }
  
 	@Override
