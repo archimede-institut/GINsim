@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
@@ -105,20 +106,23 @@ class CopyAction extends AbstractAction {
 		int questionHasBeenAsked = -1; //-1 = Not asked, 0 = asked and extend, 1 = asked and restraint
 		for (Iterator it = selectedEdges.iterator(); it.hasNext();) {
 			Edge edge = (Edge) it.next();
-			questionHasBeenAsked = nodeFound(nodes, edges, edge, edge.getSource(), questionHasBeenAsked);
-			questionHasBeenAsked = nodeFound(nodes, edges, edge, edge.getTarget(), questionHasBeenAsked);
+			questionHasBeenAsked = nodeFound(nodes, edges, edge, edge.getSource(), questionHasBeenAsked, graphSelection);
+			questionHasBeenAsked = nodeFound(nodes, edges, edge, edge.getTarget(), questionHasBeenAsked, graphSelection);
 		}
 		
 		EditCallBack.copiedSubGraph = graph.getSubgraph(nodes, edges);
 	}
 	
-	private int nodeFound(Collection nodes, Collection edges, Edge edge, Object node, int questionHasBeenAsked) {
+	private int nodeFound(Collection nodes, Collection edges, Edge edge, Object node, int questionHasBeenAsked, GraphSelection graphSelection) {
 		if (! nodes.contains(node)) {
 			if (questionHasBeenAsked == -1) {//not asked
 				questionHasBeenAsked = JOptionPane.showConfirmDialog(null, Translator.getString( "STR_Copy_shouldExtend"),"",JOptionPane.YES_NO_OPTION);
 			}
 			if (questionHasBeenAsked == 0) { //extend
 				nodes.add(node);
+				Vector v = new Vector();
+				v.add(node);
+				graphSelection.addNodesToSelection(v);
 			} else if (questionHasBeenAsked == 1){ //restraint
 				edges.remove(edge);
 			}
