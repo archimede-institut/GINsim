@@ -189,7 +189,7 @@ public class ColorizerPanel extends JPanel {
 	 * @return true if the frame can be closed, false if the CANCEL button has been pressed
 	 */
 	public boolean frameIsClosing() {
-		if (colorizer.isColored()) {
+		if (colorizer != null && colorizer.isColored()) {
 			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_colorizer_sure_close_undo_colorize"));
 			if (res == JOptionPane.CANCEL_OPTION) {
 				return false;
