@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
@@ -21,9 +22,6 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.shell.FrameActionManager;
 import org.ginsim.gui.shell.SearchFrame;
-
-import com.sun.xml.internal.xsom.impl.scd.Iterators.Map;
-
 
 /**
  * Callbacks for the "File" menu
@@ -149,7 +147,7 @@ class PasteAction<V, E extends Edge<V>> extends AbstractAction {
 		graph.merge(EditCallBack.copiedSubGraph);
 		GraphSelection<V,E> graphSelection = GUIManager.getInstance().getGraphGUI(graph).getSelection();
 		Collection<E> edges = new ArrayList<E>();
-		HashMap<V, V> old_to_new_nodes = new HashMap<V, V>();
+		Map<V, V> old_to_new_nodes = new HashMap<V, V>();
 		for (Object oldNode : EditCallBack.copiedSubGraph.getNodes()) {
 			for (Object newNode : graph.getNodes()) {
 				if (newNode.toString().startsWith(oldNode.toString())) {
