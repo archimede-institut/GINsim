@@ -107,14 +107,18 @@ public class TreeActionPanel extends JPanel implements GUIEditor<Tree> {
 			for (RegulatoryNode node : nodeOrder) {
 				sourceList.addItem(node);
 			}
-			sourceList.setSelectedIndex(((Integer)parser.getParameter(TreeBuilderFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX)).intValue());
+			if (sourceList.getItemCount() > 0) {
+				sourceList.setSelectedIndex(((Integer)parser.getParameter(TreeBuilderFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX)).intValue());				
+			}
 		} else if (parser instanceof TreeBuilderFromCircuit) {
 			labelChooseComboBox.setText(Translator.getString("STR_treeviewer_tree_choose_circuit"));
 			List contexts = (List) parser.getParameter(TreeBuilderFromCircuit.PARAM_ALLCONTEXTS);
 			for (Object context : contexts) {
 				sourceList.addItem(context);
 			}
-			sourceList.setSelectedIndex(0);
+			if (sourceList.getItemCount() > 0) {
+				sourceList.setSelectedIndex(0);
+			}
 		}
 	}
 
