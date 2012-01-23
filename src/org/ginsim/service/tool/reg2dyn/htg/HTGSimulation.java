@@ -132,12 +132,7 @@ public class HTGSimulation extends Simulation {
 		this.regGraph = (RegulatoryGraph) helper.getRegulatoryGraph();
 		this.sigmaFactory = new HierarchicalSigmaSetFactory();
 		LogManager.setDebug(debug);
-		
-//		try {
-//			LogManager.setOut(new PrintStream("/Users/duncan/Desktop/a.out"));
-//		} catch (FileNotFoundException e1) {
-//			e1.printStackTrace();
-//		}
+
 		LogManager.info("Begin HTG, shouldCompactSCC:"+shouldCompactSCC);               						
 		ready = true;
 		try {
@@ -485,7 +480,7 @@ public class HTGSimulation extends Simulation {
 	 */
 	private void addAllEdgesTo() {
 		LogManager.debug(DBG_POSTTREATMENT,"Adding all arcs to the graph...");
-		LogManager.info("posttreatment, adding the real edges to the graph");
+		LogManager.info("Post-treatment: adding the real edges to the graph");
 		int nbarc = 0;
 		for (Iterator<HierarchicalNode> it = nodeSet.iterator(); it.hasNext();) {
 			HierarchicalNode from = (HierarchicalNode) it.next();
