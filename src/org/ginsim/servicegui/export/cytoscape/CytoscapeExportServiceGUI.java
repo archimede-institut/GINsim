@@ -14,6 +14,7 @@ import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.service.export.cytoscape.CytoscapeExportService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -24,6 +25,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(CytoscapeExportService.class)
+@ServiceStatus( ServiceStatus.PUBLISHED)
 public class CytoscapeExportServiceGUI implements ServiceGUI {
 	
 	@Override

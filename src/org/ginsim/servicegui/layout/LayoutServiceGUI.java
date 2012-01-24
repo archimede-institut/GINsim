@@ -12,12 +12,13 @@ import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.LayoutAction;
+import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.service.layout.LayoutService;
 import org.mangosdk.spi.ProviderFor;
 
-
 @ProviderFor(ServiceGUI.class)
 @GUIFor(LayoutService.class)
+@ServiceStatus( ServiceStatus.PUBLISHED)
 public class LayoutServiceGUI implements ServiceGUI {
 
 	@Override

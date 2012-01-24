@@ -19,6 +19,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.regulatoryfunctiontree.RegulatoryFunctionTreeService;
 import org.mangosdk.spi.ProviderFor;
@@ -26,6 +27,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( ServiceGUI.class)
 @GUIFor( RegulatoryFunctionTreeService.class)
+@ServiceStatus( ServiceStatus.UNDER_DEVELOPMENT)
 public class RegulatoryFunctionTreeServiceGUI implements ServiceGUI {
 	
 	@Override

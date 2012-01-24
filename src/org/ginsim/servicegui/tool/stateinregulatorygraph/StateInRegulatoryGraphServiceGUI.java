@@ -11,6 +11,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.stateinregulatorygraph.StateInRegulatoryGraphService;
 import org.mangosdk.spi.ProviderFor;
@@ -18,6 +19,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( ServiceGUI.class)
 @GUIFor( StateInRegulatoryGraphService.class)
+@ServiceStatus( ServiceStatus.PUBLISHED)
 public class StateInRegulatoryGraphServiceGUI implements ServiceGUI {
 
 	

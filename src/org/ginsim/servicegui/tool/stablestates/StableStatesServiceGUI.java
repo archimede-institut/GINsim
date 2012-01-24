@@ -12,6 +12,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.gui.utils.dialog.stackdialog.HandledStackDialog;
 import org.ginsim.service.tool.stablestates.StableStatesService;
@@ -23,6 +24,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor( ServiceGUI.class)
 @GUIFor( StableStatesService.class)
+@ServiceStatus( ServiceStatus.PUBLISHED)
 public class StableStatesServiceGUI implements ServiceGUI {
     
 	@Override

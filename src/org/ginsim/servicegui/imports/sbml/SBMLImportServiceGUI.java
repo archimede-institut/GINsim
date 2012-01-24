@@ -14,11 +14,13 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ImportAction;
+import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.service.imports.sbml.SBMLImportService;
 import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor(ServiceGUI.class)
 @GUIFor(SBMLImportService.class)
+@ServiceStatus( ServiceStatus.PUBLISHED)
 public class SBMLImportServiceGUI implements ServiceGUI {
 
 	public static final FileFormatDescription FORMAT = new FileFormatDescription("SBML", "sbml");
