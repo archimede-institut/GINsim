@@ -113,7 +113,7 @@ public class ServiceGUIManager{
 				status = service_status.value();
 			}
 			else{
-				LogManager.error( "Service '" + service.getClass().getName() + "' does not have a declared status. Considere it deprecated.");
+				LogManager.error( "Service '" + service.getClass().getName() + "' does not have a declared status. Consider it deprecated.");
 				status = ServiceStatus.DEPRECATED;
 			}
 			boolean dev_envir = true; // Temporary boolean that must be replaced by a better mechanism
