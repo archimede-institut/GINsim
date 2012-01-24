@@ -160,10 +160,8 @@ public class Simulation extends Thread implements Runnable {
 			}
 		} catch (GsException e) {
 			LogManager.error( "Simulation was interrupted");
-			LogManager.error( e);
 		} catch (OutOfMemoryError e) {
 			LogManager.error( "Out of Memory");
-			LogManager.error( e);
 		    GUIMessageUtils.openErrorDialog("Out Of Memory");
 		    return null;
 		} finally {
