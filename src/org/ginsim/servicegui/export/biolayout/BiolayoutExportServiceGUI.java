@@ -24,7 +24,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor( ServiceGUI.class)
 @GUIFor( BioLayoutExportService.class)
-@ServiceStatus( ServiceStatus.PUBLISHED)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class BiolayoutExportServiceGUI implements ServiceGUI {
 	
 	@Override

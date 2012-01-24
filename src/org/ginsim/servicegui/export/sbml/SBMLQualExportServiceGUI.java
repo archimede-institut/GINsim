@@ -23,7 +23,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( ServiceGUI.class)
 @GUIFor( SBMLQualExportService.class)
-@ServiceStatus( ServiceStatus.PUBLISHED)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class SBMLQualExportServiceGUI implements ServiceGUI {
 
 	public static final FileFormatDescription FORMAT = new FileFormatDescription("SBML-qual", "sbml");

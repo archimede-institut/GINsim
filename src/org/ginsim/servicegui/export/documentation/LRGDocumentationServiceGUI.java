@@ -18,7 +18,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(LRGDocumentationService.class)
-@ServiceStatus( ServiceStatus.PUBLISHED)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class LRGDocumentationServiceGUI extends SimpleServiceGUI<LRGDocumentationService> {
 
 	public LRGDocumentationServiceGUI() {

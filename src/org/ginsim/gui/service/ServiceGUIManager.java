@@ -125,7 +125,7 @@ public class ServiceGUIManager{
 			case ServiceStatus.UNDER_DEVELOPMENT:
 				rejected = !dev_envir;
 				break;
-			case ServiceStatus.PUBLISHED:
+			case ServiceStatus.RELEASED:
 				rejected = false;
 				break;
 			default:

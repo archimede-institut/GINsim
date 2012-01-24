@@ -18,7 +18,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor(ServiceGUI.class)
 @GUIFor(LayoutService.class)
-@ServiceStatus( ServiceStatus.PUBLISHED)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class LayoutServiceGUI implements ServiceGUI {
 
 	@Override

@@ -24,7 +24,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( ServiceGUI.class)
 @GUIFor( LocalGraphService.class)
-@ServiceStatus( ServiceStatus.PUBLISHED)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class LocalGraphServiceGUI implements ServiceGUI {
 
 	static {

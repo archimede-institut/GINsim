@@ -21,7 +21,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(ModelSimplifierService.class)
-@ServiceStatus( ServiceStatus.PUBLISHED)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class ModelSimplifierServiceGUI implements ServiceGUI {
 
 	@Override

@@ -22,7 +22,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor( ServiceGUI.class)
 @GUIFor( RegulatoryGraphAnimationService.class)
-@ServiceStatus( ServiceStatus.PUBLISHED)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class RegulatoryGraphAnimationServiceGUI implements ServiceGUI {
     
 	@Override

@@ -25,7 +25,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(CytoscapeExportService.class)
-@ServiceStatus( ServiceStatus.PUBLISHED)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class CytoscapeExportServiceGUI implements ServiceGUI {
 	
 	@Override

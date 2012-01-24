@@ -19,7 +19,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( ServiceGUI.class)
 @GUIFor( StateInRegulatoryGraphService.class)
-@ServiceStatus( ServiceStatus.PUBLISHED)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class StateInRegulatoryGraphServiceGUI implements ServiceGUI {
 
 	

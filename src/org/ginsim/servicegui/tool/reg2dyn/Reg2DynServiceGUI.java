@@ -29,7 +29,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor( ServiceGUI.class)
 @GUIFor( Reg2DynService.class)
-@ServiceStatus( ServiceStatus.PUBLISHED)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class Reg2DynServiceGUI implements ServiceGUI {
 
 //    public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {

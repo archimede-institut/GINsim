@@ -28,7 +28,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @StandaloneGUI
-@ServiceStatus( ServiceStatus.PUBLISHED)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class NuSMVExportServiceGUI implements ServiceGUI {
 
 	@Override

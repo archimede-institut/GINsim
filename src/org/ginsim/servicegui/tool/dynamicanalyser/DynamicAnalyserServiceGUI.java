@@ -21,7 +21,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor( ServiceGUI.class)
 @GUIFor( DynamicAnalyserService.class)
-@ServiceStatus( ServiceStatus.PUBLISHED)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class DynamicAnalyserServiceGUI implements ServiceGUI {
     
 	@Override

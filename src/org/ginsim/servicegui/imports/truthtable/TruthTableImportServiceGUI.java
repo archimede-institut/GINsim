@@ -29,7 +29,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(TruthTableImportService.class)
-@ServiceStatus( ServiceStatus.PUBLISHED)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class TruthTableImportServiceGUI implements ServiceGUI {
 
 	public static final FileFormatDescription FORMAT = new FileFormatDescription("TruthTable", "tt");

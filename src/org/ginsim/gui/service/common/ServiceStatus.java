@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 public @interface ServiceStatus {
 
 	public static final int UNDER_DEVELOPMENT = 0;
-	public static final int PUBLISHED = 1;
+	public static final int RELEASED = 1;
 	public static final int DEPRECATED = -1;
 
 	int value();
