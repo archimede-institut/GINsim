@@ -21,6 +21,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
+import org.ginsim.common.exception.GsException;
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
@@ -60,7 +62,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 		super(parent, "STR_localGraph", 420, 260);
 	}
 
-	public LocalGraphFrame(JFrame frame, Graph regGraph) {
+	public LocalGraphFrame(JFrame frame, Graph regGraph) throws GsException {
 		
 		this(frame);
 		this.regGraph = (RegulatoryGraph) regGraph;
@@ -69,7 +71,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
         initialize();
     }
 
-	public LocalGraphFrame(JFrame frame, Graph regulatoryGraph, Graph dynamicGraph) {
+	public LocalGraphFrame(JFrame frame, Graph regulatoryGraph, Graph dynamicGraph) throws GsException {
 		
 		this(frame);
 		this.regGraph = (RegulatoryGraph) regulatoryGraph;
