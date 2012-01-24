@@ -9,6 +9,7 @@ import javax.swing.Action;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.service.common.StandaloneGUI;
 import org.ginsim.gui.service.common.ToolAction;
 import org.mangosdk.spi.ProviderFor;
@@ -16,6 +17,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor(ServiceGUI.class)
 @StandaloneGUI
+@ServiceStatus( ServiceStatus.UNDER_DEVELOPMENT)
 public class OmddVizServiceGUI implements ServiceGUI {
 
 	@Override

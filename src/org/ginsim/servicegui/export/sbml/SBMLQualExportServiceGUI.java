@@ -15,6 +15,7 @@ import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 import org.ginsim.service.export.sbml.SBMLQualConfig;
 import org.ginsim.service.export.sbml.SBMLQualExportService;
@@ -22,6 +23,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( ServiceGUI.class)
 @GUIFor( SBMLQualExportService.class)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class SBMLQualExportServiceGUI implements ServiceGUI {
 
 	public static final FileFormatDescription FORMAT = new FileFormatDescription("SBML-qual", "sbml");

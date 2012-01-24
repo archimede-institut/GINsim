@@ -14,6 +14,7 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.service.common.StandaloneGUI;
 
 
@@ -103,6 +104,38 @@ public class ServiceGUIManager{
 		
 		// Parse the existing serviceGUI to detect the ones that must be used
 		for( ServiceGUI service: services) {
+			
+			// Check for the service status. If service is not published, its action is not
+			// provided apart in case of a development environment
+			ServiceStatus service_status = service.getClass().getAnnotation( ServiceStatus.class);
+			int status;
+			if( service_status != null){
+				status = service_status.value();
+			}
+			else{
+				LogManager.error( "Service '" + service.getClass().getName() + "' does not have a declared status. Consider it deprecated.");
+				status = ServiceStatus.DEPRECATED;
+			}
+			boolean dev_envir = true; // Temporary boolean that must be replaced by a better mechanism
+			boolean rejected;
+			switch( status) {
+			case ServiceStatus.DEPRECATED:
+				rejected = true;
+				break;
+			case ServiceStatus.UNDER_DEVELOPMENT:
+				rejected = !dev_envir;
+				break;
+			case ServiceStatus.RELEASED:
+				rejected = false;
+				break;
+			default:
+				rejected = true;
+				break;
+			}
+			if( rejected){
+				continue;
+			}
+			
 			// Check if the serviceGUI is related to a server service
 			GUIFor guifor = service.getClass().getAnnotation( GUIFor.class);
 			if( guifor != null){

@@ -11,6 +11,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierService;
 import org.mangosdk.spi.ProviderFor;
@@ -20,6 +21,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(ModelSimplifierService.class)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class ModelSimplifierServiceGUI implements ServiceGUI {
 
 	@Override

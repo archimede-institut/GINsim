@@ -13,6 +13,7 @@ import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.circuit.CircuitService;
 import org.mangosdk.spi.ProviderFor;
@@ -25,6 +26,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor( ServiceGUI.class)
 @GUIFor( CircuitService.class)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class CircuitServiceGUI implements ServiceGUI {
 
 	@Override

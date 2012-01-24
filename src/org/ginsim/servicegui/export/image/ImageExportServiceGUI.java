@@ -12,6 +12,7 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.service.export.image.ImageExportService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -22,6 +23,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor( ServiceGUI.class)
 @GUIFor( ImageExportService.class)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class ImageExportServiceGUI implements ServiceGUI {
 	
 	@Override

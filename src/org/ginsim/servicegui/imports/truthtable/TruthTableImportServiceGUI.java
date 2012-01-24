@@ -17,6 +17,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ImportAction;
+import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.service.imports.truthtable.TruthTableImportService;
 import org.ginsim.service.layout.LayoutService;
 import org.mangosdk.spi.ProviderFor;
@@ -28,6 +29,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(TruthTableImportService.class)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class TruthTableImportServiceGUI implements ServiceGUI {
 
 	public static final FileFormatDescription FORMAT = new FileFormatDescription("TruthTable", "tt");

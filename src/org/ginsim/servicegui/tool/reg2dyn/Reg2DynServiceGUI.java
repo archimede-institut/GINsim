@@ -15,6 +15,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.gui.utils.widgets.Frame;
 import org.ginsim.service.tool.reg2dyn.Reg2DynService;
@@ -28,6 +29,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor( ServiceGUI.class)
 @GUIFor( Reg2DynService.class)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class Reg2DynServiceGUI implements ServiceGUI {
 
 //    public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
