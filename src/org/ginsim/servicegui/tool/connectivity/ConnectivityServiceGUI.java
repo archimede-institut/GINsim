@@ -52,13 +52,7 @@ class ConnectivityColorizeGraphAction extends GenericGraphAction {
 	public void actionPerformed( ActionEvent arg0) {
 		ConnectivityService service = ServiceManager.getManager().getService(ConnectivityService.class);
         ConnectivityResult result = service.run(graph);
-        ((ConnectivitySelector)colorizer.getSelector()).setCache(result.getComponents());
-        boolean isColored = colorizer.toggleColorize(graph);
-        if (isColored) {
-        	//TODO REFACTORING ACTION
-        	//TODO change the name of the menu 
-        } else {
-        	//TODO change the name of the menu 
-        }
+        ((ConnectivitySelector)colorizer.getSelector()).setCache(result.getComponents(), graph);
+        colorizer.doColorize(graph);
 	}
 }

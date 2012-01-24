@@ -116,10 +116,9 @@ public class NodeStyle implements Style {
 	}
 
 	public void apply(AttributesReader areader) {
-		if (areader instanceof NodeAttributesReader) {
+		if (!(areader instanceof NodeAttributesReader)) {
 			return;
 		}
-		
 		NodeAttributesReader nreader = (NodeAttributesReader)areader;
 		if (background != null) nreader.setBackgroundColor(background);
 		if (foreground != null) nreader.setForegroundColor(foreground);

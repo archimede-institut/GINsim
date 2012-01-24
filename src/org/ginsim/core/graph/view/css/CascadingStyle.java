@@ -145,7 +145,7 @@ public class CascadingStyle {
 	 * @param vreader an node AttributesReader
 	 */
 	public void applySelectorOnNodes(Selector sel, Collection nodes, NodeAttributesReader vreader) {
-		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {			//For each edge
+		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {			//For each node
 			Object node = it_nodes.next();
 			vreader.setNode(node);
 			NodeStyle style = new NodeStyle(vreader);								//  get the style
