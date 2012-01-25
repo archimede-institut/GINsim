@@ -9,11 +9,9 @@ import javax.swing.AbstractListModel;
 import javax.swing.JFrame;
 
 import org.ginsim.common.exception.GsException;
-import org.ginsim.core.GraphEventCascade;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.common.GraphModel;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -332,8 +330,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
 	}
 
 	@Override
-	public GraphEventCascade graphChanged(GraphModel g, GraphChangeType type, Object data) {
-		return null;
+	public void graphChanged(Graph g, GraphChangeType type, Object data) {
 	}
 	
 }

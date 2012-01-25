@@ -17,11 +17,14 @@ import org.ginsim.common.OptionStore;
 import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.core.GraphEventCascade;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.backend.JgraphtBackendImpl;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GUIEditor;
@@ -42,7 +45,7 @@ import org.jgrapht.ext.JGraphModelAdapter;
 
 
 
-public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphGUI<G,V, E>, GraphSelectionListener, GraphViewListener {
+public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphGUI<G,V, E>, GraphSelectionListener, GraphViewListener, GraphListener<G> {
 
 	private final G graph;
     private JGraphModelAdapter<V,E> m_jgAdapter;
@@ -358,6 +361,14 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	@Override
 	public void repaint() {
 		jgraph.clearOffscreen();
+	}
+
+	@Override
+	public GraphEventCascade graphChanged(G g, GraphChangeType type, Object data) {
+		for (GraphGUIListener<G, V, E> listener: listeners) {
+			listener.graphChanged(g, type, data);
+		}
+		return null;
 	}
 }
 

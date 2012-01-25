@@ -6,9 +6,8 @@ import java.util.List;
 
 import javax.swing.JTabbedPane;
 
-import org.ginsim.core.GraphEventCascade;
+import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.common.GraphModel;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.graph.GraphSelection;
@@ -89,8 +88,8 @@ public class EditPanel extends JTabbedPane implements GraphGUIListener {
 	}
 
 	@Override
-	public GraphEventCascade graphChanged(GraphModel g, GraphChangeType type, Object data) {
-		// TODO: propagate GUI refresh?
-		return null;
+	public void graphChanged(Graph g, GraphChangeType type, Object data) {
+		// TODO Auto-generated method stub
 	}
+
 }

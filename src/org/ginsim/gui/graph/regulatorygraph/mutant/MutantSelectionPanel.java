@@ -6,19 +6,25 @@ import java.util.Map;
 import javax.swing.JPanel;
 
 import org.ginsim.common.utils.Translator;
+import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.core.utils.data.GenericList;
 import org.ginsim.core.utils.data.ObjectStore;
+import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.utils.data.GenericListPanel;
 import org.ginsim.gui.utils.data.GenericListSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 
 
-public class MutantSelectionPanel extends GenericListSelectionPanel {
+public class MutantSelectionPanel extends GenericListSelectionPanel implements GraphGUIListener<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> {
 	private static final long serialVersionUID = 1213902700181873169L;
 	
     /**
@@ -46,9 +52,28 @@ public class MutantSelectionPanel extends GenericListSelectionPanel {
 				Translator.getString("STR_mutants"), true, Translator.getString("STR_configure_mutants"));
 		this.graph = graph;
 		setStore(store);
+        GraphGUI<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> gui = GUIManager.getInstance().getGraphGUI(graph);
+        gui.addGraphGUIListener(this);
 	}
 	
 	protected void configure() {
         dialog.addTempPanel(getMutantConfigPanel(graph));
+	}
+
+	@Override
+	public void graphSelectionChanged(
+			GraphGUI<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> gui) {
+	}
+
+	@Override
+	public void graphGUIClosed(
+			GraphGUI<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> gui) {
+	}
+
+	@Override
+	public void graphChanged(RegulatoryGraph g, GraphChangeType type, Object data) {
+		if (type == GraphChangeType.ASSOCIATEDADDED || type == GraphChangeType.ASSOCIATEDUPDATED) {
+			refresh();
+		}
 	}
 }
