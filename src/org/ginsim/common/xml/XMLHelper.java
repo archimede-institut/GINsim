@@ -132,10 +132,11 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
      * @param b
      */
     public void startParsing(File file, boolean b) throws GsException{
+    	
         try {
             startParsing(new FileInputStream(file), b);
         } catch (FileNotFoundException e) {
-        	GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e), null);
+        	throw new GsException( "File not found" + e.getLocalizedMessage(), e);
         }
     }
 

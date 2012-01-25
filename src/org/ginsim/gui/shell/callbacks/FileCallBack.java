@@ -142,11 +142,11 @@ class OpenAction extends AbstractAction {
 					GUIManager.getInstance().closeEmptyGraphs();
 				}
 				else{
-					GUIMessageUtils.openErrorDialog( "STR_unableToOpen");
+					GUIMessageUtils.openErrorDialog( "STR_unableToOpen_SeeLogs");
 				}
 				
 			} catch (GsException e) {
-				GUIMessageUtils.openErrorDialog( "STR_error_noFileOnPath");
+				GUIMessageUtils.openErrorDialog( "STR_unableToOpen_SeeLogs");
 			}
 		}
 	}

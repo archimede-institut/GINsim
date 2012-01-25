@@ -402,8 +402,15 @@ public class GraphManager {
             registerGraph( graph, file.getAbsolutePath());
             return graph;
         } catch (FileNotFoundException e) {
+        	LogManager.error( "Error while opening Graph : " + file.getPath());
+        	LogManager.error( e);
             throw new GsException(GsException.GRAVITY_ERROR, e);
         }
+        catch( GsException gse) {
+        	LogManager.error( "Error while opening Graph : " + file.getPath() + " : " + gse.getMessage());
+        	LogManager.error( gse);
+        	throw gse;
+		}
     }
     
 	/**
