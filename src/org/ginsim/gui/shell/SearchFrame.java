@@ -16,6 +16,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.Timer;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.common.utils.Translator;
@@ -33,7 +36,7 @@ import org.ginsim.gui.graph.GraphGUI;
  * The nodes founds are displayed into a list supporting multiple selection. A button allow to select in the graph, the node selected in the list.
  *
  */
-public class SearchFrame extends SimpleDialog {
+public class SearchFrame extends SimpleDialog implements ListSelectionListener {
 	private static final long serialVersionUID = 381064983897248950L;
 
 	private GraphGUI<?, ?, ?> gui;
@@ -42,20 +45,27 @@ public class SearchFrame extends SimpleDialog {
 	private JPanel mainPanel;
 	private JTextField searchTextField;
 	private JButton searchButton;
-	private JButton selectButton;
 	private JTable table;
 	private MyTableModel tableModel;
+	private Timer autoFillTimer;
 	
 	public SearchFrame(GraphGUI<?, ?, ?> gui) {
 		super(GUIManager.getInstance().getFrame(gui.getGraph()), Translator.getString("STR_searchNode_title"),300,400);
 		this.gui = gui;
 		this.g = gui.getGraph();
+		this.autoFillTimer = new Timer(100, new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				search();
+			}
+		});
         initialize();
 	}
 	
 	private void initialize() {
 		this.add(getMainPanel());
 		this.setVisible(true);
+		search();
 	}
 
 	private Component getMainPanel() {
@@ -78,6 +88,7 @@ public class SearchFrame extends SimpleDialog {
 					}
 				}
 				public void keyTyped(KeyEvent arg0) {
+					autoFillTimer.restart();
 				}
 			});
 			mainPanel.add(searchTextField, c);
@@ -100,18 +111,6 @@ public class SearchFrame extends SimpleDialog {
 			c.weighty = 1;
 			c.fill = GridBagConstraints.BOTH;
 			mainPanel.add(getTableInScrollPane(), c);
-			
-			c.gridy++;
-			c.weightx = 0;
-			c.weighty = 0;
-			c.fill = GridBagConstraints.HORIZONTAL;
-			selectButton = new JButton(Translator.getString("STR_searchNode_selectNodes"));
-			selectButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					select();
-				}
-			});
-			mainPanel.add(selectButton, c);
 		}
 		return mainPanel;
 	}
@@ -121,6 +120,7 @@ public class SearchFrame extends SimpleDialog {
 		table = new JTable(tableModel);
 		table.setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		table.setColumnSelectionAllowed(false);
+		table.getSelectionModel().addListSelectionListener(this);
 		
 		JScrollPane scrollPane = new JScrollPane(table);		
 		return scrollPane;
@@ -131,17 +131,22 @@ public class SearchFrame extends SimpleDialog {
 		tableModel.setData(g.searchNodes(searchTextField.getText()));
 	}
 
-	public void select() {
+	public void selectNodes() {
 		List l = new Vector();
 		int[] t = table.getSelectedRows();
 		for (int i = 0; i < t.length; i++) {
 			l.add(tableModel.getNodeAt(t[i]));
 		}
-		gui.getSelection().addNodesToSelection(l);
+		gui.getSelection().setSelectedNodes(l);
 	}
 		
 	public void doClose() {
 		this.setVisible(false);
+	}
+
+	@Override
+	public void valueChanged(ListSelectionEvent arg0) {
+		selectNodes();
 	}
 
 }
