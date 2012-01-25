@@ -108,7 +108,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
      * @param map
      * @param file
      */
-    public RegulatoryGraphImpl(Map map, File file) {
+    public RegulatoryGraphImpl(Map map, File file)  throws GsException{
     	
         this( true);
         RegulatoryParser parser = new RegulatoryParser();

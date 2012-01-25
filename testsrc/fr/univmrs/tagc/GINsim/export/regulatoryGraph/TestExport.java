@@ -20,7 +20,7 @@ public class TestExport {
 	RegulatoryGraph graph;
 	File tmpDir = TestFileUtils.getTempTestFileDirectory("exports");
 
-	public TestExport() throws FileNotFoundException {
+	public TestExport() throws FileNotFoundException, GsException{
 		File file = new File(TestFileUtils.getTestFileDir(), "graph.ginml");
 		GinmlParser parser = new GinmlParser();
 		this.graph = (RegulatoryGraph)parser.parse(new FileInputStream(file), null);

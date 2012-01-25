@@ -111,7 +111,7 @@ public final class RegulatoryParser extends GsXMLHelper {
      * @param map
      * @param graph the graph to fill with this data.
      */
-    public void parse(File file, Map map, Graph<?,?> graph) {
+    public void parse(File file, Map map, Graph<?,?> graph)  throws GsException{
     	this.graph = (RegulatoryGraph) graph;
     	this.map = map;
 		  vareader = graph.getNodeAttributeReader();

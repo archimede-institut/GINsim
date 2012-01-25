@@ -49,6 +49,7 @@ class MutantPanel extends SplitPane {
 
     public MutantPanel() { 
         setOrientation(VERTICAL_SPLIT);
+        setDividerLocation( 100);
         setName("mutantdef");
         model = new GsRegulatoryMutantModel();
         JPanel panel = new JPanel();

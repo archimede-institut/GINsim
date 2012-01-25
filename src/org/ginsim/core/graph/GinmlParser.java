@@ -38,7 +38,7 @@ public final class GinmlParser extends XMLHelper {
      * @param map
      * @return the new graph
      */
-    public Graph  parse(InputStream is, Map map) {
+    public Graph  parse(InputStream is, Map map)  throws GsException{
     	this.map = map;
 		startParsing(is);
 		if (realParser == null) {

@@ -23,7 +23,7 @@ public class ModelSimplifierConfigManager implements GraphAssociatedObjectManage
 
 	public static final String key = "modelSimplifier";
 	
-    public Object doOpen(InputStream is, Graph graph) {
+    public Object doOpen(InputStream is, Graph graph) throws GsException {
     	
         ModelSimplifierConfigParser parser = new ModelSimplifierConfigParser((RegulatoryGraph)graph);
         parser.startParsing(is, false);

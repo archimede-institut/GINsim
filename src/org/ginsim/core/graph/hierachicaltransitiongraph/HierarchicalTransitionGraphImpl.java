@@ -78,7 +78,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
         super( parsing);
 	}
 
-	public HierarchicalTransitionGraphImpl(Map map, File file) {
+	public HierarchicalTransitionGraphImpl(Map map, File file)  throws GsException{
 		
 	    this( true);
         HierarchicalTransitionGraphParser parser = new HierarchicalTransitionGraphParser();
