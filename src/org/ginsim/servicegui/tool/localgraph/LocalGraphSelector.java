@@ -57,6 +57,7 @@ public class LocalGraphSelector extends Selector {
 	}
 	
 	public Map initCache(RegulatoryGraph g, SimulationUpdater updater) throws GsException{
+
 		LocalGraph lg = new LocalGraph(g);
 		lg.setUpdater(updater);
 		this.cache = lg.getFunctionality();

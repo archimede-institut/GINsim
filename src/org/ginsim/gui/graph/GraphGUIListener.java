@@ -2,6 +2,7 @@ package org.ginsim.gui.graph;
 
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphListener;
 
 /**
  * Interface for objects which listen for Graph GUI events.
@@ -12,7 +13,7 @@ import org.ginsim.core.graph.common.Graph;
  * @param <V>
  * @param <E>
  */
-public interface GraphGUIListener<G extends Graph<V, E>, V, E extends Edge<V>> {
+public interface GraphGUIListener<G extends Graph<V, E>, V, E extends Edge<V>> extends GraphListener<G> {
 
 	/**
 	 * The selection has changed.

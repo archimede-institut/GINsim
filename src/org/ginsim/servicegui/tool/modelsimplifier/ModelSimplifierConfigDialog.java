@@ -77,7 +77,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
             GUIMessageUtils.openErrorDialog(e.getMessage(), GUIManager.getInstance().getFrame(graph));
             brun.setEnabled(true);
         } else {
-            GUIManager.getInstance().whatToDoWithGraph(this.graph, graph, false);
+            GUIManager.getInstance().whatToDoWithGraph(graph, this.graph, false);
             cancel();
         }
     }

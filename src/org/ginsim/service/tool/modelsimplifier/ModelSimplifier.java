@@ -235,7 +235,6 @@ public class ModelSimplifier extends Thread implements Runnable {
 				simplified_vreader.setNode(clone);
 				simplified_vreader.copyFrom(vreader);
 				copyMap.put(vertex, clone);
-				simplified_nodeOrder.add(clone);
 			}
 		}
 		
@@ -250,11 +249,12 @@ public class ModelSimplifier extends Thread implements Runnable {
 			if (src != null && target != null) {
 				RegulatoryMultiEdge me_clone = new RegulatoryMultiEdge(src, target);
 				me_clone.copyFrom(me);
-				Object new_me = simplifiedGraph.addEdge(me_clone);
-				copyMap.put(me, me_clone);
-				ereader.setEdge(me);
-				simplified_ereader.setEdge(new_me);
-				simplified_ereader.copyFrom(ereader);
+				if (simplifiedGraph.addEdge(me_clone)) {
+					copyMap.put(me, me_clone);
+					ereader.setEdge(me);
+					simplified_ereader.setEdge(me_clone);
+					simplified_ereader.copyFrom(ereader);
+				}
 			}
 		}
 
@@ -662,6 +662,7 @@ class ParameterGenerator extends LogicalFunctionBrowser {
 	public ParameterGenerator(List<RegulatoryNode> nodeOrder, Map<RegulatoryNode, Integer> m_orderPos) {
 		super(nodeOrder);
 		this.m_orderPos = m_orderPos;
+		System.out.println("order: "+m_orderPos);
 	}
 
 	public void browse(Collection<RegulatoryMultiEdge> edges, RegulatoryNode targetNode, OMDDNode node) {
