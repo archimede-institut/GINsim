@@ -3,6 +3,7 @@ package org.ginsim.servicegui.tool.localgraph;
 import java.awt.Color;
 import java.util.Map;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.css.EdgeStyle;
 import org.ginsim.core.graph.view.css.Selector;
@@ -55,7 +56,7 @@ public class LocalGraphSelector extends Selector {
 		this.cache = cache;
 	}
 	
-	public Map initCache(RegulatoryGraph g, SimulationUpdater updater) {
+	public Map initCache(RegulatoryGraph g, SimulationUpdater updater) throws GsException {
 		LocalGraph lg = new LocalGraph(g);
 		lg.setUpdater(updater);
 		this.cache = lg.getFunctionality();
