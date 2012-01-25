@@ -31,7 +31,10 @@ import javax.swing.JTree;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.ginsim.core.GraphEventCascade;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.common.GraphModel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -424,5 +427,10 @@ public class TBClientPanel extends GsPanel implements GraphGUIListener, WindowLi
 
 	@Override
 	public void graphGUIClosed(GraphGUI gui) {
+	}
+
+	@Override
+	public GraphEventCascade graphChanged(GraphModel g, GraphChangeType type, Object data) {
+		return null;
 	}
 }
