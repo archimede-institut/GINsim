@@ -131,7 +131,7 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
      * @param file
      * @param b
      */
-    public void startParsing(File file, boolean b) {
+    public void startParsing(File file, boolean b) throws GsException{
         try {
             startParsing(new FileInputStream(file), b);
         } catch (FileNotFoundException e) {
@@ -143,21 +143,21 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
      * start parsing a file.
      * @param file
      */
-    public void startParsing(File file) {
+    public void startParsing(File file)  throws GsException{
         startParsing(file, true);
     }
 
     /**
      * @param is
      */
-    public void startParsing(InputStream is) {
+    public void startParsing(InputStream is)  throws GsException{
         startParsing(is, true);
     }
     /**
      * @param is
      * @param validating 
      */
-    public void startParsing(InputStream is, boolean validating) {
+    public void startParsing(InputStream is, boolean validating) throws GsException{
 
 		SAXParserFactory spf = SAXParserFactory.newInstance();
 		spf.setValidating(validating);
@@ -168,16 +168,16 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 			xr.setEntityResolver(this);
 			xr.setErrorHandler(this);
 			xr.parse(new InputSource(new InputStreamReader(is, "UTF-8")));
-		} catch (FileNotFoundException e) { 
-		    GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+		} catch (FileNotFoundException e) {
+			throw new GsException( "File not found : " + e.getLocalizedMessage(), e);
 		} catch (IOException e) {
-			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+			throw new GsException( "IO error : " + e.getLocalizedMessage(), e);
 		} catch (ParserConfigurationException e) {
-			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+			throw new GsException( "Parsing error : " + e.getLocalizedMessage(), e);
 		} catch (SAXParseException e) {
-			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+			throw new GsException( "Parsing error : " + e.getLocalizedMessage(), e);
         } catch (SAXException e) {
-        	GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_ERROR, e.getLocalizedMessage()), null);
+        	throw new GsException( "SAX error : " + e.getLocalizedMessage(), e);
         }
     }
 

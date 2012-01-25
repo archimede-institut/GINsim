@@ -21,7 +21,7 @@ public class MutantListManager implements
 
 	public static final String key = "mutant";
 	
-    public Object doOpen(InputStream is, Graph graph) {
+    public Object doOpen(InputStream is, Graph graph)  throws GsException{
     	
         RegulatoryMutantParser parser = new RegulatoryMutantParser((RegulatoryGraph) graph);
         parser.startParsing(is, false);

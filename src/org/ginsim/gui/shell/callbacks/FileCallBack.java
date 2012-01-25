@@ -132,13 +132,18 @@ class OpenAction extends AbstractAction {
 		if (path != null) {
 			try {
 				Graph g = GraphManager.getInstance().open(path);
-				OptionStore.addRecentFile(path);
-				Frame frame = GUIManager.getInstance().newFrame( g);
-				GraphGUI graph_gui = GUIManager.getInstance().getGraphGUI( g);
-				if( graph_gui != null){
-					graph_gui.setSaved( true);
+				if( g != null){
+					OptionStore.addRecentFile(path);
+					Frame frame = GUIManager.getInstance().newFrame( g);
+					GraphGUI graph_gui = GUIManager.getInstance().getGraphGUI( g);
+					if( graph_gui != null){
+						graph_gui.setSaved( true);
+					}
+					GUIManager.getInstance().closeEmptyGraphs();
 				}
-				GUIManager.getInstance().closeEmptyGraphs();
+				else{
+					GUIMessageUtils.openErrorDialog( "STR_unableToOpen");
+				}
 				
 			} catch (GsException e) {
 				GUIMessageUtils.openErrorDialog( "STR_error_noFileOnPath");

@@ -20,7 +20,7 @@ public class InitialStateManager implements GraphAssociatedObjectManager {
 
 	public static final String key = "initialState";
 	
-    public Object doOpen(InputStream is, Graph graph) {
+    public Object doOpen(InputStream is, Graph graph)  throws GsException{
     	
         initStateParser parser = new initStateParser((RegulatoryGraph)graph);
         parser.startParsing(is, false);

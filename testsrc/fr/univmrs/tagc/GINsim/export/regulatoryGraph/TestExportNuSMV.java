@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.GinmlParser;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.service.export.nusmv.NuSMVConfig;
@@ -32,7 +33,7 @@ public class TestExportNuSMV {
 	 * @throws FileNotFoundException
 	 */
 	@Test
-	public void testLoadModels() throws FileNotFoundException {
+	public void testLoadModels() throws FileNotFoundException, GsException {
 		for (int i = 0; i < sFiles.length; i++) {
 			System.out.println("[" + sFiles[i] + "]");
 			File fModel = new File(sFiles[i]);

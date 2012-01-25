@@ -21,7 +21,7 @@ public class SimulationParametersManager implements GraphAssociatedObjectManager
 
 	public static final String key = "reg2dyn_parameters";
 	
-    public Object doOpen(InputStream is, Graph graph) {
+    public Object doOpen(InputStream is, Graph graph)  throws GsException{
         SimulationParametersParser parser = new SimulationParametersParser((RegulatoryGraph)graph);
         parser.startParsing(is, false);
         return parser.getParameters();

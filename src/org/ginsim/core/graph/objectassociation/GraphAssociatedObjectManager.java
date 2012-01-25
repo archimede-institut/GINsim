@@ -33,8 +33,9 @@ public interface GraphAssociatedObjectManager {
      * 
      * @param is
      * @param graph
+     * @throws GsException 
      */
-    public Object doOpen(InputStream is, Graph graph);
+    public Object doOpen(InputStream is, Graph graph) throws GsException;
     /**
      * create the associated object for a graph
      * @param graph

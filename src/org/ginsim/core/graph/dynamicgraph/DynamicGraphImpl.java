@@ -71,7 +71,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	 * @param map
 	 * @param file
 	 */
-	public DynamicGraphImpl(Map map, File file) {
+	public DynamicGraphImpl(Map map, File file)  throws GsException{
 		
 	    this( true);
         DynamicParser parser = new DynamicParser();

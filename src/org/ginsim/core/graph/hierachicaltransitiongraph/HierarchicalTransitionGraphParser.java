@@ -92,7 +92,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
      * @param map
      * @param graph the graph to fill with this data.
      */
-    public void parse(File file, Map map, Graph graph) {
+    public void parse(File file, Map map, Graph graph)  throws GsException{
     	
     	this.htg = (HierarchicalTransitionGraph) graph;
     	this.map = map;

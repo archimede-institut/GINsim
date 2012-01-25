@@ -57,7 +57,7 @@ public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edg
 	 * @param map
 	 * @param file
 	 */
-	public ReducedGraphImpl(Map map, File file) {
+	public ReducedGraphImpl(Map map, File file)  throws GsException{
 		
 	    this( true);
         ReducedGraphParser parser = new ReducedGraphParser();

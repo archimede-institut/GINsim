@@ -101,7 +101,7 @@ public class ServiceGUIManager{
 
 		//Retrieve the available service on server side
 		Set<Class<Service>> server_services = ServiceManager.getManager().getAvailableServices();
-		
+
 		// Parse the existing serviceGUI to detect the ones that must be used
 		for( ServiceGUI service: services) {
 			
