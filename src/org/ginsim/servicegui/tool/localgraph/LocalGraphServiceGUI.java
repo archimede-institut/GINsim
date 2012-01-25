@@ -76,11 +76,15 @@ class LocalGraphAction extends ToolAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-
-		if (dyn == null) {
-			new LocalGraphFrame( GUIManager.getInstance().getFrame( graph), graph);
-		} else {
-			new LocalGraphFrame( GUIManager.getInstance().getFrame( graph), graph, dyn);
+		try {
+			if (dyn == null) {
+				new LocalGraphFrame( GUIManager.getInstance().getFrame( graph), graph);
+			} else {
+				new LocalGraphFrame( GUIManager.getInstance().getFrame( graph), graph, dyn);
+			}
+			
+		} catch (GsException ex) {
+			GUIMessageUtils.openErrorDialog("STR_localGraph_errorMultivaluedModel");
 		}
 	}
 }

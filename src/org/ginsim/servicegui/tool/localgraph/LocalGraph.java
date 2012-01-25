@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -20,13 +21,12 @@ import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
  * 
  */
 public class LocalGraph {
-	private RegulatoryGraph g;
-	//private GsGraphManager gm;
+	private RegulatoryGraph regGraph;
 	private CascadingStyle cs = null;
 	private LocalGraphSelector selector = null;
-	private List states;
-	private HashMap functionalityMap;
-	private HashMap node_to_position;
+	private List<byte[]> states;
+	private HashMap<RegulatoryMultiEdge, String> functionalityMap;
+	private HashMap<RegulatoryNode, Integer> node_to_position;
 	private SimulationUpdater updater;
 	
 	
@@ -34,11 +34,16 @@ public class LocalGraph {
 	static final byte FUNC_POSITIVE = 2;
 	static final byte FUNC_NEGATIVE = 3;
 
-	public LocalGraph(RegulatoryGraph  g) {
-		this.g = g;
+	public LocalGraph(RegulatoryGraph regGraph) throws GsException {
+		this.regGraph = regGraph;
+		for (RegulatoryNode node : regGraph.getNodes()) {
+			if (node.getMaxValue() > 1) {
+				throw new GsException(GsException.GRAVITY_ERROR, "The local graph can only be computed on boolean models");
+			}
+		}
 	}
-	public LocalGraph(RegulatoryGraph  g, List states) {
-		this(g);
+	public LocalGraph(RegulatoryGraph regGraph, List<byte[]> states) throws GsException {
+		this(regGraph);
 		this.states = states;		
 	}
 	
@@ -47,42 +52,42 @@ public class LocalGraph {
 	}
 	
 	public void setState(byte[] state) {
-		this.states = new ArrayList(1);
+		this.states = new ArrayList<byte[]>(1);
 		this.states.add(state);
 	}
 
-	public void setStates(List states) {
+	public void setStates(List<byte[]> states) {
 		this.states = states;
 	}
 
 	public void run() {
-		node_to_position = new HashMap((int) (g.getNodeCount()*1.5));					//m.get(vertex) => its position in the nodeOrder as an Integer.
+		node_to_position = new HashMap<RegulatoryNode, Integer>((int) (regGraph.getNodeCount()*1.5));					//m.get(vertex) => its position in the nodeOrder as an Integer.
 		int i = 0;
-		for (Iterator it = g.getNodeOrder().iterator(); it.hasNext();) {							//Build the map m
+		for (Iterator<RegulatoryNode> it = regGraph.getNodeOrder().iterator(); it.hasNext();) {							//Build the map m
 			node_to_position.put(it.next(), Integer.valueOf(i++));
 		}
 				
-		functionalityMap = new HashMap();
+		functionalityMap = new HashMap<RegulatoryMultiEdge, String>();
 		selector = new LocalGraphSelector();
 		selector.setCache(functionalityMap);
 		
-		for (Iterator it_states = states.iterator(); it_states.hasNext();) {
-			byte[] state = (byte[]) it_states.next();
+		for (Iterator<byte[]> it_states = states.iterator(); it_states.hasNext();) {
+			byte[] state = it_states.next();
 			int j;
-			for (RegulatoryMultiEdge edge: g.getEdges()) {
+			for (RegulatoryMultiEdge edge: regGraph.getEdges()) {
 				RegulatoryNode source = edge.getSource();
 				RegulatoryNode target = edge.getTarget();
-				i = (Integer)node_to_position.get(source);
-				j = (Integer)node_to_position.get(target);
+				i = node_to_position.get(source);
+				j = node_to_position.get(target);
 				byte[] fx = f(state);
 				byte[] fxbi = f(bar_x(state, i));
-//				System.out.println(i+"->"+j);
-//				print(state);
-//				print(fx);
-//				print(fxbi);
-//				System.out.println(fx[j]+"=="+fxbi[j]);
+				System.out.println(i+"->"+j);
+				print(state);
+				print(fx);
+				print(fxbi);
+				System.out.println(fx[j]+"=="+fxbi[j]);
 				if (fx[j] != fxbi[j]) {
-					String func = (String) functionalityMap.get(edge);
+					String func = functionalityMap.get(edge);
 					if (state[i] == fx[j]) {
 						if (func == null || func == LocalGraphSelector.CAT_POSITIVE) functionalityMap.put(edge, LocalGraphSelector.CAT_POSITIVE);
 						else functionalityMap.put(edge, LocalGraphSelector.CAT_DUAL);
@@ -99,10 +104,10 @@ public class LocalGraph {
 
 	}
 	
-//	public void print(byte[] x) {
-//		for (int i = 0 ; i < x.length ; i++) System.out.print(x[i]);
-//		System.out.println();
-//	}
+	public void print(byte[] x) {
+		for (int i = 0 ; i < x.length ; i++) System.out.print(x[i]);
+		System.out.println();
+	}
 
 	/**
 	 * Compute the next state
@@ -145,8 +150,8 @@ public class LocalGraph {
             cs.shouldStoreOldStyle = false;
         }
 		
-		EdgeAttributesReader ereader = g.getEdgeAttributeReader();
-		for (RegulatoryMultiEdge me: g.getEdges()) {
+		EdgeAttributesReader ereader = regGraph.getEdgeAttributeReader();
+		for (RegulatoryMultiEdge me: regGraph.getEdges()) {
 			ereader.setEdge(me);
 			cs.applyOnEdge(selector, me, ereader);
 		}
@@ -154,7 +159,7 @@ public class LocalGraph {
 	}
 	
 	public void undoColorize() {
-		cs.restoreAllEdges(g.getEdges(), g.getEdgeAttributeReader());
+		cs.restoreAllEdges(regGraph.getEdges(), regGraph.getEdgeAttributeReader());
 	}
 
 
@@ -167,7 +172,7 @@ public class LocalGraph {
             }
 		}
 	}
-	public Map getFunctionality() {
+	public Map<RegulatoryMultiEdge, String> getFunctionality() {
 		return functionalityMap;
 	}
 
