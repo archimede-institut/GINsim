@@ -129,7 +129,7 @@ public class TreeActionPanel extends JPanel implements GUIEditor<Tree> {
 		}
 		if (tree == null) return;
 		int treeMode = treeModeList.getSelectedIndex();
-		if (treeMode < 0 && treeMode > 2) treeMode = 0;
+		if (treeMode < 0 || treeMode > 2) treeMode = 0;
 		
 		if (tree.getParser() instanceof TreeBuilderFromRegulatoryGraph) {
 			Integer geneIndex = new Integer(sourceList.getSelectedIndex());
