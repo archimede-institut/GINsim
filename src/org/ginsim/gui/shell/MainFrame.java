@@ -390,6 +390,11 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 
 	@Override
 	public void graphChanged(Graph g, GraphChangeType type, Object data) {
-		setFrameTitle(g, type == GraphChangeType.GRAPHSAVED);
+		
+		GraphGUI graph_gui = GUIManager.getInstance().getGraphGUI( g);
+		
+		if( graph_gui != null){
+			graph_gui.setSaved( type == GraphChangeType.GRAPHSAVED);
+		}
 	}
 }
