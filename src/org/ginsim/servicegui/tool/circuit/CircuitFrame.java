@@ -736,7 +736,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 		parser.setParameter(TreeBuilder.PARAM_NODEORDER, graph.getNodeOrder());
 		parser.setParameter(TreeBuilderFromCircuit.PARAM_INITIALCIRCUITDESC, getSelectedContextFromTreeTable().getCircuit());
 		parser.setParameter(TreeBuilderFromCircuit.PARAM_ALLCONTEXTS, getCircuitDescriptors());
-		GUIManager.getInstance().newFrame(tree);
+		GUIManager.getInstance().newFrame(tree,false);
 	}
 	
 	/**

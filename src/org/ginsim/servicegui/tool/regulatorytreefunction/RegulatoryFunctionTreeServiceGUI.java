@@ -70,7 +70,7 @@ class RegulatoryFunctionTreeAction extends ToolAction {
 		parser.setParameter(TreeBuilderFromRegulatoryGraph.PARAM_NODEORDER, graph.getNodeOrder());
 		parser.setParameter(TreeBuilderFromRegulatoryGraph.PARAM_REGGRAPH, graph);
 		parser.setParameter(TreeBuilderFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX, getSelectedNode( graph));
-		GUIManager.getInstance().newFrame(tree);
+		GUIManager.getInstance().newFrame(tree, false);
 	}
 	
 	/**

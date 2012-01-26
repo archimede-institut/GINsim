@@ -140,7 +140,7 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 			parser.setParameter(TreeBuilderFromManualOmdd.PARAM_MANUALOMDD, resOmdd);
 			parser.setParameter(TreeBuilderFromManualOmdd.PARAM_NODEORDER, graph.getNodeOrder());
 			parser.run(TreeImpl.MODE_DIAGRAM_WITH_MULTIPLE_LEAFS);
-			GUIManager.getInstance().newFrame(tree);
+			GUIManager.getInstance().newFrame(tree, false);
 
 		}
 	}
