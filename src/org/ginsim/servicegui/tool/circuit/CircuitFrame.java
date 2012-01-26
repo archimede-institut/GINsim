@@ -600,8 +600,10 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 
     private void showCircuit() {
         updateStatus(STATUS_SHOW_CIRCUIT);
-        if (tree == null) {
+        if (treemodel == null) {
         	treemodel = new GsCircuitTreeModel(v_circuit);
+        }
+        if (tree == null) {
             tree = new JTreeTable(treemodel);
         	cards.show(jContentPane, "result");
             
@@ -701,7 +703,9 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 	        int h = splitPane.getHeight();
 	        splitPane.setDividerLocation(h - 100);
         }
+        tree = null;
         treemodel.reload(this);
+        showCircuit();
         viewContextButton.setEnabled(true);
     }
 
