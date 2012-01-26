@@ -101,13 +101,15 @@ public class SCCGraphAlgo extends Thread {
 		for (NodeReducedData component : components) {				//For each component
 			vreader.setNode(component);
 			if (component.isTrivial()) {
-            	vreader.setBackgroundColor(Color.green.darker());
-            	vreader.setForegroundColor(Color.white);
-			} else if (component.isTransient(reducedGraph)) {
-            	vreader.setBackgroundColor(Color.red.darker());
-            	vreader.setForegroundColor(Color.white);
+            	if (component.isTransient(graph)) {
+                	vreader.setBackgroundColor(Color.green.darker());
+            		vreader.setForegroundColor(Color.white);
+            	} else {
+            		vreader.setBackgroundColor(Color.red.darker());
+                	vreader.setForegroundColor(Color.white);
+            	}
 			} else {
-            	Color backgroundColor = ColorPalette.blueHues[index%ColorPalette.blueHues.length];
+            	Color backgroundColor = ColorPalette.blueHues[index++%ColorPalette.blueHues.length];
 				vreader.setBackgroundColor(backgroundColor);
             	vreader.setForegroundColor(ColorPalette.getConstrastedForegroundColor(backgroundColor));
 			}
