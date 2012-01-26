@@ -12,6 +12,7 @@ import javax.swing.JScrollPane;
 import org.ginsim.common.utils.IOUtils;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.service.common.StandaloneGUI;
 import org.ginsim.gui.service.common.ToolAction;
 import org.mangosdk.spi.ProviderFor;
@@ -22,9 +23,10 @@ import org.python.util.PythonInterpreter;
 
 
 /**
- * main method for the reg2dyn plugin
+ * main method for the jython console
  */
 @ProviderFor(ServiceGUI.class)
+@ServiceStatus( ServiceStatus.UNDER_DEVELOPMENT)
 @StandaloneGUI
 public class JythonServiceGUI implements ServiceGUI {
 
