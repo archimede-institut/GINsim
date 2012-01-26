@@ -1,5 +1,7 @@
 package org.ginsim.gui.utils.widgets;
 
+import java.awt.event.WindowAdapter;
+
 import javax.swing.JFrame;
 
 import org.ginsim.common.OptionStore;
@@ -13,20 +15,21 @@ public abstract class Frame extends JFrame {
 	public Frame(String id, int w, int h) {
 		this.id = id;
 		this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
-		addWindowListener(new java.awt.event.WindowAdapter() {
+		addWindowListener(new WindowAdapter() {
 			public void windowClosing(java.awt.event.WindowEvent evt) {
 				close();
 			}
 		});
 
-		this.setSize(((Integer)OptionStore.getOption(id+".width", new Integer(w))).intValue(),
-        		((Integer)OptionStore.getOption(id+".height", new Integer(h))).intValue());
+		int width = OptionStore.getOption(id+".width", w);
+		int height = OptionStore.getOption(id+".height", h);
+		this.setSize( width, height);
 
 	}
 
 	public void dispose() {
-		OptionStore.setOption(id+".width", new Integer(getWidth()));
-		OptionStore.setOption(id+".height", new Integer(getHeight()));
+		OptionStore.setOption(id+".width", getWidth());
+		OptionStore.setOption(id+".height", getHeight());
 		super.dispose();
 	}
 	

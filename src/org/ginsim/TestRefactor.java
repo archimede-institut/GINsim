@@ -141,7 +141,6 @@ public class TestRefactor {
 		} catch (Exception e) {
 			GUIMessageUtils.openErrorDialog(e, null);
 		}
-		GUIManager.initializeOptions();
 		registerForMacOSXEvents();
 		
 	}

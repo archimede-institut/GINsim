@@ -94,7 +94,7 @@ public class GUIManager {
 		GraphGUI graph_gui;
 		try {
 			graph_gui = createGraphGUI( graph, can_be_saved);
-			MainFrame frame = new MainFrame("test", 800, 700, graph_gui);
+			MainFrame frame = new MainFrame( graph_gui);
 			frame.setVisible(true);
 			
 			NotificationManager.getManager().registerListener( frame, graph);
@@ -383,25 +383,6 @@ public class GUIManager {
 		new WhatToDoWithGraph( new_graph);
 	}
 	
-	
-	// ---------------------- METHODS LINKED TO THE OptionStore -----------------------------------
-	
-	/**
-	 * This method initialize the OptionStore by setting the default values to not defined nodes and edges attributes
-	 * 
-	 */
-    public static void initializeOptions() {
-    	
-    	OptionStore.getOption( EdgeAttributeReaderImpl.EDGE_COLOR, new Integer(-13395457));
-    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_BG, new Integer(-26368));
-    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_FG, new Integer(Color.WHITE.getRGB()));
-    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_HEIGHT, new Integer(30));
-    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_WIDTH, new Integer(55));
-    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_SHAPE, NodeShape.RECTANGLE.name());
-    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_BORDER, NodeBorder.SIMPLE.name());	
-    }
-    
-    
 	
 	/**
 	 * Class containing the relationship between a Graph, its GraphGUI the corresponding Frame

@@ -21,7 +21,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 	
     protected static Map<String, float[]> m_pattern = null;
 	
-    public static Color default_color = new Color(((Integer)OptionStore.getOption( EDGE_COLOR)).intValue());
+    public static Color default_color = new Color(OptionStore.getOption( EDGE_COLOR, -13395457));
     
     protected float defaultLineWidth;
     

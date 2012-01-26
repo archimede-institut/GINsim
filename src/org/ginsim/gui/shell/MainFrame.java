@@ -78,11 +78,15 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 	
 	private static final boolean alwaysForceClose = false;
 
-	public MainFrame(String id, int w, int h, GraphGUI graph_gui) {
+	public MainFrame(GraphGUI graph_gui) {
 		
-		super(id, w, h);
+		super("MainFrame", 800, 700);
+		
+		// I guess this is used to center the window, should we really do this??
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension scrnsize = toolkit.getScreenSize();
+		int w = getWidth();
+		int h = getHeight();
 		int cood_x = scrnsize.width >= w ? (scrnsize.width - w)/2:0;
 		int cood_y = scrnsize.height >= h ? (scrnsize.height - h)/2:0;
 		this.setBounds( cood_x, cood_y, w, h);
@@ -319,6 +323,7 @@ public class MainFrame extends Frame implements NotificationSource, Notification
         if (secondaryFrame == null) {
             OptionStore.setOption("display.dividersize", new Integer(mainSplitPane.getHeight()-mainSplitPane.getDividerLocation()));
         }
+        super.dispose();
     }
 
     

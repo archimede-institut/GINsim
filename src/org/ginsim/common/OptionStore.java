@@ -132,11 +132,11 @@ public class OptionStore extends DefaultHandler {
      * @param defValue value to return if this option is not defined
      * @return an object representing the value of this option
      */
-    public static Object getOption(String name, Object defValue) {
+    public static <T> T getOption(String name, T defValue) {
         Object o = m_option.get(name);
         
         if (o != null && o.getClass().equals(defValue.getClass())) {
-            return o;
+            return (T)o;
         }
         m_option.put(name, defValue);
         return defValue;
