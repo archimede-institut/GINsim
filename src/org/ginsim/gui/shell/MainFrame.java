@@ -78,9 +78,9 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 	
 	private static final boolean alwaysForceClose = false;
 
-	public MainFrame(String id, int w, int h, GraphGUI graph_gui) {
+	public MainFrame(int w, int h, GraphGUI graph_gui) {
 		
-		super(id, w, h);
+		super("MainFrame", w, h);
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension scrnsize = toolkit.getScreenSize();
 		int cood_x = scrnsize.width >= w ? (scrnsize.width - w)/2:0;

@@ -19,14 +19,13 @@ public abstract class Frame extends JFrame {
 			}
 		});
 
-		this.setSize(((Integer)OptionStore.getOption(id+".width", new Integer(w))).intValue(),
-        		((Integer)OptionStore.getOption(id+".height", new Integer(h))).intValue());
+		this.setSize(OptionStore.getOption(id+".width", w), OptionStore.getOption(id+".height", h));
 
 	}
 
 	public void dispose() {
-		OptionStore.setOption(id+".width", new Integer(getWidth()));
-		OptionStore.setOption(id+".height", new Integer(getHeight()));
+		OptionStore.setOption(id+".width", getWidth());
+		OptionStore.setOption(id+".height", getHeight());
 		super.dispose();
 	}
 	
