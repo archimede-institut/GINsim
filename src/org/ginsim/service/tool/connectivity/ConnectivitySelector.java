@@ -3,6 +3,7 @@ package org.ginsim.service.tool.connectivity;
 import java.awt.Color;
 import java.util.List;
 
+import org.ginsim.common.ColorPalette;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.view.NodeBorder;
@@ -19,7 +20,7 @@ public class ConnectivitySelector extends Selector {
 	
 	public static final NodeStyle STYLE_TRANSIENT_TRIVIAL	= new NodeStyle(Color.green.darker(), Color.white, NodeBorder.SIMPLE, NodeShape.RECTANGLE);
 	public static final NodeStyle STYLE_TERMINAL_TRIVIAL	= new NodeStyle(Color.red.darker(), Color.white, NodeBorder.SIMPLE, NodeShape.ELLIPSE);
-	public static final NodeStyle STYLE_COMPLEX 			= new NodeStyle(Color.red.darker(), null, NodeBorder.SIMPLE, NodeShape.RECTANGLE);
+	public static final NodeStyle STYLE_COMPLEX 			= new NodeStyle(Color.blue.darker(), null, NodeBorder.SIMPLE, NodeShape.RECTANGLE);
 	
 	private List<NodeReducedData> cacheComponents;
 	private int totalComplexComponents;
@@ -50,10 +51,11 @@ public class ConnectivitySelector extends Selector {
 			if (cacheComponents == null) {
 				return CAT_COMPLEX;
 			}
-			int saturation = 0; //color (HSB)
+			int i_complex = 0, i_compon = 0;
 			for (NodeReducedData nrd : cacheComponents) {
+				i_compon++;
 				if (!nrd.isTrivial()){
-					saturation += 200/totalComplexComponents;
+					i_complex++;
 				}
 				if (nrd.getContent().contains(obj)) {
 					if (nrd.isTrivial()) {
@@ -62,7 +64,7 @@ public class ConnectivitySelector extends Selector {
 						}
 						return CAT_TERMINAL_TRIVIAL;
 					} else {
-						return "complex_"+Color.getHSBColor(0, saturation, 80).getRGB();
+						return "complex_"+ColorPalette.blueHues[i_complex%ColorPalette.blueHues.length].getRGB();
 					}
 				}
 			}
@@ -79,6 +81,7 @@ public class ConnectivitySelector extends Selector {
 			NodeStyle style = (NodeStyle)STYLE_COMPLEX.clone();
 			int color = Integer.parseInt(category.substring(index+1)); 
 			style.background = new Color(color);
+			style.foreground = ColorPalette.getConstrastedForegroundColor(style.background);
 			return style;
 		}
 	}

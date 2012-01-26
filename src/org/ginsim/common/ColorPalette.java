@@ -61,6 +61,51 @@ public class ColorPalette {
 	};
 	
 	/**
+	 * An array of blue hues, all the blue web colors plus the greenish blues Teal, MediumAquamarine... and purplish blues Indigo, MediumPurple...
+	 */
+	public static final Color[] blueHues = new Color[] {
+		new Color(0,0,255),
+		new Color(30,144,255),
+		new Color(127,255,212),
+		new Color(0,139,139),
+		new Color(186,85,211),
+		new Color(153,50,204),
+		new Color(0,0,205),
+		new Color(143,188,143),
+		new Color(95,158,160),
+		new Color(175,238,238),
+		new Color(128,0,128),
+		new Color(25,25,112),
+		new Color(0,191,255),
+		new Color(0,206,209),
+		new Color(139,0,139),
+		new Color(176,224,230),
+		new Color(100,149,237),
+		new Color(176,196,222),
+		new Color(75,0,130),
+		new Color(72,209,204),
+		new Color(135,206,250),
+		new Color(70,130,180),
+		new Color(106,90,205),
+		new Color(123,104,238),
+		new Color(32,178,170),
+		new Color(0,255,255),
+		new Color(0,0,128),
+		new Color(147,112,219),
+		new Color(0,128,128),
+		new Color(72,61,139),
+		new Color(135,206,235),
+		new Color(64,224,208),
+		new Color(224,255,255),
+		new Color(102,205,170),
+		new Color(0,0,139),
+		new Color(148,0,211),
+		new Color(65,105,225),
+		new Color(138,43,226),
+		new Color(173,216,230)
+	};
+	
+	/**
 	 * Create a palette of color by variing the hue for nbcolors steps
 	 * @param nbcolors
 	 * @param saturation
@@ -77,5 +122,38 @@ public class ColorPalette {
 		return createColorPaletteByRange(nbcolors, 0.85f, 1.0f);
 	}
 
+	/**
+	 * Return black or white to contrast with the given background
+	 * @param backgroundColor the color of the background
+	 * @return Color.BLACK or Color.WHITE
+	 */
+	public static Color getConstrastedForegroundColor(Color backgroundColor) {
+		if (isColorPercievedBright(backgroundColor)) {
+			return Color.BLACK;
+		}
+		return Color.WHITE; 
+	}
+		
+	/**
+	 * Indicates if the given color is percieved bright
+	 * @param col
+	 * @return true if the color is percieved bright
+	 */
+	public static boolean isColorPercievedBright(Color col) {
+		return percievedBrightness(col.getRed(), col.getGreen(), col.getBlue()) >= 130;
+	}
 
+	/**
+	 * Return the percieved brightness of the given color
+	 * @param r red value from 0-255
+	 * @param g green value from 0-255
+	 * @param b blue value from 0-255
+	 * @return the percieved brightness of the given color
+	 */
+	public static int percievedBrightness(int r, int g, int b) {
+		   return (int)Math.sqrt(
+				   r * r * .241 + 
+				   g * g * .691 + 
+				   b * b * .068);
+	}
 }

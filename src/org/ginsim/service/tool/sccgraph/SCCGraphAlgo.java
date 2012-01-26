@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import org.ginsim.common.ColorPalette;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
@@ -101,13 +102,19 @@ public class SCCGraphAlgo extends Thread {
 			vreader.setNode(component);
 			if (component.isTrivial()) {
             	vreader.setBackgroundColor(Color.green.darker());
+            	vreader.setForegroundColor(Color.white);
+			} else if (component.isTransient(reducedGraph)) {
+            	vreader.setBackgroundColor(Color.red.darker());
+            	vreader.setForegroundColor(Color.white);
 			} else {
-            	vreader.setBackgroundColor(Color.getHSBColor(0, (200/totalComplexComponents)*index++, 80));
+            	Color backgroundColor = ColorPalette.blueHues[index%ColorPalette.blueHues.length];
+				vreader.setBackgroundColor(backgroundColor);
+            	vreader.setForegroundColor(ColorPalette.getConstrastedForegroundColor(backgroundColor));
 			}
             if (reducedGraph.getOutgoingEdges(component) == null) {	//  set the node's shape to ellipse if the node has no outgoing edges (is terminal).
                 vreader.setShape(NodeShape.ELLIPSE);
             } else {
-                vreader.setShape(NodeShape.ELLIPSE);
+                vreader.setShape(NodeShape.RECTANGLE);
             }
         }
 
