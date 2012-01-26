@@ -58,15 +58,48 @@ public class ServiceGUIManager{
             		LogManager.error("Got a null service");
             		continue;
             	}
-            	int weight = service.getWeight();
-            	int position = 0;
-        		for (ServiceGUI s: services) {
-        			if (s.getWeight() > weight) {
-        				break;
-        			}
-        			position++;
-        		}
-        		services.add( position, service);
+            	
+    			// Check for the service status. If service is not published, it is not
+    			// provided apart in case of a development environment
+    			ServiceStatus service_status = service.getClass().getAnnotation( ServiceStatus.class);
+    			int status;
+    			if( service_status != null){
+    				status = service_status.value();
+    			}
+    			else{
+    				LogManager.error( "Service '" + service.getClass().getName() + "' does not have a declared status. Consider it deprecated.");
+    				status = ServiceStatus.DEPRECATED;
+    			}
+    			boolean dev_envir = true; // Temporary boolean that must be replaced by a better mechanism
+    			boolean rejected;
+    			switch( status) {
+    			case ServiceStatus.DEPRECATED:
+    				rejected = true;
+    				break;
+    			case ServiceStatus.UNDER_DEVELOPMENT:
+    				rejected = !dev_envir;
+    				break;
+    			case ServiceStatus.RELEASED:
+    				rejected = false;
+    				break;
+    			default:
+    				rejected = true;
+    				break;
+    			}
+    			if( !rejected){
+	    			// Check the weight of the service so it can be ordered
+	            	int weight = service.getWeight();
+	            	int position = 0;
+	        		for (ServiceGUI s: services) {
+	        			if (s.getWeight() > weight) {
+	        				break;
+	        			}
+	        			position++;
+	        		}
+	        		
+	        		// Add the service to the list
+	        		services.add( position, service);
+    			}
             }
             catch (ServiceConfigurationError e){
 
@@ -104,37 +137,6 @@ public class ServiceGUIManager{
 
 		// Parse the existing serviceGUI to detect the ones that must be used
 		for( ServiceGUI service: services) {
-			
-			// Check for the service status. If service is not published, its action is not
-			// provided apart in case of a development environment
-			ServiceStatus service_status = service.getClass().getAnnotation( ServiceStatus.class);
-			int status;
-			if( service_status != null){
-				status = service_status.value();
-			}
-			else{
-				LogManager.error( "Service '" + service.getClass().getName() + "' does not have a declared status. Consider it deprecated.");
-				status = ServiceStatus.DEPRECATED;
-			}
-			boolean dev_envir = true; // Temporary boolean that must be replaced by a better mechanism
-			boolean rejected;
-			switch( status) {
-			case ServiceStatus.DEPRECATED:
-				rejected = true;
-				break;
-			case ServiceStatus.UNDER_DEVELOPMENT:
-				rejected = !dev_envir;
-				break;
-			case ServiceStatus.RELEASED:
-				rejected = false;
-				break;
-			default:
-				rejected = true;
-				break;
-			}
-			if( rejected){
-				continue;
-			}
 			
 			// Check if the serviceGUI is related to a server service
 			GUIFor guifor = service.getClass().getAnnotation( GUIFor.class);
