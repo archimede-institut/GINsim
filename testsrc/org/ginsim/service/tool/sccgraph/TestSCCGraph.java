@@ -89,7 +89,7 @@ public class TestSCCGraph{
 		SCCGraphResult result = service.run(regGraph);
         assertNotNull("The service didn't return any result", result);
 
-		ReducedGraph reducedGraph = result.getReducedGraph();
+		ReducedGraph<?,?,?> reducedGraph = result.getReducedGraph();
         assertNotNull("The graph is null", reducedGraph);
 
         

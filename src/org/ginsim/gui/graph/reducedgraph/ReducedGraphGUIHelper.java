@@ -19,7 +19,7 @@ import org.mangosdk.spi.ProviderFor;
 
 
 @ProviderFor( GraphGUIHelper.class)
-public class ReducedGraphGUIHelper implements GraphGUIHelper<ReducedGraph, NodeReducedData, Edge<NodeReducedData>> {
+public class ReducedGraphGUIHelper implements GraphGUIHelper<ReducedGraph<?,?,?>, NodeReducedData, Edge<NodeReducedData>> {
 
 	
 	/**
@@ -52,7 +52,7 @@ public class ReducedGraphGUIHelper implements GraphGUIHelper<ReducedGraph, NodeR
 	}
 
 	@Override
-	public GUIEditor<ReducedGraph> getMainEditionPanel(ReducedGraph graph) {
+	public GUIEditor<ReducedGraph<?,?,?>> getMainEditionPanel(ReducedGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -68,8 +68,7 @@ public class ReducedGraphGUIHelper implements GraphGUIHelper<ReducedGraph, NodeR
 	}
 
 	@Override
-	public GUIEditor<Edge<NodeReducedData>> getEdgeEditionPanel(
-			ReducedGraph graph) {
+	public GUIEditor<Edge<NodeReducedData>> getEdgeEditionPanel(ReducedGraph graph) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -81,9 +80,9 @@ public class ReducedGraphGUIHelper implements GraphGUIHelper<ReducedGraph, NodeR
 	}
 
 	@Override
-	public Class<ReducedGraph> getGraphClass() {
-		
-		return ReducedGraph.class;
+	public Class<ReducedGraph<?,?,?>> getGraphClass() {
+		// don't ask me why we have to cast...
+		return (Class)ReducedGraph.class;
 	}
 
 	@Override

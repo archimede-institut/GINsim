@@ -16,41 +16,23 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.AbstractDerivedGraph;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphAssociation;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GinmlHelper;
 
 
-public class ReducedGraphImpl  extends AbstractDerivedGraph<NodeReducedData, Edge<NodeReducedData>, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
-	implements ReducedGraph{
+public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  extends AbstractDerivedGraph<NodeReducedData, Edge<NodeReducedData>, G,V,E>
+	implements ReducedGraph<G,V,E>{
 
 	public static final String GRAPH_ZIP_NAME = "connectedComponent.ginml";
 	
 	/**
 	 * @param parent
 	 */
-	public ReducedGraphImpl( Graph parent) {
+	public ReducedGraphImpl( G parent) {
 		
 	    this( false);
-	    if( parent instanceof RegulatoryGraph){
-	    	setAssociatedGraph( (RegulatoryGraph) parent);
-	    }
-	    else if( parent instanceof GraphAssociation){
-	    	
-	    	try{
-	    		Graph associated_graph = ((GraphAssociation) parent).getAssociatedGraph();
-	    	    if( associated_graph instanceof RegulatoryGraph){
-	    	    	setAssociatedGraph( (RegulatoryGraph) associated_graph);
-	    	    }
-	    	}
-	    	catch( GsException gse){
-	    		//No graph to associate
-	    	}
-	    	
-	    }
+    	setAssociatedGraph( parent);
 	}
 
 	/**

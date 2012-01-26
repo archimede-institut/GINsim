@@ -7,15 +7,12 @@ import java.util.Map;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphAssociation;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
 
 /**
  * reduced Graph.
  */
-public interface ReducedGraph extends Graph<NodeReducedData, Edge<NodeReducedData>>, GraphAssociation<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>{
+public interface ReducedGraph<AG extends Graph<AV,AE>, AV, AE extends Edge<AV>> extends Graph<NodeReducedData, Edge<NodeReducedData>>, GraphAssociation<AG,AV,AE>{
 	
 	
 	/**
