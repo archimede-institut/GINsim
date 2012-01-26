@@ -92,7 +92,6 @@ public class TestGraphComparator {
 		Graph<?, ?> g1, g2;
 		g1 = gc.getG1();
 		g2 = gc.getG2();
-		System.out.println("\nTested : Compare g1:"+g1.getGraphName()+" and g2:"+g2.getGraphName()+"\n------\n");
 		HashMap vm = gc.getStyleMap();
 
 		
