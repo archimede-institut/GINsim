@@ -279,8 +279,14 @@ public class GraphManager {
      * @return the path of the file the graph has been loaded from or saved to if it exsists, null if not.
      */
     public String getGraphPath( Graph graph){
+    	
     	GraphInfo<?> info = graphFilepath.get( graph);
-    	return info.path;
+    	if( info != null){
+    		return info.path;
+    	}
+    	else{
+    		return null;
+    	}
     }
     
     /**

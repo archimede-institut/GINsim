@@ -3,6 +3,7 @@ package org.ginsim.service.tool.graphcomparator;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import org.ginsim.TestUtils;
 import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
@@ -14,6 +15,7 @@ import org.ginsim.service.tool.graphcomparator.DynamicGraphComparator;
 import org.ginsim.service.tool.graphcomparator.GraphComparator;
 import org.ginsim.service.tool.graphcomparator.RegulatoryGraphComparator;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
@@ -36,6 +38,16 @@ public class TestGraphComparator {
 /*
  *   TESTS 
  */
+	/**
+	 * Initialize the OptionStore is required
+	 * 
+	 */
+	@BeforeClass
+	public static void beforeAllTests(){
+		
+		TestUtils.initOptionStore();
+	}
+	
 	
 	@Test
 	public void testCompareRegulatoryGraphOnTwoEmptyGraph() {

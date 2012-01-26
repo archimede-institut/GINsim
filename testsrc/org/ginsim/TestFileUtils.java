@@ -21,28 +21,7 @@ public class TestFileUtils {
 
 	// The directory where are stored the predefined files for the tests
 	public static File testFileDirectory = new File( ".", "testfiles");
-	private static boolean isInit = false;
 	
-	
-	public static void initOptionStore() {
-		if (isInit) {
-			return;
-		}
-		isInit = true;
-		try {
-			OptionStore.init( BasicRegulatoryGraphTest.class.getPackage().getName());
-	    	OptionStore.getOption( EdgeAttributeReaderImpl.EDGE_COLOR, new Integer(-13395457));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_BG, new Integer(-26368));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_FG, new Integer(Color.WHITE.getRGB()));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_HEIGHT, new Integer(30));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_WIDTH, new Integer(55));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_SHAPE, NodeShape.RECTANGLE.name());
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_BORDER, NodeBorder.SIMPLE.name());
-		} catch (Exception e) {
-			fail( "Initialisation of OptionStore failed : " + e);
-		}
-
-	}
 	
 	/**
 	 * Returns the directory where test files are stored
@@ -105,7 +84,8 @@ public class TestFileUtils {
 	 * @param file the file to load
 	 */
 	public static RegulatoryGraph loadGraph( File file){
-		initOptionStore();
+		
+		TestUtils.initOptionStore();
 		try{
 			RegulatoryGraph graph = (RegulatoryGraph) GraphManager.getInstance().open( file);
 			

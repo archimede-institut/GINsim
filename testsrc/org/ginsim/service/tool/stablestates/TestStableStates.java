@@ -6,6 +6,7 @@ import static org.junit.Assert.fail;
 
 import java.awt.Color;
 import java.util.Set;
+import java.util.Vector;
 
 import org.ginsim.common.OptionStore;
 import org.ginsim.common.exception.GsException;
@@ -53,7 +54,7 @@ public class TestStableStates {
 	@After
 	public void afterEachTest(){
 		
-		Set<Graph> graph_list = GraphManager.getInstance().getAllGraphs();
+		Vector<Graph> graph_list = new Vector( GraphManager.getInstance().getAllGraphs());
 		
 		if( graph_list != null && !graph_list.isEmpty()){
 			

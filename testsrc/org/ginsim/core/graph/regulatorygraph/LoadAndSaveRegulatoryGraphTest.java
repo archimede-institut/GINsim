@@ -10,17 +10,29 @@ import java.util.List;
 import java.util.Set;
 
 import org.ginsim.TestFileUtils;
+import org.ginsim.TestUtils;
 import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 public class LoadAndSaveRegulatoryGraphTest {
 
 	private static final String module = "RegulatoryGraph";
 
+	/**
+	 * Initialize the OptionStore is required
+	 * 
+	 */
+	@BeforeClass
+	public static void beforeAllTests(){
+		
+		TestUtils.initOptionStore();
+	}
+	
 	/**
 	 * Clean the test file temp directory
 	 * 
