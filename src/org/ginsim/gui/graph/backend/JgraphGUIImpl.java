@@ -68,7 +68,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		jgraph.addGraphSelectionListener(this);
 		this.helper = helper;
 		g.addViewListener(this);
-		//backend.setGraphViewBackend(this);
+		GraphManager.getInstance().addGraphListener(g, this);
 		
 		// create the action manager and marquee handler
 		editActionManager = new EditActionManager(helper.getEditActions(graph));
@@ -218,10 +218,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		
 		try {
 			graph.save( savePath);
-			Frame main_frame = GUIManager.getInstance().getFrame( graph);
-			if( main_frame != null){
-				main_frame.setFrameTitle( graph, true);
-			}
+			graphChanged(graph, GraphChangeType.GRAPHSAVED, null);
 			OptionStore.addRecentFile(savePath);
 			isSaved = true;
 			return true;
@@ -248,10 +245,6 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 			}
 			try {
 				graph.setGraphName( graph_name);
-				Frame main_frame = GUIManager.getInstance().getFrame( graph);
-				if( main_frame != null){
-					main_frame.setFrameTitle( graph, true);
-				}
 			} catch (GsException gse) {
 				LogManager.error( "Unable to set graph name: " + graph_name);
 				LogManager.error( gse);

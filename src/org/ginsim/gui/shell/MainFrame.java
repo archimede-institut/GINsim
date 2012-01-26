@@ -21,10 +21,12 @@ import javax.swing.WindowConstants;
 import org.ginsim.common.OptionStore;
 import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.NotificationListener;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.dnd.GlassPane;
 import org.ginsim.gui.notifications.NotificationPanel;
 import org.ginsim.gui.notifications.NotificationSource;
@@ -46,7 +48,7 @@ import org.ginsim.gui.utils.widgets.SplitPane;
 
 
 
-public class MainFrame extends Frame implements NotificationSource, NotificationListener {
+public class MainFrame extends Frame implements NotificationSource, NotificationListener, GraphGUIListener {
 	private static final long serialVersionUID = 3002680535567580439L;
 	
 	private static final int SECONDARY_SPLIT_PANEL_MIN_HEIGHT = 250;
@@ -79,6 +81,7 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 		super(id, w, h);
         this.graphGUI = graph_gui;
         GUIManager.getInstance().registerGUI( graph_gui, this);
+        graph_gui.addGraphGUIListener(this);
         
         setFrameTitle( graphGUI.getGraph(), graphGUI.isSaved());
         setJMenuBar(menubar);
@@ -375,5 +378,18 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 			}
 		}
 		
+	}
+
+	@Override
+	public void graphSelectionChanged(GraphGUI gui) {
+	}
+
+	@Override
+	public void graphGUIClosed(GraphGUI gui) {
+	}
+
+	@Override
+	public void graphChanged(Graph g, GraphChangeType type, Object data) {
+		setFrameTitle(g, type == GraphChangeType.GRAPHSAVED);
 	}
 }

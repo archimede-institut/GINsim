@@ -219,9 +219,12 @@ public class GraphManager {
      * @param file_path the path of the file the graph has been loaded from or saved to
      */
     public <G extends Graph<?,?>> void registerGraph( G graph, String file_path){
-    	GraphInfo<G> info = new GraphInfo<G>();
+    	GraphInfo info = graphFilepath.get(graph);
+    	if (info == null) {
+    		info = new GraphInfo<GraphModel<?,?>>();
+        	graphFilepath.put( graph, info);
+    	}
     	info.path = file_path;
-    	graphFilepath.put( graph, info);
     }
     
     
@@ -447,7 +450,6 @@ public class GraphManager {
 
 class GraphInfo<G extends GraphModel<?, ?>> {
 	public String path;
-	public boolean saved;
 	public List<GraphListener<G>> listeners = null;
 	
 	public void addListener(GraphListener<G> l) {
