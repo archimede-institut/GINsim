@@ -70,15 +70,15 @@ public abstract class TreeBuilder {
 		tree.setMode(treeMode);
 		this.nodeOrder = (List<RegulatoryNode>) getParameter(PARAM_NODEORDER);
 		
-		LogManager.info("Clearing the tree");
+//		LogManager.info("Clearing the tree");
 		clearTree();			//Remove all the treeNode from the current tree
-		LogManager.info("Pretreatment");
+//		LogManager.info("Pretreatment");
 		init();					//Init the variables needed for the parsing
-		LogManager.info("Parsing the tree");
+//		LogManager.info("Parsing the tree");
 		parseOmdd();			//Launch the correct parser depending on the mode.
-		LogManager.info("Updating the graphical attributes of the tree, and refreshing the GUI");
+//		LogManager.info("Updating the graphical attributes of the tree, and refreshing the GUI");
 		updateNodeLayout();	//Refresh the position and style of the GsTreeNodes
-		LogManager.info("Tree constructed");
+//		LogManager.info("Tree constructed");
 	}
 
 	public void setTree(Tree tree) {
