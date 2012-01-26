@@ -104,7 +104,7 @@ public final class TruthTableParser {
 						if (edge == null) {
 							edge = graph.addEdge(naNodes[reg], naNodes[gi],
 									sign);
-							edge.setMin(0, min);
+							edge.setMin(0, min, graph);
 							if (RegulatoryEdgeSign.POSITIVE == sign)
 								inEdges.add(edge.getEdge(0));
 						} else {
@@ -204,7 +204,7 @@ public final class TruthTableParser {
 									edge = graph.addEdge(naNodes[i], naNodes[u
 											- iN], sign);
 									incoming_edges[u - iN].add(edge.getEdge(0));
-									edge.setMin(0, threshold);
+									edge.setMin(0, threshold, graph);
 									table_interactors[u - iN].add(i);
 								} else {
 									boolean hasEdgeSameThreshold = false;

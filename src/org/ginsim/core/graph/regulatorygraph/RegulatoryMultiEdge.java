@@ -8,6 +8,7 @@ import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.ToolTipsable;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgeEnd;
@@ -193,6 +194,7 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
 		}
 		edges[index].setSign(sign);
 		rescanSign(graph);
+		graph.fireGraphChange(GraphChangeType.EDGEUPDATED, this);
 	}
 	/**
 	 * @param index index of a subedge.
@@ -262,7 +264,7 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
 	 * @param index index of a sub edge.
 	 * @param min the new min value.
 	 */
-	public void setMin(int index, byte min) {
+	public void setMin(int index, byte min, RegulatoryGraph graph) {
 		if (index >= edgecount || min < 1 || min > source.getMaxValue() ||
 				edges[index].threshold == min) {
 			return;
@@ -281,9 +283,9 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
 			}
 		}
 		edges[index].threshold = min;
+		graph.fireGraphChange(GraphChangeType.GRAPHSAVED, this);
 	}
 
-	//protected void rescanSign(Graph graph) {
 	public void rescanSign( Graph graph) {
 		this.sign = edges[0].getSign();
 		for (int i=0 ; i<edgecount ; i++) {
@@ -382,9 +384,6 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
     	for (int i=edgecount ; i<edges.length ; i++) {
     		edges[i] = null;
     	}
-    }
-
-    public void setUserObject(Object obj) {
     }
 
 	public RegulatoryEdge getEdge(int index) {

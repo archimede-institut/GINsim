@@ -50,7 +50,7 @@ public class LRGCreator {
 		// get an edge (interactiveAddEdge does not return it)
 		RegulatoryMultiEdge me = lrg.getEdge(g0, g2);
 		// change its threshold
-		me.setMin(0, (byte)2);
+		me.setMin(0, (byte)2, lrg);
 		
 		// create a logical parameter.
 		// it takes a value and a list of interactions

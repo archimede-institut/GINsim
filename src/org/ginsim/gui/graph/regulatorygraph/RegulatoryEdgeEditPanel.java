@@ -26,14 +26,22 @@ public class RegulatoryEdgeEditPanel extends JPanel
 	private static final long	serialVersionUID	= 5147198338786927504L;
 
 	RegulatoryEdge edge;
-	RegulatoryGraph graph;
+	RegulatoryGraph graph = null;
 	GenericPropertyInfo pinfo;
 	
 	private EdgeThresholdModel thmodel = null;
 	private JComboBox signcombo;
 
 	public RegulatoryEdgeEditPanel() {
-        thmodel = new EdgeThresholdModel();
+	}
+	public RegulatoryEdgeEditPanel(RegulatoryGraph graph) {
+		this();
+		init(graph);
+	}
+	
+	public void init (RegulatoryGraph graph) {
+		this.graph = graph;
+        thmodel = new EdgeThresholdModel(graph);
         signcombo = new JComboBox(RegulatoryEdgeSign.getShortDescForGUI());
         setLayout(new GridBagLayout());
         
@@ -55,10 +63,6 @@ public class RegulatoryEdgeEditPanel extends JPanel
         add(signcombo, c);
         signcombo.addActionListener(this); 
 	}
-	public RegulatoryEdgeEditPanel(RegulatoryGraph graph) {
-		this();
-		this.graph = graph;
-	}
 	public void setEdge(RegulatoryEdge edge) {
 		this.edge = edge;
 		thmodel.setSelection(edge);
@@ -78,16 +82,23 @@ public class RegulatoryEdgeEditPanel extends JPanel
 	public void refresh(boolean force) {
 		setEdge((RegulatoryEdge)pinfo.getRawValue());
 	}
-	public void setEditedProperty(GenericPropertyInfo pinfo,
-			GenericPropertyHolder panel) {
+	public void setEditedProperty(GenericPropertyInfo pinfo, GenericPropertyHolder panel) {
 		this.pinfo = pinfo;
-		this.graph = (RegulatoryGraph)pinfo.data;
+		if (this.graph == null) {
+			init((RegulatoryGraph)pinfo.data);
+		}
 		panel.addField(this, pinfo, 0);
 	}
 }
 
 class EdgeThresholdModel extends AbstractSpinnerModel {
+
+	private final RegulatoryGraph graph;
 	RegulatoryEdge edge;
+	
+	public EdgeThresholdModel(RegulatoryGraph graph) {
+		this.graph = graph;
+	}
 	
 	public void setSelection(RegulatoryEdge edge) {
 		this.edge = edge;
@@ -96,7 +107,7 @@ class EdgeThresholdModel extends AbstractSpinnerModel {
 	
 	public Object getNextValue() {
 		if (edge != null) {
-			edge.me.setMin(edge.index, (byte)(edge.getMin()+1));
+			edge.me.setMin(edge.index, (byte)(edge.getMin()+1), graph);
 			fireStateChanged();
 		}
 		return getValue();
@@ -104,7 +115,7 @@ class EdgeThresholdModel extends AbstractSpinnerModel {
 
 	public Object getPreviousValue() {
 		if (edge != null) {
-			edge.me.setMin(edge.index, (byte)(edge.getMin()-1));
+			edge.me.setMin(edge.index, (byte)(edge.getMin()-1), graph);
 			fireStateChanged();
 		}
 		return getValue();
@@ -123,7 +134,7 @@ class EdgeThresholdModel extends AbstractSpinnerModel {
 				return;
 			}
 			if (value instanceof Integer) {
-				edge.me.setMin(edge.index, ((Integer)value).byteValue());
+				edge.me.setMin(edge.index, ((Integer)value).byteValue(), graph);
 				fireStateChanged();
 			}
 		}
