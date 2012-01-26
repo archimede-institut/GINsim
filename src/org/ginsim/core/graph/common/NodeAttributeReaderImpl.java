@@ -159,6 +159,15 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
         if (vvsd == null) {
             return;
         }
+
+        // make sure that the node does not have negative coordinates as it annoys the GUI backend
+        if (x < 0) {
+        	x = 0;
+        }
+        if (y < 0) {
+        	y = 0;
+        }
+        
         vvsd.bounds.setFrame(x,y, vvsd.bounds.getWidth(), vvsd.bounds.getHeight());
     }
 
