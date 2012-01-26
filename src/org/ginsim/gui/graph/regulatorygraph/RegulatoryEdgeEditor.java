@@ -8,6 +8,7 @@ import javax.swing.Action;
 import org.ginsim.common.utils.Translator;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -18,14 +19,15 @@ import org.ginsim.core.notification.resolvable.resolution.NotificationResolution
 import org.ginsim.core.utils.data.GenericList;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.utils.data.GenericPropertyEditorPanel;
 import org.ginsim.gui.utils.data.GenericPropertyInfo;
 import org.ginsim.gui.utils.data.ObjectEditor;
 
 
-public class RegulatoryEdgeEditor extends ObjectEditor<RegulatoryMultiEdge> {
+public class RegulatoryEdgeEditor extends ObjectEditor<RegulatoryMultiEdge> implements GraphGUIListener<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> {
 
-	private final Graph graph;
+	private final RegulatoryGraph graph;
 	private final GraphGUI gui;
 	RegulatoryEdge edge;
 	EdgeList edgeList;
@@ -40,9 +42,10 @@ public class RegulatoryEdgeEditor extends ObjectEditor<RegulatoryMultiEdge> {
 		GenericPropertyEditorPanel.addSupportedClass(RegulatoryEdge.class, RegulatoryEdgeEditPanel.class);
 	}
 	
-	public RegulatoryEdgeEditor(RegulatoryGraph graph) {
+	public RegulatoryEdgeEditor( RegulatoryGraph graph) {
 		this.graph = graph;
 		this.gui = GUIManager.getInstance().getGraphGUI(graph);
+		gui.addGraphGUIListener(this);
 		master = graph;
 		
 		// info on top
@@ -147,6 +150,20 @@ public class RegulatoryEdgeEditor extends ObjectEditor<RegulatoryMultiEdge> {
 
 	public boolean setValue(int prop, String value) {
 		return false;
+	}
+
+	@Override
+	public void graphSelectionChanged( GraphGUI<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> gui) {
+	}
+	@Override
+	public void graphGUIClosed(	GraphGUI<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> gui) {
+	}
+
+	@Override
+	public void graphChanged(RegulatoryGraph g, GraphChangeType type, Object data) {
+		if (data == edgeList.medge) {
+			setEditedItem(edgeList.medge);
+		}
 	}
 }
 
