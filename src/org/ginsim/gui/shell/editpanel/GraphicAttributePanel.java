@@ -248,9 +248,13 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	 * Enabled component for background color
 	 */
 	private void colorEnabled() {
-		jButton_bgcolor.setBackground(vReader.getBackgroundColor());
-		jButton_fgcolor.setBackground(vReader.getForegroundColor());
-		jButton_textcolor.setBackground(vReader.getTextColor());
+		backgroundColor = vReader.getBackgroundColor();
+		foregroundColor = vReader.getForegroundColor();
+		textColor = vReader.getTextColor();
+		jButton_bgcolor.setBackground(backgroundColor);
+		jButton_fgcolor.setBackground(foregroundColor);
+		jButton_textcolor.setBackground(textColor);
+		
 		jButton_bgcolor.setEnabled(true);
 		jButton_fgcolor.setEnabled(true);
 		jButton_textcolor.setEnabled(true);

@@ -384,25 +384,6 @@ public class GUIManager {
 	}
 	
 	
-	// ---------------------- METHODS LINKED TO THE OptionStore -----------------------------------
-	
-	/**
-	 * This method initialize the OptionStore by setting the default values to not defined nodes and edges attributes
-	 * 
-	 */
-    public static void initializeOptions() {
-    	
-    	OptionStore.getOption( EdgeAttributeReaderImpl.EDGE_COLOR, new Integer(-13395457));
-    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_BG, new Integer(-26368));
-    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_FG, new Integer(Color.WHITE.getRGB()));
-    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_HEIGHT, new Integer(30));
-    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_WIDTH, new Integer(55));
-    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_SHAPE, NodeShape.RECTANGLE.name());
-    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_BORDER, NodeBorder.SIMPLE.name());	
-    }
-    
-    
-	
 	/**
 	 * Class containing the relationship between a Graph, its GraphGUI the corresponding Frame
 	 * 

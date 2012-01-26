@@ -18,34 +18,40 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 	
 	public static final String VERTEX_BG = "vs.vertexbg";
 	public static final String VERTEX_FG = "vs.vertexfg";
+	public static final String VERTEX_TEXT = "vs.vertextext";
 	public static final String VERTEX_HEIGHT = "vs.vertexheight";
 	public static final String VERTEX_WIDTH = "vs.vertexwidth";
 	public static final String VERTEX_SHAPE = "vs.vertexshape";
 	public static final String VERTEX_BORDER = "vs.vertexborder";
 
-    public static Color bg = new Color(((Integer)OptionStore.getOption( VERTEX_BG)).intValue());
-    public static Color fg = new Color(((Integer)OptionStore.getOption( VERTEX_FG)).intValue());
+    public static Color bg = new Color(OptionStore.getOption( VERTEX_BG, -26368));
+    public static Color fg = new Color(OptionStore.getOption( VERTEX_FG, Color.WHITE.getRGB()));
+    public static Color text = new Color(OptionStore.getOption( VERTEX_TEXT, Color.BLACK.getRGB()));
     
-    public static int height = ((Integer)OptionStore.getOption( VERTEX_HEIGHT)).intValue();
-    public static int width = ((Integer)OptionStore.getOption( VERTEX_WIDTH)).intValue();
+    public static int height = OptionStore.getOption( VERTEX_HEIGHT, 25);
+    public static int width = OptionStore.getOption( VERTEX_WIDTH, 50);
     
     public static NodeShape  shape;
     public static NodeBorder border;
     
     static {
     	
-    	String s = OptionStore.getOption( VERTEX_SHAPE).toString();
-    	shape = NodeShape.valueOf(s);
-    	if (shape == null) {
+    	String s = OptionStore.getOption( VERTEX_SHAPE, NodeShape.RECTANGLE.name());
+    	try {
+    		shape = NodeShape.valueOf(s);
+    	} catch (IllegalArgumentException e) {
     		LogManager.error("Invalid shape in option: "+ s);
     		shape = NodeShape.RECTANGLE;
+    		OptionStore.setOption( VERTEX_SHAPE, shape);
     	}
     	
-    	s = OptionStore.getOption( VERTEX_BORDER).toString();
-    	border = NodeBorder.valueOf(s);
-    	if (border == null) {
+    	s = OptionStore.getOption( VERTEX_BORDER, NodeBorder.SIMPLE.name());
+    	try {
+        	border = NodeBorder.valueOf(s);
+    	} catch (IllegalArgumentException e) {
     		LogManager.error("Invalid border in option: "+ s);
     		border = NodeBorder.SIMPLE;
+    		OptionStore.setOption( VERTEX_BORDER, NodeBorder.SIMPLE.name());
     	}
     	
     }
@@ -76,6 +82,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
             vvsd = new NodeVSdata();
             vvsd.bgcolor = bg;
             vvsd.fgcolor = fg;
+            vvsd.textcolor = text;
             vvsd.border = border;
             vvsd.bounds.setFrame(vvsd.bounds.getX(), vvsd.bounds.getY(), width, height);
             vvsd.shape = shape;
