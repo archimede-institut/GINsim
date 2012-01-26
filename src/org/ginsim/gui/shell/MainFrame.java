@@ -394,7 +394,9 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 		GraphGUI graph_gui = GUIManager.getInstance().getGraphGUI( g);
 		
 		if( graph_gui != null){
-			graph_gui.setSaved( type == GraphChangeType.GRAPHSAVED);
+			if( graph_gui.canBeSaved()){
+				graph_gui.setSaved( type == GraphChangeType.GRAPHSAVED);
+			}
 		}
 	}
 }

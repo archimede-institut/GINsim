@@ -70,20 +70,30 @@ public class GUIManager {
 		return graph;
 	}
 
+	
 	/**
 	 * Build a new frame for the given Graph by creating a suitable GraphGUI and memorize their relationship
 	 * 
 	 * @param graph the graph for which a Frame is desired
 	 * @return a new frame for the given Graph
-	 * @throws ClassNotFoundException
-	 * @throws IllegalAccessException
-	 * @throws InstantiationException
 	 */
-	public Frame newFrame( Graph graph) {
+	public Frame newFrame( Graph graph){
+		
+		return newFrame( graph, true);
+	}
+	
+	/**
+	 * Build a new frame for the given Graph by creating a suitable GraphGUI and memorize their relationship
+	 * 
+	 * @param graph the graph for which a Frame is desired
+	 * @param can_be_saved a boolean indicating if the graph associated to the frame can be saved or not
+	 * @return a new frame for the given Graph
+	 */
+	public Frame newFrame( Graph graph, boolean can_be_saved) {
 		
 		GraphGUI graph_gui;
 		try {
-			graph_gui = createGraphGUI( graph);
+			graph_gui = createGraphGUI( graph, can_be_saved);
 			MainFrame frame = new MainFrame("test", 800, 700, graph_gui);
 			frame.setVisible(true);
 			
@@ -109,7 +119,7 @@ public class GUIManager {
 	 * @throws IllegalAccessException
 	 * @throws InstantiationException
 	 */
-	private GraphGUI createGraphGUI( Graph graph) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+	private GraphGUI createGraphGUI( Graph graph, boolean can_be_saved) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
 		
 		// get a graph GUI helper
 		GraphGUIHelper<?,?,?> helper = GraphGUIHelperFactory.getFactory().getGraphGUIHelper(graph);
@@ -119,7 +129,7 @@ public class GUIManager {
 		if (graph instanceof AbstractGraph) {
 			GraphBackend<?,?> graph_backend = ((AbstractGraph<?, ?>)graph).getBackend();
 			if (graph_backend instanceof JgraphtBackendImpl) {
-				graphGUI = new JgraphGUIImpl(graph, (JgraphtBackendImpl<?,?>) graph_backend, helper);
+				graphGUI = new JgraphGUIImpl(graph, (JgraphtBackendImpl<?,?>) graph_backend, helper, can_be_saved);
 			}
 		}
 	

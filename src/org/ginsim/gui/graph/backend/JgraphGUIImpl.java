@@ -58,11 +58,14 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
     private final List<GraphGUIListener<G, V, E>> listeners = new ArrayList<GraphGUIListener<G,V,E>>();
     
     private boolean isSaved = true;
+    private boolean canBeSaved = true;
     
-	public JgraphGUIImpl(G g, JgraphtBackendImpl<V, E> backend, GraphGUIHelper<G,V,E> helper) {
+	public JgraphGUIImpl(G g, JgraphtBackendImpl<V, E> backend, GraphGUIHelper<G,V,E> helper, boolean can_be_saved) {
+		
 		this.graph = g;
 		this.m_jgAdapter = new JGraphModelAdapter<V, E>(backend);
 		this.jgraph = new GsJgraph(m_jgAdapter, g);
+		this.canBeSaved = can_be_saved;
 		
 		jgraph.setEdgeLabelDisplayed(false);
 		jgraph.addGraphSelectionListener(this);
@@ -204,9 +207,20 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 			main_frame.setFrameTitle( graph, isSaved);
 		}
 	}
+	
+	@Override
+	public boolean canBeSaved(){
+		
+		return canBeSaved;
+	}
 
 	@Override
 	public boolean save() {
+		
+		if( ! canBeSaved){
+			GUIMessageUtils.openErrorDialog( "STR_graphTypeCannotBeSaved");
+			return false;
+		}
 		
 		String savePath = GraphManager.getInstance().getGraphPath( graph);
 		
@@ -223,7 +237,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 			isSaved = true;
 			return true;
 		} catch (Exception e) {
-			GUIMessageUtils.openErrorDialog( "Unable to save file. See logs for more details");
+			GUIMessageUtils.openErrorDialog( "STR_unableToOpen_SeeLogs");
 			LogManager.error( "Unable to save file : " + savePath);
 			LogManager.error( e);
 		}
@@ -233,6 +247,12 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 
 	@Override
 	public boolean saveAs() {
+		
+		if( ! canBeSaved){
+			GUIMessageUtils.openErrorDialog( "STR_graphTypeCannotBeSaved");
+			return false;
+		}
+		
 		Frame frame = GUIManager.getInstance().getFrame(graph);
 		GsFileFilter ffilter = new GsFileFilter();
 		ffilter.setExtensionList(new String[] { "zginml" }, "GINsim files");

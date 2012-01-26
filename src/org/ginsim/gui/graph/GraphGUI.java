@@ -61,6 +61,13 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	void setSaved( boolean isSaved);
 	
 	/**
+	 * Indicates if the type of graph associated to the GraphGUI can be saved or not
+	 * 
+	 * @return true if the type of graph associated to the GraphGUI can be saved, false if not
+	 */
+	boolean canBeSaved();
+	
+	/**
 	 * Save the graph.
 	 * 
 	 * @return true, unless save failed
@@ -109,6 +116,7 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 * Force a repaint (should be used only by layout actions)
 	 */
 	void repaint();
+
 
 	
 //    /**
