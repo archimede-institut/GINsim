@@ -4,6 +4,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.PriorityQueue;
@@ -78,7 +79,11 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 	private static final boolean alwaysForceClose = false;
 
 	public MainFrame(String id, int w, int h, GraphGUI graph_gui) {
+		
 		super(id, w, h);
+		Toolkit toolkit = Toolkit.getDefaultToolkit();
+		Dimension scrnsize = toolkit.getScreenSize();
+		this.setBounds( (scrnsize.width - w)/2, (scrnsize.height - h)/2, w, h);
         this.graphGUI = graph_gui;
         GUIManager.getInstance().registerGUI( graph_gui, this);
         graph_gui.addGraphGUIListener(this);
