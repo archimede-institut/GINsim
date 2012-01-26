@@ -113,6 +113,9 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 
 			c.gridx = 0;
 			c.gridy++;
+			c.fill = GridBagConstraints.BOTH;
+			c.weightx = 1;
+			c.weighty = 1;
 			mainPanel.add(getResultPanel(), c);
 		}
 		return mainPanel;
