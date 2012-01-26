@@ -40,7 +40,7 @@ import org.ginsim.gui.graph.GraphSelection;
 /**
  * panel to configure visual settings of the graph:
  * 	line color for edges
- * 	bg/fg color and shape for nodes
+ * 	bg/fg/text color and shape for nodes
  */
 public class GraphicAttributePanel extends AbstractParameterPanel implements EditTab {
 
@@ -49,11 +49,13 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	private String nodeShape=null;
 	private Color backgroundColor=null;
 	private Color foregroundColor=null;
+	private Color textColor=null;
 	private Color lineColor=null;
 	private CardLayout cards;
 
 	private JComboBox jComboBox_shape = null;
 	private JButton jButton_bgcolor = null;
+	private JButton jButton_textcolor = null;
 	private JButton jBttn_setDefault = null;
 	private JPanel jP_attr = null;
 	private JPanel jP_bttn = null;
@@ -144,36 +146,12 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			jButton_bgcolor.setEnabled(false);
 			jButton_bgcolor.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					setBackgroundColor(JColorChooser.showDialog(frame,Translator.getString("choose_color"),getBackgroundColor()));
+					setBackgroundColor(JColorChooser.showDialog(frame,Translator.getString("choose_color"), backgroundColor));
 					applyBackgroundColor();
 				}
 			});
 		}
 		return jButton_bgcolor;
-	}
-
-	/**
-	 * Get the current selected background color
-	 * @return a color
-	 */
-	public Color getBackgroundColor() {
-		return backgroundColor;
-	}
-
-	/**
-	 * Get the current selected foreground color
-	 * @return a color
-	 */
-	public Color getForegroundColor() {
-		return foregroundColor;
-	}
-
-	/**
-	 * Get the current selected line color
-	 * @return Color
-	 */
-	public Color getLineColor() {
-		return lineColor;
 	}
 
 	/**
@@ -187,6 +165,36 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 		}
 	}
 
+	/**
+	 * This method initializes jButton_bgcolor
+	 *
+	 * @return javax.swing.JButton
+	 */
+	private JButton getJButton_textcolor() {
+		if(jButton_textcolor == null) {
+			jButton_textcolor = new JButton("");
+			jButton_textcolor.setEnabled(false);
+			jButton_textcolor.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					setTextColor(JColorChooser.showDialog(frame,Translator.getString("choose_color"), textColor));
+					applyTextColor();
+				}
+			});
+		}
+		return jButton_textcolor;
+	}
+
+	/**
+	 * set the current selected background color
+	 * @param color
+	 */
+	public void setTextColor(Color color) {
+		if (color!=null) {
+			textColor = color;
+			jButton_textcolor.setBackground(textColor);
+		}
+	}
+	
 	/**
 	 * set the current selected foreground color
 	 * @param color
@@ -242,8 +250,10 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	private void colorEnabled() {
 		jButton_bgcolor.setBackground(vReader.getBackgroundColor());
 		jButton_fgcolor.setBackground(vReader.getForegroundColor());
+		jButton_textcolor.setBackground(vReader.getTextColor());
 		jButton_bgcolor.setEnabled(true);
 		jButton_fgcolor.setEnabled(true);
+		jButton_textcolor.setEnabled(true);
 	}
 
 	/**
@@ -272,6 +282,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 		cards.show(jP_attr,jP_empty.getName());
 		jButton_bgcolor.setEnabled(false);
 		jButton_fgcolor.setEnabled(false);
+		jButton_textcolor.setEnabled(false);
 		jButton_linecolor.setEnabled(false);
 		jComboBox_shape.setEnabled(false);
 		jTF_height.setEnabled(false);
@@ -390,7 +401,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			jButton_fgcolor.setEnabled(false);
 			jButton_fgcolor.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					setForegroundColor(JColorChooser.showDialog(frame,Translator.getString("choose_color"),null));
+					setForegroundColor(JColorChooser.showDialog(frame,Translator.getString("choose_color"), foregroundColor));
 					applyForegroundColor();
 				}
 			});
@@ -537,8 +548,6 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 		eReader.refresh();
 	}
 
-
-
 	protected void applyLinePattern() {
 		eReader.setDash((EdgePattern)jCB_linePattern.getSelectedItem());
 		eReader.refresh();
@@ -644,7 +653,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			jP_node.setLayout(new java.awt.GridBagLayout());
 			jP_node.setName("jP_node");
 
-			java.awt.GridBagConstraints consGridBagConstraints3 = new java.awt.GridBagConstraints();
+			GridBagConstraints consGridBagConstraints3 = new java.awt.GridBagConstraints();
 			java.awt.GridBagConstraints consGridBagConstraints5 = new java.awt.GridBagConstraints();
 			java.awt.GridBagConstraints consGridBagConstraints101 = new java.awt.GridBagConstraints();
 			java.awt.GridBagConstraints consGridBagConstraints111 = new java.awt.GridBagConstraints();
@@ -654,6 +663,8 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			java.awt.GridBagConstraints consGridBagConstraints14 = new java.awt.GridBagConstraints();
 			java.awt.GridBagConstraints consGridBagConstraints141 = new java.awt.GridBagConstraints();
 			java.awt.GridBagConstraints consGridBagConstraints15 = new java.awt.GridBagConstraints();
+			java.awt.GridBagConstraints consGridBagConstraints16 = new java.awt.GridBagConstraints();
+			java.awt.GridBagConstraints consGridBagConstraints17 = new java.awt.GridBagConstraints();
 
 			java.awt.GridBagConstraints consGridBagConstraints20 = new java.awt.GridBagConstraints();
 			java.awt.GridBagConstraints consGridBagConstraints21 = new java.awt.GridBagConstraints();
@@ -687,6 +698,13 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			consGridBagConstraints22.gridx = 2;
 			consGridBagConstraints22.gridy = 2;
 
+			consGridBagConstraints16.gridx = 0;
+			consGridBagConstraints16.gridy = 3;
+			consGridBagConstraints16.fill = java.awt.GridBagConstraints.BOTH;
+			consGridBagConstraints17.gridx = 1;
+			consGridBagConstraints17.gridy = 3;
+			consGridBagConstraints17.fill = java.awt.GridBagConstraints.BOTH;
+
 
 			consGridBagConstraints141.gridx = 4;
 			consGridBagConstraints141.gridy = 0;
@@ -715,6 +733,12 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			jP_node.add(new JLabel(Translator.getString("STR_fg_color")),
 					consGridBagConstraints14);
 			jP_node.add(getJButton_fgcolor(), consGridBagConstraints101);
+			
+			jP_node.add(new JLabel(Translator.getString("STR_text_color")),
+					consGridBagConstraints16);
+			jP_node.add(getJButton_textcolor(), consGridBagConstraints17);
+			
+			
 			jP_node.add(getJCB_selectForeground(), consGridBagConstraints22);
 
 			jP_node.add(new JLabel(Translator.getString("STR_height")),
@@ -821,6 +845,11 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 
 	protected void applyForegroundColor() {
 		vReader.setForegroundColor(jButton_fgcolor.getBackground());
+		vReader.refresh();
+	}
+
+	protected void applyTextColor() {
+		vReader.setTextColor(jButton_textcolor.getBackground());
 		vReader.refresh();
 	}
 

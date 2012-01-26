@@ -132,6 +132,22 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
     }
 
     @Override
+    public Color getTextColor() {
+        if (vvsd == null) {
+            return null;
+        }
+        return vvsd.textcolor;
+    }
+
+    @Override
+   public void setTextColor(Color color) {
+        if (vvsd == null) {
+            return;
+        }
+        vvsd.textcolor = color;
+    }
+
+    @Override
     public Color getBackgroundColor() {
         if (vvsd == null) {
             return null;
@@ -215,6 +231,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
     class NodeVSdata {
     	protected Rectangle bounds = new Rectangle();
         protected Color fgcolor;
+        protected Color textcolor;
         protected Color bgcolor;
         
         protected NodeShape shape;

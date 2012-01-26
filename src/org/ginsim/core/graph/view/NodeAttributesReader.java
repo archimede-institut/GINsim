@@ -34,7 +34,7 @@ public interface NodeAttributesReader extends AttributesReader {
     int getWidth();
     
     /**
-     * @return the foreground (text) color of the vertex.
+     * @return the foreground (border) color of the vertex.
      */
     Color getForegroundColor();
     /**
@@ -42,6 +42,15 @@ public interface NodeAttributesReader extends AttributesReader {
      * @param color the new color.
      */
     void setForegroundColor(Color color);
+    /**
+     * @return the text color of the vertex.
+     */
+    Color getTextColor();
+    /**
+     * change the text color of the vertex.
+     * @param color the new color.
+     */
+    void setTextColor(Color color);
     /**
      * @return the background color of the vertex.
      */

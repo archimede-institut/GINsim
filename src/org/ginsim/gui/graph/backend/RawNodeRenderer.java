@@ -81,6 +81,7 @@ class RawNodeRenderer extends JLabel {
 			g2d.fillRect(w, 0, SW, SW);
 		}
 
+		setForeground(reader.getTextColor());
 		super.paint(g);
 	}
 
