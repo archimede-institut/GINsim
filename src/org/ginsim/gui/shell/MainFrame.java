@@ -83,7 +83,10 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 		super(id, w, h);
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension scrnsize = toolkit.getScreenSize();
-		this.setBounds( (scrnsize.width - w)/2, (scrnsize.height - h)/2, w, h);
+		int cood_x = scrnsize.width >= w ? (scrnsize.width - w)/2:0;
+		int cood_y = scrnsize.height >= h ? (scrnsize.height - h)/2:0;
+		this.setBounds( cood_x, cood_y, w, h);
+		
         this.graphGUI = graph_gui;
         GUIManager.getInstance().registerGUI( graph_gui, this);
         graph_gui.addGraphGUIListener(this);
