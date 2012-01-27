@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -96,11 +95,7 @@ public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  exten
     @Override
     protected boolean isAssociationValid( Graph<?, ?> graph) {
     	
-    	if( graph instanceof RegulatoryGraph){
-    		return true;
-    	}
-    	
-    	return false;
+		return true;
     }
 
     @Override

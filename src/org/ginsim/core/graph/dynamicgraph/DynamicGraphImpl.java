@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.ginsim.common.exception.GsException;
 import org.ginsim.common.xml.XMLWriter;
@@ -71,11 +71,11 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	 * @param map
 	 * @param file
 	 */
-	public DynamicGraphImpl(Map map, File file)  throws GsException{
+	public DynamicGraphImpl(Set<String> set, File file)  throws GsException{
 		
 	    this( true);
         DynamicParser parser = new DynamicParser();
-        parser.parse(file, map, this);
+        parser.parse(file, set, this);
 	}
 	
 	/**

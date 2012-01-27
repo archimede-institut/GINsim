@@ -363,7 +363,7 @@ public class GUIManager {
 	 * 
 	 * @param new_graph the graph to manage
 	 * @param parentGraph the graph from which the new graph was generated
-	 * @param b 
+	 * @param b (unused)
 	 */
 	public void whatToDoWithGraph(Graph<?, ?> new_graph, Graph<?,?> parent_graph, boolean b) {
 		

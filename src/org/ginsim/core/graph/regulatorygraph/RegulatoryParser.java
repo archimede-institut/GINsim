@@ -8,6 +8,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Vector;
 
 import org.ginsim.common.exception.GsException;
@@ -64,7 +65,7 @@ public final class RegulatoryParser extends GsXMLHelper {
     private Map m_edges = new HashMap();
     private Vector v_waitingInteractions = new Vector();
     private String s_nodeOrder;
-    private Map map;
+    private Set set;
 
     private Hashtable values;
     private Vector v_function;
@@ -78,16 +79,15 @@ public final class RegulatoryParser extends GsXMLHelper {
     }
 
     /**
-     * @param map
+     * @param set
      * @param attributes
      * @param s_dtd
-     * @param s_filename
      * @throws SAXException
      */
-    public RegulatoryParser(Map map, Attributes attributes, String s_dtd, String file_name) throws GsException {
+    public RegulatoryParser(Set set, Attributes attributes, String s_dtd) throws GsException {
     	
         graph = GraphManager.getInstance().getNewGraph( RegulatoryGraph.class, true);
-        this.map = map;
+        this.set = set;
 		s_nodeOrder = attributes.getValue("nodeorder");
         if (s_nodeOrder == null) {
             throw new GsException( GsException.GRAVITY_ERROR, "missing nodeOrder");
@@ -111,9 +111,9 @@ public final class RegulatoryParser extends GsXMLHelper {
      * @param map
      * @param graph the graph to fill with this data.
      */
-    public void parse(File file, Map map, Graph<?,?> graph)  throws GsException{
+    public void parse(File file, Set set, Graph<?,?> graph)  throws GsException{
     	this.graph = (RegulatoryGraph) graph;
-    	this.map = map;
+    	this.set = set;
 		  vareader = graph.getNodeAttributeReader();
 		  ereader = graph.getEdgeAttributeReader();
 		  startParsing(file);
@@ -230,7 +230,7 @@ public final class RegulatoryParser extends GsXMLHelper {
         	case POS_OUT:
                 if (qName.equals("node")) {
                     String id = attributes.getValue("id");
-                    if (map == null || map.containsKey(id)) {
+                    if (set == null || set.contains(id)) {
                         pos = POS_VERTEX;
                         try {
                             byte maxvalue = (byte)Integer.parseInt(attributes.getValue("maxvalue"));
@@ -258,7 +258,7 @@ public final class RegulatoryParser extends GsXMLHelper {
                 } else if (qName.equals("edge")) {
                     String from = attributes.getValue("from");
                     String to = attributes.getValue("to");
-                    if (map == null || map.containsKey(from) && map.containsKey(to)) {
+                    if (set == null || set.contains(from) && set.contains(to)) {
                         pos = POS_EDGE;
                         try {
                             String id = attributes.getValue("id");
@@ -436,7 +436,7 @@ public final class RegulatoryParser extends GsXMLHelper {
     		Vector v_order = new Vector();
     		String[] t_order = s_nodeOrder.split(" ");
     		boolean ok = true;
-    		if (map == null) {
+    		if (set == null) {
 	    		for (int i=0 ; i<t_order.length ; i++) {
 	    			RegulatoryNode vertex = (RegulatoryNode)graph.getNodeByName(t_order[i]);
 	    			if (vertex == null) {
@@ -447,7 +447,7 @@ public final class RegulatoryParser extends GsXMLHelper {
 	    		}
     		} else {
 	    		for (int i=0 ; i<t_order.length ; i++) {
-	    		    if (map.containsKey(t_order[i])) {
+	    		    if (set.contains(t_order[i])) {
 	    		        RegulatoryNode vertex = (RegulatoryNode)graph.getNodeByName(t_order[i]);
 	    		        if (vertex == null) {
 	    		            ok = false;

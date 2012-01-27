@@ -1,7 +1,7 @@
 package org.ginsim.core.graph.dynamicgraph;
 
 import java.io.File;
-import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import org.ginsim.common.exception.GsException;
@@ -41,22 +41,22 @@ public final class DynamicParser extends GsXMLHelper {
     private NodeAttributesReader vareader = null;
     private EdgeAttributesReader ereader = null;
     private Annotation annotation = null;
-    private Map map;
+    private Set set;
 
     /**
      */
     public DynamicParser() {
     }
     /**
-     * @param map
+     * @param set
      * @param attributes
      * @param s_dtd
      * @param s_filename
      */
-    public DynamicParser(Map map, Attributes attributes, String s_dtd)throws GsException {
+    public DynamicParser(Set<String> set, Attributes attributes, String s_dtd) throws GsException {
     	
         this.graph = GraphManager.getInstance().getNewGraph( DynamicGraph.class, true);
-    	this.map = map;
+    	this.set = set;
 		vareader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
 		
@@ -81,10 +81,10 @@ public final class DynamicParser extends GsXMLHelper {
      * @param map "filter" to open only partially a graph
      * @param graph the graph to fill with this data.
      */
-    public void parse(File file, Map map, Graph graph)  throws GsException{
+    public void parse(File file, Set<String> set, Graph graph)  throws GsException{
     	
     	this.graph = (DynamicGraph) graph;
-    	this.map = map;
+    	this.set = set;
 		vareader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
 
@@ -150,7 +150,7 @@ public final class DynamicParser extends GsXMLHelper {
         	case POS_OUT:
                 if (qName.equals("node")) {
                     String id = attributes.getValue("id");
-                    if (map == null || map.containsKey(id.substring(1))) {
+                    if (set == null || set.contains(id.substring(1))) {
 	                    pos = POS_VERTEX;
 	                    vertex = new DynamicNode(id);
 	                    graph.addNode(vertex);
@@ -160,7 +160,7 @@ public final class DynamicParser extends GsXMLHelper {
                 } else if (qName.equals("edge")) {
                     String s_from = attributes.getValue("from");
                     String s_to = attributes.getValue("to");
-                    if (map == null || map.containsKey(s_from.substring(1)) && map.containsKey(s_to.substring(1))) {
+                    if (set == null || set.contains(s_from.substring(1)) && set.contains(s_to.substring(1))) {
                         pos = POS_EDGE;
                         DynamicNode from = new DynamicNode(s_from);
                         DynamicNode to = new DynamicNode(s_to);

@@ -189,8 +189,7 @@ public class GraphManager {
      */
     public Class getParserClass( String graph_type){
     	
-    	for (Iterator<GraphFactory> iterator = graphFactories.values().iterator(); iterator.hasNext();) {
-    		GraphFactory factory = (GraphFactory) iterator.next();
+    	for (GraphFactory<?> factory: graphFactories.values()) {
     		if( factory.getGraphType().equals( graph_type)){
     			return factory.getParser();
     		}
@@ -343,7 +342,7 @@ public class GraphManager {
      * @param file the File containing the graph to open
      * @return a graph of the correct type read from the given file
      */
-    public Graph open(Set map, File file) throws GsException{
+    public Graph open(Set set, File file) throws GsException{
         try {
             ZipFile f = new ZipFile(file);
             try {
@@ -367,8 +366,8 @@ public class GraphManager {
                 	}
                 }
                 
-                Graph graph = parser.parse(f.getInputStream(ze), map);
-                if (map == null) {
+                Graph graph = parser.parse(f.getInputStream(ze), set);
+                if (set == null) {
                 	// try to restore associated data ONLY if no subgraph is selected
                 	// TODO: need to load associated entry with subgraphs
                 	List v_omanager = ObjectAssociationManager.getInstance().getObjectManagerList();
@@ -407,7 +406,7 @@ public class GraphManager {
         // not a zip file
         GinmlParser parser = new GinmlParser();
         try {
-            Graph graph = parser.parse(new FileInputStream(file), map);
+            Graph graph = parser.parse(new FileInputStream(file), set);
             registerGraph( graph, file.getAbsolutePath());
             return graph;
         } catch (FileNotFoundException e) {

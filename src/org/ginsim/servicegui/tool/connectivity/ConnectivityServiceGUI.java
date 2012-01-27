@@ -4,12 +4,12 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.swing.Action;
 
 import org.ginsim.common.exception.GsException;
+import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
@@ -90,36 +90,44 @@ class ExtractFromSCCGraphAction extends GenericGraphAction {
 		GraphSelection<NodeReducedData, ?> selection = gui.getSelection();
 		
 		if (selection == null || selection.getSelectedNodes() == null || selection.getSelectedNodes().size() < 1) {
-			System.out.println("Select some nodes");
+			LogManager.debug("Select some nodes");
+			GUIMessageUtils.openErrorDialog( "STR_unableToOpen_SeeLogs");
 			return;
 		}
 
 		String s_ag = null;
 		try {
 			s_ag = g.getAssociatedGraphID();
-		} catch (Exception e) {	}
+		} catch (Exception e) {
+			
+		}
 		if (s_ag == null) {
-			System.out.println("Missing associated Graph");
+			LogManager.debug("Missing associated Graph");
+			GUIMessageUtils.openErrorDialog( "STR_unableToOpen_SeeLogs");
 			return;
 		}
 		
 		File f = new File(s_ag);
 		if (!f.exists()) {
-			System.out.println("Missing associated Graph file: "+s_ag);
+			LogManager.debug("Missing associated Graph file: "+s_ag);
+			GUIMessageUtils.openErrorDialog( "STR_unableToOpen_SeeLogs");
 			return;
 		}
 		
 		
 	    Graph subgraph = null;
 	    try {
-			Set<?> m = g.getSelectedSet( selection.getSelectedNodes());
-			LogManager.debug("Extracting from: "+s_ag+". Selected: "+m);
-			subgraph = GraphManager.getInstance().open(m, f);
+			Set<?> set = g.getSelectedSet( selection.getSelectedNodes());
+			subgraph = GraphManager.getInstance().open(set, f);
 		} catch (GsException e) {
 			e.printStackTrace();
 		}
-	    if (subgraph != null) {
-	        GUIManager.getInstance().whatToDoWithGraph(null, subgraph, true);
+	    
+	    if (subgraph == null) {
+			LogManager.debug("SCC extraction led to a null graph");
+			return;
 	    }
+	    
+        GUIManager.getInstance().whatToDoWithGraph(subgraph, graph, true);
 	}
 }

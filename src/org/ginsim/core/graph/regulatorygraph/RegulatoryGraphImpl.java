@@ -1,6 +1,5 @@
 package org.ginsim.core.graph.regulatorygraph;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
@@ -8,7 +7,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.ginsim.common.exception.GsException;
 import org.ginsim.common.xml.XMLWriter;
@@ -91,9 +89,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 		this.nodeOrder = nodeOrder;
 	}
     
-    
-	
-    
     /**
      * @param parsing
      */
@@ -104,17 +99,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     	// getEdgeAttributeReader().setDefaultEdgeSize(2);
     }
     
-    /**
-     * @param map
-     * @param file
-     */
-    public RegulatoryGraphImpl(Map map, File file)  throws GsException{
-    	
-        this( true);
-        RegulatoryParser parser = new RegulatoryParser();
-        parser.parse(file, map, this);
-    }
-
     public RegulatoryNode addNode() {
 
         while ( getNodeByName("G" + nextid) != null) {

@@ -2,7 +2,6 @@ package org.ginsim.core.graph;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
 import java.util.Set;
 
 import org.ginsim.common.exception.GsException;
@@ -67,22 +66,19 @@ public final class GinmlParser extends XMLHelper {
 	            String s_class = attributes.getValue("class");
 	            Class parser_class = GraphManager.getInstance().getParserClass( s_class);
 	            if( parser_class != null){
-		            Class<?> parameter_types[] = new Class[4];
-		            parameter_types[0] = Map.class;
+		            Class<?> parameter_types[] = new Class[3];
+		            parameter_types[0] = Set.class;
 		            parameter_types[1] = Attributes.class;
 		            parameter_types[2] = String.class;
-		            parameter_types[3] = String.class;
 		            
-		            Object[] arg_list = new Object[4];
+		            Object[] arg_list = new Object[3];
 		            arg_list[0] = map;
 		            arg_list[1] = attributes;
 		            arg_list[2] = s_dtd;
-		            arg_list[3] = s_filename;
 
 		            realParser = (GsXMLHelper) parser_class.getConstructor( parameter_types).newInstance( arg_list);
 	            	
-	            }
-	            else {
+	            } else {
 	                throw new SAXException( new GsException( GsException.GRAVITY_ERROR, "STR_noSuchGraphType"));
 	            }
         	}

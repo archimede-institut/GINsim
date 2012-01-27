@@ -42,7 +42,7 @@ public class DynamicGraphFactory implements GraphFactory<DynamicGraph> {
     @Override
 	public String getGraphType() {
 		
-		return "dynamic";
+		return "dynamical";
 	}
 	
     @Override
