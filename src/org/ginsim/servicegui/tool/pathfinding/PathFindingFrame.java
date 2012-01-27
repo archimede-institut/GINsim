@@ -2,6 +2,7 @@ package org.ginsim.servicegui.tool.pathfinding;
 
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.datatransfer.Clipboard;
@@ -58,6 +59,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	
 	public PathFindingFrame( Graph graph) {
 		super(GUIManager.getInstance().getFrame(graph), "pathFinding", 420, 260);
+		this.setMinimumSize(new Dimension(300, 300));
 		this.graph = graph;
         initialize();
     }
@@ -74,7 +76,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		
 			c.gridx = 0;
 			c.gridy = 0;
-			c.fill = GridBagConstraints.BOTH;
+			c.fill = GridBagConstraints.HORIZONTAL;
 			c.ipadx = 10;
 			c.gridwidth = 3;
 			mainPanel.add(new JLabel(Translator.getString("STR_pathFinding")), c);
@@ -138,21 +140,26 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 
 	private Component getResultPanel() {
 		if (resultsPanel == null) {
-			resultsPanel = new JPanel();
+			resultsPanel = new JPanel(new GridBagLayout());
 			resultsPanel.setVisible(false);
-			GridBagConstraints c = new GridBagConstraints();
 			
+			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = 0;
 			c.gridy = 0;
-			c.gridwidth = 2;
+			c.gridheight = 3;
+			c.weighty = 1;
 			c.weightx = 1;
+			c.fill = GridBagConstraints.BOTH;
 			resultsPanel.add(getPathScrollPane(),c);
 
-			c.gridx = 0;
-			c.gridy++;
-			c.gridwidth = 1;
+			c = new GridBagConstraints();
+			c.gridx = 1;
+			c.gridy = 0;
 			resultsPanel.add(getColorizeButton(),c);
-			c.gridx++;
+			
+			c = new GridBagConstraints();
+			c.gridx = 1;
+			c.gridy = 1;
 			resultsPanel.add(getCopyButton(),c);
 
 		}
