@@ -338,13 +338,20 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	 */
 	private Object getNode(JTextField textField) {
 		
-		Vector foundNodes = graph.searchNodes( textField.getText());
+		String lookup = textField.getText();
+		Vector foundNodes = graph.searchNodes( lookup);
 		if (foundNodes == null) {
 			GUIMessageUtils.openErrorDialog(Translator.getString("STR_pathFinding_no_node")+textField.getText(), this);
 			return null;
 		} else if (foundNodes.size() == 1) {
 			return foundNodes.get(0);
 		} else if (foundNodes.size() > 1) {
+			// roughly search for a perfect match
+			for (Object cur: foundNodes) {
+				if (cur.toString().equals( lookup)) {
+					return cur;
+				}
+			}
 			GUIMessageUtils.openErrorDialog(Translator.getString("STR_pathFinding_too_much_nodes")+textField.getText(), this);
 			return null;
 		} else {
