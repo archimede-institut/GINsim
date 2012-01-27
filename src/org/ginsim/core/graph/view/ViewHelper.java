@@ -251,7 +251,6 @@ class PointList extends ArrayList<Point> {
 			return;
 		}
 		
-		LogManager.debug("Adding point to "+ edge + " -- ("+index+") --> "+p);
 		reader.setEdge(edge);
 		List<Point> points = reader.getPoints();
 		if (points == null) {
@@ -263,7 +262,6 @@ class PointList extends ArrayList<Point> {
 	}
 
 	public Point remove(int index) {
-		LogManager.debug("Remove point: "+index);
 		List<Point> points = reader.getPoints();
 		if (points != null) {
 			points.remove(index-1);
