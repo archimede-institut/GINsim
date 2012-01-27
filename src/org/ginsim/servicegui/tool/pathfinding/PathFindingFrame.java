@@ -16,7 +16,6 @@ import java.util.Vector;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -394,17 +393,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	}
 	
 	public void cancel() {
-		if (isColorized) {
-			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_sure_close_undo_colorize"));
-			if (res == JOptionPane.NO_OPTION) {
-				super.cancel();
-			} else if (res == JOptionPane.CANCEL_OPTION) {
-				return;
-			} else if (res == JOptionPane.YES_OPTION) {
-				undoColorize();
-				super.cancel();
-			}
-		}
+		undoColorize();
 		super.cancel();
 	}
 }
