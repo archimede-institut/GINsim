@@ -39,6 +39,8 @@ import org.ginsim.gui.graph.GraphGUI;
 public class SearchFrame extends SimpleDialog implements ListSelectionListener {
 	private static final long serialVersionUID = 381064983897248950L;
 
+	private static final int MAX_FOUND_NODES_DISPLAYED = 50;
+
 	private GraphGUI<?, ?, ?> gui;
 	private Graph<?,?> g;
 	
@@ -128,7 +130,11 @@ public class SearchFrame extends SimpleDialog implements ListSelectionListener {
 
 	public void search() {
 		tableModel.setData(new Vector());
-		tableModel.setData(g.searchNodes(searchTextField.getText()));
+		List<?> foundNodes = g.searchNodes(searchTextField.getText());
+		if (foundNodes.size() > MAX_FOUND_NODES_DISPLAYED) {
+			foundNodes = (List<?>) foundNodes.subList(0, MAX_FOUND_NODES_DISPLAYED);
+		}
+		tableModel.setData(foundNodes);
 	}
 
 	public void selectNodes() {
