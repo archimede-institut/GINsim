@@ -95,7 +95,10 @@ public class GsEdgeView extends EdgeView {
 		}
 		
 		List<Point> points = ViewHelper.getPoints(renderer.nodeReader, renderer.reader, edge);
-		int delta = 5*(int)renderer.reader.getLineWidth();
+		int delta = 2*(int)renderer.reader.getLineWidth();
+		if (delta < 5) {
+			delta = 5;
+		}
 		
 		Rectangle rect = new Rectangle(points.get(0));
 		for (Point p: points) {

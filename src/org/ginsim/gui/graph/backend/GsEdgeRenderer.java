@@ -1,5 +1,8 @@
 package org.ginsim.gui.graph.backend;
 
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
@@ -16,6 +19,8 @@ public class GsEdgeRenderer extends EdgeRenderer {
 	private GsJgraph jgraph;
 	protected final EdgeAttributesReader reader;
 	protected final NodeAttributesReader nodeReader;
+	
+	private static boolean DEBUG_BOUNDS = false;
 	
 	protected GsEdgeRenderer(GsJgraph jgraph, EdgeAttributesReader reader, NodeAttributesReader nodeReader) {
 		this.jgraph = jgraph;
@@ -42,5 +47,14 @@ public class GsEdgeRenderer extends EdgeRenderer {
         }
         return super.createLineEnd(size, style, src, dst);
     }
+
+	public void paint(Graphics g) {
+		super.paint(g);
+		if (DEBUG_BOUNDS) {
+			g.setColor(Color.LIGHT_GRAY);
+			Rectangle r = getBounds();
+			g.drawRect(r.x+1, r.y+1, r.width-2, r.height-2);
+		}
+	}
 
 }
