@@ -3,6 +3,7 @@ package org.ginsim.core.graph;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
+import java.util.Set;
 
 import org.ginsim.common.exception.GsException;
 import org.ginsim.common.xml.ParsingWarningReport;
@@ -19,7 +20,7 @@ import org.xml.sax.SAXException;
  */
 public final class GinmlParser extends XMLHelper {
     
-    private Map map;
+    private Set map;
     private GsXMLHelper realParser = null;
     
     static {
@@ -41,7 +42,7 @@ public final class GinmlParser extends XMLHelper {
      * @param map
      * @return the new graph
      */
-    public Graph  parse(InputStream is, Map map)  throws GsException{
+    public Graph  parse(InputStream is, Set map)  throws GsException{
     	this.map = map;
 		startParsing(is);
 		if (realParser == null) {

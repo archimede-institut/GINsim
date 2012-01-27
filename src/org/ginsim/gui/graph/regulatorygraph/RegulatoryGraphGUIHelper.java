@@ -14,6 +14,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.gui.graph.AddEdgeAction;
 import org.ginsim.gui.graph.AddNodeAction;
+import org.ginsim.gui.graph.DeleteAction;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
@@ -42,6 +43,7 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph,
 		actions.add(new AddRegulatoryEdgeAction(graph, "Add positive regulations", RegulatoryEdgeSign.POSITIVE));
 		actions.add(new AddRegulatoryEdgeAction(graph, "Add negative regulations", RegulatoryEdgeSign.NEGATIVE));
 		actions.add(new AddRegulatoryEdgeAction(graph, "Add unknown regulations", RegulatoryEdgeSign.UNKNOWN));
+		actions.add(new DeleteAction(graph));
 		return actions;
 	}
 

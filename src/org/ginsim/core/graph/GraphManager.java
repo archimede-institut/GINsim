@@ -343,7 +343,7 @@ public class GraphManager {
      * @param file the File containing the graph to open
      * @return a graph of the correct type read from the given file
      */
-    public Graph open(Map map, File file) throws GsException{
+    public Graph open(Set map, File file) throws GsException{
         try {
             ZipFile f = new ZipFile(file);
             try {

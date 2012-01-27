@@ -62,16 +62,22 @@ public class EditActionManager {
 	 * @param action
 	 */
 	public void setSelectedAction(EditAction action) {
-		if ( this.selectedAction == action) {
+
+		if (action == EDIT_MODE) {
+			// default action is always locked
+			selectedAction = action;
+			locked = true;
+		} else if (action.getMode() == EditMode.DELETE) {
+			// delete action is applied immediately
+			locked = false;
+			action.performed(this);
+		} else if ( this.selectedAction == action) {
+			// clicking on the selected action locks it
 			locked = true;
 		} else {
+			// normal behaviour: change the selected action and unlock
 			selectedAction = action;
 			locked = false;
-		}
-		
-		// default action is always locked
-		if (action == EDIT_MODE) {
-			locked = true;
 		}
 		
 		// refresh buttons

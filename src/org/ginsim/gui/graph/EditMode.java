@@ -6,5 +6,5 @@ package org.ginsim.gui.graph;
  * @author Aurelien Naldi
  */
 public enum EditMode {
-	EDIT, NODE, EDGE, EDGEPOINT;
+	EDIT, NODE, EDGE, EDGEPOINT, DELETE;
 }

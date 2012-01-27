@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import org.ginsim.common.exception.GsException;
@@ -218,14 +220,14 @@ public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  exten
      * @return a map referencing all real nodes in the selected CC
      */
     @Override
-    public Map getSelectedMap(Collection<NodeReducedData> selection) {
-        Map map = new HashMap();
+    public Set<String> getSelectedSet(Collection<NodeReducedData> selection) {
+        Set set = new HashSet();
         for (NodeReducedData node: selection) {
             Vector content = node.getContent();
             for (int i=0 ; i<content.size() ; i++) {
-                map.put(content.get(i).toString(), null);
+                set.add(content.get(i).toString());
             }
         }
-        return map;
+        return set;
     }
 }

@@ -3,6 +3,7 @@ package org.ginsim.core.graph.reducedgraph;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Set;
 
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
@@ -26,5 +27,5 @@ public interface ReducedGraph<AG extends Graph<AV,AE>, AV, AE extends Edge<AV>> 
     /**
      * @return a map referencing all real nodes in the selected CC
      */
-    public Map getSelectedMap(Collection<NodeReducedData> selection);
+    public Set<String> getSelectedSet(Collection<NodeReducedData> selection);
 }
