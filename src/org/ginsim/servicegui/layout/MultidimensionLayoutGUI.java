@@ -47,7 +47,9 @@ public class MultidimensionLayoutGUI {
 	private JTable table;
 	private JDialog frame;
 
-    private void initGUI(JFrame parent) {
+    public void initGUI(DynamicGraph graph) {
+    	this.graph = graph;
+    	
 		frame = new JDialog();
 		frame.setMinimumSize(new Dimension(400, 300));
 		frame.setTitle(Translator.getString("STR_multidimention_placement"));

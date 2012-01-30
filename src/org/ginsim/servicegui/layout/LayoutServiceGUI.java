@@ -13,6 +13,7 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.LayoutAction;
 import org.ginsim.gui.service.common.ServiceStatus;
+import org.ginsim.service.layout.DynamicLayout3D;
 import org.ginsim.service.layout.LayoutService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -79,15 +80,13 @@ class BasicLayoutAction extends LayoutAction<Graph<?,?>> {
 }
 
 enum DynamicalLayoutType {
-	LAYOUT_3D("3D layout", LayoutService.LEVEL),
-	LAYOUT_MD("Multidimension layout", LayoutService.LEVEL_INV);
+	LAYOUT_3D("3D layout"),
+	LAYOUT_MD("Multidimension layout");
 	
 	public final String name;
-	public final int key;
 	
-	private DynamicalLayoutType(String name, int key) {
+	private DynamicalLayoutType(String name) {
 		this.name = name;
-		this.key = key;
 	}
 }
 
@@ -104,10 +103,20 @@ class DynamicalLayoutAction extends LayoutAction<DynamicGraph> {
 	public void doLayout( ActionEvent arg0) {
 		switch (type) {
 		case LAYOUT_3D:
-			// FIXME: run 3D layout
+			try {
+				DynamicLayout3D.runLayout(graph);
+			} catch (GsException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 		case LAYOUT_MD:
-			// FIXME: run MD layout
+			try {
+				MultidimensionLayoutGUI multidimensionLayoutGUI = new MultidimensionLayoutGUI();
+				multidimensionLayoutGUI.initGUI(graph);
+			} catch (Exception e) {
+				// TODO: handle exception
+			}
 			break;
 		}
 	}
