@@ -15,6 +15,7 @@ import javax.swing.JToolBar;
 import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
+import org.ginsim.common.utils.Translator;
 import org.ginsim.common.utils.log.LogManager;
 
 
@@ -29,8 +30,8 @@ import org.ginsim.common.utils.log.LogManager;
  */
 public class EditActionManager {
 
-	private static final EditAction EDIT_MODE = new EditAction(EditMode.EDIT, "Select/Move", "editmode.gif");
-	private static final EditAction EDGEPOINT_MODE = new EditAction(EditMode.EDGEPOINT, "Edit edge intermediate points", "customizeedgerouting.gif");
+	private static final EditAction EDIT_MODE = new EditAction(EditMode.EDIT, Translator.getString( "STR_edit_select_move"), "editmode.gif");
+	private static final EditAction EDGEPOINT_MODE = new EditAction(EditMode.EDGEPOINT, Translator.getString( "STR_editEdgeIntermediatePoints_descr"), "customizeedgerouting.gif");
 	
 	private EditAction selectedAction = EDGEPOINT_MODE;
 	private final List<EditAction> actions;
@@ -115,9 +116,15 @@ public class EditActionManager {
 		toolbar.add(getButton(EDIT_MODE));
 		if (actions != null) {
 			for (EditAction action: actions) {
-				toolbar.add(getButton(action));
+				if( action != null){
+					toolbar.add(getButton(action));
+				}
+				else{
+					toolbar.addSeparator();
+				}
 			}
 		}
+
 		toolbar.add(getButton(EDGEPOINT_MODE));
 		
 		// set the initial status

@@ -43,7 +43,9 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph,
 		actions.add(new AddRegulatoryEdgeAction(graph, "Add positive regulations", RegulatoryEdgeSign.POSITIVE));
 		actions.add(new AddRegulatoryEdgeAction(graph, "Add negative regulations", RegulatoryEdgeSign.NEGATIVE));
 		actions.add(new AddRegulatoryEdgeAction(graph, "Add unknown regulations", RegulatoryEdgeSign.UNKNOWN));
+		actions.add( null); // Add a separator
 		actions.add(new DeleteAction(graph));
+		actions.add( null); // Add a separator
 		return actions;
 	}
 
