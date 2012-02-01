@@ -348,7 +348,11 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     }
 
     public boolean removeNode(RegulatoryNode obj) {
+    	List<RegulatoryMultiEdge> outedges = new ArrayList<RegulatoryMultiEdge>();
         for (RegulatoryMultiEdge me: getOutgoingEdges(obj)) {
+        	outedges.add(me);
+        }
+        for (RegulatoryMultiEdge me: outedges) {
             removeEdge(me);
         }
         super.removeNode( obj);
