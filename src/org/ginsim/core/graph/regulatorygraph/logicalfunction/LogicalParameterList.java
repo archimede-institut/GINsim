@@ -256,6 +256,9 @@ public class LogicalParameterList extends ArrayList {
 		}
 	}
 	public void setParameterValue(int rowIndex, int value, RegulatoryGraph graph) {
+		if (rowIndex >= size()) {
+			return;
+		}
 		LogicalParameter param = (LogicalParameter)get(rowIndex);
 		param.setValue(value, graph);
 		if (param.hasConflict || param.isDup) {
