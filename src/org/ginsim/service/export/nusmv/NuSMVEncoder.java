@@ -242,8 +242,7 @@ public class NuSMVEncoder {
 
 		// Definition of the OMDD trees
 		OMDDNode[] t_tree = config.getGraph().getAllTrees(true);
-		Perturbation mutant = (Perturbation) config.store
-				.getObject(0);
+		Perturbation mutant = (Perturbation) config.store.getObject(0);
 		if (mutant != null) {
 			mutant.apply(t_tree, config.getGraph());
 		}
@@ -618,32 +617,32 @@ public class NuSMVEncoder {
 		} // reordered [ stateVar1 ... stateVarN inputVar1 ... inputVarN ]
 		sortedVars.addAll(orderInputVars);
 
-		StableStateSearcher sss = ServiceManager.getManager()
-				.getService(StableStatesService.class)
-				.getSearcher(config.getGraph());
-		sss.setNodeOrder(sortedVars);
-		sss.setPerturbation(mutant);
-		OMDDNode omdds;
-		try {
-			omdds = sss.call();
-		} catch (Exception e) {
-			// TODO: how to manage this error?
-			return "";
-		}
-
-		int[] stateValues = new int[sortedVars.size()];
-		for (int i = 0; i < stateValues.length; i++)
-			stateValues[i] = -1;
 		String sRet = "\nweakSS := ";
-		if (bWeakSS) {
-			sRet += writeSSs(false, stateValues, omdds, orderStateVars, 0);
-		} else {
-			sRet += "\n  FALSE";
+
+		try {
+			StableStateSearcher sss = ServiceManager.getManager()
+					.getService(StableStatesService.class)
+					.getSearcher(config.getGraph());
+			sss.setNodeOrder(sortedVars);
+			sss.setPerturbation(mutant);
+			OMDDNode omdds = sss.call();
+
+			int[] stateValues = new int[sortedVars.size()];
+			for (int i = 0; i < stateValues.length; i++)
+				stateValues[i] = -1;
+			if (bWeakSS) {
+				sRet += writeSSs(false, stateValues, omdds, orderStateVars, 0);
+			} else {
+				sRet += "\n  FALSE";
+			}
+			sRet += ";\nstrongSS := ";
+			String sTmp = writeSSs(true, stateValues, omdds, orderStateVars, 0);
+			sRet += ((sTmp.isEmpty()) ? "\n  FALSE" : sTmp) + ";\n";
+		} catch (Exception e) {
+			sRet += "\n  FALSE;\nstrongSS := \n  FALSE;\n";
+			sRet += "\n -- An error occurred when computing the stable states!!\n";
 		}
-		sRet += ";\nstrongSS := ";
-		String sTmp = writeSSs(true, stateValues, omdds, orderStateVars, 0);
-		sRet += (sTmp.isEmpty()) ? "\n  FALSE" : sTmp;
-		return sRet + ";\n";
+		return sRet;
 	}
 
 	private String writeSSs(boolean bStrong, int[] stateValues, OMDDNode nodes,
