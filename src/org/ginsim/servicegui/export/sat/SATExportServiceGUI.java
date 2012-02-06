@@ -80,7 +80,11 @@ class SATExportAction extends ExportAction<RegulatoryGraph> {
 			throw new GsException(GsException.GRAVITY_ERROR,
 					"Nothing to export: SATConfig must be specified");
 		}
-
+		if (config.getGraph() == null || config.getGraph().getNodes().size() == 0) {
+			throw new GsException(GsException.GRAVITY_ERROR,
+					"Nothing to export: The graph is empty");
+		}
+		
 		SATExportService service = ServiceManager.getManager().getService(
 				SATExportService.class);
 		if (service == null) {

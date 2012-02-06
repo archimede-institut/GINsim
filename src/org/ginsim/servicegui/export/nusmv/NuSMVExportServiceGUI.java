@@ -80,6 +80,10 @@ class NuSMVExportAction extends ExportAction<RegulatoryGraph> {
 			throw new GsException(GsException.GRAVITY_ERROR,
 					"Nothing to export: NuSMVConfig must be specified");
 		}
+		if (config.getGraph() == null || config.getGraph().getNodes().size() == 0) {
+			throw new GsException(GsException.GRAVITY_ERROR,
+					"Nothing to export: The graph is empty");
+		}
 
 		NuSMVExportService service = ServiceManager.getManager().getService(
 				NuSMVExportService.class);
