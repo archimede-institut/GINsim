@@ -33,7 +33,7 @@ public class TestGenericDocumentExport {
 		config.exportMutants = false;
 		try {
 			export.run(graph, config, filename);
-		} catch (IOException e) {
+		} catch (Exception e) {
 			Assert.fail("Error during export: "+e.getMessage());
 		}
 	}

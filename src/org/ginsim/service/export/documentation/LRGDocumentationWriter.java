@@ -57,11 +57,11 @@ public class LRGDocumentationWriter {
 
 	private DocumentExportConfig config;
 	
-    public LRGDocumentationWriter(RegulatoryGraph graph) throws IOException {
+    public LRGDocumentationWriter(RegulatoryGraph graph) {
     	this.graph = graph;
     }
 
-	public void export( DocumentExportConfig config, String filename) throws IOException {
+	public void export( DocumentExportConfig config, String filename) throws Exception {
 
 		this.config = config;
 		this.doc = config.format.getWriter();
@@ -77,7 +77,7 @@ public class LRGDocumentationWriter {
 		writeDocument();
 	}
 
-	private void writeDocument() throws IOException {
+	private void writeDocument() throws Exception {
 		doc.startDocument();
 		doc.openHeader(1, "Description of the model \"" + graph.getGraphName() + "\"", null);
 				
@@ -111,7 +111,7 @@ public class LRGDocumentationWriter {
 		doc.close();//close the document		
 	}
 
-	private void writeMutants() throws IOException {
+	private void writeMutants() throws Exception {
 		RegulatoryMutants mutantList = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, MutantListManager.key, true);
 		StableStateSearcher stableSearcher = ServiceManager.get(StableStatesService.class).getSearcher(graph);
 		OMDDNode stable;
@@ -152,7 +152,7 @@ public class LRGDocumentationWriter {
 			
 			if (config.searchStableStates) {
 				stableSearcher.setPerturbation(mutant);
-				stable = stableSearcher.getStables();
+				stable = stableSearcher.call();
 				model.setResult(stable, graph);
 			}
 			int nbrow;

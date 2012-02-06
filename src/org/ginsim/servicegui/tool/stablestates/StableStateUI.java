@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.ginsim.common.utils.Translator;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
@@ -75,7 +76,11 @@ public class StableStateUI extends AbstractStackDialogHandler {
 	
 	public boolean run() {
 		algo.setPerturbation((Perturbation)mutantstore.getObject(0));
-		setResult(algo.getStables());
+		try {
+			setResult(algo.call());
+		} catch (Exception e) {
+			LogManager.error(e);
+		}
 		return false;
 	}
 	

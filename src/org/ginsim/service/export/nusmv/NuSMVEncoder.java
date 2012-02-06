@@ -623,7 +623,13 @@ public class NuSMVEncoder {
 				.getSearcher(config.getGraph());
 		sss.setNodeOrder(sortedVars);
 		sss.setPerturbation(mutant);
-		OMDDNode omdds = sss.getStables();
+		OMDDNode omdds;
+		try {
+			omdds = sss.call();
+		} catch (Exception e) {
+			// TODO: how to manage this error?
+			return "";
+		}
 
 		int[] stateValues = new int[sortedVars.size()];
 		for (int i = 0; i < stateValues.length; i++)

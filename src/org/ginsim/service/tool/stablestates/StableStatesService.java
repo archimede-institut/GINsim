@@ -34,15 +34,15 @@ public class StableStatesService implements Service {
 		return new StableStatesAlgoImpl( graph);
 	}
 	
-	public OMDDNode run( RegulatoryGraph regGraph, List nodeOrder, Perturbation mutant) {
+	public StableStateSearcher getStableStateSearcher( RegulatoryGraph regGraph, List nodeOrder, Perturbation mutant) {
 		StableStateSearcher searcher = getSearcher(regGraph);
 		searcher.setPerturbation(mutant);
-		return searcher.getStables();
+		return searcher;
 	}
 
-	public OMDDNode run( RegulatoryGraph regGraph, List nodeOrder, Perturbation mutant, OMDDNode[] trees) {
-		StableStateSearcher algo = getSearcher( regGraph);
-		algo.setPerturbation(mutant);
-		return algo.getStables();
-	}
+//	public OMDDNode run( RegulatoryGraph regGraph, List nodeOrder, Perturbation mutant, OMDDNode[] trees) {
+//		StableStateSearcher algo = getSearcher( regGraph);
+//		algo.setPerturbation(mutant);
+//		return algo.getStables();
+//	}
 }

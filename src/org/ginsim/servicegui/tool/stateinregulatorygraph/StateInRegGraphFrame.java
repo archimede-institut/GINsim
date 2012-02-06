@@ -17,6 +17,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.ginsim.common.utils.Translator;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
@@ -259,8 +260,13 @@ class StableState extends TabComponantProvidingAState {
 	protected void run() {
 		sss = ServiceManager.get(StableStatesService.class).getSearcher(g);
 		sss.setPerturbation((Perturbation) mutantStore.getObject(0));
-		OMDDNode stable = sss.getStables();
-		tableModel.setResult(stable, g);
+		OMDDNode stable;
+		try {
+			stable = sss.call();
+			tableModel.setResult(stable, g);
+		} catch (Exception e) {
+			LogManager.error(e);
+		}
 	}
 
 	public byte[] getState() {

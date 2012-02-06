@@ -65,7 +65,7 @@ public class TestStableStates {
 	}
 	
 	@Test
-	public void SimpleExampleTest() {
+	public void SimpleExampleTest() throws Exception {
 		// Create a new RegulatoryGraph
 		RegulatoryGraph regGraph = GraphManager.getInstance().getNewGraph();
 		assertNotNull( "Create graph : the graph is null.", regGraph);
@@ -109,7 +109,7 @@ public class TestStableStates {
         assertNotNull("The service didn't return any result", stableStateSearcher);
         
         //Get the OMDD containing the stable states
-        OMDDNode root = stableStateSearcher.getStables();
+        OMDDNode root = stableStateSearcher.call();
         assertNotNull("The root of the OMDD is null", root);
         
         //Check the states 

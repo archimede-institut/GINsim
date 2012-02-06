@@ -1,7 +1,6 @@
 package org.ginsim.gui.service.common;
 
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 
 import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.FileFormatDescription;
@@ -90,5 +89,5 @@ public abstract class ExportAction<G extends Graph> extends BaseAction {
 	/**
 	 * Main export function: will be called after the target file was selected
 	 */
-	abstract protected void doExport(String filename) throws GsException, IOException;
+	abstract protected void doExport(String filename) throws Exception;
 }

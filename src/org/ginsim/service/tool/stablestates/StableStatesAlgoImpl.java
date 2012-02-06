@@ -11,7 +11,6 @@ import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
 
-
 /**
  * This implements an analytic search of stable states. A state "x" is stable if, for every gene "i",
  * K(x) = x(i).
@@ -40,6 +39,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 	int nbgene, nbremain;
 	
 	public StableStatesAlgoImpl( RegulatoryGraph regGraph) {
+		super();
 		this.regGraph = regGraph;
 		this.nodeOrder = regGraph.getNodeOrder();
 	}
@@ -55,7 +55,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 	}
 	
 	@Override
-	public OMDDNode getStables() {
+	public OMDDNode call() {
 		if (ORDERTEST) {
 			buildAdjTable();
 		}
