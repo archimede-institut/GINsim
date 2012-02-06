@@ -23,7 +23,7 @@ import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
  * to generate the following states and to switch from building a full
  * state transition graph to a "simple" reachability set.
  */
-public class Simulation extends Thread implements Runnable {
+public class Simulation implements Runnable {
 
 	protected LinkedList queue = new LinkedList(); // exploration queue
 
@@ -45,12 +45,6 @@ public class Simulation extends Thread implements Runnable {
 	 * @param params
 	 */
     public Simulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params) {
-        this(regGraph, frame, params, true, true);
-    }
-    public Simulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params, boolean runNow) {
-        this(regGraph, frame, params, runNow, true);
-    }
-    public Simulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params, boolean runNow, boolean useInit) {
 		this.frame = frame;
 		this.maxdepth = params.maxdepth;
 		this.maxnodes = params.maxnodes;
@@ -60,22 +54,14 @@ public class Simulation extends Thread implements Runnable {
 		}
 		breadthFirst = params.breadthFirst;
    		updater = SimulationUpdater.getInstance(regGraph, params);
-   		if (useInit) {
-   		    initStatesIterator = new InitialStatesIterator(params.nodeOrder, params);
-   		}
-   		if (runNow) {
-   		    start();
-   		}
+	    initStatesIterator = new InitialStatesIterator(params.nodeOrder, params);
 	}
 
-    public void startSimulation(List nodeOrder, Map inputs, Map m_initState) {
-        set_initialStates(nodeOrder, inputs, m_initState);
-        start();
-    }
     public void set_initialStates(List nodeOrder, Map inputs, Map m_initState) {
         initStatesIterator = new InitialStatesIterator(nodeOrder, inputs, m_initState);
     }
-	public void interrupt() {
+
+    public void interrupt() {
 		ready = false;
 	}
 
@@ -92,6 +78,7 @@ public class Simulation extends Thread implements Runnable {
     		LogManager.error( "Unable to start Simulation");
 		}
     }
+
 	public Graph do_simulation() throws GsException {
         ready = true;
 		boolean maxDepthReached = false;

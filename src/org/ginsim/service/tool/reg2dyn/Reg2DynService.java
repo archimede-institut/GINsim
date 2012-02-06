@@ -19,7 +19,7 @@ public class Reg2DynService implements Service {
         ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new SimulationParametersManager());
     }
     
-	public Simulation run( RegulatoryGraph graph, SimulationManager singleSimulationFrame, SimulationParameters currentParameter){
+	public Simulation get( RegulatoryGraph graph, SimulationManager singleSimulationFrame, SimulationParameters currentParameter){
 		
 		Simulation sim;
 		

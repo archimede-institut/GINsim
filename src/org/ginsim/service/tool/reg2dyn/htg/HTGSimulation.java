@@ -101,24 +101,12 @@ public class HTGSimulation extends Simulation {
 
 	
 	public HTGSimulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params) {
-		this(regGraph, frame, params, true, true);
-	}
-
-	public HTGSimulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params, boolean runNow) {
-		this(regGraph, frame, params, runNow, true);
-	}
-
-    public HTGSimulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params, boolean runNow, boolean useInit) {
-		super(regGraph, frame, params, false, useInit);
+		super(regGraph, frame, params);
 		
 		helper = new HTGSimulationHelper(regGraph, params);
 		this.params = params;
-   		if (runNow) {
-   		    start();
-   		}
 	}
   
-    
     
 	/**
 	 * Run the simulation, handle exception and build the graph.
