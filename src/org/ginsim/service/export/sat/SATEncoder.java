@@ -37,12 +37,6 @@ public class SATEncoder {
 		out.write("c GINsim implicit representation for SAT\n");
 		out.write("c Variables are considered to be multi-valued\n");
 
-		boolean bType1 = (config.getExportType() == SATConfig.CFG_FIX_POINT);
-		if (bType1)
-			out.write("c Export type: Search fix point attractors");
-		else
-			out.write("c Export type: Search complex attractors");
-
 		RegulatoryGraph graph = config.getGraph();
 		List<RegulatoryNode> nodeOrder = graph.getNodeOrder();
 		String[] t_regulators = new String[nodeOrder.size()];
@@ -62,32 +56,24 @@ public class SATEncoder {
 		}
 
 		// TODO: change # vars for multi-valued case
-		out.write("\np cnf " + t_regulators.length);
-		int clauses = 0;
+		int clauses = 0, vars = 0;
 
 		StringBuffer sb = new StringBuffer();
-		sb.append("\n\nc Declaration of variables and clause exclusivities:");
+		sb.append("\n\nc Declaration of variables and \"at least one\" valuation:");
 		for (int i = 0; i < t_vertex.length; i++) {
 			sb.append("\nc ").append(t_regulators[i]).append(": [");
 			sb.append(getSATVariable(t_vertex, i, 0)).append("...");
 			sb.append(getSATVariable(t_vertex, i, t_vertex[i].getMaxValue()))
 					.append("]\n");
 			for (int j = 0; j <= t_vertex[i].getMaxValue(); j++) {
+				vars++;
 				sb.append(getSATVariable(t_vertex, i, j)).append(" ");
 			}
 			sb.append("0");
 			clauses++;
-			for (int j = 0; j <= t_vertex[i].getMaxValue(); j++) {
-				for (int k = j + 1; k <= t_vertex[i].getMaxValue(); k++) {
-					sb.append("\n-").append(getSATVariable(t_vertex, i, j));
-					sb.append(" -").append(getSATVariable(t_vertex, i, k));
-					sb.append(" 0");
-					clauses++;
-				}
-			}
 		}
 
-		sb.append("\n\nc Declaration of regulatory rules:");
+		sb.append("\n\nc Declaration of the model regulatory rules:");
 		int[] t_cst = new int[t_vertex.length];
 		for (int i = 0; i < t_vertex.length; i++) {
 			sb.append("\nc ").append(t_regulators[i]).append(" rules");
@@ -98,7 +84,33 @@ public class SATEncoder {
 				t_cst[j] = -1;
 			clauses += node2SAT(t_tree[i], sb, t_vertex, t_cst, i);
 		}
-		out.write(" " + clauses);
+
+		sb.append("\n\nc Export type ");
+		boolean bType1 = (config.getExportType() == SATConfig.CFG_FIX_POINT);
+		if (bType1) {
+			sb.append("1: Search fix point attractors");
+			for (int i = 0; i < t_vertex.length; i++) {
+				sb.append("\nc ").append(t_regulators[i]);
+				sb.append(": exactly one valuation");
+				for (int j = 0; j <= t_vertex[i].getMaxValue(); j++) {
+					for (int k = j + 1; k <= t_vertex[i].getMaxValue(); k++) {
+						sb.append("\n-").append(getSATVariable(t_vertex, i, j));
+						sb.append(" -").append(getSATVariable(t_vertex, i, k));
+						sb.append(" 0");
+						clauses++;
+					}
+				}
+			}
+		} else {
+			sb.append("2: Search complex attractors");
+			for (int i = 0; i < t_vertex.length; i++) {
+				sb.append("\nc ").append(t_regulators[i]);
+				sb.append(": no restriction on valuations");
+			}
+		}
+		sb.append("\n");
+
+		out.write("\np cnf " + vars + " " + clauses);
 		out.write(sb.toString());
 	}
 
