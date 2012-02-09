@@ -23,6 +23,7 @@ public abstract class Frame extends JFrame {
 
 		int width = OptionStore.getOption(id+".width", w);
 		int height = OptionStore.getOption(id+".height", h);
+		setLocationByPlatform(true);
 		this.setSize( width, height);
 
 	}

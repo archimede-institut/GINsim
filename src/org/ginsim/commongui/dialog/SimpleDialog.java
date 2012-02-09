@@ -42,6 +42,7 @@ public abstract class SimpleDialog extends JDialog {
 			}
 		});
 		
+		setLocationByPlatform(true);
 		this.setSize(((Integer)OptionStore.getOption(id+".width", new Integer(w))).intValue(),
         		((Integer)OptionStore.getOption(id+".height", new Integer(h))).intValue());
 		

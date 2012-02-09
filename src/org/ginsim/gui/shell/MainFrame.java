@@ -82,15 +82,6 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 		
 		super("MainFrame", 800, 700);
 		
-		// I guess this is used to center the window, should we really do this??
-		Toolkit toolkit = Toolkit.getDefaultToolkit();
-		Dimension scrnsize = toolkit.getScreenSize();
-		int w = getWidth();
-		int h = getHeight();
-		int cood_x = scrnsize.width >= w ? (scrnsize.width - w)/2:0;
-		int cood_y = scrnsize.height >= h ? (scrnsize.height - h)/2:0;
-		this.setBounds( cood_x, cood_y, w, h);
-		
         this.graphGUI = graph_gui;
         GUIManager.getInstance().registerGUI( graph_gui, this);
         graph_gui.addGraphGUIListener(this);
