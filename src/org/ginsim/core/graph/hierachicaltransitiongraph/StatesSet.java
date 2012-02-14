@@ -84,6 +84,16 @@ public class StatesSet {
 		this.size_consistancy = true;
 	}
 
+	/**
+	 * Initialize a new set of states
+	 */
+	public StatesSet(StatesSet other) {
+		this.childsCount = other.childsCount;
+		this.size = other.size;
+		this.size_consistancy = other.size_consistancy;
+		this.root = (OMDDNode) other.root.clone();
+	}
+
 /* **************** ADD STATE ************/	
 	
 	/**

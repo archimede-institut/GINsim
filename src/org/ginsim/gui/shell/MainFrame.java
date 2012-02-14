@@ -32,6 +32,7 @@ import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.dnd.Glas
 import org.ginsim.gui.notifications.NotificationPanel;
 import org.ginsim.gui.notifications.NotificationSource;
 import org.ginsim.gui.shell.editpanel.EditPanel;
+import org.ginsim.gui.shell.editpanel.EditTab;
 import org.ginsim.gui.utils.widgets.Frame;
 import org.ginsim.gui.utils.widgets.SplitPane;
 
@@ -229,7 +230,7 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 	 *
 	 * @return javax.swing.JTabbedPane
 	 */
-	private JTabbedPane getEditTabbedPane() {
+	private EditPanel getEditTabbedPane() {
 	    if (editTabbedPane == null) {
 			editTabbedPane = new EditPanel( graphGUI);
 			editTabbedPane.setMinimumSize(new Dimension(0, 0));
@@ -402,5 +403,21 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 				graph_gui.setSaved( type == GraphChangeType.GRAPHSAVED);
 			}
 		}
+	}
+	
+	/**
+	 * Add a given EditTab to the edit panel
+	 * @param tab a given EditTab to add to the edit panel
+	 */
+	public void addTabToEditPanel(EditTab tab) {
+		getEditTabbedPane().addTab(tab);
+	}
+	
+	/**
+	 * Remove a given EditTab from the edit panel
+	 * @param tab_name a given EditTab's name to remove from the edit panel
+	 */
+	public void removeTabToEditPanel(String tab_name) {
+		getEditTabbedPane().removeTab(tab_name);
 	}
 }

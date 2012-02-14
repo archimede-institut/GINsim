@@ -11,7 +11,7 @@ import org.ginsim.core.graph.view.NodeShape;
 /**
  * a node in a state transition graph (ie a possible state of the regulatory graph).
  */
-public final class DynamicNode {
+public class DynamicNode {
 	/** each int is the state of the corresponding gene in the regulatory graph (according to nodeOrder). */
 	public final byte[] state;
 	/** if this is a stable node, default to false */

@@ -115,7 +115,6 @@ public class OMDDNode {
      * @return true if the state is OK.
      */
     public byte testStatus (byte[] status) {
-        
         if (next == null) {
             return value;
         }

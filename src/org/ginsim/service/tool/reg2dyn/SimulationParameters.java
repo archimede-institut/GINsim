@@ -11,6 +11,7 @@ import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
@@ -42,6 +43,9 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
     public boolean breadthFirst = false;
     public int simulationStrategy = STRATEGY_STG;
 
+    /**
+     * Stores the MUTANT and the PCLASS
+     */
     public ObjectStore store = new ObjectStore(2);
     public Map m_initState = new HashMap();
     public Map m_input = new HashMap();
@@ -55,6 +59,14 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
     	this.param_list = param_list;
         this.nodeOrder = param_list.graph.getNodeOrder();
         store.setObject(PCLASS, param_list.pcmanager.getElement(null, 0));
+    }
+
+    /**
+     * empty constructor without parameter list.
+     * @param param_list
+     */
+    public SimulationParameters(RegulatoryGraph graph) {
+    	this(new SimulationParameterList(graph));
     }
 
     public String toString() {

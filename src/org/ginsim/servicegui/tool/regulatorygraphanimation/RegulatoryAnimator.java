@@ -91,7 +91,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
     
     
     /**
-     * @param frame
+     * @param simulationManager
      * @param regGraph
      * @param dynHieGraph
      */

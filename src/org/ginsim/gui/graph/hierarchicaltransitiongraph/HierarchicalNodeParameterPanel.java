@@ -1,5 +1,6 @@
 package org.ginsim.gui.graph.hierarchicaltransitiongraph;
 
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -22,6 +23,7 @@ public class HierarchicalNodeParameterPanel extends AbstractParameterPanel<Hiera
 		private JTable jTable = null;
 
 		private JLabel typeLabel;
+		private JLabel nameLabel;
 		
 		public HierarchicalNodeParameterPanel( Graph g) {
 			super(g);
@@ -32,9 +34,12 @@ public class HierarchicalNodeParameterPanel extends AbstractParameterPanel<Hiera
 	        c.gridy = 0;
 	        c.weightx = 1;
 	        c.fill = GridBagConstraints.BOTH;
+	        this.add(getNameLabel(), c);
+	        
+	        c.gridy++;
 	        this.add(getTypeLabel(), c);
-	        c.gridx = 0;
-	        c.gridy = 1;
+	        
+	        c.gridy++;
 	        c.weighty = 1;
 	        this.add(getJScrollPane(), c);
 	        this.setMinimumSize(new Dimension(20,20));
@@ -50,8 +55,16 @@ public class HierarchicalNodeParameterPanel extends AbstractParameterPanel<Hiera
 				((HierarchicalTableModel)getJTable().getModel()).setContent(node);
 	            jTable.getColumnModel().getColumn(0).setMinWidth(10);
 	            jTable.getColumnModel().getColumn(0).setPreferredWidth(10);
-	            typeLabel.setText("Type : "+Translator.getString("STR_"+node.typeToString()));
+	            nameLabel.setText("Name: "+node.toString()+", ID:"+node.getUniqueId());
+	            typeLabel.setText("Type: "+Translator.getString("STR_"+node.typeToString()));
 			}
+		}
+		
+		private Component getNameLabel() {
+			if(nameLabel == null) {
+				nameLabel = new JLabel();
+			}
+			return nameLabel;
 		}
 
 		/**
