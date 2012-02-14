@@ -178,50 +178,6 @@ class PasteAction<V, E extends Edge<V>> extends AbstractAction {
 	}
 }
 
-class UndoAction extends AbstractAction {
-	
-	private final Graph<?,?> graph;
-	
-	public UndoAction(Graph<?,?> graph) {
-		super( Translator.getString( "STR_Undo"));
-		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_Undo_descr"));
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Z, FrameActionManager.MASK));
-		this.graph = graph;
-	}
-	
-	public void undo() {
-		//TODO Recfactoring action
-		//FIXME : find where to undo
-		LogManager.error("Unimplemented menu : undo");
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		undo();
-	}
-}
-class RedoAction extends AbstractAction {
-	
-	private final Graph<?,?> graph;
-	
-	public RedoAction(Graph<?,?> graph) {
-		super( Translator.getString( "STR_Redo"));
-		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_Redo_descr"));
-		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_Z, FrameActionManager.MASK | KeyEvent.SHIFT_MASK));
-		this.graph = graph;
-	}
-	
-	public void redo() {
-		//TODO Recfactoring action
-		//FIXME : find where to redo
-		LogManager.error("Unimplemented menu : redo");
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		redo();
-	}
-}
 class SearchNodeAction extends AbstractAction {
 	
 	private final Graph<?,?> graph;

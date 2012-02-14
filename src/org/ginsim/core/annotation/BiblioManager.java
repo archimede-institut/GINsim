@@ -22,7 +22,7 @@ public class BiblioManager extends BasicGraphAssociatedManager {
 	
 	public Object doCreate( Graph graph) {
 		
-		return new BiblioList( graph);
+		return new BiblioList( graph, false);
 	}
 
 	public Object doOpen(InputStream is, Graph graph) throws GsException{

@@ -18,7 +18,6 @@ import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
@@ -63,7 +62,7 @@ public class MultidimensionLayoutGUI {
 		table.getColumn(table.getColumnName(2)).setCellRenderer(new SimpleRenderer());
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setMinimumSize(new Dimension(320, 240));
-		//table.setFillsViewportHeight(true); //FIXME: find a replacement working in 1.4 (table.setFillsViewportHeight is 1.6)
+		table.setFillsViewportHeight(true);
 		
 		frame.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();

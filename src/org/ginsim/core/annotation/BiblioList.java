@@ -54,13 +54,6 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener<GraphModel<
 		this.parsing = parsing;
 		GraphManager.getInstance().addGraphListener(graph, this);
 	}
-	/**
-	 * FIXME: don't use this constructor
-	 * @param graph
-	 */
-	public BiblioList( Graph graph) {
-		this(graph, false);
-	}
 
 	public void toXML(XMLWriter out, Object param, int mode) throws IOException {
 		out.openTag("biblio");
