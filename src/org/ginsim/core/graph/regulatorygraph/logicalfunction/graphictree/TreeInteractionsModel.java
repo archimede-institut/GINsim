@@ -49,7 +49,9 @@ public class TreeInteractionsModel implements TreeModel {
 		view = v;
 	}
 	public void refreshView() {
-		view.refresh();
+		if (view != null) {
+			view.refresh();
+		}
 	}
 	public void clear() {
 		root = new TreeString(null, "Function list");
@@ -232,7 +234,7 @@ public class TreeInteractionsModel implements TreeModel {
 			addExpression(val, currentNode, tbp);
 			fireTreeStructureChanged(root);
 			if (tree != null) tree.expandPath(getPath(val, tbp.getRoot().toString(false)));
-			view.refresh();
+			refreshView();
 		}
 	}
 	public void setRootInfos() {
@@ -281,7 +283,7 @@ public class TreeInteractionsModel implements TreeModel {
 			if (newExp.equals("")) {
 				exp.clearChilds();
 				fireTreeStructureChanged(this.root);
-				view.refresh();
+				refreshView();
 				return true;
 			}
 			BooleanParser parser = new BooleanParser(graph.getIncomingEdges(node), isAutoAddEnabled());
@@ -315,7 +317,7 @@ public class TreeInteractionsModel implements TreeModel {
 			parseFunctions();
 			exp.setRoot(root);
 			fireTreeStructureChanged(this.root);
-			view.refresh();
+			refreshView();
 		}
 		catch (Exception ex) {
 			ex.printStackTrace();
@@ -339,7 +341,7 @@ public class TreeInteractionsModel implements TreeModel {
 		if (node != null) {
 			node.setInteractionsModel(this);
 			if (refreshView) {
-				view.refresh();
+				refreshView();
 			}
 			for (int p = 0 ; p <= node.getMaxValue(); p++) {
 				dis = false;
