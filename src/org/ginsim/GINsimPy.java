@@ -27,7 +27,6 @@ public class GINsimPy {
 		try {
 			String s_scriptHelper = GsScriptHelper.class.getSimpleName();
 			String s_scriptHelper_package = GsScriptHelper.class.getPackage().getName();
-			System.out.println("load script helper: "+s_scriptHelper_package + " --> "+s_scriptHelper);
 			pi.exec("from "+s_scriptHelper_package + " import "+s_scriptHelper);
 			pi.exec("gs = "+s_scriptHelper+".getInstance()");
 			
@@ -38,6 +37,8 @@ public class GINsimPy {
 		}
 
         pi.execfile(filename);
+        // force exit as jython seems to often delay it
+        System.exit(0);
 	}
 
 }
