@@ -87,8 +87,9 @@ class NewStableStatesAction extends ToolAction {
     		return;
     	}
 
-    	StableStatesService service = ServiceManager.getManager().getService(StableStatesService.class);
-    	service.testNewStableSearch(graph);
+    	new StableStateSwingUI(null, graph);
+    	//StableStatesService service = ServiceManager.getManager().getService(StableStatesService.class);
+    	//service.testNewStableSearch(graph);
 	}
 	
 }

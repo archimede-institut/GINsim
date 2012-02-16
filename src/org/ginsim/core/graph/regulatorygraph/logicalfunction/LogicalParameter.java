@@ -326,10 +326,26 @@ public class LogicalParameter implements XMLize {
 			constraints[i-1] = factory.get_mnode(factory.getVariableID(src), allowed);
 		}
 		
-		int result = MDDBaseOperators.AND.combine(factory, constraints);
-		// free intermediate results
-		for (int n: constraints) {
-			factory.free(n);
+		int result;
+		switch (constraints.length) {
+		case 0:
+			result = value;
+			break;
+		case 1:
+			result = constraints[0];
+			break;
+		case 2:
+			result = MDDBaseOperators.AND.combine(factory, constraints[0], constraints[1]);
+			factory.free(constraints[0]);
+			factory.free(constraints[1]);
+			break;
+		default:
+			result = MDDBaseOperators.AND.combine(factory, constraints);
+			// free intermediate results
+			for (int n: constraints) {
+				factory.free(n);
+			}
+			break;
 		}
 		return result;
 	}
