@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.common.OptionStore;
 import org.ginsim.common.document.GenericDocumentFormat;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
 
@@ -12,10 +13,10 @@ public class DocumentExportConfig implements InitialStateStore {
     public final Map m_init = new HashMap();
     public final Map m_input = new HashMap();
 
-	public boolean exportInitStates = true;
-	public boolean exportMutants = true;
-	public boolean searchStableStates = true;
-	public boolean putComment = true;
+	public boolean exportInitStates = OptionStore.getOption("export.doc.init",  true);
+	public boolean exportMutants = OptionStore.getOption("export.doc.perturbations",  true);;
+	public boolean searchStableStates = OptionStore.getOption("export.doc.stable",  true);;
+	public boolean putComment = OptionStore.getOption("export.doc.comment",  true);;
 	
 	public GenericDocumentFormat format = getSubFormat().get(0);
 	
@@ -36,6 +37,16 @@ public class DocumentExportConfig implements InitialStateStore {
      */
 	public List<GenericDocumentFormat> getSubFormat() {
 		return GenericDocumentFormat.getAllFormats();
+	}
+	
+	/**
+	 * Send the selected options to the OptionStore
+	 */
+	public void saveDefaults() {
+		OptionStore.setOption("export.doc.init", exportInitStates);
+		OptionStore.setOption("export.doc.perturbations", exportMutants);
+		OptionStore.setOption("export.doc.stable", searchStableStates);
+		OptionStore.setOption("export.doc.comment", putComment);
 	}
 
 }

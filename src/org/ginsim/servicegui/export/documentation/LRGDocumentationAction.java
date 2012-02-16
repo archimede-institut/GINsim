@@ -76,6 +76,8 @@ class GDExportConfigPanel extends AbstractStackDialogHandler {
 
         cfg.format = format.get(format.getSelectedIndex());
         
+        cfg.saveDefaults();
+        
 		action.selectFile();
 		return true;
 	}

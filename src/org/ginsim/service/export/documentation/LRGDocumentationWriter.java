@@ -377,6 +377,9 @@ public class LRGDocumentationWriter {
 				
 				boolean hasRegulatorComment = false;
 				for (RegulatoryMultiEdge me: graph.getIncomingEdges(vertex)) {
+					if (me.getSource() == vertex) {
+						continue;
+					}
 					Annotation annot = me.getAnnotation();
 					if (annot.isEmpty()) {
 						continue;
