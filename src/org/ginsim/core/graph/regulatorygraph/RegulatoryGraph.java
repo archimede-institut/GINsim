@@ -6,6 +6,8 @@ import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
+import fr.univmrs.tagc.javaMDD.MDDFactory;
+
 
 /**
  * The regulatory graph
@@ -17,7 +19,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * 
      * @return the node order as a list of RegulatoryNode
      */
-    public List<RegulatoryNode> getNodeOrder();
+    List<RegulatoryNode> getNodeOrder();
     
     /**
      * add a node from textual parameters (for the parser).
@@ -27,13 +29,13 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param max
      * @return the new node.
      */
-    public RegulatoryNode addNewNode(String id, String name, byte max);
+    RegulatoryNode addNewNode(String id, String name, byte max);
     
     /**
      * 
      * @return
      */
-    public RegulatoryNode addNode();
+    RegulatoryNode addNode();
     
     
     /**
@@ -41,7 +43,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param newId
      * @return True if a node of the graph has the given ID
      */
-    public boolean idExists(String newId);
+    boolean idExists(String newId);
     
     /**
      * add an edge from textual parameters (for the parser).
@@ -52,7 +54,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param sign
      * @return the new edge.
      */
-    public RegulatoryEdge addNewEdge(String from, String to, byte minvalue, RegulatoryEdgeSign sign) throws GsException;
+    RegulatoryEdge addNewEdge(String from, String to, byte minvalue, RegulatoryEdgeSign sign) throws GsException;
     
     /**
      * add an edge from textual parameters (for the parser).
@@ -63,7 +65,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param sign
      * @return the new edge
      */
-    public RegulatoryEdge addNewEdge(String from, String to, byte minvalue, String sign)  throws GsException;
+    RegulatoryEdge addNewEdge(String from, String to, byte minvalue, String sign)  throws GsException;
     
     
     /**
@@ -74,14 +76,14 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param sign
      * @return
      */
-    public RegulatoryMultiEdge addEdge(RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign sign);
+    RegulatoryMultiEdge addEdge(RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign sign);
     
     
     /**
      * @param focal if true, leaves are focal points. Otherwise their are directions (-1, 0, +1)
      * @return a tree representation of logical parameters
      */
-    public OMDDNode[] getAllTrees(boolean focal);
+    OMDDNode[] getAllTrees(boolean focal);
 
     /**
      * Computes the tree representing the logical parameters, receiving an optional node ordering
@@ -90,7 +92,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param focal if true, leaves are focal points. Otherwise their are directions (-1, 0, +1)
      * @return a tree representation of logical parameters
      */
-    public OMDDNode[] getAllTrees(List<RegulatoryNode> nodeOrder, boolean focal);
+    OMDDNode[] getAllTrees(List<RegulatoryNode> nodeOrder, boolean focal);
 
     
     /**
@@ -98,8 +100,23 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param focal
      * @return
      */
-	public OMDDNode[] getParametersForSimulation(boolean focal);
+	OMDDNode[] getParametersForSimulation(boolean focal);
+
 	
+    /**
+     * Construct MDD representation of the logical functions of the nodes of this graph.
+     * 
+     * @param factory a MDDFactory associated with the nodes of this graph 
+     * @return an array containing references to the MDD roots in the factory
+     */
+    int[] getMDDs(MDDFactory factory);
+
+    /**
+     * Construct a MDDFactory associated to the nodes of this graph
+     * @return a new MDDFactory.
+     */
+    MDDFactory getMDDFactory();
+
     
     /**
      * 
@@ -107,13 +124,13 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param newId
      * @throws GsException
      */
-    public void changeNodeId(Object node, String newId) throws GsException;
+    void changeNodeId(Object node, String newId) throws GsException;
     
     /**
      * 
      * @return
      */
-	public List getNodeOrderForSimulation();
+	List<RegulatoryNode> getNodeOrderForSimulation();
 	
 	
 	/**
@@ -121,7 +138,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
 	 * 
 	 * @param list the list of objects representing the order of node as defined by the model
 	 */
-	public void setNodeOrder( List<RegulatoryNode> list);
+	void setNodeOrder( List<RegulatoryNode> list);
 	
 	
     /**
@@ -131,6 +148,6 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param l_fixable
      * @param l_conflict
      */
-	public void canApplyNewMaxValue(RegulatoryNode node, byte newMax, List l_fixable, List l_conflict);
+	void canApplyNewMaxValue(RegulatoryNode node, byte newMax, List l_fixable, List l_conflict);
     
 }

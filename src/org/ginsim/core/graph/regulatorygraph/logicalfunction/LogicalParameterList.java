@@ -11,13 +11,13 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
 
-public class LogicalParameterList extends ArrayList {
+public class LogicalParameterList extends ArrayList<LogicalParameter> {
 	private static final long serialVersionUID = 5768653095418077753L;
 	private HashSet manualp, functionp;
 	boolean updateDup = true;
 	int nbDup = 0;
 
-	public Object remove(int index) {
+	public LogicalParameter remove(int index) {
 		int i;
 		Iterator it;
 		LogicalParameter lp = (LogicalParameter)get(index), lp2;
@@ -273,7 +273,7 @@ public class LogicalParameterList extends ArrayList {
 		if (index < 0 || to < 0) {
 			return false;
 		}
-		Object obj=super.remove(index);
+		LogicalParameter obj=super.remove(index);
 		add(to, obj);
 
 		return true;

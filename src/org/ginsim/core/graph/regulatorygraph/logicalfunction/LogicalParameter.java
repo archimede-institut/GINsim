@@ -18,6 +18,9 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
+import fr.univmrs.tagc.javaMDD.MDDFactory;
+import fr.univmrs.tagc.javaMDD.operators.MDDBaseOperators;
+
 
 /**
  * the Class in which we store biological data for logical parameters
@@ -28,7 +31,7 @@ public class LogicalParameter implements XMLize {
 	//value of the parameter
 	private int value;
 	//vector of incoming active interaction
-	private List edge_index;
+	private List<RegulatoryEdge> edge_index;
 
 	protected boolean isDup = false;
 	protected boolean hasConflict = false;
@@ -40,7 +43,7 @@ public class LogicalParameter implements XMLize {
 	 */
 	public LogicalParameter(int v) {
 		value = v;
-		edge_index = new ArrayList();
+		edge_index = new ArrayList<RegulatoryEdge>();
 	}
 
 	public boolean isDup() {
@@ -295,6 +298,41 @@ public class LogicalParameter implements XMLize {
         }
         return curRoot;
     }
+
+	/**
+	 * Build a MDD corresponding to this parameter (using the new MDD toolkit)
+	 * 
+	 * @param factory
+	 * @return
+	 */
+	public int getMDD(RegulatoryGraph graph, RegulatoryNode node, MDDFactory factory) {
+
+		if (value == 0) {
+			return 0;
+		}
+		
+		List<RegulatoryNode> nodeOrder = graph.getNodeOrder();
+        byte[][] t_ac = buildTac(graph, node, nodeOrder);
+		int[] constraints = new int[t_ac.length-1];
+		for ( int i=1 ; i< t_ac.length ; i++) {
+			byte[] curCst = t_ac[i];
+			RegulatoryNode src = nodeOrder.get(curCst[0]);
+			int[] allowed = new int[curCst.length-1];
+			for (int j=0 ; j < allowed.length ; j++) {
+				if (curCst[j+1] != -1) {
+					allowed[j] = value;
+				}
+			}
+			constraints[i-1] = factory.get_mnode(factory.getVariableID(src), allowed);
+		}
+		
+		int result = MDDBaseOperators.AND.combine(factory, constraints);
+		// free intermediate results
+		for (int n: constraints) {
+			factory.free(n);
+		}
+		return result;
+	}
 
     public void toXML(XMLWriter out, Object param, int mode) throws IOException {
     	out.openTag("parameter");

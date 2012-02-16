@@ -25,6 +25,9 @@ import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 
+import fr.univmrs.tagc.javaMDD.MDDFactory;
+import fr.univmrs.tagc.javaMDD.MultiValuedVariable;
+
 
 public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, RegulatoryMultiEdge> 
 	implements RegulatoryGraph{
@@ -648,13 +651,33 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         return t_tree;
     }
 
+    @Override
+    public MDDFactory getMDDFactory() {
+    	MultiValuedVariable[] variables = new MultiValuedVariable[getNodeCount()];
+    	int i=0;
+    	for (RegulatoryNode node: getNodeOrder()) {
+    		variables[i++] = new MultiValuedVariable(node, node.getId(), node.getMaxValue()+1);
+    	}
+    	MDDFactory factory = new MDDFactory(variables, 10);
+    	return factory;
+    }
+
+    @Override
+    public int[] getMDDs(MDDFactory factory) {
+    	int[] mdds = new int[getNodeCount()];
+    	int i=0;
+    	for (RegulatoryNode node: getNodeOrder()) {
+    		mdds[i++] = node.getMDD(this, factory);
+    	}
+    	return mdds;
+    }
+    
     /**
      * 
      * @return
      */
     @Override
-	public List getNodeOrderForSimulation() {
-		
+	public List<RegulatoryNode> getNodeOrderForSimulation() {
 		return getNodeOrder();
 	}
 	

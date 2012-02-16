@@ -8,6 +8,8 @@ import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
+import fr.univmrs.tagc.javaMDD.MDDFactory;
+
 
 /**
  * This implements an analytic search of stable states. A state "x" is stable if, for every gene "i",
@@ -45,4 +47,14 @@ public class StableStatesService implements Service {
 //		algo.setPerturbation(mutant);
 //		return algo.getStables();
 //	}
+	
+	public void testNewStableSearch( RegulatoryGraph regGraph) {
+		MDDFactory factory = regGraph.getMDDFactory();
+		int[] mdds = regGraph.getMDDs(factory);
+		
+		for (int n: mdds) {
+			System.out.println("Node: "+n);
+			factory.printNode(n);
+		}
+	}
 }

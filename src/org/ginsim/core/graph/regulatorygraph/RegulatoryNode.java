@@ -27,6 +27,10 @@ import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 
+import fr.univmrs.tagc.javaMDD.MDDFactory;
+import fr.univmrs.tagc.javaMDD.MDDOperator;
+import fr.univmrs.tagc.javaMDD.operators.MDDBaseOperators;
+
 
 
 /**
@@ -279,6 +283,41 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	}
 	public OMDDNode getTreeParameters(RegulatoryGraph graph) {
 		return getTreeParameters(graph.getNodeOrder());
+	}
+
+	/**
+	 * Experimental: Get the MDD for this node function using the new MDD toolkit.
+	 * 
+	 * @param factory
+	 * @return
+	 */
+	public int getMDD(RegulatoryGraph graph, MDDFactory factory) {
+        if (isInput) {
+        	int level = factory.getVariableID(this);
+        	if (getMaxValue() == 1) {
+        		return factory.get_bnode(level, 0, 1);
+        	}
+        	int[] children = new int[getMaxValue()+1];
+            for (int i=0 ; i<children.length ; i++) {
+                children[i] = i;
+            }
+    		return factory.get_mnode(level, children);
+        }
+
+        if (v_logicalParameters.size() == 0) {
+        	return 0;
+        }
+        int[] parameters = new int[v_logicalParameters.size()];
+        int i = 0;
+        for (LogicalParameter gsi: v_logicalParameters) {
+            parameters[i++] = gsi.getMDD(graph, this, factory);
+        }
+        int result = MDDBaseOperators.OR.combine(factory, parameters);
+		// free intermediate results
+		for (int n: parameters) {
+			factory.free(n);
+		}
+		return result;
 	}
 
     /**
