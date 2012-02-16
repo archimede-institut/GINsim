@@ -1,7 +1,5 @@
 package org.ginsim.core.graph.regulatorygraph;
 
-import org.ginsim.core.annotation.Annotation;
-
 
 public class RegulatoryEdge {
 	public byte threshold;
@@ -9,8 +7,6 @@ public class RegulatoryEdge {
 	
 	public byte index;
 	public RegulatoryMultiEdge me;
-	
-	Annotation annotation = new Annotation();
 	
 	public RegulatoryEdge(RegulatoryMultiEdge me) {
 		this.me = me;
@@ -21,12 +17,7 @@ public class RegulatoryEdge {
 		clone.threshold = threshold;
 		clone.index = index;
 		clone.sign = sign;
-		clone.annotation = (Annotation)annotation.clone();
 		return clone;
-	}
-	
-	public Annotation getAnnotation() {
-		return annotation;
 	}
 	
 	public RegulatoryEdgeSign getSign() {

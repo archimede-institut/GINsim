@@ -22,7 +22,8 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
 	private RegulatoryEdge[] edges = new RegulatoryEdge[RegulatoryNode.MAXVALUE+1];
 	private int edgecount = 0;
     private RegulatoryEdgeSign sign = RegulatoryEdgeSign.POSITIVE;
-
+	private Annotation annotation = new Annotation();
+	
     /**
      * @param source
      * @param target
@@ -151,7 +152,9 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
 
             int max = i<edgecount-1 ? edges[i+1].threshold-1 : -1;
             out.write("\t\t<edge id=\""+ edge.getLongInfo(":") + "\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.threshold+"\""+ (max == -1 ? "" : " maxvalue=\""+max+"\"")+" sign=\""+ edge.getSign().getLongDesc() +"\">\n");
-            edge.annotation.toXML(out, null, mode);
+            if (i == 0) {
+            	annotation.toXML(out, null, mode);
+            }
             if (param != null) {
                 out.write(""+param);
             }
@@ -196,14 +199,11 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
 		rescanSign(graph);
 		graph.fireGraphChange(GraphChangeType.EDGEUPDATED, this);
 	}
-	/**
-	 * @param index index of a subedge.
-	 * @return annotation attached to this sub edge.
-	 */
-	public Annotation getGsAnnotation(int index) {
-		return edges[index].annotation;
-	}
 
+	public Annotation getAnnotation() {
+		return annotation;
+	}
+	
 	/**
 	 * @param index index of a subedge.
 	 * @return name of this sub edge.

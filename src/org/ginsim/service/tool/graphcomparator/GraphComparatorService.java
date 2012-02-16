@@ -43,7 +43,7 @@ public class GraphComparatorService implements Service {
 			return null;
 		case GRAPH_TYPE_REGULATORY:
 			graph_new = GraphManager.getInstance().getNewGraph();
-			graphComparator = new RegulatoryGraphComparator(graph_1, graph_2, graph_new);
+			graphComparator = new RegulatoryGraphComparator((RegulatoryGraph)graph_1, (RegulatoryGraph)graph_2, (RegulatoryGraph)graph_new);
 			break;
 		case GRAPH_TYPE_DYNAMIC:
 			List nodeOrder = DynamicGraphComparator.getNodeOrder( (DynamicGraph) graph_1, (DynamicGraph) graph_2);

@@ -20,11 +20,11 @@ import org.ginsim.core.graph.view.css.NodeStyle;
  * @since January 2009
  *
  */
-public abstract class GraphComparator {
+public abstract class GraphComparator<G extends Graph<?,?>> {
 	
-	public Graph graph_new;
-	public Graph graph_1;
-	public Graph graph_2;
+	public G graph_new;
+	public G graph_1;
+	public G graph_2;
 	protected HashMap<Object, GraphComparatorStyleStore> stylesMap;
 	protected Set<String> verticesIdsSet;
 	protected GraphicalAttributesStore g1gas, g2gas;
@@ -156,9 +156,9 @@ public abstract class GraphComparator {
 	 * Add all the vertices from a graph to the verticeMap.
 	 * The key of the map should be the node ID
 	 * The value should be null for the moment.
-	 * @param gm the graph manager for the graph containing the vertices.
+	 * @param graph the graph containing the nodes.
 	 */
-	abstract protected void addNodesFromGraph( Graph gm);
+	abstract protected void addNodesFromGraph( G graph);
 
 	 /**
 	 * Set the value for the node to the right color in the verticeMap.
@@ -176,13 +176,13 @@ public abstract class GraphComparator {
 	 * @param ereader an edge attribute reader for the diff graph.
 	 * 
 	 */
-	abstract protected void addEdgesFromGraph( Graph gm, Graph gm_aux, String id, Color col, Color pcol, EdgeAttributesReader ereader);
+	abstract protected void addEdgesFromGraph( G gm, G gm_aux, String id, Color col, Color pcol, EdgeAttributesReader ereader);
 	
 	/**
 	 * Return a merge graph colored to indicates vertices and edges parent graph.
 	 * @return the diff graph
 	 */
-	public Graph getDiffGraph() {
+	public G getDiffGraph() {
 		return graph_new;
 	}
 
@@ -190,7 +190,7 @@ public abstract class GraphComparator {
 	 * Return the first graph to compare
 	 * @return the graph
 	 */
-	public Graph getG1() {
+	public G getG1() {
 		return graph_1;
 	}
 
@@ -198,7 +198,7 @@ public abstract class GraphComparator {
 	 * Return the second graph to compare
 	 * @return the graph
 	 */
-	public Graph getG2() {
+	public G getG2() {
 		return graph_2;
 	}
 	

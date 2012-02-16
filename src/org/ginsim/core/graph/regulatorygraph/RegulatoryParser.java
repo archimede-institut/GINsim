@@ -173,7 +173,7 @@ public final class RegulatoryParser extends GsXMLHelper {
 			    if (qName.equals("annotation")) {
 			        pos = POS_EDGE;
 			    } else if (qName.equals("comment")) {
-			        annotation.setComment(curval);
+		    		annotation.appendToComment(curval);
 			        curval = null;
 			    }
 			    break; // POS_EDGE_NOTES
@@ -330,7 +330,7 @@ public final class RegulatoryParser extends GsXMLHelper {
                 	pos = POS_EDGE_VS;
                 } else if (qName.equals("annotation")) {
                     pos = POS_EDGE_NOTES;
-                    annotation = edge.me.getGsAnnotation(edge.index);
+                    annotation = edge.me.getAnnotation();
                 }
                 break; // POS_EDGE
 
