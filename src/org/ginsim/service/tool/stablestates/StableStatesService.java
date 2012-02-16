@@ -9,6 +9,7 @@ import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
 import fr.univmrs.tagc.javaMDD.MDDFactory;
+import fr.univmrs.tagc.javaMDD.PathSearcher;
 
 
 /**
@@ -49,12 +50,23 @@ public class StableStatesService implements Service {
 //	}
 	
 	public void testNewStableSearch( RegulatoryGraph regGraph) {
-		MDDFactory factory = regGraph.getMDDFactory();
-		int[] mdds = regGraph.getMDDs(factory);
+		System.out.println("-========= Stables =========-");
+		StableStateFinder finder = new StableStateFinder(regGraph);
+		MDDFactory factory = finder.getFactory();
 		
-		for (int n: mdds) {
-			System.out.println("Node: "+n);
-			factory.printNode(n);
+		int stables = finder.find();
+		PathSearcher searcher = new PathSearcher(1);
+		int[] path = searcher.setNode(factory, stables);
+		for (int v: searcher) {
+			for (int k: path) {
+				if (k==-1) {
+					System.out.print("* ");
+				} else {
+					System.out.print(k+" ");
+				}
+			}
+			System.out.println();
 		}
+		System.out.println("-============================-");
 	}
 }
