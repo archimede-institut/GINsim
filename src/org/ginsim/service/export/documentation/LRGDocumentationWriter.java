@@ -21,6 +21,7 @@ import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.annotation.AnnotationLink;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
@@ -319,8 +320,7 @@ public class LRGDocumentationWriter {
 			doc.openTableCell("Comment", true);
 		}
 		
-		for (Iterator it=graph.getNodeOrder().iterator() ; it.hasNext() ;) {
-			RegulatoryNode vertex = (RegulatoryNode)it.next();
+		for (RegulatoryNode vertex: graph.getNodeOrder()) {
 			TreeInteractionsModel lfunc = vertex.getInteractionsModel();
 			int nbval = 0;
 			Object funcRoot = null;
@@ -374,6 +374,27 @@ public class LRGDocumentationWriter {
 			if (putcomment) {
 				doc.openTableCell(1,nbrows, null, false);
 				writeAnnotation(vertex.getAnnotation());
+				
+				boolean hasRegulatorComment = false;
+				for (RegulatoryMultiEdge me: graph.getIncomingEdges(vertex)) {
+					Annotation annot = me.getAnnotation();
+					if (annot.isEmpty()) {
+						continue;
+					}
+					if (!hasRegulatorComment) {
+						doc.openTable("", "", new String[] {"", ""});
+						doc.openTableCell("Regulator", true);
+						doc.openTableCell("Comment", true);
+						hasRegulatorComment = true;
+					}
+					doc.openTableRow();
+					doc.openTableCell(me.getSource().toString(), true);
+					doc.openTableCell(null);
+					writeAnnotation(me.getAnnotation());
+				}
+				if (hasRegulatorComment) {
+					doc.closeTable();
+				}
 			}
 			doc.closeTableRow();
 			
@@ -411,15 +432,14 @@ public class LRGDocumentationWriter {
 		doc.closeTableCell();
 	}
 	
-	public void writeAnnotation(Annotation annotation) throws IOException {
+	private void writeAnnotation(Annotation annotation) throws IOException {
 		boolean hasLink = false;
-		Iterator it = annotation.getLinkList().iterator();
-		if (it.hasNext()) {
+		List<AnnotationLink> links = annotation.getLinkList();
+		if (links.size() > 0) {
 			hasLink = true;
 			doc.openList("L1");
 		}
-		while (it.hasNext()) {
-			AnnotationLink lnk = (AnnotationLink)it.next();
+		for (AnnotationLink lnk: links) {
 			String s_link;
 			if (lnk.getHelper() != null) {
 				s_link = lnk.getHelper().getLink(lnk.getProto(), lnk.getValue());

@@ -1,8 +1,9 @@
 package org.ginsim.core.annotation;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
@@ -15,14 +16,14 @@ import org.ginsim.core.graph.common.Graph;
 public class Annotation implements XMLize
 {
     /** list of links  */
-	private Vector linkList;
+	private List<AnnotationLink> linkList;
 	private String comment;
 	
 	/**
 	 * create an empty annotation.
 	 */
 	public Annotation() {
-		linkList = new Vector();
+		linkList = new ArrayList<AnnotationLink>();
 		comment = "";
 	}
 	
@@ -34,13 +35,13 @@ public class Annotation implements XMLize
 		return getLinkList().get(index).toString();
 	}
 	public void openLink(int index) {
-		((AnnotationLink)getLinkList().get(index)).open();
+		getLinkList().get(index).open();
 	}
 	public void addLink(String s, Graph graph) {
 		setLink(s, getLinkList().size(), graph);
 	}
 	public void delLink(String s, Graph graph) {
-		while (getLinkList().removeElement(new AnnotationLink(s, graph))) ;
+		while (getLinkList().remove(new AnnotationLink(s, graph))) ;
 	}
 	public void setLink(String s, int index, Graph graph) {
 		if (index == getLinkList().size()) {
@@ -70,7 +71,7 @@ public class Annotation implements XMLize
 		return comment;
 	}
 
-	public Vector getLinkList() {
+	public List<AnnotationLink> getLinkList() {
 		return linkList;
 	}
 
@@ -104,7 +105,7 @@ public class Annotation implements XMLize
                 out.openTag("linklist");
                 for (int i=0 ; i<getLinkList().size() ; i++) {
                     out.openTag("link");
-                    out.addAttr("xlink:href", getLinkList().elementAt(i).toString());
+                    out.addAttr("xlink:href", getLinkList().get(i).toString());
                     out.closeTag();
                 }
                 out.closeTag();
