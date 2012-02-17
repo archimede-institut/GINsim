@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Toolkit;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.PriorityQueue;
@@ -15,7 +14,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 
@@ -54,16 +52,13 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 	private static final long serialVersionUID = 3002680535567580439L;
 	
 	private static final int SECONDARY_SPLIT_PANEL_MIN_HEIGHT = 250;
-	private static final int MINI_MAP_MIN_WIDTH = 100;
 	
     private JDialog secondaryFrame = null;
 	private JPanel contentPanel = null;
 	private JSplitPane mainSplitPane = null;
 	private JScrollPane graphScrollPane = null;
 	private JPanel graphPanel = null;
-	private JSplitPane secondarySplitPanel = null;
 	private EditPanel editTabbedPane = null;
-	private JPanel miniMapPanel = null;
 
 	private JMenuBar menubar = new JMenuBar();
 	private JToolBar toolbar = new JToolBar();
@@ -121,7 +116,6 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 			@Override
 			public void componentResized(ComponentEvent e) {
 				mainSplitPane.setDividerLocation( e.getComponent().getHeight() - 100 - SECONDARY_SPLIT_PANEL_MIN_HEIGHT);
-				secondarySplitPanel.setDividerLocation( e.getComponent().getWidth() - MINI_MAP_MIN_WIDTH);
 			}
 		});
     	
@@ -138,7 +132,7 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 			mainSplitPane = new SplitPane();
 			mainSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 			mainSplitPane.setTopComponent(getGraphPanel());
-			mainSplitPane.setBottomComponent(getSecondarySplitPanel());
+			mainSplitPane.setBottomComponent(getEditTabbedPane());
 			//mainSplitPane.setResizeWeight(0);
 			mainSplitPane.setDividerLocation( this.getHeight() - 100 - SECONDARY_SPLIT_PANEL_MIN_HEIGHT);
 			mainSplitPane.setName("mainFrameSeparator");
@@ -180,52 +174,6 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 	}
 	
 	/**
-	 * Change the panel used as minimap
-	 * @param graphMapPanel
-	 */
-    private void setMapPanel(JPanel graphMapPanel) {
-        secondarySplitPanel.remove(miniMapPanel);
-        miniMapPanel = graphMapPanel;
-        if (miniMapPanel == null) {
-            showMiniMap(false);
-        } else {
-        	secondarySplitPanel.setRightComponent(miniMapPanel);
-        }
-	}
-
-	/**
-	 * This method initializes jSplitPane1
-	 *
-	 * @return javax.swing.JSplitPane
-	 */
-	private JSplitPane getSecondarySplitPanel() {
-		if (secondarySplitPanel == null) {
-			secondarySplitPanel = new SplitPane();
-			secondarySplitPanel.setLeftComponent(getEditTabbedPane());
-			secondarySplitPanel.setRightComponent(getMiniMapPanel());
-			secondarySplitPanel.setDividerSize(8);
-			//secondarySplitPanel.setResizeWeight(0.7);
-			secondarySplitPanel.setDividerLocation( this.getWidth() - MINI_MAP_MIN_WIDTH);
-			secondarySplitPanel.setName("mapSeparator");
-			secondarySplitPanel.setMinimumSize( new Dimension( this.getWidth(), SECONDARY_SPLIT_PANEL_MIN_HEIGHT));
-		}
-		return secondarySplitPanel;
-	}
-
-	/**
-	 * This method initializes miniMapPanel
-	 *
-	 * @return fr.univmrs.tagc.GINsim.gui.GsGraphMapPanel
-	 */
-	private JPanel getMiniMapPanel() {
-		if (miniMapPanel == null) {
-			miniMapPanel = new JPanel();
-			miniMapPanel.setMinimumSize( new Dimension(MINI_MAP_MIN_WIDTH, 0));
-		}
-		return miniMapPanel;
-	}
-
-	/**
 	 * This method initializes editTabbedPane
 	 *
 	 * @return javax.swing.JTabbedPane
@@ -256,7 +204,7 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 			//detach component from SplitPane_H
 			mainSplitPane.setBottomComponent(null);
 			//set tools in ContentPane
-			secondaryFrame.setContentPane(secondarySplitPanel);
+			secondaryFrame.setContentPane(editTabbedPane);
 			secondaryFrame.setSize(800,300);
 			secondaryFrame.addWindowListener(new java.awt.event.WindowAdapter() {
 					public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -268,7 +216,7 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 			secondaryFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		} else  {
 			// re-attach tools
-			mainSplitPane.setBottomComponent(secondarySplitPanel);
+			mainSplitPane.setBottomComponent(editTabbedPane);
 			//destroy secondary frame
 			secondaryFrame.setVisible(false);
 			secondaryFrame.dispose();
@@ -278,23 +226,6 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 		// FIXME: update menu content
     }
     
-    /**
-     * show/hide the minimap
-     *
-     * @param b : if true the miniMap will be shown
-     */
-    public void showMiniMap(boolean b) {
-        if (miniMapPanel != null) {
-            if (b) {
-                miniMapPanel.setVisible(b);
-                secondarySplitPanel.setDividerLocation(secondarySplitPanel.getWidth() - mmapDivLocation);
-            } else {
-                mmapDivLocation = secondarySplitPanel.getWidth() - secondarySplitPanel.getDividerLocation();
-                miniMapPanel.setVisible(b);
-            }
-        }
-    }
-
     /**
      * close the window without exiting:
      *    ie close if it's not the last window
@@ -308,9 +239,6 @@ public class MainFrame extends Frame implements NotificationSource, Notification
      * TODO: check if this is actually needed
      */
     public void dispose() {
-        if (miniMapPanel.isVisible()) {
-            mmapDivLocation = secondarySplitPanel.getWidth() - secondarySplitPanel.getDividerLocation();
-        }
         OptionStore.setOption("display.minimapsize", new Integer(mmapDivLocation));
         if (secondaryFrame == null) {
             OptionStore.setOption("display.dividersize", new Integer(mainSplitPane.getHeight()-mainSplitPane.getDividerLocation()));
