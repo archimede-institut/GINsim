@@ -1,5 +1,6 @@
 package org.ginsim.service.export.sat;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -19,15 +20,18 @@ public class SATConfig implements InitialStateStore {
 	private Map<InitialState, Object> m_input;
 
 	// Store has two objects: 0- Mutant
-	public ObjectStore store = new ObjectStore(1);
+	public ObjectStore store = new ObjectStore(2);
 	public Perturbation mutant;
-	private int exportType;
+	private int type;
 	
 	/**
 	 * @param graph
 	 */
 	public SATConfig(RegulatoryGraph graph) {
+		m_initStates = new HashMap<InitialState, Object>();
+		m_input = new HashMap<InitialState, Object>();
 		this.graph = graph;
+		type = CFG_FIX_POINT;
 	}
 
 	public RegulatoryGraph getGraph() {
@@ -43,11 +47,11 @@ public class SATConfig implements InitialStateStore {
 	}
 	
 	public void setExportType(int type) {
-		exportType = type;
+		this.type = type;
 	}
 
 	public int getExportType() {
-		return exportType;
+		return type;
 	}
 }
 

@@ -4,10 +4,14 @@ import java.io.IOException;
 import java.io.Writer;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
@@ -41,27 +45,20 @@ public class SATEncoder {
 		List<RegulatoryNode> nodeOrder = graph.getNodeOrder();
 		String[] t_regulators = new String[nodeOrder.size()];
 		RegulatoryNode[] t_vertex = new RegulatoryNode[nodeOrder.size()];
-		boolean hasInputVars = false;
 		for (int i = 0; i < t_vertex.length; i++) {
 			RegulatoryNode node = nodeOrder.get(i);
 			t_vertex[i] = node;
 			t_regulators[i] = node.getId();
-			if (node.isInput())
-				hasInputVars = true;
 		}
 		OMDDNode[] t_tree = graph.getAllTrees(true);
-		Perturbation mutant = (Perturbation) config.store.getObject(0);
-		if (mutant != null) {
-			mutant.apply(t_tree, graph);
-		}
 
-		// TODO: change # vars for multi-valued case
 		int clauses = 0, vars = 0;
 
 		StringBuffer sb = new StringBuffer();
 		sb.append("\n\nc Declaration of variables and \"at least one\" valuation:");
 		for (int i = 0; i < t_vertex.length; i++) {
-			sb.append("\nc ").append(t_regulators[i]).append(": [");
+			sb.append("\nc ").append(t_regulators[i]).append(": [0-");
+			sb.append(t_vertex[i].getMaxValue()).append("] -> [");
 			sb.append(getSATVariable(t_vertex, i, 0)).append("...");
 			sb.append(getSATVariable(t_vertex, i, t_vertex[i].getMaxValue()))
 					.append("]\n");
@@ -71,6 +68,28 @@ public class SATEncoder {
 			}
 			sb.append("0");
 			clauses++;
+		}
+
+		sb.append("\n\nc Internal variable domain restrictions: ");
+		Iterator<InitialState> it = config.getInitialState().keySet()
+				.iterator();
+		if (it.hasNext()) {
+			Map<RegulatoryNode, List<Integer>> m_states = (it.hasNext()) ? it
+					.next().getMap()
+					: new HashMap<RegulatoryNode, List<Integer>>();
+			clauses += writeInitialState(sb, t_vertex, false, m_states);
+		} else {
+			sb.append("Not specified!");
+		}
+		sb.append("\nc Input variable domain restrictions: ");
+		it = config.getInputState().keySet().iterator();
+		if (it.hasNext()) {
+			Map<RegulatoryNode, List<Integer>> m_states = (it.hasNext()) ? it
+					.next().getMap()
+					: new HashMap<RegulatoryNode, List<Integer>>();
+			clauses += writeInitialState(sb, t_vertex, true, m_states);
+		} else {
+			sb.append("Not specified!");
 		}
 
 		sb.append("\n\nc Declaration of the model regulatory rules:");
@@ -127,7 +146,6 @@ public class SATEncoder {
 		return iRet;
 	}
 
-	// TODO: generalize to multi-valued networks
 	private int node2SAT(OMDDNode node, StringBuffer sb,
 			RegulatoryNode[] t_names, int[] t_cst, int nodeID)
 			throws IOException {
@@ -136,8 +154,6 @@ public class SATEncoder {
 			String s = "";
 			for (int i = 0; i < t_cst.length; i++) {
 				if (t_cst[i] != -1) {
-					// if (t_cst[i] > 0)
-					// s += "-";
 					s += "-" + getSATVariable(t_names, i, t_cst[i]) + " ";
 				}
 			}
@@ -153,4 +169,24 @@ public class SATEncoder {
 		return clauses;
 	}
 
+	private int writeInitialState(StringBuffer sb, RegulatoryNode[] t_vertex, boolean bInput,
+			Map<RegulatoryNode, List<Integer>> mInitStates) {
+		int clauses = 0;
+		for (int i = 0; i < t_vertex.length; i++) {
+			if (t_vertex[i].isInput() != bInput)
+				continue;
+			String s_init = "";
+			List<Integer> v = mInitStates.get(t_vertex[i]);
+			if (v != null && v.size() > 0) {
+				for (int j = 0; j < v.size(); j++) {
+					s_init += getSATVariable(t_vertex, i, j) + " ";
+				}
+			}
+			if (!s_init.isEmpty()) {
+				sb.append("\n").append(s_init).append("0");
+				clauses++;
+			}
+		}
+		return clauses;
+	}
 }
