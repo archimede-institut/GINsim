@@ -124,11 +124,11 @@ public class BooleanParser extends TBooleanParser {
 		}
 	}
 
-	public Vector getParams(List indexes) {
-		Vector v = new Vector();
-		for (Iterator it = indexes.iterator(); it.hasNext(); ) {
-		v.addElement(allParams[((Integer)it.next()).intValue()]);
-	}
+	public List getParams(List<Integer> indexes) {
+		List v = new ArrayList();
+		for (int i: indexes) {
+			v.add(allParams[i]);
+		}
 		return v;
 	}
 	public Object[] getAllParams() {

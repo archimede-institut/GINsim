@@ -26,7 +26,7 @@ public class LogicalFunctionList implements TBooleanData {
     logicalFunctions = v;
   }
   public Vector getAsStringVector() {
-    Vector params = parser.getParams(logicalFunctions);
+    List params = parser.getParams(logicalFunctions);
     Iterator it = params.iterator(), it2;
     Vector v, v2 = new Vector();
     Integer element;

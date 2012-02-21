@@ -1,6 +1,5 @@
 package org.ginsim.core.graph.regulatorygraph.mutant;
 
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,6 +8,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+
+import fr.univmrs.tagc.javaMDD.MDDFactory;
 
 
 /**
@@ -26,21 +27,19 @@ public class InitBasedPerturbation implements Perturbation {
     }
     
     public void apply(OMDDNode[] t_tree, RegulatoryGraph graph) {
-        Map m_init = init.getMap();
-        List norder = graph.getNodeOrder();
-        for (Iterator it=m_init.entrySet().iterator() ; it.hasNext() ;) {
-            Entry e = (Entry)it.next();
-            RegulatoryNode vertex = (RegulatoryNode)e.getKey();
-            List values = (List)e.getValue();
+        Map<RegulatoryNode, List<Integer>> m_init = init.getMap();
+        List<RegulatoryNode> norder = graph.getNodeOrder();
+        for (Entry<RegulatoryNode, List<Integer>> e: m_init.entrySet()) {
+            RegulatoryNode vertex = e.getKey();
+            List<Integer> values = e.getValue();
             if (values == null || values.size() < 1) {
                 continue; // nothing to apply here
             }
             int min = vertex.getMaxValue();
             boolean[] tvals = new boolean[vertex.getMaxValue()+1];
             // set all values in the array
-            for (Iterator it2=values.iterator() ; it2.hasNext() ; ) {
-                int v = ((Integer)it.next()).intValue();
-                if (v<min) {
+            for (int v: values ) {
+                if (v < min) {
                     min = v;
                 }
                 tvals[v] = true;
@@ -62,4 +61,41 @@ public class InitBasedPerturbation implements Perturbation {
             t_tree[index] = node;
         }
     }
+
+	@Override
+	public int[] apply(MDDFactory factory, int[] nodes, RegulatoryGraph graph) {
+		int[] result = nodes.clone();
+        Map<RegulatoryNode, List<Integer>> m_init = init.getMap();
+        List<RegulatoryNode> norder = graph.getNodeOrder();
+        for (Entry<RegulatoryNode, List<Integer>> e: m_init.entrySet()) {
+            RegulatoryNode vertex = e.getKey();
+            List<Integer> values = e.getValue();
+            if (values == null || values.size() < 1) {
+                continue; // nothing to apply here
+            }
+            int min = vertex.getMaxValue();
+            boolean[] tvals = new boolean[vertex.getMaxValue()+1];
+            // set all values in the array
+            for (int v: values ) {
+                if (v < min) {
+                    min = v;
+                }
+                tvals[v] = true;
+            }
+
+            // replace the MDD
+            int index  = norder.indexOf(vertex);
+            int[] next = new int[tvals.length];
+            for (int pos=0 ; pos<tvals.length ; pos++) {
+                if (tvals[pos]) {
+                    min = pos;
+                    next[pos] = pos;
+                } else {
+                    next[pos] = min;
+                }
+            }
+            result[index] = factory.get_mnode(factory.getVariableID(vertex), next);
+        }
+		return result;
+	}
 }

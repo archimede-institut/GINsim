@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
+import fr.univmrs.tagc.javaMDD.MDDFactory;
+
 /**
  * A list of perturbations, allowing to apply several of them at the same time without duplication.
  */
@@ -16,4 +18,13 @@ public class PerturbationList extends ArrayList<Perturbation> implements Perturb
             p.apply(t_tree, graph);
         }
     }
+
+	@Override
+	public int[] apply(MDDFactory factory, int[] nodes, RegulatoryGraph graph) {
+		int[] perturbed = nodes;
+        for (Perturbation p: this) {
+            perturbed = p.apply(factory, perturbed, graph);
+        }
+		return perturbed;
+	}
 }

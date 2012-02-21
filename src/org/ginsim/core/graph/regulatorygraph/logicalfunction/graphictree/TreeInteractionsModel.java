@@ -179,7 +179,7 @@ public class TreeInteractionsModel implements TreeModel {
 
 		TBooleanTreeNode root = parser.getRoot();
 		LogicalFunctionList functionList = (LogicalFunctionList)parser.eval();
-		Vector params = parser.getParams(functionList.getData());
+		List params = parser.getParams(functionList.getData());
 		Iterator it = params.iterator(), it2;
 		Vector v;
 		RegulatoryEdge edge;
@@ -296,7 +296,7 @@ public class TreeInteractionsModel implements TreeModel {
 			root = parser.getRoot();
 			exp.clearChilds();
 			LogicalFunctionList functionList = (LogicalFunctionList)parser.eval();
-			Vector params = parser.getParams(functionList.getData());
+			List params = parser.getParams(functionList.getData());
 			Iterator it = params.iterator();
 			TreeParam paramBasal = null;
 			while (it.hasNext()) {

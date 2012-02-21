@@ -10,7 +10,6 @@ import java.util.Enumeration;
 import java.util.List;
 
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -21,6 +20,9 @@ import javax.swing.table.TableColumn;
 
 import org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
+import org.ginsim.core.utils.data.ObjectStore;
+import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.service.tool.stablestates.StableStateFinder;
 
@@ -41,6 +43,7 @@ public class StableStateSwingUI extends StackDialog  {
 	StableStateFinder m_finder;
 	NewStableTableModel model;
 	JTable tresult;
+	ObjectStore store = new ObjectStore();
 	
 	public StableStateSwingUI(JFrame f, RegulatoryGraph lrg) {
 		super(f, "stableStatesGUI", 600, 400);
@@ -58,7 +61,8 @@ public class StableStateSwingUI extends StackDialog  {
 		GridBagConstraints cst = new GridBagConstraints(0, 0, 1, 1, 0, 0,
 				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 				insets, 0, 0);
-		panel.add(new JLabel("TODO: mutant and input selector"), cst);
+		MutantSelectionPanel  mutantPanel = new MutantSelectionPanel(this, lrg, store);
+		panel.add(mutantPanel, cst);
 		JScrollPane pane = new JScrollPane();
 	    pane.setViewportView(tresult);
 	    cst = new GridBagConstraints(0, 1, 1, 1, 1, 1,
@@ -70,7 +74,8 @@ public class StableStateSwingUI extends StackDialog  {
 	
 	@Override
 	protected void run() {
-		int result = m_finder.find();
+		Perturbation perturbation = (Perturbation)store.getObject(0);
+		int result = m_finder.find(perturbation);
 		model.setResult(m_finder.getFactory(), result);
 		m_finder.getFactory().free(result);
 

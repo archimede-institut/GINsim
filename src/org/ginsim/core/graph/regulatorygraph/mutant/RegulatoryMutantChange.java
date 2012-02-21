@@ -14,6 +14,8 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalFunctionList
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
+import fr.univmrs.tagc.javaMDD.MDDFactory;
+
 
 public class RegulatoryMutantChange {
     RegulatoryNode vertex;
@@ -131,4 +133,31 @@ public class RegulatoryMutantChange {
     	}
         out.closeTag();
     }
+
+    /**
+     * Apply a change. Warning: only simple perturbations are supported for now.
+     * 
+     * @param factory
+     * @param node
+     * @param graph
+     * @return
+     */
+	public int apply(MDDFactory factory, int node, RegulatoryGraph graph) {
+        int maxValue = vertex.getMaxValue();
+        if (min == 0 && max == maxValue) {
+            // no change here!
+            return node;
+        }
+        
+        // quick hack to support simple KO and KI
+        if (min == max && parser == null) {
+        	return min;
+        }
+        
+        int result = node;
+        // FIXME: support conditional perturbation
+        // FIXME: actually apply the perturbation
+        
+		return result;
+	}
 }

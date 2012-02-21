@@ -2,6 +2,7 @@ package org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamo
 
 import java.awt.Point;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -172,7 +173,7 @@ public class TreeExpression extends TreeElement {
     parser.compile(userExpression, functionsCreator.getGraph(), functionsCreator.getCurrentNode());
     root = parser.getRoot();
     LogicalFunctionList functionList = (LogicalFunctionList)parser.eval();
-    Vector params = parser.getParams(functionList.getData());
+    List params = parser.getParams(functionList.getData());
     Iterator it = params.iterator();
     while (it.hasNext()) {
       Iterator it2 = ((Vector)it.next()).iterator();

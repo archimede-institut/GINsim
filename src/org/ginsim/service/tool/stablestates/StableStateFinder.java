@@ -1,8 +1,10 @@
 package org.ginsim.service.tool.stablestates;
 
+import java.util.List;
+
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.python.antlr.PythonParser.factor_return;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 
 import fr.univmrs.tagc.javaMDD.MDDFactory;
 
@@ -38,17 +40,25 @@ public class StableStateFinder {
 	}
 	
 	public int find() {
+		return find(null);
+	}
+	public int find(Perturbation p) {
 		StableOperation sop = new StableOperation();
-		
+		int[] mdds = model.getMDDs(m_factory);
+		if (p != null) {
+			mdds = p.apply(m_factory, mdds, model);
+		}
+
 		// loop over the existing nodes!
 		int prev=1, result=1;
-		for (RegulatoryNode node: model.getNodeOrder()) {
+		List<RegulatoryNode> nodes = model.getNodeOrder();
+		for (int i=0 ; i<mdds.length ; i++) {
+			RegulatoryNode node = nodes.get(i);
 			prev = result;
 			int var = m_factory.getVariableID(node);
-			int f = node.getMDD(model, m_factory);
+			int f = mdds[i];
 			result = sop.getStable(m_factory, prev, f, var);
 			m_factory.free(prev);
-			m_factory.free(f);
 		}
 		return result;
 	}

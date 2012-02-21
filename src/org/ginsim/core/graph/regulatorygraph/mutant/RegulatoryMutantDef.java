@@ -11,6 +11,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.utils.data.NamedObject;
 
+import fr.univmrs.tagc.javaMDD.MDDFactory;
+
 
 /**
  * store the definition of a mutant
@@ -179,5 +181,18 @@ public class RegulatoryMutantDef implements NamedObject, Perturbation {
 			return true;
 		}
 		return ((RegulatoryMutantChange)v_changes.get(index)).s_condition == null;
+	}
+
+	@Override
+	public int[] apply(MDDFactory factory, int[] nodes, RegulatoryGraph graph) {
+		int[] result = nodes.clone();
+		
+        for (int i=0 ; i<v_changes.size() ; i++) {
+            RegulatoryMutantChange change = (RegulatoryMutantChange)v_changes.get(i);
+            int index = graph.getNodeOrderForSimulation().indexOf(change.vertex);
+            result[index] = change.apply(factory, result[index], graph);
+        }
+
+		return result;
 	}
 }
