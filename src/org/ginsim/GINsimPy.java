@@ -15,13 +15,14 @@ import org.python.util.PythonInterpreter;
  */
 public class GINsimPy {
 	
-	public static void runJython(String filename) {
+	public static void runJython(String filename, String[] args) {
         File f = new File(filename);
         if (!f.exists()) {
             LogManager.error( "No such script: "+filename);
         	return;
         }
 
+        GsScriptHelper.getInstance(args);
         PythonInterpreter pi = new PythonInterpreter();
         
 		try {

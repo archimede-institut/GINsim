@@ -28,6 +28,8 @@ public class GsScriptHelper {
 	private static GsScriptHelper instance = null;
 	private static boolean isInit = false;
 	
+	public final String[] args;
+	
 	private static void initOptionStore() {
 		if (isInit) {
 			return;
@@ -54,9 +56,20 @@ public class GsScriptHelper {
 		return instance;
 	}
 
+	public static GsScriptHelper getInstance(String[] args) {
+		if (instance == null) {
+			instance = new GsScriptHelper(args);
+		}
+		return instance;
+	}
+
 	public final ServiceManagerProxy services = new ServiceManagerProxy();
 	
 	private GsScriptHelper() {
+		this(new String[0]);
+	}
+	private GsScriptHelper(String[] args) {
+		this.args = args;
 		initOptionStore();
 	}
 	

@@ -51,7 +51,9 @@ public class TestRefactor {
                 }
                 
                 i++;
-                GINsimPy.runJython(args[i]);
+                String[] pyargs = new String[args.length-(i+1)];
+                System.arraycopy(args, i+1, pyargs, 0, pyargs.length);
+                GINsimPy.runJython(args[i], pyargs);
                 return;
             }
             
