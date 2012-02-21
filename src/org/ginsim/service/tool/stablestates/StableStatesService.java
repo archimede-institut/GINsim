@@ -3,13 +3,10 @@ package org.ginsim.service.tool.stablestates;
 import java.util.List;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
-
-import fr.univmrs.tagc.javaMDD.MDDFactory;
-import fr.univmrs.tagc.javaMDD.PathSearcher;
 
 
 /**
@@ -37,36 +34,20 @@ public class StableStatesService implements Service {
 		return new StableStatesAlgoImpl( graph);
 	}
 	
-	public StableStateSearcher getStableStateSearcher( RegulatoryGraph regGraph, List nodeOrder, Perturbation mutant) {
+	public StableStateSearcherNew getSearcherNew(RegulatoryGraph graph) {
+		return new StableStateFinder( graph);
+	}
+	
+	public StableStateSearcher getStableStateSearcher( RegulatoryGraph regGraph, List<RegulatoryNode> nodeOrder, Perturbation mutant) {
 		StableStateSearcher searcher = getSearcher(regGraph);
 		searcher.setPerturbation(mutant);
 		return searcher;
 	}
 
-//	public OMDDNode run( RegulatoryGraph regGraph, List nodeOrder, Perturbation mutant, OMDDNode[] trees) {
-//		StableStateSearcher algo = getSearcher( regGraph);
-//		algo.setPerturbation(mutant);
-//		return algo.getStables();
-//	}
-	
-	public void testNewStableSearch( RegulatoryGraph regGraph) {
-		System.out.println("-========= Stables =========-");
-		StableStateFinder finder = new StableStateFinder(regGraph);
-		MDDFactory factory = finder.getFactory();
-		
-		int stables = finder.find();
-		PathSearcher searcher = new PathSearcher(1);
-		int[] path = searcher.setNode(factory, stables);
-		for (int v: searcher) {
-			for (int k: path) {
-				if (k==-1) {
-					System.out.print("* ");
-				} else {
-					System.out.print(k+" ");
-				}
-			}
-			System.out.println();
-		}
-		System.out.println("-============================-");
+	public StableStateSearcherNew getNewStableStateSearcher( RegulatoryGraph regGraph, List<RegulatoryNode> nodeOrder, Perturbation mutant) {
+		StableStateSearcherNew searcher = getSearcherNew(regGraph);
+		searcher.setPerturbation(mutant);
+		return searcher;
 	}
+
 }

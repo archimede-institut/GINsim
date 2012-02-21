@@ -15,9 +15,10 @@ import fr.univmrs.tagc.javaMDD.MDDFactory;
  * 
  * @author Aurelien Naldi
  */
-public class StableStateFinder {
+public class StableStateFinder implements StableStateSearcherNew {
 	RegulatoryGraph model;
 	MDDFactory m_factory;
+	Perturbation p;
 	
 	boolean[][] t_reg;
 	int[][] t_newreg;
@@ -39,10 +40,11 @@ public class StableStateFinder {
 		return m_factory;
 	}
 	
-	public int find() {
-		return find(null);
+	public void setPerturbation(Perturbation p) {
+		this.p = p;
 	}
-	public int find(Perturbation p) {
+	
+	public Integer call() {
 		StableOperation sop = new StableOperation();
 		int[] mdds = model.getMDDs(m_factory);
 		if (p != null) {
@@ -61,5 +63,11 @@ public class StableStateFinder {
 			m_factory.free(prev);
 		}
 		return result;
+	}
+
+	@Override
+	public void setNodeOrder(List<RegulatoryNode> sortedVars) {
+		// TODO select node order
+		throw new RuntimeException("custom node order unsupported");
 	}
 }

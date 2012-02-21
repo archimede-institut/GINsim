@@ -75,7 +75,8 @@ public class StableStateSwingUI extends StackDialog  {
 	@Override
 	protected void run() {
 		Perturbation perturbation = (Perturbation)store.getObject(0);
-		int result = m_finder.find(perturbation);
+		m_finder.setPerturbation(perturbation);
+		int result = m_finder.call();
 		model.setResult(m_finder.getFactory(), result);
 		m_finder.getFactory().free(result);
 
