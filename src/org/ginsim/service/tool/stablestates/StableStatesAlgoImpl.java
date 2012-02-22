@@ -1,15 +1,12 @@
 package org.ginsim.service.tool.stablestates;
 
-import java.util.Iterator;
 import java.util.List;
 
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
-
 
 /**
  * This implements an analytic search of stable states. A state "x" is stable if, for every gene "i",
@@ -25,23 +22,15 @@ import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 public class StableStatesAlgoImpl implements StableStateSearcher {
 
 	private final RegulatoryGraph regGraph;
-	List<RegulatoryNode> nodeOrder;
+	List<RegulatoryNode> nodes;
 	OMDDNode[] t_param;
 	OMDDNode dd_stable;
 	Perturbation mutant;
-	boolean[][] t_reg;
-	int[][] t_newreg;
-	
-	/** use a reordering to improve the size of the MDD ? */
-	static final boolean ORDERTEST = true;
-	
-	int bestIndex, bestValue;
-	int nbgene, nbremain;
+	Iterable<Integer> ordering;
 	
 	public StableStatesAlgoImpl( RegulatoryGraph regGraph) {
-		super();
 		this.regGraph = regGraph;
-		this.nodeOrder = regGraph.getNodeOrder();
+		this.nodes = regGraph.getNodeOrder();
 	}
 
 	@Override
@@ -51,103 +40,28 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 	
 	@Override
 	public void setNodeOrder(List<RegulatoryNode> sortedVars) {
-		this.nodeOrder = sortedVars;
+		this.nodes = sortedVars;
 	}
 	
 	@Override
 	public OMDDNode call() {
-		if (ORDERTEST) {
-			buildAdjTable();
-		}
+		ordering = new StructuralNodeOrderer(regGraph);
 		
-		this.t_param = regGraph.getAllTrees(nodeOrder, true);
+		this.t_param = regGraph.getAllTrees(regGraph.getNodeOrder(), true);
 		if (mutant != null) {
 			mutant.apply(t_param, regGraph);
 		}
 		
 		dd_stable = OMDDNode.TERMINALS[1];
-		for (int i=0 ; i<t_param.length ; i++) {
-			if (ORDERTEST) {
-				int sel = selectNext();
-				dd_stable = buildStableConditionFromParam(sel, 
-						((RegulatoryNode)nodeOrder.get(sel)).getMaxValue()+1,
-						t_param[sel],
-						dd_stable).reduce();
-			} else {
-				if (i%10 == 0) {
-					LogManager.trace("  "+i, false);
-				}
-				dd_stable = buildStableConditionFromParam(i, 
-						((RegulatoryNode)nodeOrder.get(i)).getMaxValue()+1,
-						t_param[i],
-						dd_stable).reduce();
-			}
+		for (int i: ordering) {
+			dd_stable = buildStableConditionFromParam(i, 
+					((RegulatoryNode)nodes.get(i)).getMaxValue()+1,
+					t_param[i],
+					dd_stable).reduce();
 		}
 		return dd_stable;
 	}
 
-	private void buildAdjTable() {
-		nbgene = nbremain = nodeOrder.size();
-		t_newreg = new int[nbgene][2];
-		t_reg = new boolean[nbgene][nbgene];
-		bestValue = nbgene+1;
-		for (int i=0 ; i<nbgene ; i++) {
-			Iterator<RegulatoryMultiEdge> it_reg = regGraph.getIncomingEdges( (RegulatoryNode) nodeOrder.get(i)).iterator();
-			int cpt = 0;
-			boolean[] t_regline = t_reg[i];
-			while (it_reg.hasNext()) {
-				int j = nodeOrder.indexOf(it_reg.next().getSource());
-				t_regline[j] = true;
-				cpt++;
-			}
-			if (!t_reg[i][i]) {
-				t_reg[i][i] = true;
-				cpt++;
-			}
-			t_newreg[i][0] = i;
-			t_newreg[i][1] = cpt;
-			if (cpt < bestValue) {
-				bestValue = cpt;
-				bestIndex = i;
-			}
-		}
-	}
-	
-	private int selectNext() {
-		int choice = bestIndex;
-		int ret = t_newreg[choice][0];
-		bestValue = nbgene+1;
-		bestIndex = -1;
-		
-		boolean[] t_old;
-		
-		if (choice != -1) {
-			// remove the old one
-			t_newreg[choice] = t_newreg[--nbremain];
-			t_old = t_reg[choice];
-			t_reg[choice] = t_reg[nbremain];
-			for (int i=0 ; i<t_old.length ; i++) {
-				if (t_old[i]) {
-					// here is a new regulator to remove
-					for (int j=0 ; j<nbremain ; j++) {
-						if (t_reg[j][i]) {
-							t_reg[j][i] = false;
-							t_newreg[j][1]--;
-						}
-					}
-				}
-			}
-
-			// update everything here
-			for (int i=0 ; i<nbremain ; i++) {
-				if (t_newreg[i][1] < bestValue) {
-					bestValue = t_newreg[i][1];
-					bestIndex = i;
-				}
-			}
-		}
-		return ret;
-	}
 	
 	// "stupid" method
 	private OMDDNode buildStableConditionFromParam(int order, int nbChild, OMDDNode param) {
@@ -296,7 +210,7 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 	
 	// show stable state
 	private void showStableState (OMDDNode stable) {
-		int[] state = new int[nodeOrder.size()];
+		int[] state = new int[regGraph.getNodeCount()];
 		for (int i=0 ; i<state.length ; i++) {
 			state[i] = -1;
 		}

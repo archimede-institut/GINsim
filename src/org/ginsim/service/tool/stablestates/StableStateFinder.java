@@ -19,7 +19,8 @@ public class StableStateFinder implements StableStateSearcherNew {
 	RegulatoryGraph model;
 	MDDFactory m_factory;
 	Perturbation p;
-	
+	Iterable<Integer> ordering;
+
 	boolean[][] t_reg;
 	int[][] t_newreg;
 	
@@ -45,6 +46,7 @@ public class StableStateFinder implements StableStateSearcherNew {
 	}
 	
 	public Integer call() {
+		ordering = new StructuralNodeOrderer(model);
 		StableOperation sop = new StableOperation();
 		int[] mdds = model.getMDDs(m_factory);
 		if (p != null) {
@@ -54,7 +56,7 @@ public class StableStateFinder implements StableStateSearcherNew {
 		// loop over the existing nodes!
 		int prev=1, result=1;
 		List<RegulatoryNode> nodes = model.getNodeOrder();
-		for (int i=0 ; i<mdds.length ; i++) {
+		for (int i: ordering) {
 			RegulatoryNode node = nodes.get(i);
 			prev = result;
 			int var = m_factory.getVariableID(node);
