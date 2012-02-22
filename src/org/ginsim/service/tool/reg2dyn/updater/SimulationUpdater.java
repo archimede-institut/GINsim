@@ -10,6 +10,8 @@ import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
 
+import fr.univmrs.tagc.javaMDD.MDDFactory;
+
 
 /**
  * This is the part of the simulation in charge for generating the following states.
@@ -28,29 +30,29 @@ import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
  * </ul>
  */
 abstract public class SimulationUpdater implements Iterator {
-	protected OMDDNode[] t_tree;
-	protected int length;
+	protected final int length;
 	protected byte[] cur_state;
 	protected byte[] next = null;
 	protected int depth;
 	protected Object node;
 	protected boolean multiple;
 	
+	protected ModelHelper modelHelper;
+	
 	public SimulationUpdater(RegulatoryGraph regGraph, SimulationParameters params) {
-        t_tree = regGraph.getParametersForSimulation(true);
-        Perturbation mutant = (Perturbation)params.store.getObject(SimulationParameters.MUTANT);
-        if (mutant != null) {
-            mutant.apply(t_tree, regGraph);
-        }
-		this.length = t_tree.length;
+		this(regGraph, (Perturbation)params.store.getObject(SimulationParameters.MUTANT));
 	}
 
 	public SimulationUpdater(RegulatoryGraph regGraph, Perturbation mutant) {
-        t_tree = regGraph.getParametersForSimulation(true);
-        if (mutant != null) {
-            mutant.apply(t_tree, regGraph);
-        }
-		this.length = t_tree.length;
+		this(regGraph, mutant, false);
+	}
+	public SimulationUpdater(RegulatoryGraph regGraph, Perturbation mutant, boolean useNewMDDs) {
+		if (useNewMDDs) {
+			modelHelper = new ModelHelperImpl(regGraph, mutant);
+		} else {
+			modelHelper = new ModelHelperNew(regGraph, mutant);
+		}
+		this.length = modelHelper.length();
 	}
 
 	public boolean hasNext() {
@@ -96,16 +98,7 @@ abstract public class SimulationUpdater implements Iterator {
 	 * @return the direction in which the gene want to change: 0 for no change, 1 for increase and -1 for decrease
 	 */
 	protected int nodeChange(byte[] initState, int i) {
-		byte curState = initState[i];
-		byte nextState = t_tree[i].testStatus(initState);
-
-		// now see if the node is willing to change it's state
-		if (nextState > curState){
-		    return 1;
-		} else if (nextState < curState){
-		    return -1;
-		}
-		return 0;
+		return modelHelper.nodeChange(initState, i);
 	}
 	
     static public SimulationUpdater getInstance(RegulatoryGraph regGraph, SimulationParameters params) {
@@ -119,6 +112,76 @@ abstract public class SimulationUpdater implements Iterator {
 		}
 		return new PrioritySimulationUpdater(regGraph, params);
 	}
+}
+
+/* ******* MDD helper *********/
+interface ModelHelper {
+	
+	int nodeChange(byte[] initState, int i);
+	
+	int length();
+}
+
+class ModelHelperImpl implements ModelHelper {
+
+	private final OMDDNode[] t_tree;
+
+	public ModelHelperImpl(RegulatoryGraph model, Perturbation mutant) {
+		t_tree = model.getParametersForSimulation(true);
+        if (mutant != null) {
+            mutant.apply(t_tree, model);
+        }
+	}
+	
+	public int length() {
+		return t_tree.length;
+	}
+	
+	public int nodeChange(byte[] initState, int i) {
+		byte curState = initState[i];
+		byte nextState = t_tree[i].testStatus(initState);
+
+		// now see if the node is willing to change it's state
+		if (nextState > curState){
+		    return 1;
+		} else if (nextState < curState){
+		    return -1;
+		}
+		return 0;
+	}
+
+}
+
+class ModelHelperNew implements ModelHelper {
+
+	private MDDFactory factory;
+	private int[] nodes;
+
+	public ModelHelperNew(RegulatoryGraph model, Perturbation mutant) {
+		factory = model.getMDDFactory();
+		nodes = model.getMDDs(factory);
+        if (mutant != null) {
+            nodes = mutant.apply(factory, nodes, model);
+        }
+	}
+	
+	public int length() {
+		return nodes.length;
+	}
+	
+	public int nodeChange(byte[] initState, int i) {
+		byte curState = initState[i];
+		byte nextState = factory.reach(nodes[i], initState);
+
+		// now see if the node is willing to change it's state
+		if (nextState > curState){
+		    return 1;
+		} else if (nextState < curState){
+		    return -1;
+		}
+		return 0;
+	}
+
 }
 
 
