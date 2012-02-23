@@ -34,7 +34,7 @@
 	<property name="jar.name" value="${ant.project.name}-${version}.jar"/>
 	<property name="jar.file" value="${dist}/${jar.name}"/>
 	<!-- TODO: Correct the class after the refactoring... -->
-	<property name="main.class" value="org.ginsim.TestRefactor"/>
+	<property name="main.class" value="org.ginsim.Launcher"/>
 	<property name="main.class.old" value="fr.univmrs.tagc.GINsim.global.GsMain"/>
 	
 	<!-- set documentation properties -->

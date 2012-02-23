@@ -6,6 +6,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.service.Service;
+import org.ginsim.core.service.Alias;
 import org.mangosdk.spi.ProviderFor;
 
 
@@ -21,6 +22,7 @@ import org.mangosdk.spi.ProviderFor;
  * The order in which they are considerd is also chosen to keep them small as long as possible.
  */
 @ProviderFor( Service.class)
+@Alias("stable")
 public class StableStatesService implements Service {
 
 	/**

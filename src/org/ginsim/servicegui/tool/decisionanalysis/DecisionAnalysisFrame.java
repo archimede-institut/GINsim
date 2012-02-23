@@ -68,7 +68,7 @@ public class DecisionAnalysisFrame extends StackDialog implements ActionListener
 
 	
 	private GenericListSelectionPanel getPriorityClassSelector() {
-        SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( regGraph, SimulationParametersManager.key, true);
+        SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( regGraph, SimulationParametersManager.KEY, true);
 		if (selectPriorityClass == null) {
 			selectPriorityClass = new PrioritySelectionPanel(this, paramList.pcmanager);
 			this.currentParameter = (SimulationParameters)paramList.getElement(null, 0);

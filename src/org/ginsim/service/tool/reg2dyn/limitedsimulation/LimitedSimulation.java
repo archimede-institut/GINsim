@@ -91,7 +91,7 @@ public class LimitedSimulation implements Runnable {
     }
 
 	private void constructMapping(Graph dynamicGraph) {
-		HashMap<DynamicNode, HierarchicalNode> state2htg = (HashMap<DynamicNode, HierarchicalNode>) ObjectAssociationManager.getInstance().getObject(dynamicGraph, StatesToHierarchicalMappingManager.key, true);
+		HashMap<DynamicNode, HierarchicalNode> state2htg = (HashMap<DynamicNode, HierarchicalNode>) ObjectAssociationManager.getInstance().getObject(dynamicGraph, StatesToHierarchicalMappingManager.KEY, true);
 		state2htg.clear();
 		for (Iterator it = dynamicGraph.getNodes().iterator(); it.hasNext();) {
 			DynamicNode state = (DynamicNode) it.next();

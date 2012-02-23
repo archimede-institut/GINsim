@@ -106,7 +106,7 @@ class Reg2DynAction extends ToolAction {
 			// mainFrame.getActions().setCurrentMode( GsActions.MODE_DEFAULT, 0, false);
 		}
 
-		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, SimulationParametersManager.key, true);
+		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, SimulationParametersManager.KEY, true);
 		new SingleSimulationFrame(mainFrame, paramList).setVisible(true);
 
 	}

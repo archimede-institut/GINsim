@@ -6,6 +6,8 @@ import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.Set;
 
+import org.ginsim.common.utils.log.LogManager;
+
 
 /**
  * This manager provides access to the GsServices corresponding to a specific graph class
@@ -19,6 +21,7 @@ import java.util.Set;
  * 
  * 
  * @author Lionel Spinelli
+ * @author Aurelien Naldi
  */
 
 
@@ -29,6 +32,7 @@ public class ServiceManager{
 	
 	// The map establishing the correspondence between graph class and GraphGUIHelper instance
 	private HashMap<Class<Service>, Service> services = new HashMap<Class<Service>, Service>();
+	private HashMap<String, Service> serviceNames = new HashMap<String, Service>();
 	
 	
 	/**
@@ -57,7 +61,21 @@ public class ServiceManager{
             try {
             	Service service = service_list.next();
             	if( service != null){
-            		services.put( (Class<Service>) service.getClass(), service);
+            		Class<Service> cl = (Class<Service>) service.getClass();
+            		services.put( cl, service);
+            		if (serviceNames.containsKey(cl.getName())) {
+            			LogManager.error("Duplicated service:" + cl.getName());
+            		} else {
+            			serviceNames.put(cl.getName(), service);
+            		}
+            		Alias alias = cl.getAnnotation(Alias.class);
+            		if (alias != null) {
+                		if (serviceNames.containsKey(alias.value())) {
+                			LogManager.error("Duplicated service:" + alias.value());
+                		} else {
+                    		serviceNames.put(alias.value(), service);
+                		}
+            		}
             	}
             }
             catch (ServiceConfigurationError e){
@@ -78,7 +96,7 @@ public class ServiceManager{
 	
 	
 	/**
-	 * Give access to the service 
+	 * Give access to the service by service class
 	 * 
 	 * @param service_class
 	 * @return
@@ -89,6 +107,17 @@ public class ServiceManager{
 	}
 
 	/**
+	 * Give access to the service by service name 
+	 * 
+	 * @param service_class
+	 * @return
+	 */
+	public Service getService( String name){
+		
+		return serviceNames.get( name);
+	}
+
+	/**
 	 * Get a service directly, i.e. shortcut for getManager().getService( service_class)
 	 * 
 	 * @param service_class
@@ -96,5 +125,15 @@ public class ServiceManager{
 	 */
 	public static <S extends Service> S get( Class<S> service_class) {
 		return getManager().getService( service_class);
+	}
+	
+	/**
+	 * Get a service directly, i.e. shortcut for getManager().getService( name)
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public static Service get( String name) {
+		return getManager().getService( name);
 	}
 }

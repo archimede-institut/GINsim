@@ -113,7 +113,7 @@ public class LRGDocumentationWriter {
 	}
 
 	private void writeMutants() throws Exception {
-		RegulatoryMutants mutantList = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, MutantListManager.key, true);
+		RegulatoryMutants mutantList = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, MutantListManager.KEY, true);
 		StableStateSearcher stableSearcher = ServiceManager.get(StableStatesService.class).getSearcher(graph);
 		OMDDNode stable;
 		
@@ -282,7 +282,7 @@ public class LRGDocumentationWriter {
 	
 	private void writeInitialStates() throws IOException {
 		InitialStateList initStates = ((GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, 
-				InitialStateManager.key, false)).getInitialStates();
+				InitialStateManager.KEY, false)).getInitialStates();
 		if (initStates != null && initStates.getNbElements(null) > 0) {
 			InitStateTableModel model = new InitStateTableModel(null, initStates, false);
 			String[] t_cols = new String[len+1];

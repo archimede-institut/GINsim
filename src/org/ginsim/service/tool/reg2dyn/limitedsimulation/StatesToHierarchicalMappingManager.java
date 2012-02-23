@@ -7,7 +7,7 @@ import java.util.HashMap;
 import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
-import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
+import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
 
 /**
  * An GraphAssociatedObjectManager providing an HashMap<DynamicNode, HierarchicalNode> storing a mapping between states and their corresponding HierarchicalNode
@@ -17,15 +17,14 @@ import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
  * @author Duncan Berenguier
  *
  */
-public class StatesToHierarchicalMappingManager implements GraphAssociatedObjectManager {
+public class StatesToHierarchicalMappingManager extends BasicGraphAssociatedManager {
 
-	public static final String key = "statesToHierarchical";
+	public static final String KEY = "statesToHierarchical";
 
-	@Override
-	public String getObjectName() {
-		return key;
+	public StatesToHierarchicalMappingManager() {
+		super(KEY, null);
 	}
-
+	
 	@Override
 	public boolean needSaving(Graph graph) {
 		return false;

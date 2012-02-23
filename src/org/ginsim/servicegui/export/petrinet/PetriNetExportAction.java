@@ -86,7 +86,7 @@ class PNExportConfigPanel extends AbstractStackDialogHandler {
 		c.fill = GridBagConstraints.HORIZONTAL;
 		add(mutantPanel, c);
 
-		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject(graph, SimulationParametersManager.key, true);
+		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject(graph, SimulationParametersManager.KEY, true);
         priorityPanel = new PrioritySelectionPanel(stack, paramList.pcmanager);
         priorityPanel.setStore(config.store, 1);
 		c = new GridBagConstraints();

@@ -46,7 +46,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 		this.graph = graph;
 		setTitle("select nodes to remove");
 		
-        ModelSimplifierConfigList cfgList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, ModelSimplifierConfigManager.key, true);
+        ModelSimplifierConfigList cfgList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, ModelSimplifierConfigManager.KEY, true);
 		if (cfgList.getNbElements(null) == 0) {
 			cfgList.add();
 		}

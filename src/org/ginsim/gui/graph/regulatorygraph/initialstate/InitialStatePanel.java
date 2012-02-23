@@ -53,7 +53,7 @@ public class InitialStatePanel extends JPanel {
         }
 	}
     public InitialStatePanel(StackDialog dialog, Graph graph, boolean several) {
-        this(dialog, (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, InitialStateManager.key, true), several);
+        this(dialog, (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, InitialStateManager.KEY, true), several);
     }
     public void setParam(InitialStateStore currentParameter) {
         initPanel.setParam(currentParameter.getInitialState());

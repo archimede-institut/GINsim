@@ -9,7 +9,7 @@ import org.ginsim.common.exception.GsException;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
+import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -19,9 +19,13 @@ import org.xml.sax.SAXException;
 /**
  * Save/open simulation parameters along with the model.
  */
-public class ModelSimplifierConfigManager implements GraphAssociatedObjectManager {
+public class ModelSimplifierConfigManager extends BasicGraphAssociatedManager {
 
-	public static final String key = "modelSimplifier";
+	public static final String KEY = "modelSimplifier";
+	
+	public ModelSimplifierConfigManager() {
+		super(KEY, null);
+	}
 	
     public Object doOpen(InputStream is, Graph graph) throws GsException {
     	
@@ -31,7 +35,7 @@ public class ModelSimplifierConfigManager implements GraphAssociatedObjectManage
     }
 
     public void doSave(OutputStreamWriter os, Graph graph) {
-        ModelSimplifierConfigList paramList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, key, false);
+        ModelSimplifierConfigList paramList = (ModelSimplifierConfigList) getObject(graph);
         List<RegulatoryNode> nodeOrder = ((RegulatoryGraph)graph).getNodeOrder();
         if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
@@ -49,17 +53,7 @@ public class ModelSimplifierConfigManager implements GraphAssociatedObjectManage
         }
     }
 
-    public String getObjectName() {
-        return key;
-    }
-
-    public boolean needSaving( Graph graph) {
-        ModelSimplifierConfigList paramList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, key, false);
-        return paramList != null && paramList.getNbElements(null) > 0;
-    }
-
 	public Object doCreate( Graph graph) {
-		
 		return new ModelSimplifierConfigList( graph);
 	}
 }
@@ -77,7 +71,7 @@ class ModelSimplifierConfigParser extends XMLHelper {
      */
     public ModelSimplifierConfigParser(RegulatoryGraph graph) {
     	this.nodeOrder = graph.getNodeOrder();
-        this.paramList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, ModelSimplifierConfigManager.key, true);
+        this.paramList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, ModelSimplifierConfigManager.KEY, true);
     }
     
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {

@@ -320,9 +320,9 @@ public class ModelSimplifier extends Thread implements Runnable {
 		// get as much of the associated data as possible
 		Map m_alldata = new HashMap();
 		// mutants: only copy mutants that don't affect removed nodes
-		RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.key, false);
+		RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.KEY, false);
 		if (mutants != null && mutants.getNbElements(null) > 0) {
-			RegulatoryMutants newMutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, MutantListManager.key, true);
+			RegulatoryMutants newMutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, MutantListManager.KEY, true);
 			RegulatoryMutantDef mutant, newMutant;
 			int mutantPos=0;
 			for (int i=0 ; i<mutants.getNbElements(null) ; i++) {
@@ -357,9 +357,9 @@ public class ModelSimplifier extends Thread implements Runnable {
 		}
 		
 		// initial states
-        GsInitialStateList linit = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject( graph, InitialStateManager.key, false);
+        GsInitialStateList linit = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject( graph, InitialStateManager.KEY, false);
 		if (linit != null && !linit.isEmpty()) {
-			GsInitialStateList newLinit = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, InitialStateManager.key, true);
+			GsInitialStateList newLinit = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, InitialStateManager.KEY, true);
             InitialStateList[] inits = {linit.getInitialStates(), linit.getInputConfigs()};
             InitialStateList[] newInits = {newLinit.getInitialStates(), newLinit.getInputConfigs()};
 
@@ -386,10 +386,10 @@ public class ModelSimplifier extends Thread implements Runnable {
 		}
 		
 		// priority classes definition and simulation parameters
-		SimulationParameterList params = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, SimulationParametersManager.key, false);
+		SimulationParameterList params = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, SimulationParametersManager.KEY, false);
 		if (params != null) {
 			PriorityClassManager pcman = params.pcmanager;
-			SimulationParameterList new_params = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, SimulationParametersManager.key, true);
+			SimulationParameterList new_params = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, SimulationParametersManager.KEY, true);
 			PriorityClassManager new_pcman = new_params.pcmanager;
 			for (int i=2 ; i<pcman.getNbElements(null) ; i++) {
 				PriorityClassDefinition pcdef = (PriorityClassDefinition)pcman.getElement(null, i);

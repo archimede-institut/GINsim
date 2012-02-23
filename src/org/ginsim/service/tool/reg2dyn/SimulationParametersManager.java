@@ -9,7 +9,7 @@ import org.ginsim.common.exception.GsException;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
+import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 
@@ -17,18 +17,24 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 /**
  * Save/open simulation parameters along with the model.
  */
-public class SimulationParametersManager implements GraphAssociatedObjectManager {
+public class SimulationParametersManager extends BasicGraphAssociatedManager {
 
-	public static final String key = "reg2dyn_parameters";
+	public static final String KEY = "reg2dyn_parameters";
 	
-    public Object doOpen(InputStream is, Graph graph)  throws GsException{
+	public SimulationParametersManager() {
+		super(KEY, null);
+	}
+
+	@Override
+	public Object doOpen(InputStream is, Graph graph)  throws GsException{
         SimulationParametersParser parser = new SimulationParametersParser((RegulatoryGraph)graph);
         parser.startParsing(is, false);
         return parser.getParameters();
     }
 
+    @Override
     public void doSave(OutputStreamWriter os, Graph graph) throws GsException{
-        SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, key, false);
+        SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, KEY, false);
         List nodeOrder = ((RegulatoryGraph)graph).getNodeOrder();
         if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
@@ -58,16 +64,7 @@ public class SimulationParametersManager implements GraphAssociatedObjectManager
         }
     }
 
-    public String getObjectName() {
-        return key;
-    }
-
-    public boolean needSaving( Graph graph) {
-        SimulationParameterList paramList = (SimulationParameterList)  ObjectAssociationManager.getInstance().getObject( graph, key, false);
-        return paramList != null && (paramList.getNbElements(null) > 0 || 
-        		paramList.pcmanager != null && paramList.pcmanager.getNbElements(null) > 2);
-    }
-
+    @Override
 	public Object doCreate( Graph graph) {
 		return new SimulationParameterList( graph);
 	}

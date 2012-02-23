@@ -9,16 +9,20 @@ import org.ginsim.common.exception.GsException;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
+import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 
-public class InitialStateManager implements GraphAssociatedObjectManager {
+public class InitialStateManager extends BasicGraphAssociatedManager {
 
-	public static final String key = "initialState";
+	public static final String KEY = "initialState";
+	
+	public InitialStateManager() {
+		super(KEY, null);
+	}
 	
     public Object doOpen(InputStream is, Graph graph)  throws GsException{
     	
@@ -28,7 +32,7 @@ public class InitialStateManager implements GraphAssociatedObjectManager {
     }
 
     public void doSave(OutputStreamWriter os, Graph graph) throws GsException{
-        GsInitialStateList imanager = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, key, true);
+        GsInitialStateList imanager = (GsInitialStateList) getObject(graph);
         List nodeOrder = ((RegulatoryGraph)graph).getNodeOrder();
         if (imanager == null || imanager.isEmpty() || nodeOrder == null || nodeOrder.size() == 0) {
             return;
@@ -44,15 +48,7 @@ public class InitialStateManager implements GraphAssociatedObjectManager {
         }
     }
 
-	public String getObjectName() {
-		return key;
-	}
-
-    public boolean needSaving( Graph graph) {
-        GsInitialStateList list = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, key, false);
-        return list != null && !list.isEmpty();
-    }
-
+    @Override
 	public Object doCreate( Graph graph) {
 		return new GsInitialStateList(graph);
 	}

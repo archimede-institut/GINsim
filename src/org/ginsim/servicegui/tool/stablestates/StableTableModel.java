@@ -117,7 +117,7 @@ public class StableTableModel extends AbstractTableModel {
 	private void updateMatches( Graph graph) {
 		InitialStateList initstates = null;
 		if (graph != null && graph instanceof RegulatoryGraph) {
-		    GsInitialStateList ilist = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, InitialStateManager.key, false);
+		    GsInitialStateList ilist = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, InitialStateManager.KEY, false);
 		    if (ilist != null) {
 		        initstates = ilist.getInitialStates();
 		    }

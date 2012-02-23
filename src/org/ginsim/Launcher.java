@@ -19,11 +19,11 @@ import org.ginsim.gui.shell.AboutDialog;
 
 
 /**
- * Simple, stupid launcher to test the ongoing refactoring
+ * Simple launcher: parse command line arguments, show some help, open files or run the script mode accordingly.
  * 
  * @author Aurelien Naldi
  */
-public class TestRefactor {
+public class Launcher {
 
 	/**
 	 * @param args
@@ -45,15 +45,19 @@ public class TestRefactor {
          */
         for (int i = 0; i < args.length; i++) {
         	if (args[i].equals("-s")) {
+        		ScriptLauncher script = new ScriptLauncher();
                 if (args.length == i+1) {
-                    System.out.println("Script mode requires a filename argument");
+                	script.help();
                     return;
                 }
                 
                 i++;
                 String[] pyargs = new String[args.length-(i+1)];
                 System.arraycopy(args, i+1, pyargs, 0, pyargs.length);
-                GINsimPy.runJython(args[i], pyargs);
+                script.run(args[i], pyargs);
+                
+                // force exit as jython seems to often delay it
+                System.exit(0);
                 return;
             }
             
@@ -61,9 +65,11 @@ public class TestRefactor {
             	if (!args[i].equals("-h")) {
                     System.out.println("Unknown option: "+args[i]);
             	}
-                System.out.println("available options:");
-                System.out.println("\t-s <file>: run \"script\" from <file> [TODO: script arguments]");
-                System.out.println("\t-h: display this message");
+                System.out.println("Available options:");
+                System.out.println("\t<file>: open <file> on startup.");
+                System.out.println("\t-s: display the script help message.");
+                System.out.println("\t-s <file>: run \"script\" from <file>. Extra arguments are script arguments.");
+                System.out.println("\t-h:  display this message.");
                 return;
             }
         	
@@ -91,17 +97,6 @@ public class TestRefactor {
 		if( graph == null){
 			graph = GUIManager.getInstance().newFrame();
 		}
-		// Test whatToDoWithGraph frame
-//		new WhatToDoWithGraph( graph);
-		// Test of Notifications
-//		String[] options_names = new String[]{ "STR_OK", "STR_cancel"};
-//		NotificationResolution resolution = new NotificationResolution( options_names);
-//		NotificationManager.publishResolvableError( graph, "STR_unableToOpen", graph, null, resolution);
-//		NotificationManager.publishWarning( graph, "STR_unableToSave");
-//		NotificationManager.publishError( graph, "STR_wantToStop_title");
-//		NotificationManager.publishDetailedError( graph, "STR_wantToStop_title", 
-//				"<HTML> essaiD <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai <br> essai F</HTML>");
-		
 	}
 
 	/**
@@ -111,7 +106,7 @@ public class TestRefactor {
 	private static void detectGSDir() {
 		String basedir = System.getProperty("user.dir");
 		
-		Class<?> cl = TestRefactor.class;
+		Class<?> cl = Launcher.class;
 		String clname = cl.getName().replace(".",	"/") + ".class";
 		String path = cl.getClassLoader().getResource(clname).toString();
 		if (path.startsWith("file:")) {
@@ -139,7 +134,7 @@ public class TestRefactor {
 		ImageLoader.pushSearchPath("/org/ginsim/gui/resource/icon/action");
 		AboutDialog.setDOAPFile("/org/ginsim/gui/resource/GINsim-about.rdf");
 		try {
-			OptionStore.init(TestRefactor.class.getPackage().getName());
+			OptionStore.init(Launcher.class.getPackage().getName());
 		} catch (Exception e) {
 			GUIMessageUtils.openErrorDialog(e, null);
 		}

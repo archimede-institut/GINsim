@@ -8,26 +8,26 @@ import org.ginsim.common.exception.GsException;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
-import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.xml.sax.Attributes;
-
 
 
 public class BiblioManager extends BasicGraphAssociatedManager {
 
-	public BiblioManager() {
-		this.key = "biblio";
-		AnnotationLink.addHelperClass("ref", key);
-	}
+	public static final String KEY = "biblio";
 	
+	public BiblioManager() {
+		super(KEY, null);
+		AnnotationLink.addHelperClass("ref", KEY);
+	}
+
+	@Override
 	public Object doCreate( Graph graph) {
-		
 		return new BiblioList( graph, false);
 	}
 
+	@Override
 	public Object doOpen(InputStream is, Graph graph) throws GsException{
-		
-		BiblioList bibList = (BiblioList) ObjectAssociationManager.getInstance().getObject(graph, key, true);
+		BiblioList bibList = (BiblioList) getObject(graph);
 		BiblioParser parser = new BiblioParser(bibList);
 		parser.startParsing(is, false);
 		return bibList;

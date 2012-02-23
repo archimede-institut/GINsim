@@ -33,7 +33,7 @@ public class MutantSelectionPanel extends GenericListSelectionPanel implements G
      * @return a panel to configure mutants
      */
     public static JPanel getMutantConfigPanel(RegulatoryGraph graph) {
-        RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, MutantListManager.key, true);
+        RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, MutantListManager.KEY, true);
         MutantPanel mpanel = new MutantPanel();
         Map m = new HashMap();
         m.put(RegulatoryMutantDef.class, mpanel);
@@ -48,7 +48,7 @@ public class MutantSelectionPanel extends GenericListSelectionPanel implements G
 	RegulatoryGraph graph;
 	
 	public MutantSelectionPanel(StackDialog dialog, RegulatoryGraph graph, ObjectStore store) {
-		super(dialog, (GenericList) ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.key, false),
+		super(dialog, (GenericList) ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.KEY, false),
 				Translator.getString("STR_mutants"), true, Translator.getString("STR_configure_mutants"));
 		this.graph = graph;
 		setStore(store);

@@ -8,18 +8,20 @@ import java.util.List;
 import org.ginsim.common.exception.GsException;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
-import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 
 
 /**
  * Save/open simulation parameters along with the model.
  */
-public class MutantListManager implements
-        GraphAssociatedObjectManager {
+public class MutantListManager extends BasicGraphAssociatedManager {
 
-	public static final String key = "mutant";
+	public static final String KEY = "mutant";
+	
+	public MutantListManager() {
+		super(KEY, null);
+	}
 	
     public Object doOpen(InputStream is, Graph graph)  throws GsException{
     	
@@ -30,7 +32,7 @@ public class MutantListManager implements
 
     public void doSave(OutputStreamWriter os, Graph graph) throws GsException{
     	
-        RegulatoryMutants lMutant = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, key, false);
+        RegulatoryMutants lMutant = (RegulatoryMutants) getObject(graph);
         List nodeOrder = ((RegulatoryGraph)graph).getNodeOrder();
         if (lMutant == null || lMutant.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
             return;
@@ -48,18 +50,8 @@ public class MutantListManager implements
         }
     }
 
-    public String getObjectName() {
-        return "mutant";
-    }
-
-    public boolean needSaving( Graph graph) {
-    	
-        RegulatoryMutants lMutant = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, "mutant", false);
-        return lMutant != null && lMutant.getNbElements(null) > 0;
-    }
-
+    @Override
 	public Object doCreate( Graph graph) {
-		
 		return new RegulatoryMutants( (RegulatoryGraph)graph);
 	}
 }

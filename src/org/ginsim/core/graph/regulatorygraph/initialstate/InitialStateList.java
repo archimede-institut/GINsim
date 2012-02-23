@@ -107,4 +107,34 @@ public class InitialStateList extends SimpleGenericList {
             out.closeTag();
         }
     }
+
+	public String nameState(byte[] state, List<RegulatoryNode> no) {
+        if (getNbElements(null) > 0) {
+            for (int i=0 ; i<getNbElements(null) ; i++) {
+                InitialState istate = (InitialState)getElement(null, i);
+                Map<RegulatoryNode, List<Integer>> m_istate = istate.getMap();
+                boolean ok = true;
+                for (int j=0 ; j<no.size() ; j++) {
+                    List<Integer> values = m_istate.get(no.get(j));
+                    if (values != null) {
+                        ok = false;
+                        int val = state[j];
+                        for (int v: values) {
+                            if (v == val) {
+                                ok = true;
+                                break;
+                            }
+                        }
+                        if (!ok) {
+                            break;
+                        }
+                    }
+                }
+                if (ok) {
+                    return istate.getName();
+                }
+            }
+        }
+        return null;
+	}
 }

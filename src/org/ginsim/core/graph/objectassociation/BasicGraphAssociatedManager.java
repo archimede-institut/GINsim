@@ -10,14 +10,19 @@ import org.ginsim.core.graph.common.Graph;
 
 
 
-public abstract class BasicGraphAssociatedManager implements
-		GraphAssociatedObjectManager {
+public abstract class BasicGraphAssociatedManager implements GraphAssociatedObjectManager {
 
-	protected String key;
+	private final String key;
+	private final String[] aliases;
+	
+	public BasicGraphAssociatedManager(String key, String[] aliases) {
+		this.key = key;
+		this.aliases = aliases;
+	}
 	
 	public void doSave(OutputStreamWriter os, Graph graph) throws GsException{
 		
-        Object o =  ObjectAssociationManager.getInstance().getObject(graph, key, false);
+        Object o =  getObject(graph);
         if (o != null && o instanceof XMLize) {
         	try{
         		XMLWriter out = new XMLWriter(os, null);
@@ -33,9 +38,15 @@ public abstract class BasicGraphAssociatedManager implements
 		return key;
 	}
 
-	public boolean needSaving( Graph graph) {
-		
-		return ObjectAssociationManager.getInstance().getObject(graph, key, false) != null;
+	public String[] getAliases() {
+		return aliases;
 	}
 
+	public boolean needSaving( Graph graph) {
+		return getObject(graph) != null;
+	}
+
+	public Object getObject( Graph graph) {
+		return ObjectAssociationManager.getInstance().getObject(graph, key, false);
+	}
 }

@@ -44,7 +44,7 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
     public SimulationParameterList( Graph<RegulatoryNode,RegulatoryMultiEdge> graph, SimulationParameters param) {
     	
         this.graph = (RegulatoryGraph) graph;
-        imanager = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, InitialStateManager.key, true);
+        imanager = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, InitialStateManager.KEY, true);
         imanager.getInitialStates().addListListener(this);
         imanager.getInputConfigs().addListListener(this);
         pcmanager = new PriorityClassManager(this.graph);
@@ -54,7 +54,7 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
     	canRemove = true;
     	canOrder = true;
         GraphManager.getInstance().addGraphListener( this.graph, this);
-        RegulatoryMutants mutants = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.key, true);
+        RegulatoryMutants mutants = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.KEY, true);
         mutants.addListener(this);
         if (param == null) {
         	add();

@@ -54,7 +54,7 @@ public class SimulationParametersParser extends XMLHelper {
     	this.graph = graph;
         this.nodeOrder = graph.getNodeOrder();
         paramLists = new SimulationParameterList(graph);
-        imanager = (GsInitialStateList)  ObjectAssociationManager.getInstance().getObject( graph, InitialStateManager.key, true);
+        imanager = (GsInitialStateList)  ObjectAssociationManager.getInstance().getObject( graph, InitialStateManager.KEY, true);
         initList = imanager.getInitialStates();
         inputList = imanager.getInputConfigs();
     }
@@ -131,7 +131,7 @@ public class SimulationParametersParser extends XMLHelper {
                 } else if (qName.equals("mutant")) {
                     String s = attributes.getValue("value");
                     if (!s.trim().equals("")) {
-                    	RegulatoryMutants mutantList = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.key, true);
+                    	RegulatoryMutants mutantList = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.KEY, true);
                     	Object mutant = mutantList.get(s);
                         param.store.setObject(SimulationParameters.MUTANT, mutantList.get(s));
                         if (mutant == null) {

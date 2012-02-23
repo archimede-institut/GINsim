@@ -72,7 +72,7 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 
 		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager
 				.getInstance().getObject(config.getGraph(),
-						SimulationParametersManager.key, true);
+						SimulationParametersManager.KEY, true);
 		priorityPanel = new PrioritySelectionPanel(stack, paramList.pcmanager);
 		priorityPanel.setStore(config.store, 1);
 		cst = new GridBagConstraints();
@@ -324,7 +324,7 @@ class GsNuSMVMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
 	GsNuSMVMutantModel(NuSMVConfig cfg) {
 		this.cfg = cfg;
 		this.listMutants = (RegulatoryMutants) ObjectAssociationManager
-				.getInstance().getObject(cfg.getGraph(), MutantListManager.key,
+				.getInstance().getObject(cfg.getGraph(), MutantListManager.KEY,
 						true);
 	}
 

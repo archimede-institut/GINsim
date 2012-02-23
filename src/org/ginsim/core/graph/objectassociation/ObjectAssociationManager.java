@@ -1,8 +1,10 @@
 package org.ginsim.core.graph.objectassociation;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import org.ginsim.core.graph.common.Graph;
@@ -83,6 +85,15 @@ public class ObjectAssociationManager {
     public List<GraphAssociatedObjectManager> getObjectManagerList() {
     	
         return objectManagers;
+    }
+    
+    /**
+     * Give access to the list of classes for which object managers are registered
+     * 
+     * @return the set of class associated to specialised object managers
+     */
+    public Collection<Entry<Class, List<GraphAssociatedObjectManager>>> getManagedClasses() {
+    	return specializedObjectManagers.entrySet();
     }
     
     /**

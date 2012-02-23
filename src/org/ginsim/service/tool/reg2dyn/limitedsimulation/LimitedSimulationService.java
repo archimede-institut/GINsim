@@ -19,7 +19,7 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor( Service.class)
 public class LimitedSimulationService implements Service {
     static {
-    	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( DynamicGraph.class, StatesToHierarchicalMappingManager.key)){
+    	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( DynamicGraph.class, StatesToHierarchicalMappingManager.KEY)){
     		ObjectAssociationManager.getInstance().registerObjectManager(DynamicGraph.class, new StatesToHierarchicalMappingManager());
     	}
     }
@@ -49,7 +49,7 @@ public class LimitedSimulationService implements Service {
 	}
 
 	public static HashMap<DynamicNode, HierarchicalNode> getStatesToHierarchicalNodes(DynamicGraph dynamicGraph) {
-		return 	(HashMap<DynamicNode, HierarchicalNode>) ObjectAssociationManager.getInstance().getObject(dynamicGraph, StatesToHierarchicalMappingManager.key, true);
+		return 	(HashMap<DynamicNode, HierarchicalNode>) ObjectAssociationManager.getInstance().getObject(dynamicGraph, StatesToHierarchicalMappingManager.KEY, true);
 	}
 }
 
