@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
@@ -17,9 +18,10 @@ import org.mangosdk.spi.ProviderFor;
  * (basically no original code remains..)
  */
 @ProviderFor( Service.class)
+@Alias("graphviz")
 public class GraphvizExportService implements Service {
 
-	public void run( Graph graph, Collection<Object> nodes,  Collection<Edge<?>> edges, String filename) throws IOException{
+	public void export( Graph graph, Collection<Object> nodes,  Collection<Edge<?>> edges, String filename) throws IOException{
 		
 		GraphvizEncoder encoder = new GraphvizEncoder();
 		

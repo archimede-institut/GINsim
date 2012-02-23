@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
@@ -14,6 +15,7 @@ import org.mangosdk.spi.ProviderFor;
  * export the graph to SVG
  */
 @ProviderFor( Service.class)
+@Alias("SVG")
 public class SVGExportService implements Service{
 
 	
@@ -25,7 +27,7 @@ public class SVGExportService implements Service{
 	 * @param edges the list of edges that must be exported
 	 * @param fileName the path to the output file
 	 */
-	public void run( Graph graph, Collection nodes,  Collection<Edge> edges, String fileName) throws IOException{
+	public void export( Graph graph, Collection nodes,  Collection<Edge> edges, String fileName) throws IOException{
 		
 		SVGEncoder encoder = new SVGEncoder();
 	

@@ -63,7 +63,7 @@ class SBMLQualExportAction extends ExportAction<RegulatoryGraph> {
 		// call the selected export method to do the job
 		try {
 			SBMLQualExportService service = ServiceManager.getManager().getService( SBMLQualExportService.class);
-			service.run( this.graph, config, filename);
+			service.export( this.graph, config, filename);
 			
 		} catch (IOException e) {
 			LogManager.error( "Unable to export graph to SBML Format");

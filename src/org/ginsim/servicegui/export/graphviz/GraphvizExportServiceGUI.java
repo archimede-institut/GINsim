@@ -59,7 +59,7 @@ class ExportGraphVizAction extends ExportAction {
 	protected void doExport(String filename) throws IOException {
 		 
 		GraphvizExportService service = ServiceManager.getManager().getService( GraphvizExportService.class);
-		service.run( graph, null, null, filename);
+		service.export( graph, null, null, filename);
 	}
 
 	@Override

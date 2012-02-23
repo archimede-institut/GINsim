@@ -3,6 +3,7 @@ package org.ginsim.service.layout;
 import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
@@ -15,6 +16,7 @@ import org.mangosdk.spi.ProviderFor;
  * @author Aurelien Naldi
  */
 @ProviderFor(Service.class)
+@Alias("layout")
 public class LayoutService implements Service {
 
     public static final int LEVEL = 0;

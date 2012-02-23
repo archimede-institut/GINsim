@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
+import org.mangosdk.spi.ProviderFor;
 
+@ProviderFor(Service.class)
+@Alias("PN")
 public class PetrinetExportService implements Service {
 
 	public static final List<BasePetriNetExport> FORMATS = new ArrayList<BasePetriNetExport>();
@@ -17,8 +21,8 @@ public class PetrinetExportService implements Service {
 		FORMATS.add(new PetriNetExportAPNN());
 	}
 	
-	public void run(RegulatoryGraph graph, PNConfig config, String filename) throws IOException {
-		
+	public void export(RegulatoryGraph graph, PNConfig config, String filename) throws IOException {
+		config.format.export(config, filename);
 	}
 	
 }

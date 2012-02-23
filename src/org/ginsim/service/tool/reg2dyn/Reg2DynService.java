@@ -4,11 +4,13 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
+import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.ginsim.service.tool.reg2dyn.htg.HTGSimulation;
 import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( Service.class)
+@Alias("simulation")
 public class Reg2DynService implements Service {
 
     static {

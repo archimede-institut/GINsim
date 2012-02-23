@@ -67,7 +67,7 @@ class ExportSVGAction extends ExportAction {
 		SVGExportService service = ServiceManager.getManager().getService( SVGExportService.class);
 		
 		if( service != null){
-			service.run(graph, null, null, filename);
+			service.export(graph, null, null, filename);
 		}
 		else{
 			throw new GsException( GsException.GRAVITY_ERROR, "No SVGExportService service available");

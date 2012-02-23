@@ -63,7 +63,7 @@ class GNAExportAction extends ExportAction<RegulatoryGraph> {
 
 		GNAExportService service = ServiceManager.getManager().getService(
 				GNAExportService.class);
-		service.run(graph, filename);
+		service.export(graph, filename);
 	}
 
 	@Override

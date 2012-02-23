@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
@@ -19,6 +20,7 @@ import org.mangosdk.spi.ProviderFor;
  * @author Pedro T. Monteiro
  */
 @ProviderFor(Service.class)
+@Alias("truthtable")
 public class TruthTableImportService implements Service {
 	public RegulatoryGraph run(String filename) throws IOException, GsException {
 

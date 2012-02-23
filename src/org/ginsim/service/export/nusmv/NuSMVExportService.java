@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
@@ -21,13 +22,14 @@ import org.mangosdk.spi.ProviderFor;
  * @author Pedro T. Monteiro
  */
 @ProviderFor(Service.class)
+@Alias("NuSMV")
 public class NuSMVExportService implements Service {
 
 	public void run(NuSMVConfig config, String filename) throws IOException {
 		File f = new File(filename);
-		run(config, f);
+		export(config, f);
 	}
-	public void run(NuSMVConfig config, File file) throws IOException {
+	public void export(NuSMVConfig config, File file) throws IOException {
 
 		FileWriter writer = new FileWriter(file);
 

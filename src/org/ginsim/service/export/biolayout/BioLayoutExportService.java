@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
@@ -12,6 +13,7 @@ import org.mangosdk.spi.ProviderFor;
  * Encode a graph to biolayout format.
  */
 @ProviderFor( Service.class)
+@Alias("biolayout")
 public class BioLayoutExportService implements Service{
 
 	

@@ -16,7 +16,7 @@ public class ImageExportService implements Service {
      * @param selectedOnly
      * @param fileName
      */
-    public static void exportImage( Graph graph, boolean selectedOnly, String fileName) {
+    public static void export( Graph graph, boolean selectedOnly, String fileName) {
 
 //    	BufferedImage img = graph.getImage();
 //    	

@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
@@ -18,9 +19,10 @@ import org.mangosdk.spi.ProviderFor;
  * @author Pedro T. Monteiro
  */
 @ProviderFor(Service.class)
+@Alias("GNA")
 public class GNAExportService implements Service {
 
-	public void run(RegulatoryGraph graph, String filename) throws IOException {
+	public void export(RegulatoryGraph graph, String filename) throws IOException {
 
 		FileWriter writer = new FileWriter(filename);
 

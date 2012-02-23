@@ -53,7 +53,7 @@ public class NuSMVExportTest {
 
 	private void runService(NuSMVConfig config, File tmpFile) {
 		try {
-			service.run(config, tmpFile);
+			service.export(config, tmpFile);
 		} catch (IOException e) {
 			fail("Could not export to " + tmpFile);
 		}

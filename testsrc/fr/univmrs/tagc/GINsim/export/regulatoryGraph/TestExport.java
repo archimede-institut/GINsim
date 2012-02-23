@@ -30,7 +30,7 @@ public class TestExport {
 	public void testGNAML() throws IOException {
 		GNAExportService export = ServiceManager.getManager().getService(GNAExportService.class);
 		String filename = tmpDir.getAbsolutePath()+File.separator+"graph.gnaml";
-		export.run(graph, filename);
+		export.export(graph, filename);
 	}
 	
 	@Test
