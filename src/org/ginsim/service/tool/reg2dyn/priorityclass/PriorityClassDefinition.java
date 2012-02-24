@@ -143,7 +143,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
                     }
                 }
             }
-			
+
 			if (v_listeners != null) {
 				for (GenericListListener l: v_listeners) {
 					l.itemRemoved(c, t_index[i]);

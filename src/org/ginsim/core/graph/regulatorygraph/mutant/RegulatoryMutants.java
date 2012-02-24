@@ -4,11 +4,9 @@ import java.util.Vector;
 
 import org.ginsim.core.GraphEventCascade;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.SimpleGenericList;
 
@@ -18,8 +16,7 @@ import org.ginsim.core.utils.data.SimpleGenericList;
  */
 public class RegulatoryMutants extends SimpleGenericList implements GraphListener<RegulatoryGraph> {
 
-    Vector v_listeners = new Vector();
-    Graph<RegulatoryNode,RegulatoryMultiEdge> graph;
+    private final RegulatoryGraph graph;
     
     /**
      * edit mutants associated with the graph
@@ -86,20 +83,6 @@ public class RegulatoryMutants extends SimpleGenericList implements GraphListene
     public int indexOf(Object o) {
         return v_data.indexOf(o);
     }
-    /**
-     * register a new listener for this object
-     * @param listener
-     */
-    public void addListener(RegulatoryMutantListener listener) {
-        v_listeners.add(listener);
-    }
-    /**
-     * un-register a listener
-     * @param listener
-     */
-    public void removeListener(RegulatoryMutantListener listener) {
-        v_listeners.remove(listener);
-    }
 
     /**
      * get a mutant by its name.
@@ -121,6 +104,10 @@ public class RegulatoryMutants extends SimpleGenericList implements GraphListene
         m.setName( name);
         graph.fireGraphChange(GraphChangeType.ASSOCIATEDUPDATED, this);
 		return m;
+	}
+
+	public RegulatoryGraph getGraph() {
+		return graph;
 	}
 }
 

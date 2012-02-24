@@ -131,10 +131,10 @@ class MutantPanel extends SplitPane {
        ap.setEditedObject(curMutant.getAnnotation());
     }
     
-    void setEditedObject(RegulatoryMutants mutants, GenericListPanel lp, RegulatoryGraph graph) {
+    void setEditedObject(RegulatoryMutants mutants, GenericListPanel lp) {
     	this.lp = lp;
         this.mutants = mutants;
-        this.graph = graph;
+        this.graph = mutants.getGraph();
         ap.setGraph(graph);
         
         lp.addSelectionListener(new ListSelectionListener() {

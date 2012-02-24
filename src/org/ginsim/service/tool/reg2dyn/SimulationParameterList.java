@@ -14,7 +14,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantListener;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.SimpleGenericList;
@@ -27,7 +27,7 @@ import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
  * Also deals with updating them when the graph is changed
  */
 public class SimulationParameterList extends SimpleGenericList<SimulationParameters> 
-	implements GraphListener<RegulatoryGraph>, RegulatoryMutantListener, GenericListListener {
+	implements GraphListener<RegulatoryGraph>, GenericListListener {
 
     public final RegulatoryGraph graph;
     public final GsInitialStateList imanager;
@@ -55,7 +55,7 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
     	canOrder = true;
         GraphManager.getInstance().addGraphListener( this.graph, this);
         RegulatoryMutants mutants = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.KEY, true);
-        mutants.addListener(this);
+        mutants.addListListener(this);
         if (param == null) {
         	add();
         } else {
@@ -107,18 +107,6 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
     	return add(param, v_data.size());
     }
 
-    public void mutantAdded(Object mutant) {
-    }
-
-    public void mutantRemoved(Object mutant) {
-        for (int i=0 ; i< v_data.size() ; i++) {
-            SimulationParameters param = (SimulationParameters)v_data.get(i);
-            if (param.store.getObject(SimulationParameters.MUTANT) == mutant) {
-                param.store.setObject(SimulationParameters.MUTANT, null);
-            }
-        }
-    }
-
 	protected SimulationParameters doCreate(String name, int mode) {
         SimulationParameters parameter = new SimulationParameters(this);
         parameter.name = name;
@@ -129,6 +117,16 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
 	}
 
 	public void itemRemoved(Object item, int pos) {
+		if (item instanceof Perturbation) {
+	        for (int i=0 ; i< v_data.size() ; i++) {
+	            SimulationParameters param = (SimulationParameters)v_data.get(i);
+	            if (param.store.getObject(SimulationParameters.MUTANT) == item) {
+	                param.store.setObject(SimulationParameters.MUTANT, null);
+	            }
+	        }
+	        return;
+		}
+		
 		for (int i=0 ; i<v_data.size() ; i++) {
 			SimulationParameters param = (SimulationParameters)v_data.get(i);
 			if (param.m_initState != null) {

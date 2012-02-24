@@ -22,6 +22,8 @@ import org.ginsim.commongui.dialog.DefaultDialogSize;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.gui.guihelpers.GUIHelper;
+import org.ginsim.gui.guihelpers.GUIHelperManager;
 import org.ginsim.gui.utils.dialog.stackdialog.HandledStackDialog;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 
@@ -38,10 +40,12 @@ public class DataViewer extends JScrollPane implements StackDialogHandler {
 	private static final DefaultDialogSize DEFAULTSIZE = new DefaultDialogSize("dataviewer", 400, 400);
 	
 	private final Graph<?, ?> graph;
-	JPanel panel = new JPanel(new GridBagLayout());
+	private final JPanel panel = new JPanel(new GridBagLayout());
 	private final ObjectAssociationManager objManager = ObjectAssociationManager.getInstance();
-	Map<String, Object> deleted = new HashMap<String, Object>();
+	private final Map<String, Object> deleted = new HashMap<String, Object>();
 
+	private HandledStackDialog dialog;
+	
 	public DataViewer(Graph<?, ?> graph) {
 		super();
 		this.graph = graph;
@@ -106,7 +110,10 @@ public class DataViewer extends JScrollPane implements StackDialogHandler {
 				cst.gridx = 1;
 				cst.gridy = row;
 				cst.anchor = GridBagConstraints.WEST;
-				panel.add(new JButton(new ViewAction(this, key)), cst);
+				// lookup a GUIHelper
+				Object o = objManager.getObject(graph, key, false);
+				GUIHelper helper = GUIHelperManager.getInstance().getHelper(o);
+				panel.add(new JButton(new ViewAction(this, key, helper)), cst);
 
 				cst = new GridBagConstraints();
 				cst.gridx = 2;
@@ -177,6 +184,7 @@ public class DataViewer extends JScrollPane implements StackDialogHandler {
 
 	@Override
 	public void setStackDialog(HandledStackDialog dialog) {
+		this.dialog = dialog;
 		dialog.setTitle("Associated data");
 	}
 
@@ -195,8 +203,9 @@ public class DataViewer extends JScrollPane implements StackDialogHandler {
 		return DEFAULTSIZE;
 	}
 
-	public void view(String key) {
-		// TODO Auto-generated method stub
+	public void view(String key, GUIHelper helper) {
+		dialog.addSecondaryPanel(helper.getPanel(objManager.getObject(graph, key, false)), "HELPER");
+		dialog.setVisiblePanel("HELPER");
 	}
 
 	public void delete(String key) {
@@ -224,17 +233,20 @@ class ViewAction extends AbstractAction {
 
 	private final DataViewer viewer;
 	private final String key;
+	private final GUIHelper helper;
+
 	
-	public ViewAction(DataViewer viewer, String key) {
+	public ViewAction(DataViewer viewer, String key, GUIHelper helper) {
 		super("view");
 		this.viewer = viewer;
 		this.key = key;
-		setEnabled(false);
+		this.helper = helper;
+		setEnabled(helper != null);
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		viewer.view(key);
+		viewer.view(key, helper);
 	}
 }
 

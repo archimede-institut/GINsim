@@ -39,11 +39,9 @@ public class MutantSelectionPanel extends GenericListSelectionPanel implements G
         m.put(RegulatoryMutantDef.class, mpanel);
         GenericListPanel lp = new GenericListPanel(m, "mutantList");
         lp.setList(mutants);
-        mpanel.setEditedObject(mutants, lp, graph);
+        mpanel.setEditedObject(mutants, lp);
     	return lp;
     }
-
-
 	
 	RegulatoryGraph graph;
 	
