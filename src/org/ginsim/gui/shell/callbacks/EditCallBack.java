@@ -167,6 +167,7 @@ class PasteAction<V, E extends Edge<V>> extends AbstractAction {
 			edges.add(graph.getEdge(old_to_new_nodes.get(edge.getSource()), old_to_new_nodes.get(edge.getTarget())));
 		}
 		
+		graphSelection.unselectAll();
 		graphSelection.setSelectedNodes(old_to_new_nodes.values());
 		graphSelection.setSelectedEdges(edges);
 
