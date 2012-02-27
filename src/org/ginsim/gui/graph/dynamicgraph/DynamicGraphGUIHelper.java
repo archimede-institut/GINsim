@@ -67,11 +67,8 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
 	
 	@Override
 	public GUIEditor<DynamicGraph> getMainEditionPanel(DynamicGraph graph) {
-//		RegulatoryGraphEditor editor = new RegulatoryGraphEditor();
-//		editor.setEditedObject(graph);
-//		return editor;
-		// TODO: rework the main graph panel
-		return null;
+		StateTransitionGraphEditor editor = new StateTransitionGraphEditor(graph);
+		return editor;
 	}
 
 	@Override

@@ -1,9 +1,8 @@
-package org.ginsim.gui.graph.regulatorygraph;
+package org.ginsim.gui.graph.dynamicgraph;
 
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 
-import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.DataUtils;
 import org.ginsim.common.utils.Translator;
 import org.ginsim.core.GraphEventCascade;
@@ -11,25 +10,25 @@ import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphListener;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.common.NodeInfo;
+import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.utils.data.GenericList;
 import org.ginsim.core.utils.data.SimpleGenericList;
-import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.utils.data.GenericPropertyInfo;
 import org.ginsim.gui.utils.data.ObjectEditor;
 
 
-public class RegulatoryGraphEditor extends ObjectEditor<RegulatoryGraph> implements GraphListener<RegulatoryGraph> {
+public class StateTransitionGraphEditor extends ObjectEditor<DynamicGraph> implements GraphListener<DynamicGraph> {
 
 	public static final int PROP_ID = 0;
 	public static final int PROP_NODEORDER = 1;
 	public static final int PROP_ANNOTATION = 2;
 	public static final int PROP_RAW = 10;
 	
-	RegulatoryGraph graph;
-	private GsGraphOrderList nodeList;
+	DynamicGraph graph;
+	private SimpleGenericList<NodeInfo> nodeList;
 
-	public RegulatoryGraphEditor(RegulatoryGraph graph) {
+	public StateTransitionGraphEditor(DynamicGraph graph) {
 		GenericPropertyInfo pinfo = new GenericPropertyInfo(this, PROP_ID, Translator.getString("STR_name"), String.class);
 		v_prop.add(pinfo);
 		pinfo = new GenericPropertyInfo(this, PROP_NODEORDER, null, GenericList.class);
@@ -43,13 +42,13 @@ public class RegulatoryGraphEditor extends ObjectEditor<RegulatoryGraph> impleme
 		setEditedObject(graph);
 	}
 
-	private void setEditedObject(RegulatoryGraph g) {
+	private void setEditedObject(DynamicGraph g) {
 		if (g != this.graph) {
 			if (this.graph != null) {
 		        GraphManager.getInstance().removeGraphListener( this.graph, this);
 			}
 			this.graph = g;
-			this.nodeList = new GsGraphOrderList( graph);
+			this.nodeList = new SimpleGenericList<NodeInfo>( graph.getNodeOrder());
 			if (this.graph != null) {
 		        GraphManager.getInstance().addGraphListener( this.graph, this);
 			}
@@ -116,7 +115,7 @@ public class RegulatoryGraphEditor extends ObjectEditor<RegulatoryGraph> impleme
 	}
 
 	@Override
-	public GraphEventCascade graphChanged(RegulatoryGraph g, GraphChangeType type, Object data) {
+	public GraphEventCascade graphChanged(DynamicGraph g, GraphChangeType type, Object data) {
 		switch (type) {
 		case NODEADDED:
 		case NODEREMOVED:
@@ -125,32 +124,4 @@ public class RegulatoryGraphEditor extends ObjectEditor<RegulatoryGraph> impleme
 		}
 		return null;
 	}
-}
-
-class GsGraphOrderList extends SimpleGenericList {
-	RegulatoryGraph graph = null;
-	
-	GsGraphOrderList( RegulatoryGraph graph) {
-		super(graph.getNodeOrder());
-		if (graph instanceof RegulatoryGraph) {
-			canOrder = true;
-			canEdit = true;
-			nbAction = 1;
-			this.graph = (RegulatoryGraph) graph;
-		}
-	}
-	
-	protected boolean doEdit(Object data, Object value) {
-		try {
-			graph.changeNodeId(data, (String)value);
-			return true;
-		} catch (GsException e) {
-			return false;
-		}
-	}
-
-	protected void doRun(int row, int col) {
-		GUIManager.getInstance().getGraphGUI(graph).getSelection().selectNode(v_data.get(row));
-	}
-	
 }
