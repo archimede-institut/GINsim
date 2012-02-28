@@ -1,6 +1,5 @@
 package org.ginsim.gui;
 
-import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -27,6 +26,7 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.service.ServiceGUIManager;
 import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.LayoutAction;
 import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.gui.shell.FileSelectionHelper;
@@ -70,24 +70,8 @@ public class WhatToDoWithGraph extends JFrame {
 	private JComboBox comboBox_Exports;
 	
 	private final List<LayoutAction> availableLayoutActions = new Vector<LayoutAction>();
-	private final List<ToolAction> availableToolActions = new Vector<ToolAction>();
+	private final List<Action> availableToolActions = new Vector<Action>();
 	private final List<ExportAction> availableExportActions = new Vector<ExportAction>();
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main( String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					WhatToDoWithGraph frame = new WhatToDoWithGraph( null);
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 	
 	/**
 	 * Create the frame.
@@ -247,6 +231,9 @@ public class WhatToDoWithGraph extends JFrame {
 			if (action instanceof ToolAction) {
 				availableToolActions.add( (ToolAction) action);
 				comboBox_Tools.addItem( Translator.getString( action.getValue( Action.NAME).toString()));
+			} else if (action instanceof GenericGraphAction) {
+				availableToolActions.add( (GenericGraphAction) action);
+				comboBox_Tools.addItem( Translator.getString( action.getValue( Action.NAME).toString()));
 			}
 		}
 	}
@@ -333,7 +320,7 @@ public class WhatToDoWithGraph extends JFrame {
 		
 		int selected_index = comboBox_Tools.getSelectedIndex();
 		if( selected_index >= 0 && selected_index < availableToolActions.size()){
-			ToolAction selected_tool = availableToolActions.get( selected_index);
+			Action selected_tool = availableToolActions.get( selected_index);
 			selected_tool.actionPerformed( null);
 			return true;
 		}
