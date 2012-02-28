@@ -55,15 +55,16 @@ public class ModelRewiring implements Callable<RegulatoryGraph> {
 
 			break;
 		case LowPriority:
+			// add a new priority class configuration where the targets are assigned a low priority
 			SimulationParameterList paramList = (SimulationParameterList)ObjectAssociationManager.getInstance().getObject(graph, SimulationParametersManager.KEY, true);
 			PriorityClassManager pcmanager = paramList.pcmanager;
-			System.out.println(pcmanager.getNbElements());
 			PriorityClassDefinition pcdef = pcmanager.getElement(null, pcmanager.add());
 			pcdef.add();
 			Reg2dynPriorityClass pc = pcdef.getElement(null, pcdef.getNbElements()-1);
-			System.out.println(pc);
 			pc.setMode(Reg2dynPriorityClass.SYNCHRONOUS);
-			
+			for (RegulatoryNode node: targets) {
+				pcdef.m_elt.put(node, pc);
+			}
 			break;
 		}
 		return graph;
