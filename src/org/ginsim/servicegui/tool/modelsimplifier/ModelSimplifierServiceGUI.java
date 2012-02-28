@@ -13,6 +13,7 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.service.common.ToolAction;
+import org.ginsim.gui.utils.dialog.stackdialog.HandledStackDialog;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -29,6 +30,7 @@ public class ModelSimplifierServiceGUI implements ServiceGUI {
 		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
 			actions.add(new ModelSimplifierAction((RegulatoryGraph)graph));
+			actions.add(new ModelRewiringAction((RegulatoryGraph)graph));
 			return actions;
 		}
 		return null;
@@ -58,5 +60,25 @@ class ModelSimplifierAction extends ToolAction {
 		// TODO: reset edit mode
 		// mframe.getActions().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
 		new ModelSimplifierConfigDialog(graph);
+	}
+}
+
+class ModelRewiringAction extends ToolAction {
+
+	private final RegulatoryGraph graph;
+	public ModelRewiringAction(RegulatoryGraph graph) {
+		super("STR_rewire", "STR_rewire_descr");
+		this.graph = graph;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		if (graph.getNodeCount() < 1) {
+            NotificationManager.publishWarning( graph, graph instanceof RegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph");
+            return;
+		}
+
+		// TODO: reset edit mode
+		new HandledStackDialog(new RewiringGUI( graph));
 	}
 }

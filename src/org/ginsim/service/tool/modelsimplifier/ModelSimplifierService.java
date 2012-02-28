@@ -16,4 +16,7 @@ public class ModelSimplifierService implements Service {
         }
     }
 
+    public ModelRewiring getRewirer( RegulatoryGraph graph) {
+    	return new ModelRewiring(graph);
+    }
 }

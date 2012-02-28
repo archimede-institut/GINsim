@@ -40,16 +40,16 @@ public class PriorityClassManager extends SimpleGenericList<PriorityClassDefinit
 
 		// add default priority classes
 		int index = add();
-		PriorityClassDefinition pcdef = (PriorityClassDefinition)getElement(null, index);
+		PriorityClassDefinition pcdef = getElement(null, index);
 		pcdef.setName(ASYNCHRONOUS);
-		Reg2dynPriorityClass pc = (Reg2dynPriorityClass)pcdef.getElement(null, 0);
+		Reg2dynPriorityClass pc = pcdef.getElement(null, 0);
 		pc.setName("all");
 		pc.setMode(Reg2dynPriorityClass.ASYNCHRONOUS);
 		pcdef.lock();
 		index = add();
-		pcdef = (PriorityClassDefinition)getElement(null, index);
+		pcdef = getElement(null, index);
 		pcdef.setName(SYNCHRONOUS);
-		pc = (Reg2dynPriorityClass)pcdef.getElement(null, 0);
+		pc = pcdef.getElement(null, 0);
 		pc.setName("all");
 		pc.setMode(Reg2dynPriorityClass.SYNCHRONOUS);
 		pcdef.lock();
@@ -110,7 +110,7 @@ public class PriorityClassManager extends SimpleGenericList<PriorityClassDefinit
 			int l = pcdef.getNbElements();
 			boolean hasSync = false;
 			for (int i=0 ; i<l ; i++) {
-				Reg2dynPriorityClass pc = (Reg2dynPriorityClass)pcdef.getElement(null, i);
+				Reg2dynPriorityClass pc = pcdef.getElement(null, i);
 				if (pc.getMode() == Reg2dynPriorityClass.SYNCHRONOUS) {
 					hasSync = true;
 					break;
