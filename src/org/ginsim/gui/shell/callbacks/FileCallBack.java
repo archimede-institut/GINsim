@@ -2,8 +2,11 @@ package org.ginsim.gui.shell.callbacks;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
@@ -60,6 +63,19 @@ public class FileCallBack {
 		return menu;
 	}
 	
+	public static Action getActionNew() {
+		return new NewAction();
+	}
+	public static Action getActionOpen() {
+		return new OpenAction();
+	}
+	public static List<Action> getActionsRecent() {
+		List<Action> actions = new ArrayList<Action>();
+		for (String recent: OptionStore.getRecentFiles()) {
+			actions.add( new OpenAction(recent));
+		}
+		return actions;
+	}
 }
 /**
  * Recent menu: update its content when opened.

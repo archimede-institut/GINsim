@@ -82,21 +82,7 @@ public class Launcher {
         }
 		
 		initGUI();
-		Graph graph = null;
-		if (open.size() > 0) {
-			for (String filename: open) {
-				try {
-					graph = GraphManager.getInstance().open(filename);
-					GUIManager.getInstance().newFrame( graph);
-
-				} catch (GsException e) {
-					LogManager.error(e);
-				}
-			}
-		}
-		if( graph == null){
-			graph = GUIManager.getInstance().newFrame();
-		}
+		GUIManager.getInstance().startup( open);
 	}
 
 	/**

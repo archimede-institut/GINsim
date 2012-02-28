@@ -1,12 +1,13 @@
 package org.ginsim.gui;
 
-import java.awt.Color;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
 import org.ginsim.common.OptionStore;
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.Translator;
 import org.ginsim.common.utils.log.LogManager;
@@ -14,22 +15,20 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.backend.JgraphtBackendImpl;
 import org.ginsim.core.graph.common.AbstractGraph;
-import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.view.NodeBorder;
-import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.GraphGUIHelperFactory;
 import org.ginsim.gui.graph.backend.JgraphGUIImpl;
 import org.ginsim.gui.shell.MainFrame;
+import org.ginsim.gui.shell.StartupDialog;
 import org.ginsim.gui.utils.widgets.Frame;
 
 public class GUIManager {
     
+	private static boolean STARTUPDIALOG = false;
 	private static GUIManager manager;
 	
 	private HashMap<Graph,GUIObject> graphToGUIObject = new HashMap<Graph, GUIObject>();
@@ -212,8 +211,7 @@ public class GUIManager {
 			o.frame.dispose();
 		}
 		if (graphToGUIObject.size() == 0) {
-			OptionStore.saveOptions();
-			System.exit(0);
+			noFrameLeft(false);
 		}
 		return true;
 	}
@@ -512,4 +510,41 @@ public class GUIManager {
 		
 	}
 
+
+	public void startup( List<String> open) {
+		
+		if (open.size() > 0) {
+			for (String filename: open) {
+				try {
+					Graph graph = GraphManager.getInstance().open(filename);
+					newFrame(graph);
+				} catch (GsException e) {
+					LogManager.error(e);
+				}
+			}
+		}
+		
+		if (graphToGUIObject.size() == 0) {
+			noFrameLeft(true);
+		}
+	}
+
+	private void noFrameLeft(boolean startup) {
+		if (STARTUPDIALOG) {
+			new StartupDialog();
+			return;
+		}
+		
+		if (startup) {
+			newFrame();
+			return;
+		}
+		
+		exit();
+	}
+	
+	public void exit() {
+		OptionStore.saveOptions();
+		System.exit(0);
+	}
 }
