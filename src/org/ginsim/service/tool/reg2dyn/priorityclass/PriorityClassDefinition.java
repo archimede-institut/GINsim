@@ -42,7 +42,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 		setName(name);
 		add();
 		m_elt = new HashMap();
-		Reg2dynPriorityClass newclass = (Reg2dynPriorityClass)getElement(null, 0);
+		Reg2dynPriorityClass newclass = getElement(null, 0);
 		for (RegulatoryNode v: elts) {
 			m_elt.put(v, newclass);
 		}
@@ -81,13 +81,14 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 		if (pos<0 || pos >= len) {
 			i = len == 0 ? 0 : len-1;
 		}
-		priority = len == 0 ? 0: ((Reg2dynPriorityClass)v_data.get(i)).rank;
+		priority = len == 0 ? 0: (v_data.get(i)).rank;
         for ( ; i < len ; i++) {
-            if (((Reg2dynPriorityClass)v_data.get(i)).rank != priority) {
+            if ((v_data.get(i)).rank != priority) {
                 break;
             }
         }
-        v_data.add(i, new Reg2dynPriorityClass(priority+1, name));
+        Reg2dynPriorityClass pc = new Reg2dynPriorityClass(priority+1, name);
+        v_data.add(i, pc);
         for ( i++; i<len ; i++) {
             ((Reg2dynPriorityClass)v_data.get(i)).rank++;
         }
@@ -117,13 +118,13 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 		for (int i = t_index.length - 1 ; i > -1 ; i--) {
 			int index = getRealIndex(filter, t_index[i]);
 			
-            Reg2dynPriorityClass c = (Reg2dynPriorityClass) v_data.remove(index);
+            Reg2dynPriorityClass c = v_data.remove(index);
             if (index < v_data.size()) {
             	// update rank of the next priority classes
-            	if ( index == 0 || ((Reg2dynPriorityClass) v_data.get(index-1)).rank != c.rank) {
-            		if (((Reg2dynPriorityClass) v_data.get(index)).rank != c.rank) {
+            	if ( index == 0 || ( v_data.get(index-1)).rank != c.rank) {
+            		if (( v_data.get(index)).rank != c.rank) {
             			for (int j=index ; j<v_data.size() ; j++) {
-            				((Reg2dynPriorityClass) v_data.get(j)).rank--;
+            				( v_data.get(j)).rank--;
             			}
             		}
             	}
@@ -173,18 +174,18 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
             int start = index[i][0];
             int stop = index[i][1];
             int target = start+diff;
-            int pr = ((Reg2dynPriorityClass)v_data.get(start)).rank;
-            int prTarget = ((Reg2dynPriorityClass)v_data.get(target)).rank;
+            int pr = (v_data.get(start)).rank;
+            int prTarget = (v_data.get(target)).rank;
             target--;
-            while (target >= 0 && ((Reg2dynPriorityClass)v_data.get(target)).rank == prTarget) {
+            while (target >= 0 && (v_data.get(target)).rank == prTarget) {
                 target--;
             }
             target++;
             for (int j=target ; j<start ; j++) {
-                ((Reg2dynPriorityClass)v_data.get(j)).rank = pr;
+                (v_data.get(j)).rank = pr;
             }
             for (int j=0 ; j<=stop-start ; j++) {
-            	((Reg2dynPriorityClass)v_data.get(start+j)).rank = prTarget;
+            	(v_data.get(start+j)).rank = prTarget;
             	moveElement(start+j, target+j);
             	if (reselect < selection.length && selection[reselect] == start+j) {
             		selection[reselect++] = target+j;
@@ -249,14 +250,14 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
         int count = 0;
         int lastPriority = -1;
         for (int i=0 ; i<index.length ; i++) {
-            int priority = ((Reg2dynPriorityClass)v_data.get(index[i])).rank;
+            int priority = (v_data.get(index[i])).rank;
             if (priority != lastPriority) {
                 int start = index[i]-1;
                 int stop = index[i]+1;
-                while(start >= 0 && ((Reg2dynPriorityClass)v_data.get(start)).rank == priority) {
+                while(start >= 0 && (v_data.get(start)).rank == priority) {
                     start--;
                 }
-                while(stop < end && ((Reg2dynPriorityClass)v_data.get(stop)).rank == priority) {
+                while(stop < end && (v_data.get(stop)).rank == priority) {
                     stop++;
                 }
                 start++;
@@ -274,14 +275,14 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
         lastPriority = -1;
         count = 0;
         for (int i=0 ; i<index.length ; i++) {
-            int priority = ((Reg2dynPriorityClass)v_data.get(index[i])).rank;
+            int priority = (v_data.get(index[i])).rank;
             if (priority != lastPriority) {
                 int start = index[i]-1;
                 int stop = index[i]+1;
-                while(start >= 0 && ((Reg2dynPriorityClass)v_data.get(start)).rank == priority) {
+                while(start >= 0 && (v_data.get(start)).rank == priority) {
                     start--;
                 }
-                while(stop < end && ((Reg2dynPriorityClass)v_data.get(stop)).rank == priority) {
+                while(stop < end && (v_data.get(stop)).rank == priority) {
                     stop++;
                 }
                 start++;
@@ -303,7 +304,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 		StringBuffer s_tmp;
 		for (int i=0 ; i< v_data.size(); i++) {
 			out.openTag("class");
-            Reg2dynPriorityClass pc = (Reg2dynPriorityClass)v_data.get(i);
+            Reg2dynPriorityClass pc = v_data.get(i);
             out.addAttr("name", pc.getName());
             out.addAttr("mode", ""+pc.getMode());
             out.addAttr("rank", ""+pc.rank);
@@ -353,7 +354,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
         //   - then the real int[][] is created from the merged classes
 		List<List<Integer>> v_vpclass = new ArrayList<List<Integer>>();
         for (int i=0 ; i<v_data.size() ; i++) {
-            Reg2dynPriorityClass pc = (Reg2dynPriorityClass)v_data.get(i);
+            Reg2dynPriorityClass pc = v_data.get(i);
             List<Integer> v_content;
             if (pc.getMode() == Reg2dynPriorityClass.ASYNCHRONOUS) {
                 v_content = new ArrayList<Integer>();

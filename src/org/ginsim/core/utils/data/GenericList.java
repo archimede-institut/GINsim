@@ -114,7 +114,7 @@ abstract public class GenericList<T> {
      * @return the ith element of the list
      */
     abstract public T getElement(String filter, int startIndex, int i);
-    public Object getElement(String filter, int i) {
+    public T getElement(String filter, int i) {
     	return getElement(filter, 0, i);
     }
     
