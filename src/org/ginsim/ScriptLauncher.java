@@ -3,9 +3,14 @@ package org.ginsim;
 import java.awt.Color;
 import java.io.File;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.ginsim.common.OptionStore;
+import org.ginsim.common.document.DocumentWriter;
+import org.ginsim.common.document.LaTeXDocumentWriter;
+import org.ginsim.common.document.OOoDocumentWriter;
+import org.ginsim.common.document.XHTMLDocumentWriter;
 import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.GraphManager;
@@ -174,10 +179,40 @@ public class ScriptLauncher {
 	 * @param create
 	 * @return
 	 */
-	public Object associated(Graph g, String key, boolean create) {
+	public Object associated(Graph<?,?> g, String key, boolean create) {
 		return associated.getObject(g, key, create);
 	}
 
+	/**
+	 * Create a report file, this creates the file and DocumentWriter, don't forget to close it.
+	 * 
+	 * @param path
+	 * @param properties
+	 * @return
+	 */
+	public DocumentWriter createReport(String path, Map<String, String> properties) {
+		DocumentWriter dw;
+		if (path.endsWith("html")) {
+			dw = XHTMLDocumentWriter.FACTORY.getDocumentWriter();
+		} else if (path.endsWith(".odt")) {
+			dw = OOoDocumentWriter.FACTORY.getDocumentWriter();
+		} else if (path.endsWith("tex")) {
+			dw = LaTeXDocumentWriter.FACTORY.getDocumentWriter();
+		} else {
+			return null;
+		}
+		
+		try {
+			dw.setOutput(new File(path));
+			dw.setDocumentProperties(properties);
+			dw.startDocument();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			dw = null;
+		}
+		return dw;
+	}
 	
 	/**
 	 * Show some help about services and data available for scripts
