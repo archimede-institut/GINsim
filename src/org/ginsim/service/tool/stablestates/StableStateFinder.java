@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 
 import fr.univmrs.tagc.javaMDD.MDDFactory;
@@ -16,11 +17,13 @@ import fr.univmrs.tagc.javaMDD.MDDFactory;
  * @author Aurelien Naldi
  */
 public class StableStateFinder implements StableStateSearcherNew {
-	RegulatoryGraph model;
-	MDDFactory m_factory;
+	private final RegulatoryGraph model;
+	private final MDDFactory m_factory;
+	
 	Perturbation p;
 	Iterable<Integer> ordering;
 
+	InitialState state = null; // no state restriction by default
 	boolean[][] t_reg;
 	int[][] t_newreg;
 	
@@ -36,15 +39,17 @@ public class StableStateFinder implements StableStateSearcherNew {
 		m_factory = factory;
 	}
 
-	
+	@Override
 	public MDDFactory getFactory() {
 		return m_factory;
 	}
 	
+	@Override
 	public void setPerturbation(Perturbation p) {
 		this.p = p;
 	}
 	
+	@Override
 	public Integer call() {
 		ordering = new StructuralNodeOrderer(model);
 		StableOperation sop = new StableOperation();
@@ -54,7 +59,11 @@ public class StableStateFinder implements StableStateSearcherNew {
 		}
 
 		// loop over the existing nodes!
-		int prev=1, result=1;
+		int prev=1;
+		if (state != null) {
+			prev = state.getMDD(m_factory);
+		}
+		int result=prev;
 		List<RegulatoryNode> nodes = model.getNodeOrder();
 		for (int i: ordering) {
 			RegulatoryNode node = nodes.get(i);
@@ -71,5 +80,10 @@ public class StableStateFinder implements StableStateSearcherNew {
 	public void setNodeOrder(List<RegulatoryNode> sortedVars) {
 		// TODO select node order
 		throw new RuntimeException("custom node order unsupported");
+	}
+
+	@Override
+	public void setStateRestriction( InitialState state) {
+		this.state = state;
 	}
 }
