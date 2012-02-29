@@ -8,9 +8,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.ginsim.common.utils.DataUtils;
 import org.ginsim.core.graph.common.Edge;
@@ -54,7 +56,7 @@ public class SVGEncoder {
         out.write("<svg width=\""+tmax[0]+"\" height=\""+tmax[1]+"\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n");
         
         Map<Object, Rectangle> boxes = new HashMap<Object, Rectangle>();
-        Map m_marker = new HashMap();
+        Set<String>  m_marker = new HashSet<String>();
         for (Object obj: nodes) {
             vreader.setNode(obj);
             writeNode(out, obj, vreader);
@@ -98,12 +100,11 @@ public class SVGEncoder {
     
         for (Edge e: edges) {
             ereader.setEdge(e);
-            List points = ereader.getPoints();
+            List<Point> points = ereader.getPoints();
             if (points == null) {
                 continue;
             }
-            for (Iterator itp=points.iterator() ; itp.hasNext() ; ) {
-                Point2D pt = (Point2D)itp.next();
+            for (Point2D pt: points ) {
                 value = (int)pt.getX();
                 if (value > tmax[0]) {
                     tmax[0] = value;
@@ -181,7 +182,7 @@ public class SVGEncoder {
      * @param markers
      * @throws IOException
      */
-    private void writeEdge(FileWriter out, Rectangle box1, Rectangle box2, EdgeAttributesReader ereader, Map markers) throws IOException {
+    private void writeEdge(FileWriter out, Rectangle box1, Rectangle box2, EdgeAttributesReader ereader, Set<String> markers) throws IOException {
         String color = "#"+DataUtils.getColorCode(ereader.getLineColor());
         float w = ereader.getLineWidth();
         String marker = addMarker(out, markers, ereader.getLineEnd(), color, true);
@@ -221,8 +222,8 @@ public class SVGEncoder {
         if (box2 != null) {
             l_point.set(l_point.size()-1, ViewHelper.getIntersection(box2, l_point.get(l_point.size()-2), intersect, w));
         }
-        Point2D pt1 = (Point2D)l_point.get(l_point.size()-2);
-        Point2D pt2 = (Point2D)l_point.get(l_point.size()-1);
+        Point2D pt1 = l_point.get(l_point.size()-2);
+        Point2D pt2 = l_point.get(l_point.size()-1);
         
         double dx = pt2.getX()-pt1.getX();
         double dy = pt2.getY()-pt1.getY();
@@ -231,13 +232,13 @@ public class SVGEncoder {
             pt2.setLocation(pt2.getX()-w*dx/l, pt2.getY()-w*dy/l);
         }
         
-        pt1 = (Point2D)l_point.get(0);
+        pt1 = l_point.get(0);
         out.write(" d=\"M "+pt1.getX()+" "+pt1.getY());
-        Iterator it = l_point.iterator();
+        Iterator<Point> it = l_point.iterator();
         if (ereader.isCurve()) {
 	        Point2D[] p = new Point2D[l_point.size()];
 	        for (int i=0 ; it.hasNext() ; i++) {
-	            p[i] = (Point2D)it.next();
+	            p[i] = it.next();
 	        }
 	        Point2D[] b = new Bezier(p).getPoints();
 	        if (b != null && b.length > 1) {
@@ -250,14 +251,14 @@ public class SVGEncoder {
 	            out.write(" Q "+b[b.length-1].getX() +","+ b[b.length-1].getY() +" "+ p[p.length - 1].getX() +","+ p[p.length - 1].getY());
 	        } else {
 	            for (int i=1 ; i<l_point.size() ; i++) {
-	                pt1 = (Point2D)l_point.get(i);
+	                pt1 = l_point.get(i);
 	                out.write(" L "+pt1.getX()+" "+pt1.getY());
 	            }
 	        }
         } else {
     		it.next();
-	        for (int i=1 ; it.hasNext() ; i++) {
-	            pt1 = (Point2D)it.next();
+	        while (it.hasNext()) {
+	            pt1 = it.next();
 	            out.write(" L "+pt1.getX()+" "+pt1.getY());
 	        }
         }        
@@ -276,10 +277,10 @@ public class SVGEncoder {
      * @return the id of the corresponding marker
      * @throws IOException
      */
-	private String addMarker(FileWriter out, Map m_marker, EdgeEnd markerType, String color,
+	private String addMarker(FileWriter out, Set<String> m_marker, EdgeEnd markerType, String color,
 			boolean fill) throws IOException {
 		String id = "Marker_" + markerType + "_" + color.substring(1) + "_" + fill;
-		if (!m_marker.containsKey(id)) {
+		if (!m_marker.contains(id)) {
 			out.write("  <defs>\n");
 			out.write("    <marker id=\"" + id + "\" viewBox=\"-7 -7 12 15\" orient=\"auto\" markerHeight=\"5\" markerWidth=\"5\">\n"
 					+ "      <path stroke=\"" + color + "\" fill=\"" + color + "\" ");
@@ -300,7 +301,7 @@ public class SVGEncoder {
 			}
 			out.write("    </marker>\n");
 			out.write("  </defs>\n");
-			m_marker.put(id, null);
+			m_marker.add(id);
 		}
 		return id;
 	}
