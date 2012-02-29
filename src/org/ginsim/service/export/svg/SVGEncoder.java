@@ -207,10 +207,12 @@ public class SVGEncoder {
         
         List<Point> l_point = ereader.getPoints();
         if (l_point == null) {
-            l_point = new ArrayList();
-            l_point.add(0, new Point((int)box1.getCenterX(), (int)box1.getCenterY()));
-            l_point.add(new Point((int)box2.getCenterX(), (int)box2.getCenterY()));
+            l_point = new ArrayList<Point>();
         }
+        // add the first and last points
+        l_point.add(0, new Point((int)box1.getCenterX(), (int)box1.getCenterY()));
+        l_point.add(new Point((int)box2.getCenterX(), (int)box2.getCenterY()));
+        
         boolean intersect = l_point.size() < 3 || ereader.isCurve();
         // replace first and last points by bounding box points
         if (box1 != null) {
