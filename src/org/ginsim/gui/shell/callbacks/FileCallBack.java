@@ -2,6 +2,7 @@ package org.ginsim.gui.shell.callbacks;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -132,8 +133,13 @@ class OpenAction extends AbstractAction {
 	}
 	
 	public OpenAction(String filename) {
-		super(filename);
+		super("Open");
 		this.filename = filename;
+		if (filename != null) {
+			int idx = filename.lastIndexOf(File.separatorChar);
+			this.putValue(Action.NAME, filename.substring(idx+1));
+			this.putValue(Action.LONG_DESCRIPTION, "Open "+filename);
+		}
 	}
 	
 	@Override

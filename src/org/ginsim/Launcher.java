@@ -7,12 +7,9 @@ import java.util.List;
 
 import org.ginsim.common.OSXAdapter;
 import org.ginsim.common.OptionStore;
-import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.Translator;
 import org.ginsim.common.utils.log.LogManager;
-import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.shell.AboutDialog;
@@ -61,12 +58,18 @@ public class Launcher {
                 return;
             }
             
+        	if (args[i].equals("-n")) {
+        		open.add(null);
+        		continue;
+        	} 
+        	
         	if (args[i].startsWith("-")) {
             	if (!args[i].equals("-h")) {
                     System.out.println("Unknown option: "+args[i]);
             	}
                 System.out.println("Available options:");
                 System.out.println("\t<file>: open <file> on startup.");
+                System.out.println("\t-n: start with a new regulatory graph.");
                 System.out.println("\t-s: display the script help message.");
                 System.out.println("\t-s <file>: run \"script\" from <file>. Extra arguments are script arguments.");
                 System.out.println("\t-h:  display this message.");

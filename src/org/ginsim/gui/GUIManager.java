@@ -28,7 +28,7 @@ import org.ginsim.gui.utils.widgets.Frame;
 
 public class GUIManager {
     
-	private static boolean STARTUPDIALOG = false;
+	private static boolean STARTUPDIALOG = true;
 	private static GUIManager manager;
 	
 	private HashMap<Graph,GUIObject> graphToGUIObject = new HashMap<Graph, GUIObject>();
@@ -515,11 +515,20 @@ public class GUIManager {
 		
 		if (open.size() > 0) {
 			for (String filename: open) {
-				try {
-					Graph graph = GraphManager.getInstance().open(filename);
+				Graph graph = null;
+				if (filename == null) {
+					graph = GraphManager.getInstance().getNewGraph();
+				} else {
+					try {
+						graph = GraphManager.getInstance().open(filename);
+					} catch (GsException e) {
+						LogManager.error(e);
+						graph = null;
+					}
+				}
+				
+				if (graph != null) {
 					newFrame(graph);
-				} catch (GsException e) {
-					LogManager.error(e);
 				}
 			}
 		}
