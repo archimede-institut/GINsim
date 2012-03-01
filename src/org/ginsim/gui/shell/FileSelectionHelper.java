@@ -2,17 +2,23 @@ package org.ginsim.gui.shell;
 
 import java.awt.Frame;
 import java.io.File;
-import java.util.Vector;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileFilter;
 
+import org.ginsim.common.OptionStore;
 import org.ginsim.commongui.utils.FileFormatFilter;
 
 
 public class FileSelectionHelper {
 	
+	private static final String DIRKEY = "gui.last_working_directory";
+	private static String lastDirectory = System.getProperty("user.dir");
+	
+	static {
+		lastDirectory = OptionStore.getOption(DIRKEY, lastDirectory);
+	}
 	
 	public static String selectSaveFilename( Frame parent) {
 		return selectSaveFilename(parent, (GsFileFilter) null);
@@ -26,6 +32,7 @@ public class FileSelectionHelper {
 	
 	public static String selectSaveFilename( Frame parent, FileFilter file_filter) {
 		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory( new File(lastDirectory));
 		if( file_filter != null){
 			chooser.setFileFilter( file_filter);
 		}
@@ -35,6 +42,11 @@ public class FileSelectionHelper {
 		if (f == null) {
 			return null;
 		}
+		
+		// change the remembered directory
+		lastDirectory = chooser.getCurrentDirectory().getAbsolutePath();
+		OptionStore.setOption(DIRKEY, lastDirectory);
+		
 		// List the available extensions in the provided File Filter
 		String[] extensions;
 		if( file_filter instanceof GsFileFilter){
@@ -86,8 +98,8 @@ public class FileSelectionHelper {
 	}
 	
 	public static String selectOpenFilename( Frame parent, FileFilter file_filter) {
-		// TODO: remember path and so on
 		JFileChooser chooser = new JFileChooser();
+		chooser.setCurrentDirectory( new File(lastDirectory));
 		if( file_filter != null){
 			chooser.setFileFilter( file_filter);
 		}
@@ -96,6 +108,11 @@ public class FileSelectionHelper {
 		if (f == null) {
 			return null;
 		}
+		
+		// change the remembered directory
+		lastDirectory = chooser.getCurrentDirectory().getAbsolutePath();
+		OptionStore.setOption(DIRKEY, lastDirectory);
+		
 		return f.getAbsolutePath();
 	}
 }
