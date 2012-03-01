@@ -184,7 +184,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 				// mark all its targets as affected
 				it_targets.setOutgoingList(ri.targets);
 				while (it_targets.hasNext()) {
-					RegulatoryNode target = (RegulatoryNode)it_targets.next();
+					RegulatoryNode target = it_targets.next();
 					if (!target.equals(vertex)) {
 						targets.add(target);
 						OMDDNode targetNode = m_affected.get(target);
@@ -227,9 +227,9 @@ public class ModelSimplifier extends Thread implements Runnable {
 		// Create all the nodes of the new model
 		NodeAttributesReader vreader = graph.getNodeAttributeReader();
 		NodeAttributesReader simplified_vreader = simplifiedGraph.getNodeAttributeReader();
-		for (RegulatoryNode vertex: (List<RegulatoryNode>)graph.getNodeOrder()) {
+		for (RegulatoryNode vertex: graph.getNodeOrder()) {
 			if (!m_removed.containsKey(vertex)) {
-				RegulatoryNode clone = (RegulatoryNode)vertex.clone();
+				RegulatoryNode clone = vertex.clone(simplifiedGraph);
 				simplifiedGraph.addNode(clone);
 				vreader.setNode(vertex);
 				simplified_vreader.setNode(clone);
@@ -241,9 +241,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 		// copy all unaffected edges
 		EdgeAttributesReader ereader = graph.getEdgeAttributeReader();
 		EdgeAttributesReader simplified_ereader = simplifiedGraph.getEdgeAttributeReader();
-		Iterator<RegulatoryMultiEdge>it = graph.getEdges().iterator();
-		while (it.hasNext()) {
-			RegulatoryMultiEdge me = it.next();
+		for (RegulatoryMultiEdge me: graph.getEdges()) {
 			RegulatoryNode src = (RegulatoryNode)copyMap.get(me.getSource());
 			RegulatoryNode target = (RegulatoryNode)copyMap.get(me.getTarget());
 			if (src != null && target != null) {

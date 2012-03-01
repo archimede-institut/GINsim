@@ -281,10 +281,6 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	public LogicalParameterList getV_logicalParameters() {
 		return v_logicalParameters;
 	}
-	public OMDDNode getTreeParameters(RegulatoryGraph graph) {
-		return getTreeParameters(graph.getNodeOrder());
-	}
-
 	/**
 	 * Experimental: Get the MDD for this node function using the new MDD toolkit.
 	 * 
@@ -326,7 +322,10 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
      * @param graph
      * @return an OMDDNode representing logical parameters associated to this node.
      */
-    public OMDDNode getTreeParameters(List<RegulatoryNode> nodeOrder) {
+	public OMDDNode getTreeParameters(RegulatoryGraph graph) {
+		return getTreeParameters(graph, graph.getNodeOrder());
+	}
+	public OMDDNode getTreeParameters(RegulatoryGraph graph, List<RegulatoryNode> nodeOrder) {
         OMDDNode root;
         if (isInput) {
             root = new OMDDNode();
@@ -401,13 +400,17 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 		gsa = annotation;
 	}
 
-	public Object clone() {
+	public RegulatoryNode clone(RegulatoryGraph graph) {
 		RegulatoryNode clone = new RegulatoryNode(id, graph);
 		clone.maxValue = maxValue;
 		clone.name = name;
 		clone.setGsa((Annotation)gsa.clone());
 		clone.isInput = isInput;
 		return clone;
+	}
+	
+	public RegulatoryNode clone() {
+		return clone(this.graph);
 	}
 
 	/**

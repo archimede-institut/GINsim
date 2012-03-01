@@ -640,7 +640,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         OMDDNode[] t_tree = new OMDDNode[tmpNodeOrder.size()];
         for (int i = 0; i < tmpNodeOrder.size(); i++) {
         	RegulatoryNode vertex = (RegulatoryNode)tmpNodeOrder.get(i);
-            t_tree[i] = vertex.getTreeParameters(tmpNodeOrder);
+            t_tree[i] = vertex.getTreeParameters(this, tmpNodeOrder);
             if (!focal) {
             	// FIXME: does non-focal tree works correctly ??????
             	t_tree[i] = t_tree[i].buildNonFocalTree(i, vertex.getMaxValue()+1).reduce();
