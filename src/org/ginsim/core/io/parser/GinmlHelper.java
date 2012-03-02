@@ -1,5 +1,6 @@
 package org.ginsim.core.io.parser;
 
+import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -44,12 +45,18 @@ public class GinmlHelper {
         	vareader.setShape(NodeShape.RECTANGLE);
         	vareader.setBackgroundColor(DataUtils.getColorFromCode(attributes.getValue("backgroundColor")));
         	vareader.setForegroundColor(DataUtils.getColorFromCode(attributes.getValue("foregroundColor")));
+        	String s_textColor = attributes.getValue("textColor");
+        	Color col_text = s_textColor == null ? vareader.getForegroundColor() : DataUtils.getColorFromCode(s_textColor);
+        	vareader.setTextColor(col_text);
         	vareader.setSize(Integer.parseInt(attributes.getValue("width")), Integer.parseInt(attributes.getValue("height")));
             vareader.setPos(Integer.parseInt(attributes.getValue("x")),Integer.parseInt(attributes.getValue("y")));
         } else if (qName.equals("ellipse")) {
         	vareader.setShape(NodeShape.ELLIPSE);
         	vareader.setBackgroundColor(DataUtils.getColorFromCode(attributes.getValue("backgroundColor")));
         	vareader.setForegroundColor(DataUtils.getColorFromCode(attributes.getValue("foregroundColor")));
+        	String s_textColor = attributes.getValue("textColor");
+        	Color col_text = s_textColor == null ? vareader.getForegroundColor() : DataUtils.getColorFromCode(s_textColor);
+        	vareader.setTextColor(col_text);
         	vareader.setSize(Integer.parseInt(attributes.getValue("width")), Integer.parseInt(attributes.getValue("height")));
             vareader.setPos(Integer.parseInt(attributes.getValue("x")),Integer.parseInt(attributes.getValue("y")));
         } 
@@ -173,6 +180,7 @@ public class GinmlHelper {
 					"\" height=\""+vReader.getHeight()+
 					"\" backgroundColor=\"#"+ DataUtils.getColorCode(vReader.getBackgroundColor()) +
 					"\" foregroundColor=\"#"+DataUtils.getColorCode(vReader.getForegroundColor()) +
+					"\" textColor=\"#"+DataUtils.getColorCode(vReader.getTextColor()) +
 					"\"/>\n";
         		break;
             case ELLIPSE:
@@ -182,6 +190,7 @@ public class GinmlHelper {
 				"\" height=\""+vReader.getHeight()+
 				"\" backgroundColor=\"#"+ DataUtils.getColorCode(vReader.getBackgroundColor()) +
 				"\" foregroundColor=\"#"+DataUtils.getColorCode(vReader.getForegroundColor()) +
+				"\" textColor=\"#"+DataUtils.getColorCode(vReader.getTextColor()) +
 				"\"/>\n";
         		break;
         	default:

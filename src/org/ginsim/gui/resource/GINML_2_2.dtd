@@ -21,15 +21,15 @@ copyright by
 
        + ETUDIANTS DESS: F. Cordeil, T. Marcq, C. Menahem,  R. Muti, A. Naldi
              
-      - an element node  has a new attributes name, basevalue and maxvalue and can contain:
+      - an element node  has a new attributes name, maxvalue and can contain:
           	a list of elements parameters, 
-      	an annotation
-      	a nodevisualsetting
+      	    an annotation
+      	    a nodevisualsetting
       - an element edge has new attributes sign, minvalue, maxvalue and can contain:
-      	an annotation
-      	an edgevisulasetting
+      	    an annotation
+      	    an edgevisulasetting
       - an element parameter is empty and has an attribute idActiveInteractions which is the references 
-          of incoming edges, and an attribute val (default 0)
+            of incoming edges, and an attribute val (default 0)
       - an element annotation can contain a linklist and a comment
       - an element nodevisualsetting can contain a point or a rect or an ellipse
       - an element edgevisualsetting can contain a polyline
@@ -47,11 +47,11 @@ copyright by
 <!ENTITY % gxl-extension "">
 <!ENTITY % graph-extension ", annotation?, link?">
 <!ENTITY % node-extension ",parameter*,annotation?,nodevisualsetting?">
-<!ENTITY % edge-extension ",annotation?,edgevisualsetting?">
+<!ENTITY % edge-extension ",subedge?,annotation?,edgevisualsetting?">
 <!ENTITY % rel-extension "">
 <!ENTITY % value-extension "">
 <!ENTITY % relend-extension "">
-<!ENTITY % gxl-attr-extension "">
+<!ENTITY % gxl-attr-extension "ginmlversion CDATA #IMPLIED">
 <!ENTITY % graph-attr-extension "class (regulatory|dynamical|cellular|reduced) 'regulatory'
                                                               nodeorder NMTOKENS #IMPLIED">
 <!ENTITY % node-attr-extension "name CDATA #IMPLIED basevalue CDATA '0' maxvalue CDATA '1'">
@@ -158,7 +158,13 @@ copyright by
 <!ELEMENT comment (#PCDATA)> 
 <!ELEMENT link EMPTY> 
 <!ATTLIST link  
-	xlink:href CDATA #REQUIRED 
+    xlink:href CDATA #REQUIRED 
+> 
+
+<!-- Sub-edge --> 
+<!ELEMENT subedge EMPTY> 
+<!ATTLIST subedge  
+ %edge-attr-extension;
 > 
 
 <!-- attr -->
