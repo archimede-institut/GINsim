@@ -430,7 +430,7 @@ class EdgeIterator<V,E extends Edge<V>> implements Iterator<E> {
         if (i_edges != null && i_edges.hasNext()) {
             next = i_edges.next();
         } else while (i_vertices.hasNext()) {
-            VInfo vinfo = (VInfo)i_vertices.next();
+            VInfo<V,E> vinfo = i_vertices.next();
             if (vinfo.l_outgoing != null) {
                 i_edges = vinfo.l_outgoing.iterator();
                 if (i_edges.hasNext()) {

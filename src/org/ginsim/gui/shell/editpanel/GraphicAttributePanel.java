@@ -78,6 +78,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	private JCheckBox jCB_selectShape = null;
 	private JCheckBox jCB_selectBackground = null;
 	private JCheckBox jCB_selectForeground = null;
+	private JCheckBox jCB_selectText = null;
 	private JCheckBox jCB_selectSize = null;
 
 	private final NodeAttributesReader vReader;
@@ -88,7 +89,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	private static final int NOTHINGSELECTED = 2;
 	private int whatIsSelected;
 	private Object selected;
-	private List v_selection;
+	private List<?> v_selection;
 
 	private JCheckBox jCB_selectLinewidth;
 
@@ -99,7 +100,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	 */
 	public GraphicAttributePanel(GraphGUI<?, ?, ?> gui) {
 		super(gui);
-		Graph graph = gui.getGraph();
+		Graph<?,?> graph = gui.getGraph();
 		vReader = graph.getNodeAttributeReader();
 		eReader = graph.getEdgeAttributeReader();
 		initialize();
@@ -674,6 +675,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			java.awt.GridBagConstraints consGridBagConstraints21 = new java.awt.GridBagConstraints();
 			java.awt.GridBagConstraints consGridBagConstraints22 = new java.awt.GridBagConstraints();
 			java.awt.GridBagConstraints consGridBagConstraints23 = new java.awt.GridBagConstraints();
+			java.awt.GridBagConstraints consGridBagConstraints24 = new java.awt.GridBagConstraints();
 
 			consGridBagConstraints111.gridx = 0;
 			consGridBagConstraints111.gridy = 0;
@@ -701,6 +703,8 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			consGridBagConstraints101.fill = java.awt.GridBagConstraints.BOTH;
 			consGridBagConstraints22.gridx = 2;
 			consGridBagConstraints22.gridy = 2;
+			consGridBagConstraints24.gridx = 2;
+			consGridBagConstraints24.gridy = 3;
 
 			consGridBagConstraints16.gridx = 0;
 			consGridBagConstraints16.gridy = 3;
@@ -744,6 +748,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			
 			
 			jP_node.add(getJCB_selectForeground(), consGridBagConstraints22);
+			jP_node.add(getJCB_selectText(), consGridBagConstraints24);
 
 			jP_node.add(new JLabel(Translator.getString("STR_height")),
 					consGridBagConstraints141);
@@ -810,6 +815,13 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 		}
 		return jCB_selectForeground;
 	}
+	protected JCheckBox getJCB_selectText() {
+		if (jCB_selectText == null) {
+			jCB_selectText = new JCheckBox();
+			jCB_selectText.setSelected(true);
+		}
+		return jCB_selectText;
+	}
 	protected JCheckBox getJCB_selectShape() {
 		if (jCB_selectShape == null) {
 			jCB_selectShape = new JCheckBox();
@@ -872,7 +884,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	protected void applyToAll() {
 		switch(whatIsSelected) {
 		case EDGESELECTED:
-			Collection edges = v_selection;
+			Collection<?> edges = v_selection;
 			if (v_selection == null) {
 				edges = graph.getEdges();
 			}
@@ -910,6 +922,9 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 				}
 				if (jCB_selectBackground.isSelected()) {
 					vReader.setBackgroundColor(jButton_bgcolor.getBackground());
+				}
+				if (jCB_selectText.isSelected()) {
+					vReader.setTextColor(jButton_textcolor.getBackground());
 				}
 				if (jCB_selectSize.isSelected()) {
 					try {
