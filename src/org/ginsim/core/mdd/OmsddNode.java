@@ -1,7 +1,9 @@
 package org.ginsim.core.mdd;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 /**
  * Ordered Binary Decision Diagram (OBDD) is a tree representation of boolean functions.
@@ -472,4 +474,149 @@ public class OmsddNode {
         }
         return this;
     }
+    
+    public StringBuffer write() {
+        StringBuffer s = new StringBuffer();
+        if (next == null) {
+        	switch (value) {
+			case 1: s.append('1'); break;
+			case -1: s.append('2'); break;
+			case 0: s.append('0'); break;
+			}
+    		return s;
+    	}
+        s.append('(');
+        s.append(level);
+        s.append(',');
+        for (int i=0 ; i<next.length-1 ; i++) {
+            if (next[i] != null) s.append(next[i].write());
+            else s.append("&");
+            s.append(',');
+        }
+        if (next[next.length-1] != null)s.append(next[next.length-1].write());
+        else s.append("&");
+        s.append(')');
+        return s;
+    }
+
+    public static OmsddNode read(String s, byte[] childCount) throws ParseException {
+    	if (s.length() == 1) {
+    		switch (s.charAt(0)) {
+			case '1':
+				return POSITIVE;
+			case '2':
+				return NEGATIVE;
+			case '0':
+				return FALSE;
+
+			default:
+				throw new ParseException("Wrong terminal value, expected 1,-1,0, got "+s.charAt(0), 0);
+			}
+       	} 
+    	
+    	int length = s.length();
+    	int deep = -1;
+    	
+    	byte[] childVisited = new byte[childCount.length];
+    	Stack<OmsddNode> heap = new Stack<OmsddNode>();
+    	OmsddNode o = null, op;
+    	int i = 0;
+    	while (i < length) {
+    		char c = s.charAt(i);
+    		if (c == '(') {
+       			o = new OmsddNode();
+    			heap.add(o);
+    			deep++;
+				i = readLevel(s, o, i+1, length);
+				for (int j = deep; j < o.level; j++) {
+					childVisited[j] = -1; //the child is skipped
+				}
+				deep = o.level;
+    			if (i >= length || s.charAt(i) != ',') {
+    				throw new ParseException("Missing , after opening a new node", i-1);
+    			}
+    		} else if (c == ')') {
+    			if (childVisited[deep] != childCount[deep]) {
+    				throw new ParseException("Wrong number of child found", i);
+    			}
+    			do {
+        			childVisited[deep] = 0;
+    				deep--;
+    			} while (deep >= 0 && childVisited[deep] == -1); //while the child has been skipped skipped
+        		op = (OmsddNode) heap.pop();
+        		if (heap.size() > 0) {
+            		o = (OmsddNode) heap.peek();
+            		if (o.next == null) {
+            			o.next = new OmsddNode[childCount[deep]];
+            		}       			
+            		o.next[childVisited[deep]++] = op;
+        		}
+    			if (deep == -2) {
+    				throw new ParseException("Opening parenthese missing", i);
+    			}
+    		} else if (c == ',') { 
+    		} else {
+    			readTerminal(s, (OmsddNode) heap.peek(), i, deep, childVisited, childCount, length);
+   		}
+    		i++;
+    	}
+    	if (deep != -1) {
+			throw new ParseException("End of string reached too early", i);
+    	}  	
+    	return o;
+    }
+    
+	private static void readTerminal(String s, OmsddNode o, int i, int deep, byte[] childVisited, byte[] childCount, int length) throws ParseException {
+		OmsddNode terminal;
+		switch (s.charAt(i)) {
+		case '1': terminal = POSITIVE; break;
+		case '2': terminal = NEGATIVE; break;
+		case '0': terminal = FALSE; break;
+		default:
+			throw new ParseException("Missing terminal value", i);
+		}
+		if (o.next == null) {
+			o.next = new OmsddNode[childCount[deep]];
+		}
+		int k = childVisited[deep]++;
+		if (k >= childCount[deep]) {
+			throw new ParseException("Too much child at depth "+deep+" - "+k+" - "+childCount[deep]+" - "+childVisited[deep], i);
+		}
+		o.next[k] = terminal;
+	}
+
+
+	/**
+     * 
+     * @param s the string
+     * @param o current OMDDNode to fill with level
+     * @param i current index in s
+     * @param length the length of s
+     * @return the index of the next non number character
+     */
+    private static int readLevel(String s, OmsddNode o, int i, int length) {
+    	int res = 0;
+    	char c = s.charAt(i++);
+    	do {
+			switch (c) {
+			case '0': break;
+			case '1': res += 1; break;
+			case '2': res += 2; break;
+			case '3': res += 3; break;
+			case '4': res += 4; break;
+			case '5': res += 5; break;
+			case '6': res += 6; break;
+			case '7': res += 7; break;
+			case '8': res += 8; break;
+			case '9': res += 9; break;
+			default:
+				o.level = res/10;
+				return i-1;
+			}
+    		res *= 10;
+    		c = s.charAt(i++);
+    	} while (i < length);
+		return length+1; //FAIL in the while
+	}
+
 }
