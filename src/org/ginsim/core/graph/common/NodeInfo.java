@@ -2,6 +2,13 @@ package org.ginsim.core.graph.common;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
+
+/**
+ * Contains the basic informations of a regulatory node (gene) : 
+ * 	- nodeID : a unique identifier for the gene
+ *  - max : the maximal regulatory level 
+ *
+ */
 public class NodeInfo {
 	
 	public static final byte UNDEFINED_MAX = -1;
@@ -13,6 +20,11 @@ public class NodeInfo {
 		super();
 		this.nodeID = name;
 		this.max = UNDEFINED_MAX;
+	}
+	
+	
+	public NodeInfo(NodeInfo other) {
+		this( other.getNodeID(), other.getMax());
 	}
 	
 	public NodeInfo(String name, byte max) {
