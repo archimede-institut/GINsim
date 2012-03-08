@@ -457,6 +457,7 @@ public class HTGSimulation extends Simulation {
 	private void addAllNodeTo() {
 		for (Iterator<HierarchicalNode> it = nodeSet.iterator(); it.hasNext();) {
 			HierarchicalNode node = (HierarchicalNode) it.next();
+			node.addAllTheStatesInQueue();
 			node.updateSize();
 			htg.addNode(node);
 			setHnodeGraphicalProperties(node);
