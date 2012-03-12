@@ -434,7 +434,7 @@ public final class SBMLXpathParser {
 								fctResultLevel = fctAt.get(0).getValue();
 							
 								FunctionTerm function_term = deal( child);
-															
+								
 								if( function_term != null) {
 									addEdgesToMutliEdges( function_term, getNodeId(trans_Id), intput_to_sign, graph);
 									v_function.addElement( function_term.getLogicalFunction());
@@ -651,7 +651,7 @@ public final class SBMLXpathParser {
 			if(code.isEmpty()) {
 				return null;
 			}
-
+			
 			ArrayList<String> conditions = MathMLCodeParser.getConditions( code);
 			
 			HashMap< String, ArrayList<String>> final_result = new HashMap<String, ArrayList<String>>();
@@ -1102,14 +1102,16 @@ public final class SBMLXpathParser {
 				}
 			}
 			else if(op.equals("leq")){
-				for( int i = minvalue; i >= 1; i--){
-					String cas = "!" + node + ":" + i;
+				for( int i = minvalue; i >= 0; i--){
+					String cas = node + ":" + i;
 					cases.add( cas);
 				}
 			}
 			else if(op.equals("lt") && minvalue > 0){
-				String cas = "!"+ node + ":" + minvalue;
-				cases.add( cas);
+				for( int i = minvalue - 1; i >=0; i--){
+					String cas = node + ":" + i;
+					cases.add( cas);
+				}
 			}
 			return cases;
 		} 
