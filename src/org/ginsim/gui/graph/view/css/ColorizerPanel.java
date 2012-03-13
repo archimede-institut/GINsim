@@ -136,7 +136,7 @@ public class ColorizerPanel extends JPanel {
 	/**
 	 * Perform the colorization of the graph, update the button name accordingly
 	 */
-	protected void doColorize() {
+	public void doColorize() {
 		colorizer.doColorize(graph);
 		colorizeButton.setText(Translator.getString("STR_colorizer_undo_colorize"));
 	}

@@ -1,0 +1,54 @@
+package org.ginsim.servicegui.tool.polytopesViz;
+
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.Action;
+
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.gui.service.AbstractServiceGUI;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.common.ServiceStatus;
+import org.ginsim.gui.service.common.StandaloneGUI;
+import org.ginsim.gui.service.common.ToolkitAction;
+import org.mangosdk.spi.ProviderFor;
+
+
+@ProviderFor(ServiceGUI.class)
+@StandaloneGUI
+@ServiceStatus( ServiceStatus.TOOLKIT)
+public class PolytopesVizServiceGUI extends AbstractServiceGUI {
+
+	@Override
+	public List<Action> getAvailableActions(Graph<?, ?> graph) {
+		if (graph instanceof DynamicGraph) {
+			List<Action> actions = new ArrayList<Action>();
+			actions.add(new PolytopesVizAction((DynamicGraph)graph, this));
+			return actions;
+		}
+		return null;
+	}
+
+	@Override
+	public int getInitialWeight() {
+		return W_TOOLS_MAIN + 40;
+	}
+}
+
+class PolytopesVizAction extends ToolkitAction {
+	private static final long serialVersionUID = -5562888847827466003L;
+	private DynamicGraph graph;
+
+	public PolytopesVizAction(DynamicGraph graph, ServiceGUI serviceGUI) {
+		super("STR_polytopesViz", "STR_polytopesViz_descr", serviceGUI);
+		this.graph = graph;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		new PolytopesVizFrame(graph);
+	}
+	
+}
