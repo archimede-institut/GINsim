@@ -11,10 +11,11 @@ import javax.swing.JScrollPane;
 
 import org.ginsim.common.utils.IOUtils;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.service.common.StandaloneGUI;
-import org.ginsim.gui.service.common.ToolAction;
+import org.ginsim.gui.service.common.ToolkitAction;
 import org.mangosdk.spi.ProviderFor;
 import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
@@ -26,29 +27,29 @@ import org.python.util.PythonInterpreter;
  * main method for the jython console
  */
 @ProviderFor(ServiceGUI.class)
-@ServiceStatus( ServiceStatus.UNDER_DEVELOPMENT)
+@ServiceStatus( ServiceStatus.TOOLKIT)
 @StandaloneGUI
-public class JythonServiceGUI implements ServiceGUI {
+public class JythonServiceGUI extends AbstractServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		List<Action> actions = new ArrayList<Action>();
-		actions.add(new JythonAction(graph));
+		actions.add(new JythonAction(graph, this));
 		return actions;
 	}
 
 	@Override
-	public int getWeight() {
-		return W_MANIPULATION + 10;
+	public int getInitialWeight() {
+		return W_TOOLKITS_MAIN + 10;
 	}
 }
 
-class JythonAction extends ToolAction {
+class JythonAction extends ToolkitAction {
 
 	private final Graph<?, ?> graph;
 
-	public JythonAction(Graph<?, ?> graph) {
-		super("STR_jython", "STR_jython_descr");
+	public JythonAction(Graph<?, ?> graph, ServiceGUI serviceGUI) {
+		super("STR_jython", "STR_jython_descr", serviceGUI);
 		this.graph = graph;
 	}
 

@@ -8,6 +8,7 @@ import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.commongui.utils.FileFormatFilter;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.notification.NotificationManager;
+import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.utils.dialog.stackdialog.HandledStackDialog;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
@@ -25,8 +26,8 @@ public abstract class ExportAction<G extends Graph> extends BaseAction {
      * @param name Entry to insert in the menu
      * @param tooltip Long description of the action
      */
-	public ExportAction(G graph, String name, String tooltip) {
-		super(name, null, tooltip, null);
+	public ExportAction(G graph, String name, String tooltip, ServiceGUI serviceGui) {
+		super(name, null, tooltip, null, serviceGui);
 		this.graph = graph;
 		String className = getClass().getName();
 		this.id = className.substring(className.lastIndexOf('.')+1);

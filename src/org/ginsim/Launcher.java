@@ -23,6 +23,11 @@ import org.ginsim.gui.shell.AboutDialog;
 public class Launcher {
 
 	/**
+	 * True if the developers extras (toolkit menu, under-developement...) should be enabled
+	 */
+	public static boolean developer_mode = false;
+	
+	/**
 	 * @param args
 	 * @throws InstantiationException 
 	 * @throws IllegalAccessException 
@@ -56,14 +61,13 @@ public class Launcher {
                 // force exit as jython seems to often delay it
                 System.exit(0);
                 return;
-            }
-            
-        	if (args[i].equals("-n")) {
+            } else if (args[i].equals("-n")) {
         		open.add(null);
         		continue;
-        	} 
-        	
-        	if (args[i].startsWith("-")) {
+        	} else if (args[i].equals("--dev")) {
+        		developer_mode = true;
+        		continue;
+            } else if (args[i].startsWith("-")) {
             	if (!args[i].equals("-h")) {
                     System.out.println("Unknown option: "+args[i]);
             	}
@@ -73,6 +77,7 @@ public class Launcher {
                 System.out.println("\t-s: display the script help message.");
                 System.out.println("\t-s <file>: run \"script\" from <file>. Extra arguments are script arguments.");
                 System.out.println("\t-h:  display this message.");
+                System.out.println("\t--dev : enable the developer's options.");
                 return;
             }
         	

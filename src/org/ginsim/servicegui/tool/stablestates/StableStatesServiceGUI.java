@@ -11,6 +11,7 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.service.ServiceManager;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ServiceStatus;
@@ -26,23 +27,23 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor( ServiceGUI.class)
 @GUIFor( StableStatesService.class)
 @ServiceStatus( ServiceStatus.RELEASED)
-public class StableStatesServiceGUI implements ServiceGUI {
+public class StableStatesServiceGUI extends AbstractServiceGUI {
     
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		
 		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new StableStatesAction( (RegulatoryGraph)graph));
-			actions.add(new NewStableStatesAction( (RegulatoryGraph)graph));
+			actions.add(new StableStatesAction( (RegulatoryGraph)graph, this));
+			actions.add(new NewStableStatesAction( (RegulatoryGraph)graph, this));
 			return actions;
 		}
 		return null;
 	}
 
 	@Override
-	public int getWeight() {
-		return W_ANALYSIS + 1;
+	public int getInitialWeight() {
+		return W_TOOLS_MAIN + 20;
 	}
 }
 
@@ -50,9 +51,9 @@ class StableStatesAction extends ToolAction {
 
 	private final RegulatoryGraph graph;
 	
-	public StableStatesAction(RegulatoryGraph graph) {
+	public StableStatesAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
 		
-		super( "STR_stableStates", "STR_stableStates_descr");
+		super( "STR_stableStates", "STR_stableStates_descr", serviceGUI);
 		this.graph = graph;
 	}
 
@@ -73,9 +74,9 @@ class NewStableStatesAction extends ToolAction {
 
 	private final RegulatoryGraph graph;
 	
-	public NewStableStatesAction(RegulatoryGraph graph) {
+	public NewStableStatesAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
 		
-		super( "TEST stable state", "(NEW)");
+		super( "TEST stable state", "(NEW)", serviceGUI);
 		this.graph = graph;
 	}
 

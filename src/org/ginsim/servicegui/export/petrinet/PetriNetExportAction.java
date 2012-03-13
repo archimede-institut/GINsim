@@ -29,7 +29,7 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> {
 	PNConfig config;
 	
 	public PetriNetExportAction(RegulatoryGraph graph, PetrinetExportService service) {
-		super(graph, "STR_PetriNet", "STR_PetriNet_descr");
+		super(graph, "STR_PetriNet", "STR_PetriNet_descr", null);
 		this.service = service;
 	}
 

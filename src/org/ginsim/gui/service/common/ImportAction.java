@@ -55,7 +55,7 @@ public abstract class ImportAction extends BaseAction {
 	 */
 	public ImportAction(String name, ImageIcon icon, String tooltip,
 			KeyStroke accelerator) {
-		super(name, icon, tooltip, accelerator, null);
+		super(name, icon, tooltip, accelerator, null, null);
 		String className = getClass().getName();
 		this.id = className.substring(className.lastIndexOf('.') + 1);
 	}

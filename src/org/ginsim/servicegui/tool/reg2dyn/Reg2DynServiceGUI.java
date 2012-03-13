@@ -13,6 +13,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ServiceStatus;
@@ -30,7 +31,7 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor( ServiceGUI.class)
 @GUIFor( Reg2DynService.class)
 @ServiceStatus( ServiceStatus.RELEASED)
-public class Reg2DynServiceGUI implements ServiceGUI {
+public class Reg2DynServiceGUI extends AbstractServiceGUI {
 
 //    public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
 //        if (actionType != ACTION_ACTION) {
@@ -68,15 +69,15 @@ public class Reg2DynServiceGUI implements ServiceGUI {
 		
 		if( graph instanceof RegulatoryGraph){
 			List<Action> actions = new ArrayList<Action>();
-			actions.add( new Reg2DynAction( (RegulatoryGraph) graph));
+			actions.add( new Reg2DynAction( (RegulatoryGraph) graph, this));
 			return actions;
 		}
 		return null;
 	}
 
 	@Override
-	public int getWeight() {
-		return W_MAIN + 1;
+	public int getInitialWeight() {
+		return W_TOOLS_MAIN + 10;
 	}
 }
 
@@ -85,8 +86,8 @@ class Reg2DynAction extends ToolAction {
 
 	private final RegulatoryGraph graph;
 	
-	public Reg2DynAction( RegulatoryGraph graph) {
-		super( "STR_reg2dyn", "STR_reg2dyn_descr");
+	public Reg2DynAction( RegulatoryGraph graph, ServiceGUI serviceGUI) {
+		super( "STR_reg2dyn", "STR_reg2dyn_descr", serviceGUI);
 		this.graph = graph;
 	}
 

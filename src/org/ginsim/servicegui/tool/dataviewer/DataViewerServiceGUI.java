@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.ServiceStatus;
@@ -23,26 +24,25 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor(ServiceGUI.class)
 @StandaloneGUI
 @ServiceStatus( ServiceStatus.UNDER_DEVELOPMENT)
-public class DataViewerServiceGUI implements ServiceGUI {
+public class DataViewerServiceGUI extends AbstractServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions( Graph<?, ?> graph) {
 		List<Action> actions = new ArrayList<Action>();
-		actions.add( new DataViewerAction( graph));
+		actions.add( new DataViewerAction( graph, this));
 		return actions;
 	}
 
-	@Override
-	public int getWeight() {
-		return W_GENERIC;
+	public int getInitialWeight() {
+		return W_GRAPH_COLORIZE+40;
 	}
 }
 
 class DataViewerAction extends GenericGraphAction {
 	private static final long serialVersionUID = 8294301473668672512L;
 	
-	protected DataViewerAction( Graph graph) {
-        super( graph, "View data", null, "View associated data", null);
+	protected DataViewerAction( Graph graph, ServiceGUI serviceGUI) {
+        super( graph, "View data", null, "View associated data", null, serviceGUI);
 
 	}
 	

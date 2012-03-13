@@ -5,20 +5,26 @@ import java.util.List;
 import javax.swing.Action;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 
+import org.ginsim.Launcher;
 import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.ServiceGUIManager;
+import org.ginsim.gui.service.common.BaseAction;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.ImportAction;
 import org.ginsim.gui.service.common.LayoutAction;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.gui.shell.callbacks.EditCallBack;
 import org.ginsim.gui.shell.callbacks.FileCallBack;
 import org.ginsim.gui.shell.callbacks.HelpCallBack;
+import org.ginsim.gui.shell.callbacks.SelectionCallBack;
 
 public class MainFrameActionManager implements FrameActionManager {
 
@@ -42,21 +48,38 @@ public class MainFrameActionManager implements FrameActionManager {
 		JMenu layoutMenu = new JMenu( Translator.getString( "STR_Layout"));
 		JMenu graphMenu = new JMenu( Translator.getString( "STR_Graph"));
 		JMenu toolsMenu = new JMenu( Translator.getString( "STR_Tools"));
+		JMenu toolkitsMenu = null;
+		if (Launcher.developer_mode) {
+			 toolkitsMenu = new JMenu( Translator.getString( "STR_Toolkits"));
+		}
+
+		SelectionCallBack.fillMenu(graphMenu, graph); //Add all the simple selection actions
+		
+		int nextSeparator = 0;
+		
 		for (Action action: actions) {
+			if (nextSeparator < ServiceGUI.separators.length && ((BaseAction)action).getWeight() >= ServiceGUI.separators[nextSeparator]) {
+				if (action instanceof GenericGraphAction) {
+					graphMenu.add( new JSeparator());
+				} else if (action instanceof ToolAction) {
+					toolsMenu.add( new JSeparator());
+				} else if (action instanceof ExportAction) {
+					exportMenu.add( new JSeparator());
+				}
+				nextSeparator++;
+			}
 			if (action instanceof ImportAction) {
 				importMenu.add( action);
-			}
-			else if (action instanceof ExportAction) {
+			} else if (action instanceof ExportAction) {
 				exportMenu.add( action);
-			}
-			else if (action instanceof LayoutAction) {
+			} else if (action instanceof LayoutAction) {
 				layoutMenu.add( action);
-			}
-			else if (action instanceof GenericGraphAction) {
+			} else if (action instanceof GenericGraphAction) {
 				graphMenu.add( action);
-			}
-			else {
+			} else if (action instanceof ToolAction) {
 				toolsMenu.add( action);
+			} else {
+				toolkitsMenu.add( action);
 			}
 		}
 
@@ -79,6 +102,9 @@ public class MainFrameActionManager implements FrameActionManager {
 		}
 		if (toolsMenu.getItemCount() > 0) {
 			menubar.add( toolsMenu);
+		}
+		if (toolkitsMenu != null && toolkitsMenu.getItemCount() > 0) {
+			menubar.add( toolkitsMenu);
 		}
 		
 		JMenu menu = new JMenu( Translator.getString( "STR_Help"));

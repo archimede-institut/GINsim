@@ -9,10 +9,11 @@ import javax.swing.Action;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.ServiceStatus;
-import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.stateinregulatorygraph.StateInRegulatoryGraphService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -20,7 +21,7 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor( ServiceGUI.class)
 @GUIFor( StateInRegulatoryGraphService.class)
 @ServiceStatus( ServiceStatus.RELEASED)
-public class StateInRegulatoryGraphServiceGUI implements ServiceGUI {
+public class StateInRegulatoryGraphServiceGUI extends AbstractServiceGUI {
 
 	
 	@Override
@@ -28,7 +29,7 @@ public class StateInRegulatoryGraphServiceGUI implements ServiceGUI {
 		
 		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new StateInRegulatoryGraphAction((RegulatoryGraph)graph));
+			actions.add(new StateInRegulatoryGraphAction((RegulatoryGraph)graph, this));
 			return actions;
 		}
 		return null;
@@ -36,19 +37,17 @@ public class StateInRegulatoryGraphServiceGUI implements ServiceGUI {
 
 
 	@Override
-	public int getWeight() {
-		return W_INFO + 2;
+	public int getInitialWeight() {
+		return W_GRAPH_COLORIZE + 10;
 	}
 }
 
-class StateInRegulatoryGraphAction extends ToolAction {
+class StateInRegulatoryGraphAction extends GenericGraphAction {
 
-	private final RegulatoryGraph graph;
 	
-	public StateInRegulatoryGraphAction(RegulatoryGraph graph) {
+	public StateInRegulatoryGraphAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
 		
-		super( "STR_stateInRegGraph", "STR_stateInRegGraph_descr");
-		this.graph = graph;
+		super( graph, "STR_stateInRegGraph", null, "STR_stateInRegGraph_descr", null, serviceGUI);
 	}
 
 	@Override

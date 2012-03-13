@@ -9,10 +9,11 @@ import javax.swing.Action;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.ServiceStatus;
-import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.regulatorygraphanimation.RegulatoryGraphAnimationService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -23,39 +24,37 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor( ServiceGUI.class)
 @GUIFor( RegulatoryGraphAnimationService.class)
 @ServiceStatus( ServiceStatus.RELEASED)
-public class RegulatoryGraphAnimationServiceGUI implements ServiceGUI {
+public class RegulatoryGraphAnimationServiceGUI extends AbstractServiceGUI {
     
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		
 		if (graph instanceof DynamicGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new AnimRegGraphAction((DynamicGraph)graph));
+			actions.add(new AnimRegGraphAction((DynamicGraph)graph, this));
 			return actions;
 		}
 		return null;
 	}
 
 	@Override
-	public int getWeight() {
-		return W_MAIN + 2;
+	public int getInitialWeight() {
+		return W_TOOLS_MAIN + 140;
 	}
 }
 
-class AnimRegGraphAction extends ToolAction {
+class AnimRegGraphAction extends GenericGraphAction {
 
-	private final DynamicGraph graph;
 	
-	public AnimRegGraphAction( DynamicGraph graph) {
+	public AnimRegGraphAction( DynamicGraph graph, ServiceGUI serviceGUI) {
 		
-		super( "STR_aRegGraph", "STR_aRegGraph_descr");
-		this.graph = graph;
+		super( graph, "STR_aRegGraph", "STR_aRegGraph_descr", serviceGUI);
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
-        RegulatoryAnimator.animate( GUIManager.getInstance().getFrame( graph), graph);
+        RegulatoryAnimator.animate( GUIManager.getInstance().getFrame( graph), (DynamicGraph) graph);
 	}
 	
 }

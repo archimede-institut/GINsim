@@ -17,6 +17,6 @@ import org.mangosdk.spi.ProviderFor;
 public class PetriNetExportServiceGUI extends SimpleServiceGUI<PetrinetExportService> {
 
 	public PetriNetExportServiceGUI() {
-		super(PetriNetExportAction.class, W_ANALYSIS);
+		super(PetriNetExportAction.class, W_EXPORT_SPECIFIC+50);
 	}
 }

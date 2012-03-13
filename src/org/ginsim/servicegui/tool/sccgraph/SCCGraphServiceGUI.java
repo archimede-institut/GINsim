@@ -9,10 +9,11 @@ import javax.swing.Action;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.ServiceStatus;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.connectivity.ConnectivityService;
 import org.ginsim.service.tool.sccgraph.SCCGraphResult;
 import org.ginsim.service.tool.sccgraph.SCCGraphService;
@@ -25,26 +26,28 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor(ServiceGUI.class)
 @GUIFor(ConnectivityService.class)
 @ServiceStatus( ServiceStatus.RELEASED)
-public class SCCGraphServiceGUI implements ServiceGUI {
+public class SCCGraphServiceGUI extends AbstractServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions( Graph<?, ?> graph) {
 		List<Action> actions = new ArrayList<Action>();
-		actions.add( new SCCGraphAction( graph));
+		actions.add( new SCCGraphAction( graph, this));
 		return actions;
 	}
 
 	@Override
-	public int getWeight() {
-		return W_GENERIC;
+	public int getInitialWeight() {
+		return W_TOOLS_MAIN + 30;
 	}
 }
 
-class SCCGraphAction extends GenericGraphAction {
+class SCCGraphAction extends ToolAction {
 	private static final long serialVersionUID = 8294301473668672512L;
+	private Graph graph;
 	
-	protected SCCGraphAction( Graph graph) {
-        super( graph, "STR_constructReducedGraph", null, "STR_constructReducedGraph_descr", null);
+	protected SCCGraphAction( Graph graph, ServiceGUI serviceGUI) {
+        super( "STR_constructReducedGraph", "STR_constructReducedGraph_descr", serviceGUI);
+		this.graph = graph;
 	}
 	
 	@Override

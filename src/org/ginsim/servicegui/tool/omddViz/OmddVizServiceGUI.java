@@ -8,40 +8,41 @@ import javax.swing.Action;
 
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.service.common.StandaloneGUI;
-import org.ginsim.gui.service.common.ToolAction;
+import org.ginsim.gui.service.common.ToolkitAction;
 import org.mangosdk.spi.ProviderFor;
 
 
 @ProviderFor(ServiceGUI.class)
 @StandaloneGUI
 @ServiceStatus( ServiceStatus.UNDER_DEVELOPMENT)
-public class OmddVizServiceGUI implements ServiceGUI {
+public class OmddVizServiceGUI extends AbstractServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new OMDDVizAction((RegulatoryGraph)graph));
+			actions.add(new OMDDVizAction((RegulatoryGraph)graph, this));
 			return actions;
 		}
 		return null;
 	}
 
 	@Override
-	public int getWeight() {
-		return W_INFO + 3;
+	public int getInitialWeight() {
+		return W_TOOLKITS_MAIN + 20;
 	}
 }
 
-class OMDDVizAction extends ToolAction {
+class OMDDVizAction extends ToolkitAction {
 
 	private RegulatoryGraph graph;
 
-	public OMDDVizAction(RegulatoryGraph graph) {
-		super("STR_omddViz", "STR_omddViz_descr");
+	public OMDDVizAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+		super("STR_omddViz", "STR_omddViz_descr", serviceGUI);
 		this.graph = graph;
 	}
 

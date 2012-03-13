@@ -9,6 +9,7 @@ import javax.swing.Action;
 import org.ginsim.common.exception.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.LayoutAction;
@@ -20,7 +21,7 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor(ServiceGUI.class)
 @GUIFor(LayoutService.class)
 @ServiceStatus( ServiceStatus.RELEASED)
-public class LayoutServiceGUI implements ServiceGUI {
+public class LayoutServiceGUI extends AbstractServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions( Graph<?, ?> graph) {
@@ -39,8 +40,8 @@ public class LayoutServiceGUI implements ServiceGUI {
 	}
 
 	@Override
-	public int getWeight() {
-		return W_GENERIC;
+	public int getInitialWeight() {
+		return 1;
 	}
 }
 

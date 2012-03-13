@@ -11,6 +11,7 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ServiceStatus;
@@ -27,21 +28,21 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor( ServiceGUI.class)
 @GUIFor( CircuitService.class)
 @ServiceStatus( ServiceStatus.RELEASED)
-public class CircuitServiceGUI implements ServiceGUI {
+public class CircuitServiceGUI extends AbstractServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new CircuitAction((RegulatoryGraph)graph));
+			actions.add(new CircuitAction((RegulatoryGraph)graph, this));
 			return actions;
 		}
 		return null;
 	}
 
 	@Override
-	public int getWeight() {
-		return W_ANALYSIS + 1;
+	public int getInitialWeight() {
+		return ServiceGUI.W_TOOLS_MAIN + 60;
 	}
 }
 
@@ -49,9 +50,9 @@ class CircuitAction extends ToolAction {
 
 	private final RegulatoryGraph graph;
 	
-	public CircuitAction(RegulatoryGraph graph) {
+	public CircuitAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
 		
-		super("STR_circuit");
+		super("STR_circuit", serviceGUI);
 		this.graph = graph;
 	}
 
@@ -64,5 +65,4 @@ class CircuitAction extends ToolAction {
 
         new CircuitFrame( GUIManager.getInstance().getFrame( graph), graph);
 	}
-	
 }

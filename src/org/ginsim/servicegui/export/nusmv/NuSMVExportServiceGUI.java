@@ -11,6 +11,7 @@ import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.ServiceManager;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.ServiceStatus;
@@ -29,21 +30,21 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor(ServiceGUI.class)
 @StandaloneGUI
 @ServiceStatus( ServiceStatus.RELEASED)
-public class NuSMVExportServiceGUI implements ServiceGUI {
+public class NuSMVExportServiceGUI extends AbstractServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new NuSMVExportAction((RegulatoryGraph) graph));
+			actions.add(new NuSMVExportAction((RegulatoryGraph) graph, this));
 			return actions;
 		}
 		return null;
 	}
 
 	@Override
-	public int getWeight() {
-		return W_MANIPULATION;
+	public int getInitialWeight() {
+		return W_EXPORT_SPECIFIC+30;
 	}
 }
 
@@ -59,8 +60,8 @@ class NuSMVExportAction extends ExportAction<RegulatoryGraph> {
 	
 	private NuSMVConfig config;
 
-	public NuSMVExportAction(RegulatoryGraph graph) {
-		super(graph, "STR_NuSMV", "STR_NuSMV_descr");
+	public NuSMVExportAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+		super(graph, "STR_NuSMV", "STR_NuSMV_descr", serviceGUI);
 	}
 
 	@Override

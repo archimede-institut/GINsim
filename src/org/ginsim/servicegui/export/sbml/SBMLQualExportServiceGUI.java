@@ -12,6 +12,7 @@ import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.ServiceManager;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.GUIFor;
@@ -24,7 +25,7 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor( ServiceGUI.class)
 @GUIFor( SBMLQualExportService.class)
 @ServiceStatus( ServiceStatus.RELEASED)
-public class SBMLQualExportServiceGUI implements ServiceGUI {
+public class SBMLQualExportServiceGUI extends AbstractServiceGUI {
 
 	public static final FileFormatDescription FORMAT = new FileFormatDescription("SBML-qual", "sbml");
 	
@@ -33,15 +34,15 @@ public class SBMLQualExportServiceGUI implements ServiceGUI {
 		
 		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new SBMLQualExportAction( (RegulatoryGraph) graph));
+			actions.add(new SBMLQualExportAction( (RegulatoryGraph) graph, this));
 			return actions;
 		}
 		return null;
 	}
 	
 	@Override
-	public int getWeight() {
-		return W_ANALYSIS + 2;
+	public int getInitialWeight() {
+		return W_EXPORT_SPECIFIC + 10;
 	}
 }
 
@@ -49,9 +50,9 @@ class SBMLQualExportAction extends ExportAction<RegulatoryGraph> {
 	
 	SBMLQualConfig config;
 	
-	public SBMLQualExportAction(RegulatoryGraph graph) {
+	public SBMLQualExportAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
 		
-		super( graph, "STR_SBML_L3", "STR_SBML_L3_descr");
+		super( graph, "STR_SBML_L3", "STR_SBML_L3_descr", serviceGUI);
 	}
 	
 	@Override

@@ -15,15 +15,15 @@ import org.ginsim.core.utils.IntrospectionUtils;
 import org.ginsim.gui.service.common.GUIFor;
 
 
-public class SimpleServiceGUI<S extends Service> implements ServiceGUI {
+public abstract class SimpleServiceGUI<S extends Service> extends AbstractServiceGUI {
 
 	private final Class<? extends Action> actionClass;
 	private final S service;
-	private final int weight;
+	private final int initialWeight;
 	
-	public SimpleServiceGUI(Class<? extends Action> actionClass, int weight) {
+	public SimpleServiceGUI(Class<? extends Action> actionClass, int initialWeight) {
 		this.actionClass = actionClass;
-		this.weight = weight;
+		this.initialWeight = initialWeight;
 		
 		GUIFor backend = getClass().getAnnotation(GUIFor.class);
 		if (backend == null) {
@@ -38,8 +38,8 @@ public class SimpleServiceGUI<S extends Service> implements ServiceGUI {
 
 
 	@Override
-	public int getWeight() {
-		return weight;
+	public int getInitialWeight() {
+		return initialWeight;
 	}
 
 	@Override
@@ -89,4 +89,5 @@ public class SimpleServiceGUI<S extends Service> implements ServiceGUI {
 
 			return actions;
 	}
+
 }

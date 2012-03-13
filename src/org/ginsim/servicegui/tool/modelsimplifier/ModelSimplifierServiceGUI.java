@@ -9,6 +9,7 @@ import javax.swing.Action;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ServiceStatus;
@@ -23,30 +24,30 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor(ServiceGUI.class)
 @GUIFor(ModelSimplifierService.class)
 @ServiceStatus( ServiceStatus.RELEASED)
-public class ModelSimplifierServiceGUI implements ServiceGUI {
+public class ModelSimplifierServiceGUI extends AbstractServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new ModelSimplifierAction((RegulatoryGraph)graph));
-			actions.add(new ModelRewiringAction((RegulatoryGraph)graph));
+			actions.add(new ModelSimplifierAction((RegulatoryGraph)graph, this));
+			actions.add(new ModelRewiringAction((RegulatoryGraph)graph, this));
 			return actions;
 		}
 		return null;
 	}
 
 	@Override
-	public int getWeight() {
-		return W_MANIPULATION;
+	public int getInitialWeight() {
+		return W_TOOLS_MAIN + 50;
 	}
 }
 
 class ModelSimplifierAction extends ToolAction {
 
 	private final RegulatoryGraph graph;
-	public ModelSimplifierAction(RegulatoryGraph graph) {
-		super("STR_reduce", "STR_reduce_descr");
+	public ModelSimplifierAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+		super("STR_reduce", "STR_reduce_descr", serviceGUI);
 		this.graph = graph;
 	}
 
@@ -66,8 +67,8 @@ class ModelSimplifierAction extends ToolAction {
 class ModelRewiringAction extends ToolAction {
 
 	private final RegulatoryGraph graph;
-	public ModelRewiringAction(RegulatoryGraph graph) {
-		super("STR_rewire", "STR_rewire_descr");
+	public ModelRewiringAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+		super("STR_rewire", "STR_rewire_descr", serviceGUI);
 		this.graph = graph;
 	}
 

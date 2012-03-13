@@ -27,7 +27,7 @@ public class LRGDocumentationAction  extends ExportAction<RegulatoryGraph> {
 	private DocumentExportConfig config;
 
     public LRGDocumentationAction(RegulatoryGraph graph, LRGDocumentationService service) {
-    	super(graph, "STR_Generic", "STR_Generic_descr");
+    	super(graph, "STR_Generic", "STR_Generic_descr", null);
     	this.service = service;
     }
 

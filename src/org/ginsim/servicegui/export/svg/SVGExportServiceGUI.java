@@ -10,6 +10,7 @@ import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.service.ServiceManager;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.GUIFor;
@@ -25,19 +26,19 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor( ServiceGUI.class)
 @GUIFor( SVGExportService.class)
 @ServiceStatus( ServiceStatus.RELEASED)
-public class SVGExportServiceGUI implements ServiceGUI {
+public class SVGExportServiceGUI extends AbstractServiceGUI {
 	
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		
 		List<Action> actions = new ArrayList<Action>();
-		actions.add( new ExportSVGAction( graph));
+		actions.add( new ExportSVGAction( graph, this));
 		return actions;
 	}
 
 	@Override
-	public int getWeight() {
-		return W_GENERIC + 5;
+	public int getInitialWeight() {
+		return W_EXPORT_DOC + 20;
 	}
 }
 
@@ -52,8 +53,8 @@ class ExportSVGAction extends ExportAction {
 
 	private static final FileFormatDescription FORMAT = new FileFormatDescription("SVG image", "svg");
 	
-	public ExportSVGAction( Graph graph) {
-		super( graph, "STR_SVG", "STR_SVG_descr");
+	public ExportSVGAction( Graph graph, ServiceGUI serviceGUI) {
+		super( graph, "STR_SVG", "STR_SVG_descr", serviceGUI);
 	}
 
 	@Override

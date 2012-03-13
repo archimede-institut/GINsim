@@ -20,6 +20,7 @@ import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GenericGraphAction;
@@ -36,22 +37,26 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor(ServiceGUI.class)
 @GUIFor(ConnectivityService.class)
 @ServiceStatus( ServiceStatus.RELEASED)
-public class ConnectivityServiceGUI implements ServiceGUI {
+public class ConnectivityServiceGUI extends AbstractServiceGUI {
+
+	private int initialWeight = W_GRAPH_COLORIZE + 20;
 
 	@Override
 	public List<Action> getAvailableActions( Graph<?, ?> graph) {
 		List<Action> actions = new ArrayList<Action>();
 		if (graph instanceof ReducedGraph) {
-			actions.add( new ExtractFromSCCGraphAction( (ReducedGraph)graph));
+			actions.add( new ExtractFromSCCGraphAction( (ReducedGraph)graph, this));
+			initialWeight = W_TOOLS_MAIN + 35;
 		} else {
-			actions.add( new ConnectivityColorizeGraphAction( graph));
+			actions.add( new ConnectivityColorizeGraphAction( graph, this));
+			initialWeight = W_GRAPH_COLORIZE + 20;
 		}
 		return actions;
 	}
 
 	@Override
-	public int getWeight() {
-		return W_GENERIC;
+	public int getInitialWeight() {
+		return initialWeight;
 	}
 }
 
@@ -59,8 +64,8 @@ class ConnectivityColorizeGraphAction extends GenericGraphAction {
 	private static final long serialVersionUID = 8294301473668672512L;
 	private Colorizer colorizer;
 	
-	protected ConnectivityColorizeGraphAction( Graph graph) {
-        super( graph, "STR_connectivity", null, "STR_connectivity_descr", null);
+	protected ConnectivityColorizeGraphAction( Graph graph, ServiceGUI serviceGUI) {
+        super( graph, "STR_connectivity", null, "STR_connectivity_descr", null, serviceGUI);
         colorizer = new Colorizer(new ConnectivitySelector());
 
 	}
@@ -77,8 +82,8 @@ class ConnectivityColorizeGraphAction extends GenericGraphAction {
 class ExtractFromSCCGraphAction extends GenericGraphAction {
 	private static final long serialVersionUID = 8294301473668672512L;
 	
-	protected ExtractFromSCCGraphAction( ReducedGraph<?, ?, ?> graph) {
-        super( graph, "STR_connectivity_extract", null, "STR_connectivity_extract_descr", null);
+	protected ExtractFromSCCGraphAction( ReducedGraph<?, ?, ?> graph, ServiceGUI serviceGUI) {
+        super( graph, "STR_connectivity_extract", null, "STR_connectivity_extract_descr", null, serviceGUI);
 
 	}
 	

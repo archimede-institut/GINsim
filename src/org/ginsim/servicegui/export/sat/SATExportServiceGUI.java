@@ -11,6 +11,7 @@ import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.ServiceManager;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.ServiceStatus;
@@ -29,21 +30,21 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor(ServiceGUI.class)
 @StandaloneGUI
 @ServiceStatus(ServiceStatus.RELEASED)
-public class SATExportServiceGUI implements ServiceGUI {
+public class SATExportServiceGUI extends AbstractServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new SATExportAction((RegulatoryGraph) graph));
+			actions.add(new SATExportAction((RegulatoryGraph) graph, this));
 			return actions;
 		}
 		return null;
 	}
 
 	@Override
-	public int getWeight() {
-		return W_MANIPULATION;
+	public int getInitialWeight() {
+		return W_EXPORT_SPECIFIC+30;
 	}
 }
 
@@ -59,8 +60,8 @@ class SATExportAction extends ExportAction<RegulatoryGraph> {
 	
 	private SATConfig config;
 
-	public SATExportAction(RegulatoryGraph graph) {
-		super(graph, "STR_SAT", "STR_SAT_descr");
+	public SATExportAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+		super(graph, "STR_SAT", "STR_SAT_descr", serviceGUI);
 	}
 
 	@Override

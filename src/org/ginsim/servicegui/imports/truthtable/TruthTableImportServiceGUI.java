@@ -14,6 +14,7 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ImportAction;
@@ -30,7 +31,7 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor(ServiceGUI.class)
 @GUIFor(TruthTableImportService.class)
 @ServiceStatus( ServiceStatus.RELEASED)
-public class TruthTableImportServiceGUI implements ServiceGUI {
+public class TruthTableImportServiceGUI extends AbstractServiceGUI {
 
 	public static final FileFormatDescription FORMAT = new FileFormatDescription("TruthTable", "tt");
 
@@ -42,8 +43,8 @@ public class TruthTableImportServiceGUI implements ServiceGUI {
 	}
 	
 	@Override
-	public int getWeight() {
-		return W_MANIPULATION + 1;
+	public int getInitialWeight() {
+		return 2;
 	}
 }
 

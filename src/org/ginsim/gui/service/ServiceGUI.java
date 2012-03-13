@@ -19,25 +19,48 @@ import org.ginsim.core.graph.common.Graph;
 public interface ServiceGUI {
 
 	/**
-	 * Base weight for generic actions: CFC, path search...
+	 * Weight for menu Graph, action affecting the selection
 	 */
-	public static final int W_GENERIC = 0;
+	public static final int W_GRAPH_SELECTION = 0;
 	/**
-	 * Base weight for main action: simulation
+	 * Weight for menu Graph, action affecting the graphicalAttributes
 	 */
-	public static final int W_MAIN = 100;
+	public static final int W_GRAPH_COLORIZE = 500;
+	
 	/**
-	 * Base weight for analysis tools: circuits, stable states
+	 * Weight for menu Tools, action like simulation, stablestates...
 	 */
-	public static final int W_ANALYSIS = 200;
+	public static final int W_TOOLS_MAIN = 5000;
+
 	/**
-	 * Base weight for manipulation tools: reduction
+	 * Weight for menu Toolits, all
 	 */
-	public static final int W_MANIPULATION = 300;
+	public static final int W_TOOLKITS_MAIN = 10000;
+	
 	/**
-	 * Base weight for informative tools: interaction functionality, color state, view logical functions...
+	 * Extra weight for UNDER_DEVELOPMENT actions
 	 */
-	public static final int W_INFO = 400;
+	public static final int W_UNDER_DEVELOPMENT = 100000;
+
+	/**
+	 * Weight for menu export, images/doc
+	 */
+	public static final int W_EXPORT_DOC = 15000;
+	/**
+	 * Weight for menu export, generic graph viz
+	 */
+	public static final int W_EXPORT_GENERIC = 15500;
+	/**
+	 * Weight for menu export, specific file types
+	 */
+	public static final int W_EXPORT_SPECIFIC = 16000;
+
+
+	/**
+	 * An array of the separator
+	 */
+	public static final int[] separators = {W_GRAPH_COLORIZE, W_EXPORT_GENERIC, W_EXPORT_SPECIFIC,  W_UNDER_DEVELOPMENT+W_TOOLS_MAIN, W_UNDER_DEVELOPMENT+W_TOOLKITS_MAIN};
+	
 	
 	
 	/**
@@ -53,13 +76,24 @@ public interface ServiceGUI {
 	public List<Action> getAvailableActions(Graph<?, ?> graph);
 
 	/**
-	 * Give a weight for the service.
+	 * Give a weight for the service, as defined by the developer.
 	 * 
-	 * "Categories" of service should add a weight based on groups defined as constant here.
+	 * @return a positive weight or -1 if unsure
+	 */
+	public int getInitialWeight();
+	
+	/**
+	 * Give the real weight for the service.
 	 * 
 	 * @return a positive weight or -1 if unsure
 	 */
 	public int getWeight();
+
+	/**
+	 * define the new weight of the service
+	 * @param new_weight
+	 */
+	public void setWeight(int new_weight);
 
 }
 

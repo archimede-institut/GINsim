@@ -23,7 +23,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor( ServiceGUI.class)
 @GUIFor( SBMLExportService.class)
-public class SBMLExportServiceGUI implements ServiceGUI {
+public class SBMLExportServiceGUI extends AbstractServiceGUI {
 	
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {

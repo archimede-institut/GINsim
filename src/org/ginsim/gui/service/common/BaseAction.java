@@ -9,6 +9,7 @@ import javax.swing.KeyStroke;
 
 import org.ginsim.common.utils.Translator;
 import org.ginsim.gui.resource.ImageLoader;
+import org.ginsim.gui.service.ServiceGUI;
 
 
 /**
@@ -28,33 +29,39 @@ public abstract class BaseAction extends AbstractAction {
 		return null;
 	}
 
+	private int weight = -1;
+
 	/**
      * 
      * @param name name of the action (menu entry)
      * @param icon for menu and toolbar
      * @param tooltip
      * @param accelerator (ie keyboard bytecut)
+	 * @param serviceGUI 
      */
 	public BaseAction(String name,
 			   ImageIcon icon,
 			   String tooltip,
-			   KeyStroke accelerator) {
-		this(name, icon, tooltip, accelerator, null);
+			   KeyStroke accelerator,
+			   ServiceGUI serviceGUI) {
+		this(name, icon, tooltip, accelerator, null, serviceGUI);
 	}
 
 	public BaseAction(String name,
 			   String icon,
 			   String tooltip,
 			   KeyStroke accelerator,
-			   Integer mnemonic) {
-		this(name, getIcon(icon), tooltip, accelerator, mnemonic);
+			   Integer mnemonic,
+			   ServiceGUI serviceGUI) {
+		this(name, getIcon(icon), tooltip, accelerator, mnemonic, serviceGUI);
 	}
 	
 	public BaseAction(String name,
 			   ImageIcon icon,
 			   String tooltip,
 			   KeyStroke accelerator,
-			   Integer mnemonic) {
+			   Integer mnemonic,
+			   ServiceGUI serviceGUI) {
 		
 		if (mnemonic != null) {
 			this.putValue(Action.MNEMONIC_KEY, mnemonic);
@@ -69,5 +76,20 @@ public abstract class BaseAction extends AbstractAction {
 		if (accelerator != null) {
 			this.putValue( Action.ACCELERATOR_KEY, accelerator );
 		}	 
+		
+		if (serviceGUI != null) {
+			weight = serviceGUI.getWeight();
+		}
 	 }
+	
+	public int getWeight() {
+		return weight;
+	}
+
+	/**
+	 * @param weight the weight to set
+	 */
+	public void setWeight(int weight) {
+		this.weight = weight;
+	}
 }

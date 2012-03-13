@@ -17,36 +17,37 @@ import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromRegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ServiceStatus;
-import org.ginsim.gui.service.common.ToolAction;
+import org.ginsim.gui.service.common.ToolkitAction;
 import org.ginsim.service.tool.regulatoryfunctiontree.RegulatoryFunctionTreeService;
 import org.mangosdk.spi.ProviderFor;
 
 
 @ProviderFor( ServiceGUI.class)
 @GUIFor( RegulatoryFunctionTreeService.class)
-@ServiceStatus( ServiceStatus.UNDER_DEVELOPMENT)
-public class RegulatoryFunctionTreeServiceGUI implements ServiceGUI {
+@ServiceStatus( ServiceStatus.TOOLKIT)
+public class RegulatoryFunctionTreeServiceGUI extends AbstractServiceGUI {
 	
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new RegulatoryFunctionTreeAction( (RegulatoryGraph)graph));
+			actions.add(new RegulatoryFunctionTreeAction( (RegulatoryGraph)graph, this));
 			return actions;
 		}
 		return null;
 	}
 
 	@Override
-	public int getWeight() {
-		return W_INFO + 2;
+	public int getInitialWeight() {
+		return W_TOOLKITS_MAIN + 10;
 	}
 }
 
-class RegulatoryFunctionTreeAction extends ToolAction {
+class RegulatoryFunctionTreeAction extends ToolkitAction {
 	private static final long serialVersionUID = 1040657167135212807L;
 
 	private static final Integer ZERO = new Integer(0);
@@ -54,9 +55,9 @@ class RegulatoryFunctionTreeAction extends ToolAction {
 	private final RegulatoryGraph graph;
 	private final GraphGUI<?, ?, ?> gui;
 	
-	public RegulatoryFunctionTreeAction( RegulatoryGraph graph) {
+	public RegulatoryFunctionTreeAction( RegulatoryGraph graph, ServiceGUI serviceGUI) {
 		
-		super( "STR_treeViewer_regulatoryPlugin", "STR_treeViewer_regulatoryPlugin_descr");
+		super( "STR_treeViewer_regulatoryPlugin", "STR_treeViewer_regulatoryPlugin_descr", serviceGUI);
 		this.graph = graph;
 		this.gui = GUIManager.getInstance().getGraphGUI(graph);
 	}

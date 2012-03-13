@@ -10,6 +10,7 @@ import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.service.ServiceManager;
+import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.GUIFor;
@@ -25,19 +26,20 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor( ServiceGUI.class)
 @GUIFor( BioLayoutExportService.class)
 @ServiceStatus( ServiceStatus.RELEASED)
-public class BiolayoutExportServiceGUI implements ServiceGUI {
+public class BiolayoutExportServiceGUI extends AbstractServiceGUI {
 	
+
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		
 		List<Action> actions = new ArrayList<Action>();
-		actions.add( new ExportBioLayoutAction( graph));
+		actions.add( new ExportBioLayoutAction( graph, this));
 		return actions;
 	}
 
 	@Override
-	public int getWeight() {
-		return W_GENERIC + 2;
+	public int getInitialWeight() {
+		return W_EXPORT_GENERIC + 20;
 	}
 }
 
@@ -52,9 +54,9 @@ class ExportBioLayoutAction extends ExportAction {
 
 	static final FileFormatDescription FORMAT = new FileFormatDescription("biolayout", "layout");
 	
-	public ExportBioLayoutAction( Graph graph) {
+	public ExportBioLayoutAction( Graph graph, ServiceGUI serviceGUI) {
 		
-		super( graph, "STR_biolayout", "STR_biolayout_descr");
+		super( graph, "STR_biolayout", "STR_biolayout_descr", serviceGUI);
 	}
 
 	@Override

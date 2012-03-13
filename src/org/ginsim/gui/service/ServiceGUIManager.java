@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.swing.Action;
 
+import org.ginsim.Launcher;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.service.Service;
@@ -70,17 +71,20 @@ public class ServiceGUIManager{
     				LogManager.error( "Service '" + service.getClass().getName() + "' does not have a declared status. Consider it deprecated.");
     				status = ServiceStatus.DEPRECATED;
     			}
-    			boolean dev_envir = true; // Temporary boolean that must be replaced by a better mechanism
     			boolean rejected;
     			switch( status) {
     			case ServiceStatus.DEPRECATED:
     				rejected = true;
     				break;
     			case ServiceStatus.UNDER_DEVELOPMENT:
-    				rejected = !dev_envir;
+    				rejected = !Launcher.developer_mode;
+    				service.setWeight(ServiceGUI.W_UNDER_DEVELOPMENT);
     				break;
     			case ServiceStatus.RELEASED:
     				rejected = false;
+    				break;
+    			case ServiceStatus.TOOLKIT:
+    				rejected = !Launcher.developer_mode;
     				break;
     			default:
     				rejected = true;
