@@ -6,15 +6,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.IOUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
@@ -32,7 +31,7 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 	protected static final int STARTONLY = 2;
 	protected static final int BOTH = 3;
 	
-	static Map m_entities = new TreeMap();
+	static Map<String, String> m_entities = new HashMap<String, String>();
 	
 	public static void addEntity(String url, String path) {
 		m_entities.put(url, path);
@@ -193,7 +192,17 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
      */
 	public InputSource resolveEntity(String publicId, String systemId)
 	throws SAXException {
-		String path = (String)m_entities.get(systemId);
+		if (systemId == null) {
+			return null;
+		}
+		String path = m_entities.get(systemId);
+		if (path == null) {
+			int last = systemId.lastIndexOf('/');
+			if (last < 0) {
+				last = systemId.lastIndexOf('\\');
+			}
+			path = m_entities.get(systemId.substring(last+1));
+		}
 		if (path != null) {
 			try {
 				InputSource is = new InputSource(IOUtils.getStreamForPath(path));
