@@ -32,6 +32,7 @@ public class GUIManager {
 	private static GUIManager manager;
 	
 	private HashMap<Graph,GUIObject> graphToGUIObject = new HashMap<Graph, GUIObject>();
+	private StartupDialog startupDialog = null;
 
 	/**
 	 * Give access to the manager singleton
@@ -95,8 +96,8 @@ public class GUIManager {
 			graph_gui = createGraphGUI( graph, can_be_saved);
 			MainFrame frame = new MainFrame( graph_gui);
 			frame.setVisible(true);
-			
 			NotificationManager.getManager().registerListener( frame, graph);
+			closeStartupDialog();			
 			return frame;
 		} catch (Exception e) {
 			GUIMessageUtils.openErrorDialog( "STR_unableToOpen");
@@ -540,7 +541,7 @@ public class GUIManager {
 
 	private void noFrameLeft(boolean startup) {
 		if (STARTUPDIALOG) {
-			new StartupDialog();
+			startupDialog = new StartupDialog();
 			return;
 		}
 		
@@ -555,5 +556,18 @@ public class GUIManager {
 	public void exit() {
 		OptionStore.saveOptions();
 		System.exit(0);
+	}
+
+	public void closeStartupDialog() {
+		if (startupDialog == null) {
+			return;
+		}
+		StartupDialog oldDialog = startupDialog;
+		startupDialog = null;
+		oldDialog.close();
+		
+		if (graphToGUIObject.size() == 0) {
+			exit();
+		}
 	}
 }

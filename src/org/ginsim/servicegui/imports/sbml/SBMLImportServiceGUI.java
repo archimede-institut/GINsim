@@ -29,12 +29,9 @@ public class SBMLImportServiceGUI extends AbstractServiceGUI {
 	@Override
 	public List<Action> getAvailableActions( Graph<?, ?> graph) {
 		
-		if( graph instanceof RegulatoryGraph){
-			List<Action> actions = new ArrayList<Action>();
-			actions.add(new SBMLImportAction());
-			return actions;
-		}
-		return null;
+		List<Action> actions = new ArrayList<Action>();
+		actions.add(new SBMLImportAction());
+		return actions;
 	}
 	
 	@Override

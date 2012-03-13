@@ -29,6 +29,7 @@ import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.dnd.GlassPane;
 import org.ginsim.gui.notifications.NotificationPanel;
 import org.ginsim.gui.notifications.NotificationSource;
+import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.shell.editpanel.EditPanel;
 import org.ginsim.gui.shell.editpanel.EditTab;
 import org.ginsim.gui.utils.widgets.Frame;
@@ -77,6 +78,7 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 	public MainFrame(GraphGUI graph_gui) {
 		
 		super("MainFrame", 800, 700);
+		setIconImage(ImageLoader.getImage("gs1.gif"));
 		
         this.graphGUI = graph_gui;
         GUIManager.getInstance().registerGUI( graph_gui, this);

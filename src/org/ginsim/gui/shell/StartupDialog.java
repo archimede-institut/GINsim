@@ -1,12 +1,14 @@
 package org.ginsim.gui.shell;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -16,14 +18,16 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 
-import org.ginsim.common.OptionStore;
 import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.ImageLoader;
+import org.ginsim.gui.service.ServiceGUIManager;
+import org.ginsim.gui.service.common.ImportAction;
 import org.ginsim.gui.shell.callbacks.FileCallBack;
 
 public class StartupDialog extends JFrame {
@@ -36,6 +40,7 @@ public class StartupDialog extends JFrame {
 		setSize(500, 500);
 		setMinimumSize(getSize());
 		setResizable(false);
+		setIconImage(ImageLoader.getImage("gs1.gif"));
 		JPanel content = new JPanel(new GridBagLayout());
 		setContentPane(content);
 		
@@ -76,12 +81,19 @@ public class StartupDialog extends JFrame {
 		cst = new GridBagConstraints();
 		cst.gridx = 0;
 		cst.gridy = 0;
-		panel.add(new JButton( new ActionNew(this)), cst);
+		panel.add(new JButton( FileCallBack.getActionNew()), cst);
 		
 		cst = new GridBagConstraints();
 		cst.gridx = 1;
 		cst.gridy = 0;
-		panel.add(new JButton( new ActionOpen(this)), cst);
+		panel.add(new JButton( FileCallBack.getActionOpen()), cst);
+		
+		
+		// get import actions
+		cst = new GridBagConstraints();
+		cst.gridx = 2;
+		cst.gridy = 0;
+		panel.add(new JButton(new ActionImport(this)), cst);
 		
 		panel = new JPanel( new GridBagLayout());
 		panel.setBorder( BorderFactory.createTitledBorder("Recent files"));
@@ -134,8 +146,9 @@ public class StartupDialog extends JFrame {
 	}
 
 	public void close() {
-		OptionStore.saveOptions();
-		System.exit(0);
+		GUIManager.getInstance().closeStartupDialog();
+		setVisible(false);
+		dispose();
 	}
 
 	public void setMessage(String string) {
@@ -144,52 +157,33 @@ public class StartupDialog extends JFrame {
 
 }
 
-class ActionNew extends AbstractAction {
-	private final StartupDialog dialog;
+class ActionImport extends AbstractAction {
 	
-	public ActionNew(StartupDialog dialog) {
-		super("New regulatory graph");
-		this.dialog = dialog;
+	public ActionImport(StartupDialog dialog) {
+		super("Import");
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		GUIManager.getInstance().newFrame();
-		dialog.dispose();
-	}
-}
-
-class ActionOpen extends AbstractAction {
-	private final StartupDialog dialog;
-	
-	public ActionOpen(StartupDialog dialog) {
-		super("Open");
-		this.dialog = dialog;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		GsFileFilter ffilter = new GsFileFilter();
-		ffilter.setExtensionList(new String[] { "ginml", "zginml" }, "GINsim files");
-		String filename = FileSelectionHelper.selectOpenFilename(dialog, ffilter);
-		if (filename == null) {
-			return;
+		JPopupMenu importMenu = new JPopupMenu();
+		List<Action> actions = ServiceGUIManager.getManager().getAvailableActions(null);
+		for (Action action: actions) {
+			if (action instanceof ImportAction) {
+				importMenu.add(action);
+			}
 		}
 		
-		try {
-			Graph<?, ?> graph = GraphManager.getInstance().open(filename);
-			if (graph == null) {
-				dialog.setMessage("Could not open file");
-			} else {
-				GUIManager.getInstance().newFrame(graph);
-				dialog.dispose();
-			}
-		} catch (GsException e1) {
-			dialog.setMessage("Could not open file, see logs");
-			LogManager.error(e1);
+		Object src = e.getSource();
+		Component component;
+		if (src instanceof Component) {
+			component = (Component)src;
+		} else {
+			component = null;
 		}
+		importMenu.show(component, 0, component.getHeight());
 	}
 }
+
 
 class ActionQuit extends AbstractAction {
 	private final StartupDialog dialog;
