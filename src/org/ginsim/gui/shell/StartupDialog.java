@@ -19,6 +19,7 @@ import javax.swing.JPanel;
 
 import org.ginsim.common.OptionStore;
 import org.ginsim.common.exception.GsException;
+import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
@@ -28,6 +29,8 @@ import org.ginsim.gui.shell.callbacks.FileCallBack;
 public class StartupDialog extends JFrame {
 	private static final long serialVersionUID = 2935330158118845149L;
 
+	private final JLabel message;
+	
 	public StartupDialog() {
 		super("GINsim");
 		setSize(500, 500);
@@ -53,12 +56,20 @@ public class StartupDialog extends JFrame {
 		cst.weightx = 1;
 		content.add(header, cst);
 		
+		cst = new GridBagConstraints();
+		cst.fill = GridBagConstraints.HORIZONTAL;
+		cst.anchor = GridBagConstraints.NORTH;
+		cst.gridwidth = 3;
+		cst.weightx = 1;
+		cst.gridy = 1;
+		message = new JLabel();
+		content.add(message, cst);
 		
 		JPanel panel = new JPanel( new GridBagLayout());
 		panel.setBorder( BorderFactory.createTitledBorder("Start with ..."));
 		cst = new GridBagConstraints();
 		cst.fill = GridBagConstraints.HORIZONTAL;
-		cst.gridy = 1;
+		cst.gridy = 2;
 		cst.weightx = 1;
 		content.add(panel, cst);
 		
@@ -76,7 +87,7 @@ public class StartupDialog extends JFrame {
 		panel.setBorder( BorderFactory.createTitledBorder("Recent files"));
 		cst = new GridBagConstraints();
 		cst.fill = GridBagConstraints.BOTH;
-		cst.gridy = 2;
+		cst.gridy = 3;
 		cst.gridx = 0;
 		cst.weightx = 1;
 		cst.weighty = 1;
@@ -100,7 +111,7 @@ public class StartupDialog extends JFrame {
 		panel.setBorder( BorderFactory.createTitledBorder("Help"));
 		cst = new GridBagConstraints();
 		cst.fill = GridBagConstraints.HORIZONTAL;
-		cst.gridy = 3;
+		cst.gridy = 4;
 		cst.gridx = 0;
 		cst.weightx = 1;
 		content.add(panel, cst);
@@ -108,7 +119,7 @@ public class StartupDialog extends JFrame {
 		panel.add( new JLabel("TODO"));
 		
 		cst = new GridBagConstraints();
-		cst.gridy = 4;
+		cst.gridy = 5;
 		cst.gridx = 0;
 		cst.anchor = GridBagConstraints.SOUTHEAST;
 		content.add(new JButton( new ActionQuit(this)), cst);
@@ -125,6 +136,10 @@ public class StartupDialog extends JFrame {
 	public void close() {
 		OptionStore.saveOptions();
 		System.exit(0);
+	}
+
+	public void setMessage(String string) {
+		message.setText(string);		
 	}
 
 }
@@ -154,18 +169,24 @@ class ActionOpen extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		String filename = FileSelectionHelper.selectOpenFilename(dialog);
+		GsFileFilter ffilter = new GsFileFilter();
+		ffilter.setExtensionList(new String[] { "ginml", "zginml" }, "GINsim files");
+		String filename = FileSelectionHelper.selectOpenFilename(dialog, ffilter);
 		if (filename == null) {
 			return;
 		}
 		
 		try {
 			Graph<?, ?> graph = GraphManager.getInstance().open(filename);
-			GUIManager.getInstance().newFrame();
-			dialog.dispose();
+			if (graph == null) {
+				dialog.setMessage("Could not open file");
+			} else {
+				GUIManager.getInstance().newFrame(graph);
+				dialog.dispose();
+			}
 		} catch (GsException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			dialog.setMessage("Could not open file, see logs");
+			LogManager.error(e1);
 		}
 	}
 }
