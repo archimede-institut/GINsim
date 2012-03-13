@@ -20,7 +20,7 @@ public class StateInRegGraphColorizerPanel extends ColorizerPanel {
 	}
 	
 	@Override
-	protected void doColorize() {
+	public void doColorize() {
 		((StateInRegGraphSelector) colorizer.getSelector()).setState(state);
 		super.doColorize();
 	}

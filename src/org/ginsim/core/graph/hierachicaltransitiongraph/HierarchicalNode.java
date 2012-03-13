@@ -374,8 +374,21 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 			for (int i = 0; i < t.length; i++) {
 				s.append(String.valueOf(t[i]).charAt(0));
 			}
-			return s.toString();
-		} 
+			switch (type) {
+			case TYPE_TRANSIENT_COMPONENT:
+				return "i-"+s.toString();
+			case TYPE_STABLE_STATE:
+				return "ss-"+s.toString();
+			}
+		}
+		switch (type) {
+		case TYPE_TRANSIENT_COMPONENT:
+			return "i-"+size;
+		case TYPE_TERMINAL_CYCLE:
+			return "ca-"+size;
+		case TYPE_TRANSIENT_CYCLE:
+			return "ct"+size;
+		}
 		return "#"+size;
 	}
 	public String toLongString() {

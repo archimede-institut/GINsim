@@ -94,6 +94,17 @@ public class StatesSet {
 		this.root = (OMDDNode) other.root.clone();
 	}
 
+	/**
+	 * Initialize a new set of states
+	 */
+	public StatesSet(OMDDNode omdd, byte[] childsCount) {
+		this.childsCount = childsCount;
+		this.size = 0;
+		this.size_consistancy = false;
+		this.root = (OMDDNode) omdd;
+		updateSize();
+	}
+
 /* **************** ADD STATE ************/	
 	
 	/**

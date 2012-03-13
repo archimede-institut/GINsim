@@ -1,8 +1,11 @@
 package org.ginsim.servicegui.tool.circuit;
 
 import java.awt.CardLayout;
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -106,6 +109,8 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 
 	private ConnectivityResult resultAlgoConnectivity;
 
+	private JButton copyContextButton;
+
     /**
      * This is the default constructor
      * 
@@ -195,6 +200,8 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         	c.fill = GridBagConstraints.NONE;
         	c.gridwidth = 1;
             resultPanel.add(getViewContextButton(), c);
+        	c.gridx++;
+            resultPanel.add(getCopyContextButton(), c);
             
         	c.gridx++;
             resultPanel.add(get_pythonPanel(), c);
@@ -211,7 +218,20 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         return resultPanel;
     }
     
-    private JButton getViewContextButton() {
+    private Component getCopyContextButton() {
+       	if (copyContextButton == null) {
+       		copyContextButton = new JButton(Translator.getString("STR_circuit_copyContext"));
+       		copyContextButton.setEnabled(false);
+       		copyContextButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					copyContext();
+				}
+			});
+    	}
+		return copyContextButton;
+	}
+
+	private JButton getViewContextButton() {
     	if (viewContextButton == null) {
     		viewContextButton = new JButton(Translator.getString("STR_circuit_viewContext"));
     		viewContextButton.setEnabled(false);
@@ -707,6 +727,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         treemodel.reload(this);
         showCircuit();
         viewContextButton.setEnabled(true);
+        copyContextButton.setEnabled(true);
     }
 
     private JTextArea getJTextArea() {
@@ -741,6 +762,23 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 		parser.setParameter(TreeBuilderFromCircuit.PARAM_INITIALCIRCUITDESC, getSelectedContextFromTreeTable().getCircuit());
 		parser.setParameter(TreeBuilderFromCircuit.PARAM_ALLCONTEXTS, getCircuitDescriptors());
 		GUIManager.getInstance().newFrame(tree,false);
+	}
+	
+    /**
+     * Copy the selected context of functionnality in the clipboard
+     */
+	private void copyContext() {
+		Clipboard clipboard = getToolkit ().getSystemClipboard ();
+		CircuitDescr circuit = getSelectedContextFromTreeTable().getCircuit();
+		OmsddNode[] contexts = circuit.getContext();
+		StringBuffer string = new StringBuffer();
+		for (int i = 0; i < contexts.length - 1; i++) {
+			string.append(contexts[i].write());
+			string.append("#");
+		}
+		string.append(contexts[contexts.length-1].write());
+		StringSelection data = new StringSelection(string.toString());
+		clipboard.setContents(data, data);
 	}
 	
 	/**
