@@ -4,7 +4,8 @@
 package org.ginsim.gui.service;
 
 /**
- * 
+ * This class contains the weight used to order the services' actions in the menus
+ * The services must inherit from this class
  *
  */
 public abstract class AbstractServiceGUI implements ServiceGUI {

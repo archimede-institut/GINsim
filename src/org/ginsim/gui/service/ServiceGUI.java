@@ -14,6 +14,7 @@ import org.ginsim.core.graph.common.Graph;
  * 
  * @author Lionel Spinelli
  * @author Aurelien Naldi
+ * @author Duncan Berenguier
  *
  */
 public interface ServiceGUI {
@@ -58,6 +59,7 @@ public interface ServiceGUI {
 
 	/**
 	 * An array of the separator
+	 * The desired seprators must be ordered by weight
 	 */
 	public static final int[] separators = {W_GRAPH_COLORIZE, W_EXPORT_GENERIC, W_EXPORT_SPECIFIC,  W_UNDER_DEVELOPMENT+W_TOOLS_MAIN, W_UNDER_DEVELOPMENT+W_TOOLKITS_MAIN};
 	

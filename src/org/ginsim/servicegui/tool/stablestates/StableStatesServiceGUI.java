@@ -76,7 +76,7 @@ class NewStableStatesAction extends ToolAction {
 	
 	public NewStableStatesAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
 		
-		super( "TEST stable state", "(NEW)", serviceGUI);
+		super( Translator.getString("STR_stableStates")+" (new)", "(new implementation)", serviceGUI);
 		this.graph = graph;
 	}
 
