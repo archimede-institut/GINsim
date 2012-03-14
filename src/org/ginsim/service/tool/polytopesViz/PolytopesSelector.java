@@ -15,8 +15,8 @@ public class PolytopesSelector extends Selector {
 	private static final String CAT_OUT = "terminal-trivial";
 	public static final String CAT_COMPLEX = "complex";
 	
-	public static final NodeStyle STYLE_IN	= new NodeStyle(Color.green.darker(), Color.white, NodeBorder.SIMPLE, null);
-	public static final NodeStyle STYLE_OUT	= new NodeStyle(Color.red.darker(), Color.white, NodeBorder.SIMPLE, null);
+	public static final NodeStyle STYLE_IN	= new NodeStyle(Color.green.darker(), Color.black, Color.white, NodeBorder.SIMPLE, null);
+	public static final NodeStyle STYLE_OUT	= new NodeStyle(Color.red.darker(),   Color.black, Color.white, NodeBorder.SIMPLE, null);
 	
 	private StatesSet polytope;
 	

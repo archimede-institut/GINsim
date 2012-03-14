@@ -31,6 +31,7 @@ public class NodeStyle implements Style {
 
 	public final static String CSS_BACKGROUND		= "background";
 	public final static String CSS_FOREGROUND		= "foreground";
+	public final static String CSS_TEXTCOLOR		= "text-color";
 	public final static String CSS_SHAPE			= "shape";
 	public final static String CSS_BORDER			= "border";
 	
@@ -42,6 +43,7 @@ public class NodeStyle implements Style {
 
 	public Color background;
 	public Color foreground;
+	public Color textcolor;
 	public NodeBorder border;
 	public NodeShape shape;
 	
@@ -51,17 +53,7 @@ public class NodeStyle implements Style {
 	 * A new style from the with all values to NULL
 	 */
 	public NodeStyle() {
-		this(null, null, null, null);
-	}
-
-	/**
-	 * A new Style defining only colors.
-	 * 
-	 * @param background
-	 * @param foreground
-	 */
-	public NodeStyle(Color background, Color foreground) {
-		this(background, foreground, null, null);
+		this(null, null, null, null, null);
 	}
 
 	/**
@@ -73,9 +65,10 @@ public class NodeStyle implements Style {
 	 * 
 	 * @see NodeAttributesReader
 	 */
-	public NodeStyle(Color background, Color foreGround, NodeBorder border, NodeShape shape) {
+	public NodeStyle(Color background, Color foreground, Color textcolor, NodeBorder border, NodeShape shape) {
 		this.background = background;
-		this.foreground = foreGround;
+		this.foreground = foreground;
+		this.textcolor  = textcolor;
 		this.border 	= border;
 		this.shape 		= shape;
 	}
@@ -88,6 +81,7 @@ public class NodeStyle implements Style {
 	public NodeStyle(AttributesReader areader) {
 		background 	= ((NodeAttributesReader) areader).getBackgroundColor();
 		foreground 	= ((NodeAttributesReader) areader).getForegroundColor();
+		textcolor 	= ((NodeAttributesReader) areader).getTextColor();
 		border 		= ((NodeAttributesReader) areader).getBorder();
 		shape 		= ((NodeAttributesReader) areader).getShape();
 	}
@@ -99,6 +93,7 @@ public class NodeStyle implements Style {
 	public NodeStyle(Style s) {
 		background 	= ((NodeStyle) s).background;
 		foreground 	= ((NodeStyle) s).foreground;
+		textcolor 	= ((NodeStyle) s).textcolor;
 		border 		= ((NodeStyle) s).border;
 		shape 		= ((NodeStyle) s).shape;
 	}
@@ -111,6 +106,7 @@ public class NodeStyle implements Style {
 		NodeStyle s = (NodeStyle)sa; 
 		if (s.background != null)   background = s.background;
 		if (s.foreground != null)   foreground = s.foreground;
+		if (s.textcolor != null)    textcolor = s.textcolor;
 		if (s.border != null)       border     = s.border;		
 		if (s.shape != null)        shape      = s.shape;
 	}
@@ -122,6 +118,7 @@ public class NodeStyle implements Style {
 		NodeAttributesReader nreader = (NodeAttributesReader)areader;
 		if (background != null) nreader.setBackgroundColor(background);
 		if (foreground != null) nreader.setForegroundColor(foreground);
+		if (textcolor != null)  nreader.setTextColor(textcolor);
 		if (border != null)     nreader.setBorder(border);
 		if (shape != null)      nreader.setShape(shape);
 		areader.refresh();
@@ -146,6 +143,7 @@ public class NodeStyle implements Style {
 		}
 		if (background != null) s += tabs+CSS_BACKGROUND+": "+DataUtils.getColorCode(background)+"\n"; 
 		if (foreground != null) s += tabs+CSS_FOREGROUND+": "+DataUtils.getColorCode(foreground)+"\n";
+		if (textcolor != null) s += tabs+CSS_TEXTCOLOR+": "+DataUtils.getColorCode(textcolor)+"\n";
 		if (border != null) {
 			s += tabs+CSS_BORDER+": ";
 			switch (border) {
@@ -177,6 +175,7 @@ public class NodeStyle implements Style {
 	public static Style fromString(String []lines) throws PatternSyntaxException, CSSSyntaxException {
 		Color background  = null;
 		Color foreground  = null;
+		Color textColor  = null;
 		NodeShape shape   = null;
 		NodeBorder border = null;
 		
@@ -199,6 +198,12 @@ public class NodeStyle implements Style {
 				} catch (NumberFormatException e) {
 					throw new CSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
 				}
+			} else if (key.equals(CSS_TEXTCOLOR)) {
+				try {
+					textColor = DataUtils.getColorFromCode(value);
+				} catch (NumberFormatException e) {
+					throw new CSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
+				}
 			} else if (key.equals(CSS_SHAPE)) {
 				if 		(value.equals(CSS_SHAPE_ELLIPSE)) 	shape = NodeShape.ELLIPSE;
 				else if (value.equals(CSS_SHAPE_RECTANGLE)) shape = NodeShape.RECTANGLE;
@@ -212,7 +217,7 @@ public class NodeStyle implements Style {
 				throw new CSSSyntaxException("Node has no key "+key+" at line "+i+" : "+lines[i]+". Must be "+CSS_BACKGROUND+", "+CSS_FOREGROUND+", "+CSS_SHAPE+" or "+CSS_BORDER);
 			}
 		}
-		return new NodeStyle(background, foreground, border, shape);
+		return new NodeStyle(background, foreground, textColor, border, shape);
 	}
 	public Object clone() {
 		return new NodeStyle(this);

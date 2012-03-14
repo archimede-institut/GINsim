@@ -103,15 +103,15 @@ public class SCCGraphAlgo extends Thread {
 			if (component.isTrivial()) {
             	if (component.isTransient(graph)) {
                 	vreader.setBackgroundColor(Color.green.darker());
-            		vreader.setForegroundColor(Color.white);
+            		vreader.setTextColor(Color.white);
             	} else {
             		vreader.setBackgroundColor(Color.red.darker());
-                	vreader.setForegroundColor(Color.white);
+                	vreader.setTextColor(Color.white);
             	}
 			} else {
             	Color backgroundColor = ColorPalette.blueHues[index++%ColorPalette.blueHues.length];
 				vreader.setBackgroundColor(backgroundColor);
-            	vreader.setForegroundColor(ColorPalette.getConstrastedForegroundColor(backgroundColor));
+            	vreader.setTextColor(ColorPalette.getConstrastedForegroundColor(backgroundColor));
 			}
             if (reducedGraph.getOutgoingEdges(component) == null) {	//  set the node's shape to ellipse if the node has no outgoing edges (is terminal).
                 vreader.setShape(NodeShape.ELLIPSE);

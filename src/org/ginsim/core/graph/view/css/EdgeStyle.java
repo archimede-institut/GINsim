@@ -22,7 +22,9 @@ import org.ginsim.core.graph.view.EdgeEnd;
  */
 public class EdgeStyle implements Style {
 	public final static float NULL_BORDER = -99;
+	public final static int NULL_CURVE = -99;
 
+	
 	public final static String CSS_LINECOLOR		= "line-color";
 	public final static String CSS_SHAPE			= "shape";
 	public final static String CSS_SHAPE_STRAIGHT	= "straight";
@@ -35,7 +37,7 @@ public class EdgeStyle implements Style {
 	public final static String CSS_BORDER			= "border";
 	
 	public Color lineColor;
-	public boolean curve;
+	public int curve;
 	public EdgeEnd lineEnd;
 	public float border;
 	
@@ -46,11 +48,11 @@ public class EdgeStyle implements Style {
 	 * A new style from the with all values to NULL
 	 */
 	public EdgeStyle() {
-		this(null, null, false, NULL_BORDER);
+		this(null, null, NULL_CURVE, NULL_BORDER);
 	}
 
 	public EdgeStyle(Color lineColor) {
-		this(lineColor, null, false, NULL_BORDER);
+		this(lineColor, null, NULL_CURVE, NULL_BORDER);
 	}
 
 	
@@ -62,7 +64,7 @@ public class EdgeStyle implements Style {
 	 * 
 	 * @see EdgeAttributesReader
 	 */
-	public EdgeStyle(Color lineColor, EdgeEnd lineEnd, boolean curve, float border) {
+	public EdgeStyle(Color lineColor, EdgeEnd lineEnd, int curve, float border) {
 		this.lineColor	= lineColor;
 		this.lineEnd 	= lineEnd;
 		this.curve 		= curve;
@@ -75,7 +77,7 @@ public class EdgeStyle implements Style {
  	 */
 	public EdgeStyle(AttributesReader areader) {
 		lineColor 	= ((EdgeAttributesReader) areader).getLineColor();
-		curve 		= ((EdgeAttributesReader) areader).isCurve();
+		curve 		= (((EdgeAttributesReader) areader).isCurve()?1:0);
 		lineEnd 	= ((EdgeAttributesReader) areader).getLineEnd();
 		border	 	= ((EdgeAttributesReader) areader).getLineWidth();
 	}
@@ -96,12 +98,12 @@ public class EdgeStyle implements Style {
 		if (((EdgeStyle) s).lineColor != null)	lineColor 	= ((EdgeStyle) s).lineColor;
 		if (((EdgeStyle) s).lineEnd != null)		lineEnd 	= ((EdgeStyle) s).lineEnd;		
 		if (((EdgeStyle) s).border != NULL_BORDER)			border 		= ((EdgeStyle) s).border;
-		curve = ((EdgeStyle) s).curve;
+		if (((EdgeStyle) s).curve != NULL_CURVE)	curve = ((EdgeStyle) s).curve;
 	}
 
 	public void apply(AttributesReader areader) {
 		if (lineColor != null)	((EdgeAttributesReader) areader).setLineColor(lineColor);
-		((EdgeAttributesReader) areader).setCurve(curve);
+		if (curve != NULL_CURVE) ((EdgeAttributesReader) areader).setCurve(curve==1);
 		if (lineEnd != null) 		((EdgeAttributesReader) areader).setLineEnd(lineEnd);
 		if (border != NULL_BORDER) 			((EdgeAttributesReader) areader).setLineWidth(border);
 		areader.refresh();
@@ -124,7 +126,7 @@ public class EdgeStyle implements Style {
 			tabs += "\t";
 		}
 		if (lineColor!= null) s += tabs+CSS_LINECOLOR+": "+DataUtils.getColorCode(lineColor)+"\n";
-		if (curve) s += tabs+CSS_SHAPE+": "+(curve ? CSS_SHAPE_CURVE:CSS_SHAPE_STRAIGHT)+"\n";
+		if (curve != NULL_CURVE) s += tabs+CSS_SHAPE+": "+(curve==1 ? CSS_SHAPE_CURVE:CSS_SHAPE_STRAIGHT)+"\n";
 		if (border != NULL_BORDER) s += tabs+CSS_BORDER+": "+border+"\n";
 		if (lineEnd != null) {
 			s += tabs+CSS_LINEEND+": ";
@@ -157,7 +159,7 @@ public class EdgeStyle implements Style {
 	 */
 	public static Style fromString(String []lines) throws PatternSyntaxException, CSSSyntaxException {
 		Color lineColor = null;
-		boolean curve = false;
+		int curve = NULL_CURVE;
 		EdgeEnd lineEnd = null;
 		float border = NULL_BORDER;
 		
@@ -175,8 +177,8 @@ public class EdgeStyle implements Style {
 					throw new CSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
 				}
 			} else if (key.equals(CSS_SHAPE)) {
-				if 		(value.equals(CSS_SHAPE_CURVE)) 	curve = true;
-				else if (value.equals(CSS_SHAPE_STRAIGHT)) 	curve = false;
+				if 		(value.equals(CSS_SHAPE_CURVE)) 	curve = 1;
+				else if (value.equals(CSS_SHAPE_STRAIGHT)) 	curve = 0;
 				else throw new CSSSyntaxException("Unknown edge shape at line "+i+" : "+lines[i]+". Must be "+CSS_SHAPE_CURVE+" or "+CSS_SHAPE_STRAIGHT);
 			} else if (key.equals(CSS_LINEEND)) {
 				if 		(value.equals(CSS_LINEEND_POSITIVE)) 	lineEnd = EdgeEnd.POSITIVE;

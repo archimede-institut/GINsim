@@ -36,10 +36,10 @@ public class RegulatoryAnimatorSelector extends Selector {
 	static {	
 		int step = 256/(MAX_STYLES+1);
 		for (int k = 0 ; k <= MAX_STYLES ; k++) {
-			STYLE_NODES[k] = new NodeStyle(new Color(255-k*step,  255, 255-k*step), 	Color.black, NodeStyle.NULL_BORDER, NodeStyle.NULL_SHAPE);
+			STYLE_NODES[k] = new NodeStyle(new Color(255-k*step,  255, 255-k*step), null, Color.black, null, null);
 			CAT_NODES[k] = String.valueOf(k);
 		}
-		STYLE_NODES[STAR] = new NodeStyle(new Color(0, 127, 255), Color.black, NodeStyle.NULL_BORDER, NodeStyle.NULL_SHAPE);
+		STYLE_NODES[STAR] = new NodeStyle(new Color(0, 127, 255), null, Color.black, null,null);
 		CAT_NODES[STAR] = "*";
 	}	
 

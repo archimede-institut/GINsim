@@ -18,9 +18,9 @@ public class ConnectivitySelector extends Selector {
 	private static final String CAT_TERMINAL_TRIVIAL = "terminal-trivial";
 	public static final String CAT_COMPLEX = "complex";
 	
-	public static final NodeStyle STYLE_TRANSIENT_TRIVIAL	= new NodeStyle(Color.green.darker(), Color.white, NodeBorder.SIMPLE, NodeShape.RECTANGLE);
-	public static final NodeStyle STYLE_TERMINAL_TRIVIAL	= new NodeStyle(Color.red.darker(), Color.white, NodeBorder.SIMPLE, NodeShape.ELLIPSE);
-	public static final NodeStyle STYLE_COMPLEX 			= new NodeStyle(Color.blue.darker(), null, NodeBorder.SIMPLE, NodeShape.RECTANGLE);
+	public static final NodeStyle STYLE_TRANSIENT_TRIVIAL	= new NodeStyle(Color.green.darker(), Color.black, Color.white, NodeBorder.SIMPLE, NodeShape.RECTANGLE);
+	public static final NodeStyle STYLE_TERMINAL_TRIVIAL	= new NodeStyle(Color.red.darker(),   Color.black, Color.white, NodeBorder.SIMPLE, NodeShape.ELLIPSE);
+	public static final NodeStyle STYLE_COMPLEX 			= new NodeStyle(Color.blue.darker(),  Color.black, Color.white, NodeBorder.SIMPLE, NodeShape.RECTANGLE);
 	
 	private List<NodeReducedData> cacheComponents;
 	private int totalComplexComponents;
@@ -81,7 +81,7 @@ public class ConnectivitySelector extends Selector {
 			NodeStyle style = (NodeStyle)STYLE_COMPLEX.clone();
 			int color = Integer.parseInt(category.substring(index+1)); 
 			style.background = new Color(color);
-			style.foreground = ColorPalette.getConstrastedForegroundColor(style.background);
+			style.textcolor = ColorPalette.getConstrastedForegroundColor(style.background);
 			return style;
 		}
 	}

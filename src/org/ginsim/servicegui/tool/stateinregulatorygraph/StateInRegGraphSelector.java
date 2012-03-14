@@ -38,10 +38,10 @@ public class StateInRegGraphSelector extends Selector {
 	static {	
 		int step = 256/(MAX_STYLES+1);
 		for (int k = 0 ; k <= MAX_STYLES ; k++) {
-			STYLE_NODES[k] = new NodeStyle(new Color(255-k*step,  255, 255-k*step), Color.black);
+			STYLE_NODES[k] = new NodeStyle(new Color(255-k*step,  255, 255-k*step), Color.black, Color.black, null, null);
 			CAT_NODES[k] = String.valueOf(k);
 		}
-		STYLE_NODES[STAR] = new NodeStyle(new Color(0, 127, 255), Color.black);
+		STYLE_NODES[STAR] = new NodeStyle(new Color(0, 127, 255), Color.black, Color.black, null, null);
 		CAT_NODES[STAR] = "*";
 	}	
 

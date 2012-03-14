@@ -20,10 +20,10 @@ public class PathFindingSelector extends Selector {
 	public static final String CAT_OUTOFPATH_NODE = "outpath-node";
 	public static final String CAT_OUTOFPATH_EDGE = "outpath-edge";
 	
-	public static final EdgeStyle STYLE_PATH_EDGE			= new EdgeStyle(Color.blue,  null, false,  3);
-	public static final NodeStyle STYLE_PATH_NODE			= new NodeStyle(Color.green, Color.white, null, null);
-	public static final EdgeStyle STYLE_OUTOFPATH_EDGE		= new EdgeStyle(Color.gray,  null, false,  1);
-	public static final NodeStyle STYLE_OUTOFPATH_NODE	= new NodeStyle(Color.white,     Color.gray, null, null);
+	public static final EdgeStyle STYLE_PATH_EDGE			= new EdgeStyle(Color.blue,  null, EdgeStyle.NULL_CURVE,  3);
+	public static final NodeStyle STYLE_PATH_NODE			= new NodeStyle(Color.green, null, Color.white, null, null);
+	public static final EdgeStyle STYLE_OUTOFPATH_EDGE		= new EdgeStyle(Color.gray,  null, EdgeStyle.NULL_CURVE,  1);
+	public static final NodeStyle STYLE_OUTOFPATH_NODE		= new NodeStyle(Color.white, null, Color.gray, null, null);
 	
 	private static final Object CACHE_PATH = "PATH";
 	
