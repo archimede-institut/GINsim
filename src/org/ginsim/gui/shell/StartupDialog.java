@@ -29,6 +29,7 @@ import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.service.ServiceGUIManager;
 import org.ginsim.gui.service.common.ImportAction;
 import org.ginsim.gui.shell.callbacks.FileCallBack;
+import org.ginsim.gui.shell.callbacks.HelpCallBack;
 
 public class StartupDialog extends JFrame {
 	private static final long serialVersionUID = 2935330158118845149L;
@@ -128,7 +129,10 @@ public class StartupDialog extends JFrame {
 		cst.weightx = 1;
 		content.add(panel, cst);
 		
-		panel.add( new JLabel("TODO"));
+		List<Action> actions = HelpCallBack.getActions();
+		for (Action action: actions) {
+			panel.add(new JButton( action));
+		}
 		
 		cst = new GridBagConstraints();
 		cst.gridy = 5;
