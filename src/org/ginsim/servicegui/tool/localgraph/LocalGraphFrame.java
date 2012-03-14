@@ -32,6 +32,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.utils.data.SimpleStateListTableModel;
@@ -156,7 +157,6 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 	}
 	
 	public void actionPerformed(ActionEvent e) {
-		GraphSelection<DynamicNode, Edge<DynamicNode>> selection = GUIManager.getInstance().getGraphGUI(dynGraph).getSelection();
 		if (e.getSource() == colorizeButton) {
 			if (lg.getFunctionality() != null) {	
 				if (isColorized) {
@@ -165,28 +165,35 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 					doColorize();
 				}
 			}
-		} else if (e.getSource() == addStatesButton) {
-			List<DynamicNode> selected = selection.getSelectedNodes();
-			if (selected != null) {
-				List states = new ArrayList();
-				for (DynamicNode state: selected) {
-					states.add(state.state);
+			return;
+		}
+		
+		GraphGUI graphGUI = GUIManager.getInstance().getGraphGUI(dynGraph);
+		if (graphGUI != null) {
+			GraphSelection<DynamicNode, Edge<DynamicNode>> selection = graphGUI.getSelection();
+			if (e.getSource() == addStatesButton) {
+				List<DynamicNode> selected = selection.getSelectedNodes();
+				if (selected != null) {
+					List states = new ArrayList();
+					for (DynamicNode state: selected) {
+						states.add(state.state);
+					}
+					lg.setStates(states);
+					sst.setStates(states);
 				}
-				lg.setStates(states);
-				sst.setStates(states);
-			}
-		} else if (e.getSource() == replaceStatesButton) {
-			List<DynamicNode> selected = selection.getSelectedNodes();
-			if (selected != null) {
-				sst.ssl.data.clear();
-				List states = new ArrayList();
-				for (DynamicNode state: selected) {
-					states.add(state.state);
+			} else if (e.getSource() == replaceStatesButton) {
+				List<DynamicNode> selected = selection.getSelectedNodes();
+				if (selected != null) {
+					sst.ssl.data.clear();
+					List states = new ArrayList();
+					for (DynamicNode state: selected) {
+						states.add(state.state);
+					}
+					lg.setStates(states);
+					sst.setStates(states);
 				}
-				lg.setStates(states);
-				sst.setStates(states);
 			}
-			}
+		}
 
 	}
 	
