@@ -20,10 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
-import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.log.LogManager;
-import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.service.ServiceGUIManager;
@@ -36,7 +32,7 @@ public class StartupDialog extends JFrame {
 
 	private final JLabel message;
 	
-	public StartupDialog() {
+	public StartupDialog(boolean startup) {
 		super("GINsim");
 		setSize(500, 500);
 		setMinimumSize(getSize());
@@ -49,7 +45,12 @@ public class StartupDialog extends JFrame {
 		Image logo = ImageLoader.getImage("gs1.gif");
 		JLabel logoLabel = new JLabel(new ImageIcon( logo ));
 		header.add(logoLabel);
-		JLabel title = new JLabel("Welcome to GINsim");
+		JLabel title; 
+		if (startup) {
+			title = new JLabel("Welcome to GINsim");
+		} else {
+			title = new JLabel("Quit GINsim ?");
+		}
 		header.setBackground(Color.DARK_GRAY);
 		title.setForeground(Color.WHITE);
 		title.setFont(new Font("Serif", Font.BOLD, 28));

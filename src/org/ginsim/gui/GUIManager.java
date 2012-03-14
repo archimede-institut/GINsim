@@ -225,6 +225,9 @@ public class GUIManager {
 		// Construction of the Vector of graph is required to avoid the ConcurrentModificationException
 		// a loop on the graphToGUIObject.keySet() will generate due to the graphToGUIObject.remove( graph)
 		// call in the close() method
+		
+		// Ignore the startup dialog setting: we want to quit
+		STARTUPDIALOG = false;
 		Vector<Graph> graph_list = new Vector<Graph>();
 		graph_list.addAll( graphToGUIObject.keySet());
 		for ( Graph g: graph_list) {
@@ -541,7 +544,7 @@ public class GUIManager {
 
 	private void noFrameLeft(boolean startup) {
 		if (STARTUPDIALOG) {
-			startupDialog = new StartupDialog();
+			startupDialog = new StartupDialog( startup);
 			return;
 		}
 		
