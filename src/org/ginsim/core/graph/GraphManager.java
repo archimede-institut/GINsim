@@ -376,8 +376,12 @@ public class GraphManager {
 	                        GraphAssociatedObjectManager manager = (GraphAssociatedObjectManager)v_omanager.get(i);
 	                        ze = f.getEntry((usePrefix ? AbstractGraph.ZIP_PREFIX:"")+manager.getObjectName());
 	                        if (ze != null) {
-	                            Object o = manager.doOpen(f.getInputStream(ze), graph);
-	                            ObjectAssociationManager.getInstance().addObject( graph, manager.getObjectName(), o);
+	                        	try {
+	                        		Object o = manager.doOpen(f.getInputStream(ze), graph);
+	                        		ObjectAssociationManager.getInstance().addObject( graph, manager.getObjectName(), o);
+	                        	} catch (Exception e) {
+	                        		LogManager.error(e);
+	                        	}
 	                        }
 	                    }
 	                }
@@ -387,8 +391,12 @@ public class GraphManager {
 	                        GraphAssociatedObjectManager manager = (GraphAssociatedObjectManager)v_omanager.get(i);
 	                        ze = f.getEntry((usePrefix ? AbstractGraph.ZIP_PREFIX:"")+manager.getObjectName());
 	                        if (ze != null) {
-	                            Object o = manager.doOpen(f.getInputStream(ze), graph);
-	                            ObjectAssociationManager.getInstance().addObject( graph, manager.getObjectName(), o);
+	                        	try {
+	                        		Object o = manager.doOpen(f.getInputStream(ze), graph);
+		                            ObjectAssociationManager.getInstance().addObject( graph, manager.getObjectName(), o);
+	                        	} catch (Exception e) {
+	                        		LogManager.error(e);
+	                        	}
 	                        }
 	                    }
 	                }
