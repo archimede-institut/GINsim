@@ -34,9 +34,6 @@ public class MutantListManager extends BasicGraphAssociatedManager {
     	
         RegulatoryMutants lMutant = (RegulatoryMutants) getObject(graph);
         List nodeOrder = ((RegulatoryGraph)graph).getNodeOrder();
-        if (lMutant == null || lMutant.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
-            return;
-        }
         try {
             XMLWriter out = new XMLWriter(os, null);
             out.openTag("mutantList");

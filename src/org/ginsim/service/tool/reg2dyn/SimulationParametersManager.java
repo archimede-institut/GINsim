@@ -36,9 +36,6 @@ public class SimulationParametersManager extends BasicGraphAssociatedManager {
     public void doSave(OutputStreamWriter os, Graph graph) throws GsException{
         SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, KEY, false);
         List nodeOrder = ((RegulatoryGraph)graph).getNodeOrder();
-        if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
-            return;
-        }
         try {
             XMLWriter out = new XMLWriter(os, null);
             out.openTag("simulationParameters");

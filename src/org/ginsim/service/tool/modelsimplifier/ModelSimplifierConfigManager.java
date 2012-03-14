@@ -37,9 +37,6 @@ public class ModelSimplifierConfigManager extends BasicGraphAssociatedManager {
     public void doSave(OutputStreamWriter os, Graph graph) {
         ModelSimplifierConfigList paramList = (ModelSimplifierConfigList) getObject(graph);
         List<RegulatoryNode> nodeOrder = ((RegulatoryGraph)graph).getNodeOrder();
-        if (paramList == null || paramList.getNbElements(null) == 0 || nodeOrder == null || nodeOrder.size() == 0) {
-            return;
-        }
         try {
             XMLWriter out = new XMLWriter(os, null);
             out.openTag("modelSimplifications");
