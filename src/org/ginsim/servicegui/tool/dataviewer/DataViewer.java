@@ -218,8 +218,12 @@ public class DataViewer extends JScrollPane implements StackDialogHandler {
 	}
 
 	public void create(String key) {
-		objManager.getObject(graph, key, true);
+		Object o = objManager.getObject(graph, key, true);
 		refresh();
+		GUIHelper helper = GUIHelperManager.getInstance().getHelper(o);
+		if (helper != null) {
+			view(key, helper);
+		}
 	}
 	
 	public void restore(String key) {

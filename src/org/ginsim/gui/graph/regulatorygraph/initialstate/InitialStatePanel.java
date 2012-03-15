@@ -1,5 +1,6 @@
 package org.ginsim.gui.graph.regulatorygraph.initialstate;
 
+import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -11,6 +12,7 @@ import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.table.TableColumn;
@@ -34,6 +36,7 @@ public class InitialStatePanel extends JPanel {
     
     private StateListPanel initPanel;
     private StateListPanel inputPanel;
+    private JLabel messageLabel = new JLabel();
     
 	public InitialStatePanel(GsInitialStateList imanager, boolean several) {
 		
@@ -41,12 +44,18 @@ public class InitialStatePanel extends JPanel {
 	    inputPanel = new StateListPanel(this, imanager.getInputConfigs(), several, Translator.getString("STR_Fixed_inputs"));
 	    setLayout(new GridBagLayout());
 	    GridBagConstraints c = new GridBagConstraints();
+	    c.weightx = 1;
+	    c.fill = GridBagConstraints.HORIZONTAL;
+	    add(messageLabel, c);
+	    messageLabel.setForeground(Color.RED);
+	    
 	    c.weightx = c.weighty = 1;
+        c.gridy = 1;
 	    c.fill = GridBagConstraints.BOTH;
 	    if (imanager.getNormalNodes().size() > 0) {
 	        add(initPanel, c);
 	    }
-        c.gridy = 1;
+        c.gridy = 2;
         if (imanager.getInputNodes().size() > 0) {
             add(inputPanel, c);
         }
@@ -60,7 +69,7 @@ public class InitialStatePanel extends JPanel {
     }
     
     public void setMessage(String message) {
-    	// TODO
+    	this.messageLabel.setText(message);
     }
 }
 
