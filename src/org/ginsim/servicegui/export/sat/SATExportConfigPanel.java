@@ -61,7 +61,7 @@ public class SATExportConfigPanel extends AbstractStackDialogHandler {
 		jpType.add(jrb2);
 		add(jpType, BorderLayout.NORTH);
 
-		initPanel = new InitialStatePanel(stack, config.getGraph(), false);
+		initPanel = new InitialStatePanel(config.getGraph(), false);
 		initPanel.setParam(config);
 		add(initPanel, BorderLayout.CENTER);
 	}

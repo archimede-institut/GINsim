@@ -11,7 +11,6 @@ import javax.swing.table.AbstractTableModel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
-import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 
 
@@ -22,13 +21,13 @@ import org.ginsim.gui.utils.widgets.EnhancedJTable;
 public class InitStateTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = -1553864043658960569L;
-	private List nodeOrder;
+	private List<RegulatoryNode> nodeOrder;
     private Map m_initState = null;
     private InitialStateList imanager;
 	private int nbCol;
-    private StackDialog frame;
+    private InitialStatePanel panel;
     private boolean several;
-    
+    private int columnShift = 1;
     private JTable theTable;
 	
 	/**
@@ -37,9 +36,9 @@ public class InitStateTableModel extends AbstractTableModel {
 	 * @param nodeOrder
      * @param frame
 	 */	
-    public InitStateTableModel(StackDialog frame, InitialStateList imanager, boolean several) {
+    public InitStateTableModel(InitialStatePanel panel, InitialStateList imanager, boolean several) {
 		super();
-        this.frame = frame;
+        this.panel = panel;
         this.imanager = imanager;
         this.several = several;
         nodeOrder = imanager.getNodeOrder();
@@ -54,14 +53,14 @@ public class InitStateTableModel extends AbstractTableModel {
 	}
 
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		if (columnIndex < 2 && rowIndex >= imanager.getNbElements(null)) {
+		if (columnIndex < columnShift && rowIndex >= imanager.getNbElements(null)) {
 			return false;
 		}
 		return true;
 	}
 
 	public Class getColumnClass(int columnIndex) {
-		if (columnIndex == 1) {
+		if (columnIndex == 1 && m_initState != null) {
 			return Boolean.class;
 		}
 		return String.class;
@@ -83,7 +82,7 @@ public class InitStateTableModel extends AbstractTableModel {
 			}
 			return ((InitialState)imanager.getElement(null, rowIndex)).getName();
 		}
-		if (columnIndex == 1) {
+		if (m_initState != null && columnIndex == 1) {
 			if (m_initState == null || rowIndex >= imanager.getNbElements(null)) {
 				return Boolean.FALSE;
 			}
@@ -92,13 +91,14 @@ public class InitStateTableModel extends AbstractTableModel {
 			}
 			return Boolean.FALSE;
 		}
-		int ci = columnIndex - 2;
+		
+		int ci = columnIndex - columnShift;
 		if (imanager == null || rowIndex >= imanager.getNbElements(null)) {
 			return "";
 		}
         Map m_row = ((InitialState)imanager.getElement(null, rowIndex)).getMaxValueTable();
         element = (List)m_row.get(nodeOrder.get(ci));
-        return showValue(element, ((RegulatoryNode)nodeOrder.get(ci)).getMaxValue());
+        return showValue(element, nodeOrder.get(ci).getMaxValue());
     }
     
     /**
@@ -190,10 +190,11 @@ public class InitStateTableModel extends AbstractTableModel {
 	  * here we have to parse strings like "1-4 ; 6-7" to construct vector like [1 ; 2 ; 3 ; 4 ;  6 ; 7]
 	 */
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        frame.setMessage("");
-		if (m_initState == null || rowIndex > getRowCount() || columnIndex > nbCol+1) {
+		panel.setMessage("");
+		if (rowIndex > getRowCount() || columnIndex > nbCol+1) {
 			return;
 		}
+		
 		if (columnIndex == 0) {
 			if (rowIndex >= imanager.getNbElements(null)) {
 				return;
@@ -202,7 +203,7 @@ public class InitStateTableModel extends AbstractTableModel {
 			// FIXME: the name should be unique
 			return;
 		}
-		if (columnIndex == 1) {
+		if (columnIndex == 1 && m_initState != null) {
 			if (rowIndex >= imanager.getNbElements(null)) {
 				return;
 			}
@@ -230,8 +231,8 @@ public class InitStateTableModel extends AbstractTableModel {
 	}
 	
 	public void doSetValueAt(Object aValue, int rowIndex, int columnIndex) {
-		int ci = columnIndex - 2;
-		int maxvalue = ((RegulatoryNode)nodeOrder.get(ci)).getMaxValue();
+		int ci = columnIndex - columnShift;
+		int maxvalue = nodeOrder.get(ci).getMaxValue();
         if (aValue == null || ((String)aValue).trim().equals("") || ((String)aValue).trim().equals("*")) {
             if (rowIndex >= 0 && rowIndex < getRowCount()-1) {
                 Map m_line = ((InitialState)imanager.getElement(null, rowIndex)).getMaxValueTable();
@@ -251,7 +252,7 @@ public class InitStateTableModel extends AbstractTableModel {
 			for (int i=0 ; i<values.length ; i++) {
 				String[] minmax = values[i].split("-");
 				if (minmax.length > 2) {
-                    frame.setMessage("syntax error");
+					panel.setMessage("syntax error");
 					return;
 				}
 				// remove spaces !!
@@ -260,7 +261,7 @@ public class InitStateTableModel extends AbstractTableModel {
 				String s_tmp = minmax[0].trim();
 				if (s_tmp.equalsIgnoreCase("m") || s_tmp.equalsIgnoreCase("max")) {
 					if (minmax.length>1) {
-                        frame.setMessage("interval starting at max !!");
+						panel.setMessage("interval starting at max !!");
 						return;
 					}
 					min = maxvalue;
@@ -275,14 +276,14 @@ public class InitStateTableModel extends AbstractTableModel {
 						max = Integer.parseInt(s_tmp);
 					}
 					if (max < min) {
-                        frame.setMessage("bad interval");
+						panel.setMessage("bad interval");
 						return; 
 					}
 				} else {
 					max = min;
 				}
 				if (max > maxvalue || min > maxvalue || max<0 ||min<0 ) {
-                    frame.setMessage("bad value: out of range");
+					panel.setMessage("bad value: out of range");
 					return;
 				}
 				while (min <= max) {
@@ -294,7 +295,9 @@ public class InitStateTableModel extends AbstractTableModel {
             if (rowIndex == imanager.getNbElements(null)) {
             	imanager.add();
             	fireTableRowsInserted(rowIndex, rowIndex);
-            	setValueAt(Boolean.TRUE, rowIndex, 1);
+            	if (m_initState != null) {
+            		setValueAt(Boolean.TRUE, rowIndex, 1);
+            	}
             }
             Map m_line = ((InitialState)imanager.getElement(null, rowIndex)).getMaxValueTable();
             m_line.put(nodeOrder.get(ci),newcell);
@@ -327,14 +330,14 @@ public class InitStateTableModel extends AbstractTableModel {
 		if (columnIndex == 0) {
 			return "name";
 		}
-		if (columnIndex == 1) {
+		if (columnIndex == 1 && m_initState != null) {
 			return "use";
 		}
-		return ((RegulatoryNode)nodeOrder.get(columnIndex-2)).toString();
+		return ((RegulatoryNode)nodeOrder.get(columnIndex-columnShift)).toString();
 	}
 
 	public int getColumnCount() {
-		return nodeOrder.size()+2;
+		return nodeOrder.size()+columnShift;
 	}
     
 	/**
@@ -367,6 +370,11 @@ public class InitStateTableModel extends AbstractTableModel {
      */
     public void setParam(Map param) {
         this.m_initState = param;
+        if (param == null) {
+        	columnShift = 1;
+        } else {
+        	columnShift = 2;
+        }
         fireTableStructureChanged();
     }
 

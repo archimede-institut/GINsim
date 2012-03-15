@@ -158,7 +158,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 			mainPanel.add(getPriorityClassSelector(), c);
 			
 			// initial state
-			initStatePanel = new InitialStatePanel(this, paramList.graph, true);
+			initStatePanel = new InitialStatePanel(paramList.graph, true);
 			c.gridx = 0;
 			c.gridy++;
 			c.gridwidth = 2;

@@ -23,7 +23,6 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
-import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.Label;
 import org.ginsim.gui.utils.widgets.StockButton;
@@ -36,10 +35,10 @@ public class InitialStatePanel extends JPanel {
     private StateListPanel initPanel;
     private StateListPanel inputPanel;
     
-	public InitialStatePanel(StackDialog dialog, GsInitialStateList imanager, boolean several) {
+	public InitialStatePanel(GsInitialStateList imanager, boolean several) {
 		
-	    initPanel = new StateListPanel(dialog, imanager.getInitialStates(), several, Translator.getString("STR_Initial_state"));
-	    inputPanel = new StateListPanel(dialog, imanager.getInputConfigs(), several, Translator.getString("STR_Fixed_inputs"));
+	    initPanel = new StateListPanel(this, imanager.getInitialStates(), several, Translator.getString("STR_Initial_state"));
+	    inputPanel = new StateListPanel(this, imanager.getInputConfigs(), several, Translator.getString("STR_Fixed_inputs"));
 	    setLayout(new GridBagLayout());
 	    GridBagConstraints c = new GridBagConstraints();
 	    c.weightx = c.weighty = 1;
@@ -52,12 +51,16 @@ public class InitialStatePanel extends JPanel {
             add(inputPanel, c);
         }
 	}
-    public InitialStatePanel(StackDialog dialog, Graph graph, boolean several) {
-        this(dialog, (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, InitialStateManager.KEY, true), several);
+    public InitialStatePanel(Graph graph, boolean several) {
+        this((GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, InitialStateManager.KEY, true), several);
     }
     public void setParam(InitialStateStore currentParameter) {
         initPanel.setParam(currentParameter.getInitialState());
         inputPanel.setParam(currentParameter.getInputState());
+    }
+    
+    public void setMessage(String message) {
+    	// TODO
     }
 }
 
@@ -75,11 +78,11 @@ class StateListPanel extends JPanel {
 
     Insets topInset = new Insets(20,0,0,0);
 	private InitialStateList stateList;
-	private StackDialog dialog;
+	private InitialStatePanel panel;
 	private boolean several;
 	
-    public StateListPanel(StackDialog dialog, InitialStateList stateList, boolean several, String title) {
-    	this.dialog = dialog;
+    public StateListPanel(InitialStatePanel panel, InitialStateList stateList, boolean several, String title) {
+    	this.panel = panel;
         this.several = several;
     	this.stateList = stateList;
         setBorder(BorderFactory.createTitledBorder(title));
@@ -138,7 +141,7 @@ class StateListPanel extends JPanel {
     private javax.swing.JTable getTableInitStates() {
         if(tableInitStates == null) {
             tableInitStates = new EnhancedJTable();
-            model = new InitStateTableModel(dialog, stateList, several);
+            model = new InitStateTableModel(panel, stateList, several);
             tableInitStates.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
             tableInitStates.setModel(model);
             tableInitStates.getTableHeader().setReorderingAllowed(false);

@@ -90,7 +90,7 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 			}
 		});
 
-		initPanel = new InitialStatePanel(stack, config.getGraph(), false);
+		initPanel = new InitialStatePanel( config.getGraph(), false);
 		initPanel.setParam(config);
 		add(initPanel, BorderLayout.CENTER);
 		this.setMinimumSize(new Dimension(450, 320));

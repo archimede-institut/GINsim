@@ -75,7 +75,7 @@ class PNExportConfigPanel extends AbstractStackDialogHandler {
 		RegulatoryGraph graph = config.graph;
     	MutantSelectionPanel mutantPanel = null;
     	
-    	InitialStatePanel initPanel = new InitialStatePanel(stack, graph, false);
+    	InitialStatePanel initPanel = new InitialStatePanel(graph, false);
     	initPanel.setParam(config);
     	
     	setLayout(new GridBagLayout());

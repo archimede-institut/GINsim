@@ -84,7 +84,7 @@ class GDExportConfigPanel extends AbstractStackDialogHandler {
 	
 	@Override
 	protected void init() {
-    	InitialStatePanel initPanel = new InitialStatePanel(stack, graph, false);
+    	InitialStatePanel initPanel = new InitialStatePanel( graph, false);
     	initPanel.setParam(cfg);
 
     	setLayout(new GridBagLayout());

@@ -25,7 +25,7 @@ public class SBMLQualExportConfigPanel extends AbstractStackDialogHandler {
 	@Override
 	protected void init() {
 		
-		InitialStatePanel initPanel = new InitialStatePanel( stack, config.getGraph(), false);
+		InitialStatePanel initPanel = new InitialStatePanel( config.getGraph(), false);
 		initPanel.setParam(config);
 		
 		GridBagConstraints c = new GridBagConstraints();
