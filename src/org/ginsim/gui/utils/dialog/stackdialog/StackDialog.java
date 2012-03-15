@@ -244,7 +244,7 @@ abstract public class StackDialog extends SimpleDialog {
     	cancel();
     }
     protected void cancel() {
-    	setVisible(false);
+    	dispose();
     }
     
     protected void setRunning(boolean b) {

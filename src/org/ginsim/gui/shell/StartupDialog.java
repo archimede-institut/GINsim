@@ -200,6 +200,6 @@ class ActionQuit extends AbstractAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		dialog.dispose();
+		dialog.close();
 	}
 }
