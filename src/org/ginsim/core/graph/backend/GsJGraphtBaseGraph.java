@@ -7,7 +7,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
+import org.ginsim.common.utils.ArraySet;
 import org.ginsim.core.graph.common.Edge;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
@@ -253,7 +255,7 @@ class VInfo<V,E extends Edge<V>> {
     
     protected boolean addIncoming(E e ) {
         if (l_incoming == null) {
-            l_incoming = new HashSet<E>();
+            l_incoming = new ArraySet<E>();
             l_incoming.add(e);
             return true;
         }
@@ -265,7 +267,7 @@ class VInfo<V,E extends Edge<V>> {
     }
     protected boolean addOutgoing(E e ) {
         if (l_outgoing == null) {
-            l_outgoing = new HashSet<E>();
+            l_outgoing = new ArraySet<E>();
             l_outgoing.add(e);
             return true;
         }
