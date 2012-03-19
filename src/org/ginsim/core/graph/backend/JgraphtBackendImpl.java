@@ -13,8 +13,8 @@ import org.jgrapht.graph.ListenableDirectedGraph;
 public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirectedGraph<V, E> implements GraphBackend<V, E> {
 	private static final long serialVersionUID = -7766943723639796018L;
 	
-	public static <V,E extends Edge<V>> GraphBackend getGraphBackend() {
-		GsJGraphtBaseGraph<V,E> base = new GsJGraphtBaseGraph<V, E>();
+	public static GraphBackend getGraphBackend() {
+		GsJGraphtBaseGraph base = new GsJGraphtBaseGraph();
 		return new JgraphtBackendImpl(base);
 	}
 	

@@ -70,7 +70,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
      * @param parsing
      */
     public AbstractGraph( boolean parsing) {
-        this( JgraphtBackendImpl.getGraphBackend(), parsing);
+        this( (GraphBackend<V, E>)JgraphtBackendImpl.getGraphBackend(), parsing);
     }
 
 	
