@@ -1,6 +1,7 @@
 package org.ginsim.core.utils.data;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -8,7 +9,7 @@ import java.util.regex.Pattern;
 import org.ginsim.common.utils.log.LogManager;
 
 
-public class SimpleGenericList<T> extends GenericList<T> {
+public class SimpleGenericList<T> extends GenericList<T> implements Iterable<T> {
 	public List<T>		v_data;
 	protected String	prefix			= "name_";
 	protected String	pattern			= "^[a-zA-Z0-9_-]+$";
@@ -290,5 +291,10 @@ public class SimpleGenericList<T> extends GenericList<T> {
 			}
 		}
 		return null;
+	}
+
+	@Override
+	public Iterator<T> iterator() {
+		return v_data.iterator();
 	}
 }
