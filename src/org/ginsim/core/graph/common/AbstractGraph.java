@@ -70,7 +70,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
      * @param parsing
      */
     public AbstractGraph( boolean parsing) {
-        this( new JgraphtBackendImpl<V, E>(), parsing);
+        this( JgraphtBackendImpl.getGraphBackend(), parsing);
     }
 
 	
@@ -166,7 +166,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		
 		return false;
 	}
-	
+
 	/**
 	 * Add an edge to this graph structure.
 	 * 
@@ -311,55 +311,31 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		return v;
 	}
 	
-	
-    /**
-     * @param node
-     * @return true if the node is in the graph, false if not.
-     */
 	@Override
     public boolean containsNode(V node) {
         return graphBackend.containsNode(node);
     }
     
+	@Override
+	public V getExistingNode(V node) {
+		return graphBackend.getExistingNode(node);
+	}
 	
-    /**
-     * @param from
-     * @param to
-     * @return true if an edge between the two provided vertices exists in the graph, false if not.
-     */
 	@Override
     public boolean containsEdge(V from, V to) {
         return graphBackend.containsEdge(from, to);
     }	
 	
-
-    /**
-     * @param node
-     * @return a Collection of the incoming edges of the given node.
-     */
 	@Override
 	public Collection<E> getIncomingEdges(V node) {
 		return graphBackend.getIncomingEdges(node);
 	}
 	
-    
-    /**
-     * @param node
-     * @return a Collection of the outgoing edges of the given node.
-     */
 	@Override
 	public Collection<E> getOutgoingEdges(V node) {
 		return graphBackend.getOutgoingEdges(node);
 	}
 	
-	
-	/**
-	 * Find the shortest path between the two given vertices
-	 * 
-	 * @param source the node at the beginning of the searched path
-	 * @param target the node at the end of the searched path
-	 * @return the list of edges composing the shortest path
-	 */
 	@Override
 	public List<E> getShortestPath( V source, V target){
 		

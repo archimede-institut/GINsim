@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.ginsim.common.utils.ArraySet;
 import org.ginsim.core.graph.common.Edge;
@@ -97,6 +96,19 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
         }
         m_vertices.put(v, new VInfo<V,E>( v ));
         return true;
+    }
+
+    /**
+     * Get an existing vertex.
+     * @param v
+     * @return
+     */
+    public V getVertex(V v) {
+    	VInfo<V, E> info = m_vertices.get(v);
+        if (info == null) {
+        	return null;
+        }
+        return info.self;
     }
 
     @Override

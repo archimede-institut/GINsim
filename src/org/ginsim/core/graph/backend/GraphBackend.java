@@ -34,6 +34,12 @@ public interface GraphBackend<V, E extends Edge<V>> {
      */
     public boolean containsNode(V node);
     
+    /**
+     * @param node
+     * @return an existing node if found, or null.
+     */
+    public V getExistingNode(V node);
+    
 	
     /**
      * 

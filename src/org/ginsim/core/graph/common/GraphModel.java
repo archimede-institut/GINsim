@@ -93,7 +93,7 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 * @return the created node
 	 */
 	boolean addNode( V node);
-
+	
 	/**
 	 * Add an edge to this graph structure.
 	 * 
@@ -180,6 +180,7 @@ public interface GraphModel<V,E extends Edge<V>> {
      */
     boolean containsNode(V node);
     
+    V getExistingNode(V node);
     
     /**
      * @param from

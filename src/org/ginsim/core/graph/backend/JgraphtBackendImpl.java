@@ -5,7 +5,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import org.ginsim.core.graph.common.AbstractGraph;
 import org.ginsim.core.graph.common.Edge;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.alg.StrongConnectivityInspector;
@@ -14,11 +13,17 @@ import org.jgrapht.graph.ListenableDirectedGraph;
 public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirectedGraph<V, E> implements GraphBackend<V, E> {
 	private static final long serialVersionUID = -7766943723639796018L;
 	
-	private AbstractGraph<V,E> frontend = null;
-
-	public JgraphtBackendImpl() {
+	public static <V,E extends Edge<V>> GraphBackend getGraphBackend() {
+		GsJGraphtBaseGraph<V,E> base = new GsJGraphtBaseGraph<V, E>(new GsJgraphtEdgeFactory());
+		return new JgraphtBackendImpl(base);
+	}
+	
+	GsJGraphtBaseGraph<V,E> base;
+	
+	private JgraphtBackendImpl(GsJGraphtBaseGraph<V,E> base) {
 		// FIXME: remove the edgeFactory (with better integration with the underlying graph)
-		super(new GsJGraphtBaseGraph<V, E>(new GsJgraphtEdgeFactory()));
+		super(base);
+		this.base = base;
 	}
 	
 	/**
@@ -105,7 +110,12 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
     public boolean containsNode(V vertex) {
         return super.containsVertex(vertex);
     }
-    
+
+	@Override
+	public V getExistingNode( V node) {
+		return base.getVertex( node);
+	}
+	
     /**
      * @param from
      * @param to
