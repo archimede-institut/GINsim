@@ -29,6 +29,7 @@ import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceManager;
+import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
 
 /**
@@ -92,9 +93,13 @@ public class ScriptLauncher {
         }
 		
         initOptionStore();
-        // actually run the script
+        
+        // Create and set up python interpreter, add gs helper and "" to classpath
         PythonInterpreter pi = new PythonInterpreter();
+        pi.getSystemState().path.add(0, "");
 		pi.set("gs", this);
+		
+        // actually run the script
         pi.execfile(filename);
         
         // reset the running status: should not be needed but may be convenient later
