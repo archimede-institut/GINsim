@@ -165,7 +165,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     		
     		return obj;
     	}
-    	obj = new RegulatoryMultiEdge(source, target, sign);
+    	obj = new RegulatoryMultiEdge(this, source, target, sign);
     	addEdge(obj);
     	obj.rescanSign( this);
     	target.incomingEdgeAdded(obj);
@@ -437,7 +437,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         RegulatoryMultiEdge me = getEdge(source, target);
         int index = 0;
         if (me == null) {
-            me = new RegulatoryMultiEdge(source, target, sign, minvalue);
+            me = new RegulatoryMultiEdge(this, source, target, sign, minvalue);
             addEdge(me);
         } else {
             index = me.addEdge(sign, minvalue, this);

@@ -144,7 +144,7 @@ public class TreeNode implements Dotify {
 		for (Edge<TreeNode> e: (Collection<Edge<TreeNode>>) gm.getOutgoingEdges(this)) {
 			TreeNode target = e.getTarget().deepCopy( gm);
 			gm.addNode(target);
-			Edge<TreeNode> edge = new Edge<TreeNode>(self, target);
+			Edge<TreeNode> edge = new Edge<TreeNode>(gm, self, target);
 			gm.addEdge(edge);
 		}
 		return self;

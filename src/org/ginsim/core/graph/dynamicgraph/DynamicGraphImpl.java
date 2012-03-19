@@ -277,7 +277,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	@Override
 	public Edge<DynamicNode> addEdge(DynamicNode source, DynamicNode target, boolean multiple) {
 		
-		Edge<DynamicNode> edge = new Edge<DynamicNode>(getExistingNode(source), getExistingNode(target));
+		Edge<DynamicNode> edge = new Edge<DynamicNode>(this, source, target);
 		if (!addEdge(edge)) {
 			return null;
 		}

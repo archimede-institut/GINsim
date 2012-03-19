@@ -138,7 +138,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 		Object e = getEdge(source, target);
 		if (e != null) return e;
 		// FIXME: creating an empty DecisionOnEdge object: is it even possible?
-		DecisionOnEdge edge = new DecisionOnEdge( source, target, nodeOrder);
+		DecisionOnEdge edge = new DecisionOnEdge( this, source, target, nodeOrder);
 		return addEdge(edge);
 	}
 

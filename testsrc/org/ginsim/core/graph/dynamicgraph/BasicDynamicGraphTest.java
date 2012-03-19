@@ -106,7 +106,7 @@ public class BasicDynamicGraphTest {
 		graph.addNode( node2);
 		
 		// Add Edge
-		Edge<DynamicNode> edge = new Edge<DynamicNode>( node1, node2);
+		Edge<DynamicNode> edge = new Edge<DynamicNode>( graph, node1, node2);
 		graph.addEdge( edge);
 		
 		int edge_count = graph.getEdges().size();

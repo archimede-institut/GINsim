@@ -18,24 +18,15 @@ import org.jgrapht.graph.AbstractGraph;
  * a "simple" jgrapht implementation using hashmap.
  * it aims at "low" memory consumption without getting too slow.
  */
-public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E> implements DirectedGraph<V,E> {
+public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E> implements DirectedGraph<V,E>, EdgeFactory<V, E> {
     
     protected Map<V, VInfo<V,E>> m_vertices = new HashMap<V, VInfo<V,E>>(10);
-    private EdgeFactory<V,E> ef;
     private Set<E> edgeSet = null;
     private Set<V> vertexSet = null;
     private int edgeCount = 0;
     
     private static final Set emptySet = new HashSet();
     
-    /**
-     * 
-     * @param ef the edge factory
-     */
-    public GsJGraphtBaseGraph( EdgeFactory<V,E> ef ) {
-        this.ef = ef;
-    }
-
     @Override
     public Set<E> getAllEdges(V sourceNode, V targetNode) {
         // no multiple edges here
@@ -53,7 +44,7 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
 
     @Override
     public EdgeFactory<V,E> getEdgeFactory() {
-        return ef;
+        return this;
     }
 
     @Override
@@ -70,7 +61,7 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
             return null;
         }
         // really create/add the edge
-        E e = ef.createEdge( src, vinfo.self );
+        E e = createEdge( src, vinfo.self );
         if (addEdge(sourceNode, targetNode, e)) {
             return e;
         }
@@ -89,6 +80,11 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
         return false;
     }
 
+	@Override
+	public E createEdge(V source, V target) {
+		return (E)new Edge<V>(null, getVertex(source), getVertex(target));
+	}
+	
     @Override
     public boolean addVertex(V v) {
         if (m_vertices.containsKey(v)) {

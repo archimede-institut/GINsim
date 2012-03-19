@@ -14,14 +14,13 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	private static final long serialVersionUID = -7766943723639796018L;
 	
 	public static <V,E extends Edge<V>> GraphBackend getGraphBackend() {
-		GsJGraphtBaseGraph<V,E> base = new GsJGraphtBaseGraph<V, E>(new GsJgraphtEdgeFactory());
+		GsJGraphtBaseGraph<V,E> base = new GsJGraphtBaseGraph<V, E>();
 		return new JgraphtBackendImpl(base);
 	}
 	
 	GsJGraphtBaseGraph<V,E> base;
 	
 	private JgraphtBackendImpl(GsJGraphtBaseGraph<V,E> base) {
-		// FIXME: remove the edgeFactory (with better integration with the underlying graph)
 		super(base);
 		this.base = base;
 	}

@@ -19,9 +19,9 @@ public class Edge<V> implements ToolTipsable {
 	 * @param source the source node.
 	 * @param target the target node.
 	 */
-    public Edge(V source, V target) {
-    	this.source = source;
-    	this.target = target;
+    public Edge(Graph<V, ?> g, V source, V target) {
+    	this.source = g == null ? source : g.getExistingNode(source);
+    	this.target = g == null ? target : g.getExistingNode(target);
     }
 
     public V getSource() {

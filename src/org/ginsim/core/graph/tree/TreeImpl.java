@@ -70,7 +70,7 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
 		
 		Edge<TreeNode> edge = getEdge(source, target);
 		if (edge == null) {
-			edge = new Edge<TreeNode>(source, target);
+			edge = new Edge<TreeNode>(this, source, target);
 			if (!addEdge(edge)) {
 				return null;
 			}

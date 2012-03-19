@@ -21,8 +21,8 @@ public class DecisionOnEdge extends Edge<HierarchicalNode> implements ToolTipsab
 	private int[] genesUpdated = null;
 	private List<NodeInfo> nodeOrder;
 
-	public DecisionOnEdge(HierarchicalNode source, HierarchicalNode target, List<NodeInfo> nodeOrder) {
-		super(source, target);
+	public DecisionOnEdge( HierarchicalTransitionGraph g, HierarchicalNode source, HierarchicalNode target, List<NodeInfo> nodeOrder) {
+		super(g, source, target);
         this.nodeOrder = nodeOrder;
 	}
 

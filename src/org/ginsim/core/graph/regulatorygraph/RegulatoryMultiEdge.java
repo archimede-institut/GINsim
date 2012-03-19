@@ -29,11 +29,11 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
      * @param target
      * @param param
      */
-    public RegulatoryMultiEdge(RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign param) {
-    	this(source, target, param, (byte)1);
+    public RegulatoryMultiEdge(RegulatoryGraph g, RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign param) {
+    	this(g, source, target, param, (byte)1);
     }
-    public RegulatoryMultiEdge(RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign param, byte threshold) {
-    	super(source, target);
+    public RegulatoryMultiEdge(RegulatoryGraph g, RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign param, byte threshold) {
+    	super(g, source, target);
         RegulatoryEdge edge = new RegulatoryEdge(this);
         edge.setSign(param);
         if (threshold <= source.getMaxValue()) {
@@ -50,8 +50,8 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
      * @param target
      *
      */
-    public RegulatoryMultiEdge(RegulatoryNode source, RegulatoryNode target) {
-    	this(source, target, RegulatoryEdgeSign.POSITIVE, (byte)1);
+    public RegulatoryMultiEdge(RegulatoryGraph g, RegulatoryNode source, RegulatoryNode target) {
+    	this(g, source, target, RegulatoryEdgeSign.POSITIVE, (byte)1);
     }
 
     public void addEdge( Graph graph) {

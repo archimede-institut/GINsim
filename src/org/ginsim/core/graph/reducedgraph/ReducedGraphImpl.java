@@ -196,7 +196,7 @@ public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  exten
 	 */
     @Override
 	public void addEdge(NodeReducedData source, NodeReducedData target) {
-		Edge<NodeReducedData> edge = new Edge<NodeReducedData>(source, target);
+		Edge<NodeReducedData> edge = new Edge<NodeReducedData>(this, source, target);
 		addEdge( edge);
 	}
 	

@@ -245,7 +245,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 			RegulatoryNode src = (RegulatoryNode)copyMap.get(me.getSource());
 			RegulatoryNode target = (RegulatoryNode)copyMap.get(me.getTarget());
 			if (src != null && target != null) {
-				RegulatoryMultiEdge me_clone = new RegulatoryMultiEdge(src, target);
+				RegulatoryMultiEdge me_clone = new RegulatoryMultiEdge(simplifiedGraph, src, target);
 				me_clone.copyFrom(me);
 				if (simplifiedGraph.addEdge(me_clone)) {
 					copyMap.put(me, me_clone);
@@ -296,7 +296,7 @@ public class ModelSimplifier extends Thread implements Runnable {
 				RegulatoryNode src = (RegulatoryNode)copyMap.get(e.getKey());
 				RegulatoryMultiEdge de = simplifiedGraph.getEdge(src, target);
 				if (de == null) {
-					de = new RegulatoryMultiEdge(src, target);
+					de = new RegulatoryMultiEdge(simplifiedGraph, src, target);
 					simplifiedGraph.addEdge(de);
 				}
 				boolean[] t_required = e.getValue();
