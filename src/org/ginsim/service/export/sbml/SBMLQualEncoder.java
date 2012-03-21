@@ -22,11 +22,15 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterLis
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDBrowserListener;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNodeBrowser;
+import org.ginsim.core.graph.view.NodeAttributesReader;
 
 public class SBMLQualEncoder implements OMDDBrowserListener{
 
 	public static final String L3_QUALI_URL = "http://www.sbml.org/sbml/level3/version1/qual/version1";
+	public static final String L3_LAYOUT_URL = "http://www.sbml.org/sbml/level3/version1/layout/version1";
 
+	private static final boolean LAYOUT = true;
+	
     List<RegulatoryNode> v_no;
     int len;
     OMDDNode[] t_tree;
@@ -76,6 +80,10 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
         out.addAttr("version", "1");
         out.addAttr("xmlns:qual", L3_QUALI_URL);
         out.addAttr("qual:required", "true");
+        if (LAYOUT) {
+        	out.addAttr("xmlns:layout", L3_LAYOUT_URL);
+        	out.addAttr("layout:required", "false");
+        }
         
         out.openTag("model");
         String graph_path = GraphManager.getInstance().getGraphPath( graph);
@@ -93,12 +101,46 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
         out.closeTag();
         out.closeTag();
         
+        // layout information
+        if (LAYOUT) {
+            out.openTag("layout:listOfLayouts");
+            out.addAttr("xmlns", L3_LAYOUT_URL);
+            out.openTag("layout:layout");
+            out.openTag("layout:listOfSpeciesGlyphs");
+
+            NodeAttributesReader vreader = graph.getNodeAttributeReader();
+            for (RegulatoryNode node: v_no) {
+            	vreader.setNode(node);
+            	out.openTag("layout:speciesGlyph");
+            	out.addAttr("layout:species", node.getId());
+            	out.openTag("layout:boundingBox");
+            	
+            	out.openTag("layout:position");
+            	out.addAttr("layout:x", ""+vreader.getX());
+            	out.addAttr("layout:y", ""+vreader.getY());
+            	out.addAttr("layout:z", "0");
+                out.closeTag();
+            	out.openTag("layout:dimensions");
+            	out.addAttr("layout:width", ""+vreader.getWidth());
+            	out.addAttr("layout:height", ""+vreader.getHeight());
+            	out.addAttr("layout:depth", "1");
+                out.closeTag();
+                
+                out.closeTag();
+                out.closeTag();
+            }
+            
+            out.closeTag();
+            out.closeTag();
+            out.closeTag();
+        }
+        
         // List all components
         out.openTag("qual:listOfQualitativeSpecies");
         out.addAttr("xmlns", L3_QUALI_URL);
 
         for (int i=0 ; i<t_tree.length ; i++) {
-            RegulatoryNode node = (RegulatoryNode)v_no.get(i);
+            RegulatoryNode node = v_no.get(i);
             String s_id = node.getId();
             String s_name = node.getName();
             out.openTag("qual:qualitativeSpecies");
