@@ -29,7 +29,6 @@ import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceManager;
-import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
 
 /**
@@ -93,10 +92,23 @@ public class ScriptLauncher {
         }
 		
         initOptionStore();
+
+        // select a base directory for script files:
+        // the first parent of the selected script without a __init__.py file
+        File dir = f.getParentFile();
+        while (true) {
+        	File finit = new File(dir, "__init__.py");
+        	if (!finit.exists()) {
+        		break;
+        	}
+        	dir = dir.getParentFile();
+        }
         
-        // Create and set up python interpreter, add gs helper and "" to classpath
+        // Create and set up python interpreter:
+        //  * add the selected folder to the classpath
+        //  * add a "gs" object pointing to this script launcher
         PythonInterpreter pi = new PythonInterpreter();
-        pi.getSystemState().path.add(0, "");
+        pi.getSystemState().path.add(0, dir.getAbsolutePath());
 		pi.set("gs", this);
 		
         // actually run the script
