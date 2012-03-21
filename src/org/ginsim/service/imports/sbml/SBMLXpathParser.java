@@ -151,8 +151,14 @@ public final class SBMLXpathParser {
 			
 			// Getting a transition list.
 			List<Element> transList = xpathTransition.selectNodes(racine);
-			Element transContent = transList.get(0);
-			List<Element> transListElements = transContent.getChildren();
+			List<Element> transListElements;
+			if (transList.size() == 0) {
+				transListElements = new ArrayList<Element>();
+			} else {
+				// NOTE: should we deal with more than one list of transitions?
+				Element transContent = transList.get(0);
+				transListElements = transContent.getChildren();
+			}
 			
 			// getting a qualitativeSpecies list.
 			List<Element> qualSpeciesList = xpathQualSpecies.selectNodes(racine);
