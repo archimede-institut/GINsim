@@ -79,10 +79,23 @@ public class OptionStore extends DefaultHandler {
      * 
      * @param path the path to add to the list
      */
+	public static void appendRecentFile(String path) {
+		int last = recentFiles.size();
+		if (last < 10) {
+			addRecentFile(path, last);
+		}
+	}
 	public static void addRecentFile(String path) {
+		addRecentFile(path, 0);
+	}
+	
+	private static void addRecentFile(String path, int position) {
 		// add this file on top of the list
 		recentFiles.remove(path);
-		recentFiles.add(0, path);
+		if (!new File(path).exists()) {
+			return;
+		}
+		recentFiles.add(position, path);
 		
 		// trim the list size
 		while (recentFiles.size() > 10) {
@@ -105,7 +118,7 @@ public class OptionStore extends DefaultHandler {
     /**
      * save the value of an option. accepted types: Boolean, Integer, String
      * 
-     * @param name uniq name (key) of the option
+     * @param name unique name (key) of the option
      * @param value an object giving the value of this option
      */
     public static void setOption(String name, Object value) {
@@ -128,7 +141,7 @@ public class OptionStore extends DefaultHandler {
     /**
      * get the saved value of an option with a fallback value.
      * If the option was not defined or if types mismatch, it will be set to the default value.
-     * @param name uniq name (key) of the option
+     * @param name unique name (key) of the option
      * @param defValue value to return if this option is not defined
      * @return an object representing the value of this option
      */
@@ -143,7 +156,7 @@ public class OptionStore extends DefaultHandler {
     }
     /**
      * remove a saved option.
-     * @param name uniq name (key) of the option
+     * @param name unique name (key) of the option
      */
     public static void removeOption(String name) {
         m_option.remove(name);
@@ -204,7 +217,7 @@ public class OptionStore extends DefaultHandler {
     public void startElement(String uri, String localName, String qName,
             Attributes attributes) throws SAXException {
         if (qName.equals("recent")) {
-        	OptionStore.addRecentFile(attributes.getValue("filename"));
+        	OptionStore.appendRecentFile(attributes.getValue("filename"));
         } else if (qName.equals("option")) {
             String k = attributes.getValue("key");
             String sv = attributes.getValue("value");
