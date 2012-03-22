@@ -26,6 +26,12 @@ public class IOUtils {
 		m_helper.put(key, helper);
 	}
 	
+	public static void addHelperClassAlias(String alias, String key) {
+		OpenHelper helper = m_helper.get(key);
+		if (helper != null) {
+			m_helper.put(alias, helper);
+		}
+	}
 	
 	public static OpenHelper getHelper( Object key){
 		
@@ -212,6 +218,5 @@ public class IOUtils {
 		}
 		return path.delete();
 	}
-	
 
 }

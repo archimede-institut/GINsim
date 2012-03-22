@@ -23,7 +23,6 @@ import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 
-
 abstract public class XMLHelper extends DefaultHandler implements EntityResolver {
 
 	protected static final int NOCALL = 0;
@@ -36,10 +35,17 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 	public static void addEntity(String url, String path) {
 		m_entities.put(url, path);
 	}
-	
+
+	@Deprecated
 	protected static void addCall(String tag, int id, int constraint, Map m_call, 
 			int callmode, boolean readcontent) {
-		CallDescription cd = new CallDescription(id, constraint, callmode, readcontent);
+		addCall(tag, id, constraint, m_call, getMode(callmode, readcontent));
+	}
+	protected static void addCall(String tag, int id, Map m_call, CallMode mode) {
+		addCall(tag, id, -1, m_call, mode);
+	}
+	protected static void addCall(String tag, int id, int constraint, Map m_call, CallMode mode) {
+		CallDescription cd = new CallDescription(id, constraint, mode);
 		CallDescription cur = (CallDescription)m_call.get(tag);
 		if (cur == null) {
 			m_call.put(tag, cd);
@@ -47,12 +53,36 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 			cur.other = cd;
 		}
 	}
-	protected static void addCall(String tag, int id, Map m_call, 
-			int callmode, boolean readcontent) {
-		addCall(tag, id, -1, m_call, callmode, readcontent);
+
+	@Deprecated
+	protected static void addCall(String tag, int id, Map m_call, int callmode, boolean readcontent) {
+		addCall(tag, id, -1, m_call, getMode(callmode, readcontent));
 	}
 	protected static void addCall(String tag, int id, Map m_call) {
-		addCall(tag, id, -1, m_call, BOTH, false);
+		addCall(tag, id, -1, m_call, CallMode.BOTH);
+	}
+
+	/**
+	 * Compatibility method to create a CallDescription without using CallMode directly
+	 * @param callmode
+	 * @param readcontent
+	 */
+	private static CallMode getMode(int callmode, boolean readcontent) {
+		switch (callmode) {
+		case XMLHelper.BOTH:
+			if (readcontent) {
+				return CallMode.BOTHREAD;
+			}
+			return CallMode.BOTH;
+		case XMLHelper.STARTONLY:
+			return CallMode.STARTONLY;
+		case XMLHelper.ENDONLY:
+			if (readcontent) {
+				return CallMode.ENDONLYREAD;
+			}
+			return CallMode.ENDONLY;
+		}
+		return CallMode.NOCALL;
 	}
 
     /** if set to other than null, characters will be stored here */
@@ -228,7 +258,7 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 			if (cd != null) {
 				// TODO: deal with handlers with different priorities
 				startElement(cd.id, attributes);
-				if (cd.readcontent) {
+				if (cd.mode.readContent) {
 					curval = "";
 				}
 			}
@@ -244,7 +274,7 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 			if (cd != null) {
 				// TODO: deal with handlers with different priorities
 				endElement(cd.id);
-				if (cd.readcontent) {
+				if (cd.mode.readContent) {
 					curval = null;
 				}
 			}
@@ -257,17 +287,3 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
 	}
 }
 
-class CallDescription {
-	int id;
-	int callmode;
-	int constraint;
-	boolean readcontent;
-	CallDescription other = null;
-	
-	public CallDescription(int id, int constraint, int callmode, boolean readcontent) {
-		this.id = id;
-		this.callmode = callmode;
-		this.constraint = constraint;
-		this.readcontent = readcontent;
-	}
-}

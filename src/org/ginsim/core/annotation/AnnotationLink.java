@@ -15,6 +15,7 @@ public class AnnotationLink {
 	protected static Map m_helper = new HashMap();
 	static {
 		HttpHelper.setup();
+		MiriamURNHelper.setup();
 	}
 	static void addHelperClass( String key, String objectKey) {
 		
