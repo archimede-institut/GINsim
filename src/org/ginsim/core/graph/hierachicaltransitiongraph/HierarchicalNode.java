@@ -387,7 +387,7 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 		case TYPE_TERMINAL_CYCLE:
 			return "ca-"+size;
 		case TYPE_TRANSIENT_CYCLE:
-			return "ct"+size;
+			return "ct-"+size;
 		}
 		return "#"+size;
 	}

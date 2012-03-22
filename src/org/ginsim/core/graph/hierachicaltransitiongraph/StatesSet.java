@@ -198,7 +198,7 @@ public class StatesSet {
 			if (omdd.value == 0) return;
 	
 			int s = 1;
-			for (int i = last_depth; i < childsCount.length-1; i++) {
+			for (int i = last_depth+1; i < childsCount.length; i++) {
 				s *= childsCount[i];
 			}
 			counts[omdd.value] += s*coef;
