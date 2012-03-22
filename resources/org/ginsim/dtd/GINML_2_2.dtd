@@ -46,7 +46,7 @@ copyright by
 <!-- Extensions -->
 <!ENTITY % gxl-extension "">
 <!ENTITY % graph-extension ", annotation?, link?">
-<!ENTITY % node-extension ",parameter*,annotation?,nodevisualsetting?">
+<!ENTITY % node-extension ",parameter*,value*,annotation?,nodevisualsetting?">
 <!ENTITY % edge-extension ",subedge?,annotation?,edgevisualsetting?">
 <!ENTITY % rel-extension "">
 <!ENTITY % value-extension "">
@@ -150,6 +150,16 @@ copyright by
 <!ATTLIST parameter 
     	idActiveInteractions  IDREFS  #IMPLIED
 	val CDATA "0"
+>
+
+<!-- logical function -->
+<!ELEMENT value (exp+)>
+<!ATTLIST value
+    val CDATA "0"
+>
+<!ELEMENT exp EMPTY>
+<!ATTLIST exp
+    str CDATA #REQUIRED
 >
 
 <!-- Annotation --> 
