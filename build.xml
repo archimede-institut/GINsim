@@ -14,6 +14,7 @@
 	
 	<!-- set global properties for this build -->
 	<property name="src" location="${basedir}/src"/>
+	<property name="resources" location="${basedir}/resources"/>
 	<property name="build" location="${basedir}/build"/>
 	<property name="dist" location="${basedir}/dist"/>
 	<property name="lib.dir" location="${basedir}/../lib"/>
@@ -24,13 +25,6 @@
 	<property name="test.files"  location="${basedir}/testfiles"/>
 	<property name="test.report" location="${basedir}/testreports"/>
 	
-	<property name="src.resources.ginsim" location="${src}/org/ginsim/gui/resource"/>
-	<property name="src.resources.jython" location="${src}/org/ginsim/servicegui/tool/jython/console"/>
-	<property name="src.resources.common" location="${src}/fr/univmrs/tagc/common/resources"/>
-	<property name="build.resources.ginsim" location="${build}/org/ginsim/gui/resource"/>
-	<property name="build.resources.jython" location="${build}/org/ginsim/servicegui/tool/jython/console"/>
-	<property name="build.resources.common" location="${build}/fr/univmrs/tagc/common/resources"/>
-
 	<property name="jar.name" value="${ant.project.name}-${version}.jar"/>
 	<property name="jar.file" value="${dist}/${jar.name}"/>
 	<!-- TODO: Correct the class after the refactoring... -->
@@ -38,12 +32,8 @@
 	<property name="main.class.old" value="fr.univmrs.tagc.GINsim.global.GsMain"/>
 	
 	<!-- set documentation properties -->
-	<property name="doc.src" location="Documentation"/>
 	<property name="doc.dist" location="${dist}/Documentation"/>
 	<property name="doc.dist.javadoc" location="${doc.dist}/javadoc"/>
-	<property name="doc.dist.pdf" location="${doc.dist}/pdf"/>
-	<property name="doc.dist.docbook" location="${doc.dist}/docbook"/>
-	<property name="docbook.htmlstyle" location="${doc.dist.docbook}/ginsimdoc.xsl"/>
 
 	<!-- Setting the classpath with the necessary libraries -->
 	<available file="${GSLib}" type="dir" property="lib.dir" value="${GSLib}"/>
@@ -93,9 +83,7 @@
       [-DBundler=/path/to/jarbundler.jar]
 
   * Documentation *
-  doc.all     - Builds all documentation (javadoc and docbook)
-  doc.javadoc - Generates the Javadoc for all the src/ files
-  doc.docbook - Builds the user documentation (tutorial and manual)
+  javadoc - Generates the Javadoc for all the src/ files
 </echo>
 	</target>
 	
@@ -265,19 +253,13 @@
 		</javac>
 
 		<echo message="--> Copying resources ..."/>
-		<mkdir dir="${build.resources.ginsim}"/>
-		<copy todir="${build.resources.ginsim}">
-			<fileset dir="${src.resources.ginsim}"/>
-		</copy>
-		<!-- TODO: pedro: I would change this location, still thinking on it... -->
-		<mkdir dir="${build.resources.jython}"/>
-		<copy todir="${build.resources.jython}">
-			<fileset dir="${src.resources.jython}"/>
+		<copy todir="${build}">
+			<fileset dir="${resources}"/>
 		</copy>
 
 		<!-- build the doap file -->
 		<property name="doapfile" value="${ant.project.name}-about.rdf"/>
-		<exec dir="${build.resources.ginsim}" executable="xsltproc">
+		<exec dir="${build}" executable="xsltproc">
 			<arg line="-o ${doapfile} --stringparam ${ant.project.name}.version ${version}  doapversionchange.xsl ${doapfile}"/>
 		</exec>
 	</target>
@@ -442,26 +424,18 @@
 	</target>
 	
 	<!-- ************************************************** -->
-	<!-- ********** Starting Documentation targets ******** -->
-	<!-- ************************************************** -->
-	<target name="doc.all" depends="doc.docbook,doc.javadoc" description="generate all doc"/>
-	<target name="doc.docbook" depends="doc.docbook.single, doc.docbook.chunked" description="Documentation: all docbook versions (chunked, single)"/>
-
-	<!-- ************************************************** -->
 	<!-- Creates the doc directory structure                -->
 	<!-- ************************************************** -->
 	<target name="doc.init" depends="init" description="Creates the doc directory structure">
 		<echo message="--> Creating the doc directory structure ..." />
 		<mkdir dir="${doc.dist}"/>
-		<copy todir="${doc.dist}/"><fileset dir="${doc.src}"/></copy>
 		<mkdir dir="${doc.dist.javadoc}"/>
-		<mkdir dir="${doc.dist.pdf}"/>
 	</target>
 
 	<!-- ************************************************** -->
 	<!-- Generates the Javadoc files from ${src}            -->
 	<!-- ************************************************** -->
-	<target name="doc.javadoc" depends="doc.init" description="Generates the javadoc">
+	<target name="javadoc" depends="doc.init" description="Generates the javadoc">
 		<echo message="--> Generating the Javadoc files ..." />
 		<javadoc destdir="${doc.dist.javadoc}"
 			classpath="${classpath}"
@@ -480,55 +454,7 @@
 		</javadoc>
 	</target>
 
-	<!-- ************************************************** -->
-	<!-- Docbook Documentation targets                      -->
-	<!-- ************************************************** -->
 
-	<!-- generate chunked version of the doc: .db files then real export -->
-	<target name="doc.docbook.chunked" depends="doc.init" description="Documentation: html chunked pages">
-	 	<exec dir="${doc.dist.docbook}" executable="xsltproc">
-	 		<arg line="--stringparam  targets.filename tutorial.db --stringparam collect.xref.targets only ginsimdoc.xsl tutorial.xml"/>
-	 	</exec>
-	 	<exec dir="${doc.dist.docbook}" executable="xsltproc">
-	 		<arg line="--xinclude --stringparam  targets.filename userManual.db --stringparam collect.xref.targets only ginsimdoc.xsl userManual.xml"/>
-	 	</exec>
-
-	 	<exec dir="${doc.dist.docbook}" executable="xsltproc">
-	 		<arg line="-o ../html/ --stringparam  current.docid tutorial ginsimdoc.xsl tutorial.xml"/>
-	 	</exec>
-	 	<exec dir="${doc.dist.docbook}" executable="xsltproc">
-	 		<arg line="-o ../html/ --xinclude --stringparam  current.docid userManual ginsimdoc.xsl userManual.xml"/>
-	 	</exec>
-	</target>
-
-	<!-- and single-page version  -->
-	<target name="doc.docbook.single" depends="doc.init" description="Documentation: html single pages">
-	 	<exec dir="${doc.dist.docbook}" executable="xsltproc">
-	 		<arg line="--stringparam  targets.filename tutorial.db --stringparam collect.xref.targets only ginsimdoc-single.xsl tutorial.xml"/>
-	 	</exec>
-	 	<exec dir="${doc.dist.docbook}" executable="xsltproc">
-	 		<arg line="--xinclude --stringparam  targets.filename userManual.db --stringparam collect.xref.targets only ginsimdoc-single.xsl userManual.xml"/>
-	 	</exec>
-	 	<exec dir="${doc.dist.docbook}" executable="xsltproc">
-	 		<arg line="-o ../html/tutorial.html --stringparam  current.docid tutorial ginsimdoc-single.xsl tutorial.xml"/>
-	 	</exec>
-	 	<exec dir="${doc.dist.docbook}" executable="xsltproc">
-	 		<arg line="-o ../html/userManual.html --xinclude --stringparam  current.docid userManual ginsimdoc-single.xsl userManual.xml"/>
-	 	</exec>
-	</target>
-
-	<!-- TODO finally a pdf version, using dblatex  -->
-	<target name="doc.docbook.pdf" depends="doc.init" description="Documentation: pdf version">
-	 	<exec dir="${doc.dist.docbook}" executable="dblatex">
-	 		<arg line="-T simple tutorial.xml"/>
-	 	</exec>
-	 	<exec dir="${doc.dist.docbook}" executable="dblatex">
-	 		<arg line="-T simple userManual.xml"/>
-	 	</exec>
-		<move todir="${doc.dist.pdf}" file="${doc.dist.docbook}/tutorial.pdf"/>
-		<move todir="${doc.dist.pdf}" file="${doc.dist.docbook}/userManual.pdf"/>
-	 </target>
-	
 	<!-- ************************************************** -->
 	<!-- Build an application bundle for Mac OS X           -->
 	<!-- ************************************************** -->
@@ -551,7 +477,7 @@
 			version="${baseversion}"
 			build="${CURDATE}"
 			infostring="GINsim (Gene Interaction Network simulation) is a computer tool for the modeling and simulation of genetic regulatory networks. See http://ginsim.org/" 
-			icon="${src.resources.ginsim}/icon/GINsim.icns"
+			icon="${resources}/icon/GINsim.icns"
 			verbose="true"
 			>
 			<!-- Adjust the look, feel and behavior -->
@@ -561,9 +487,9 @@
 
 			<!-- Associate document types with this application -->
 			<documenttype name="GINML document" extensions="ginml" role="Editor"
-				iconFile="${src.resources.ginsim}/icon/GINsim.icns"/>
+				iconFile="${resources}/icon/GINsim.icns"/>
 			<documenttype name="zGINML document" extensions="zginml" role="Editor"
-				iconFile="${src.resources.ginsim}/icon/GINsim.icns"/>
+				iconFile="${resources}/icon/GINsim.icns"/>
 		</jarbundler>
 		<copy todir="${dist}/${ant.project.name}.app/Contents/Resources/Java/lib">
 			<fileset dir="${lib.dir}" includes="**/*.jar" />

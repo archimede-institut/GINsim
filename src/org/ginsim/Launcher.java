@@ -123,10 +123,10 @@ public class Launcher {
 	 * This method will only load all required resources, it will not create the first window.
 	 */
 	private static void initGUI() {
-		Translator.pushBundle("org.ginsim.gui.resource.messages");
-		ImageLoader.pushSearchPath("/org/ginsim/gui/resource/icon");
-		ImageLoader.pushSearchPath("/org/ginsim/gui/resource/icon/action");
-		AboutDialog.setDOAPFile("/org/ginsim/gui/resource/GINsim-about.rdf");
+		Translator.pushBundle("org.ginsim.messages");
+		ImageLoader.pushSearchPath("/org/ginsim/icon");
+		ImageLoader.pushSearchPath("/org/ginsim/icon/action");
+		AboutDialog.setDOAPFile("/GINsim-about.rdf");
 		try {
 			OptionStore.init(Launcher.class.getPackage().getName());
 		} catch (Exception e) {

@@ -23,13 +23,13 @@ public final class GinmlParser extends XMLHelper {
     private GsXMLHelper realParser = null;
     
     static {
-    	String DTD = "/org/ginsim/gui/resource/GINML_2_1.dtd";
+    	String DTD = "/org/ginsim/dtd/GINML_2_1.dtd";
         XMLHelper.addEntity("http://gin.univ-mrs.fr/GINsim/GINML_2_0.dtd", DTD);
         XMLHelper.addEntity("http://gin.univ-mrs.fr/GINsim/GINML_2_1.dtd", DTD);
         XMLHelper.addEntity("GINML_2_0.dtd", DTD);
         XMLHelper.addEntity("GINML_2_1.dtd", DTD);
 
-    	String NEWDTD = "/org/ginsim/gui/resource/GINML_2_2.dtd";
+    	String NEWDTD = "/org/ginsim/dtd/GINML_2_2.dtd";
         XMLHelper.addEntity("http://ginsim.org/GINML_2_2.dtd", NEWDTD);
         XMLHelper.addEntity("GINML_2_2.dtd", NEWDTD);
     }
