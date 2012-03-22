@@ -107,6 +107,20 @@ public class IOUtils {
 	}
 
 	/**
+	 * get an input stream for a file inside a given package.
+	 * 
+	 * @param path the path for which the InputSTream is desired
+	 * @return a FileInputStream initialized with the given path
+	 * @throws IOException
+	 * @throws FileNotFoundException
+	 */
+	public static InputStream getStreamForPath(Package pack, String filename) throws IOException,	FileNotFoundException {
+		String path = pack.getName().replace(".", File.separator);
+		return getStreamForPath(File.separator+path+File.separator+filename);
+	}
+
+	
+	/**
 	 * Produces a StringBuffer initialized with the given path
 	 * 
 	 * @param file_path the path for which the StringBuffer is desired

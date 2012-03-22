@@ -485,7 +485,7 @@ public class LRGDocumentationWriter {
 	 */
 	private void setJavascript() throws IOException {
 		StringBuffer javascript = doc.getDocumentExtra("javascript");
-		InputStream stream = IOUtils.getStreamForPath("/org/ginsim/gui/resource/makeStableStatesClickable.js");
+		InputStream stream = IOUtils.getStreamForPath(getClass().getPackage(), "makeStableStatesClickable.js");
 		BufferedReader in = new BufferedReader(new InputStreamReader(stream));
 		String s;
 		while ((s = in.readLine()) != null) {
