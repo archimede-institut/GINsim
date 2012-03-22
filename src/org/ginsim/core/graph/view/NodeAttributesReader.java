@@ -1,6 +1,7 @@
 package org.ginsim.core.graph.view;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 
@@ -161,4 +162,13 @@ public interface NodeAttributesReader extends AttributesReader {
      * @return the old bounds
      */
 	Rectangle setBounds(Rectangle bounds);
+
+	/**
+	 * Render a node on a given graphics.
+	 * Note: this will also change the selected node.
+	 * 
+	 * @param node
+	 * @param g
+	 */
+	void render(Object node, Graphics2D g);
 }

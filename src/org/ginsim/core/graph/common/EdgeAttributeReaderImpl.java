@@ -1,6 +1,7 @@
 package org.ginsim.core.graph.common;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,8 @@ import org.ginsim.common.OptionStore;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
+import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.ViewHelper;
 
 
 /**
@@ -124,7 +127,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
         return evsd.end;
     }
 
-    public List getPoints() {
+    public List<Point> getPoints() {
         if ( evsd == null ) {
             return null;
         }
@@ -228,6 +231,21 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 	@Override
 	public boolean getDefaultCurve() {
 		return defaultcurve;
+	}
+
+	@Override
+	public void render(NodeAttributesReader nreader, Edge edge, Graphics2D g) {
+		setEdge(edge);
+		List<Point> points = ViewHelper.getPoints(nreader, this, edge);
+		g.setColor(getLineColor());
+		Point pt1 = null;
+
+		for (Point pt2: points) {
+			if (pt1 != null) {
+				g.drawLine(pt1.x, pt1.y, pt2.x, pt2.y);
+			}
+			pt1 = pt2;
+		}
 	}
 
 }

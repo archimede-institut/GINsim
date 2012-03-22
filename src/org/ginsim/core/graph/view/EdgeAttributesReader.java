@@ -1,8 +1,11 @@
 package org.ginsim.core.graph.view;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.List;
+
+import org.ginsim.core.graph.common.Edge;
 
 
 /**
@@ -131,5 +134,14 @@ public interface EdgeAttributesReader extends AttributesReader {
      * @return the dash motif
      */
     EdgePattern getDash();
+    
+    /**
+     * Render an edge on a given graphics.
+     * 
+     * @param nreader
+     * @param edge
+     * @param g
+     */
+	void render(NodeAttributesReader nreader, Edge edge, Graphics2D g);
     
 }

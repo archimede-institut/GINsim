@@ -1,7 +1,9 @@
 package org.ginsim.core.graph.common;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.Shape;
 import java.util.Map;
 
 import org.ginsim.common.OptionStore;
@@ -344,5 +346,18 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
         setForegroundColor(fvreader.getForegroundColor());
         setBorder(fvreader.getBorder());
     }
+
+	@Override
+	public void render(Object node, Graphics2D g) {
+		setNode(node);
+		NodeShape shape = getShape();
+		
+		Shape s = getShape().getShape(getX(), getY(), getWidth(), getHeight());
+		g.setColor(getBackgroundColor());
+		g.fill(s);
+		g.setColor(getForegroundColor());
+		g.draw(s);
+		// FIXME: add text
+	}
 
 }
