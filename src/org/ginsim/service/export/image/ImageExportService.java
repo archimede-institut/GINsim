@@ -15,6 +15,7 @@ import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
@@ -23,6 +24,7 @@ import org.mangosdk.spi.ProviderFor;
  * 
  */
 @ProviderFor( Service.class)
+@Alias("image")
 public class ImageExportService implements Service {
 
     /**
@@ -30,7 +32,7 @@ public class ImageExportService implements Service {
      * @param selectedOnly
      * @param fileName
      */
-    public static void export( Graph<?, Edge<?>> graph, boolean selectedOnly, String fileName) {
+    public static void export( Graph<?, Edge<?>> graph, String fileName) {
 
     	Dimension dim = graph.getDimension();
     	int width = (int)dim.getWidth();

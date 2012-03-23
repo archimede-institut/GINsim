@@ -64,7 +64,7 @@ class ExportImageAction extends ExportAction {
 
 	@Override
 	protected void doExport(String filename) throws GsException, IOException {
-        ImageExportService.export(graph, false, filename);
+        ImageExportService.export(graph, filename);
 	}
 }
 

@@ -1,9 +1,11 @@
 package org.ginsim.core.graph.common;
 
 import java.awt.Color;
+import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.geom.AffineTransform;
 import java.util.Map;
 
 import org.ginsim.common.OptionStore;
@@ -17,6 +19,8 @@ import org.ginsim.core.graph.view.NodeShape;
  * a generic nodeAttributeReader storing data into a dedicated hashmap
  */
 public class NodeAttributeReaderImpl implements NodeAttributesReader {
+
+	private static char ELLIPSIS = '\u2026';
 	
 	public static final String VERTEX_BG = "vs.vertexbg";
 	public static final String VERTEX_FG = "vs.vertexfg";
@@ -350,14 +354,52 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 	@Override
 	public void render(Object node, Graphics2D g) {
 		setNode(node);
-		NodeShape shape = getShape();
+		int x = getX();
+		int y = getY();
+		g.translate( x,y);
+		doRender(node.toString(), g);
+		g.translate( -x,-y);
+	}
+	
+	/**
+	 * Render the node, assuming that the node has already been set
+	 * and the graphics context has been translated to its position.
+	 * i.e. render the current node at (0,0)
+	 * 
+	 * @param node
+	 * @param g
+	 */
+	private void doRender(String text, Graphics2D g) {
+		int w = getWidth();
+		int h = getHeight();
 		
-		Shape s = getShape().getShape(getX(), getY(), getWidth(), getHeight());
+		Shape s = getShape().getShape( 0,0, w,h);
 		g.setColor(getBackgroundColor());
 		g.fill(s);
 		g.setColor(getForegroundColor());
 		g.draw(s);
-		// FIXME: add text
+
+		// get the text and FontMetric to evaluate its size
+		FontMetrics fm = g.getFontMetrics();
+		
+		// shorten the text if needed
+		int textwidth = fm.stringWidth(text);
+		int targetWidth = w - 2;
+		int i = text.length()-3;
+		while ( textwidth > targetWidth && i > 0 ) {
+			text = text.substring(0, i) + ELLIPSIS;
+			textwidth = fm.stringWidth(text);
+			i--;
+		}
+		
+		// center the text
+		int textHeight = fm.getHeight();
+		int tx = w/2 - textwidth/2;
+		int ty = h/2 + textHeight/2;
+		
+		// render the text
+		g.setColor(getTextColor());
+		g.drawString(text, tx, ty);
 	}
 
 }
