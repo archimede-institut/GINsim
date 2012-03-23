@@ -85,7 +85,7 @@ public class ScriptLauncher {
 		running = true;
 		this.args = args;
 
-        File f = new File(filename);
+        File f = new File(filename).getAbsoluteFile();
         if (!f.exists()) {
             LogManager.error( "No such script: "+filename);
         	return;
