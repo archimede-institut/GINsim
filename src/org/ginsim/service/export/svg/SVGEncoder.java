@@ -1,5 +1,6 @@
 package org.ginsim.service.export.svg;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
@@ -49,11 +50,13 @@ public class SVGEncoder {
         if (nodes == null) {
             nodes = graph.getNodes();
         }
-        int[] tmax = getmax(nodes, edges, vreader, ereader);
+        Dimension dim = graph.getDimension();
+    	int width = (int)dim.getWidth();
+    	int height = (int)dim.getHeight();
 
         out.write("<?xml version='1.0' encoding='iso-8859-1' ?>\n");
         out.write("<!DOCTYPE svg PUBLIC \"-//W3C//DTD SVG 20001102//EN\" \"http://www.w3.org/TR/2000/CR-SVG-20001102/DTD/svg-20001102.dtd\">\n");
-        out.write("<svg width=\""+tmax[0]+"\" height=\""+tmax[1]+"\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n");
+        out.write("<svg width=\""+width+"\" height=\""+height+"\" xmlns=\"http://www.w3.org/2000/svg\" version=\"1.1\">\n");
         
         Map<Object, Rectangle> boxes = new HashMap<Object, Rectangle>();
         Set<String>  m_marker = new HashSet<String>();
@@ -74,50 +77,6 @@ public class SVGEncoder {
         out.close();
     }
 
-    /**
-     * Browse the graph to find max coordinates.
-     * 
-     * @param itNodes nodes iterator
-     * @param itEdges edges iterator
-     * @param vreader node attribute reader
-     * @param ereader edge attribute reader
-     * @return a integer array containing x,y max coordinates
-     */
-    private int[] getmax(Collection vertices, Collection<Edge> edges, NodeAttributesReader vreader, EdgeAttributesReader ereader) {
-        int[] tmax = new int[2];
-        int value;
-        for (Object v: vertices) {
-            vreader.setNode(v);
-            value = vreader.getX() + vreader.getWidth();
-            if (value > tmax[0]) {
-                tmax[0] = value;
-            }
-            value = vreader.getY() + vreader.getHeight();
-            if (value > tmax[1]) {
-                tmax[1] = value;
-            }
-        }
-    
-        for (Edge e: edges) {
-            ereader.setEdge(e);
-            List<Point> points = ereader.getPoints();
-            if (points == null) {
-                continue;
-            }
-            for (Point2D pt: points ) {
-                value = (int)pt.getX();
-                if (value > tmax[0]) {
-                    tmax[0] = value;
-                }
-                value = (int)pt.getY();
-                if (value > tmax[1]) {
-                    tmax[1] = value;
-                }
-            }
-        }
-        return tmax;
-    }
-    
     /**
      * 
      * @param out

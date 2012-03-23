@@ -1,5 +1,6 @@
 package org.ginsim.core.graph.common;
 
+import java.awt.Dimension;
 import java.util.Collection;
 
 import org.ginsim.common.exception.GsException;
@@ -40,6 +41,12 @@ public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 	 */
 	public NodeAttributesReader getNodeAttributeReader();
 	
+	/**
+	 * Get the global bounds of the graph.
+	 * 
+	 * @return
+	 */
+	public Dimension getDimension();
 	
 	/**
 	 * Save this graph

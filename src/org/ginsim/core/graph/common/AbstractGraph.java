@@ -1,5 +1,9 @@
 package org.ginsim.core.graph.common;
 
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
@@ -389,6 +393,45 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		return new NodeAttributeReaderImpl(this, getNodeVSMap());
 	}
 	
+	public Dimension getDimension() {
+    	int width = 0;
+    	int height = 0;
+		NodeAttributesReader nreader = getNodeAttributeReader();
+		for (V node: getNodes()) {
+			nreader.setNode(node);
+    		int x = nreader.getX() + nreader.getWidth();
+    		if (x > width) {
+    			width = x;
+    		}
+    		int y = nreader.getY() + nreader.getHeight();
+    		if (y > height) {
+    			height = y;
+    		}
+		}
+		
+		EdgeAttributesReader ereader = getEdgeAttributeReader();
+        for (Edge e: getEdges()) {
+            ereader.setEdge(e);
+            List<Point> points = ereader.getPoints();
+            if (points == null) {
+                continue;
+            }
+            for (Point2D pt: points ) {
+                int x = (int)pt.getX();
+        		if (x > width) {
+        			width = x;
+        		}
+                int y = (int)pt.getY();
+        		if (y > height) {
+        			height = y;
+        		}
+            }
+        }
+
+		
+		return new Dimension(width, height);
+	}
+
 	
     /**
      * @return true is the graph is empty
