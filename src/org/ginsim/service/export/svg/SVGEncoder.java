@@ -93,6 +93,7 @@ public class SVGEncoder {
         
         String bgCol = "#"+DataUtils.getColorCode(vreader.getBackgroundColor());
         String fgCol = "#"+DataUtils.getColorCode(vreader.getForegroundColor());
+        String txtCol = "#"+DataUtils.getColorCode(vreader.getTextColor());
         
 	    out.write("  <g id=\""+id+"\">\n");
         switch (vreader.getShape()) {
@@ -123,7 +124,7 @@ public class SVGEncoder {
 	            " x=\""+(x+w/2)+"\"" +
 	            " y=\""+(y+h/2+3)+"\"" +
 	            " text-anchor=\"middle\"" +
-	            " fill=\""+fgCol+"\">" +
+	            " fill=\""+txtCol+"\">" +
 	    		obj+
 	    		"</text>\n");
 	    out.write("  </g>\n");
