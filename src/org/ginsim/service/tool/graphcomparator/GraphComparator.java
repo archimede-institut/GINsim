@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.ginsim.common.exception.GsException;
+import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.GraphicalAttributesStore;
@@ -125,8 +126,8 @@ public abstract class GraphComparator<G extends Graph<?,?>> {
 	 * @param col the color to apply to its lineColor
 	 */
 	protected void mergeEdgeAttributes(Object e, Object source, Object aux, Color col, EdgeAttributesReader ereader, EdgeAttributesReader esourcereader, EdgeAttributesReader eauxreader) {
-		ereader.setEdge(e);
-		esourcereader.setEdge(source);
+		ereader.setEdge((Edge)e);
+		esourcereader.setEdge((Edge)source);
 		ereader.copyFrom(esourcereader);
 		ereader.setLineColor(col);
 		ereader.refresh();			
@@ -134,7 +135,7 @@ public abstract class GraphComparator<G extends Graph<?,?>> {
 		if (col == SPECIFIC_G1_COLOR) stylesMap.put(e, new GraphComparatorStyleStore(new EdgeStyle(esourcereader), null, new EdgeStyle(ereader)));
 		else if (col == SPECIFIC_G2_COLOR) stylesMap.put(e, new GraphComparatorStyleStore(null, new EdgeStyle(esourcereader), new EdgeStyle(ereader)));
 		else {
-			eauxreader.setEdge(aux);
+			eauxreader.setEdge((Edge)aux);
 			stylesMap.put(e, new GraphComparatorStyleStore(new EdgeStyle(esourcereader), new EdgeStyle(eauxreader), new EdgeStyle(ereader)));
 		}
 	}

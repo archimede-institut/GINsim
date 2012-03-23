@@ -23,6 +23,7 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.backend.JgraphtBackendImpl;
+import org.ginsim.core.graph.common.EdgeAttributeReaderImpl.EdgeVSdata;
 import org.ginsim.core.graph.common.NodeAttributeReaderImpl.NodeVSdata;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
@@ -37,8 +38,8 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	
 	// view data
 	private GraphViewListener listener;
-    private Map<V,NodeVSdata> evsmap = null;
-    private Map vvsmap = null;
+    private Map<Edge<?>,EdgeVSdata> evsmap = null;
+    private Map<Object, NodeVSdata> vvsmap = null;
 
     
 	// The name of the graph
@@ -346,16 +347,16 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * @return the place where local VS data is stored (create it if needed)
 	 * @see #hasFallBackVSData()
 	 */
-    private Map getEdgeVSMap() {
+    private Map<Edge<?>, EdgeVSdata> getEdgeVSMap() {
         if (evsmap == null) {
-            evsmap = new HashMap();
+            evsmap = new HashMap<Edge<?>, EdgeVSdata>();
         }
         return evsmap;
     }
     
-    private Map getNodeVSMap() {
+    private Map<Object, NodeVSdata> getNodeVSMap() {
         if (vvsmap == null) {
-            vvsmap = new HashMap();
+            vvsmap = new HashMap<Object, NodeVSdata>();
         }
         return vvsmap;
     }

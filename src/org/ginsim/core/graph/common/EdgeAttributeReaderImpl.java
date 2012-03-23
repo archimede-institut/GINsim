@@ -29,7 +29,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     protected float defaultLineWidth;
     
 	private final AbstractGraph graph;
-    private final Map dataMap;
+    private final Map<Edge<?>, EdgeVSdata> dataMap;
     
     private float defaultsize = 1;
     private boolean defaultfill = true;
@@ -76,8 +76,8 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
         evsd.size = w;
     }
 
-    public void setEdge(Object obj) {
-    	edge = (Edge)obj;
+    public void setEdge(Edge obj) {
+    	this.edge = obj;
         evsd = (EdgeVSdata)dataMap.get(obj);
         if (evsd == null && obj instanceof Edge) {
             evsd = (EdgeVSdata)dataMap.get(obj);

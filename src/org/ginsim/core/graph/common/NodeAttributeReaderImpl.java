@@ -60,7 +60,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 
 
 	private final AbstractGraph backend;
-    private Map dataMap = null;
+    private Map<Object, NodeVSdata> dataMap = null;
     
     private NodeVSdata vvsd;
     private Object vertex;
@@ -69,7 +69,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
     /**
      * @param map
      */
-    public NodeAttributeReaderImpl(AbstractGraph backend, Map map) {
+    public NodeAttributeReaderImpl(AbstractGraph backend, Map<Object, NodeVSdata> map) {
     	this.backend = backend;
         this.dataMap = map;
         

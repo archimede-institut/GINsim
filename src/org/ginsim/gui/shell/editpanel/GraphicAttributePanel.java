@@ -889,7 +889,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 				edges = graph.getEdges();
 			}
 			for (Object edge: edges) {
-				eReader.setEdge(edge);
+				eReader.setEdge((Edge)edge);
 				if (jCB_selectLineColor.isSelected()) {
 					eReader.setLineColor(jButton_linecolor.getBackground());
 				}
@@ -904,7 +904,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 				}
 				eReader.refresh();
 			}
-			eReader.setEdge(selected);
+			eReader.setEdge((Edge)selected);
 			break;
 		case VERTEXSELECTED:
 			refreshSize();
@@ -1064,7 +1064,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 		}
 		if (selected instanceof Edge) {
 			whatIsSelected = EDGESELECTED;
-			eReader.setEdge(selected);
+			eReader.setEdge((Edge)selected);
 			lineColorEnabled();
 			lineStyleEnabled();
 			linePatternEnabled();

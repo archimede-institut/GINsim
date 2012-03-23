@@ -10,7 +10,7 @@ import java.util.Vector;
 
 import org.ginsim.common.ColorPalette;
 import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgePattern;
@@ -254,7 +254,7 @@ public abstract class TreeBuilder {
 	 * @param ereader
 	 */
 	protected void linkNode(TreeNode source, TreeNode target, int colorIndex, EdgeAttributesReader ereader) {
-		Object e = tree.addEdge(source, target);
+		Edge<?> e = tree.addEdge(source, target);
 		ereader.setEdge(e);
 		ereader.setLineColor(ColorPalette.defaultPalette[colorIndex+1]);
     	if (target.isLeaf()) {

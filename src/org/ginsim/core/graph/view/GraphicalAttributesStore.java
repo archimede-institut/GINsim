@@ -45,7 +45,7 @@ public class GraphicalAttributesStore {
         while (it.hasNext()) {
             Object obj = it.next();
             if ( obj instanceof Edge) {
-                ereader.setEdge(obj);
+                ereader.setEdge((Edge)obj);
                 ((StoreColor)oldColors.get(obj)).restore(ereader);
             } else {
                 vreader.setNode(obj);

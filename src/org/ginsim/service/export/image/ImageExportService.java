@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.imageio.metadata.IIOMetadata;
 
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Edge;

@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.view.AttributesReader;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
@@ -82,7 +83,7 @@ public class CascadingStyle {
 	public void applySelectorsOnEdges(List selectors, Collection edges, EdgeAttributesReader ereader) {
 		for (Iterator it_edges = edges.iterator(); it_edges.hasNext();) {			//For each edges
 			Object edge = it_edges.next();
-			ereader.setEdge(edge);
+			ereader.setEdge((Edge)edge);
 			EdgeStyle style = new EdgeStyle(ereader);								//  get the style
 			if (shouldStoreOldStyle) old_edges.put(edge, style.clone());					//  save a copy if needed
 			for (Iterator it_sel = selectors.iterator(); it_sel.hasNext();) {		//  For each selector
@@ -128,7 +129,7 @@ public class CascadingStyle {
 	public void applySelectorOnEdges(Selector sel, Collection edges, EdgeAttributesReader ereader) {
 		for (Iterator it_edges = edges.iterator(); it_edges.hasNext();) {			//For each edge
 			Object edge = it_edges.next();
-			ereader.setEdge(edge);
+			ereader.setEdge((Edge)edge);
 			EdgeStyle style = new EdgeStyle(ereader);								//  get the style
 			if (shouldStoreOldStyle) old_edges.put(edge, style.clone());					//  save a copy if needed
 			((EdgeStyle)sel.getStyleForEdge(edge)).apply(ereader);		//  apply the style to the edge.
@@ -179,7 +180,7 @@ public class CascadingStyle {
 	public void restoreAllEdges(EdgeAttributesReader areader) {
 		for (Iterator it_edges = old_edges.keySet().iterator(); it_edges.hasNext();) {
 			Object edge = it_edges.next();
-			areader.setEdge(edge);
+			areader.setEdge((Edge)edge);
 			((Style)old_edges.get(edge)).apply(areader);
 		}
 	}
@@ -204,7 +205,7 @@ public class CascadingStyle {
 	public void restoreAllEdges(Collection edges, EdgeAttributesReader areader) {
 		for (Iterator it_edges = edges.iterator(); it_edges.hasNext();) {
 			Object edge = it_edges.next();
-			areader.setEdge(edge);
+			areader.setEdge((Edge)edge);
 			Style style = (Style)old_edges.get(edge);
 			if (style != null) style.apply(areader);
 		}
@@ -246,7 +247,7 @@ public class CascadingStyle {
 	public void storeAllEdges(Collection edges, EdgeAttributesReader areader) {
 		for (Iterator it_edges = edges.iterator(); it_edges.hasNext();) {
 			Object edge = it_edges.next();
-			areader.setEdge(edge);
+			areader.setEdge((Edge)edge);
 			EdgeStyle style = new EdgeStyle(areader);
 			old_edges.put(edge, style);
 		}

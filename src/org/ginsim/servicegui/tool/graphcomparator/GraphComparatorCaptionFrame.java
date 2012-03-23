@@ -307,7 +307,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 				if (style == null) style = is.v1;
 			}
 			if (o instanceof Edge) { 	//edge
-				ereader.setEdge(o);
+				ereader.setEdge((Edge)o);
 				if (style != null) {
 					ereader.setDash(EdgePattern.SIMPLE); //FIXME : thats dirty, but copy/paste from DynamicGraph.
 					cs.applyOnEdge((EdgeStyle)style, o, ereader);
