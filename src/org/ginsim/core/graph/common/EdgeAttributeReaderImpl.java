@@ -246,6 +246,17 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 			}
 			pt1 = pt2;
 		}
+		
+		// draw the arrow end
+		g.translate(pt1.x, pt1.y);
+		Point ptsrc = points.get(points.size()-2);
+		double theta = ViewHelper.getRotationAngle(pt1.x-ptsrc.x, pt1.y-ptsrc.y);
+		g.rotate(theta);
+
+		g.fill(getLineEnd().getShape());
+
+		g.rotate(-theta);
+		g.translate(-pt1.x, -pt1.y);
 	}
 
 }

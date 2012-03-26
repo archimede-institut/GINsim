@@ -47,10 +47,10 @@ public class ViewHelper {
 		for (Point p: middlePoints) {
 			points.add(p);
 		}
-		points.add(getIntersection(targetBounds, middlePoints.get(middlePoints.size()-1), true, w));
+		points.add(getIntersection(targetBounds, middlePoints.get(middlePoints.size()-1), false, w));
 		
 		// replace the first point
-		points.set(0, getIntersection(srcBounds, middlePoints.get(0), true, w));
+		points.set(0, getIntersection(srcBounds, middlePoints.get(0), false, w));
 		
 		return points;
 	}
@@ -232,6 +232,40 @@ public class ViewHelper {
 		if (b2.contains(points.get(last))) {
 			points.remove(last);
 		}
+	}
+
+	/**
+	 * Get the rotation angle between a vector and the horizontal axis.
+	 * 
+	 * @param dx
+	 * @param dy
+	 * @return
+	 */
+	public static double getRotationAngle(int dx, int dy) {
+
+		// fast answer for simple cases (and avoid dividing by 0)
+		if (dy == 0) {
+			if (dx < 0) {
+				return Math.PI;
+			}
+			return 0;
+		}
+		if (dx == 0) {
+			if (dy > 0) {
+				return Math.PI/2;
+			}
+			return -Math.PI/2;
+		}
+
+		// estimate angle using inverse tangent function
+		// Note: the tangent is the ratio dy/dx (height reached for dx=1)
+		double theta = Math.atan(dy / (double)dx);
+		
+		// find the proper angle when dx < 0
+		if (dx < 0) {
+			theta += Math.PI;
+		}
+		return theta;
 	}
 }
 
