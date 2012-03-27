@@ -79,10 +79,10 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	public HierarchicalTransitionGraphImpl( boolean parsing) {
 		
         super( parsing);
+        this.newLabelsBySize = new HashMap();
 	}
 
 	public HierarchicalTransitionGraphImpl(Map map, File file)  throws GsException{
-		
 	    this( true);
         HierarchicalTransitionGraphParser parser = new HierarchicalTransitionGraphParser();
         parser.parse(file, map, this);
