@@ -455,11 +455,12 @@ public class HTGSimulation extends Simulation {
 		vreader.setNode(hnode);
 		switch (hnode.getType()) {
 		case HierarchicalNode.TYPE_STABLE_STATE:
-			vreader.setShape(NodeShape.ELLIPSE);
+			vreader.setShape(NodeShape.RECTANGLE);
 			vreader.setBackgroundColor(HierarchicalNode.TYPE_STABLE_STATE_COLOR);
 			
 			break;
 		case HierarchicalNode.TYPE_TRANSIENT_CYCLE:
+			vreader.setShape(NodeShape.ELLIPSE);
 			vreader.setBackgroundColor(HierarchicalNode.TYPE_TRANSIENT_CYCLE_COLOR);
 			break;
 		case HierarchicalNode.TYPE_TERMINAL_CYCLE:
@@ -467,6 +468,7 @@ public class HTGSimulation extends Simulation {
 			vreader.setBackgroundColor(HierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
 			break;
 		case HierarchicalNode.TYPE_TRANSIENT_COMPONENT:
+			vreader.setShape(NodeShape.ELLIPSE);
 			Color color = null;
 			if (hnode.getIn().isEmpty()) {
 				color = HierarchicalNode.TYPE_EDEN_TRANSIENT_COMPONENT_COLOR;

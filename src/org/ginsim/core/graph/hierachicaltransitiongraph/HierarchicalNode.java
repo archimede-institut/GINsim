@@ -47,12 +47,12 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 	public static final String TYPE_TRANSIENT_CYCLE_STRING = "cycle";
 	public static final String TYPE_STABLE_STATE_STRING = "stableState";
 	
-	public static final Color TYPE_TRANSIENT_COMPONENT_COLOR = new Color(78, 154, 6);
-	public static final Color TYPE_TRANSIENT_CYCLE_COLOR = new Color(114, 159, 207);
-	public static final Color TYPE_TERMINAL_CYCLE_COLOR = new Color(32, 74, 135);
-	public static final Color TYPE_STABLE_STATE_COLOR = new Color(164, 0, 0);
-	public static final Color TYPE_TRANSIENT_COMPONENT_ALONE_COLOR = new Color(175, 255, 86);
-	public static final Color TYPE_EDEN_TRANSIENT_COMPONENT_COLOR = new Color(120, 160, 40);
+	public static final Color TYPE_TRANSIENT_COMPONENT_COLOR = new Color(215, 246, 203);
+	public static final Color TYPE_TRANSIENT_CYCLE_COLOR = new Color(128, 158, 208);
+	public static final Color TYPE_TERMINAL_CYCLE_COLOR = new Color(240, 200, 200);
+	public static final Color TYPE_STABLE_STATE_COLOR = new Color(240, 200, 200);
+	public static final Color TYPE_TRANSIENT_COMPONENT_ALONE_COLOR = new Color(250, 250, 180);
+	public static final Color TYPE_EDEN_TRANSIENT_COMPONENT_COLOR = new Color(200, 200, 255);
 
 //	/**
 //	 * OMDDNode status to indicate the state is present in the GsStateSet but unprocessed 
