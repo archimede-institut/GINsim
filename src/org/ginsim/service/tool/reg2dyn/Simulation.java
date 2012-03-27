@@ -54,11 +54,11 @@ public class Simulation implements Runnable {
 		}
 		breadthFirst = params.breadthFirst;
    		updater = SimulationUpdater.getInstance(regGraph, params);
-	    initStatesIterator = new InitialStatesIterator(params.nodeOrder, params);
+	    setInitStatesIterator(new InitialStatesIterator(params.nodeOrder, params));
 	}
 
     public void set_initialStates(List nodeOrder, Map inputs, Map m_initState) {
-        initStatesIterator = new InitialStatesIterator(nodeOrder, inputs, m_initState);
+        setInitStatesIterator(new InitialStatesIterator(nodeOrder, inputs, m_initState));
     }
 
     public void interrupt() {
@@ -84,9 +84,9 @@ public class Simulation implements Runnable {
 		boolean maxDepthReached = false;
 		try {
 			// iterate through initial states and run the simulation from each of them
-			while(initStatesIterator.hasNext()) {
+			while(getInitStatesIterator().hasNext()) {
 				// add the next proposed state
-				queue.add(new SimulationQueuedState((byte[])initStatesIterator.next(), 0, null, false));
+				queue.add(new SimulationQueuedState((byte[])getInitStatesIterator().next(), 0, null, false));
 				
 				// do the simulation itself
 				while (!queue.isEmpty()) {
@@ -158,5 +158,19 @@ public class Simulation implements Runnable {
 			}
 		}
 		return helper.endSimulation();
+	}
+
+	/**
+	 * @return the initStatesIterator
+	 */
+	public Iterator<byte[]> getInitStatesIterator() {
+		return initStatesIterator;
+	}
+
+	/**
+	 * @param initStatesIterator the initStatesIterator to set
+	 */
+	public void setInitStatesIterator(Iterator<byte[]> initStatesIterator) {
+		this.initStatesIterator = initStatesIterator;
 	}
 }

@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +48,8 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	 */
 	private byte[] childsCount = null;
 	private long saveEdgeId;
+	
+	protected Map<Integer, Integer> newLabelsBySize;
 
 	
 /* **************** CONSTRUCTORS ************/	
@@ -326,6 +329,17 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
     	
     	return false;
     }
+    
+    @Override
+	public Map<Integer, Integer> getNewLabelsBySize() {
+    	return newLabelsBySize;
+    }
+    @Override
+	public void setNewLabelsBySize(Map<Integer, Integer> newLabelsBySize){
+		this.newLabelsBySize = newLabelsBySize;
+	}
+
+    
 
 		
 /* **************** UNIMPLEMENTED METHODS ************/

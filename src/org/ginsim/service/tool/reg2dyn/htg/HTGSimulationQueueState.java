@@ -1,7 +1,6 @@
 package org.ginsim.service.tool.reg2dyn.htg;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -114,10 +113,8 @@ public class HTGSimulationQueueState implements HTGSimulationQueueItem  {
 	 */
 	public HierarchicalNode getInCycle(HierarchicalNodeSet nodeSet, List queue) {
 		if (inCycle == null) return null;
-		for (Iterator it = nodeSet.iterator(); it.hasNext();) {
-			HierarchicalNode n = (HierarchicalNode) it.next();
-			if (n.contains(state)) return n;
-		}
+		HierarchicalNode n = nodeSet.getHNodeForState(state);
+		if (n != null) return n;
 		for (ListIterator it = queue.listIterator(queue.size()); it.hasPrevious();) {
 			HTGSimulationQueueItem e = (HTGSimulationQueueItem) it.previous();
 			if (e.isCycle() && e.containsState(state)) return ((HTGSimulationQueueSCC) e).getSCC();

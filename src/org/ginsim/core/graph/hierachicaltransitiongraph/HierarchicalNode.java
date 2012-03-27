@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.ginsim.core.utils.Dotify;
@@ -99,16 +100,18 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 	 */
 	private int size = 0;
 
+	/**
+	 * Count of states in this node.
+	 */
+	private short label_count = -1;
+
 
 	/**
 	 * The atteignability in terms of attractors
 	 */
 	private HierarchicalSigmaSet sigma;
 	
-	/**
-	 * An array such that childsCount[i] indicates the maxValue of the i-th gene
-	 */
-	private byte[] childsCount;
+	private HierarchicalTransitionGraph htg;
 	private Set<HierarchicalNode> out;
 	private Set<HierarchicalNode> in;
 
@@ -120,11 +123,11 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 	 * Initialize a new node with a good uid, and type TYPE_TRANSIENT_COMPONENT
 	 * By default the state set is not initialized
 	 */
-	public HierarchicalNode(byte[] childsCount) {
+	public HierarchicalNode(HierarchicalTransitionGraph htg) {
 		this.statesSet = null;
 		this.uid = nextId++;
 		this.type = TYPE_TRANSIENT_COMPONENT;
-		this.childsCount = childsCount;
+		this.htg = htg;
 		this.in = new HashSet<HierarchicalNode>();
 		this.out = new HashSet<HierarchicalNode>();
 	}
@@ -136,7 +139,7 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 	 */
 	public void addAllTheStatesInQueue() {
 		if (statePile == null) return;
-		if (statesSet == null) statesSet = new StatesSet(childsCount);
+		if (statesSet == null) statesSet = new StatesSet(htg.getChildsCount());
 		statesSet.addStates(statePile);
 		statePile = null;
 		updateSize();
@@ -161,7 +164,7 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 	 * @param status
 	 */
 	public void addState(byte[] state, int status) {
-		if (statesSet == null) statesSet = new StatesSet(childsCount);
+		if (statesSet == null) statesSet = new StatesSet(htg.getChildsCount());
 		statesSet.addState(state, status);
 	}
 
@@ -356,7 +359,7 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 	}
 
 	public void parse(String parse) throws SAXException {
-		if (statesSet == null) statesSet = new StatesSet(childsCount);
+		if (statesSet == null) statesSet = new StatesSet(htg.getChildsCount());
 		statesSet.parse(parse);
 	}
 
@@ -381,16 +384,33 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 				return "ss-"+s.toString();
 			}
 		}
+		if (label_count == -1) {
+			updateLabelCount();
+		}
 		switch (type) {
 		case TYPE_TRANSIENT_COMPONENT:
-			return "i-"+size;
+			return "i#"+size+"-"+label_count;
 		case TYPE_TERMINAL_CYCLE:
-			return "ca-"+size;
+			return "ca#"+size+"-"+label_count;
 		case TYPE_TRANSIENT_CYCLE:
-			return "ct-"+size;
+			return "ct#"+size+"-"+label_count;
 		}
 		return "#"+size;
 	}
+	private void updateLabelCount() {
+		Map<Integer, Integer> newLabelsBySize = htg.getNewLabelsBySize();
+		Integer i_size = new Integer(size);
+		Integer nextLabel = newLabelsBySize.get(i_size);
+		if (nextLabel == null) {
+			nextLabel = new Integer(1);
+			newLabelsBySize.put(i_size, nextLabel);
+		} else {
+			nextLabel = new Integer(nextLabel.shortValue()+1);
+			newLabelsBySize.put(i_size, nextLabel);
+		}
+		label_count = nextLabel.shortValue();
+	}
+
 	public String toLongString() {
 		String name = "";
 		if (size == 1) {
@@ -454,7 +474,7 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 	 * Return a string representation of the first state in the node.
 	 */
 	public StringBuffer firstStatesToString() {
-		StringBuffer s = new StringBuffer(childsCount.length);
+		StringBuffer s = new StringBuffer(htg.getChildsCount().length);
 		if (statePile != null) {
 			byte[] stateInPile = (byte[]) statePile.get(0);
 			for (int i = 0; i < stateInPile.length; i++) {

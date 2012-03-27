@@ -1,6 +1,8 @@
 package org.ginsim.core.graph.hierachicaltransitiongraph;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphAssociation;
@@ -75,4 +77,7 @@ public interface HierarchicalTransitionGraph extends Graph<HierarchicalNode, Dec
 	 * @return <b>true</b> if the transients are compacted into component by their atteignability of attractors.
 	 */
 	public boolean areTransientCompacted();
+
+	public Map<Integer, Integer> getNewLabelsBySize();
+	public void setNewLabelsBySize(Map<Integer, Integer> newLabelsBySize);
 }

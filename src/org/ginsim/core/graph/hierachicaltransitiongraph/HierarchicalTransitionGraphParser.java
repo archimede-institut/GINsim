@@ -187,7 +187,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                     String id = attributes.getValue("id");
                     if (map == null || map.containsKey(id)) {
                         pos = POS_VERTEX;
-                        vertex = new HierarchicalNode(childCount);
+                        vertex = new HierarchicalNode(htg);
                         oldIdToNode.put(id, vertex);
                         htg.addNode(vertex);
                     } else {
