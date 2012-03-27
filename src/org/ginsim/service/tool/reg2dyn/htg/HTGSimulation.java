@@ -37,8 +37,6 @@ import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
  */
 public class HTGSimulation extends Simulation {
 	
-
-	
 	/*  ****DEBUG RELATED STUFF*/
 	private static final int DBG_DEPLOYMENT = 0;
 	private static final int DBG_MAINLOOPS = 1;
@@ -90,6 +88,9 @@ public class HTGSimulation extends Simulation {
 	protected long lastDraw = 0;
 	protected int nbinitialstates = 0;
 	protected int step = 0;
+	
+	protected long queueSearchCount = 0;
+	
 
 	/**
 	 * The simulation parameters
@@ -157,6 +158,7 @@ public class HTGSimulation extends Simulation {
 	
 		LogManager.info("Simulation done in : "+(System.currentTimeMillis()-time)+"ms");
 		LogManager.info("Max depth reached : "+max_depth_reached);
+		LogManager.info("Queue iteration count : "+queueSearchCount);
 		addAllNodeTo();									// add all nodes to the graph
 		LogManager.info("Count of nodes : "+htg.getNodeCount());
 		addAllEdgesTo();								// add all the edges to the graph
@@ -429,6 +431,7 @@ public class HTGSimulation extends Simulation {
 	private HTGSimulationQueueItem getTripletInQueueForState(byte[] state) {
 		for (ListIterator<HTGSimulationQueueItem> it = queue.listIterator(queue.size()); it.hasPrevious();) {
 			HTGSimulationQueueItem triplet = (HTGSimulationQueueItem) it.previous();
+			queueSearchCount++;
 			if (triplet.containsState(state)) {
 				return triplet;
 			}
@@ -580,5 +583,9 @@ public class HTGSimulation extends Simulation {
 	public void setMaxDepth(int max_depth_reached2) {
 		this.max_depth_reached = max_depth_reached2;
 	}
-	
+
+	public void setQueueSearchCount(long queueSearchCount) {
+		this.queueSearchCount = queueSearchCount;
+	}
+
 }

@@ -52,6 +52,9 @@ public class TarjanSimulation {
 
 	private final SimulationManager frame;
 	
+	private long queueSearchCount = 0;
+	protected Map<SimpleState, HTGSimulationQueueState> inQueue; 
+	
 
 	public TarjanSimulation(HTGSimulation htgSimulation, SimulationManager frame) {
 		this.htgSimulation = htgSimulation;
@@ -59,6 +62,7 @@ public class TarjanSimulation {
 		nbnode = 0;
 		this.indexesMap = new HashMap<SimpleState, Integer>();
 		this.state2sccMap = new HashMap<SimpleState, HierarchicalNode>();
+		this.inQueue = new HashMap<SimpleState, HTGSimulationQueueState>();
 	}
 
 
@@ -102,6 +106,7 @@ public class TarjanSimulation {
 			}
 		}
 		htgSimulation.setMaxDepth(max_depth_reached);
+		htgSimulation.setQueueSearchCount(queueSearchCount);
 
 	}
 
@@ -115,9 +120,11 @@ public class TarjanSimulation {
 		HTGSimulationQueueItem n = null;
 		index++;
 		depth++;
-		indexesMap.put(new SimpleState(e.getState()), new Integer(index));
+		SimpleState s_e = new SimpleState(e.getState());
+		indexesMap.put(s_e, new Integer(index));
 		queue.add(e);																										//Queueing the current state
-
+		inQueue.put(s_e, e);
+		
 		while (e_updater.hasNext()) {																						//For each successors
 			byte[] n_state= ((SimulationQueuedState)e_updater.next()).state;												// n_state is the state of the successor
 			SimulationUpdater n_updater = getUpdaterForState(n_state);                          							
@@ -159,6 +166,7 @@ public class TarjanSimulation {
 		HTGSimulationQueueItem n;
 		do {
 			n = (HTGSimulationQueueItem) queue.removeLast();
+			inQueue.remove(new SimpleState(((HTGSimulationQueueState)n).getState()));
 			if (n.getLow_index() < low_index) low_index = n.getLow_index();
 			cycle.addState(((HTGSimulationQueueState)n).getState(), 1);
 			state2sccMap.put(new SimpleState(((HTGSimulationQueueState)n).getState()), cycle);
@@ -231,13 +239,8 @@ public class TarjanSimulation {
 	 * @return
 	 */
 	private HTGSimulationQueueItem getTripletInQueueForState(byte[] state) {
-		for (ListIterator<HTGSimulationQueueItem> it = queue.listIterator(queue.size()); it.hasPrevious();) {
-			HTGSimulationQueueItem triplet = (HTGSimulationQueueItem) it.previous();
-			if (triplet.containsState(state)) {
-				return triplet;
-			}
-		}
-		return null;
+		queueSearchCount++;
+		return inQueue.get(new SimpleState(state));
 	}
 
 	/**
