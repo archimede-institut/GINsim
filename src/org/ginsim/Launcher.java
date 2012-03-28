@@ -10,6 +10,7 @@ import org.ginsim.common.OptionStore;
 import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.Translator;
 import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.shell.AboutDialog;
@@ -35,7 +36,7 @@ public class Launcher {
 	 */
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
 		detectGSDir();
-		
+		ServiceManager.getManager();//Force the services to load, in order to be able to load a file with its attached objects like initStates...
 		
         List<String> open = new ArrayList<String>();
 
