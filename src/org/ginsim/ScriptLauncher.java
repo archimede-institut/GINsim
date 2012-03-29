@@ -3,6 +3,7 @@ package org.ginsim;
 import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -275,25 +276,32 @@ public class ScriptLauncher {
 	}
 
 	public void doc(String filename, String javadocbase) {
-		System.out.println("doc start");
 		DocumentWriter doc = createReport(filename, null);
 		try {
-			System.out.println("run doc");
 			writeDoc(doc, javadocbase, "Services", ServiceManager.getManager().getAvailableServices());
-			System.out.println("doc");
-/*
-			writeDoc(doc, "Available data managers", associated.getObjectManagerList());
-			System.out.println("doc");
-			writeDoc(doc, "Available specialised data managers", associated.getManagedClasses());
-			System.out.println("doc");
-*/			
+			// TODO: names for associated data managers
+			writeDoc(doc, javadocbase, "Associated data", getDataManagers());
 			doc.close();
-			System.out.println("doc done");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
+	private List<GraphAssociatedObjectManager> getDataManagers() {
+		List datamanagers = new ArrayList();
+		List<GraphAssociatedObjectManager> managers = associated.getObjectManagerList();
+		if (managers != null) {
+			datamanagers.addAll(managers);
+		}
+		
+		Collection<Entry<Class, List<GraphAssociatedObjectManager>>> managed = associated.getManagedClasses();
+		if (managed != null) {
+			for (Entry<Class, List<GraphAssociatedObjectManager>> e: managed) {
+				datamanagers.addAll(e.getValue());
+			}
+		}
+		return datamanagers;
+	}
 	private void writeDoc(DocumentWriter doc, String javadocbase, String title, Collection<?> objects) throws IOException {
 		
 		if (objects == null || objects.size() == 0) {
