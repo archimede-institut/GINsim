@@ -2,9 +2,12 @@ package org.ginsim;
 
 import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.ginsim.common.OptionStore;
 import org.ginsim.common.document.DocumentWriter;
@@ -221,7 +224,9 @@ public class ScriptLauncher {
 		
 		try {
 			dw.setOutput(new File(path));
-			dw.setDocumentProperties(properties);
+			if (properties != null) {
+				dw.setDocumentProperties(properties);
+			}
 			dw.startDocument();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -268,5 +273,53 @@ public class ScriptLauncher {
 		}
 		System.out.println();
 	}
-	
+
+	public void doc(String filename, String javadocbase) {
+		System.out.println("doc start");
+		DocumentWriter doc = createReport(filename, null);
+		try {
+			System.out.println("run doc");
+			writeDoc(doc, javadocbase, "Services", ServiceManager.getManager().getAvailableServices());
+			System.out.println("doc");
+/*
+			writeDoc(doc, "Available data managers", associated.getObjectManagerList());
+			System.out.println("doc");
+			writeDoc(doc, "Available specialised data managers", associated.getManagedClasses());
+			System.out.println("doc");
+*/			
+			doc.close();
+			System.out.println("doc done");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void writeDoc(DocumentWriter doc, String javadocbase, String title, Collection<?> objects) throws IOException {
+		
+		if (objects == null || objects.size() == 0) {
+			return;
+		}
+		
+		doc.openHeader(1, title, null);
+		doc.openList(null);
+		for (Object o: objects) {
+			Class<?> cl;
+			if (o instanceof Class) {
+				cl = (Class<?>)o;
+			} else {
+				cl = o.getClass();
+			}
+			Alias alias = cl.getAnnotation(Alias.class);
+			String name = cl.getSimpleName();
+			if (alias != null) {
+				name = alias.value();
+			}
+			
+			// TODO: javadoc link
+			String scl = cl.getCanonicalName().replace('.', '/');
+			doc.openListItem("");
+			doc.addLink(javadocbase+"/"+scl+".html", name);
+		}
+		doc.closeList();
+	}
 }
