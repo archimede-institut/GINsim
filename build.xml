@@ -438,7 +438,6 @@
 	<target name="javadoc" depends="doc.init" description="Generates the javadoc">
 		<echo message="--> Generating the Javadoc files ..." />
 		<javadoc destdir="${doc.dist.javadoc}"
-			classpath="${classpath}"
 			author="true"
 			version="true"
 			use="true"
@@ -446,8 +445,12 @@
 			windowtitle="API documentation for GINsim (Gene Interaction Network simulator)">
 
 			<packageset dir="${src}" defaultexcludes="yes">
-				<include name="fr/univmrs/tagc/**" />
+				<include name="org/ginsim/**" />
 			</packageset>
+
+			<classpath location="${build}">
+				<path refid="lib.classpath"/>
+			</classpath>
 
 			<doctitle><![CDATA[<h1>API documentation for GINsim</h1>]]></doctitle>
 			<bottom><![CDATA[<i>Copyright &#169; 2011 IBDML. All Rights Granted.</i>]]></bottom>
