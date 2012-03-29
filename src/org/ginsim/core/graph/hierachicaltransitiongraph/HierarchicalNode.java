@@ -398,15 +398,15 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 		return "#"+size;
 	}
 	private void updateLabelCount() {
-		Map<Integer, Integer> newLabelsBySize = htg.getNewLabelsBySize();
-		Integer i_size = new Integer(size);
-		Integer nextLabel = newLabelsBySize.get(i_size);
+		Map<String, Integer> newLabelsBySize = htg.getNewLabelsBySize();
+		String key = type+"-"+size;
+		Integer nextLabel = newLabelsBySize.get(key );
 		if (nextLabel == null) {
 			nextLabel = new Integer(1);
-			newLabelsBySize.put(i_size, nextLabel);
+			newLabelsBySize.put(key, nextLabel);
 		} else {
 			nextLabel = new Integer(nextLabel.shortValue()+1);
-			newLabelsBySize.put(i_size, nextLabel);
+			newLabelsBySize.put(key, nextLabel);
 		}
 		label_count = nextLabel.shortValue();
 	}

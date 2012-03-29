@@ -77,6 +77,6 @@ public interface HierarchicalTransitionGraph extends Graph<HierarchicalNode, Dec
 	 */
 	public boolean areTransientCompacted();
 
-	public Map<Integer, Integer> getNewLabelsBySize();
-	public void setNewLabelsBySize(Map<Integer, Integer> newLabelsBySize);
+	public Map<String, Integer> getNewLabelsBySize();
+	public void setNewLabelsBySize(Map<String, Integer> newLabelsBySize);
 }

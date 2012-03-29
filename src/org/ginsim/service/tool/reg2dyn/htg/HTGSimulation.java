@@ -456,6 +456,7 @@ public class HTGSimulation extends Simulation {
 	 */
 	private void setHnodeGraphicalProperties(HierarchicalNode hnode) {
 		vreader.setNode(hnode);
+	    vreader.setSize(15+10*params.nodeOrder.size(), 25);
 		switch (hnode.getType()) {
 		case HierarchicalNode.TYPE_STABLE_STATE:
 			vreader.setShape(NodeShape.RECTANGLE);
@@ -492,7 +493,7 @@ public class HTGSimulation extends Simulation {
 	 * Add all the nodes to the graph, update their size and set their graphical properties
 	 */
 	private void addAllNodeTo() {
-	    htg.setNewLabelsBySize(new HashMap<Integer, Integer>());
+	    htg.setNewLabelsBySize(new HashMap<String, Integer>());
 		for (Iterator<HierarchicalNode> it = nodeSet.iterator(); it.hasNext();) {
 			HierarchicalNode node = (HierarchicalNode) it.next();
 			node.addAllTheStatesInQueue();

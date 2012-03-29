@@ -49,7 +49,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	private byte[] childsCount = null;
 	private long saveEdgeId;
 	
-	protected Map<Integer, Integer> newLabelsBySize;
+	protected Map<String, Integer> newLabelsBySize;
 
 	
 /* **************** CONSTRUCTORS ************/	
@@ -79,7 +79,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	public HierarchicalTransitionGraphImpl( boolean parsing) {
 		
         super( parsing);
-        this.newLabelsBySize = new HashMap();
+        this.newLabelsBySize = new HashMap<String, Integer>();
 	}
 
 	public HierarchicalTransitionGraphImpl(Map map, File file)  throws GsException{
@@ -239,7 +239,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 		Matcher matcher = pattern.matcher("");
 		
 		for (Iterator<HierarchicalNode> it = this.getNodes().iterator(); it.hasNext();) {
-			HierarchicalNode vertex = (HierarchicalNode) it.next();
+			HierarchicalNode vertex = it.next();
 			matcher.reset(vertex.statesToString());
 			if (matcher.find()) {
 				v.add(vertex);
@@ -251,7 +251,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	@Override
 	public HierarchicalNode getNodeForState(byte[] state) {
 		for (Iterator<HierarchicalNode> it = this.getNodes().iterator(); it.hasNext();) {
-			HierarchicalNode v = (HierarchicalNode) it.next();
+			HierarchicalNode v = it.next();
 			if (v.contains(state)) return v;
 		}
 		return null;
@@ -331,11 +331,11 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
     }
     
     @Override
-	public Map<Integer, Integer> getNewLabelsBySize() {
+	public Map<String, Integer> getNewLabelsBySize() {
     	return newLabelsBySize;
     }
     @Override
-	public void setNewLabelsBySize(Map<Integer, Integer> newLabelsBySize){
+	public void setNewLabelsBySize(Map<String, Integer> newLabelsBySize){
 		this.newLabelsBySize = newLabelsBySize;
 	}
 

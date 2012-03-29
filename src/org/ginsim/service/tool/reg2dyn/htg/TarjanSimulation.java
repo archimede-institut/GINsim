@@ -3,7 +3,6 @@ package org.ginsim.service.tool.reg2dyn.htg;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.ListIterator;
 import java.util.Map;
 
 import org.ginsim.common.exception.GsException;
@@ -162,7 +161,7 @@ public class TarjanSimulation {
 	 */
 	private HierarchicalNode cycleFound(HTGSimulationQueueItem stopItemInQueue, int index, int low_index) {
 		HierarchicalNode cycle = new HierarchicalNode(htgSimulation.htg);
-		cycle.setType(HierarchicalNode.TYPE_TRANSIENT_CYCLE);
+		cycle.setType(HierarchicalNode.TYPE_TRANSIENT_COMPONENT);
 		HTGSimulationQueueItem n;
 		do {
 			n = (HTGSimulationQueueItem) queue.removeLast();
@@ -183,11 +182,11 @@ public class TarjanSimulation {
 	 */
 	private HierarchicalNode buildSCC(HTGSimulationQueueItem e) {
 		HierarchicalNode scc = cycleFound(e, e.getIndex(), e.getLow_index());
-		scc.setType(HierarchicalNode.TYPE_TRANSIENT_COMPONENT);
 		htgSimulation.nodeSet.add(scc);
 
 		scc.addAllTheStatesInQueue();
 		scc.statesSet.reduce();
+		scc.updateSize();
 		boolean isTerminal = true;
 		for (Iterator<byte[]> it = scc.statesSet.statesToFullList().iterator(); it.hasNext();) { //compute the edges and the sigma
 			byte[] state = (byte[]) it.next();
