@@ -25,7 +25,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( ServiceGUI.class)
 @GUIFor( DecisionAnalysisService.class)
-@ServiceStatus( ServiceStatus.UNDER_DEVELOPMENT)
+@ServiceStatus( ServiceStatus.RELEASED)
 public class DecisionAnalysisServiceGUI extends AbstractServiceGUI {
 	
 	@Override
