@@ -198,7 +198,7 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
                 		out.openTag("qual:input");
 						out.addAttr("qual:id", "input_" + me.getSource().toString()+"_"+me.getMin(k));
 						out.addAttr("qual:qualitativeSpecies", me.getSource().toString());
-						out.addAttr("qual:tresholdLevel", ""+myEdge.getMin());
+						out.addAttr("qual:thresholdLevel", ""+myEdge.getMin());
 						out.addAttr("qual:transitionEffect","none");
 						out.addAttr("qual:sign", ""+edgeSign);
 						out.closeTag();
@@ -209,7 +209,7 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
             	   out.openTag("qual:input");
             	   out.addAttr("qual:id", "input_" + me.getSource().toString() + "_"+me.getMin(0));
         		   out.addAttr("qual:qualitativeSpecies", me.getSource().toString());
-        		   out.addAttr("qual:tresholdLevel", ""+me.getMin(0));
+        		   out.addAttr("qual:thresholdLevel", ""+me.getMin(0));
         		   out.addAttr("qual:transitionEffect","none");
         		   out.addAttr("qual:sign", ""+edgeSign);
         		   out.closeTag();
