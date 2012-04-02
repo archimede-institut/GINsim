@@ -280,6 +280,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 						radioBreadthFirst.setEnabled(true);
 						radioDephtFirst.setEnabled(true);
 					}
+					OptionStore.setOption("simulation.defaultMethod", new Integer(simulationMethodsComboBox.getSelectedIndex()));
 				}
 			});		
 		}
