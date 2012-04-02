@@ -2,6 +2,7 @@ package org.ginsim.core.graph.hierachicaltransitiongraph;
 
 import java.util.List;
 
+import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.common.ToolTipsable;
@@ -65,6 +66,8 @@ public class DecisionOnEdge extends Edge<HierarchicalNode> implements ToolTipsab
 			return "";
 		}
 		StringBuffer s = new StringBuffer();
+		s.append(Translator.getString("STR_htg_decision_analysis_label"));
+		s.append(": ");
 		for (int i = 0; i < genesUpdated.length; i++) {
 			switch (genesUpdated[i]) {
 			case CHANGE_NONE: break;
