@@ -337,9 +337,9 @@ public final class SBMLXpathParser {
 								inputClass.setQualitativeSpecies( att_qual.getValue());
 							}
 							
-							Attribute att_tresh = input.getAttribute( "tresholdLevel", namespace);
-							if( att_tresh != null) {
-								inputClass.setTresholdLevel( att_tresh.getValue());
+							Attribute att_thresh = input.getAttribute( "thresholdLevel", namespace);
+							if( att_thresh != null) {
+								inputClass.setthresholdLevel( att_thresh.getValue());
 							}
 							
 							Attribute att_transEf = input.getAttribute( "transitionEffect", namespace);
@@ -1500,14 +1500,14 @@ class Input {
  
  private String id;
  private String qualitativeSpecies;
- private String tresholdLevel;
+ private String thresholdLevel;
  private String transitionEffect;
  private String sign;
  	 
 public Input() {
 	this.id = null;
 	this.qualitativeSpecies = null;
-	this.tresholdLevel = null;
+	this.thresholdLevel = null;
 	this.transitionEffect = null;
 	this.sign = null;
 }
@@ -1529,11 +1529,11 @@ public void setQualitativeSpecies(String qualitativeSpecies) {
 }
 
 public String getThresholdLevel() {
-	return tresholdLevel;
+	return thresholdLevel;
 }
 
-public void setTresholdLevel(String tresholdLevel) {
-	this.tresholdLevel = tresholdLevel;
+public void setthresholdLevel(String thresholdLevel) {
+	this.thresholdLevel = thresholdLevel;
 }
 
 public String getTransitionEffect() {
@@ -1555,7 +1555,7 @@ public void setSign(String sign) {
 public String toString() {
 	return "id : " + id +
 		   " \nqualitativeSpecies : " + qualitativeSpecies +
-		   " \ntresholdLevel      : " + tresholdLevel +
+		   " \nthresholdLevel      : " + thresholdLevel +
 		   " \ntransitionEffect   : " + transitionEffect +
 		   " \nsign : " + sign ;
 }

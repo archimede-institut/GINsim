@@ -25,4 +25,15 @@ public class SBMLQualExportService implements Service{
 		
 		encoder.doExport( graph, config, filename);
 	}
+	
+	/**
+	 * Convenience method to export without having to configure anything
+	 * @param graph
+	 * @param filename
+	 * @throws IOException
+	 */
+	public void export( RegulatoryGraph graph, String filename) throws IOException {
+		SBMLQualConfig cfg = new SBMLQualConfig(graph);
+		export(graph, cfg, filename);
+	}
 }

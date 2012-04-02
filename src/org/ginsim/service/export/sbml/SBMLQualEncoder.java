@@ -29,7 +29,7 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
 	public static final String L3_QUALI_URL = "http://www.sbml.org/sbml/level3/version1/qual/version1";
 	public static final String L3_LAYOUT_URL = "http://www.sbml.org/sbml/level3/version1/layout/version1";
 
-	private static final boolean LAYOUT = true;
+	private static final boolean LAYOUT = false;
 	
     List<RegulatoryNode> v_no;
     int len;
@@ -37,6 +37,7 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
     OMDDNodeBrowser browser;
     int curValue;
     XMLWriter out;
+    boolean hasValues = false;
 	
 	/*
 	 * This is where the real export is done.
@@ -198,7 +199,7 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
                 		out.openTag("qual:input");
 						out.addAttr("qual:id", "input_" + me.getSource().toString()+"_"+me.getMin(k));
 						out.addAttr("qual:qualitativeSpecies", me.getSource().toString());
-						out.addAttr("qual:tresholdLevel", ""+myEdge.getMin());
+						out.addAttr("qual:thresholdLevel", ""+myEdge.getMin());
 						out.addAttr("qual:transitionEffect","none");
 						out.addAttr("qual:sign", ""+edgeSign);
 						out.closeTag();
@@ -209,7 +210,7 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
             	   out.openTag("qual:input");
             	   out.addAttr("qual:id", "input_" + me.getSource().toString() + "_"+me.getMin(0));
         		   out.addAttr("qual:qualitativeSpecies", me.getSource().toString());
-        		   out.addAttr("qual:tresholdLevel", ""+me.getMin(0));
+        		   out.addAttr("qual:thresholdLevel", ""+me.getMin(0));
         		   out.addAttr("qual:transitionEffect","none");
         		   out.addAttr("qual:sign", ""+edgeSign);
         		   out.closeTag();
@@ -241,22 +242,19 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
                 }
             } 
             if (hasNoBasalValue) {
-            out.addAttr("qual:resultLevel", ""+0);
-            out.closeTag();
-            for (curValue=1 ; curValue<=regulatoryNode.getMaxValue() ; curValue++) {
-                out.openTag("qual:functionTerm");
-                out.addAttr("qual:resultLevel", ""+curValue);
-                out.openTag("math");
-                out.addAttr("xmlns", "http://www.w3.org/1998/Math/MathML");
-                
-                out.openTag("apply");
-                out.addTag("or");    // enforced for now, we should try to avoid it when not needed
-                browser.browse(node); // will call leafReached()
-                out.closeTag();  // apply
-
-                out.closeTag(); // math
-                out.closeTag(); // functionTerm
-            }
+	            out.addAttr("qual:resultLevel", ""+0);
+	            out.closeTag();
+	            for (curValue=1 ; curValue<=regulatoryNode.getMaxValue() ; curValue++) {
+	                hasValues = false;
+	                browser.browse(node); // will call leafReached()
+	                if (hasValues) {
+	                	// close the function if it was created
+	                	out.closeTag(); // apply
+	                    out.closeTag(); // math
+	                    out.closeTag(); // functionTerm
+	                }
+	
+	            }
             }
             out.closeTag(); // listOfFunctionTerms
             out.closeTag(); // transition
@@ -277,6 +275,18 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
 		}
 		
         try {
+			if (!hasValues) {
+				// first match, open the needed tags
+                out.openTag("qual:functionTerm");
+                out.addAttr("qual:resultLevel", ""+curValue);
+                out.openTag("math");
+                out.addAttr("xmlns", "http://www.w3.org/1998/Math/MathML");
+
+	            out.openTag("apply");
+	            out.addTag("or");
+	            hasValues = true;
+			}
+		
 			out.openTag("apply");
 	        out.addTag("and");    // enforced for now, we should try to avoid it when not needed
 
