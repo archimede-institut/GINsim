@@ -229,6 +229,7 @@ public class TarjanSimulation {
 		hnode.setType(HierarchicalNode.TYPE_STABLE_STATE);
 		htgSimulation.nodeSet.add(hnode);
 		state2sccMap.put(new SimpleState(state), hnode);
+		nbnode++;
 		return hnode;
 	}
 
