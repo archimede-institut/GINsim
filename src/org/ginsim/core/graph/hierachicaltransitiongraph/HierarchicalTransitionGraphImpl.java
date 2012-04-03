@@ -1,6 +1,5 @@
 package org.ginsim.core.graph.hierachicaltransitiongraph;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
@@ -80,12 +79,6 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 		
         super( parsing);
         this.newLabelsBySize = new HashMap<String, Integer>();
-	}
-
-	public HierarchicalTransitionGraphImpl(Map map, File file)  throws GsException{
-	    this( true);
-        HierarchicalTransitionGraphParser parser = new HierarchicalTransitionGraphParser();
-        parser.parse(file, map, this);
 	}
 
 	/**
