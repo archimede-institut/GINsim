@@ -389,7 +389,7 @@ public class GUIManager {
 	/**
 	 * Class containing the relationship between a Graph, its GraphGUI the corresponding Frame
 	 * 
-	 * @author spinelli
+	 * @author Lionel spinelli
 	 *
 	 */
 	private class GUIObject{
@@ -502,16 +502,6 @@ public class GUIManager {
 		    }
 		}
 
-	    /**
-	     * Verify if it is allowed to close the graph can be closed
-	     * 
-	     * @return true if closing this graph is allowed
-	     */
-	    public boolean canClose() {
-	    	
-	        return blockClose == null;
-	    }
-		
 	}
 
 

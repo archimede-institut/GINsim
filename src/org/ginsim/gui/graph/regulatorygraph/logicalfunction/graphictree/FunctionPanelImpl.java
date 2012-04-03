@@ -40,11 +40,9 @@ public class FunctionPanelImpl extends BooleanFunctionTreePanel implements Funct
   private JTextArea textArea;
   private JScrollPane jsp;
   private boolean toUpdate = false;
-  private LogicalFunctionPanel panel;
 
   public FunctionPanelImpl(LogicalFunctionPanel p, TreeElement value, JTree tree, boolean sel, int width, boolean edit) {
     super(value, tree, sel, width);
-    panel = p;
     setLayout(new BorderLayout(2, 2));
     setBackground(Color.white);
     editButton = new GsButton(ImageLoader.getImageIcon("edit.png"));

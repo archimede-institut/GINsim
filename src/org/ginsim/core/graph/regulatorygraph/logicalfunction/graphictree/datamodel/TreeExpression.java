@@ -13,7 +13,6 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalFunctionList
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.FunctionEditorModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.tree.ParamTree;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBinaryOperator;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBooleanOperator;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBooleanTreeNode;
@@ -168,7 +167,7 @@ public class TreeExpression extends TreeElement {
     return userExpression;
   }
   private void makeDNFString() throws Exception {
-    ParamTree tr = functionsCreator.makeTree(1234);
+    functionsCreator.makeTree(1234);
     BooleanParser parser = new BooleanParser(functionsCreator.getGraph().getIncomingEdges(functionsCreator.getCurrentNode()));
     parser.compile(userExpression, functionsCreator.getGraph(), functionsCreator.getCurrentNode());
     root = parser.getRoot();

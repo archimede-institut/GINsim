@@ -18,7 +18,6 @@ import fr.univmrs.tagc.javaMDD.MDDFactory;
  * All other values are replaced by the closest lower allowed value (or closest higher for the first values).
  */
 public class InitBasedPerturbation implements Perturbation {
-    private static final long serialVersionUID = 6186448725402623972L;
 
     InitialState init;
     

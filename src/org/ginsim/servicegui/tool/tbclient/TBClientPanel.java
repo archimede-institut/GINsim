@@ -77,7 +77,6 @@ public class TBClientPanel extends GsPanel implements GraphGUIListener, WindowLi
 	private JTabbedPane toolsPane;
 	private TBSelector sel;
 	private TBCascadingStyle cs;
-	private TBButton testButton = new TBButton("TEST");
 	private EdgeAttributesReader ereader;
 
 	public TBClientPanel( Graph g) {

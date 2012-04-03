@@ -131,7 +131,6 @@ public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  exten
      * @throws IOException
      */
     private void saveEdge(XMLWriter out, int mode, Collection<Edge<NodeReducedData>> edges) throws IOException {
-        Iterator<Edge<NodeReducedData>> it;
     	if (edges == null) {
     		edges = getEdges();
     	}
@@ -153,7 +152,6 @@ public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  exten
      * @throws IOException
      */
     private void saveNodes(XMLWriter out, int mode, Collection<NodeReducedData> vertices) throws IOException {
-    	Iterator it;
     	if (vertices == null) {
     		vertices = getNodes();
     	}

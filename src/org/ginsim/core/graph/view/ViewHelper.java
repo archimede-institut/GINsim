@@ -6,7 +6,6 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.common.Edge;
 
 /**
@@ -147,11 +146,6 @@ public class ViewHelper {
 		return getIntersection(bounds, target, true, w);
 	}
 
-	private static PointList getPoints(NodeAttributesReader nodeReader, Object src) {
-		Rectangle bounds = getBounds(nodeReader, src);
-		return getPoints(bounds);
-	}
-	
 	/**
 	 * Get the bounding box of a node.
 	 * 
@@ -270,6 +264,7 @@ public class ViewHelper {
 }
 
 class PointList extends ArrayList<Point> {
+	private static final long serialVersionUID = 6183889721767644621L;
 	
 	private EdgeAttributesReader reader;
 	private Edge<?> edge;

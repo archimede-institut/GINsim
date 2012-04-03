@@ -78,16 +78,12 @@ public class InteractionsPanel extends GsPanel implements ItemListener, ActionLi
 		}
 	}
 	class ButtonListener implements ActionListener {
-		private DTreeElementButton node;
 		private RegulatoryNode srcNode, dstNode;
 
 		public ButtonListener(RegulatoryNode src, RegulatoryNode dst) {
 			super();
 			srcNode = src;
 			dstNode = dst;
-		}
-		public void setNode(AbstractDTreeElement n) {
-			node = (DTreeElementButton)n;
 		}
 		public void actionPerformed(ActionEvent e) {
 			Vector v = new Vector();
@@ -283,7 +279,6 @@ public class InteractionsPanel extends GsPanel implements ItemListener, ActionLi
 				SigKey sk;
 				String org, mod, symb, gene1, gene2;
 				TBModuleData d;
-				Hashtable h;
 				float[][] data;
 
 				org = orgComboBox.getSelectedItem().toString();
@@ -303,10 +298,9 @@ public class InteractionsPanel extends GsPanel implements ItemListener, ActionLi
 								//mods = clientPanel.getClient().getSignatures(v, org);
 								v = clientPanel.getClient().getSignatures(v, org);
 								signatures.put(sk, /*mods*/v);
-							}
-							else
+							} else {
 								v = (Vector)signatures.get(sk);
-							h = (Hashtable)v.lastElement();
+							}
 							v = (Vector)v.firstElement();
 							enu = v.elements();
 							LogManager.trace( "*** " + gene1 + " " + gene2);

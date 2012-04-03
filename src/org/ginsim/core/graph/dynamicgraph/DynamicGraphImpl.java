@@ -259,15 +259,6 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	}
 
 	/**
-	 * add a node to this graph.
-	 * @param state the state we want to add
-	 * @return the new DynamicNode.
-	 */
-	private boolean addNode( byte[] state) {
-		return addNode( new DynamicNode(state));
-	}
-	
-	/**
 	 * add an edge between source and target
 	 * @param source
 	 * @param target

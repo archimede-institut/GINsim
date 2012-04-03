@@ -520,7 +520,6 @@ public final class RegulatoryParser extends GsXMLHelper {
       String[] t_interaction = par.split(" ");
       Vector v = new Vector();
       String srcString, indexString;
-      RegulatoryMultiEdge o;
       for (int i = 0; i < t_interaction.length; i++) {
         if (t_interaction[i].lastIndexOf("_") != -1) {
           srcString = t_interaction[i].substring(0, t_interaction[i].lastIndexOf("_"));

@@ -51,9 +51,8 @@ public class ConnectivitySelector extends Selector {
 			if (cacheComponents == null) {
 				return CAT_COMPLEX;
 			}
-			int i_complex = 0, i_compon = 0;
+			int i_complex = 0;
 			for (NodeReducedData nrd : cacheComponents) {
-				i_compon++;
 				if (!nrd.isTrivial()){
 					i_complex++;
 				}

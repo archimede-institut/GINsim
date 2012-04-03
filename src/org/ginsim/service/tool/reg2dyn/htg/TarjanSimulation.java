@@ -130,13 +130,13 @@ public class TarjanSimulation {
 			if (!n_updater.hasNext()) {																						// n_state has no child No child => stable state
 				processStableState(n_state);
 			} else {
-				n = getTripletInQueueForState(n_state);															   				//Search the state in the queue
-				if (n != null) {																				   				//If found
-					e.setLow_index(Math.min(e.getLow_index(), n.getLow_index()));												   				//  update the index
-				} else {																						   				//Else the state is not in the queue
-					if (indexesMap.get(new SimpleState(n_state)) == null) {                                                                         				
-						n = new HTGSimulationQueueState(n_state, index, index);						   				//     explore it
-						HierarchicalNode n_hnode = explore((HTGSimulationQueueState) n, n_updater);																					//     update the index
+				n = getTripletInQueueForState(n_state);															   			//Search the state in the queue
+				if (n != null) {																				   			//If found
+					e.setLow_index(Math.min(e.getLow_index(), n.getLow_index()));											//  update the index
+				} else {																						   			//Else the state is not in the queue
+					if (indexesMap.get(new SimpleState(n_state)) == null) {
+						n = new HTGSimulationQueueState(n_state, index, index);						   						//     explore it
+						explore((HTGSimulationQueueState) n, n_updater);													//     update the index
 						e.setLow_index(Math.min(e.getLow_index(), n.getLow_index()));
 					}
 				}

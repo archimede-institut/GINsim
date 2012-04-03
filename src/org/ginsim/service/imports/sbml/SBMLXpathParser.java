@@ -102,8 +102,6 @@ public final class SBMLXpathParser {
 			e.printStackTrace();
 		}
 		
-		TransitionList transListClass = null;
-		
 		QualitativeSpeciesList qualSpeciesListClass = null;
 
 		try {
@@ -289,7 +287,6 @@ public final class SBMLXpathParser {
 			//*****************   dealing a transition list   ********************//
 			
 			Transition transitionClass = null;
-			transListClass = new TransitionList();
 			
 			for(int i=0; i<transListElements.size(); i++) {
 				

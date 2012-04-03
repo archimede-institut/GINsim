@@ -53,7 +53,6 @@ public class StatesToHierarchicalEditTab extends AbstractParameterPanel<DynamicN
 	
 	public StatesToHierarchicalEditTab(DynamicGraph graph, HierarchicalTransitionGraph htg) {
 		super(graph);
-		LimitedSimulationService limitedSimulationService = ServiceManager.getManager().getService(LimitedSimulationService.class);
 		this.states2hnode = LimitedSimulationService.getStatesToHierarchicalNodes(graph);
 		this.htg = htg;
 		initGUI();

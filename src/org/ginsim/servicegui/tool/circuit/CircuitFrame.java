@@ -105,8 +105,6 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 
 	private JButton viewContextButton;
 
-	private Thread threadAlgoConnectivity;
-
 	private ConnectivityResult resultAlgoConnectivity;
 
 	private JButton copyContextButton;
@@ -395,7 +393,6 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         case STATUS_NONE:
             updateStatus(STATUS_SCC);
     		ConnectivityService service = ServiceManager.getManager().getService(ConnectivityService.class);
-            threadAlgoConnectivity = new Thread();
             resultAlgoConnectivity = service.run(graph, true);
             NotificationManager.getManager().registerListener(this, resultAlgoConnectivity);
             break;

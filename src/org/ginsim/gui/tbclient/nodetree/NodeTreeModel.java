@@ -4,7 +4,6 @@ import java.awt.Color;
 import java.util.Hashtable;
 import java.util.Vector;
 
-import org.ginsim.core.annotation.AnnotationLink;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
@@ -14,11 +13,9 @@ import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeModel;
 public class NodeTreeModel extends DTreeModel {
 	
   public void addGene(RegulatoryNode vertex, Vector par) {
-    AnnotationLink al;
     Vector v2 = new Vector();
-    String[] field, sfield;
-    int i, j;
-    boolean ezSel = false;
+    String[] field;
+    int i;
 
     boolean deja = false;
     for (i = 0; i < root.getChildCount(); i++) {

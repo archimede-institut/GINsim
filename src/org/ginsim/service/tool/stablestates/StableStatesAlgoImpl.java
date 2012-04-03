@@ -207,34 +207,4 @@ public class StableStatesAlgoImpl implements StableStateSearcher {
 		return stable;
 	}
 	
-	
-	// show stable state
-	private void showStableState (OMDDNode stable) {
-		int[] state = new int[regGraph.getNodeCount()];
-		for (int i=0 ; i<state.length ; i++) {
-			state[i] = -1;
-		}
-		findStableState(state, stable);
-	}
-	
-	private void findStableState(int[] state, OMDDNode stable) {
-		if (stable.next == null) {
-			if (stable.value == 1) {
-				// we have a stable state:
-				LogManager.trace( "Stable: ");
-				String display = "";
-				for (int i=0 ; i<state.length ; i++) {
-					display += (state[i] != -1 ? ""+state[i] : "*") +" ";
-				}
-				display += "\n";
-				LogManager.trace( display, false); 
-			}
-			return;
-		}
-		for (int i=0 ; i<stable.next.length ; i++) {
-			state[stable.level] = i;
-			findStableState(state, stable.next[i]);
-		}
-		state[stable.level] = -1;
-	}
 }

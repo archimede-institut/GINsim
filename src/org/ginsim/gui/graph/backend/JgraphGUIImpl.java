@@ -417,7 +417,8 @@ class PropertySwitchAction extends AbstractAction {
 }
 
 class ZoomAction extends AbstractAction {
-
+	private static final long serialVersionUID = 8027606268716590825L;
+	
 	private final JgraphGUIImpl<?, ?, ?> gui;
 	private final int direction;
 	

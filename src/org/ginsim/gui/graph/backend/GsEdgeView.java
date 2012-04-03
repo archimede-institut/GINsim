@@ -106,9 +106,9 @@ public class GsEdgeView extends EdgeView {
 		}
 		
 		
-		// add a rectange arround the last point
-		Point last = points.get(points.size()-1);
-		Rectangle2D arrow = new Rectangle2D.Double(last.x-delta, last.y-delta, 2*delta, 2*delta);
+		// add a rectangle around the last point
+		//Point last = points.get(points.size()-1);
+		//Rectangle2D arrow = new Rectangle2D.Double(last.x-delta, last.y-delta, 2*delta, 2*delta);
 		//rect.add(arrow);
 		
 		// extend the bounding box to include selection marks and edge end

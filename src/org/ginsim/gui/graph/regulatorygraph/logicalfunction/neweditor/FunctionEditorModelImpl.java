@@ -18,13 +18,11 @@ public class FunctionEditorModelImpl implements FunctionEditorModel {
 	private Vector interactions, interactionList;
 	private Point selectedArea;
 	private FunctionEditorControler controler;
-	private Vector allowedTerms;
 
   public FunctionEditorModelImpl(FunctionEditorControler c) {
   	interactions = new Vector();
   	controler = c;
 		selectedArea = new Point(-1, -2);
-		allowedTerms = new Vector();
 		oldExp = "";
   }
   public void init(TreeInteractionsModel m, FunctionPanel p) {
@@ -314,7 +312,6 @@ public class FunctionEditorModelImpl implements FunctionEditorModel {
 	public int deleteTerm() {
 		String s = functionPanel.getCurrentText();
 		String s0 = s.substring(0, selectedArea.x);
-		String t = s.substring(selectedArea.x, selectedArea.y + 1);
 		String s1 = s.substring(selectedArea.y + 1);
 		int i = 0;
 		boolean ok = false;

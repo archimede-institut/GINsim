@@ -14,7 +14,6 @@ public class ParsingWarning {
 	}
 
 	public boolean merge(SAXParseException e) {
-		String m = e.getMessage();
 		if (message.equals(e.getMessage())) {
 			extraCount++;
 			return true;

@@ -24,13 +24,10 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> {
 
 	static final String PNFORMAT = "export.petriNet.defaultFormat";
 
-	private final PetrinetExportService service;
-
 	PNConfig config;
 	
-	public PetriNetExportAction(RegulatoryGraph graph, PetrinetExportService service) {
+	public PetriNetExportAction(RegulatoryGraph graph) {
 		super(graph, "STR_PetriNet", "STR_PetriNet_descr", null);
-		this.service = service;
 	}
 
 	protected void doExport( String filename) {

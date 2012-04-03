@@ -42,7 +42,6 @@ public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
 	    setHorizontalTextPosition(LEFT);
 	    setVerticalAlignment(BOTTOM);
 	    setOpaque(false);
-//	    super.setBorder(new BevelBorder(BevelBorder.RAISED));
 	  }
 
     public Component getTableCellRendererComponent(JTable table, Object value,
@@ -86,15 +85,6 @@ public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
     	setText(value == null ? "" : value.toString());
     	setIcon(sortIcon);
 
-//    	Border border = null;
-//    	if (hasFocus) {
-//    		border = UIManager.getBorder("TableHeader.focusCellBorder");
-//    	}
-//    	if (border == null) {
-//    		border = UIManager.getBorder("TableHeader.cellBorder");
-//    	}
-//    	setBorder(border);
-
     	return this;
     }
 
@@ -111,53 +101,6 @@ public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
         }
         return rv;
     }
-
-//    @Override
-//    public void paintComponent(Graphics g) {
-//        boolean b = UIManager.getBoolean("TableHeader.rightAlignSortArrow");
-//        if (b && sortArrow != null) {
-//            //emptyIcon is used so that if the text in the header is right
-//            //aligned, or if the column is too narrow, then the text will
-//            //be sized appropriately to make room for the icon that is about
-//            //to be painted manually here.
-//            emptyIcon.width = sortArrow.getIconWidth();
-//            emptyIcon.height = sortArrow.getIconHeight();
-//            setIcon(emptyIcon);
-//            super.paintComponent(g);
-//            Point position = computeIconPosition(g);
-//            sortArrow.paintIcon(this, g, position.x, position.y);
-//        } else {
-//            super.paintComponent(g);
-//        }
-//    }
-
-//    private Point computeIconPosition(Graphics g) {
-//        FontMetrics fontMetrics = g.getFontMetrics();
-//        Rectangle viewR = new Rectangle();
-//        Rectangle textR = new Rectangle();
-//        Rectangle iconR = new Rectangle();
-//        Insets i = getInsets();
-//        viewR.x = i.left;
-//        viewR.y = i.top;
-//        viewR.width = getWidth() - (i.left + i.right);
-//        viewR.height = getHeight() - (i.top + i.bottom);
-//        SwingUtilities.layoutCompoundLabel(
-//            this,
-//            fontMetrics,
-//            getText(),
-//            sortArrow,
-//            getVerticalAlignment(),
-//            getHorizontalAlignment(),
-//            getVerticalTextPosition(),
-//            getHorizontalTextPosition(),
-//            viewR,
-//            iconR,
-//            textR,
-//            getIconTextGap());
-//        int x = getWidth() - i.right - sortArrow.getIconWidth();
-//        int y = iconR.y;
-//        return new Point(x, y);
-//    }
 
 	  /**
 	   * Overloaded to return an icon suitable to the primary sorted column, or null if
@@ -201,41 +144,4 @@ public class DefaultTableHeaderCellRenderer extends DefaultTableCellRenderer {
 	    return null;
 	  }
 
-		  
-//	  /**
-//	   * Returns the default table header cell renderer.
-//	   * <P>
-//	   * If the column is sorted, the appropriate icon is retrieved from the
-//	   * current Look and Feel, and a border appropriate to a table header cell
-//	   * is applied.
-//	   * <P>
-//	   * Subclasses may override this method to provide custom content or
-//	   * formatting.
-//	   *
-//	   * @param table the <code>JTable</code>.
-//	   * @param value the value to assign to the header cell
-//	   * @param isSelected This parameter is ignored.
-//	   * @param hasFocus This parameter is ignored.
-//	   * @param row This parameter is ignored.
-//	   * @param column the column of the header cell to render
-//	   * @return the default table header cell renderer
-//	   */
-//	  @Override
-//	  public Component getTableCellRendererComponent(JTable table, Object value,
-//	          boolean isSelected, boolean hasFocus, int row, int column) {
-//	    super.getTableCellRendererComponent(table, value,
-//	            isSelected, hasFocus, row, column);
-//	    setIcon(getIcon(table, column));
-//	    setBorder(UIManager.getBorder("TableHeader.cellBorder"));
-//	    return this;
-//	  }
-
-
-	  private class EmptyIcon implements Icon {
-		  int width = 0;
-		  int height = 0;
-		  public void paintIcon(Component c, Graphics g, int x, int y) {}
-		  public int getIconWidth() { return width; }
-		  public int getIconHeight() { return height; }
-	  }
 }

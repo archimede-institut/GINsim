@@ -24,9 +24,6 @@ public class TreeElementNodeNote extends TreeElementDeco {
     b.setFocusPainted(false);
     b.addActionListener(new ActionListener() {
       public void actionPerformed(ActionEvent actionEvent) {
-      	RegulatoryNode vertex = (RegulatoryNode)((Vector)userObject).firstElement();
-        String proto = (String)((Vector)userObject).elementAt(1);
-        String value = (String)((Vector)userObject).elementAt(2);
         setNote(b.isSelected());
       }
     });

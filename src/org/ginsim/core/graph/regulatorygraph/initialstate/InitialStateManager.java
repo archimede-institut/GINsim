@@ -33,7 +33,6 @@ public class InitialStateManager extends BasicGraphAssociatedManager {
 
     public void doSave(OutputStreamWriter os, Graph graph) throws GsException{
         GsInitialStateList imanager = (GsInitialStateList) getObject(graph);
-        List nodeOrder = ((RegulatoryGraph)graph).getNodeOrder();
         try {
             XMLWriter out = new XMLWriter(os, null);
             out.openTag("initialStates");

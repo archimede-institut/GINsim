@@ -234,10 +234,7 @@ public class ObjectAssociationManager {
     	Map<Object, Object> m_objects = objectsOfGraph.get( graph);
     	
         if (m_objects != null) {
-            for( Object key : m_objects.keySet()){
-            	Object obj = m_objects.get( key);
-            	obj = null;
-            }
+        	// is that REALLY needed? (i.e. do we have copies of this map outside of here?)
             m_objects.clear();
             m_objects = null;
         }

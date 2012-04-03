@@ -3,10 +3,8 @@ package org.ginsim.core.graph.tree;
 import java.util.List;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.core.mdd.OmsddNode;
 
 public class TreeBuilderFromRegulatoryGraph extends TreeBuilderFromOmdd {
 	

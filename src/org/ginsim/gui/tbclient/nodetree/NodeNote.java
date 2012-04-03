@@ -22,30 +22,32 @@ public class NodeNote extends DTreeElementToggleButton {
 			setUserObject(v);
 		}
 		v.addAll((Vector)o);
-    proto = (String)v.elementAt(1);
-    value = (String)v.elementAt(2);
-    tb.addActionListener(new ActionListener() {
+		proto = (String)v.elementAt(1);
+		value = (String)v.elementAt(2);
+		tb.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				RegulatoryNode vertex = (RegulatoryNode)((Vector)getUserObject()).firstElement();
-        String proto = (String)((Vector)getUserObject()).elementAt(1);
-        String value = (String)((Vector)getUserObject()).elementAt(2);
-        setNote(tb.isSelected());
+				setNote(tb.isSelected());
 			}
-    });
+		});
 	}
+	
 	public void setNote(boolean b) {
-    super.check(b);
-    RegulatoryNode vertex = (RegulatoryNode)((Vector)getUserObject()).firstElement();
-    proto = (String)((Vector)getUserObject()).elementAt(1);
-    value = (String)((Vector)getUserObject()).elementAt(2);
-    if (b)
-      vertex.getAnnotation().addLink(toString(), vertex.getInteractionsModel().getGraph());
-    else
-      vertex.getAnnotation().delLink(toString(), vertex.getInteractionsModel().getGraph());
-    for (int i = 0; i < getChildCount(); i++)
-      (getChild(i)).check(b);
-  }
+	    super.check(b);
+	    RegulatoryNode vertex = (RegulatoryNode)((Vector)getUserObject()).firstElement();
+	    proto = (String)((Vector)getUserObject()).elementAt(1);
+	    value = (String)((Vector)getUserObject()).elementAt(2);
+	    if (b) {
+	    	vertex.getAnnotation().addLink(toString(), vertex.getInteractionsModel().getGraph());
+	    }
+	    else {
+	    	vertex.getAnnotation().delLink(toString(), vertex.getInteractionsModel().getGraph());
+	    }
+	    for (int i = 0; i < getChildCount(); i++) {
+	    	(getChild(i)).check(b);
+	    }
+	}
+	
 	public String toString() {
-  	return proto + ":" + value;
-  }
+		return proto + ":" + value;
+	}
 }

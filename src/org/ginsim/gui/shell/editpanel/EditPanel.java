@@ -25,8 +25,6 @@ public class EditPanel extends JTabbedPane implements GraphGUIListener {
     private final GraphGUI<?, ?, ?> gui;
     private final List<EditTab> tabs = new ArrayList<EditTab>();
     
-    private SelectionType selectionType = SelectionType.SEL_NONE;
-	
 	public EditPanel( GraphGUI<?, ?, ?> gui) {
 		this.gui = gui;
 		gui.addGraphGUIListener(this);

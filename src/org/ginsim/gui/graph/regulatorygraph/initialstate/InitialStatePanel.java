@@ -168,10 +168,8 @@ class StateListPanel extends JPanel {
      */
     public void updateTable() {
         Enumeration e_col = tableInitStates.getColumnModel().getColumns();
-        int i=-1;
         while (e_col.hasMoreElements()) {
             TableColumn col = (TableColumn)e_col.nextElement();
-            i++;
             int w = 15+8*5;
             col.setPreferredWidth(w+10);
             col.setMinWidth(w);

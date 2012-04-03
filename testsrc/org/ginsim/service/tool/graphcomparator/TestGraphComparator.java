@@ -89,9 +89,6 @@ public class TestGraphComparator {
  */
 
 	public void compareGraph(GraphComparator gc, int vertexCount, int edgesCount) {
-		Graph<?, ?> g1, g2;
-		g1 = gc.getG1();
-		g2 = gc.getG2();
 		HashMap vm = gc.getStyleMap();
 
 		

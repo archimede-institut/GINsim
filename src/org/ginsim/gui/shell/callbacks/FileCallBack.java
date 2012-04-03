@@ -155,7 +155,7 @@ class OpenAction extends AbstractAction {
 				Graph g = GraphManager.getInstance().open(path);
 				if( g != null){
 					OptionStore.addRecentFile(path);
-					Frame frame = GUIManager.getInstance().newFrame( g);
+					GUIManager.getInstance().newFrame( g);
 					GraphGUI graph_gui = GUIManager.getInstance().getGraphGUI( g);
 					if( graph_gui != null){
 						graph_gui.setSaved( true);

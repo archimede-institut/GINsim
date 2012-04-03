@@ -43,7 +43,7 @@ public class TBServiceGUI extends AbstractServiceGUI {
 class TBAction extends ToolAction {
 
 	private final RegulatoryGraph graph;
-	private TBClientPanel clientPanel;
+//	private TBClientPanel clientPanel;
 
 	public TBAction( RegulatoryGraph graph, ServiceGUI serviceGUI) {
 

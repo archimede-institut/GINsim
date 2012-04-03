@@ -786,7 +786,6 @@ public class OMDDNode {
                 if (next[i].conflict(node)) {
                     return true;
                 }
-                return false;
             }
         }
         

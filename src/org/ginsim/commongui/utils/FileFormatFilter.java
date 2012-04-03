@@ -68,7 +68,7 @@ public class FileFormatFilter extends FileFilter {
 		
 		if (formats != null) {
 			for (FileFormatDescription f: formats) {
-				if (format.extension.equals(extension)) {
+				if (f.extension.equals(extension)) {
 					return true;
 				}
 			}

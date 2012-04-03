@@ -88,7 +88,6 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> 
 			if (col == SPECIFIC_G1_COLOR) comment+= "is specific to g1";
 			else if (col == SPECIFIC_G2_COLOR) comment+= "is specific to g2";
 			else comment+= "is common to both graphs";
-			int edgeCount = ((RegulatoryMultiEdge) edge_new).getEdgeCount();
 			((RegulatoryMultiEdge) edge_new).getAnnotation().appendToComment(comment);
 			log(comment+"\n");
 			if (edge_1 != null && edge_2 != null) compareEdges((RegulatoryMultiEdge)edge_1, (RegulatoryMultiEdge)edge_2);
@@ -191,7 +190,6 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> 
 			for (int i = 0; i < me1.getEdgeCount(); i++) {
 				try{
 					e = graph_new.addNewEdge(id, tid, me1.getMin(i) , me1.getSign(i));
-					Annotation gsa = e.me.getAnnotation();
 				}
 				catch( GsException gs_exception){
 					LogManager.error( "Unable to create new edge between vertices '" + id + "' and '" + tid + "' : one of the vertex was not found in the graph");
@@ -200,7 +198,6 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> 
 			}
 
 			// copy edge annotations to the merged graph
-			Annotation gsa1 = me1.getAnnotation();
 			Annotation new_gsa = e.me.getAnnotation();
 			new_gsa.copyFrom(me1.getAnnotation());
 			if (me2 != null) {
