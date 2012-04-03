@@ -48,8 +48,6 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	private byte[] childsCount = null;
 	private long saveEdgeId;
 	
-	protected Map<String, Integer> newLabelsBySize;
-
 	
 /* **************** CONSTRUCTORS ************/	
 	
@@ -78,7 +76,6 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	public HierarchicalTransitionGraphImpl( boolean parsing) {
 		
         super( parsing);
-        this.newLabelsBySize = new HashMap<String, Integer>();
 	}
 
 	/**
@@ -322,16 +319,6 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
     	
     	return false;
     }
-    
-    @Override
-	public Map<String, Integer> getNewLabelsBySize() {
-    	return newLabelsBySize;
-    }
-    @Override
-	public void setNewLabelsBySize(Map<String, Integer> newLabelsBySize){
-		this.newLabelsBySize = newLabelsBySize;
-	}
-
     
 
 		
