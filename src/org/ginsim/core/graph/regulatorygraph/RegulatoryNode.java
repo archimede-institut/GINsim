@@ -49,6 +49,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 
 	private byte 	maxValue = 1;
 	private boolean isInput = false;
+	private boolean isOutput = true;
 	private final LogicalParameterList v_logicalParameters = new LogicalParameterList();
 
 	private String 		name = "";
@@ -94,6 +95,17 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
             ((AbstractGraph) graph).fireGraphChange( GraphChangeType.NODEUPDATED, this);
         }
     }
+
+    public boolean isOutput() {
+        return !isInput && isOutput;
+    }
+    public void setOutput(boolean output, Graph graph) {
+        if (output != this.isOutput) {
+            this.isOutput = output;
+            ((AbstractGraph) graph).fireGraphChange( GraphChangeType.NODEUPDATED, this);
+        }
+    }
+
 	/**
 	 * @return the max value of the node
 	 */
@@ -352,7 +364,8 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	public String toToolTip() {
 		return    Translator.getString( S_ID) + ":" + id + "|"
 				+ Translator.getString( S_NAME) + ":" + name + "|"
-                + Translator.getString( S_MAX) + ":" + maxValue;
+                + Translator.getString( S_MAX) + ":" + maxValue
+                + (isOutput() ? "(output)" : "");
 	}
 
 	public void toXML(XMLWriter out, Object param, int mode) throws IOException {

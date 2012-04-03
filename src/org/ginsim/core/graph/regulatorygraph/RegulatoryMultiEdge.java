@@ -34,6 +34,7 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
     }
     public RegulatoryMultiEdge(RegulatoryGraph g, RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign param, byte threshold) {
     	super(g, source, target);
+    	source.setOutput(false, g);
         RegulatoryEdge edge = new RegulatoryEdge(this);
         edge.setSign(param);
         if (threshold <= source.getMaxValue()) {

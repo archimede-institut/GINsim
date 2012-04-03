@@ -35,8 +35,7 @@ public class Launcher {
 	 * @throws ClassNotFoundException 
 	 */
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-		detectGSDir();
-		ServiceManager.getManager();//Force the services to load, in order to be able to load a file with its attached objects like initStates...
+		init();
 		
         List<String> open = new ArrayList<String>();
 
@@ -95,10 +94,9 @@ public class Launcher {
 	}
 
 	/**
-	 * detect the current directory
-	 * It will be needed for plugins, dynamic classpath...
+	 * Initialise GINsim core: detect the current directory, load services
 	 */
-	private static void detectGSDir() {
+	public static void init() {
 		String basedir = System.getProperty("user.dir");
 		
 		Class<?> cl = Launcher.class;
@@ -117,6 +115,8 @@ public class Launcher {
 		catch( IOException io){
 			System.out.println("TestRefactor.main() : Unable to initialize the debugger");
 		}
+		
+		ServiceManager.getManager();
 	}
 	
 	/**
