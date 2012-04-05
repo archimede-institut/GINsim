@@ -236,7 +236,6 @@ public class HTGSimulation extends Simulation {
 //		LogManager.debug(DBG_QUEUE,log_tabdepth+"queue :"+queue);                                            							
 //		LogManager.debug(DBG_DOT,"DOT::"+print_state(e.getState())+"[label=\""+print_state(e.getState())+"/"+index+"\", rank=\""+index+"\"]");
 //		LogManager.debug(DBG_DOT,"NODES::"+print_state(e.getState())+"/"+index);
-		int tmp_i_succ = 0;
 		while (e_updater.hasNext()) {																						//For each successors
 			byte[] n_state= ((SimulationQueuedState)e_updater.next()).state;												// n_state is the state of the successor
 //			LogManager.debug(DBG_DOT,"EDGE::"+(++step)+" "+print_state(e.getState())+"/"+print_state(n_state));
@@ -493,14 +492,48 @@ public class HTGSimulation extends Simulation {
 	 * Add all the nodes to the graph, update their size and set their graphical properties
 	 */
 	private void addAllNodeTo() {
-	    htg.setNewLabelsBySize(new HashMap<String, Integer>());
+	    HashMap<String, Integer> maxLabelsBySize = new HashMap<String, Integer>();
 		for (Iterator<HierarchicalNode> it = nodeSet.iterator(); it.hasNext();) {
 			HierarchicalNode node = (HierarchicalNode) it.next();
 			node.addAllTheStatesInQueue();
 			node.updateSize();
+			if (node.getSize() > 1) {
+				String key = node.getType()+"-"+node.getSize();
+				Integer nextLabel = maxLabelsBySize.get(key );
+				if (nextLabel == null) {
+					nextLabel = new Integer(1);
+					maxLabelsBySize.put(key, nextLabel);
+				} else {
+					nextLabel = new Integer(nextLabel.shortValue()+1);
+					maxLabelsBySize.put(key, nextLabel);
+				}
+			}	
+		}
+	    HashMap<String, Integer> newLabelsBySize = new HashMap<String, Integer>();
+		for (Iterator<HierarchicalNode> it = nodeSet.iterator(); it.hasNext();) {
+			HierarchicalNode node = (HierarchicalNode) it.next();
+			if (node.getSize() > 1) {
+				String key = node.getType()+"-"+node.getSize();
+				Integer maxLabel = maxLabelsBySize.get(key );
+				if (maxLabel != null && maxLabel.intValue() > 1) {
+					Integer nextLabel = newLabelsBySize.get(key );
+					if (nextLabel == null) {
+						nextLabel = new Integer(1);
+						newLabelsBySize.put(key, nextLabel);
+					} else {
+						nextLabel = new Integer(nextLabel.shortValue()+1);
+						newLabelsBySize.put(key, nextLabel);
+					}	
+					node.setLabelCount(nextLabel.shortValue());
+				} else {
+					node.setLabelCount((short) 0);
+				}
+			}
 			htg.addNode(node);
 			setHnodeGraphicalProperties(node);
 		}
+		maxLabelsBySize = null;
+		newLabelsBySize = null;
 	}
 	
 	/**

@@ -1,14 +1,11 @@
 package org.ginsim.core.graph.hierachicaltransitiongraph;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,8 +46,6 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	private byte[] childsCount = null;
 	private long saveEdgeId;
 	
-	protected Map<String, Integer> newLabelsBySize;
-
 	
 /* **************** CONSTRUCTORS ************/	
 	
@@ -79,13 +74,6 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	public HierarchicalTransitionGraphImpl( boolean parsing) {
 		
         super( parsing);
-        this.newLabelsBySize = new HashMap<String, Integer>();
-	}
-
-	public HierarchicalTransitionGraphImpl(Map map, File file)  throws GsException{
-	    this( true);
-        HierarchicalTransitionGraphParser parser = new HierarchicalTransitionGraphParser();
-        parser.parse(file, map, this);
 	}
 
 	/**
@@ -329,16 +317,6 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
     	
     	return false;
     }
-    
-    @Override
-	public Map<String, Integer> getNewLabelsBySize() {
-    	return newLabelsBySize;
-    }
-    @Override
-	public void setNewLabelsBySize(Map<String, Integer> newLabelsBySize){
-		this.newLabelsBySize = newLabelsBySize;
-	}
-
     
 
 		

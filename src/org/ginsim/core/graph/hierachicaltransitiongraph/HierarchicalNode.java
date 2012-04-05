@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.ginsim.core.utils.Dotify;
@@ -364,7 +363,10 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 	}
 
 
-	
+	public void setLabelCount(short intValue) {
+		this.label_count = intValue;
+	}
+
 /* **************** TOSTRINGS ************/	
 
 	public String toString() {
@@ -384,31 +386,27 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 				return "ss-"+s.toString();
 			}
 		}
-		if (label_count == -1) {
-			updateLabelCount();
-		}
-		switch (type) {
-		case TYPE_TRANSIENT_COMPONENT:
-			return "i#"+size+"-"+label_count;
-		case TYPE_TERMINAL_CYCLE:
-			return "ca#"+size+"-"+label_count;
-		case TYPE_TRANSIENT_CYCLE:
-			return "ct#"+size+"-"+label_count;
+		if (label_count > 0) {
+			switch (type) {
+			case TYPE_TRANSIENT_COMPONENT:
+				return "i#"+size+"("+label_count+")";
+			case TYPE_TERMINAL_CYCLE:
+				return "ca#"+size+"("+label_count+")";
+			case TYPE_TRANSIENT_CYCLE:
+				return "ct#"+size+"("+label_count+")";
+			}
+		} else {
+			switch (type) {
+			case TYPE_TRANSIENT_COMPONENT:
+				return "i#"+size;
+			case TYPE_TERMINAL_CYCLE:
+				return "ca#"+size;
+			case TYPE_TRANSIENT_CYCLE:
+				return "ct#"+size;
+			}
+
 		}
 		return "#"+size;
-	}
-	private void updateLabelCount() {
-		Map<String, Integer> newLabelsBySize = htg.getNewLabelsBySize();
-		String key = type+"-"+size;
-		Integer nextLabel = newLabelsBySize.get(key );
-		if (nextLabel == null) {
-			nextLabel = new Integer(1);
-			newLabelsBySize.put(key, nextLabel);
-		} else {
-			nextLabel = new Integer(nextLabel.shortValue()+1);
-			newLabelsBySize.put(key, nextLabel);
-		}
-		label_count = nextLabel.shortValue();
 	}
 
 	public String toLongString() {

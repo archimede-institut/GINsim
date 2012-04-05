@@ -1,6 +1,5 @@
 package org.ginsim.core.graph.hierachicaltransitiongraph;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -42,20 +41,19 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
     private NodeAttributesReader vareader = null;
     private EdgeAttributesReader ereader = null;
     private Annotation annotation = null;
-    private Set set;
+    private Set<String> nodeToParse;
     private Map<String, HierarchicalNode> oldIdToNode = new HashMap<String, HierarchicalNode>();
 	private byte[] childCount;
     
     /**
-     * @param map
+     * @param nodeToParse the set of node to parse, the others will be filtered
      * @param attributes
      * @param s_dtd
-     * @param s_filename
      */
-    public HierarchicalTransitionGraphParser(Set<String> set, Attributes attributes, String s_dtd) throws GsException{
+    public HierarchicalTransitionGraphParser(Set<String> nodeToParse, Attributes attributes, String s_dtd) throws GsException{
     	
     	this.htg = GraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, true);
-    	this.set = set;
+    	this.nodeToParse = nodeToParse;
 		vareader = htg.getNodeAttributeReader();
 		ereader = htg.getEdgeAttributeReader();
 		
@@ -84,23 +82,6 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
      * 
      */
     public HierarchicalTransitionGraphParser() {
-    }
-
-    /**
-     * create a new ReducedGraph from a file.
-     * 
-     * @param file the file to read.
-     * @param map
-     * @param graph the graph to fill with this data.
-     */
-    public void parse(File file, Map map, Graph graph)  throws GsException{
-    	
-    	this.htg = (HierarchicalTransitionGraph) graph;
-    	this.set = set;
-		vareader = graph.getNodeAttributeReader();
-		ereader = graph.getEdgeAttributeReader();
-
-		startParsing(file);
     }
 
     public void endElement(String uri, String localName, String qName)
@@ -186,7 +167,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
         	case POS_OUT:
                 if (qName.equals("node")) {
                     String id = attributes.getValue("id");
-                    if (set == null || set.contains(id)) {
+                    if (nodeToParse == null || nodeToParse.contains(id)) {
                         pos = POS_VERTEX;
                         vertex = new HierarchicalNode(htg);
                         oldIdToNode.put(id, vertex);
@@ -197,7 +178,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                 } else if (qName.equals("edge")) {
                     String s_from = attributes.getValue("from");
                     String s_to = attributes.getValue("to");
-                    if (set == null || set.contains(s_from) && set.contains(s_to)) {
+                    if (nodeToParse == null || nodeToParse.contains(s_from) && nodeToParse.contains(s_to)) {
                         pos = POS_EDGE;
                         htg.addEdge(oldIdToNode.get(s_from), oldIdToNode.get(s_to));
                     } else {
