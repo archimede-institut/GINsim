@@ -17,6 +17,7 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphModel;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -25,7 +26,7 @@ import org.ginsim.gui.graph.GraphSelection;
 
 import com.kenai.jaffl.annotations.Clear;
 
-public class GraphCanvasRenderer implements CanvasRenderer, GraphListener<Graph> {
+public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 
 	private final Graph graph;
 	private final NodeAttributesReader nreader;
@@ -209,7 +210,7 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener<Graph>
 	}
 
 	@Override
-	public GraphEventCascade graphChanged(Graph g, GraphChangeType type, Object data) {
+	public GraphEventCascade graphChanged(GraphModel g, GraphChangeType type, Object data) {
 		
 		switch (type) {
 		case EDGEADDED:
