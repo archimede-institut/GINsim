@@ -26,8 +26,9 @@ public class CanvasTest {
 		
 		JFrame f = new JFrame();
 		f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		CanvasRenderer r = new GraphCanvasRenderer(g);
-		f.setContentPane(new SimpleCanvas(r));
+		SimpleCanvas canvas = new SimpleCanvas();
+		CanvasRenderer r = new GraphCanvasRenderer(g, canvas);
+		f.setContentPane(canvas);
 		
 		f.setSize(800, 600);
 		f.setVisible(true);

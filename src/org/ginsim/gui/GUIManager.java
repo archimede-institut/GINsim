@@ -22,6 +22,7 @@ import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.GraphGUIHelperFactory;
 import org.ginsim.gui.graph.backend.JgraphGUIImpl;
+import org.ginsim.gui.graph.canvas.CanvasGraphGUIImpl;
 import org.ginsim.gui.shell.MainFrame;
 import org.ginsim.gui.shell.StartupDialog;
 import org.ginsim.gui.utils.widgets.Frame;
@@ -126,7 +127,9 @@ public class GUIManager {
 		
 		// find the GUI component and show the graph...
 		GraphGUI<?,?,?> graphGUI = null;
-		if (graph instanceof AbstractGraph) {
+		if (CanvasGraphGUIImpl.USECANVAS) {
+			graphGUI = new CanvasGraphGUIImpl(graph, helper, can_be_saved);
+		} else if (graph instanceof AbstractGraph) {
 			GraphBackend<?,?> graph_backend = ((AbstractGraph<?, ?>)graph).getBackend();
 			if (graph_backend instanceof JgraphtBackendImpl) {
 				graphGUI = new JgraphGUIImpl(graph, (JgraphtBackendImpl<?,?>) graph_backend, helper, can_be_saved);

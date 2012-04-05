@@ -3,6 +3,7 @@ package org.ginsim.core.graph.common;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -39,13 +40,17 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
     private boolean defaultcurve;
     
+    private final NodeAttributesReader nreader;
+    
+    private Rectangle cachedBounds = null;
     
     /**
      * @param dataMap
      */
-    public EdgeAttributeReaderImpl(AbstractGraph backend, Map dataMap) {
+    public EdgeAttributeReaderImpl(AbstractGraph backend, Map dataMap, NodeAttributesReader nreader) {
     	this.graph = backend;
         this.dataMap = dataMap;
+        this.nreader = nreader;
     }
     
     public void setDefaultEdgeColor(Color color) {
@@ -54,6 +59,40 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     	this.default_color = color;
     }
 
+    @Override
+    public Rectangle getBounds() {
+        if (evsd == null) {
+            return null;
+        }
+    	
+        if (cachedBounds == null) {
+        	List<Point> cachedPoints = ViewHelper.getPoints(nreader, this, edge);
+        	Point p = cachedPoints.get(0);
+        	int minx = p.x;
+        	int miny = p.y;
+        	int maxx = p.x;
+        	int maxy = p.y;
+        	
+        	for (Point p1: cachedPoints) {
+        		if (p1.x < minx) {
+        			minx = p1.x;
+        		} else if (p1.x > maxx) {
+        			maxx = p1.x;
+        		}
+        		
+        		if (p1.y < miny) {
+        			miny = p1.y;
+        		} else if (p1.y > maxy) {
+        			maxy = p1.y;
+        		}
+        	}
+        	
+        	cachedBounds = new Rectangle(minx, miny, maxx-minx, maxy-miny);
+        }
+        return cachedBounds;
+    }
+
+    
     public void setDefaultEdgeSize(float s) {
         defaultsize = s;
     }
@@ -77,7 +116,11 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     }
 
     public void setEdge(Edge obj) {
+    	if (obj == this.edge) {
+    		return;
+    	}
     	this.edge = obj;
+    	cachedBounds = null;
         evsd = (EdgeVSdata)dataMap.get(obj);
         if (evsd == null && obj instanceof Edge) {
             evsd = (EdgeVSdata)dataMap.get(obj);
@@ -234,8 +277,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 	}
 
 	@Override
-	public void render(NodeAttributesReader nreader, Edge edge, Graphics2D g) {
-		setEdge(edge);
+	public void render(Graphics2D g) {
 		List<Point> points = ViewHelper.getPoints(nreader, this, edge);
 		g.setColor(getLineColor());
 		Point pt1 = null;
@@ -257,6 +299,19 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
 		g.rotate(-theta);
 		g.translate(-pt1.x, -pt1.y);
+	}
+
+	@Override
+	public boolean select(Point p) {
+		if (evsd == null) {
+			return false;
+		}
+		
+		if (getBounds().contains(p)) {
+			// TODO: finer check
+		}
+		
+		return false;
 	}
 
 }

@@ -6,71 +6,78 @@ import java.awt.Rectangle;
 
 
 /**
- * extract from graph graphic info on a vertex.
+ * extract from graph graphic info on a node.
  */
 public interface NodeAttributesReader extends AttributesReader {
 
     /**
-     * change the edited vertex.
-     * @param vertex the vertex to edit
+     * change the edited node.
+     * @param node the node to edit
      */
-    void setNode(Object vertex); 
+    void setNode(Object node);
 
     /**
-     * @return the horizontal position of the vertex.
+     * change the edited node, knowing that it is selected
+     * @param node
+     * @param selected
+     */
+    void setNode(Object node, boolean selected); 
+
+    /**
+     * @return the horizontal position of the node.
      */
     int getX();
     /**
-     * @return the vertical position of the vertex.
+     * @return the vertical position of the node.
      */
     int getY();
     
     /**
-     * @return the height of the vertex.
+     * @return the height of the node.
      */
     int getHeight();
     /**
-     * @return the width of the vertex.
+     * @return the width of the node.
      */
     int getWidth();
     
     /**
-     * @return the foreground (border) color of the vertex.
+     * @return the foreground (border) color of the node.
      */
     Color getForegroundColor();
     /**
-     * change the foreground color of the vertex.
+     * change the foreground color of the node.
      * @param color the new color.
      */
     void setForegroundColor(Color color);
     /**
-     * @return the text color of the vertex.
+     * @return the text color of the node.
      */
     Color getTextColor();
     /**
-     * change the text color of the vertex.
+     * change the text color of the node.
      * @param color the new color.
      */
     void setTextColor(Color color);
     /**
-     * @return the background color of the vertex.
+     * @return the background color of the node.
      */
     Color getBackgroundColor();
     /**
-     * change the background color of the vertex.
+     * change the background color of the node.
      * @param color the new color.
      */
     void setBackgroundColor(Color color);
 
     
     /**
-     * change the vertex's position.
+     * change the node's position.
      * @param x
      * @param y
      */
     void setPos(int x, int y);
     /**
-     * change the vertex's size.
+     * change the node's size.
      * @param w
      * @param h
      */
@@ -130,21 +137,21 @@ public interface NodeAttributesReader extends AttributesReader {
 	NodeShape getDefaultNodeShape();
 
 	/**
-	 * change the kind of border for this vertex
+	 * change the kind of border for this node
 	 * @param index
 	 * @see #getBorderList()
 	 */
 	void setBorder(NodeBorder index);
 	/**
-	 * @return the border of the vertex.
+	 * @return the border of the node.
 	 */
 	NodeBorder getBorder();
 	/**
-	 * @return the shape of the vertex
+	 * @return the shape of the node
 	 */
 	NodeShape getShape();
 	/**
-	 * change the shape of the vertex.
+	 * change the shape of the node.
 	 * @param shapeIndex
 	 * @see #getShapeList()
 	 */
@@ -164,11 +171,9 @@ public interface NodeAttributesReader extends AttributesReader {
 	Rectangle setBounds(Rectangle bounds);
 
 	/**
-	 * Render a node on a given graphics.
-	 * Note: this will also change the selected node.
+	 * Render the current node on a given graphics.
 	 * 
-	 * @param node
 	 * @param g
 	 */
-	void render(Object node, Graphics2D g);
+	void render(Graphics2D g);
 }

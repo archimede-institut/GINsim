@@ -138,10 +138,8 @@ public interface EdgeAttributesReader extends AttributesReader {
     /**
      * Render an edge on a given graphics.
      * 
-     * @param nreader
-     * @param edge
      * @param g
      */
-	void render(NodeAttributesReader nreader, Edge edge, Graphics2D g);
+	void render(Graphics2D g);
     
 }

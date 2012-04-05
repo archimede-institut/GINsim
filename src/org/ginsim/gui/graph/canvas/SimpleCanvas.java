@@ -11,28 +11,38 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.renderable.RenderableImage;
 
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputListener;
 
 public class SimpleCanvas extends JComponent {
 
-	private final CanvasRenderer renderer;
+	private CanvasRenderer renderer = null;
 	private final CanvasMouseListener mouseListener;
 	
+	/** zoom factor */
 	private double zoom = 1;
+	/** position of the top-left corner in screen coordinates */
 	private int dx=0, dy=0;
-	private Image img;
 	
-	private Point lastPoint;
-	
-	public SimpleCanvas(CanvasRenderer renderer) {
-		this.renderer = renderer;
+	/** cached image for double buffering and easy overlay */
+	private BufferedImage img;
 
+	/** part of the canvas that was changed and should be repainted */
+    private Rectangle damagedRegion = null;
+    
+	private Point lastPoint, draggedPoint;
+	
+	public SimpleCanvas() {
 		mouseListener = new CanvasMouseListener(this);
 		addMouseListener(mouseListener);
 		addMouseMotionListener(mouseListener);
 		addMouseWheelListener(mouseListener);
+	}
+
+	public void setRenderer(CanvasRenderer renderer) {
+		this.renderer = renderer;
 	}
 
 	private BufferedImage getNewBufferedImage() {
@@ -49,34 +59,74 @@ public class SimpleCanvas extends JComponent {
 	
 	private void paintBuffer() {
     	BufferedImage img = getNewBufferedImage();
-		Rectangle area = new Rectangle((int)dx, (int)dy, getWidth(), getHeight());
+		Rectangle area = new Rectangle(dx, dy, getWidth(), getHeight());
     	paintAreaInBuffer(img, area);
 	}
 	
 	private void paintAreaInBuffer(BufferedImage img, Rectangle area) {
 		
-		// TODO: restrict to visible area
-		
     	Graphics2D g = img.createGraphics();
+    	g.clip(area);
+    	
+		Rectangle canvasArea = area;
 		if (zoom != 1) {
-			g.scale(zoom, zoom);
+			canvasArea = new Rectangle((int)(area.x*zoom), (int)(area.y*zoom), (int)(area.width*zoom), (int)(area.height*zoom));
 		}
 		
-		g.translate((int)dx, (int)dy);
+    	
+		g.translate(dx, dy);
+		g.scale(zoom, zoom);
 
-		renderer.render(g,area);
+		if (renderer != null) {
+			renderer.render(g,canvasArea);
+		}
 
 		this.img = img;
+		
+		if (true) {
+			BufferedImage img2 = getNewBufferedImage();
+			g = img2.createGraphics();
+			g.drawImage(img, 0, 0, null);
+			g.setColor(Color.RED);
+	    	g.draw(area);
+	    	
+			this.img = img2;
+		}
 	}
 	
 	@Override
 	protected void paintComponent(Graphics g) {
 		if (img == null) {
 			paintBuffer();
+		} else if (damagedRegion != null){
+			paintAreaInBuffer(img, damagedRegion);
 		}
+		
+		damagedRegion = null;
 		g.drawImage(img, 0, 0, null);
+		if (lastPoint != null && draggedPoint != null) {
+			Rectangle rect = getRectangle(lastPoint, draggedPoint);
+			g.drawRect(rect.x, rect.y, rect.width, rect.height);
+		}
 	}
 
+	private Rectangle getRectangle(Point lastPoint, Point draggedPoint) {
+		int x1 = lastPoint.x;
+		int x2 = draggedPoint.x;
+		int y1 = lastPoint.y;
+		int y2 = draggedPoint.y;
+		
+		if (x2 < x1) {
+			x1 = x2;
+			x2 = lastPoint.x;
+		}
+		if (y2 < y1) {
+			y1 = y2;
+			y2 = lastPoint.y;
+		}
+		return new Rectangle(x1, y1, x2-x1, y2-y1);
+	}
+	
 	public void setEventManager(CanvasEventManager evtManager) {
 		mouseListener.setEventManager(evtManager);
 	}
@@ -85,7 +135,9 @@ public class SimpleCanvas extends JComponent {
 		if (n > 0) {
 			zoom = zoom * 1.1;
 		} else if (n < 0) {
-			zoom = zoom * .9;
+			zoom = zoom / 1.1;
+		} else {
+			zoom = 1;
 		}
 		img = null;
 		repaint();
@@ -98,15 +150,19 @@ public class SimpleCanvas extends JComponent {
 	public void setLastPoint(Point p) {
 		this.lastPoint = p;
 	}
-	
+	public void setDraggedPoint(Point p) {
+		this.draggedPoint = p;
+		repaint();
+	}
+
 	public void drag(Point p) {
 		moveImage(p.x-lastPoint.x, p.y-lastPoint.y);
 		this.lastPoint = p;
 	}
 
 	private void moveImage(int dx, int dy) {
-		this.dx += (int)(dx*zoom);
-		this.dy += (int)(dy*zoom);
+		this.dx += dx;
+		this.dy += dy;
 		
 		if (img == null) {
 			return;
@@ -117,24 +173,37 @@ public class SimpleCanvas extends JComponent {
     	
     	g.drawImage(this.img, dx, dy, null);
     	
-		// TODO: redraw only the sides
-		Rectangle area = new Rectangle((int)dx, (int)dy, getWidth(), getHeight());
-    	paintAreaInBuffer(img, area);
+		// redraw only the sides
+    	if (dx > 0) {
+    		Rectangle area = new Rectangle(0, 0, dx, getHeight());
+        	paintAreaInBuffer(img, area);
+    	} else if (dx < 0) {
+    		Rectangle area = new Rectangle(getWidth()-dx, 0, dx, getHeight());
+        	paintAreaInBuffer(img, area);
+    	}
+
+    	if (dy > 0) {
+    		Rectangle area = new Rectangle(0, 0, getWidth()-dx, dy);
+        	paintAreaInBuffer(img, area);
+    	} else if (dy < 0) {
+    		Rectangle area = new Rectangle(0, getHeight()-dy, getWidth()-dx, dy);
+        	paintAreaInBuffer(img, area);
+    	}
 
     	this.img = img;
     	repaint();
 	}
 	
 	protected Point window2canvas(Point p) {
-		if (zoom == 0) {
+		if (zoom == 1) {
 			if (dx == 0 && dy==0) {
 				return p;
 			}
 			
-			return new Point(p.x+(int)dx, p.y+(int)dy);
+			return new Point(p.x+dx, p.y+dy);
 		}
 		
-		return new Point((int)(dx + p.x*zoom), (int)(dy + p.y*zoom));
+		return new Point((int)((p.x+dx)*zoom), (int)((p.y+dy)*zoom));
 	}
 
 	public void scroll(int wheelRotation, boolean alternate) {
@@ -145,6 +214,29 @@ public class SimpleCanvas extends JComponent {
 			moveImage(0, tr);
 		}
 	}
+	
+	public void damageCanvas(Rectangle area) {
+		int x = (int)(area.x / zoom) - dx - 1;
+		int y = (int)(area.y / zoom) - dy - 1;
+		
+		int width = (int)(area.width/zoom) +2;
+		int height = (int)(area.height/zoom) +2;
+
+		damageScreen(new Rectangle(x,y, width, height));
+	}
+	
+	public void damageScreen(Rectangle area) {
+		if (damagedRegion == null) {
+			damagedRegion = area;
+		} else {
+			damagedRegion = damagedRegion.union(area);
+		}
+	}
+
+	public void clearOffscreen() {
+		img = null;
+	}
+
 }
 
 
@@ -186,6 +278,8 @@ class CanvasMouseListener implements MouseInputListener, MouseWheelListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
+		canvas.setLastPoint(null);
+		canvas.setDraggedPoint(null);
 		mouseButton = -1;
 		if (evtManager != null) {
 			evtManager.released(canvas.window2canvas(e.getPoint()));
@@ -210,6 +304,8 @@ class CanvasMouseListener implements MouseInputListener, MouseWheelListener {
 		if (evtManager != null) {
 			evtManager.dragged(canvas.window2canvas(e.getPoint()));
 		}
+
+		canvas.setDraggedPoint(e.getPoint());
 	}
 
 	@Override
@@ -219,7 +315,11 @@ class CanvasMouseListener implements MouseInputListener, MouseWheelListener {
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
 		if (!e.isControlDown()) {
-			canvas.scroll(e.getWheelRotation(), e.isAltDown());
+			int n = e.getWheelRotation();
+			if (e.isShiftDown()) {
+				n *= 5;
+			}
+			canvas.scroll(n, e.isAltDown());
 			return;
 		}
 		

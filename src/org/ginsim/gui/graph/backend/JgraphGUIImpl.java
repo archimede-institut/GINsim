@@ -26,6 +26,7 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.BaseGraphGUI;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUI;
@@ -45,36 +46,23 @@ import org.jgrapht.ext.JGraphModelAdapter;
 
 
 
-public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphGUI<G,V, E>, GraphSelectionListener, GraphViewListener, GraphListener<G> {
+public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> extends BaseGraphGUI<G, V, E>
+       implements GraphSelectionListener {
 
-	private final G graph;
     private JGraphModelAdapter<V,E> m_jgAdapter;
     private GsJgraph jgraph;
-    private final GraphGUIHelper<G,V,E> helper;
-    private final EditActionManager editActionManager;
-    
-    private final GraphSelection<V, E> selection = new GraphSelection<V, E>(this);
-    
-    private final List<GraphGUIListener<G, V, E>> listeners = new ArrayList<GraphGUIListener<G,V,E>>();
-    
-    private boolean isSaved = true;
-    private boolean canBeSaved = true;
     
 	public JgraphGUIImpl(G g, JgraphtBackendImpl<V, E> backend, GraphGUIHelper<G,V,E> helper, boolean can_be_saved) {
+
+		super(g, helper, can_be_saved);
 		
-		this.graph = g;
 		this.m_jgAdapter = new JGraphModelAdapter<V, E>(backend);
 		this.jgraph = new GsJgraph(m_jgAdapter, g);
-		this.canBeSaved = can_be_saved;
 		
 		jgraph.setEdgeLabelDisplayed(false);
 		jgraph.addGraphSelectionListener(this);
-		this.helper = helper;
 		g.addViewListener(this);
-		GraphManager.getInstance().addGraphListener(g, this);
 		
-		// create the action manager and marquee handler
-		editActionManager = new EditActionManager(helper.getEditActions(graph));
 		new MarqueeHandler(this);
 		vertexToFront(true);
 	}
@@ -141,13 +129,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 
 	@Override
 	public JMenu getViewMenu(JMenu layout) {
-		JMenu menu = new JMenu("View");
-		
-		menu.add(layout);
-
-		menu.add(new ZoomAction(this, -1));
-		menu.add(new ZoomAction(this, +1));
-		menu.add(new ZoomAction(this, 0));
+		JMenu menu = super.getViewMenu(layout);
 		
 		menu.add(new JSeparator());
 		
@@ -158,146 +140,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 		return menu;
 	}
 
-	@Override
-	public Graph<V, E> getGraph() {
-		return graph;
-	}
-
-	@Override
-	public GUIEditor<G> getMainEditionPanel() {
-		return helper.getMainEditionPanel(graph);
-	}
-
-	@Override
-	public String getEditingTabLabel() {
-		return helper.getEditingTabLabel(graph);
-	}
-
-	@Override
-	public GUIEditor<V> getNodeEditionPanel() {
-		return helper.getNodeEditionPanel(graph);
-	}
-
-	@Override
-	public GUIEditor<E> getEdgeEditionPanel() {
-		return helper.getEdgeEditionPanel( graph);
-	}
-
-	@Override
-	public JPanel getInfoPanel() {
-		return helper.getInfoPanel( graph);
-	}
-
-	@Override
-	public EditActionManager getEditActionManager() {
-		return editActionManager;
-	}
 	
-	@Override
-	public boolean isSaved() {
-		return isSaved;
-	}
-	
-	@Override
-	public void setSaved( boolean isSaved) {
-		
-		this.isSaved = isSaved;
-		Frame main_frame = GUIManager.getInstance().getFrame( graph);
-		if( main_frame != null){
-			main_frame.setFrameTitle( graph, isSaved);
-		}
-	}
-	
-	@Override
-	public boolean canBeSaved(){
-		
-		return canBeSaved;
-	}
-
-	@Override
-	public boolean save() {
-		
-		if( ! canBeSaved){
-			GUIMessageUtils.openErrorDialog( "STR_graphTypeCannotBeSaved");
-			return false;
-		}
-		
-		String savePath = GraphManager.getInstance().getGraphPath( graph);
-		
-		if (savePath == null) {
-			isSaved = false;
-			saveAs();
-			return isSaved();
-		}
-		
-		try {
-			graph.save( savePath);
-			graphChanged(graph, GraphChangeType.GRAPHSAVED, null);
-			OptionStore.addRecentFile(savePath);
-			isSaved = true;
-			return true;
-		} catch (Exception e) {
-			GUIMessageUtils.openErrorDialog( "STR_unableToOpen_SeeLogs");
-			LogManager.error( "Unable to save file : " + savePath);
-			LogManager.error( e);
-		}
-		return false;
-		
-	}
-
-	@Override
-	public boolean saveAs() {
-		
-		if( ! canBeSaved){
-			GUIMessageUtils.openErrorDialog( "STR_graphTypeCannotBeSaved");
-			return false;
-		}
-		
-		Frame frame = GUIManager.getInstance().getFrame(graph);
-		GsFileFilter ffilter = new GsFileFilter();
-		ffilter.setExtensionList(new String[] { "zginml" }, "GINsim files");
-		String filename = FileSelectionHelper.selectSaveFilename(frame, ffilter);
-		if (filename != null) {
-			String graph_name = (new File( filename)).getName();
-			int dot_index = graph_name.indexOf( ".");
-			if( dot_index > 0){
-				graph_name = graph_name.substring( 0, dot_index);
-			}
-			try {
-				graph.setGraphName( graph_name);
-			} catch (GsException gse) {
-				LogManager.error( "Unable to set graph name: " + graph_name);
-				LogManager.error( gse);
-			}
-			GraphManager.getInstance().registerGraph( graph, filename);
-			return save();
-		}
-		
-		return false;
-	}
-
-	@Override
-	public void fireGraphClose() {
-		for (GraphGUIListener<G, V, E> listener: listeners) {
-			listener.graphGUIClosed(this);
-		}
-	}
-
-	@Override
-	public void addGraphGUIListener(GraphGUIListener<G, V, E> listener) {
-		listeners.add(listener);
-	}
-
-	@Override
-	public void removeGraphGUIListener(GraphGUIListener<G, V, E> listener) {
-		listeners.remove(listener);
-	}
-
-	@Override
-	public boolean isEditAllowed() {
-		
-		return GUIManager.getInstance().isEditAllowed( graph);
-	}
 
     public void vertexToFront(boolean b) {
         // move all vertex to front;
@@ -328,10 +171,6 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 			}
 		}
 
-		selection.backendSelectionUpdated(nodes, edges);
-		for (GraphGUIListener<G, V, E> listener: listeners) {
-			listener.graphSelectionChanged(this);
-		}
 	}
 
 	@Override
@@ -350,11 +189,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 			}
 		}
 		jgraph.setSelectionCells(new_selection.toArray());
-	}
-
-	@Override
-	public GraphSelection<V, E> getSelection() {
-		return selection;
+		updateSelection(nodes, edges);
 	}
 
 	@Override
@@ -374,14 +209,6 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> implement
 	@Override
 	public void repaint() {
 		jgraph.clearOffscreen();
-	}
-
-	@Override
-	public GraphEventCascade graphChanged(G g, GraphChangeType type, Object data) {
-		for (GraphGUIListener<G, V, E> listener: listeners) {
-			listener.graphChanged(g, type, data);
-		}
-		return null;
 	}
 }
 
@@ -413,33 +240,5 @@ class PropertySwitchAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		gui.setProperty(property, !gui.hasProperty(property));
-	}
-}
-
-class ZoomAction extends AbstractAction {
-	private static final long serialVersionUID = 8027606268716590825L;
-	
-	private final JgraphGUIImpl<?, ?, ?> gui;
-	private final int direction;
-	
-	public ZoomAction(JgraphGUIImpl<?, ?, ?> gui, int direction) {
-		this.gui = gui;
-		this.direction = direction;
-		
-		if (direction < 0) {
-			putValue(NAME, "Zoom out");
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, FrameActionManager.MASK));
-		} else if (direction > 0) {
-			putValue(NAME, "Zoom in");
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, FrameActionManager.MASK));
-		} else {
-			putValue(NAME, "Reset zoom level");
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, FrameActionManager.MASK));
-		}
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		gui.setZoomLevel(direction);
 	}
 }

@@ -44,12 +44,14 @@ public class ImageExportService implements Service {
     	g.fill(new Rectangle(width, height));
         NodeAttributesReader nreader = graph.getNodeAttributeReader();
     	for (Object node: graph.getNodes()) {
-    		nreader.render(node, g);
+    		nreader.setNode(node);
+    		nreader.render(g);
     	}
     	
         EdgeAttributesReader ereader = graph.getEdgeAttributeReader();
     	for (Edge edge: graph.getEdges()) {
-    		ereader.render(nreader, edge, g);
+    		ereader.setEdge(edge);
+    		ereader.render(g);
     	}
 
     	try {

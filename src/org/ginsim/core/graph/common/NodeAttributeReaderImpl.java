@@ -3,6 +3,7 @@ package org.ginsim.core.graph.common;
 import java.awt.Color;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.AffineTransform;
@@ -22,6 +23,9 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 
 	private static char ELLIPSIS = '\u2026';
 	
+	public static final int SW = 6;      // width of the selection mark
+	public static final int hSW = SW/2;  // half width of the selection mark
+
 	public static final String VERTEX_BG = "vs.vertexbg";
 	public static final String VERTEX_FG = "vs.vertexfg";
 	public static final String VERTEX_TEXT = "vs.vertextext";
@@ -68,6 +72,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
     
     private NodeVSdata vvsd;
     private Object vertex;
+    private boolean selected;
     
 
     /**
@@ -82,7 +87,11 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 
     @Override
     public void setNode(Object node) {
+    	setNode(node, false);
+    }
+    public void setNode(Object node, boolean selected) {
     	this.vertex = node;
+    	this.selected = selected;
         vvsd = (NodeVSdata)dataMap.get(vertex);
         if (vvsd == null) {
             vvsd = new NodeVSdata();
@@ -128,6 +137,15 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
         return (int)vvsd.bounds.getWidth();
     }
 
+    @Override
+    public Rectangle getBounds() {
+        if (vvsd == null) {
+            return null;
+        }
+    	return vvsd.bounds;
+    }
+
+    
     @Override
     public Color getForegroundColor() {
         if (vvsd == null) {
@@ -352,13 +370,24 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
     }
 
 	@Override
-	public void render(Object node, Graphics2D g) {
-		setNode(node);
-		int x = getX();
-		int y = getY();
-		g.translate( x,y);
-		doRender(node.toString(), g);
-		g.translate( -x,-y);
+	public void render(Graphics2D g) {
+		if (this.vertex == null) {
+			return;
+		}
+		
+		Rectangle bounds = getBounds();
+		g.translate( bounds.x, bounds.y);
+		doRender(vertex.toString(), g);
+		g.translate( -bounds.x,-bounds.y);
+	}
+
+	@Override
+	public boolean select(Point p) {
+		if (vvsd == null) {
+			return false;
+		}
+		
+		return getBounds().contains(p);
 	}
 	
 	/**
@@ -373,7 +402,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 		int w = getWidth();
 		int h = getHeight();
 		
-		Shape s = getShape().getShape( 0,0, w,h);
+		Shape s = getShape().getShape( hSW, hSW, w,h);
 		g.setColor(getBackgroundColor());
 		g.fill(s);
 		g.setColor(getForegroundColor());
@@ -394,12 +423,21 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 		
 		// center the text
 		int textHeight = fm.getHeight();
-		int tx = w/2 - textwidth/2;
-		int ty = h/2 + textHeight/2;
+		int tx = hSW + w/2 - textwidth/2;
+		int ty = hSW + h/2 + textHeight/2;
 		
 		// render the text
 		g.setColor(getTextColor());
 		g.drawString(text, tx, ty);
+		
+		if (selected) {
+			g.setColor(Color.red);
+			g.fillRect(0, 0, SW, SW);
+			g.fillRect(0, h, SW, SW);
+			g.fillRect(w, h, SW, SW);
+			g.fillRect(w, 0, SW, SW);
+		}
+
 	}
 
 }

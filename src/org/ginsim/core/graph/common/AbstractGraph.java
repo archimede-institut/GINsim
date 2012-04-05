@@ -385,7 +385,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	
 	@Override
 	public EdgeAttributesReader getEdgeAttributeReader() {
-		return new EdgeAttributeReaderImpl(this, getEdgeVSMap());
+		return new EdgeAttributeReaderImpl(this, getEdgeVSMap(), getNodeAttributeReader());
 	}
 	
 	@Override
