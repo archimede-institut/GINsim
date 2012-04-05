@@ -1,6 +1,5 @@
 package org.ginsim.core.graph.hierachicaltransitiongraph;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -42,7 +41,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
     private NodeAttributesReader vareader = null;
     private EdgeAttributesReader ereader = null;
     private Annotation annotation = null;
-    private Set nodeToParse;
+    private Set<String> nodeToParse;
     private Map<String, HierarchicalNode> oldIdToNode = new HashMap<String, HierarchicalNode>();
 	private byte[] childCount;
     

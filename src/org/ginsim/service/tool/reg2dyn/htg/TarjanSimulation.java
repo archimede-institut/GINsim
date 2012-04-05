@@ -24,7 +24,7 @@ import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
  *
  */
 public class TarjanSimulation {
-	protected LinkedList queue = new LinkedList(); // exploration queue
+	protected LinkedList<HTGSimulationQueueState> queue = new LinkedList<HTGSimulationQueueState>(); // exploration queue
 
 	/**
 	 * The index of the next state found during the dfs.
@@ -88,7 +88,7 @@ public class TarjanSimulation {
 		max_depth_reached = -1;
 		Iterator<byte[]> initStatesIterator = htgSimulation.getInitStatesIterator();
 		while(initStatesIterator.hasNext()) { 																				//For each initial states
-			byte[] state = (byte[])initStatesIterator.next();																//  __state__ is the current initial state.
+			byte[] state = initStatesIterator.next();																//  __state__ is the current initial state.
 			nbinitialstates++;
 			                                                                                        						
 			
@@ -164,7 +164,7 @@ public class TarjanSimulation {
 		cycle.setType(HierarchicalNode.TYPE_TRANSIENT_COMPONENT);
 		HTGSimulationQueueItem n;
 		do {
-			n = (HTGSimulationQueueItem) queue.removeLast();
+			n = queue.removeLast();
 			inQueue.remove(new SimpleState(((HTGSimulationQueueState)n).getState()));
 			if (n.getLow_index() < low_index) low_index = n.getLow_index();
 			cycle.addState(((HTGSimulationQueueState)n).getState(), 1);
@@ -189,7 +189,7 @@ public class TarjanSimulation {
 		scc.updateSize();
 		boolean isTerminal = true;
 		for (Iterator<byte[]> it = scc.statesSet.statesToFullList().iterator(); it.hasNext();) { //compute the edges and the sigma
-			byte[] state = (byte[]) it.next();
+			byte[] state = it.next();
 			SimulationUpdater updater = getUpdaterForState(state);						//    Get the updater of the state
 			while (updater.hasNext()) {
 				SimulationQueuedState successor = (SimulationQueuedState) updater.next();
