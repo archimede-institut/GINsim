@@ -333,7 +333,11 @@ public class InitStateTableModel extends AbstractTableModel {
 		if (columnIndex == 1 && m_initState != null) {
 			return "use";
 		}
-		return ((RegulatoryNode)nodeOrder.get(columnIndex-columnShift)).toString();
+		RegulatoryNode node = nodeOrder.get(columnIndex-columnShift);
+		if (node.isOutput()) {
+			return "[O] "+node.toString();
+		}
+		return node.toString();
 	}
 
 	public int getColumnCount() {

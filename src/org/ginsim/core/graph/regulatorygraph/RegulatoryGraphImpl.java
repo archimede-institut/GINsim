@@ -345,6 +345,11 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     public boolean removeEdge(RegulatoryMultiEdge edge) {
        edge.markRemoved();
        super.removeEdge(edge);
+       RegulatoryNode src = edge.getSource();
+       Collection<RegulatoryMultiEdge> targets = getOutgoingEdges(src);
+       if (targets == null || targets.size() == 0) {
+    	   src.setOutput(true, this);
+       }
        edge.getTarget().removeEdgeFromInteraction(edge);
        fireGraphChange(GraphChangeType.EDGEREMOVED, edge);
        return true;

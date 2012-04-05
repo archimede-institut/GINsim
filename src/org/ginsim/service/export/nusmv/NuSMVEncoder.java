@@ -176,7 +176,7 @@ public class NuSMVEncoder {
 			out.write("-- Asynchronous\n  PCs : { ");
 			boolean bFirst = true;
 			for (int i = 0; i < t_vertex.length; i++) {
-				if (t_vertex[i].isInput())
+				if (t_vertex[i].isInput() || t_vertex[i].isOutput())
 					continue;
 				if (!bFirst)
 					out.write(", ");
@@ -189,7 +189,7 @@ public class NuSMVEncoder {
 			}
 			out.write(" };\n");
 			for (int i = 0; i < t_vertex.length; i++) {
-				if (t_vertex[i].isInput())
+				if (t_vertex[i].isInput() || t_vertex[i].isOutput())
 					continue;
 				sTmp = "PC_c" + (i + 1) + "_" + t_regulators[i];
 				out.write("  PC_c" + (i + 1) + "_vars : { " + sTmp + " };\n");
@@ -283,7 +283,7 @@ public class NuSMVEncoder {
 		out.write("\n-- State variables declaration\n");
 		for (int i = 0; i < t_vertex.length; i++) {
 			int currIndex = alSorted.get(i).intValue();
-			if (t_vertex[currIndex].isInput())
+			if (t_vertex[currIndex].isInput() || t_vertex[currIndex].isOutput())
 				continue;
 			String s_levels = "0";
 
@@ -331,7 +331,7 @@ public class NuSMVEncoder {
 
 		out.write("\n-- Variable update if conditions are met\n");
 		for (int v = 0; v < t_vertex.length; v++) {
-			if (t_vertex[v].isInput())
+			if (t_vertex[v].isInput() || t_vertex[v].isOutput())
 				continue;
 			// The real next(Variable) if conditions are satisfied
 			out.write("next(" + t_regulators[v] + ") := \n");
@@ -361,7 +361,7 @@ public class NuSMVEncoder {
 
 		out.write("-- Variable next level regulation\n");
 		for (int i = 0; i < t_vertex.length; i++) {
-			if (t_vertex[i].isInput())
+			if (t_vertex[i].isInput() || t_vertex[i].isOutput())
 				continue;
 			out.write(t_vertex[i].getId() + "_focal :=\n");
 			out.write("  case\n");
@@ -373,7 +373,7 @@ public class NuSMVEncoder {
 		out.write("\n");
 
 		for (int v = 0; v < t_vertex.length; v++) {
-			if (t_vertex[v].isInput())
+			if (t_vertex[v].isInput() || t_vertex[v].isOutput())
 				continue;
 			out.write(t_regulators[v] + "_inc := ");
 			out.write(t_regulators[v] + "_focal > ");
@@ -387,7 +387,7 @@ public class NuSMVEncoder {
 		}
 
 		for (int v = 0; v < t_vertex.length; v++) {
-			if (t_vertex[v].isInput())
+			if (t_vertex[v].isInput() || t_vertex[v].isOutput())
 				continue;
 			Integer[] aiSplits = tmVarNum2PcNum.get(v);
 			String[] saSubName = tmVarNum2SubPcName.get(v);
@@ -422,10 +422,25 @@ public class NuSMVEncoder {
 		// Write StrongSSs. If Type2 write also WeakSSs
 		out.write(writeStableStates(nodeOrder, mutant, config, !bType1));
 
+		out.write("\n");
+		out.write("-- Output variables declaration\n");
+		for (int i = 0; i < t_vertex.length; i++) {
+			if (!t_vertex[i].isOutput())
+				continue;
+			out.write(t_vertex[i].getId() + " :=\n");
+			out.write("  case\n");
+			for (int j = 0; j < t_cst.length; j++)
+				t_cst[j] = -1;
+			node2SMV(t_tree[i], out, t_vertex, t_cst);
+			out.write("  esac;\n");
+		}
+		out.write("\n");
+		
 		out.write("\nTRANS\n");
 		for (int i = 0; i < t_vertex.length; i++) {
-			if (t_vertex[i].isInput())
+			if (t_vertex[i].isInput() || t_vertex[i].isOutput()) {
 				continue;
+			}
 			out.write("next(" + t_regulators[i] + ") != ");
 			out.write(t_regulators[i] + " |\n");
 		}
@@ -581,7 +596,7 @@ public class NuSMVEncoder {
 			Map<RegulatoryNode, List<Integer>> mInitStates) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < t_vertex.length; i++) {
-			if (t_vertex[i].isInput() != bInput)
+			if (bInput && !t_vertex[i].isInput() || !bInput && t_vertex[i].isOutput())
 				continue;
 			String s_init = "";
 			List<Integer> v = mInitStates.get(t_vertex[i]);
@@ -617,8 +632,7 @@ public class NuSMVEncoder {
 		} // reordered [ stateVar1 ... stateVarN inputVar1 ... inputVarN ]
 		sortedVars.addAll(orderInputVars);
 
-		String sRet = "\nweakSS := ";
-
+		String sRet = "\nweakSS := FALSE";
 		try {
 			StableStateSearcher sss = ServiceManager.getManager()
 					.getService(StableStatesService.class)
@@ -632,14 +646,12 @@ public class NuSMVEncoder {
 				stateValues[i] = -1;
 			if (bWeakSS) {
 				sRet += writeSSs(false, stateValues, omdds, orderStateVars, 0);
-			} else {
-				sRet += "\n  FALSE";
 			}
 			sRet += ";\nstrongSS := ";
 			String sTmp = writeSSs(true, stateValues, omdds, orderStateVars, 0);
-			sRet += ((sTmp.isEmpty()) ? "\n  FALSE" : sTmp) + ";\n";
+			sRet += ((sTmp.isEmpty()) ? "FALSE" : sTmp) + ";\n";
 		} catch (Exception e) {
-			sRet += "\n  FALSE;\nstrongSS := \n  FALSE;\n";
+			sRet += "\n  FALSE;\nstrongSS := FALSE;\n";
 			sRet += "\n -- An error occurred when computing the stable states!!\n";
 		}
 		return sRet;
