@@ -11,4 +11,6 @@ public interface CanvasEventManager {
 	void released(Point p);
 	
 	void dragged(Point p);
+	
+	void cancel();
 }

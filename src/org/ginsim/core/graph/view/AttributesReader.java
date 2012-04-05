@@ -21,4 +21,14 @@ public interface AttributesReader {
 	 * @return true if the item should be selected
 	 */
 	boolean select(Point p);
+	
+    /**
+     * Move the item.
+     * 
+     * @param dx
+     * @param dy
+     */
+    void move(int dx, int dy);
+    
+
 }

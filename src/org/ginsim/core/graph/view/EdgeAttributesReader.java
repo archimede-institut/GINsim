@@ -67,6 +67,15 @@ public interface EdgeAttributesReader extends AttributesReader {
 	 * @param obj
 	 */
 	void setEdge(Edge<?> obj);
+
+	/**
+	 * Set the edge on which we work, knowing that it is selected.
+	 * 
+	 * @param obj
+	 * @param selected
+	 */
+	void setEdge(Edge<?> obj, boolean selected);
+	
 	/**
 	 * change this edge's line color.
 	 * @param color the new color.

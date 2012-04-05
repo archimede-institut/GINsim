@@ -1,11 +1,14 @@
 package org.ginsim.gui.graph.canvas;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
@@ -19,47 +22,39 @@ import javax.swing.event.MouseInputListener;
 public class SimpleCanvas extends JComponent {
 
 	private CanvasRenderer renderer = null;
-	private final CanvasMouseListener mouseListener;
+	private final CanvasEventListener mouseListener;
 	
 	/** zoom factor */
 	private double zoom = 1;
 	/** position of the top-left corner in screen coordinates */
 	private int dx=0, dy=0;
 	
-	/** cached image for double buffering and easy overlay */
+	/** cached images for double buffering and easy overlay */
 	private BufferedImage img;
 
 	/** part of the canvas that was changed and should be repainted */
     private Rectangle damagedRegion = null;
     
 	private Point lastPoint, draggedPoint;
-	
+
+	private Color backgroundColor = Color.white;
+
 	public SimpleCanvas() {
-		mouseListener = new CanvasMouseListener(this);
-		addMouseListener(mouseListener);
-		addMouseMotionListener(mouseListener);
-		addMouseWheelListener(mouseListener);
+		mouseListener = new CanvasEventListener(this);
 	}
 
 	public void setRenderer(CanvasRenderer renderer) {
 		this.renderer = renderer;
+		mouseListener.setEventManager(renderer);
 	}
 
-	private BufferedImage getNewBufferedImage() {
-		int width = getWidth();
-		int height = getHeight();
-		
-    	BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
-    	Graphics2D g = img.createGraphics();
-    	g.setColor(Color.white);
-    	g.fill(new Rectangle(width, height));
-    	
-    	return img;
+	public BufferedImage getNewBufferedImage() {
+    	return new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 	}
 	
 	private void paintBuffer() {
     	BufferedImage img = getNewBufferedImage();
-		Rectangle area = new Rectangle(dx, dy, getWidth(), getHeight());
+		Rectangle area = new Rectangle(0, 0, getWidth(), getHeight());
     	paintAreaInBuffer(img, area);
 	}
 	
@@ -67,31 +62,17 @@ public class SimpleCanvas extends JComponent {
 		
     	Graphics2D g = img.createGraphics();
     	g.clip(area);
-    	
-		Rectangle canvasArea = area;
-		if (zoom != 1) {
-			canvasArea = new Rectangle((int)(area.x*zoom), (int)(area.y*zoom), (int)(area.width*zoom), (int)(area.height*zoom));
-		}
+		// erase the whole area
+		g.setColor(backgroundColor);
+		g.fill(area);
 		
-    	
-		g.translate(dx, dy);
-		g.scale(zoom, zoom);
-
 		if (renderer != null) {
-			renderer.render(g,canvasArea);
+			g.translate(dx, dy);
+			g.scale(zoom, zoom);
+			renderer.render(g,getCanvasRectangle(area));
 		}
 
 		this.img = img;
-		
-		if (true) {
-			BufferedImage img2 = getNewBufferedImage();
-			g = img2.createGraphics();
-			g.drawImage(img, 0, 0, null);
-			g.setColor(Color.RED);
-	    	g.draw(area);
-	    	
-			this.img = img2;
-		}
 	}
 	
 	@Override
@@ -104,31 +85,46 @@ public class SimpleCanvas extends JComponent {
 		
 		damagedRegion = null;
 		g.drawImage(img, 0, 0, null);
-		if (lastPoint != null && draggedPoint != null) {
-			Rectangle rect = getRectangle(lastPoint, draggedPoint);
-			g.drawRect(rect.x, rect.y, rect.width, rect.height);
+		
+		// add overlay layer to the image, by the renderer
+		if (renderer != null) {
+			Graphics2D g2 = (Graphics2D)g;
+			g2.translate(dx, dy);
+			g2.scale(zoom, zoom);
+
+			renderer.overlay(g2, getCanvasRectangle(new Rectangle(0,0, getWidth(), getHeight())));
 		}
 	}
+	
+	private Rectangle getCanvasRectangle(Rectangle area) {
+		Rectangle canvasArea = area;
+		if (zoom != 1) {
+			canvasArea = new Rectangle((int)((dx+area.x)*zoom), (int)((dy+area.y)*zoom), (int)(area.width*zoom), (int)(area.height*zoom));
+		}
+		return canvasArea;
+	}
 
-	private Rectangle getRectangle(Point lastPoint, Point draggedPoint) {
+	public static Rectangle getRectangle(Point lastPoint, Point draggedPoint) {
 		int x1 = lastPoint.x;
 		int x2 = draggedPoint.x;
 		int y1 = lastPoint.y;
 		int y2 = draggedPoint.y;
 		
+		return getRectangle(x1, y1, x2, y2);
+	}
+	public static Rectangle getRectangle(int x1, int y1, int x2, int y2) {
+		int tmp;
 		if (x2 < x1) {
+			tmp = x1;
 			x1 = x2;
-			x2 = lastPoint.x;
+			x2 = tmp;
 		}
 		if (y2 < y1) {
+			tmp = y1;
 			y1 = y2;
-			y2 = lastPoint.y;
+			y2 = tmp;
 		}
 		return new Rectangle(x1, y1, x2-x1, y2-y1);
-	}
-	
-	public void setEventManager(CanvasEventManager evtManager) {
-		mouseListener.setEventManager(evtManager);
 	}
 	
 	public void zoom(int n) {
@@ -149,10 +145,6 @@ public class SimpleCanvas extends JComponent {
 	
 	public void setLastPoint(Point p) {
 		this.lastPoint = p;
-	}
-	public void setDraggedPoint(Point p) {
-		this.draggedPoint = p;
-		repaint();
 	}
 
 	public void drag(Point p) {
@@ -215,6 +207,13 @@ public class SimpleCanvas extends JComponent {
 		}
 	}
 	
+	/**
+	 * Mark a part of the canvas as needing to be redrawn.
+	 * It will transform the canvas area into screen coordinates and call damageScreen.
+	 * Note: this does NOT call repaint to let several calls happen before the actual redraw.
+	 * 
+	 * @param area
+	 */
 	public void damageCanvas(Rectangle area) {
 		int x = (int)(area.x / zoom) - dx - 1;
 		int y = (int)(area.y / zoom) - dy - 1;
@@ -225,6 +224,12 @@ public class SimpleCanvas extends JComponent {
 		damageScreen(new Rectangle(x,y, width, height));
 	}
 	
+	/**
+	 * Mark a part of the screen as needing to be redrawn.
+	 * Note: this does NOT call repaint to let several calls happen before the actual redraw.
+	 * 
+	 * @param area
+	 */
 	public void damageScreen(Rectangle area) {
 		if (damagedRegion == null) {
 			damagedRegion = area;
@@ -233,22 +238,34 @@ public class SimpleCanvas extends JComponent {
 		}
 	}
 
+	/**
+	 * Throw away the cached image.
+	 * The next repaint will have to build the image from scratch.
+	 * Should be called when changing the zoom level or after a general layout change.
+	 */
 	public void clearOffscreen() {
 		img = null;
+	}
+
+	public void cancel() {
+		renderer.cancel();
 	}
 
 }
 
 
-class CanvasMouseListener implements MouseInputListener, MouseWheelListener {
+class CanvasEventListener implements MouseInputListener, MouseWheelListener, KeyListener {
 	
 	private final SimpleCanvas canvas;
 	private CanvasEventManager evtManager;
 	
 	private int mouseButton = -1;
 	
-	CanvasMouseListener(SimpleCanvas canvas) {
+	CanvasEventListener(SimpleCanvas canvas) {
 		this.canvas = canvas;
+		canvas.addMouseListener(this);
+		canvas.addMouseMotionListener(this);
+		canvas.addMouseWheelListener(this);
 	}
 	
 	public void setEventManager(CanvasEventManager evtManager) {
@@ -278,8 +295,6 @@ class CanvasMouseListener implements MouseInputListener, MouseWheelListener {
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		canvas.setLastPoint(null);
-		canvas.setDraggedPoint(null);
 		mouseButton = -1;
 		if (evtManager != null) {
 			evtManager.released(canvas.window2canvas(e.getPoint()));
@@ -304,8 +319,6 @@ class CanvasMouseListener implements MouseInputListener, MouseWheelListener {
 		if (evtManager != null) {
 			evtManager.dragged(canvas.window2canvas(e.getPoint()));
 		}
-
-		canvas.setDraggedPoint(e.getPoint());
 	}
 
 	@Override
@@ -324,6 +337,43 @@ class CanvasMouseListener implements MouseInputListener, MouseWheelListener {
 		}
 		
 		canvas.zoom(e.getWheelRotation());
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		
+		if (e.isControlDown()) {
+			switch (e.getKeyCode()) {
+			case KeyEvent.VK_ADD:
+				canvas.zoom(1);
+				break;
+			case KeyEvent.VK_SUBTRACT:
+				canvas.zoom(-1);
+				break;
+			case KeyEvent.VK_MULTIPLY:
+			case KeyEvent.VK_EQUALS:
+				canvas.zoom(0);
+				break;
+
+			default:
+				break;
+			}
+		}
+		
+		switch (e.getKeyCode()) {
+		case KeyEvent.VK_ESCAPE:
+			canvas.cancel();
+			break;
+		}
+
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
 	}
 
 }

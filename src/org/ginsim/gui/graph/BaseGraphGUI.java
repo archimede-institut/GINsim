@@ -225,11 +225,16 @@ public abstract class BaseGraphGUI<G extends Graph<V,E>, V, E extends Edge<V>>
 
 	protected void updateSelection(List<V> nodes, List<E> edges) {
 		selection.backendSelectionUpdated(nodes, edges);
+		fireSelectionChange();
+	}
+
+	protected void fireSelectionChange() {
 		for (GraphGUIListener<G, V, E> listener: listeners) {
 			listener.graphSelectionChanged(this);
 		}
 	}
 
+	
 	@Override
 	public GraphEventCascade graphChanged(G g, GraphChangeType type, Object data) {
 		for (GraphGUIListener<G, V, E> listener: listeners) {

@@ -111,8 +111,19 @@ public class GraphSelection<V, E extends Edge<V>> {
 	public void selectNode(V node) {
 		nodes = new ArrayList<V>();
 		nodes.add(node);
-		gui.selectionChanged();
+		updateType(false);
 	}
+
+	/**
+	 * Select a single edge
+	 * @param edge
+	 */
+	public void selectEdge(E edge) {
+		edges = new ArrayList<E>();
+		edges.add(edge);
+		updateType(false);
+	}
+
 
 	/**
 	 * Select all the edges and 
@@ -120,8 +131,8 @@ public class GraphSelection<V, E extends Edge<V>> {
 	public void selectAll() {
 		nodes = new ArrayList<V>(gui.getGraph().getNodes());
 		edges = new ArrayList<E>(gui.getGraph().getEdges());
-		findType();
-		gui.selectionChanged();
+		
+		updateType(false);
 	}
 	
 	/**
@@ -167,6 +178,38 @@ public class GraphSelection<V, E extends Edge<V>> {
 		updateType(false);
 	}
 
+	public void unselectNode(V node) {
+		if (nodes != null) {
+			nodes.remove(node);
+			updateType(false);
+		}
+	}
+	
+	public void unselectEdge(E edge) {
+		if (edges != null) {
+			edges.remove(edge);
+			updateType(false);
+		}
+	}
+	
+	public void addNodeToSelection(V node) {
+		if (nodes == null) {
+			nodes = new ArrayList<V>();
+		}
+		nodes.add(node);
+		updateType(false);
+	}
+
+	public void addEdgeToSelection(E edge) {
+		if (edges == null) {
+			edges = new ArrayList<E>();
+		}
+		edges.add(edge);
+		updateType(false);
+	}
+
+
+	
 	/**
 	 * Add the nodes in l to the list of selected nodes
 	 * @param l the list of nodes to select
@@ -212,6 +255,20 @@ public class GraphSelection<V, E extends Edge<V>> {
 		updateType(false);
 	}
 
+	/**
+	 * Set the selection
+	 * 
+	 * @param nodes
+	 * @param edges
+	 */
+	public void setSelection(Collection<V> nodes, Collection<E> edges) {
+		this.nodes = new ArrayList<V>(nodes);
+		this.edges = new ArrayList<E>(edges);
+		updateType(false);
+	}
+
+
+	
 	/**
 	 * Add all the incoming nodes of the selected nodes to the list of selected nodes
 	 */

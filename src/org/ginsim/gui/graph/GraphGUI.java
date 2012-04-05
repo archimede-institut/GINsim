@@ -117,15 +117,4 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 */
 	void repaint();
 
-
-	
-//    /**
-//     * Move all nodes to front if boolean is true.
-//     * Remove vertices from front if boolean is false. 
-//     * 
-//     * @param b
-//     */
-//    public void nodeToFront(boolean b);
-//    
-
 }

@@ -76,14 +76,13 @@ public interface NodeAttributesReader extends AttributesReader {
      * @param y
      */
     void setPos(int x, int y);
+    
     /**
      * change the node's size.
      * @param w
      * @param h
      */
     void setSize(int w, int h);
-    
-//    Rectangle getBounds();
     
     /**
      * set the default background color for vertices.
@@ -176,4 +175,13 @@ public interface NodeAttributesReader extends AttributesReader {
 	 * @param g
 	 */
 	void render(Graphics2D g);
+	
+	/**
+	 * Render the current node while moving it.
+	 * 
+	 * @param g
+	 * @param movex
+	 * @param movey
+	 */
+	void renderMoving(Graphics2D g, int movex, int movey);
 }

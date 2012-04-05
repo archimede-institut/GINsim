@@ -37,7 +37,8 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     
     private Edge<?> edge;
     private EdgeVSdata evsd = null;
-
+    private boolean selected = false;
+    
     private boolean defaultcurve;
     
     private final NodeAttributesReader nreader;
@@ -67,11 +68,13 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     	
         if (cachedBounds == null) {
         	List<Point> cachedPoints = ViewHelper.getPoints(nreader, this, edge);
-        	Point p = cachedPoints.get(0);
-        	int minx = p.x;
-        	int miny = p.y;
-        	int maxx = p.x;
-        	int maxy = p.y;
+        	Point p = cachedPoints.get(cachedPoints.size()-1);
+        	// take into account some extra space for the arrow
+        	int arrowmargin = 5;
+        	int minx = p.x-arrowmargin;
+        	int miny = p.y-arrowmargin;
+        	int maxx = p.x+arrowmargin;
+        	int maxy = p.y+arrowmargin;
         	
         	for (Point p1: cachedPoints) {
         		if (p1.x < minx) {
@@ -116,6 +119,10 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     }
 
     public void setEdge(Edge obj) {
+    	setEdge(obj, false);
+    }
+    public void setEdge(Edge obj, boolean selected) {
+    	this.selected = selected;
     	if (obj == this.edge) {
     		return;
     	}
@@ -280,6 +287,10 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 	public void render(Graphics2D g) {
 		List<Point> points = ViewHelper.getPoints(nreader, this, edge);
 		g.setColor(getLineColor());
+		if (selected) {
+			// TODO: better selection markup
+			g.setColor(Color.PINK);
+		}
 		Point pt1 = null;
 
 		for (Point pt2: points) {
@@ -312,6 +323,21 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 		}
 		
 		return false;
+	}
+
+	@Override
+	public void move(int dx, int dy) {
+		if (evsd == null) {
+			return;
+		}
+		List<Point> points = getPoints();
+		if (points == null) {
+			return;
+		}
+		for (Point p: points) {
+			p.x += dx;
+			p.y += dy;
+		}
 	}
 
 }

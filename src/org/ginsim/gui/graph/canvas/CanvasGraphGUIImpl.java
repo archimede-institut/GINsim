@@ -20,13 +20,14 @@ public class CanvasGraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> exte
 	public static final boolean USECANVAS = false;
 	
 	private final SimpleCanvas canvas;
+	private final GraphCanvasRenderer renderer;
 	
 	public CanvasGraphGUIImpl(G g, GraphGUIHelper<G, V, E> helper,
 			boolean can_be_saved) {
 		super(g, helper, can_be_saved);
 
 		this.canvas = new SimpleCanvas();
-		new GraphCanvasRenderer(g, canvas);
+		renderer = new GraphCanvasRenderer(g, canvas, getSelection());
 	}
 
 	@Override
@@ -36,8 +37,8 @@ public class CanvasGraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> exte
 
 	@Override
 	public void selectionChanged() {
-		// TODO Auto-generated method stub
-		
+		renderer.updateSelectionCache();
+		fireSelectionChange();
 	}
 
 	@Override

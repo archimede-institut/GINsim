@@ -217,6 +217,17 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
         
         vvsd.bounds.setFrame(x,y, vvsd.bounds.getWidth(), vvsd.bounds.getHeight());
     }
+    
+    @Override
+    public void move(int dx, int dy) {
+        if (vvsd == null) {
+            return;
+        }
+
+        int x = getX();
+        int y = getY();
+        setPos(x+dx, y+dy);
+    }
 
     @Override
     public void setSize(int w, int h) {
@@ -377,8 +388,20 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 		
 		Rectangle bounds = getBounds();
 		g.translate( bounds.x, bounds.y);
-		doRender(vertex.toString(), g);
+		doRender(vertex.toString(), g, false);
 		g.translate( -bounds.x,-bounds.y);
+	}
+
+	@Override
+	public void renderMoving(Graphics2D g, int movex, int movey) {
+		if (this.vertex == null) {
+			return;
+		}
+		
+		Rectangle bounds = getBounds();
+		g.translate( movex+bounds.x, movey+bounds.y);
+		doRender(vertex.toString(), g, true);
+		g.translate( -movex-bounds.x, -movey-bounds.y);
 	}
 
 	@Override
@@ -397,17 +420,20 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 	 * 
 	 * @param node
 	 * @param g
+	 * @param moving
 	 */
-	private void doRender(String text, Graphics2D g) {
+	private void doRender(String text, Graphics2D g, boolean moving) {
 		int w = getWidth();
 		int h = getHeight();
 		
-		Shape s = getShape().getShape( hSW, hSW, w,h);
+		Shape s = getShape().getShape( 0, 0, w,h);
 		g.setColor(getBackgroundColor());
 		g.fill(s);
-		g.setColor(getForegroundColor());
-		g.draw(s);
 
+		if (moving) {
+			return;
+		}
+		
 		// get the text and FontMetric to evaluate its size
 		FontMetrics fm = g.getFontMetrics();
 		
@@ -423,21 +449,24 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 		
 		// center the text
 		int textHeight = fm.getHeight();
-		int tx = hSW + w/2 - textwidth/2;
-		int ty = hSW + h/2 + textHeight/2;
+		int tx = w/2 - textwidth/2;
+		int ty = h/2 + textHeight/2;
 		
 		// render the text
 		g.setColor(getTextColor());
 		g.drawString(text, tx, ty);
 		
+		g.setColor(getForegroundColor());
+		g.draw(s);
+
 		if (selected) {
 			g.setColor(Color.red);
 			g.fillRect(0, 0, SW, SW);
-			g.fillRect(0, h, SW, SW);
-			g.fillRect(w, h, SW, SW);
-			g.fillRect(w, 0, SW, SW);
+			g.fillRect(0, h-SW, SW, SW);
+			g.fillRect(w-SW, h-SW, SW, SW);
+			g.fillRect(w-SW, 0, SW, SW);
 		}
-
+		
 	}
 
 }
