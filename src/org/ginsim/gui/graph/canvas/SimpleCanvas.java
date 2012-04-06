@@ -1,41 +1,58 @@
 package org.ginsim.gui.graph.canvas;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
-import java.awt.image.renderable.RenderableImage;
 
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputListener;
 
+/**
+ * A simple canvas component.
+ * This component has a zoom level and translation and lets a separate renderer
+ * draw the content (without having to know about coordinate transformations)
+ * Mouse events that are not caught for zooming and dragging are also passed
+ * to the renderer (which can use them for example to select and move items) 
+ * 
+ * @author Aurelien Naldi
+ */
 public class SimpleCanvas extends JComponent {
 
+	private final static double MAXZOOM = 20;
+	private final static double MINZOOM = 0.001;
+	
+	private final static RenderingHints RENDER_HINTS;
+			
+	static {
+		RENDER_HINTS = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		RENDER_HINTS.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+	}
+	
 	private CanvasRenderer renderer = null;
 	private final CanvasEventListener mouseListener;
 	
 	/** zoom factor */
 	private double zoom = 1;
-	/** position of the top-left corner in screen coordinates */
-	private int dx=0, dy=0;
 	
-	/** cached images for double buffering and easy overlay */
+	/** translation: the top-left corner is (-tr_x, -tr_y). Only negative translations are accepted */
+	private int tr_x=0, tr_y=0;
+	
+	/** cached image for double buffering and easy overlay */
 	private BufferedImage img;
 
 	/** part of the canvas that was changed and should be repainted */
     private Rectangle damagedRegion = null;
     
-	private Point lastPoint, draggedPoint;
+	private Point lastPoint;
 
 	private Color backgroundColor = Color.white;
 
@@ -61,13 +78,14 @@ public class SimpleCanvas extends JComponent {
 	private void paintAreaInBuffer(BufferedImage img, Rectangle area) {
 		
     	Graphics2D g = img.createGraphics();
+    	g.setRenderingHints(RENDER_HINTS);
     	g.clip(area);
 		// erase the whole area
 		g.setColor(backgroundColor);
 		g.fill(area);
 		
 		if (renderer != null) {
-			g.translate(dx, dy);
+			g.translate(tr_x, tr_y);
 			g.scale(zoom, zoom);
 			renderer.render(g,getCanvasRectangle(area));
 		}
@@ -89,7 +107,7 @@ public class SimpleCanvas extends JComponent {
 		// add overlay layer to the image, by the renderer
 		if (renderer != null) {
 			Graphics2D g2 = (Graphics2D)g;
-			g2.translate(dx, dy);
+			g2.translate(tr_x, tr_y);
 			g2.scale(zoom, zoom);
 
 			renderer.overlay(g2, getCanvasRectangle(new Rectangle(0,0, getWidth(), getHeight())));
@@ -99,39 +117,26 @@ public class SimpleCanvas extends JComponent {
 	private Rectangle getCanvasRectangle(Rectangle area) {
 		Rectangle canvasArea = area;
 		if (zoom != 1) {
-			canvasArea = new Rectangle((int)((dx+area.x)*zoom), (int)((dy+area.y)*zoom), (int)(area.width*zoom), (int)(area.height*zoom));
+			canvasArea = new Rectangle((int)((area.x-tr_x)/zoom), (int)((area.y-tr_y)/zoom), (int)(area.width/zoom), (int)(area.height/zoom));
+		} else if (tr_x != 0 || tr_y != 0) {
+			canvasArea = new Rectangle(area.x-tr_x, area.y-tr_y, area.width, area.height);
 		}
 		return canvasArea;
 	}
 
-	public static Rectangle getRectangle(Point lastPoint, Point draggedPoint) {
-		int x1 = lastPoint.x;
-		int x2 = draggedPoint.x;
-		int y1 = lastPoint.y;
-		int y2 = draggedPoint.y;
-		
-		return getRectangle(x1, y1, x2, y2);
-	}
-	public static Rectangle getRectangle(int x1, int y1, int x2, int y2) {
-		int tmp;
-		if (x2 < x1) {
-			tmp = x1;
-			x1 = x2;
-			x2 = tmp;
-		}
-		if (y2 < y1) {
-			tmp = y1;
-			y1 = y2;
-			y2 = tmp;
-		}
-		return new Rectangle(x1, y1, x2-x1, y2-y1);
-	}
-	
 	public void zoom(int n) {
 		if (n > 0) {
+			if (zoom >= MAXZOOM) {
+				return;
+			}
 			zoom = zoom * 1.1;
 		} else if (n < 0) {
+			if (zoom <= MINZOOM) {
+				return;
+			}
 			zoom = zoom / 1.1;
+		} else if (zoom == 1) {
+			return;
 		} else {
 			zoom = 1;
 		}
@@ -139,6 +144,15 @@ public class SimpleCanvas extends JComponent {
 		repaint();
 	}
 	
+	/**
+	 * Translate the canvas.
+	 *   dx > 0 will reveal what is to the right of the current view (horizontal scroll)
+	 *   dy > 0 will reveal what is below the current view (scroll down)
+	 * Note: the zoom level affects this.
+	 *   
+	 * @param dx
+	 * @param dy
+	 */
 	public void translate(double dx, double dy) {
 		moveImage((int)(dx/zoom), (int)(dy/zoom));
 	}
@@ -147,16 +161,31 @@ public class SimpleCanvas extends JComponent {
 		this.lastPoint = p;
 	}
 
+	/**
+	 * Drag to scroll the view.
+	 * Note: only the main event listener should call this method, the renderer should use "translate".
+	 * 
+	 * @param p
+	 */
 	public void drag(Point p) {
-		moveImage(p.x-lastPoint.x, p.y-lastPoint.y);
+		moveImage(lastPoint.x - p.x, lastPoint.y - p.y);
 		this.lastPoint = p;
 	}
 
 	private void moveImage(int dx, int dy) {
-		this.dx += dx;
-		this.dy += dy;
+		// prevent going to negative coordinates
+		if (dx > 0 && dx > -this.tr_x) {
+			dx = -this.tr_x;
+		}
+		if (dy > 0 && dy > -this.tr_y) {
+			dy = -this.tr_y;
+		}
 		
-		if (img == null) {
+		// moving coordinates
+		this.tr_x += dx;
+		this.tr_y += dy;
+		
+		if (img == null || (dx == 0 && dy == 0)) {
 			return;
 		}
 		
@@ -166,19 +195,20 @@ public class SimpleCanvas extends JComponent {
     	g.drawImage(this.img, dx, dy, null);
     	
 		// redraw only the sides
+    	// Note: the corner is re-painted twice
     	if (dx > 0) {
     		Rectangle area = new Rectangle(0, 0, dx, getHeight());
         	paintAreaInBuffer(img, area);
     	} else if (dx < 0) {
-    		Rectangle area = new Rectangle(getWidth()-dx, 0, dx, getHeight());
+    		Rectangle area = new Rectangle(getWidth()+dx, 0, -dx, getHeight());
         	paintAreaInBuffer(img, area);
     	}
 
     	if (dy > 0) {
-    		Rectangle area = new Rectangle(0, 0, getWidth()-dx, dy);
+    		Rectangle area = new Rectangle(0, 0, getWidth(), dy);
         	paintAreaInBuffer(img, area);
     	} else if (dy < 0) {
-    		Rectangle area = new Rectangle(0, getHeight()-dy, getWidth()-dx, dy);
+    		Rectangle area = new Rectangle(0, getHeight()+dy, getWidth(), -dy);
         	paintAreaInBuffer(img, area);
     	}
 
@@ -188,18 +218,13 @@ public class SimpleCanvas extends JComponent {
 	
 	protected Point window2canvas(Point p) {
 		if (zoom == 1) {
-			if (dx == 0 && dy==0) {
-				return p;
-			}
-			
-			return new Point(p.x+dx, p.y+dy);
+			return new Point(p.x-tr_x, p.y-tr_y);
 		}
-		
-		return new Point((int)((p.x+dx)*zoom), (int)((p.y+dy)*zoom));
+		return new Point((int)((p.x-tr_x)/zoom), (int)((p.y-tr_y)/zoom));
 	}
 
 	public void scroll(int wheelRotation, boolean alternate) {
-		int tr = 10*wheelRotation;
+		int tr = -10*wheelRotation;
 		if (alternate) {
 			moveImage(tr, 0);
 		} else {
@@ -212,16 +237,28 @@ public class SimpleCanvas extends JComponent {
 	 * It will transform the canvas area into screen coordinates and call damageScreen.
 	 * Note: this does NOT call repaint to let several calls happen before the actual redraw.
 	 * 
-	 * @param area
+	 * @param area the canvas area to mark as damaged
 	 */
 	public void damageCanvas(Rectangle area) {
-		int x = (int)(area.x / zoom) - dx - 1;
-		int y = (int)(area.y / zoom) - dy - 1;
+		int x = (int)(area.x * zoom) + tr_x - 1;
+		int y = (int)(area.y * zoom) + tr_y - 1;
 		
-		int width = (int)(area.width/zoom) +2;
-		int height = (int)(area.height/zoom) +2;
+		int width = (int)(area.width*zoom) +2;
+		int height = (int)(area.height*zoom) +2;
 
-		damageScreen(new Rectangle(x,y, width, height));
+		// only take into account visible parts
+		if (x < 0) {
+			width -= x;
+			x = 0;
+		}
+		if (y < 0) {
+			height -= y;
+			y = 0;
+		}
+		
+		if (width > 0 && height > 0) {
+			damageScreen(new Rectangle(x,y, width, height));
+		}
 	}
 	
 	/**
@@ -251,6 +288,15 @@ public class SimpleCanvas extends JComponent {
 		renderer.cancel();
 	}
 
+	@Override
+	public void reshape(int x, int y, int w, int h) {
+		if (img != null) {
+			img = null;
+		}
+		super.reshape(x, y, w, h);
+	}
+
+	
 }
 
 

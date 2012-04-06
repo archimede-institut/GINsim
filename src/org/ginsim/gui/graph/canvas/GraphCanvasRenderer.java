@@ -1,31 +1,31 @@
 package org.ginsim.gui.graph.canvas;
 
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.ginsim.core.GraphEventCascade;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphModel;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphListener;
+import org.ginsim.core.graph.common.GraphModel;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.MovingEdgeType;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.ViewHelper;
 import org.ginsim.gui.graph.GraphSelection;
 
-import com.kenai.jaffl.annotations.Clear;
-
+@SuppressWarnings({"rawtypes", "unchecked"})
 public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 
 	private final Graph graph;
@@ -42,13 +42,13 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 	 */
 	private Set selectionCache = new HashSet();
 	/**
-	 * Edges that are not selected but that will be moved with their attached nodes
+	 * Edges that have to be moves as either them or their attached nodes are selected
 	 */
-	private Collection movingEdges = new HashSet();
+	private Map<Edge, MovingEdgeType> movingEdges = new HashMap<Edge, MovingEdgeType>();
 
 	DragStatus dragstatus = DragStatus.NODRAG;
 	
-    public GraphCanvasRenderer(Graph<?,?> graph, SimpleCanvas canvas, GraphSelection selection) {
+	public GraphCanvasRenderer(Graph<?,?> graph, SimpleCanvas canvas, GraphSelection selection) {
     	this.graph = graph;
     	this.nreader = graph.getNodeAttributeReader();
     	this.ereader = graph.getEdgeAttributeReader();
@@ -65,7 +65,7 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
     	for (Object node: graph.getNodes()) {
     		nreader.setNode(node, selectionCache.contains(node));
     		Rectangle bounds = nreader.getBounds();
-    		if (true || bounds.intersects(area)) {
+    		if (bounds.intersects(area)) {
     			nreader.render(g);
     		}
     	}
@@ -73,7 +73,7 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
     	for (Object edge: graph.getEdges()) {
     		ereader.setEdge((Edge)edge, selectionCache.contains(edge));
     		Rectangle bounds = ereader.getBounds();
-    		if (true || bounds.intersects(area)) {
+    		if (bounds.intersects(area)) {
     			ereader.render(g);
     		}
     	}
@@ -101,12 +101,20 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 		    		}
 		    	}
 			}
+			for (Edge e: movingEdges.keySet()) {
+				MovingEdgeType type = movingEdges.get(e);
+				ereader.setEdge(e);
+				Rectangle bounds = ereader.getBounds();
+				if (bounds.intersects(area)) {
+					ereader.renderMoving(g, type, movex, movey);
+				}
+			}
 			
 			break;
 
 		case SELECT:
 			// just draw a selection rectangle
-			g.draw(canvas.getRectangle(startPoint.x, startPoint.y, startPoint.x+movex, startPoint.y+movey));
+			g.draw(ViewHelper.getRectangle(startPoint.x, startPoint.y, startPoint.x+movex, startPoint.y+movey));
 			break;
 		}
 	}
@@ -247,9 +255,13 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 	public void pressed(Point p, boolean alternate) {
 		dragstatus = DragStatus.NODRAG;
 		startPoint = p;
+		
 		Object o = getObjectUnderPoint(p);
+		
 		if (alternate) {
-			if (selectionCache.contains(o)) {
+			if (o == null) {
+				// do nothing
+			} else if (selectionCache.contains(o)) {
 				// remove it from selection
 				if (o instanceof Edge) {
 					selection.unselectEdge((Edge)o);
@@ -289,7 +301,7 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 		switch (dragstatus) {
 		case MOVE:
 			// first mark all moving items as damaged
-			for (Object o: movingEdges) {
+			for (Object o: movingEdges.keySet()) {
 				damageItem(o);
 			}
 			for (Object o: selectionCache) {
@@ -309,7 +321,7 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 			}
 
 			// finally mark them as damaged again and repaint
-			for (Object o: movingEdges) {
+			for (Object o: movingEdges.keySet()) {
 				damageItem(o);
 			}
 			for (Object o: selectionCache) {
@@ -322,7 +334,7 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 
 		case SELECT:
 			
-			Rectangle selectionClip = canvas.getRectangle(startPoint.x, startPoint.y, startPoint.x+movex, startPoint.y+movey);
+			Rectangle selectionClip = ViewHelper.getRectangle(startPoint.x, startPoint.y, startPoint.x+movex, startPoint.y+movey);
 			select(selectionClip);
 			dragstatus = DragStatus.NODRAG;
 			canvas.repaint();
@@ -348,10 +360,32 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 				movingEdges.clear();
 				for (Object o: selectionCache) {
 					if (o instanceof Edge) {
+						Edge e = (Edge)o;
+						boolean source = selectionCache.contains(e.getSource());
+						boolean target = selectionCache.contains(e.getTarget());
+						movingEdges.put(e, MovingEdgeType.getMovingType(true, source, target));
 						continue;
 					}
-					movingEdges.addAll(graph.getIncomingEdges(o));
-					movingEdges.addAll(graph.getOutgoingEdges(o));
+					
+					boolean source = true;
+					boolean target = false;
+					for (Object oe: graph.getOutgoingEdges(o)) {
+						if (selectionCache.contains(oe)) {
+							continue;
+						}
+						Edge e = (Edge)oe;
+						target = selectionCache.contains(e.getTarget());
+						movingEdges.put(e, MovingEdgeType.getMovingType(false, source, target));
+					}
+					target = true;
+					for (Object oe: graph.getIncomingEdges(o)) {
+						if (selectionCache.contains(oe)) {
+							continue;
+						}
+						Edge e = (Edge)oe;
+						source = selectionCache.contains(e.getSource());
+						movingEdges.put(e, MovingEdgeType.getMovingType(false, source, target));
+					}
 				}
 			} else {
 				dragstatus = DragStatus.SELECT;

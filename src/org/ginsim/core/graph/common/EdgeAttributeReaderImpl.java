@@ -12,7 +12,9 @@ import org.ginsim.common.OptionStore;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
+import org.ginsim.core.graph.view.MovingEdgeType;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.SimpleStroke;
 import org.ginsim.core.graph.view.ViewHelper;
 
 
@@ -44,6 +46,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     private final NodeAttributesReader nreader;
     
     private Rectangle cachedBounds = null;
+    private SimpleStroke stroke = new SimpleStroke();
     
     /**
      * @param dataMap
@@ -286,7 +289,19 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 	@Override
 	public void render(Graphics2D g) {
 		List<Point> points = ViewHelper.getPoints(nreader, this, edge);
+		dorender(g, points);
+	}
+	
+	@Override
+	public void renderMoving(Graphics2D g, MovingEdgeType type, int movex, int movey) {
+		List<Point> points = ViewHelper.getMovingPoints(type, movex, movey, nreader, this, edge);
+		dorender(g, points);
+	}
+
+	private void dorender(Graphics2D g, List<Point> points) {
 		g.setColor(getLineColor());
+		stroke.setWidth(getLineWidth());
+		g.setStroke(stroke);
 		if (selected) {
 			// TODO: better selection markup
 			g.setColor(Color.PINK);

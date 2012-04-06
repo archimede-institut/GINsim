@@ -18,7 +18,9 @@ import org.ginsim.core.graph.common.Edge;
 public class ViewHelper {
 
 	/**
-	 * @param bounds
+	 * Construct intermediate points for loops.
+	 * 
+	 * @param bounds the bounds of the item with the loop
 	 * @return the list of points for a loop.
 	 */
 	private static PointList getPoints(Rectangle bounds) {
@@ -34,7 +36,7 @@ public class ViewHelper {
 		return points;
 	}
 	
-	private static PointList getPoints(Rectangle srcBounds, Rectangle targetBounds, List<Point> middlePoints, int w) {
+	public static PointList getPoints(Rectangle srcBounds, Rectangle targetBounds, List<Point> middlePoints, int w) {
 
 		if (middlePoints == null || middlePoints.size() < 1) {
 			return getPoints(srcBounds, targetBounds, w);
@@ -179,6 +181,44 @@ public class ViewHelper {
 		return points;
 	}
 
+	public static List<Point> getMovingPoints(MovingEdgeType type, int movex, int movey, NodeAttributesReader nreader, EdgeAttributesReader ereader, Edge<?> edge) {
+		Object source = edge.getSource();
+		Object target = edge.getTarget();
+		
+		if (source == target) {
+			Rectangle box = getBounds(nreader, source);
+			if (type.source) {
+				box = translateRectangle(box, movex, movey);
+			}
+			return getPoints(box);
+		}
+		
+		Rectangle b1 = getBounds(nreader, source);
+		if (type.source) {
+			b1 = translateRectangle(b1, movex, movey);
+		}
+		Rectangle b2 = getBounds(nreader, target);
+		if (type.target) {
+			b2 = translateRectangle(b2, movex, movey);
+		}
+
+		List<Point> realPoints = ereader.getPoints();
+		int w = (int)ereader.getLineWidth();
+		
+		if (realPoints == null || realPoints.size() == 0) {
+			return getPoints(b1, b2, w);
+		}
+		
+		if (type.edge) {
+			// move points
+		}
+		return getPoints(b1, b2, realPoints, w);
+	}
+
+	private static Rectangle translateRectangle(Rectangle box, int movex, int movey) {
+		return new Rectangle(box.x+movex, box.y+movey, box.width, box.height);
+	}
+	
 	public static PointList doGetPoints(NodeAttributesReader nodeReader, EdgeAttributesReader edgeReader, Edge<?> edge) {
 		Object source = edge.getSource();
 		Object target = edge.getTarget();
@@ -261,6 +301,46 @@ public class ViewHelper {
 		}
 		return theta;
 	}
+
+	/**
+	 * Get a rectangle given its two angle points.
+	 * 
+	 * @param lastPoint
+	 * @param draggedPoint
+	 * @return
+	 */
+	public static Rectangle getRectangle(Point lastPoint, Point draggedPoint) {
+		int x1 = lastPoint.x;
+		int x2 = draggedPoint.x;
+		int y1 = lastPoint.y;
+		int y2 = draggedPoint.y;
+		
+		return getRectangle(x1, y1, x2, y2);
+	}
+	/**
+	 * Get a rectangle given its two angle points.
+	 * 
+	 * @param x1
+	 * @param y1
+	 * @param x2
+	 * @param y2
+	 * @return
+	 */
+	public static Rectangle getRectangle(int x1, int y1, int x2, int y2) {
+		int tmp;
+		if (x2 < x1) {
+			tmp = x1;
+			x1 = x2;
+			x2 = tmp;
+		}
+		if (y2 < y1) {
+			tmp = y1;
+			y1 = y2;
+			y2 = tmp;
+		}
+		return new Rectangle(x1, y1, x2-x1, y2-y1);
+	}
+
 }
 
 class PointList extends ArrayList<Point> {

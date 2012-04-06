@@ -150,5 +150,15 @@ public interface EdgeAttributesReader extends AttributesReader {
      * @param g
      */
 	void render(Graphics2D g);
-    
+
+	/**
+	 * Render an edge while the edge or at least one of its connected node is moved.
+	 * 
+	 * @param g
+	 * @param type
+	 * @param movex
+	 * @param movey
+	 */
+	void renderMoving(Graphics2D g, MovingEdgeType type, int movex, int movey);
+
 }
