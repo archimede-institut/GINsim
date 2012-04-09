@@ -2,41 +2,19 @@ package org.ginsim.gui.graph.backend;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
-import javax.swing.JPanel;
 import javax.swing.JSeparator;
-import javax.swing.KeyStroke;
 
-import org.ginsim.common.OptionStore;
-import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.log.LogManager;
-import org.ginsim.core.GraphEventCascade;
-import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.backend.JgraphtBackendImpl;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.common.GraphListener;
-import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.BaseGraphGUI;
-import org.ginsim.gui.graph.EditActionManager;
-import org.ginsim.gui.graph.GUIEditor;
-import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIHelper;
-import org.ginsim.gui.graph.GraphGUIListener;
-import org.ginsim.gui.graph.GraphSelection;
-import org.ginsim.gui.shell.FileSelectionHelper;
-import org.ginsim.gui.shell.FrameActionManager;
-import org.ginsim.gui.shell.GsFileFilter;
-import org.ginsim.gui.utils.widgets.Frame;
 import org.jgraph.JGraph;
 import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.event.GraphSelectionListener;
@@ -171,6 +149,7 @@ public class JgraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> extends B
 			}
 		}
 
+		updateSelection(nodes, edges);
 	}
 
 	@Override
