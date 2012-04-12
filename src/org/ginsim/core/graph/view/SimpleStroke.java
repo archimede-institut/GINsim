@@ -21,12 +21,17 @@ public class SimpleStroke implements Stroke {
 	int join = BasicStroke.JOIN_MITER;
 	int miterlimit = 10;
 	int dash_phase = 0;
+	
+	BasicStroke cachedStroke = null;
+	BasicStroke cachedSimpleStroke = null;
 
 	public void setWidth(float width) {
 		if (width < 1) {
 			width = 1;
-		} else {
+		} else if (this.width != width) {
 			this.width = width;
+			cachedStroke = null;
+			cachedSimpleStroke = null;
 		}
 	}
 
@@ -35,21 +40,24 @@ public class SimpleStroke implements Stroke {
 			this.dash = DASHPATTERN;
 		} else {
 			this.dash = null;
+			cachedStroke = null;
+			cachedSimpleStroke = null;
 		}
 	}
 	
 	@Override
 	public Shape createStrokedShape(Shape s) {
-        sun.java2d.pipe.RenderingEngine re =
-                sun.java2d.pipe.RenderingEngine.getInstance();
-            return re.createStrokedShape(s, width, cap, join, miterlimit,
-                                         dash, dash_phase);
+        if (cachedStroke == null) {
+        	cachedStroke = new BasicStroke(width, cap, join, miterlimit, dash, dash_phase);
+        }
+        return cachedStroke.createStrokedShape(s);
 	}
 
 	public Shape createSimpleStrokedShape(Shape s) {
-        sun.java2d.pipe.RenderingEngine re =
-                sun.java2d.pipe.RenderingEngine.getInstance();
-            return re.createStrokedShape(s, width, cap, join, miterlimit, null, 0);
+        if (cachedSimpleStroke == null) {
+        	cachedSimpleStroke = new BasicStroke(width, cap, join, miterlimit);
+        }
+        return cachedSimpleStroke.createStrokedShape(s);
 	}
 
 }
