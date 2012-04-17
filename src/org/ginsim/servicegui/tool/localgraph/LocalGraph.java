@@ -11,7 +11,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.css.CascadingStyle;
+import org.ginsim.core.graph.view.css.CascadingStyleSheetManager;
 import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
 
 
@@ -22,7 +22,7 @@ import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
  */
 public class LocalGraph {
 	private RegulatoryGraph regGraph;
-	private CascadingStyle cs = null;
+	private CascadingStyleSheetManager cs = null;
 	private LocalGraphSelector selector = null;
 	private List<byte[]> states;
 	private HashMap<RegulatoryMultiEdge, String> functionalityMap;
@@ -145,7 +145,7 @@ public class LocalGraph {
             return;
         }
 		if (cs == null) {
-            cs = new CascadingStyle(true);
+            cs = new CascadingStyleSheetManager(true);
         } else {
             cs.shouldStoreOldStyle = false;
         }

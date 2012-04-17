@@ -29,7 +29,7 @@ import org.ginsim.common.utils.GUIMessageUtils;
 import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.view.css.CascadingStyle;
+import org.ginsim.core.graph.view.css.CascadingStyleSheetManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.resource.ImageLoader;
@@ -51,7 +51,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	private JScrollPane pathListScrollPane;
 	private boolean isColorized = false;
 	private Vector path;
-	private CascadingStyle cs;
+	private CascadingStyleSheetManager cs;
 	private PathFindingSelector selector;
 	private JButton selectionForEndButton, selectionForStartButton;
 	
@@ -362,7 +362,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	private void doColorize() {
 		if (path != null) {
 			if (cs == null) {
-	            cs = new CascadingStyle(true);
+	            cs = new CascadingStyleSheetManager(true);
 	        } else {
 	            cs.shouldStoreOldStyle = false;
 	        }

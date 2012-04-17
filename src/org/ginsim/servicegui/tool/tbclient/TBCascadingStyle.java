@@ -2,11 +2,11 @@ package org.ginsim.servicegui.tool.tbclient;
 
 import org.ginsim.core.graph.view.AttributesReader;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.css.CascadingStyle;
+import org.ginsim.core.graph.view.css.CascadingStyleSheetManager;
 import org.ginsim.core.graph.view.css.EdgeStyle;
 
 
-public class TBCascadingStyle extends CascadingStyle {
+public class TBCascadingStyle extends CascadingStyleSheetManager {
 	public TBCascadingStyle(boolean shouldStoreOldStyle) {
 		super(shouldStoreOldStyle);
 	}

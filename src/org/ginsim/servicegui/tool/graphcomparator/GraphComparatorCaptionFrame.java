@@ -29,7 +29,7 @@ import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
-import org.ginsim.core.graph.view.css.CascadingStyle;
+import org.ginsim.core.graph.view.css.CascadingStyleSheetManager;
 import org.ginsim.core.graph.view.css.EdgeStyle;
 import org.ginsim.core.graph.view.css.NodeStyle;
 import org.ginsim.core.graph.view.css.Style;
@@ -46,7 +46,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	private JPanel mainPanel;
 	private JTextArea resultsPane;
 	private JRadioButton diffColor, specG1Color, specG2Color, intersectColor, exclusionColor, fusionColor1, fusionColor2;
-	private CascadingStyle cs;
+	private CascadingStyleSheetManager cs;
 	private JButton automaticRoutingButton;
 	private GraphComparatorResult gcResult;
 	
@@ -56,7 +56,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	public GraphComparatorCaptionFrame(GraphComparatorResult gcResult) {
         this.g = gcResult.getDiffGraph();
         this.gcResult = gcResult;
-        this.cs = new CascadingStyle(false);
+        this.cs = new CascadingStyleSheetManager(false);
 
         initialize();
         this.setTitle(Translator.getString("STR_gcmp_caption")+" ("+g.getGraphName()+")");

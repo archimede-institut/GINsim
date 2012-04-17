@@ -19,4 +19,12 @@ public interface Style {
 	public abstract void apply(AttributesReader areader);
 	
 	public abstract Object clone();
+
+	/**
+	 * Define the value of a property of a style
+	 * @param property
+	 * @param value
+	 * @param i the index in the parsed text
+	 */
+	public abstract void setProperty(String property, String value, int i) throws CSSSyntaxException;
 }

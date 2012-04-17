@@ -340,6 +340,19 @@ public abstract class Selector {
 	}
 	
 	public String toString(String category) {
-		return identifier+category;
+		return identifier+"."+category;
+	}
+	
+	public String toCSS() {
+		StringBuffer s = new StringBuffer();
+		for (Object category : m.keySet()) {
+			s.append(identifier);
+			s.append('.');
+			s.append(category);
+			s.append("{\n");
+			s.append(m.get(category));
+			s.append("\n}");
+		}
+		return s.toString();
 	}
 }

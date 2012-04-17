@@ -12,6 +12,10 @@ public class CSSSyntaxException extends Exception {
 		super(defaultMessage+" : "+message);
 	}
 
+	public CSSSyntaxException(String message, String text, int i) {
+		super(defaultMessage+" : "+message+" "+i+" ["+text.substring(Math.max(0, i-2), Math.min(i+2, text.length()))+"]");
+	}
+
 	public CSSSyntaxException(Throwable cause) {
 		super(defaultMessage, cause);
 	}

@@ -124,6 +124,40 @@ public class NodeStyle implements Style {
 		areader.refresh();
 	}
 	
+	@Override
+	public void setProperty(String property, String value, int i) throws CSSSyntaxException {
+		if (property.equals(CSS_BACKGROUND)) {
+			try {
+				background = DataUtils.getColorFromCode(value.toUpperCase());
+			} catch (NumberFormatException e) {
+				throw new CSSSyntaxException("Malformed color code at line "+i+" found "+value+". Must be from 000000 to FFFFFF");
+			}
+		} else if (property.equals(CSS_FOREGROUND)) {
+			try {
+				foreground = DataUtils.getColorFromCode(value.toUpperCase());
+			} catch (NumberFormatException e) {
+				throw new CSSSyntaxException("Malformed color code at line "+i+" found "+value+". Must be from 000000 to FFFFFF");
+			}
+		} else if (property.equals(CSS_TEXTCOLOR)) {
+			try {
+				textcolor = DataUtils.getColorFromCode(value.toUpperCase());
+			} catch (NumberFormatException e) {
+				throw new CSSSyntaxException("Malformed color code at line "+i+" found "+value+". Must be from 000000 to FFFFFF");
+			}
+		} else if (property.equals(CSS_SHAPE)) {
+			if 		(value.equals(CSS_SHAPE_ELLIPSE)) 	shape = NodeShape.ELLIPSE;
+			else if (value.equals(CSS_SHAPE_RECTANGLE)) shape = NodeShape.RECTANGLE;
+			else throw new CSSSyntaxException("Unknown vertex shape at line "+i+" found "+value+". Must be "+CSS_SHAPE_ELLIPSE+" or "+CSS_SHAPE_RECTANGLE);
+		} else if (property.equals(CSS_BORDER)) {
+			if 		(value.equals(CSS_BORDER_SIMPLE)) 	border = NodeBorder.SIMPLE;
+			else if (value.equals(CSS_BORDER_RAISED)) 	border = NodeBorder.RAISED;
+			else if (value.equals(CSS_BORDER_STRONG)) 	border = NodeBorder.STRONG;
+			else throw new CSSSyntaxException("Unknown vertex border at line "+i+" found "+value+". Must be "+CSS_BORDER_SIMPLE+", "+CSS_BORDER_RAISED+" or "+CSS_BORDER_STRONG);
+		} else {
+			throw new CSSSyntaxException("Node has no key "+property+" at line "+i+" found "+value+". Must be "+CSS_BACKGROUND+", "+CSS_FOREGROUND+", "+CSS_SHAPE+" or "+CSS_BORDER);
+		}
+	}
+	
 	/**
 	 * a css string representation of this style.
 	 */
@@ -141,9 +175,9 @@ public class NodeStyle implements Style {
 		for (int i = 1; i < tabs_count; i++) {
 			tabs += "\t";
 		}
-		if (background != null) s += tabs+CSS_BACKGROUND+": "+DataUtils.getColorCode(background)+"\n"; 
-		if (foreground != null) s += tabs+CSS_FOREGROUND+": "+DataUtils.getColorCode(foreground)+"\n";
-		if (textcolor != null) s += tabs+CSS_TEXTCOLOR+": "+DataUtils.getColorCode(textcolor)+"\n";
+		if (background != null) s += tabs+CSS_BACKGROUND+": #"+DataUtils.getColorCode(background)+";\n"; 
+		if (foreground != null) s += tabs+CSS_FOREGROUND+": #"+DataUtils.getColorCode(foreground)+";\n";
+		if (textcolor != null) s += tabs+CSS_TEXTCOLOR+": #"+DataUtils.getColorCode(textcolor)+";\n";
 		if (border != null) {
 			s += tabs+CSS_BORDER+": ";
 			switch (border) {
@@ -157,9 +191,9 @@ public class NodeStyle implements Style {
 				s += CSS_BORDER_STRONG;
 				break;
 			}
-			s += "\n";
+			s += ";\n";
 		}
-		if (shape != null) s += tabs+CSS_SHAPE+": "+(shape == NodeShape.ELLIPSE?CSS_SHAPE_ELLIPSE:CSS_SHAPE_RECTANGLE)+"\n";
+		if (shape != null) s += tabs+CSS_SHAPE+": "+(shape == NodeShape.ELLIPSE?CSS_SHAPE_ELLIPSE:CSS_SHAPE_RECTANGLE)+";\n";
 		return s;
 	}
 	

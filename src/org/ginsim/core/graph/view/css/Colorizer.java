@@ -16,7 +16,7 @@ public class Colorizer {
 	private boolean isColored;
 
 	protected Selector selector;
-	protected CascadingStyle cs = null;
+	protected CascadingStyleSheetManager cs = null;
 
 	/**
 	 * Construct the colorizer from a selector and a graph.
@@ -36,7 +36,7 @@ public class Colorizer {
 	 */
 	public void doColorize(Graph<?, ?> graph) {
 		if (cs == null) {
-            cs = new CascadingStyle(true);
+            cs = new CascadingStyleSheetManager(true);
         } else {
             cs.shouldStoreOldStyle = false;
         }

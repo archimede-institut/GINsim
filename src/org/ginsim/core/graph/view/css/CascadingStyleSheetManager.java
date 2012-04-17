@@ -12,11 +12,11 @@ import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 
 
-public class CascadingStyle {
+public class CascadingStyleSheetManager {
 	private Map old_nodes, old_edges;
 	public boolean shouldStoreOldStyle;
 
-	public CascadingStyle(boolean shouldStoreOldStyle) {
+	public CascadingStyleSheetManager(boolean shouldStoreOldStyle) {
 		old_nodes = new HashMap();
 		old_edges = new HashMap();
 		this.shouldStoreOldStyle = shouldStoreOldStyle;
@@ -49,7 +49,7 @@ public class CascadingStyle {
 	/**
 	 * Apply a style on an edge using its attribute reader.
 	 * If shouldStoreOldStyle is true it save the old style too.
-	 * @param sel
+	 * @param selID
 	 * @param edge
 	 * @param areader
 	 */
@@ -61,7 +61,7 @@ public class CascadingStyle {
 	/**
 	 * Apply a style on an edge using its attribute reader.
 	 * If shouldStoreOldStyle is true it save the old style too.
-	 * @param sel
+	 * @param selID
 	 * @param node
 	 * @param areader
 	 */
@@ -130,8 +130,9 @@ public class CascadingStyle {
 		for (Iterator it_edges = edges.iterator(); it_edges.hasNext();) {			//For each edge
 			Object edge = it_edges.next();
 			ereader.setEdge((Edge)edge);
-			EdgeStyle style = new EdgeStyle(ereader);								//  get the style
-			if (shouldStoreOldStyle) old_edges.put(edge, style.clone());					//  save a copy if needed
+			if (shouldStoreOldStyle) {
+				old_edges.put(edge, new EdgeStyle(ereader));					//  save a copy if needed
+			}
 			((EdgeStyle)sel.getStyleForEdge(edge)).apply(ereader);		//  apply the style to the edge.
 		}
 	}
@@ -149,8 +150,9 @@ public class CascadingStyle {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {			//For each node
 			Object node = it_nodes.next();
 			vreader.setNode(node);
-			NodeStyle style = new NodeStyle(vreader);								//  get the style
-			if (shouldStoreOldStyle) old_nodes.put(node, style.clone());					//  save a copy if needed
+			if (shouldStoreOldStyle) {
+				old_nodes.put(node, new NodeStyle(vreader));					//  save a copy if needed
+			}
 			((NodeStyle)sel.getStyleForNode(node)).apply(vreader);	//  apply the style to the node.
 		}
 	}

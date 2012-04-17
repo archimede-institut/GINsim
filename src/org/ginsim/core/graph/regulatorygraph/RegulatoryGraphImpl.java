@@ -21,6 +21,7 @@ import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.css.CSSFilesAssociatedManager;
 import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
@@ -43,6 +44,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     static {
     	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new MutantListManager());
     	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class,  new BiblioManager());
+    	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new CSSFilesAssociatedManager());
     }
 
     /**
