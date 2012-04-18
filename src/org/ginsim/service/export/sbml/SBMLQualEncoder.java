@@ -29,7 +29,7 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
 	public static final String L3_QUALI_URL = "http://www.sbml.org/sbml/level3/version1/qual/version1";
 	public static final String L3_LAYOUT_URL = "http://www.sbml.org/sbml/level3/version1/layout/version1";
 
-	private static final boolean LAYOUT = false;
+	private static final boolean LAYOUT = true;
 	
     List<RegulatoryNode> v_no;
     int len;
@@ -110,6 +110,7 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
             out.openTag("layout:listOfSpeciesGlyphs");
 
             NodeAttributesReader vreader = graph.getNodeAttributeReader();
+            int maxx=0, maxy=0;
             for (RegulatoryNode node: v_no) {
             	vreader.setNode(node);
             	out.openTag("layout:speciesGlyph");
@@ -117,20 +118,38 @@ public class SBMLQualEncoder implements OMDDBrowserListener{
             	out.openTag("layout:boundingBox");
             	
             	out.openTag("layout:position");
-            	out.addAttr("layout:x", ""+vreader.getX());
-            	out.addAttr("layout:y", ""+vreader.getY());
+            	int curx = vreader.getX();
+            	int cury = vreader.getY();
+            	out.addAttr("layout:x", ""+curx);
+            	out.addAttr("layout:y", ""+cury);
             	out.addAttr("layout:z", "0");
                 out.closeTag();
             	out.openTag("layout:dimensions");
-            	out.addAttr("layout:width", ""+vreader.getWidth());
-            	out.addAttr("layout:height", ""+vreader.getHeight());
+            	int curwidth = vreader.getWidth();
+            	int curheight = vreader.getHeight();
+            	out.addAttr("layout:width", ""+curwidth);
+            	out.addAttr("layout:height", ""+curheight);
             	out.addAttr("layout:depth", "1");
                 out.closeTag();
                 
                 out.closeTag();
                 out.closeTag();
+                
+                curx += curwidth;
+                if (curx > maxx) {
+                	maxx = curx;
+                }
+                cury += curheight;
+                if (cury > maxy) {
+                	maxy = cury;
+                }
             }
             
+            out.closeTag();
+        	out.openTag("layout:dimensions");
+        	out.addAttr("layout:width", ""+(maxx+1));
+        	out.addAttr("layout:height", ""+(maxy+1));
+        	out.addAttr("layout:depth", "1");
             out.closeTag();
             out.closeTag();
             out.closeTag();
