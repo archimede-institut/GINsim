@@ -23,7 +23,8 @@ public class CSSFilesAssociatedManager extends BasicGraphAssociatedManager {
 	
 	@Override
 	public boolean needSaving(Graph graph) {
-		return true ;
+		Object o = getObject(graph);
+		return (o != null && ((List)o).size() > 0);
 	}
 
 	@Override
