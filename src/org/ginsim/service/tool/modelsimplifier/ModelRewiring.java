@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
@@ -36,7 +37,7 @@ public class ModelRewiring extends AbstractModelSimplifier implements Callable<R
 	private RewiringAction post;
 	private Collection<RegulatoryNode> targets = null;
 	private Collection<RegulatoryNode> rewiredtargets = null;
-	private Queue<RegulatoryNode> orderedPseudoOutputs = null;
+	private LinkedList<RegulatoryNode> orderedPseudoOutputs = null;
 	
 	public ModelRewiring( RegulatoryGraph graph) {
 		this.graph = graph;
@@ -52,11 +53,12 @@ public class ModelRewiring extends AbstractModelSimplifier implements Callable<R
 		List<RegulatoryNode> nOrder = graph.getNodeOrder();
 
 		// apply reduction to all pseudo-targets
-		OMDDNode[] functions = graph.getAllTrees(false);
+		OMDDNode[] functions = graph.getAllTrees(true);
 		lookupRewired();
 		// orderedPseudoOutputs provides a sane pseudo-output order
 		while (!orderedPseudoOutputs.isEmpty()) {
-			RegulatoryNode n = orderedPseudoOutputs.poll();
+			RegulatoryNode n = orderedPseudoOutputs.removeLast();
+			System.out.println("pseudo-output: "+n);
 			int removed_idx = nOrder.indexOf(n);
 			for (RegulatoryMultiEdge edge: graph.getOutgoingEdges(n) ) {
 				RegulatoryNode target = edge.getTarget();
@@ -157,7 +159,7 @@ public class ModelRewiring extends AbstractModelSimplifier implements Callable<R
 		}
 		
 		rewiredtargets = new HashSet<RegulatoryNode>();
-		orderedPseudoOutputs = new ArrayDeque<RegulatoryNode>();
+		orderedPseudoOutputs = new LinkedList<RegulatoryNode>();
 		Map<RegulatoryNode, Integer> nodes = new HashMap<RegulatoryNode, Integer>();
 		Queue<RegulatoryNode> queue = new ArrayDeque<RegulatoryNode>();
 		
