@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Callable;
 
 import org.ginsim.common.exception.GsException;
@@ -35,6 +36,7 @@ public class ModelRewiring extends AbstractModelSimplifier implements Callable<R
 	private RewiringAction post;
 	private Collection<RegulatoryNode> targets = null;
 	private Collection<RegulatoryNode> rewiredtargets = null;
+	private Queue<RegulatoryNode> orderedPseudoOutputs = null;
 	
 	public ModelRewiring( RegulatoryGraph graph) {
 		this.graph = graph;
@@ -50,9 +52,11 @@ public class ModelRewiring extends AbstractModelSimplifier implements Callable<R
 		List<RegulatoryNode> nOrder = graph.getNodeOrder();
 
 		// apply reduction to all pseudo-targets
-		// FIXME: we may have to get this in a proper order to avoid stupid errors...
 		OMDDNode[] functions = graph.getAllTrees(false);
-		for (RegulatoryNode n: rewiredtargets) {
+		lookupRewired();
+		// orderedPseudoOutputs provides a sane pseudo-output order
+		while (!orderedPseudoOutputs.isEmpty()) {
+			RegulatoryNode n = orderedPseudoOutputs.poll();
 			int removed_idx = nOrder.indexOf(n);
 			for (RegulatoryMultiEdge edge: graph.getOutgoingEdges(n) ) {
 				RegulatoryNode target = edge.getTarget();
@@ -60,9 +64,16 @@ public class ModelRewiring extends AbstractModelSimplifier implements Callable<R
 				
 					functions[target_idx] = remove(functions[target_idx], functions[removed_idx], removed_idx);
 			}
+			n.setOutput(true, graph);
 		}
 		
 		return functions;
+	}
+	
+	public void unMarkPseudoOutputs() {
+		for (RegulatoryNode n: rewiredtargets) {
+			n.setOutput(false, graph);
+		}
 	}
 	
 	public RegulatoryGraph call() {
@@ -146,6 +157,7 @@ public class ModelRewiring extends AbstractModelSimplifier implements Callable<R
 		}
 		
 		rewiredtargets = new HashSet<RegulatoryNode>();
+		orderedPseudoOutputs = new ArrayDeque<RegulatoryNode>();
 		Map<RegulatoryNode, Integer> nodes = new HashMap<RegulatoryNode, Integer>();
 		Queue<RegulatoryNode> queue = new ArrayDeque<RegulatoryNode>();
 		
@@ -178,6 +190,7 @@ public class ModelRewiring extends AbstractModelSimplifier implements Callable<R
 					if (targetCount == 0) {
 						queue.add(regulator);
 						rewiredtargets.add(regulator);
+						orderedPseudoOutputs.add(regulator);
 					} else {
 						nodes.put(regulator, targetCount);
 					}
