@@ -1,18 +1,22 @@
 package org.ginsim.service.tool.modelsimplifier;
 
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.Callable;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
@@ -24,7 +28,7 @@ import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
  * 
  * @author Aurelien Naldi
  */
-public class ModelRewiring implements Callable<RegulatoryGraph> {
+public class ModelRewiring extends AbstractModelSimplifier implements Callable<RegulatoryGraph>  {
 
 	private final RegulatoryGraph graph;
 
@@ -39,6 +43,26 @@ public class ModelRewiring implements Callable<RegulatoryGraph> {
 	
 	public void setRewiringAction(RewiringAction post) {
 		this.post = post;
+	}
+	
+	public OMDDNode[] rewirePseudoOutputs() throws GsException {
+		
+		List<RegulatoryNode> nOrder = graph.getNodeOrder();
+
+		// apply reduction to all pseudo-targets
+		// FIXME: we may have to get this in a proper order to avoid stupid errors...
+		OMDDNode[] functions = graph.getAllTrees(false);
+		for (RegulatoryNode n: rewiredtargets) {
+			int removed_idx = nOrder.indexOf(n);
+			for (RegulatoryMultiEdge edge: graph.getOutgoingEdges(n) ) {
+				RegulatoryNode target = edge.getTarget();
+				int target_idx = nOrder.indexOf(target);
+				
+					functions[target_idx] = remove(functions[target_idx], functions[removed_idx], removed_idx);
+			}
+		}
+		
+		return functions;
 	}
 	
 	public RegulatoryGraph call() {
@@ -66,9 +90,19 @@ public class ModelRewiring implements Callable<RegulatoryGraph> {
 				pcdef.m_elt.put(node, pc);
 			}
 			break;
+		case Rewire:
+			try {
+				rewirePseudoOutputs();
+				// TODO: turn these new functions into a real LRG?
+			} catch (GsException e) {
+				LogManager.error(e);
+			}
+			
+			break;
 		}
 		return graph;
 	}
+	
 
 	public void reset() {
 		targets = null;

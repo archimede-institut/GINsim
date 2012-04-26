@@ -40,7 +40,6 @@ import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
-import org.ginsim.servicegui.tool.modelsimplifier.AbstractModelSimplifier;
 import org.ginsim.servicegui.tool.modelsimplifier.ParameterGenerator;
 import org.ginsim.servicegui.tool.modelsimplifier.TargetEdgesIterator;
 

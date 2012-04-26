@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.modelsimplifier;
+package org.ginsim.service.tool.modelsimplifier;
 
 import java.util.List;
 import java.util.Map;
