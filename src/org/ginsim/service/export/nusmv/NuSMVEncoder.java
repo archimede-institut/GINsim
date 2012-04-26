@@ -14,12 +14,15 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.ginsim.common.exception.GsException;
 import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.service.ServiceManager;
+import org.ginsim.service.tool.modelsimplifier.ModelRewiring;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifierService;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
 import org.ginsim.service.tool.stablestates.StableStateSearcher;
@@ -43,7 +46,8 @@ public class NuSMVEncoder {
 	 * @param out
 	 *            the writer receiving the encoded model description
 	 */
-	public void write(NuSMVConfig config, Writer out) throws IOException {
+	public void write(NuSMVConfig config, Writer out) throws IOException,
+			GsException {
 
 		DateFormat dateformat = DateFormat.getDateTimeInstance(DateFormat.LONG,
 				DateFormat.LONG);
@@ -58,6 +62,20 @@ public class NuSMVEncoder {
 		else
 			out.write(Translator.getString("STR_NuSMV_Type2"));
 		out.write("\n\nMODULE main\n");
+
+		// RegulatoryNode simplification on pseudo-outputs
+		ModelSimplifierService mss = ServiceManager.getManager().getService(
+				ModelSimplifierService.class);
+		ModelRewiring mr = mss.getRewirer(config.getGraph());
+
+		// Definition of the OMDD trees
+		// OMDDNode[] t_tree = config.getGraph().getAllTrees(true);
+		OMDDNode[] t_tree = mr.rewirePseudoOutputs();
+		// Application of the user-defined Perturbation
+		Perturbation mutant = (Perturbation) config.store.getObject(0);
+		if (mutant != null) {
+			mutant.apply(t_tree, config.getGraph());
+		}
 
 		// TODO: correct PCs when a subset has the same rank distinct from the
 		// rest
@@ -240,13 +258,6 @@ public class NuSMVEncoder {
 			out.write(" };\n");
 		}
 
-		// Definition of the OMDD trees
-		OMDDNode[] t_tree = config.getGraph().getAllTrees(true);
-		Perturbation mutant = (Perturbation) config.store.getObject(0);
-		if (mutant != null) {
-			mutant.apply(t_tree, config.getGraph());
-		}
-
 		// Topological sorting of the state variables
 		int[] t_cst = new int[nodeOrder.size()];
 		HashMap<String, ArrayList<String>> hmRegulators = new HashMap<String, ArrayList<String>>();
@@ -301,12 +312,14 @@ public class NuSMVEncoder {
 				out.write("\n-- Establishing priorities\n");
 				out.write("  PCrank :=\n    case\n");
 				for (int c = 0; c < iaTmp.length; c++) {
-					sTmp = "      ";
+					sTmp = "";
 					if (c + 1 == iaTmp.length) {
 						sTmp += "TRUE";
 					} else {
 						for (int v = 2; v < iaTmp[c].length; v += 2) {
-							if (v > 2)
+							if (t_vertex[iaTmp[c][v]].isOutput())
+								continue;
+							if (sTmp.length() > 0)
 								sTmp += " | ";
 							switch (iaTmp[c][v + 1]) {
 							case 1:
@@ -320,14 +333,20 @@ public class NuSMVEncoder {
 										+ "_std";
 							}
 						}
+						if (sTmp.length() == 0)
+							sTmp = "FALSE";
 					}
-					out.write(sTmp + " : "
+					out.write("      " + sTmp + " : "
 							+ tmPcRank2Name.get(tmPcNum2Rank.get(c + 1))
 							+ ";\n");
 				}
 				out.write("    esac;\n");
 			}
 		}
+		// TODO: Solve major problem when using PCs with Input variables
+		// A proper component focal function may depend on Input variables
+		// When that component is used in the PCRank NuSMV says
+		// that there is a dependency on Input variables :/
 
 		out.write("\n-- Variable update if conditions are met\n");
 		for (int v = 0; v < t_vertex.length; v++) {
@@ -435,7 +454,7 @@ public class NuSMVEncoder {
 			out.write("  esac;\n");
 		}
 		out.write("\n");
-		
+
 		out.write("\nTRANS\n");
 		for (int i = 0; i < t_vertex.length; i++) {
 			if (t_vertex[i].isInput() || t_vertex[i].isOutput()) {
@@ -473,6 +492,8 @@ public class NuSMVEncoder {
 		else
 			out.write("-- SPEC AF ( weakSS )\n-- LTLSPEC G F ( weakSS )\n");
 
+		// ModelRewiring END code
+		mr.unMarkPseudoOutputs();
 	}
 
 	/**
@@ -596,7 +617,8 @@ public class NuSMVEncoder {
 			Map<RegulatoryNode, List<Integer>> mInitStates) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < t_vertex.length; i++) {
-			if (bInput && !t_vertex[i].isInput() || !bInput && t_vertex[i].isOutput())
+			if (bInput && !t_vertex[i].isInput() || !bInput
+					&& t_vertex[i].isOutput())
 				continue;
 			String s_init = "";
 			List<Integer> v = mInitStates.get(t_vertex[i]);
