@@ -225,6 +225,7 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 			break;
 		}
 
+		canvas.repaint();
 		return null;
 	}
 

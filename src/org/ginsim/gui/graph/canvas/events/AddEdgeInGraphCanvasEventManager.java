@@ -1,5 +1,6 @@
 package org.ginsim.gui.graph.canvas.events;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -20,6 +21,7 @@ public class AddEdgeInGraphCanvasEventManager implements CanvasEventManager {
 
 	private Object start = null;
 	private boolean dragged = false;
+	private Point p1, p2;
 	
 	public AddEdgeInGraphCanvasEventManager(GraphCanvasRenderer renderer) {
 		this.renderer = renderer;
@@ -35,6 +37,9 @@ public class AddEdgeInGraphCanvasEventManager implements CanvasEventManager {
 		start = renderer.getObjectUnderPoint(p);
 		if (start instanceof Edge) {
 			start = null;
+			p1 = null;
+		} else {
+			p1 = p;
 		}
 	}
 
@@ -60,8 +65,11 @@ public class AddEdgeInGraphCanvasEventManager implements CanvasEventManager {
 
 	@Override
 	public void dragged(Point p) {
-		dragged = true;
-		// TODO: overlay information
+		if (p1 != null) {
+			renderer.repaintCanvas();
+			dragged = true;
+			p2 = p;
+		}
 	}
 
 	@Override
@@ -70,8 +78,12 @@ public class AddEdgeInGraphCanvasEventManager implements CanvasEventManager {
 
 	@Override
 	public void overlay(Graphics2D g, Rectangle area) {
-		if (dragged) {
-			System.out.println("overlay for edge");
+		if (dragged && p1 != null && p2 != null) {
+			Object o = renderer.getObjectUnderPoint(p2);
+			if (o != null && !(o instanceof Edge)) {
+				g.setColor(Color.GREEN);
+			}
+			g.drawLine(p1.x, p1.y, p2.x, p2.y);
 		}
 	}
 
