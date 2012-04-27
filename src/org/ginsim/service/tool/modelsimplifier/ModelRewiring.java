@@ -58,7 +58,6 @@ public class ModelRewiring extends AbstractModelSimplifier implements Callable<R
 		// orderedPseudoOutputs provides a sane pseudo-output order
 		while (!orderedPseudoOutputs.isEmpty()) {
 			RegulatoryNode n = orderedPseudoOutputs.removeLast();
-			System.out.println("pseudo-output: "+n);
 			int removed_idx = nOrder.indexOf(n);
 			for (RegulatoryMultiEdge edge: graph.getOutgoingEdges(n) ) {
 				RegulatoryNode target = edge.getTarget();
