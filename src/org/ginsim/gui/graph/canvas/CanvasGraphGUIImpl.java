@@ -19,7 +19,7 @@ public class CanvasGraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> exte
 		super(g, helper, can_be_saved);
 
 		this.canvas = new SimpleCanvas();
-		renderer = new GraphCanvasRenderer(g, canvas, getSelection());
+		renderer = new GraphCanvasRenderer(g, canvas, getSelection(), getEditActionManager());
 	}
 
 	@Override
