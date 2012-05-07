@@ -306,6 +306,31 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 			// TODO: better selection markup
 			g.setColor(Color.PINK);
 		}
+		double theta;
+		if (isCurve()) {
+			theta = dorender_curved(g, points);
+		} else {
+			theta = dorender_straight(g, points);
+		}
+		
+		// draw the arrow end
+		Point pt1 = points.get(points.size()-1);
+		g.translate(pt1.x, pt1.y);
+		g.rotate(theta);
+		
+		g.fill(getLineEnd().getShape());
+
+		g.rotate(-theta);
+		g.translate(-pt1.x, -pt1.y);
+	}
+	
+	private double dorender_curved(Graphics2D g, List<Point> points) {
+		
+		// TODO: support curved edges as well
+		return dorender_straight(g, points);
+	}
+
+	private double dorender_straight(Graphics2D g, List<Point> points) {
 		Point pt1 = null;
 
 		for (Point pt2: points) {
@@ -315,16 +340,8 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 			pt1 = pt2;
 		}
 		
-		// draw the arrow end
-		g.translate(pt1.x, pt1.y);
 		Point ptsrc = points.get(points.size()-2);
-		double theta = ViewHelper.getRotationAngle(pt1.x-ptsrc.x, pt1.y-ptsrc.y);
-		g.rotate(theta);
-
-		g.fill(getLineEnd().getShape());
-
-		g.rotate(-theta);
-		g.translate(-pt1.x, -pt1.y);
+		return ViewHelper.getRotationAngle(pt1.x-ptsrc.x, pt1.y-ptsrc.y);
 	}
 
 	@Override

@@ -23,18 +23,19 @@ public enum EdgeEnd {
     
     private static Shape getArrow() {
     	Polygon poly = new Polygon();
-    	poly.addPoint(-3, -5);
-    	poly.addPoint(-3, 5);
-    	poly.addPoint(2, 0);
+    	poly.addPoint(-4,-5);
+    	poly.addPoint(-2, 0);
+    	poly.addPoint(-4, 5);
+    	poly.addPoint( 2, 0);
     	return poly;
     }
     
     private static Shape getT() {
     	Polygon poly = new Polygon();
-    	poly.addPoint(0, -3);
-    	poly.addPoint(0, 3);
-    	poly.addPoint(2, 3);
-    	poly.addPoint(2, -3);
+    	poly.addPoint(-1, -4);
+    	poly.addPoint(-1, 4);
+    	poly.addPoint(1, 4);
+    	poly.addPoint(1, -4);
     	return poly;
     }
 

@@ -433,7 +433,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
         }
 
 		
-		return new Dimension(width, height);
+		return new Dimension(width+5, height+5);
 	}
 
 	

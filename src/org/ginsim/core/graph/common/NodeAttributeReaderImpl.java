@@ -450,7 +450,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 		// center the text
 		int textHeight = fm.getHeight();
 		int tx = w/2 - textwidth/2;
-		int ty = h/2 + textHeight/2;
+		int ty = h/2 + textHeight/2 - 2;
 		
 		// render the text
 		g.setColor(getTextColor());
