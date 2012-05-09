@@ -486,11 +486,7 @@ public class NuSMVEncoder {
 		}
 
 		out.write("\n");
-		out.write("-- Property specification examples\n");
-		if (bType1)
-			out.write("-- SPEC !EF ( strongSS )\n");
-		else
-			out.write("-- SPEC AF ( weakSS )\n-- LTLSPEC G F ( weakSS )\n");
+		out.write("-- Include properties specifications here\n");
 
 		// ModelRewiring END code
 		mr.unMarkPseudoOutputs();
@@ -654,7 +650,7 @@ public class NuSMVEncoder {
 		} // reordered [ stateVar1 ... stateVarN inputVar1 ... inputVarN ]
 		sortedVars.addAll(orderInputVars);
 
-		String sRet = "\nweakSS := FALSE";
+		String sRet = "\nweakSS := ";
 		try {
 			StableStateSearcher sss = ServiceManager.getManager()
 					.getService(StableStatesService.class)
@@ -666,44 +662,74 @@ public class NuSMVEncoder {
 			int[] stateValues = new int[sortedVars.size()];
 			for (int i = 0; i < stateValues.length; i++)
 				stateValues[i] = -1;
+			ArrayList<String> alSSdesc;
 			if (bWeakSS) {
-				sRet += writeSSs(false, stateValues, omdds, orderStateVars, 0);
+				alSSdesc = writeSSs(false, stateValues, omdds, orderStateVars,
+						0);
+				if (alSSdesc == null || alSSdesc.size() == 0) {
+					sRet += "\n  FALSE";
+				} else {
+					for (int i = 0; i < alSSdesc.size(); i++) {
+						if (i > 0)
+							sRet += " | ";
+						sRet += "weakSS" + i;
+					}
+					for (int i = 0; i < alSSdesc.size(); i++) {
+						sRet += ";\nweakSS" + i + " := " + alSSdesc.get(i);
+					}
+				}
 			}
 			sRet += ";\nstrongSS := ";
-			String sTmp = writeSSs(true, stateValues, omdds, orderStateVars, 0);
-			sRet += ((sTmp.isEmpty()) ? "FALSE" : sTmp) + ";\n";
+			alSSdesc = writeSSs(true, stateValues, omdds, orderStateVars, 0);
+			if (alSSdesc == null || alSSdesc.size() == 0) {
+				sRet += "\n  FALSE";
+			} else {
+				for (int i = 0; i < alSSdesc.size(); i++) {
+					if (i > 0)
+						sRet += " | ";
+					sRet += "strongSS" + i;
+				}
+				for (int i = 0; i < alSSdesc.size(); i++) {
+					sRet += ";\nstrongSS" + i + " := " + alSSdesc.get(i);
+				}
+			}
+			sRet += ";\n";
 		} catch (Exception e) {
 			sRet += "\n  FALSE;\nstrongSS := FALSE;\n";
 			sRet += "\n -- An error occurred when computing the stable states!!\n";
+			sRet += "\n -- This SMV description may no longer be valid!!\n";
 		}
 		return sRet;
 	}
 
-	private String writeSSs(boolean bStrong, int[] stateValues, OMDDNode nodes,
-			List<RegulatoryNode> stateVars, int level) {
-		String sRet = "";
+	private ArrayList<String> writeSSs(boolean bStrong, int[] stateValues,
+			OMDDNode nodes, List<RegulatoryNode> stateVars, int level) {
+		ArrayList<String> alSSdesc = new ArrayList<String>();
 		if (nodes.next == null) {
 			if (nodes.value == 1
 					&& (bStrong && level == stateVars.size() || !bStrong
 							&& level > stateVars.size())) {
 				// we have a stable state:
-				sRet += "\n  | ";
+				String desc = "";
 				for (int i = 0; i < stateVars.size(); i++) {
 					if (stateValues[i] == -1)
 						continue;
+					if (stateVars.get(i).isOutput())
+						continue;
 					if (i > 0)
-						sRet += " & ";
-					sRet += stateVars.get(i) + "=" + stateValues[i];
+						desc += " & ";
+					desc += stateVars.get(i) + "=" + stateValues[i];
 				}
+				alSSdesc.add(desc);
 			}
-			return sRet;
+			return alSSdesc;
 		}
 		for (int i = 0; i < nodes.next.length; i++) {
 			stateValues[nodes.level] = i;
-			sRet += writeSSs(bStrong, stateValues, nodes.next[i], stateVars,
-					level + 1);
+			alSSdesc.addAll(writeSSs(bStrong, stateValues, nodes.next[i],
+					stateVars, level + 1));
 		}
 		stateValues[nodes.level] = -1;
-		return sRet;
+		return alSSdesc;
 	}
 }
