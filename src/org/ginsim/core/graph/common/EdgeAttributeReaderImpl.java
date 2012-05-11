@@ -4,11 +4,17 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.Shape;
+import java.awt.Stroke;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import org.ginsim.common.OptionStore;
+import org.ginsim.core.graph.view.Bezier;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
@@ -46,6 +52,8 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     private final NodeAttributesReader nreader;
     
     private Rectangle cachedBounds = null;
+    private Shape cachedPath = null;
+    private List<Point> cachedPoints = null;
     private SimpleStroke stroke = new SimpleStroke();
     
     /**
@@ -70,30 +78,10 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
         }
     	
         if (cachedBounds == null) {
-        	List<Point> cachedPoints = ViewHelper.getPoints(nreader, this, edge);
-        	Point p = cachedPoints.get(cachedPoints.size()-1);
-        	// take into account some extra space for the arrow
+        	Shape path = getPath();
+        	Rectangle b = path.getBounds();
         	int arrowmargin = 5;
-        	int minx = p.x-arrowmargin;
-        	int miny = p.y-arrowmargin;
-        	int maxx = p.x+arrowmargin;
-        	int maxy = p.y+arrowmargin;
-        	
-        	for (Point p1: cachedPoints) {
-        		if (p1.x < minx) {
-        			minx = p1.x;
-        		} else if (p1.x > maxx) {
-        			maxx = p1.x;
-        		}
-        		
-        		if (p1.y < miny) {
-        			miny = p1.y;
-        		} else if (p1.y > maxy) {
-        			maxy = p1.y;
-        		}
-        	}
-        	
-        	cachedBounds = new Rectangle(minx, miny, maxx-minx, maxy-miny);
+        	cachedBounds = new Rectangle(b.x-arrowmargin, b.y-arrowmargin, b.width+2*arrowmargin, b.height+2*arrowmargin);
         }
         return cachedBounds;
     }
@@ -131,6 +119,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     	}
     	this.edge = obj;
     	cachedBounds = null;
+    	cachedPath = null;
         evsd = (EdgeVSdata)dataMap.get(obj);
         if (evsd == null && obj instanceof Edge) {
             evsd = (EdgeVSdata)dataMap.get(obj);
@@ -288,8 +277,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
 	@Override
 	public void render(Graphics2D g) {
-		List<Point> points = ViewHelper.getPoints(nreader, this, edge);
-		dorender(g, points);
+		dorender(g, null);
 	}
 	
 	@Override
@@ -297,6 +285,16 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 		List<Point> points = ViewHelper.getMovingPoints(type, movex, movey, nreader, this, edge);
 		dorender(g, points);
 	}
+	
+	@Override
+	public void renderMovingPoint(Graphics2D g, int idx, int movex, int movey) {
+		List<Point> points = new ArrayList<Point>(getPoints());
+		Point pt = points.get(idx);
+		points.set(idx, new Point(pt.x+movex, pt.y+movey));
+		dorender(g, ViewHelper.getModifiedPoints(nreader, this, edge, points));
+	}
+
+
 
 	private void dorender(Graphics2D g, List<Point> points) {
 		g.setColor(getLineColor());
@@ -306,44 +304,40 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 			// TODO: better selection markup
 			g.setColor(Color.PINK);
 		}
-		double theta;
-		if (isCurve()) {
-			theta = dorender_curved(g, points);
-		} else {
-			theta = dorender_straight(g, points);
-		}
 		
+		Shape s;
+		if (points == null) {
+			s = getPath();
+			points = cachedPoints;
+		} else {
+			s = createPath(points, isCurve());
+		}
+		g.draw(s);
+
+		// get the angle for the edge end
+		int n = points.size()-1;
+		Point pt1 = points.get(n);
+		Point ptsrc = points.get(n-1);
+		double theta = ViewHelper.getRotationAngle(pt1.x-ptsrc.x, pt1.y-ptsrc.y);;
+
 		// draw the arrow end
-		Point pt1 = points.get(points.size()-1);
 		g.translate(pt1.x, pt1.y);
 		g.rotate(theta);
-		
+
 		g.fill(getLineEnd().getShape());
 
 		g.rotate(-theta);
 		g.translate(-pt1.x, -pt1.y);
+
+		if (selected) {
+			// draw points
+			g.setColor(Color.RED);
+			for (Point pt: points) {
+				g.fillRect(pt.x-2, pt.y-2, 4, 4);
+			}
+		}
 	}
 	
-	private double dorender_curved(Graphics2D g, List<Point> points) {
-		
-		// TODO: support curved edges as well
-		return dorender_straight(g, points);
-	}
-
-	private double dorender_straight(Graphics2D g, List<Point> points) {
-		Point pt1 = null;
-
-		for (Point pt2: points) {
-			if (pt1 != null) {
-				g.drawLine(pt1.x, pt1.y, pt2.x, pt2.y);
-			}
-			pt1 = pt2;
-		}
-		
-		Point ptsrc = points.get(points.size()-2);
-		return ViewHelper.getRotationAngle(pt1.x-ptsrc.x, pt1.y-ptsrc.y);
-	}
-
 	@Override
 	public boolean select(Point p) {
 		if (evsd == null) {
@@ -351,12 +345,65 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 		}
 		
 		if (getBounds().contains(p)) {
-			// TODO: finer check
+			Shape path = getPath();
+			return path.intersects(p.x-2, p.y-2, 5, 5);
 		}
 		
 		return false;
 	}
 
+	private Shape createPath(List<Point> points, boolean curve) {
+
+		Path2D path = new Path2D.Float();
+
+		if (curve) {
+			Point pt = points.get(0);
+			path.moveTo(pt.x, pt.y);
+
+			pt = points.get(1);
+			Point2D[] b = new Bezier(points).getPoints();
+			path.quadTo((float) b[0].getX(), 	(float) b[0].getY(), (float) pt.getX(), (float) pt.getY());
+			int n = points.size();
+			for (int i = 2; i < n - 1; i++) {
+				Point2D b0 = b[2 * i - 3];
+				Point2D b1 = b[2 * i - 2];
+				pt = points.get(i);
+				path.curveTo(
+						(float) b0.getX(), (float) b0	.getY(),
+						(float) b1.getX(), (float) b1.getY(),
+						(float) pt.getX(), (float) pt.getY());
+			}
+			pt = points.get(n-1);
+			path.quadTo(
+					(float) b[b.length - 1].getX(),
+					(float) b[b.length - 1].getY(),
+					(float) pt.getX(), (float) pt.getY());
+
+		} else {
+			// just iterate a path with existing points
+			Point pt_prev = null;
+			for (Point pt: points) {
+				if (pt_prev == null) {
+					path.moveTo(pt.x, pt.y);
+				} else {
+					path.lineTo(pt.x, pt.y);
+				}
+				pt_prev = pt;
+			}
+		}
+		
+		return stroke.createStrokedShape(path);
+	}
+
+	
+	private Shape getPath() {
+		if (cachedPath == null) {
+			cachedPoints = ViewHelper.getPoints(nreader, this, edge);
+			cachedPath = createPath(cachedPoints, isCurve());
+		}
+		return cachedPath;
+	}
+	
 	@Override
 	public void move(int dx, int dy) {
 		if (evsd == null) {

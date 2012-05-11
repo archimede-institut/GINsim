@@ -1,5 +1,6 @@
 package org.ginsim.gui.graph.canvas;
 
+import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -12,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
+import java.util.Date;
 
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputListener;
@@ -55,9 +57,12 @@ public class SimpleCanvas extends JComponent {
 	private Point lastPoint;
 
 	private Color backgroundColor = Color.white;
+	
+	private boolean showHelp = false;
 
 	public SimpleCanvas() {
 		mouseListener = new CanvasEventListener(this);
+		setFocusable(true);
 	}
 
 	public void setRenderer(CanvasRenderer renderer) {
@@ -110,7 +115,14 @@ public class SimpleCanvas extends JComponent {
 			g2.translate(tr_x, tr_y);
 			g2.scale(zoom, zoom);
 
-			renderer.overlay(g2, getCanvasRectangle(new Rectangle(0,0, getWidth(), getHeight())));
+			if (showHelp) {
+				AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.8f); 
+				g2.setComposite(ac);
+				renderer.helpOverlay(g2, getCanvasRectangle(new Rectangle(0,0, getWidth(), getHeight())));
+				showHelp = false;
+			} else {
+				renderer.overlay(g2, getCanvasRectangle(new Rectangle(0,0, getWidth(), getHeight())));
+			}
 		}
 	}
 	
@@ -125,12 +137,12 @@ public class SimpleCanvas extends JComponent {
 	}
 
 	public void zoom(int n) {
-		if (n > 0) {
+		if (n < 0) {
 			if (zoom >= MAXZOOM) {
 				return;
 			}
 			zoom = zoom * 1.1;
-		} else if (n < 0) {
+		} else if (n > 0) {
 			if (zoom <= MINZOOM) {
 				return;
 			}
@@ -288,6 +300,11 @@ public class SimpleCanvas extends JComponent {
 		renderer.cancel();
 	}
 
+	public void help() {
+		showHelp = true;
+		repaint();
+	}
+
 	@Override
 	public void reshape(int x, int y, int w, int h) {
 		if (img != null) {
@@ -295,8 +312,6 @@ public class SimpleCanvas extends JComponent {
 		}
 		super.reshape(x, y, w, h);
 	}
-
-	
 }
 
 
@@ -312,6 +327,7 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 		canvas.addMouseListener(this);
 		canvas.addMouseMotionListener(this);
 		canvas.addMouseWheelListener(this);
+		canvas.addKeyListener(this);
 	}
 	
 	public void setEventManager(CanvasEventManager evtManager) {
@@ -331,6 +347,7 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 
 	@Override
 	public void mousePressed(MouseEvent e) {
+		canvas.requestFocusInWindow();
 		Point p = e.getPoint();
 		canvas.setLastPoint(p);
 		mouseButton = e.getButton();
@@ -387,7 +404,7 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 
 	@Override
 	public void keyTyped(KeyEvent e) {
-		
+
 		if (e.isControlDown()) {
 			switch (e.getKeyCode()) {
 			case KeyEvent.VK_ADD:
@@ -400,18 +417,24 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 			case KeyEvent.VK_EQUALS:
 				canvas.zoom(0);
 				break;
-
-			default:
+			case KeyEvent.VK_F1:
+			case KeyEvent.VK_HELP:
+			case KeyEvent.VK_H:
+				canvas.help();
 				break;
 			}
 		}
 		
-		switch (e.getKeyCode()) {
+		switch (e.getKeyChar()) {
 		case KeyEvent.VK_ESCAPE:
 			canvas.cancel();
 			break;
+		case '?':
+		case 'h':
+		case 'H':
+			canvas.help();
+			break;
 		}
-
 	}
 
 	@Override

@@ -49,4 +49,9 @@ public class AddNodeInGraphCanvasEventManager implements CanvasEventManager {
 	public void overlay(Graphics2D g, Rectangle area) {
 	}
 
+	@Override
+	public void helpOverlay(Graphics2D g, Rectangle area) {
+	}
+
+
 }

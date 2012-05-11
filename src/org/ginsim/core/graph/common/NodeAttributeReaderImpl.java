@@ -431,6 +431,8 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 		g.fill(s);
 
 		if (moving) {
+			g.setColor(getForegroundColor());
+			g.draw(s);
 			return;
 		}
 		

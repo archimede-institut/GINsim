@@ -17,4 +17,6 @@ public interface CanvasEventManager {
 	void cancel();
 	
 	void overlay(Graphics2D g, Rectangle area);
+	
+	void helpOverlay(Graphics2D g, Rectangle area);
 }

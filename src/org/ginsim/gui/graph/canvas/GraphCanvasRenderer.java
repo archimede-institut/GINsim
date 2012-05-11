@@ -107,6 +107,11 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 		getEventManager().overlay(g, area);
 	}
 
+	@Override
+	public void helpOverlay(Graphics2D g, Rectangle area) {
+		getEventManager().helpOverlay(g, area);
+	}
+
 	
 	public void updateSelectionCache() {
 		Set<?> newSelection = buildSelectionCache();
@@ -139,9 +144,13 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 	public void damageItem(Object item) {
 		Rectangle bounds = null;
 		if (item instanceof Edge) {
+			// force a reset of the ereader
+			ereader.setEdge(null);
 			ereader.setEdge((Edge)item);
 			bounds = ereader.getBounds();
 		} else {
+			// force a reset of the nreader
+			nreader.setNode(null);
 			nreader.setNode(item);
 			bounds = nreader.getBounds();
 		}

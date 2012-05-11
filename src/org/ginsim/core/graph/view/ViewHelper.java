@@ -68,7 +68,6 @@ public class ViewHelper {
 		return points;
 	}
 
-	
     /**
      * Get the bounding box point to connect a box with an external point.
      * 
@@ -239,6 +238,27 @@ public class ViewHelper {
 		}
 		
 		return getPoints(b1, b2, realPoints, w);
+	}
+
+	public static PointList getModifiedPoints(NodeAttributesReader nodeReader, EdgeAttributesReader edgeReader, Edge<?> edge, List<Point> modifiedPoints) {
+		Object source = edge.getSource();
+		Object target = edge.getTarget();
+		
+		if (source == target) {
+			Rectangle box = getBounds(nodeReader, source);
+			return getPoints(box);
+		}
+		
+		Rectangle b1 = getBounds(nodeReader, source);
+		Rectangle b2 = getBounds(nodeReader, target);
+		
+		int w = (int)edgeReader.getLineWidth();
+		
+		if (modifiedPoints == null || modifiedPoints.size() == 0) {
+			return getPoints(b1, b2, w);
+		}
+		
+		return getPoints(b1, b2, modifiedPoints, w);
 	}
 
 	/**

@@ -160,5 +160,7 @@ public interface EdgeAttributesReader extends AttributesReader {
 	 * @param movey
 	 */
 	void renderMoving(Graphics2D g, MovingEdgeType type, int movex, int movey);
+	
+	void renderMovingPoint(Graphics2D g, int idx, int movex, int movey);
 
 }

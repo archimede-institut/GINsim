@@ -87,4 +87,9 @@ public class AddEdgeInGraphCanvasEventManager implements CanvasEventManager {
 		}
 	}
 
+	@Override
+	public void helpOverlay(Graphics2D g, Rectangle area) {
+		// TODO: help overlay
+	}
+
 }

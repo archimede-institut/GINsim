@@ -23,7 +23,7 @@ import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.ViewHelper;
-import org.jgraph.util.Bezier;
+import org.ginsim.core.graph.view.Bezier;
 
 
 
@@ -196,19 +196,18 @@ public class SVGEncoder {
         out.write(" d=\"M "+pt1.getX()+" "+pt1.getY());
         Iterator<Point> it = l_point.iterator();
         if (ereader.isCurve()) {
-	        Point2D[] p = new Point2D[l_point.size()];
-	        for (int i=0 ; it.hasNext() ; i++) {
-	            p[i] = it.next();
-	        }
-	        Point2D[] b = new Bezier(p).getPoints();
+	        Point2D[] b = new Bezier(l_point).getPoints();
 	        if (b != null && b.length > 1) {
-	            out.write(" Q "+b[0].getX() +","+ b[0].getY() +" "+ p[1].getX() +","+ p[1].getY());
-	            for(int i = 2; i < p.length - 1; i++ ) {
+	        	Point pt = l_point.get(1);
+	            out.write(" Q "+b[0].getX() +","+ b[0].getY() +" "+ pt.getX() +","+ pt.getY());
+	            for(int i = 2; i < l_point.size() - 1; i++ ) {
 	                Point2D b0 = b[2*i-3];
 	                Point2D b1 = b[2*i-2];
-	                out.write(" C "+b0.getX()+","+ b0.getY()+" "+ b1.getX() +","+ b1.getY() +" "+ p[i].getX() +","+ p[i].getY());
+	                pt = l_point.get(i);
+	                out.write(" C "+b0.getX()+","+ b0.getY()+" "+ b1.getX() +","+ b1.getY() +" "+ pt.getX() +","+ pt.getY());
 	            }
-	            out.write(" Q "+b[b.length-1].getX() +","+ b[b.length-1].getY() +" "+ p[p.length - 1].getX() +","+ p[p.length - 1].getY());
+	            pt = l_point.get(l_point.size()-1);
+	            out.write(" Q "+b[b.length-1].getX() +","+ b[b.length-1].getY() +" "+ pt.getX() +","+ pt.getY());
 	        } else {
 	            for (int i=1 ; i<l_point.size() ; i++) {
 	                pt1 = l_point.get(i);
