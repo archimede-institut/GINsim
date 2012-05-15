@@ -142,8 +142,11 @@ public class LRGDocumentationWriter {
 		
 		StableTableModel model = new StableTableModel(nodeOrder);
 		for (int i=-1 ; i<mutantList.getNbElements(null) ; i++) {
-			Object perturbation = mutantList.getElement(null, i);
 			RegulatoryMutantDef mutant = null;
+			Object perturbation  = null;
+			if (i >= 0) {
+				perturbation = mutantList.getElement(null, i);
+			}
 			if (perturbation instanceof RegulatoryMutantDef) {
 				mutant = i<0 ? null : (RegulatoryMutantDef)perturbation;
 			} else {
