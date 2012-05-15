@@ -356,7 +356,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
 		Path2D path = new Path2D.Float();
 
-		if (curve) {
+		if (curve && points != null && points.size() > 2) {
 			Point pt = points.get(0);
 			path.moveTo(pt.x, pt.y);
 
