@@ -1,5 +1,6 @@
 package org.ginsim.gui.graph.canvas;
 
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -14,4 +15,6 @@ public interface CanvasRenderer extends CanvasEventManager {
 	void select(Shape s);
 	
 	Object getObjectUnderPoint(Point p);
+	
+	Dimension getBounds();
 }

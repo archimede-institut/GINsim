@@ -2,6 +2,7 @@ package org.ginsim.gui.graph.canvas;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -29,8 +30,10 @@ import javax.swing.event.MouseInputListener;
  */
 public class SimpleCanvas extends JComponent {
 
-	private final static double MAXZOOM = 20;
-	private final static double MINZOOM = 0.001;
+	private final static double MAXZOOM = 10;
+	private final static double MINZOOM = 0.1;
+	
+	private final static int SCROLLMARGIN = 10;
 	
 	private final static RenderingHints RENDER_HINTS;
 			
@@ -71,12 +74,12 @@ public class SimpleCanvas extends JComponent {
 	}
 
 	public BufferedImage getNewBufferedImage() {
-    	return new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
+    	return new BufferedImage(getWidth()-SCROLLMARGIN, getHeight()-SCROLLMARGIN, BufferedImage.TYPE_INT_RGB);
 	}
 	
 	private void paintBuffer() {
     	BufferedImage img = getNewBufferedImage();
-		Rectangle area = new Rectangle(0, 0, getWidth(), getHeight());
+		Rectangle area = new Rectangle(0, 0, getWidth()-SCROLLMARGIN, getHeight()-SCROLLMARGIN);
     	paintAreaInBuffer(img, area);
 	}
 	
@@ -108,21 +111,77 @@ public class SimpleCanvas extends JComponent {
 		
 		damagedRegion = null;
 		g.drawImage(img, 0, 0, null);
+
+		if (renderer == null) {
+			return;
+		}
+		
+		// draw size indicators (pseudo scroll bars)
+		Dimension bounds = renderer.getBounds();
+		// canvas and scroll area size
+		int cw = getWidth()-SCROLLMARGIN;
+		int ch = getHeight()-SCROLLMARGIN;
+		int sw = SCROLLMARGIN-1;
+
+		// renderer size
+		int rw = bounds.width;
+		int rh = bounds.height;
+		
+		// visible area
+		int vx = (-tr_x * 100) / rw;
+		double vmaxx = ((-tr_x+(cw/zoom))*100) / rw;
+		
+		int vy = (-tr_y * 100) / rh;
+		double vmaxy = ((-tr_y+(ch/zoom))*100) / rh;
+		int cmaxy = tr_y+ch;
+		
+		// make sure to stay in the 0-100 range
+		if (vx > 90) {
+			vx = 90;
+		}
+		if (vy > 90) {
+			vy = 90;
+		}
+		if (vmaxx > 100) {
+			vmaxx = 100;
+		}
+		if (vmaxy > 100) {
+			vmaxy = 100;
+		}
+
+		// extract width and height
+		int vw = (int)vmaxx - vx;
+		int vh = (int)vmaxy - vy;
+
+		// translate into screen coordinates
+		vx = vx *cw / 100;
+		vw = vw * cw / 100;
+		vy = vy * ch / 100;
+		vh = vh * ch / 100;
+		
+		// scroll information background
+		g.setColor(Color.LIGHT_GRAY);
+		g.fillRect(0, ch+1, cw, sw);
+		g.fillRect(cw+1, 0, sw, ch);
+		
+		// actual scroll information
+		g.setColor(Color.DARK_GRAY);
+		g.fillRect(vx, ch+1, vw, sw);
+		g.fillRect(cw+1, vy, sw, vh);
+
 		
 		// add overlay layer to the image, by the renderer
-		if (renderer != null) {
-			Graphics2D g2 = (Graphics2D)g;
-			g2.translate(tr_x, tr_y);
-			g2.scale(zoom, zoom);
+		Graphics2D g2 = (Graphics2D)g;
+		g2.translate(tr_x, tr_y);
+		g2.scale(zoom, zoom);
 
-			if (showHelp) {
-				AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.8f); 
-				g2.setComposite(ac);
-				renderer.helpOverlay(g2, getCanvasRectangle(new Rectangle(0,0, getWidth(), getHeight())));
-				showHelp = false;
-			} else {
-				renderer.overlay(g2, getCanvasRectangle(new Rectangle(0,0, getWidth(), getHeight())));
-			}
+		if (showHelp) {
+			AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.8f); 
+			g2.setComposite(ac);
+			renderer.helpOverlay(g2, getCanvasRectangle(new Rectangle(0,0, getWidth(), getHeight())));
+			showHelp = false;
+		} else {
+			renderer.overlay(g2, getCanvasRectangle(new Rectangle(0,0, getWidth(), getHeight())));
 		}
 	}
 	
@@ -209,18 +268,18 @@ public class SimpleCanvas extends JComponent {
 		// redraw only the sides
     	// Note: the corner is re-painted twice
     	if (dx > 0) {
-    		Rectangle area = new Rectangle(0, 0, dx, getHeight());
+    		Rectangle area = new Rectangle(0, 0, dx, getHeight()-SCROLLMARGIN);
         	paintAreaInBuffer(img, area);
     	} else if (dx < 0) {
-    		Rectangle area = new Rectangle(getWidth()+dx, 0, -dx, getHeight());
+    		Rectangle area = new Rectangle(getWidth()+dx-SCROLLMARGIN, 0, -dx, getHeight()-SCROLLMARGIN);
         	paintAreaInBuffer(img, area);
     	}
 
     	if (dy > 0) {
-    		Rectangle area = new Rectangle(0, 0, getWidth(), dy);
+    		Rectangle area = new Rectangle(0, 0, getWidth()-SCROLLMARGIN, dy);
         	paintAreaInBuffer(img, area);
     	} else if (dy < 0) {
-    		Rectangle area = new Rectangle(0, getHeight()+dy, getWidth(), -dy);
+    		Rectangle area = new Rectangle(0, getHeight()+dy-SCROLLMARGIN, getWidth()-SCROLLMARGIN, -dy);
         	paintAreaInBuffer(img, area);
     	}
 

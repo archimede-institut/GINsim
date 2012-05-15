@@ -1,6 +1,7 @@
 package org.ginsim.gui.graph.canvas;
 
 import java.awt.AlphaComposite;
+import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -44,6 +45,8 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 	public final Graph graph;
 	public final EditActionManager amanager;
 	
+	private Dimension bounds = new Dimension();
+	
 	int movex=0, movey=0;
 	
 	/**
@@ -85,9 +88,20 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 	@Override
 	public void render(Graphics2D g, Rectangle area) {
 
+		int maxx=0, maxy=0;
+		int tmpmax=0;
+		
     	for (Object node: graph.getNodes()) {
     		nreader.setNode(node, selectionCache.contains(node));
     		Rectangle bounds = nreader.getBounds();
+    		tmpmax = bounds.x+bounds.width;
+    		if (tmpmax > maxx) {
+    			maxx = tmpmax;
+    		}
+    		tmpmax = bounds.y+bounds.height;
+    		if (tmpmax > maxy) {
+    			maxy = tmpmax;
+    		}
     		if (bounds.intersects(area)) {
     			nreader.render(g);
     		}
@@ -96,10 +110,22 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
     	for (Object edge: graph.getEdges()) {
     		ereader.setEdge((Edge)edge, selectionCache.contains(edge));
     		Rectangle bounds = ereader.getBounds();
+    		tmpmax = bounds.x+bounds.width;
+    		if (tmpmax > maxx) {
+    			maxx = tmpmax;
+    		}
+    		tmpmax = bounds.y+bounds.height;
+    		if (tmpmax > maxy) {
+    			maxy = tmpmax;
+    		}
     		if (bounds.intersects(area)) {
     			ereader.render(g);
     		}
     	}
+    	
+    	// update global bounds
+    	bounds.width = maxx + 5;
+    	bounds.height = maxy + 5;
 	}
 
 	@Override
@@ -271,5 +297,10 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 	@Override
 	public void cancel() {
 		getEventManager().cancel();
+	}
+
+	@Override
+	public Dimension getBounds() {
+		return bounds;
 	}
 }
