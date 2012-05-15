@@ -9,8 +9,6 @@ import org.ginsim.gui.graph.GraphGUIHelper;
 
 public class CanvasGraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> extends BaseGraphGUI<G, V, E> {
 
-	public static final boolean USECANVAS = false;
-	
 	private final SimpleCanvas canvas;
 	private final GraphCanvasRenderer renderer;
 	
