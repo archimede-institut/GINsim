@@ -76,6 +76,9 @@ class ConnectivityColorizeGraphAction extends GenericGraphAction {
         ConnectivityResult result = service.run(graph);
         ((ConnectivitySelector)colorizer.getSelector()).setCache(result.getComponents(), graph);
         colorizer.doColorize(graph);
+        if (GUIManager.getInstance().getFrame(graph) == null) {
+        		GUIManager.getInstance().whatToDoWithGraph(graph, true);
+        }
 	}
 }
 

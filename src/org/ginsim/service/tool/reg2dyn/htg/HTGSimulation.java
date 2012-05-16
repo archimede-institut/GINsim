@@ -135,6 +135,10 @@ public class HTGSimulation extends Simulation {
 			    GUIMessageUtils.openErrorDialog("Out Of Memory");
 			    LogManager.error("Simulation of the HTG : Out of memory");
 			    return null;
+			} catch (StackOverflowError e) {
+			    GUIMessageUtils.openErrorDialog("Stack overflow error (need more memory)");
+			    LogManager.error("Simulation of the HTG : Stack overflow error");
+			    return null;
 			} catch (Exception e) {
 				LogManager.error("Error : "+e.getMessage());
 				e.printStackTrace();
@@ -148,6 +152,10 @@ public class HTGSimulation extends Simulation {
 			} catch (OutOfMemoryError e) {
 			    GUIMessageUtils.openErrorDialog("Out Of Memory");
 			    LogManager.error("Simulation of the HTG : Out of memory");
+			    return null;
+			} catch (StackOverflowError e) {
+			    GUIMessageUtils.openErrorDialog("Stack overflow error (need more memory)");
+			    LogManager.error("Simulation of the HTG : Stack overflow error");
 			    return null;
 			} catch (Exception e) {
 				LogManager.error("Error : "+e.getMessage());
