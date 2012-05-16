@@ -405,7 +405,8 @@ public final class RegulatoryParser extends GsXMLHelper {
     				LogManager.error( " Edge = " + entry.getKey().getShortDetail());
     				LogManager.error( "   Pased max value = " + entry.getValue());  
     			}
-    			throw new SAXException( new GsException( GsException.GRAVITY_ERROR, "Interaction inconsistency detected"));
+    			// TODO: should we report something to the user here?
+    			// throw new SAXException( new GsException( GsException.GRAVITY_ERROR, "Interaction inconsistency detected"));
     		}
     	}
 
