@@ -1,7 +1,7 @@
 package org.ginsim.core.notification;
 
-import org.ginsim.core.utils.timeout.Timeout;
-import org.ginsim.core.utils.timeout.TimeoutObject;
+import org.ginsim.common.callable.Timeout;
+import org.ginsim.common.callable.TimeoutObject;
 
 
 /**

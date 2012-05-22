@@ -1,4 +1,4 @@
-package org.ginsim.core.notification.resolvable.resolution;
+package org.ginsim.core.notification.resolvable;
 
 import org.ginsim.core.graph.common.Graph;
 

@@ -25,7 +25,7 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamod
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
+import org.ginsim.core.notification.resolvable.NotificationResolution;
 
 import fr.univmrs.tagc.javaMDD.MDDFactory;
 import fr.univmrs.tagc.javaMDD.MDDOperator;

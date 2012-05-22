@@ -11,9 +11,9 @@ import org.ginsim.common.application.OSXAdapter;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.application.Translator;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
+import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.shell.AboutDialog;
 
 

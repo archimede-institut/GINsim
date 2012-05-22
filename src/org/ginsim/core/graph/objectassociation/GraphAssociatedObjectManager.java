@@ -52,7 +52,7 @@ public interface GraphAssociatedObjectManager {
 	 * get the existing associated object for a graph
 	 * 
 	 * @param graph
-	 * @return
+	 * @return the existing object, or null if not created
 	 */
 	Object getObject( Graph graph);
 }

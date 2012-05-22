@@ -4,8 +4,8 @@ import java.awt.Color;
 import java.util.Hashtable;
 import java.util.Vector;
 
+import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
 import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeModel;
 

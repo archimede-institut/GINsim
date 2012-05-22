@@ -29,7 +29,7 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.core.notification.resolvable.resolution.InvalidFunctionResolution;
+import org.ginsim.core.notification.resolvable.InvalidFunctionResolution;
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.Element;

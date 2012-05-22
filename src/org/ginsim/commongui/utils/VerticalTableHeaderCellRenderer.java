@@ -18,7 +18,7 @@ import javax.swing.UIManager;
  * 
  * @see VerticalLabelUI
  * @author Darryl
- * @see http://tips4java.wordpress.com/2009/03/06/vertical-table-header-cell-renderer/
+ * @see  <a href="http://tips4java.wordpress.com/2009/03/06/vertical-table-header-cell-renderer/">this Blog post</a>
  */
 @SuppressWarnings("serial")
 public class VerticalTableHeaderCellRenderer extends DefaultTableHeaderCellRenderer {

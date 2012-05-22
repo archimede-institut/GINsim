@@ -45,7 +45,8 @@ public class IOUtils {
 	/**
 	 * get an input stream for a file inside a given package.
 	 * 
-	 * @param path the path for which the InputSTream is desired
+	 * @param pack the package in which to lookup
+	 * @param filename the name of the desired file in this package
 	 * @return a FileInputStream initialized with the given path
 	 * @throws IOException
 	 * @throws FileNotFoundException
@@ -130,8 +131,8 @@ public class IOUtils {
 	/**
 	 * Remove all files and directory from the given path
 	 * 
-	 * @param path
-	 * @return
+	 * @param path the file to delete
+	 * @return true if the file was properly deleted, false otherwise
 	 */
 	public static boolean deleteDirectory( File path) {
 		

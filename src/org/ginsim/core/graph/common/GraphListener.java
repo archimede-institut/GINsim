@@ -1,6 +1,5 @@
 package org.ginsim.core.graph.common;
 
-import org.ginsim.core.graph.GraphEventCascade;
 
 /**
  * Listen to graph edit events.

@@ -23,6 +23,7 @@ import org.ginsim.core.graph.common.AbstractGraph;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphAssociation;
 import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.common.GraphEventCascade;
 import org.ginsim.core.graph.common.GraphFactory;
 import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.core.graph.common.GraphModel;
@@ -33,11 +34,12 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.reducedgraph.ReducedGraphImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphImpl;
+import org.ginsim.core.io.parser.GinmlParser;
 import org.ginsim.core.notification.NotificationManager;
 
 
 /**
- * descriptor for regulatoryGraph.
+ * Manage registered graph types and handles graph creation (from scratch or through a parser).
  */
 public class GraphManager {
 
@@ -50,7 +52,7 @@ public class GraphManager {
     }
     
     /**
-     * The constructor of the manager retrieve the list of available GraphFactory
+     * The constructor of the manager retrieves the list of available GraphFactory
      */
     private GraphManager(){
     	
@@ -80,9 +82,9 @@ public class GraphManager {
     }
     
     /**
-     * Create a new default RegulatoryGraph
+     * Create a new (RegulatoryGraph)
      * 
-     * @return
+     * @return a new Regulatory Graph
      */
     public RegulatoryGraph getNewGraph(){
     	
@@ -115,7 +117,7 @@ public class GraphManager {
      * 
      * @param graph_class
      * @param args
-     * @return
+     * @return a new Graph of the specified type, or null if failed
      */
     public <C extends Graph> C getNewGraph( Class<C> graph_class, Object... args){
     	
@@ -229,7 +231,7 @@ public class GraphManager {
     /**
      * Return the list of registered graphs
      * 
-     * @return
+     * @return the list of all registered graph types
      */
 	public Set getAllGraphs() {
 

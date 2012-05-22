@@ -8,7 +8,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import org.ginsim.gui.resource.ImageLoader;
+import org.ginsim.commongui.utils.ImageLoader;
 
 
 

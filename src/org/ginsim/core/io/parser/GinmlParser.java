@@ -1,4 +1,4 @@
-package org.ginsim.core.graph;
+package org.ginsim.core.io.parser;
 
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
@@ -7,15 +7,17 @@ import java.util.Set;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.ParsingWarningReport;
 import org.ginsim.common.xml.XMLHelper;
+import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.io.parser.GsXMLHelper;
 import org.ginsim.core.notification.NotificationManager;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 
 /**
- * parses a ginml regulatory graph.
+ * Parser for GINML files.
+ * This generic parser starts parsing and will handle the core of the file to a specialised parser,
+ * according to the encountered graph type. 
  */
 public final class GinmlParser extends XMLHelper {
     

@@ -19,6 +19,7 @@ import javax.swing.WindowConstants;
 
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.application.Translator;
+import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.notification.Notification;
@@ -29,7 +30,6 @@ import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.dnd.GlassPane;
 import org.ginsim.gui.notifications.NotificationPanel;
 import org.ginsim.gui.notifications.NotificationSource;
-import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.shell.editpanel.EditPanel;
 import org.ginsim.gui.shell.editpanel.EditTab;
 import org.ginsim.gui.utils.widgets.Frame;

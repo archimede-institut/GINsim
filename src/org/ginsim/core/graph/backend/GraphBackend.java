@@ -13,7 +13,7 @@ public interface GraphBackend<V, E extends Edge<V>> {
 	 * The front-end graph is responsible for creating the node object and calling this method in the backend.
 	 * 
 	 * @param node
-	 * @return
+	 * @return true if the node was created, false otherwise
 	 */
 	public boolean addNodeInBackend (V node);
 	
@@ -23,7 +23,7 @@ public interface GraphBackend<V, E extends Edge<V>> {
 	 * The front-end graph is responsible for creating the edge and calling this method in the backend.
 	 * 
 	 * @param edge
-	 * @return
+	 * @return true if the edge was created, false otherwise
 	 */
 	public boolean addEdgeInBackend (E edge);
 	

@@ -4,8 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.gui.resource.ImageLoader;
 
 import tbrowser.ihm.widget.TBToggleButton;
 

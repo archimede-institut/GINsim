@@ -6,6 +6,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotate a service with an alias to define a short name (to be used in script mode for example)
+ * 
+ * @author Aurelien Naldi
+ */
+
 @Documented
 @Target(ElementType.TYPE)
 @Retention( RetentionPolicy.RUNTIME)

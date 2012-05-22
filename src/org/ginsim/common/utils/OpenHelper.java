@@ -12,7 +12,7 @@ public interface OpenHelper {
 	 * 
 	 * @param proto
 	 * @param value
-	 * @return
+	 * @return true if the link could be opened, false otherwise.
 	 */
 	public boolean open(String proto, String value);
 	

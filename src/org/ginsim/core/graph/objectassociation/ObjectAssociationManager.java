@@ -158,7 +158,7 @@ public class ObjectAssociationManager {
      * Allow to associate objects with a graph to retrieve them later.
      * this (and <code>addObject(key, obj)</code>) makes it easy.
      *
-     * @see #addObject(Object, Object)
+     * @see #addObject(Graph, Object, Object)
      * @param key
      * @param create if true, a non-defined object will be created
      * @return the associated object
@@ -191,8 +191,8 @@ public class ObjectAssociationManager {
     /**
      * Allow to associate objects with a graph to retrieve them later.
      *
-     * @see #getObject(Object)
-     * @see #removeObject(Object)
+     * @see #getObject(Graph, Object, boolean)
+     * @see #removeObject(Graph, Object)
      * @param key
      * @param obj
      */
@@ -210,8 +210,8 @@ public class ObjectAssociationManager {
     /**
      * remove an object previously associated to a graph with <code>addObject(Object, Object)</code>.
      *
-     * @see #getObject(Object)
-     * @see #addObject(Object, Object)
+     * @see #getObject(Graph, Object, boolean)
+     * @see #addObject(Graph, Object, Object)
      * @param key
      */
     public void removeObject(Graph graph, Object key) {

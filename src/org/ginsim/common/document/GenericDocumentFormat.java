@@ -31,7 +31,7 @@ public class GenericDocumentFormat extends FileFormatDescription {
 		
 	/**
 	 * Define a new generic document format.
-	 * @param documentWriterClass : The DocumentWriter sub-class for the format
+	 * @param factory : The DocumentWriterFactory to create the instance
 	 * @param id : The name of the format (for the dropdown menu)
 	 * @param extension : the extension to add to the exported file
 	 */

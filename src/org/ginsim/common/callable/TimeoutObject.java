@@ -1,4 +1,4 @@
-package org.ginsim.core.utils.timeout;
+package org.ginsim.common.callable;
 
 /**
  * Objects waiting for a timeout

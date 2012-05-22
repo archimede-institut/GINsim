@@ -7,8 +7,8 @@ import java.io.IOException;
 
 import org.ginsim.TestFileUtils;
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.GinmlParser;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.io.parser.GinmlParser;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.service.export.cytoscape.CytoscapeEncoder;
 import org.ginsim.service.export.gna.GNAExportService;

@@ -23,14 +23,14 @@ import org.ginsim.common.utils.OpenHelper;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
-import org.ginsim.core.graph.GraphEventCascade;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.common.GraphEventCascade;
 import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.core.graph.common.GraphModel;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
+import org.ginsim.core.notification.resolvable.NotificationResolution;
 import org.xml.sax.Attributes;
 
 import bibtex.dom.BibtexAbstractValue;

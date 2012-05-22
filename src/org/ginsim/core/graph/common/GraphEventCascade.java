@@ -1,4 +1,4 @@
-package org.ginsim.core.graph;
+package org.ginsim.core.graph.common;
 
 /**
  * Interface for cascade changes: an object implementing this interface should be returned when

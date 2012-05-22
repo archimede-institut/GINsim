@@ -58,8 +58,6 @@ public class ScriptLauncher {
 	 */
 	public String[] args;
 	
-
-	
 	/**
 	 * Initialisation method for the script helper to ensure a working OptionStore.
 	 */
@@ -134,7 +132,7 @@ public class ScriptLauncher {
 	 * Open a graph from a file.
 	 * 
 	 * @param filename
-	 * @return
+	 * @return the parsed graph
 	 * @throws GsException
 	 */
 	public Graph<?, ?> open(String filename) throws GsException {
@@ -165,7 +163,7 @@ public class ScriptLauncher {
 	 * Get a service instance
 	 * 
 	 * @param cl the service class
-	 * @return
+	 * @return the service or null if not found
 	 */
 	public Service service(Class<Service> cl) {
 		return services.get(cl);
@@ -175,7 +173,7 @@ public class ScriptLauncher {
 	 * Get a service instance by name
 	 * 
 	 * @param name the service name (class name or alias)
-	 * @return
+	 * @return the service or null if not found
 	 */
 	public Service service(String name) {
 		return services.get(name);
@@ -186,7 +184,7 @@ public class ScriptLauncher {
 	 * 
 	 * @param g
 	 * @param key
-	 * @return
+	 * @return the associated object or null if it was not created.
 	 */
 	public Object associated(Graph g, String key) {
 		return associated(g, key, false);
@@ -198,7 +196,7 @@ public class ScriptLauncher {
 	 * @param g
 	 * @param key
 	 * @param create
-	 * @return
+	 * @return the associated object, created if needed or null if the key is invalid
 	 */
 	public Object associated(Graph<?,?> g, String key, boolean create) {
 		return associated.getObject(g, key, create);
@@ -209,7 +207,7 @@ public class ScriptLauncher {
 	 * 
 	 * @param path
 	 * @param properties
-	 * @return
+	 * @return a new DocumentWriter
 	 */
 	public DocumentWriter createReport(String path, Map<String, String> properties) {
 		DocumentWriter dw;

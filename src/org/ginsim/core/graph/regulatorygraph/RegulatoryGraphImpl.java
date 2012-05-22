@@ -24,7 +24,7 @@ import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.css.CSSFilesAssociatedManager;
 import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
+import org.ginsim.core.notification.resolvable.NotificationResolution;
 
 import fr.univmrs.tagc.javaMDD.MDDFactory;
 import fr.univmrs.tagc.javaMDD.MultiValuedVariable;

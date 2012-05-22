@@ -136,7 +136,7 @@ public class Translator {
 	 * 
 	 * @param key
 	 * @param params
-	 * @return
+	 * @return a translated custom string
 	 */
 	public static String getString( String key, String... params){
 		

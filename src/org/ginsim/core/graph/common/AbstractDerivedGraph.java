@@ -3,7 +3,6 @@ package org.ginsim.core.graph.common;
 import java.io.File;
 
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.GraphEventCascade;
 import org.ginsim.core.graph.GraphManager;
 
 

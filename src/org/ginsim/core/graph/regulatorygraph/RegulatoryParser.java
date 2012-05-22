@@ -27,7 +27,7 @@ import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.io.parser.GsXMLHelper;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.core.notification.resolvable.resolution.InvalidFunctionResolution;
+import org.ginsim.core.notification.resolvable.InvalidFunctionResolution;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
