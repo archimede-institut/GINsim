@@ -5,11 +5,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ginsim.common.OSXAdapter;
-import org.ginsim.common.OptionStore;
-import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.common.utils.Translator;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.CurrentOS;
+import org.ginsim.common.application.LogManager;
+import org.ginsim.common.application.OSXAdapter;
+import org.ginsim.common.application.OptionStore;
+import org.ginsim.common.application.Translator;
+import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.resource.ImageLoader;
@@ -29,6 +30,8 @@ public class Launcher {
 	public static boolean developer_mode = false;
 	
 	/**
+	 * The main "main" function, launching GINsin GUI or script handler.
+	 * 
 	 * @param args
 	 * @throws InstantiationException 
 	 * @throws IllegalAccessException 
@@ -96,7 +99,7 @@ public class Launcher {
 	/**
 	 * Initialise GINsim core: detect the current directory, load services
 	 */
-	public static void init() {
+	private static void init() {
 		String basedir = System.getProperty("user.dir");
 		
 		Class<?> cl = Launcher.class;
@@ -120,7 +123,7 @@ public class Launcher {
 	}
 	
 	/**
-	 * Init method for GINsim GUI.
+	 * Initialisation method for GINsim GUI.
 	 * This method will only load all required resources, it will not create the first window.
 	 */
 	private static void initGUI() {
@@ -133,12 +136,9 @@ public class Launcher {
 		} catch (Exception e) {
 			GUIMessageUtils.openErrorDialog(e, null);
 		}
-		registerForMacOSXEvents();
 		
-	}
-	
-    public static void registerForMacOSXEvents() {
-        if (System.getProperty("os.name").toLowerCase().startsWith("mac os x")) {
+    	// register OSX callback if appropriate
+        if (CurrentOS.os == CurrentOS.SYS_MACOSX) {
             try {
             	OSXCallBack osxCallBack = new OSXCallBack();
                 // Generate and register the OSXAdapter, passing it a hash of all the methods we wish to

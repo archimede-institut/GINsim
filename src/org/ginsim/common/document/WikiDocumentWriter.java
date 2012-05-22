@@ -11,7 +11,12 @@ import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
-
+/**
+ * Wiki-like backend for the document writer.
+ * It is deprecated and should not be used.
+ * 
+ * @author Aurelien Naldi
+ */
 public class WikiDocumentWriter extends DocumentWriter {
 
 	OutputStreamWriter writer;

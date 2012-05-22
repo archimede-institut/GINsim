@@ -2,9 +2,11 @@ package org.ginsim.core.graph.reducedgraph;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
-import org.ginsim.common.utils.DataUtils;
+import org.ginsim.common.utils.CollectionUtils;
+import org.ginsim.common.utils.MaskUtils;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 
@@ -16,7 +18,7 @@ import org.ginsim.core.graph.common.Graph;
 public class NodeReducedData {
 	
 	//all vertices that are in the strongest connected component together 
-	private Vector content;
+	private List content;
 	private String id;
 	
 	public static final int SCC_TYPE_UNIQUE_NODE = 0;
@@ -66,7 +68,7 @@ public class NodeReducedData {
 	 */
 	public NodeReducedData (String id, String s_content) {
 		this.id = id;
-		content = DataUtils.getVectorFromArray(s_content.split(","));
+		content = CollectionUtils.getVectorFromArray(s_content.split(","));
 	}
 	
 	public String toString() {
@@ -76,7 +78,7 @@ public class NodeReducedData {
 	/**
 	 * @return the content of the connected component.
 	 */
-	public Vector getContent() {
+	public List getContent() {
 		return content;
 	}
 

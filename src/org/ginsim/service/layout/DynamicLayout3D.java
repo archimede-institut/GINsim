@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ginsim.common.ColorPalette;
-import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.LogManager;
+import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;

@@ -8,6 +8,7 @@ import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * A helper to write well formed XML documents.
@@ -21,6 +22,17 @@ public class XMLWriter {
     private boolean indent;
     private StringBuffer buf = null;
 
+	/**
+	 * Indicates if the given string is a valid GINsim ID (contains only a-z, A-Z, 0-9, "_" or "-" characters)
+	 * 
+	 * @param id the string to test
+	 * @return true if the given string can be used as ID
+	 */
+	public static boolean isValidId(String id) {
+		return Pattern.compile("^[a-zA-Z0-9_-]+$").matcher(id).find();
+	}
+
+    
     /**
      * Create a XMLWriter with the path to a file.
      * 

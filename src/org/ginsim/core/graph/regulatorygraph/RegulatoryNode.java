@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.ginsim.common.utils.DataUtils;
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.Translator;
+import org.ginsim.common.utils.MaskUtils;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.annotation.Annotation;
@@ -203,7 +203,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	 * @param id the new id.
 	 */
 	public boolean setId(String id) {
-		if (DataUtils.isValidId(id)) {
+		if (XMLWriter.isValidId(id)) {
 			this.id = id;
 			return true;
 		}

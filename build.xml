@@ -441,7 +441,7 @@
 			author="true"
 			version="true"
 			use="true"
-			access="private"
+			access="protected"
 			windowtitle="API documentation for GINsim (Gene Interaction Network simulator)">
 
 			<packageset dir="${src}" defaultexcludes="yes">

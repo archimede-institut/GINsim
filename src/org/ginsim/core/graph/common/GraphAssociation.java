@@ -1,6 +1,6 @@
 package org.ginsim.core.graph.common;
 
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
 
 public interface GraphAssociation<AG extends Graph<AV, AE>, AV, AE extends Edge<AV>> {
 

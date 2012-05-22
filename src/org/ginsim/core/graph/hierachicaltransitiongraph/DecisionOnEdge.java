@@ -2,7 +2,7 @@ package org.ginsim.core.graph.hierachicaltransitiongraph;
 
 import java.util.List;
 
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.common.ToolTipsable;

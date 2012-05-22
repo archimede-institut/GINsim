@@ -13,8 +13,8 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.ginsim.common.OptionStore;
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.OptionStore;
+import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.css.Colorizer;
 

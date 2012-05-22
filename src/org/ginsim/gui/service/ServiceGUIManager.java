@@ -10,7 +10,7 @@ import java.util.Set;
 import javax.swing.Action;
 
 import org.ginsim.Launcher;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceManager;

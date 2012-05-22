@@ -1,7 +1,14 @@
-package org.ginsim.common.utils;
+package org.ginsim.common.callable;
 
 import java.util.concurrent.Callable;
 
+/**
+ * Estimate the time needed for a callable to run.
+ * It is a crude measure based on real time and a user-defined number of calls
+ * but it is convenient for quick performance analysis.
+ * 
+ * @author Aurelien Naldi
+ */
 public class Timing {
 	
 	/**

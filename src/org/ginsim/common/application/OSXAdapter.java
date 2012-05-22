@@ -55,7 +55,7 @@ Copyright 2003-2007 Apple, Inc., All Rights Reserved
 
 */
 
-package org.ginsim.common;
+package org.ginsim.common.application;
 
 
 import java.lang.reflect.InvocationHandler;
@@ -63,9 +63,12 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 
-import org.ginsim.common.utils.log.LogManager;
 
-
+/**
+ * Apple-provided adapter to help with OSX integration.
+ * 
+ * @author Duncan Berenguier
+ */
 public class OSXAdapter implements InvocationHandler {
 
     protected Object targetObject;

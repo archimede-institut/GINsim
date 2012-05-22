@@ -10,7 +10,7 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-import org.ginsim.common.OptionStore;
+import org.ginsim.common.application.OptionStore;
 
 
 public abstract class SimpleDialog extends JDialog {

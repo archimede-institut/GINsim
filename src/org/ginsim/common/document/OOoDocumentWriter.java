@@ -15,16 +15,17 @@ import java.util.zip.ZipOutputStream;
 
 import javax.imageio.ImageIO;
 
-import org.ginsim.common.utils.DataUtils;
+import org.ginsim.common.utils.ColorPalette;
+import org.ginsim.common.utils.MaskUtils;
 import org.ginsim.common.xml.XMLWriter;
 
 
 /**
- * OOoDocumentWriter is a backend to write openOffice.org (odt) documents
+ * OOoDocumentWriter is a backend to write OpenDocument text files.
+ * Such files are supported by OpenOffice/LibreOffice and recent versions of MS Office.
  * 
  * @see DocumentWriter
  * @author Naldi Aurelien
- *
  */
 public class OOoDocumentWriter extends DocumentWriter {
 
@@ -161,7 +162,7 @@ public class OOoDocumentWriter extends DocumentWriter {
 
 	private String getStyleValue(String property, Object value) {
 		if (property.equals(DocumentStyle.COLOR)) {
-			return "#"+DataUtils.getColorCode((Color)value);
+			return "#"+ColorPalette.getColorCode((Color)value);
 		} else if (property.equals(DocumentStyle.FONT_SIZE)) {
 			return value.toString()+"pt";
 		} else if (property.equals(DocumentStyle.HEIGHT)) {

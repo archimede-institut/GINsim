@@ -1,10 +1,16 @@
-package org.ginsim.common;
+package org.ginsim.common.utils;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+/**
+ * Handle the creation and destruction of temporary directory.
+ * It is encouraged to use such temporary space to store intermediate computation results.
+ * 
+ * @author Aurelien Naldi
+ */
 public class TempDir {
 	private static DirDeleter deleterThread;
 
@@ -46,6 +52,12 @@ public class TempDir {
 	}
 }
 
+/**
+ * Thread which deletes a directory when launched.
+ * It is used to clean up temporary folders upon JVM shutdown.
+ * 
+ * @author Aurelien Naldi
+ */
 class DirDeleter extends Thread {
 	private ArrayList dirList = new ArrayList();
 

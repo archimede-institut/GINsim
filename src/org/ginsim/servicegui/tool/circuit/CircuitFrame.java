@@ -28,10 +28,10 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.ginsim.common.ProgressListener;
-import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.common.utils.Translator;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.LogManager;
+import org.ginsim.common.application.Translator;
+import org.ginsim.common.callable.ProgressListener;
+import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
@@ -446,7 +446,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
             }
             v_circuit.clear();
             for (int i = 0; i < l.size(); i++) {
-                Vector v_cc = ((NodeReducedData) l.get(i)).getContent();
+                List v_cc = ((NodeReducedData) l.get(i)).getContent();
                 searchCircuitInSCC(v_cc);
             }
             if (config == null || config.minlen < 2) { // search
@@ -479,7 +479,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
      * 
      * @param v_cc
      */
-    private void searchCircuitInSCC(Vector v_cc) {
+    private void searchCircuitInSCC(List v_cc) {
         
         if (v_cc.size() < 2) {
             return;
@@ -685,7 +685,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         }
     }
 
-    private byte[][] buildTCC( Graph graph, Vector v_cc) {
+    private byte[][] buildTCC( Graph graph, List v_cc) {
         byte[][] t_cc = new byte[v_cc.size()][];
         for (byte i = 0; i < t_cc.length; i++) {
             byte[] t = new byte[t_cc.length - 1];

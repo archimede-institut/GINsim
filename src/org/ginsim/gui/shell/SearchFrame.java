@@ -21,7 +21,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.Translator;
 import org.ginsim.commongui.dialog.SimpleDialog;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.GUIManager;

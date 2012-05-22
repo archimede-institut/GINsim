@@ -1,12 +1,11 @@
-package org.ginsim.common.exception;
+package org.ginsim.common.application;
 
 import java.util.Vector;
 
-import org.ginsim.common.utils.Translator;
 
 /**
  * When something bad happen, a GsException must be raised.
- * it will be used by the app to display an error message.
+ * it will be used by the GUI to display an error message.
  */
 public class GsException extends Exception {
 

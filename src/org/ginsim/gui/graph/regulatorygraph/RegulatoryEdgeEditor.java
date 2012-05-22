@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 import javax.swing.Action;
 
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.Translator;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;

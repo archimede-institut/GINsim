@@ -1,8 +1,10 @@
-package org.ginsim.common.utils;
+package org.ginsim.commongui.dialog;
 
 import java.awt.Component;
 
 import javax.swing.JOptionPane;
+
+import org.ginsim.common.application.Translator;
 
 
 public class GUIMessageUtils {

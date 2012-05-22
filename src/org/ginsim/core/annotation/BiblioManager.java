@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;

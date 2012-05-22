@@ -3,7 +3,7 @@ package org.ginsim.service.tool.connectivity;
 import java.awt.Color;
 import java.util.List;
 
-import org.ginsim.common.ColorPalette;
+import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.view.NodeBorder;

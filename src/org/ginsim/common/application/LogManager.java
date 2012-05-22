@@ -1,4 +1,4 @@
-package org.ginsim.common.utils.log;
+package org.ginsim.common.application;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -21,6 +21,9 @@ import java.util.zip.ZipOutputStream;
  * eg. log("a fancy message") will print the following line on System.out : 
  *    43:LogManager#getLineNumber() a fancy message\n
  *
+ * @author Duncan Berenguier
+ * @author Lionel Spinelli
+ * @author Aurelien Naldi
  */
 public class LogManager {
 	private static PrintStream debugOut = System.err;

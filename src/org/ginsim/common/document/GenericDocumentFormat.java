@@ -5,9 +5,11 @@ import java.util.List;
 
 import org.ginsim.common.utils.FileFormatDescription;
 
-
 /**
  * This class contain the informations about each kind of document like id, extension, filter and its class.
+ * 
+ * @author Aurelien Naldi
+ * @author Duncan Berenguier
  */
 public class GenericDocumentFormat extends FileFormatDescription {
 	

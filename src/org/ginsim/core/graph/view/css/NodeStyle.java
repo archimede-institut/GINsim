@@ -5,7 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
-import org.ginsim.common.utils.DataUtils;
+import org.ginsim.common.utils.ColorPalette;
+import org.ginsim.common.utils.MaskUtils;
 import org.ginsim.core.graph.view.AttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
@@ -128,19 +129,19 @@ public class NodeStyle implements Style {
 	public void setProperty(String property, String value, int i) throws CSSSyntaxException {
 		if (property.equals(CSS_BACKGROUND)) {
 			try {
-				background = DataUtils.getColorFromCode(value.toUpperCase());
+				background = ColorPalette.getColorFromCode(value.toUpperCase());
 			} catch (NumberFormatException e) {
 				throw new CSSSyntaxException("Malformed color code at line "+i+" found "+value+". Must be from 000000 to FFFFFF");
 			}
 		} else if (property.equals(CSS_FOREGROUND)) {
 			try {
-				foreground = DataUtils.getColorFromCode(value.toUpperCase());
+				foreground = ColorPalette.getColorFromCode(value.toUpperCase());
 			} catch (NumberFormatException e) {
 				throw new CSSSyntaxException("Malformed color code at line "+i+" found "+value+". Must be from 000000 to FFFFFF");
 			}
 		} else if (property.equals(CSS_TEXTCOLOR)) {
 			try {
-				textcolor = DataUtils.getColorFromCode(value.toUpperCase());
+				textcolor = ColorPalette.getColorFromCode(value.toUpperCase());
 			} catch (NumberFormatException e) {
 				throw new CSSSyntaxException("Malformed color code at line "+i+" found "+value+". Must be from 000000 to FFFFFF");
 			}
@@ -175,9 +176,9 @@ public class NodeStyle implements Style {
 		for (int i = 1; i < tabs_count; i++) {
 			tabs += "\t";
 		}
-		if (background != null) s += tabs+CSS_BACKGROUND+": #"+DataUtils.getColorCode(background)+";\n"; 
-		if (foreground != null) s += tabs+CSS_FOREGROUND+": #"+DataUtils.getColorCode(foreground)+";\n";
-		if (textcolor != null) s += tabs+CSS_TEXTCOLOR+": #"+DataUtils.getColorCode(textcolor)+";\n";
+		if (background != null) s += tabs+CSS_BACKGROUND+": #"+ColorPalette.getColorCode(background)+";\n"; 
+		if (foreground != null) s += tabs+CSS_FOREGROUND+": #"+ColorPalette.getColorCode(foreground)+";\n";
+		if (textcolor != null) s += tabs+CSS_TEXTCOLOR+": #"+ColorPalette.getColorCode(textcolor)+";\n";
 		if (border != null) {
 			s += tabs+CSS_BORDER+": ";
 			switch (border) {
@@ -222,19 +223,19 @@ public class NodeStyle implements Style {
 			if (m.groupCount() < 2) throw new CSSSyntaxException("Malformed line "+i+" : "+lines[i]+". Must be 'key: value;'");
 			if (key.equals(CSS_BACKGROUND)) {
 				try {
-					background = DataUtils.getColorFromCode(value);
+					background = ColorPalette.getColorFromCode(value);
 				} catch (NumberFormatException e) {
 					throw new CSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
 				}
 			} else if (key.equals(CSS_FOREGROUND)) {
 				try {
-					foreground = DataUtils.getColorFromCode(value);
+					foreground = ColorPalette.getColorFromCode(value);
 				} catch (NumberFormatException e) {
 					throw new CSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
 				}
 			} else if (key.equals(CSS_TEXTCOLOR)) {
 				try {
-					textColor = DataUtils.getColorFromCode(value);
+					textColor = ColorPalette.getColorFromCode(value);
 				} catch (NumberFormatException e) {
 					throw new CSSSyntaxException("Malformed color code at line "+i+" : "+lines[i]+". Must be from 000000 to FFFFFF");
 				}

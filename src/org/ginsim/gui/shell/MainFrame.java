@@ -17,8 +17,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 
-import org.ginsim.common.OptionStore;
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.OptionStore;
+import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.notification.Notification;

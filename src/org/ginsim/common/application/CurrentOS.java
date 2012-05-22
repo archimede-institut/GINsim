@@ -1,8 +1,12 @@
-package org.ginsim.common.utils;
+package org.ginsim.common.application;
 
-import org.ginsim.common.utils.log.LogManager;
-
-public class EnvUtils {
+/**
+ * Detect the current Operating System and provide the information
+ * in an easier way for some OS-dependent operations.
+ * 
+ * @author Aurelien Naldi
+ */
+public class CurrentOS {
 
 	public final static int os;
 	

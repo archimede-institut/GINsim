@@ -3,7 +3,7 @@ package org.ginsim.servicegui.tool.localgraph;
 import java.awt.Color;
 import java.util.Map;
 
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.css.EdgeStyle;
 import org.ginsim.core.graph.view.css.Selector;

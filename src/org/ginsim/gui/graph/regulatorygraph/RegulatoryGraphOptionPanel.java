@@ -8,8 +8,8 @@ import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import org.ginsim.common.OptionStore;
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.OptionStore;
+import org.ginsim.common.application.Translator;
 import org.ginsim.gui.graph.GraphOptionPanel;
 
 

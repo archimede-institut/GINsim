@@ -6,8 +6,8 @@ import static org.junit.Assert.fail;
 import java.awt.Color;
 import java.io.File;
 
-import org.ginsim.common.OptionStore;
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.utils.IOUtils;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;

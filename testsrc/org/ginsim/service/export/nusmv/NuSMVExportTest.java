@@ -9,9 +9,9 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 
 import org.ginsim.TestFileUtils;
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.Translator;
 import org.ginsim.common.utils.IOUtils;
-import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.ServiceManager;
 import org.junit.BeforeClass;

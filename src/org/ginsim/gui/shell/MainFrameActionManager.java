@@ -9,7 +9,7 @@ import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 
 import org.ginsim.Launcher;
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GraphGUI;

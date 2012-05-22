@@ -10,7 +10,7 @@ import javax.swing.JTextField;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;

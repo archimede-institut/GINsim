@@ -3,9 +3,9 @@ package org.ginsim.gui.graph.regulatorygraph;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 
-import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.DataUtils;
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.Translator;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.GraphEventCascade;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
@@ -72,7 +72,7 @@ public class RegulatoryGraphEditor extends ObjectEditor<RegulatoryGraph> impleme
 
 	public boolean isValidValue(int prop, String value) {
 		if (prop == PROP_ID) {
-			return DataUtils.isValidId(value);
+			return XMLWriter.isValidId(value);
 		}
 		return false;
 	}

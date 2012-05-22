@@ -9,8 +9,8 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.util.Map;
 
-import org.ginsim.common.OptionStore;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.LogManager;
+import org.ginsim.common.application.OptionStore;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;

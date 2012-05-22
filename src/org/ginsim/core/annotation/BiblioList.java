@@ -16,9 +16,10 @@ import java.util.TreeMap;
 
 import javax.swing.JFileChooser;
 
-import org.ginsim.common.OpenHelper;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.IOUtils;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.utils.OpenUtils;
+import org.ginsim.common.utils.OpenHelper;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
@@ -188,7 +189,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener<GraphModel<
 		while (it.hasNext()) {
 			Entry e = (Entry)it.next();
 			if (!"file".equals(e.getKey())) {
-				return IOUtils.getLink(e.getKey(), e.getValue());
+				return OpenUtils.getLink(e.getKey(), e.getValue());
 			}
 		}
 		return null;
@@ -255,13 +256,13 @@ class Ref {
 	}
 
 	public void open() {
-		if (links.containsKey("file") && IOUtils.open("file", links.get("file"))) {
+		if (links.containsKey("file") && OpenUtils.open("file", links.get("file"))) {
 			return;
 		}
 		Iterator it = links.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry e = (Entry)it.next();
-			if (IOUtils.open(e.getKey(), e.getValue())) {
+			if (OpenUtils.open(e.getKey(), e.getValue())) {
 				return;
 			}
 		}

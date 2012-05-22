@@ -18,7 +18,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
  */
-package org.ginsim.common.utils;
+package org.ginsim.common.application;
 
 import java.text.MessageFormat;
 import java.util.Enumeration;
@@ -29,30 +29,18 @@ import java.util.ResourceBundle;
 import java.util.Stack;
 import java.util.Vector;
 
-import org.ginsim.common.utils.log.LogManager;
 
 /** 
- * Contains ResourceBundle objects.
- * The first (deepest) bundle is the Graphpad bundle.
- * If a user wants to use Graphpad as a framework
- * he can push his own bundle with the <tt>pushBundle</tt>
- * method. Requests will procedure with the following
- * logic: The translator asks the highest bundle
- * for a localized text string. If the bundle has
- * no entry for the specified key. The next bundle will
- * ask for the key. If the deepest bundle hasn't a
- * value for the key the key will return.
+ * Contains a list of ResourceBundle objects.
+ *  
+ * Requests for translated text will be forwarded to the highest bundle
+ * and go down until a match is found. If the deepest bundle hasn't a
+ * value for the key the key will be returned untranslated.
  * 
- * NOTE: you HAVE to push a default message file
+ * NOTE: GINsim will push at least one bundle, an extension can push
+ * its own bundle(s) with the <tt>pushBundle</tt> method.
  */
-
 public class Translator {
-
-	/** 
-	 * Container for the registered LocaleChangeListener.
-	 * @see LocaleChangeListener
-	 */
-	protected static Vector listeners = new Vector();
 
 	/**
 	 * The translator creates outputs on the
@@ -108,7 +96,7 @@ public class Translator {
 	 * @return the localized String for the key.
 	 *
 	 */
-	public static String getString(int bundleIndex, String sKey) {
+	private static String getString(int bundleIndex, String sKey) {
 		if (bundleIndex < bundles.size() && bundleIndex >= 0){
 			ResourceBundle bundle = (ResourceBundle)bundles.get(bundleIndex);
 			try {
@@ -162,95 +150,6 @@ public class Translator {
 	}
 	
 	/** 
-	 * get the localized String for the key. If
-	 * the String wasn't found the method will return
-	 * the key but not null.
-	 *
-	 * @param sKey Key for the localized String.
-	 * @param values Object array for placeholders.
-	 * @return the localized String for the key.
-	 *
-	 * @see MessageFormat#format(String, Object[])
-	 */
-	public static String getString(String sKey, Object[] values) {
-		return getString(bundles.size()-1, sKey, values);
-	}
-
-	/** 
-	 * Returns the localized String for the key. If
-	 * the String wasn't found the method will return
-	 * an empty String but not null and will log
-	 * on the System.err the key String,
-	 * if logNotFoundResources is true.
-	 *
-	 * @param bundleIndex
-	 * @param sKey Key for the localized String.
-	 * @param oValues Object array for placeholders.
-	 * @return the localized String for the key.
-	 *
-	 * @see MessageFormat#format(String, Object[])
-	 */
-	public static String getString(
-		int bundleIndex,
-		String sKey,
-		Object[] oValues
-		) {
-
-		if (bundleIndex < bundles.size() && bundleIndex >= 0){
-			ResourceBundle bundle = (ResourceBundle)bundles.get(bundleIndex);
-			try {
-				return MessageFormat.format(bundle.getString(sKey), oValues);
-			} catch (MissingResourceException mrex) {
-				return getString(bundleIndex-1, sKey, oValues);
-			}
-		}
-		try {
-			return defaultBundle.getString(sKey);
-		} catch (MissingResourceException mrex) {
-			if (logNotFoundResources) {
-				LogManager.error("Resource for the following key not found:" + sKey);
-			}
-			return null;
-		}
-	}
-
-	/** 
-	 * Returns the current locale
-	 * @return the currently used locale
-	 */
-	public static Locale getLocale() {
-		return Locale.getDefault();
-	}
-
-	/** 
-	 * Sets the new locale and fires events
-	 * to the locale change listener.
-	 * @param locale
-	 */
-	public static void setLocale(Locale locale) {
-		// change the locale
-		Locale.setDefault(locale);
-
-		// reload the bundles
-		reloadBundles();
-	}
-
-	/** 
-	 * Reloads the bundles at the stack by using the default locale.
-	 */
-	public static void reloadBundles(){
-		// update the proper bundles		
-		defaultBundle.requeryDefaultNames();
-		
-		// update the bundles at the stack		
-		for (int i = 0; i < bundleNames.size() ; i++){
-			ResourceBundle resourcebundle =
-				ResourceBundle.getBundle((String)bundleNames.get(i));
-			bundles.set( i, resourcebundle);
-		}
-	}
-
-	/** 
 	 * Pushes the specified bundle on the stack.
 	 * An example for a bundle file name is 'org.jgraph.pad.resources.Graphpad'.
 	 * Don't add the suffix of the filename, the language or country code.
@@ -260,38 +159,6 @@ public class Translator {
 		ResourceBundle resourcebundle = ResourceBundle.getBundle(filename);
 		bundles.push(resourcebundle);
 		bundleNames.push( filename);
-	}
-
-	/** 
-	 * Pops the highest bundle on the stack
-	 */
-	public static void popBundle(){
-		bundles.pop() ;
-		bundleNames.pop() ;
-	}
-
-	/** 
-	 * removes the specified bundle
-	 * @param index
-	 */
-	public static void removeBundle(int index){
-		bundles.remove(index) ;
-		bundleNames.remove(index) ;
-	}
-	/**
-	 * Returns the logNotFoundResources.
-	 * @return boolean
-	 */
-	public static boolean isLogNotFoundResources() {
-		return logNotFoundResources;
-	}
-
-	/**
-	 * Sets the logNotFoundResources.
-	 * @param logNotFoundResources The logNotFoundResources to set
-	 */
-	public static void setLogNotFoundResources(boolean logNotFoundResources) {
-		Translator.logNotFoundResources = logNotFoundResources;
 	}
 }
 

@@ -3,7 +3,7 @@ package org.ginsim.service.tool.modelsimplifier;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 

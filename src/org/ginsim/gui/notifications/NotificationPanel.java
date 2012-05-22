@@ -13,7 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.Translator;
 import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.detailed.DetailedNotification;
 import org.ginsim.core.notification.resolvable.ResolvableNotification;

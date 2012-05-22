@@ -1,4 +1,4 @@
-package org.ginsim.common;
+package org.ginsim.common.application;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -13,7 +13,6 @@ import java.util.Map;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.ginsim.common.utils.EnvUtils;
 import org.ginsim.common.xml.XMLWriter;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -23,8 +22,10 @@ import org.xml.sax.helpers.DefaultHandler;
 
 
 /**
- * handle options: remember them during the session, restore them when first called
+ * Handle options: remember them during the session, restore them when first called
  * and save them when exiting.
+ * 
+ * @author Aurelien Naldi
  */
 public class OptionStore extends DefaultHandler {
 	
@@ -33,18 +34,24 @@ public class OptionStore extends DefaultHandler {
     private static String optionFile = null;
 	private static List<String> recentFiles = new ArrayList<String>();
     
+	/**
+	 * Initialise the option store: this should be called by the launcher once and only once.
+	 * 
+	 * @param name
+	 * @throws Exception
+	 */
     public static void init(String name) throws Exception {
     	
     	String home = System.getProperty("user.home");
     	String prefix = home;
-    	switch (EnvUtils.os) {
-		case EnvUtils.SYS_MACOSX:
+    	switch (CurrentOS.os) {
+		case CurrentOS.SYS_MACOSX:
 			prefix = home+"/Library/Preferences/";
 			break;
-		case EnvUtils.SYS_LINUX:
+		case CurrentOS.SYS_LINUX:
 			prefix = home+"/.config/";
 			break;
-		case EnvUtils.SYS_WINDOWS:
+		case CurrentOS.SYS_WINDOWS:
 			prefix = home+"\\Application Data\\";
 			break;
 		}
@@ -75,33 +82,36 @@ public class OptionStore extends DefaultHandler {
     }
     
     /**
-     * Add file path to recent file list
+     * Add file path to recent file list, at the end of the list.
+     * This is only used internally to restore the list of recent files at startup.
      * 
      * @param path the path to add to the list
      */
-	public static void appendRecentFile(String path) {
+	private static void appendRecentFile(String path) {
+		recentFiles.remove(path);
 		int last = recentFiles.size();
 		if (last < 10) {
-			addRecentFile(path, last);
+			recentFiles.add(path);
 		}
 	}
+    /**
+     * Add file path to recent file list.
+     * The file will take the first position in the list.
+     * 
+     * @param path the path to add to the list
+     */
 	public static void addRecentFile(String path) {
-		addRecentFile(path, 0);
-	}
-	
-	private static void addRecentFile(String path, int position) {
 		// add this file on top of the list
-		recentFiles.remove(path);
 		if (!new File(path).exists()) {
 			return;
 		}
-		recentFiles.add(position, path);
+		recentFiles.remove(path);
+		recentFiles.add(0, path);
 		
 		// trim the list size
 		while (recentFiles.size() > 10) {
 			recentFiles.remove(10);
 		}
-		
 	}
 	
 	/**
@@ -198,6 +208,7 @@ public class OptionStore extends DefaultHandler {
         } catch (Exception e) {}
     }
 
+    
     /* ********************************
      *      parse options 
      **********************************/
@@ -213,6 +224,9 @@ public class OptionStore extends DefaultHandler {
      * 
      * 
      * all that is needed is an handler for startElement
+     */
+    /**
+     * Handler to parse the saved file.
      */
     public void startElement(String uri, String localName, String qName,
             Attributes attributes) throws SAXException {

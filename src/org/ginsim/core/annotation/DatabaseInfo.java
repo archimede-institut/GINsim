@@ -1,7 +1,7 @@
 package org.ginsim.core.annotation;
 
-import org.ginsim.common.OpenHelper;
-import org.ginsim.common.utils.IOUtils;
+import org.ginsim.common.utils.OpenUtils;
+import org.ginsim.common.utils.OpenHelper;
 
 public class DatabaseInfo implements OpenHelper {
 
@@ -12,16 +12,16 @@ public class DatabaseInfo implements OpenHelper {
 		this.name = name;
 		this.description = description;
 		
-		IOUtils.addHelperClass(name, this);
+		OpenUtils.addHelperClass(name, this);
 	}
 	
 	public void open() {
-		IOUtils.openURI("http://identifiers.org/"+name);
+		OpenUtils.openURI("http://identifiers.org/"+name);
 	}
 	
 	@Override
 	public boolean open(String proto, String value) {
-	    return IOUtils.openURI(getLink(proto, value));
+	    return OpenUtils.openURI(getLink(proto, value));
 	}
 
 	@Override

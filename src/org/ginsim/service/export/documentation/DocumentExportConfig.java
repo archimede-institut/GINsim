@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.common.OptionStore;
+import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.document.GenericDocumentFormat;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
 

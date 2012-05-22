@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.Set;
 import java.util.Vector;
 
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Edge;

@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import org.ginsim.common.document.DocumentStyle;
 import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.common.utils.IOUtils;
+import org.ginsim.common.utils.OpenUtils;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.annotation.AnnotationLink;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
@@ -450,7 +451,7 @@ public class LRGDocumentationWriter {
 			if (lnk.getHelper() != null) {
 				s_link = lnk.getHelper().getLink(lnk.getProto(), lnk.getValue());
 			} else {
-				s_link = IOUtils.getLink(lnk.getProto(), lnk.getValue());
+				s_link = OpenUtils.getLink(lnk.getProto(), lnk.getValue());
 			}
 			if (s_link == null) {
 				doc.openListItem(null);

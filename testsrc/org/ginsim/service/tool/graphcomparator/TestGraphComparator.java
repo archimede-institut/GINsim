@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.ginsim.TestUtils;
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;

@@ -1,7 +1,13 @@
-package org.ginsim.common;
+package org.ginsim.common.utils;
 
 import java.awt.Color;
 
+/**
+ * Some pre-defined color palettes and methods to help generating
+ * new ones or manipulating colors in general.
+ * 
+ * @author Duncan Berenguier
+ */
 public class ColorPalette {
 	public static final Color[] RAINBOW = {
 		new Color(220, 0, 99),
@@ -106,7 +112,7 @@ public class ColorPalette {
 	};
 	
 	/**
-	 * Create a palette of color by variing the hue for nbcolors steps
+	 * Create a palette of color by varying the hue for nbcolors steps
 	 * @param nbcolors
 	 * @param saturation
 	 * @param brightness
@@ -135,20 +141,20 @@ public class ColorPalette {
 	}
 		
 	/**
-	 * Indicates if the given color is percieved bright
+	 * Indicates if the given color is perceived bright
 	 * @param col
-	 * @return true if the color is percieved bright
+	 * @return true if the color is perceived bright
 	 */
 	public static boolean isColorPercievedBright(Color col) {
 		return percievedBrightness(col.getRed(), col.getGreen(), col.getBlue()) >= 130;
 	}
 
 	/**
-	 * Return the percieved brightness of the given color
+	 * Return the perceived brightness of the given color
 	 * @param r red value from 0-255
 	 * @param g green value from 0-255
 	 * @param b blue value from 0-255
-	 * @return the percieved brightness of the given color
+	 * @return the perceived brightness of the given color
 	 */
 	public static int percievedBrightness(int r, int g, int b) {
 		   return (int)Math.sqrt(
@@ -156,4 +162,27 @@ public class ColorPalette {
 				   g * g * .691 + 
 				   b * b * .068);
 	}
+	
+	/**
+	 * Convert a 8-bit Color into a CSS-like string (without the #).<br>
+	 * <i>Exemple : Color(255,127,0) -> "FF7F00"</i>
+	 * 
+	 * @param color the color to convert.
+	 * @return String a string representation.
+	 * 
+	 */
+	public static String getColorCode(Color color) {
+		return Integer.toHexString(color.getRGB() & 0xffffff | 0x1000000).substring(1);
+	}
+
+	/**
+	 * get a Color corresponding to a given color code.
+	 * 
+	 * @param code the hexadecimal color code
+	 * @return the corresponding Color
+	 */
+	public static Color getColorFromCode(String code) throws NumberFormatException {
+		return Color.decode(code);
+	}
+
 }

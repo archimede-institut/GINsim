@@ -10,13 +10,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.ginsim.common.OptionStore;
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.LogManager;
+import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.common.document.LaTeXDocumentWriter;
 import org.ginsim.common.document.OOoDocumentWriter;
 import org.ginsim.common.document.XHTMLDocumentWriter;
-import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.common.Graph;
@@ -36,22 +36,32 @@ import org.ginsim.core.service.ServiceManager;
 import org.python.util.PythonInterpreter;
 
 /**
- * A helper when running GINsim without a GUI.
+ * A helper when running GINsim in script mode.
  * It provides a convenient API for common actions:
  * - open and save graphs
  * - run services
- * - write reports
+ * - create reports
  * 
  * @author Aurelien Naldi
  */
 public class ScriptLauncher {
 
 	private static boolean isInit = false;
+	private boolean running = false;
+	
+	private final ServiceManager services = ServiceManager.getManager();
+	private final ObjectAssociationManager associated = ObjectAssociationManager.getInstance();
+	
 
 	/**
-	 * Main entry point for the script mode.y
-	 * @param filename
-	 * @param args
+	 * Arguments passed to the script
+	 */
+	public String[] args;
+	
+
+	
+	/**
+	 * Initialisation method for the script helper to ensure a working OptionStore.
 	 */
 	private static void initOptionStore() {
 		if (isInit) {
@@ -74,13 +84,11 @@ public class ScriptLauncher {
 		}
 	}
 
-	private boolean running = false;
-	
 	/**
-	 * Run the script
+	 * Run a script: the method is called by the main launcher to launch a GINsim script
 	 * 
-	 * @param filename
-	 * @param args
+	 * @param filename script filename
+	 * @param args additional arguments passed on the command line
 	 */
 	public synchronized void run(String filename, String[] args) {
 		if (running) {
@@ -122,16 +130,6 @@ public class ScriptLauncher {
         running = false;
 	}
 	
-	private final ServiceManager services = ServiceManager.getManager();
-	private final ObjectAssociationManager associated = ObjectAssociationManager.getInstance();
-	
-
-	/**
-	 * Arguments passed to the script
-	 */
-	public String[] args;
-	
-	
 	/**
 	 * Open a graph from a file.
 	 * 
@@ -146,11 +144,13 @@ public class ScriptLauncher {
 	
 	/**
 	 * Lookup a named state matching the given state.
+	 * Marked as deprecated as it should be part of the initial state service.
 	 * 
 	 * @param state
 	 * @param graph
 	 * @return the name or null
 	 */
+	@Deprecated
 	public String nameState(byte[] state, RegulatoryGraph graph) {
         // FIXME: adapt it to deal with input configs !!
         InitialStateList init = ((GsInitialStateList)associated.getObject(graph, InitialStateManager.KEY, false)).getInitialStates();
@@ -275,6 +275,13 @@ public class ScriptLauncher {
 		System.out.println();
 	}
 
+	/**
+	 * Write some ad-hoc documentation.
+	 * It creates a simple HTML version of the help, with links to the javadoc.
+	 * 
+	 * @param filename output filename
+	 * @param javadocbase path to the javadoc
+	 */
 	public void doc(String filename, String javadocbase) {
 		DocumentWriter doc = createReport(filename, null);
 		try {
@@ -302,6 +309,7 @@ public class ScriptLauncher {
 		}
 		return datamanagers;
 	}
+	
 	private void writeDoc(DocumentWriter doc, String javadocbase, String title, Collection<?> objects) throws IOException {
 		
 		if (objects == null || objects.size() == 0) {

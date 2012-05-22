@@ -14,7 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.Translator;
 
 
 /**

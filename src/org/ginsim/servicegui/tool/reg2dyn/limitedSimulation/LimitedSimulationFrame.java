@@ -13,9 +13,9 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.ginsim.common.OptionStore;
-import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.OptionStore;
+import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
