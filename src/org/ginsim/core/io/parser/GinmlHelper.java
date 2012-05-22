@@ -6,8 +6,9 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ginsim.common.utils.DataUtils;
-import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.ColorPalette;
+import org.ginsim.common.utils.MaskUtils;
+import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgePattern;
@@ -43,19 +44,19 @@ public class GinmlHelper {
         } 
         if (qName.equals("rect")) {
         	vareader.setShape(NodeShape.RECTANGLE);
-        	vareader.setBackgroundColor(DataUtils.getColorFromCode(attributes.getValue("backgroundColor")));
-        	vareader.setForegroundColor(DataUtils.getColorFromCode(attributes.getValue("foregroundColor")));
+        	vareader.setBackgroundColor(ColorPalette.getColorFromCode(attributes.getValue("backgroundColor")));
+        	vareader.setForegroundColor(ColorPalette.getColorFromCode(attributes.getValue("foregroundColor")));
         	String s_textColor = attributes.getValue("textColor");
-        	Color col_text = s_textColor == null ? vareader.getForegroundColor() : DataUtils.getColorFromCode(s_textColor);
+        	Color col_text = s_textColor == null ? vareader.getForegroundColor() : ColorPalette.getColorFromCode(s_textColor);
         	vareader.setTextColor(col_text);
         	vareader.setSize(Integer.parseInt(attributes.getValue("width")), Integer.parseInt(attributes.getValue("height")));
             vareader.setPos(Integer.parseInt(attributes.getValue("x")),Integer.parseInt(attributes.getValue("y")));
         } else if (qName.equals("ellipse")) {
         	vareader.setShape(NodeShape.ELLIPSE);
-        	vareader.setBackgroundColor(DataUtils.getColorFromCode(attributes.getValue("backgroundColor")));
-        	vareader.setForegroundColor(DataUtils.getColorFromCode(attributes.getValue("foregroundColor")));
+        	vareader.setBackgroundColor(ColorPalette.getColorFromCode(attributes.getValue("backgroundColor")));
+        	vareader.setForegroundColor(ColorPalette.getColorFromCode(attributes.getValue("foregroundColor")));
         	String s_textColor = attributes.getValue("textColor");
-        	Color col_text = s_textColor == null ? vareader.getForegroundColor() : DataUtils.getColorFromCode(s_textColor);
+        	Color col_text = s_textColor == null ? vareader.getForegroundColor() : ColorPalette.getColorFromCode(s_textColor);
         	vareader.setTextColor(col_text);
         	vareader.setSize(Integer.parseInt(attributes.getValue("width")), Integer.parseInt(attributes.getValue("height")));
             vareader.setPos(Integer.parseInt(attributes.getValue("x")),Integer.parseInt(attributes.getValue("y")));
@@ -73,7 +74,7 @@ public class GinmlHelper {
 	 */
 	public static void applyEdgeVisualSettings(Edge<?> edge, EdgeAttributesReader ereader, NodeAttributesReader nreader, String qName, Attributes attributes) {
 		if (qName.equals("polyline")) {
-			ereader.setLineColor(DataUtils.getColorFromCode(attributes.getValue("line_color")));
+			ereader.setLineColor(ColorPalette.getColorFromCode(attributes.getValue("line_color")));
 			boolean isCurved = false;
 			String s = attributes.getValue("line_style");
 			if (s.equals("curve") || s.equals("13") || s.equals("12") || s.equals("bezier") || s.equals("spline")) {
@@ -143,7 +144,7 @@ public class GinmlHelper {
     	    s = "straight";
         }
         svs += " line_style=\""+s+"\"";
-        svs += " line_color=\"#"+DataUtils.getColorCode(eReader.getLineColor())+"\"";
+        svs += " line_color=\"#"+ColorPalette.getColorCode(eReader.getLineColor())+"\"";
         EdgePattern pattern = eReader.getDash();
         if (pattern == EdgePattern.DASH) {
             svs += " pattern=\"dash\"";
@@ -178,9 +179,9 @@ public class GinmlHelper {
 					"\" y=\""+vReader.getY()+
 					"\" width=\""+vReader.getWidth()+
 					"\" height=\""+vReader.getHeight()+
-					"\" backgroundColor=\"#"+ DataUtils.getColorCode(vReader.getBackgroundColor()) +
-					"\" foregroundColor=\"#"+DataUtils.getColorCode(vReader.getForegroundColor()) +
-					"\" textColor=\"#"+DataUtils.getColorCode(vReader.getTextColor()) +
+					"\" backgroundColor=\"#"+ ColorPalette.getColorCode(vReader.getBackgroundColor()) +
+					"\" foregroundColor=\"#"+ColorPalette.getColorCode(vReader.getForegroundColor()) +
+					"\" textColor=\"#"+ColorPalette.getColorCode(vReader.getTextColor()) +
 					"\"/>\n";
         		break;
             case ELLIPSE:
@@ -188,9 +189,9 @@ public class GinmlHelper {
 				"\" y=\""+vReader.getY()+
 				"\" width=\""+vReader.getWidth()+
 				"\" height=\""+vReader.getHeight()+
-				"\" backgroundColor=\"#"+ DataUtils.getColorCode(vReader.getBackgroundColor()) +
-				"\" foregroundColor=\"#"+DataUtils.getColorCode(vReader.getForegroundColor()) +
-				"\" textColor=\"#"+DataUtils.getColorCode(vReader.getTextColor()) +
+				"\" backgroundColor=\"#"+ ColorPalette.getColorCode(vReader.getBackgroundColor()) +
+				"\" foregroundColor=\"#"+ColorPalette.getColorCode(vReader.getForegroundColor()) +
+				"\" textColor=\"#"+ColorPalette.getColorCode(vReader.getTextColor()) +
 				"\"/>\n";
         		break;
         	default:

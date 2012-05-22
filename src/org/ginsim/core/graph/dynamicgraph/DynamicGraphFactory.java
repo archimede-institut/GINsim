@@ -8,7 +8,7 @@ import org.mangosdk.spi.ProviderFor;
 
 
 /**
- * descriptor for dynamic (state transition) graphs.
+ * Factory used to create dynamical graphs (STGs).
  */
 @ProviderFor( GraphFactory.class)
 public class DynamicGraphFactory implements GraphFactory<DynamicGraph> {

@@ -6,11 +6,11 @@ import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
-import org.ginsim.common.OptionStore;
-import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.common.utils.Translator;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.LogManager;
+import org.ginsim.common.application.OptionStore;
+import org.ginsim.common.application.Translator;
+import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.backend.JgraphtBackendImpl;

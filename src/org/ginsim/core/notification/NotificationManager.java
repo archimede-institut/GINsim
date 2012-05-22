@@ -9,9 +9,9 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.notification.detailed.DetailedErrorNotification;
 import org.ginsim.core.notification.detailed.DetailedInformationNotification;
 import org.ginsim.core.notification.detailed.DetailedWarningNotification;
+import org.ginsim.core.notification.resolvable.NotificationResolution;
 import org.ginsim.core.notification.resolvable.ResolvableErrorNotification;
 import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
-import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
 
 /**
  * This class is the central class of the register/publish design pattern applied to Notifications

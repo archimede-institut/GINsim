@@ -20,7 +20,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;

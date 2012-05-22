@@ -6,10 +6,10 @@ import java.util.Iterator;
 import java.util.ListIterator;
 import java.util.Set;
 
-import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.common.utils.Translator;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.LogManager;
+import org.ginsim.common.application.Translator;
+import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNodeSet;

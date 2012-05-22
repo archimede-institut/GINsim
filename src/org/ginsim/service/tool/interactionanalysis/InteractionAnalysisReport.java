@@ -8,10 +8,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.common.application.Translator;
 import org.ginsim.common.document.DocumentStyle;
 import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.common.utils.IOUtils;
-import org.ginsim.common.utils.Translator;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;

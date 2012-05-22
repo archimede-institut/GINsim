@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.AbstractDerivedGraph;
@@ -216,9 +216,9 @@ public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  exten
     public Set<String> getSelectedSet(Collection<NodeReducedData> selection) {
         Set set = new HashSet();
         for (NodeReducedData node: selection) {
-            Vector content = node.getContent();
-            for (int i=0 ; i<content.size() ; i++) {
-                set.add(content.get(i).toString());
+            List content = node.getContent();
+            for (Object o: content) {
+                set.add(o.toString());
             }
         }
         return set;

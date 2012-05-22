@@ -4,8 +4,8 @@ import java.awt.GridBagConstraints;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ginsim.common.utils.DataUtils;
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.Translator;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -106,7 +106,7 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
 		try {
 			switch (prop) {
 				case PROP_ID:
-					return DataUtils.isValidId(value) && !graph.idExists(value);
+					return XMLWriter.isValidId(value) && !graph.idExists(value);
 				case PROP_NAME:
 					return true;
 			}

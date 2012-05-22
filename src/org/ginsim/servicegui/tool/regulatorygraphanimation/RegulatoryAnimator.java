@@ -8,7 +8,7 @@ import java.util.Vector;
 import javax.swing.AbstractListModel;
 import javax.swing.JFrame;
 
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;

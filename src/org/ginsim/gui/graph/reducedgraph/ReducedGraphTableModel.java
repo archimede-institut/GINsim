@@ -1,5 +1,6 @@
 package org.ginsim.gui.graph.reducedgraph;
 
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
@@ -12,7 +13,7 @@ import javax.swing.table.AbstractTableModel;
 public class ReducedGraphTableModel extends AbstractTableModel {
 
 	private static final long serialVersionUID = 9012745010038236066L;
-	private Vector content = null;
+	private List content = null;
 	int rowCount = 0;
 	int lastcolCount = 0;
 	int colCount = 0;
@@ -23,7 +24,7 @@ public class ReducedGraphTableModel extends AbstractTableModel {
 	 *  
 	 * @param content the vector containing values
 	 */
-	public void setContent (Vector content) {
+	public void setContent (List content) {
 		this.content = content;
 		int size = content.size();
 		if (size >maxrow) {

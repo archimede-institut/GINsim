@@ -1,6 +1,6 @@
 package org.ginsim.gui.graph.regulatorygraph.models;
 
-import org.ginsim.common.utils.DataUtils;
+import org.ginsim.common.utils.MaskUtils;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -15,6 +15,8 @@ import org.ginsim.gui.utils.data.models.SpinModel;
  */
 public class NodeMaxValueSpinModel extends SpinModel {
 
+	private static final Integer IZ = new Integer(0);
+	
     private RegulatoryNode vertex;
 	private final RegulatoryGraph graph;
 	private final GraphGUI<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> gui;
@@ -51,7 +53,7 @@ public class NodeMaxValueSpinModel extends SpinModel {
 
 	public Object getValue() {
         if (graph == null || vertex == null) {
-            return DataUtils.IZ;
+            return IZ;
         }
         return new Integer(vertex.getMaxValue());
 	}

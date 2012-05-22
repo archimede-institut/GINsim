@@ -3,12 +3,12 @@ package org.ginsim.gui.graph.dynamicgraph;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 
-import org.ginsim.common.utils.DataUtils;
-import org.ginsim.common.utils.Translator;
-import org.ginsim.core.GraphEventCascade;
+import org.ginsim.common.application.Translator;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.common.GraphEventCascade;
 import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
@@ -71,7 +71,7 @@ public class StateTransitionGraphEditor extends ObjectEditor<DynamicGraph> imple
 
 	public boolean isValidValue(int prop, String value) {
 		if (prop == PROP_ID) {
-			return DataUtils.isValidId(value);
+			return XMLWriter.isValidId(value);
 		}
 		return false;
 	}

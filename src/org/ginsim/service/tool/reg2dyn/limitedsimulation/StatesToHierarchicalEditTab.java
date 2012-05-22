@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;

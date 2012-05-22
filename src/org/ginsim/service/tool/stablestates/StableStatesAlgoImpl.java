@@ -2,7 +2,7 @@ package org.ginsim.service.tool.stablestates;
 
 import java.util.List;
 
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;

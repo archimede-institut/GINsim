@@ -24,9 +24,9 @@ import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.Translator;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.LogManager;
+import org.ginsim.common.application.Translator;
 import org.ginsim.commongui.dialog.SimpleDialog;
 import org.ginsim.core.annotation.AnnotationLink;
 import org.ginsim.core.annotation.BiblioList;

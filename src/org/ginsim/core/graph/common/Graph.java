@@ -3,7 +3,7 @@ package org.ginsim.core.graph.common;
 import java.awt.Dimension;
 import java.util.Collection;
 
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;

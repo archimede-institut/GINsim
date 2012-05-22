@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
-import org.ginsim.common.ColorPalette;
+import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;

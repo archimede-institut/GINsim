@@ -3,13 +3,18 @@ package org.ginsim.core.annotation;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ginsim.common.OpenHelper;
-import org.ginsim.common.utils.IOUtils;
+import org.ginsim.common.utils.OpenUtils;
+import org.ginsim.common.utils.OpenHelper;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 
 
-
+/**
+ * A link in an annotation.
+ * It has a "protocol" (database, bibliography, normal link) and a value (ID or real value).
+ * 
+ * @author Aurelien Naldi
+ */
 public class AnnotationLink {
 	
 	protected static Map m_helper = new HashMap();
@@ -53,7 +58,7 @@ public class AnnotationLink {
 			return;
 		}
 		// no helper, use a generic open call
-		IOUtils.open(proto, value);
+		OpenUtils.open(proto, value);
 	}
 	
 	public String toString() {

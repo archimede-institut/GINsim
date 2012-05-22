@@ -438,10 +438,12 @@
 	<target name="javadoc" depends="doc.init" description="Generates the javadoc">
 		<echo message="--> Generating the Javadoc files ..." />
 		<javadoc destdir="${doc.dist.javadoc}"
+			encoding="UTF-8"
+			docencoding="UTF-8"
 			author="true"
 			version="true"
 			use="true"
-			access="private"
+			access="protected"
 			windowtitle="API documentation for GINsim (Gene Interaction Network simulator)">
 
 			<packageset dir="${src}" defaultexcludes="yes">

@@ -4,7 +4,7 @@ import static org.junit.Assert.fail;
 
 import java.awt.Color;
 
-import org.ginsim.common.OptionStore;
+import org.ginsim.common.application.OptionStore;
 import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.regulatorygraph.BasicRegulatoryGraphTest;

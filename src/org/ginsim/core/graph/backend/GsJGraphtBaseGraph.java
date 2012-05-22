@@ -97,7 +97,7 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
     /**
      * Get an existing vertex.
      * @param v
-     * @return
+     * @return the vertex
      */
     public V getVertex(V v) {
     	VInfo<V, E> info = m_vertices.get(v);

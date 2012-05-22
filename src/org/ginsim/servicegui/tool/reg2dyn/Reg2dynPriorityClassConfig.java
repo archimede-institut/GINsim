@@ -16,7 +16,7 @@ import javax.swing.JPanel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.SimpleGenericList;
 import org.ginsim.gui.utils.data.GenericListPanel;

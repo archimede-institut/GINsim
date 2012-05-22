@@ -2,7 +2,7 @@ package org.ginsim.service.export.cytoscape;
 
 import java.io.IOException;
 
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;

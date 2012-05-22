@@ -2,7 +2,7 @@ package org.ginsim.core.graph.tree;
 
 import java.util.Collection;
 
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.utils.Dotify;
 

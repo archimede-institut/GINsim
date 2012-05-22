@@ -3,13 +3,13 @@ package org.ginsim.core.graph.regulatorygraph;
 import java.io.IOException;
 import java.util.List;
 
+import org.ginsim.common.utils.ToolTipsable;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.common.ToolTipsable;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgeEnd;
 
@@ -164,7 +164,7 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
     }
 
 	/**
-	 * @see org.ginsim.core.graph.common.ToolTipsable#toToolTip()
+	 * @see org.ginsim.common.utils.ToolTipsable#toToolTip()
 	 */
 	public String toToolTip() {
 		return ""+source+" -> "+target+ (edgecount > 1 ? " ; "+edgecount : "");

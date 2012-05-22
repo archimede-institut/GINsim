@@ -15,7 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.ginsim.common.utils.DataUtils;
+import org.ginsim.common.utils.ColorPalette;
+import org.ginsim.common.utils.MaskUtils;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -91,9 +92,9 @@ public class SVGEncoder {
         int h = vreader.getHeight();
         int w = vreader.getWidth();
         
-        String bgCol = "#"+DataUtils.getColorCode(vreader.getBackgroundColor());
-        String fgCol = "#"+DataUtils.getColorCode(vreader.getForegroundColor());
-        String txtCol = "#"+DataUtils.getColorCode(vreader.getTextColor());
+        String bgCol = "#"+ColorPalette.getColorCode(vreader.getBackgroundColor());
+        String fgCol = "#"+ColorPalette.getColorCode(vreader.getForegroundColor());
+        String txtCol = "#"+ColorPalette.getColorCode(vreader.getTextColor());
         
 	    out.write("  <g id=\""+id+"\">\n");
         switch (vreader.getShape()) {
@@ -143,7 +144,7 @@ public class SVGEncoder {
      * @throws IOException
      */
     private void writeEdge(FileWriter out, Rectangle box1, Rectangle box2, EdgeAttributesReader ereader, Set<String> markers) throws IOException {
-        String color = "#"+DataUtils.getColorCode(ereader.getLineColor());
+        String color = "#"+ColorPalette.getColorCode(ereader.getLineColor());
         float w = ereader.getLineWidth();
         String marker = addMarker(out, markers, ereader.getLineEnd(), color, true);
         out.write("    <path " +

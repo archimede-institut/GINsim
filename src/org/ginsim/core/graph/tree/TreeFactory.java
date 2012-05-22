@@ -1,6 +1,6 @@
 package org.ginsim.core.graph.tree;
 
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.common.GraphFactory;
 import org.mangosdk.spi.ProviderFor;
 

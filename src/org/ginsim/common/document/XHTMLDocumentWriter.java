@@ -12,16 +12,17 @@ import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
-import org.ginsim.common.utils.DataUtils;
+import org.ginsim.common.utils.ColorPalette;
+import org.ginsim.common.utils.MaskUtils;
 import org.ginsim.common.xml.XMLWriter;
 
 
 /**
- * XHTMLDocumentWriter is a backend to write xHTML
+ * XHTMLDocumentWriter is a backend to write xHTML files
  * 
  * @see DocumentWriter
- * @author Berenguier duncan
- *
+ * @author Duncan Berenguier
+ * @author Aurelien Naldi
  */
 public class XHTMLDocumentWriter extends DocumentWriter {
 
@@ -316,7 +317,7 @@ class ColorStyleWriter extends SimpleStyleWriter {
 		super(prefix, suffix);
 	}
 	public String getCSSStyle(Object value) {
-		return prefix+DataUtils.getColorCode((Color)value)+suffix;
+		return prefix+ColorPalette.getColorCode((Color)value)+suffix;
 	}
 }
 

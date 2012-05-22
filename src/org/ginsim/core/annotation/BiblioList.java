@@ -16,20 +16,21 @@ import java.util.TreeMap;
 
 import javax.swing.JFileChooser;
 
-import org.ginsim.common.OpenHelper;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.IOUtils;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.utils.OpenUtils;
+import org.ginsim.common.utils.OpenHelper;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
-import org.ginsim.core.GraphEventCascade;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.common.GraphEventCascade;
 import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.core.graph.common.GraphModel;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
+import org.ginsim.core.notification.resolvable.NotificationResolution;
 import org.xml.sax.Attributes;
 
 import bibtex.dom.BibtexAbstractValue;
@@ -37,8 +38,11 @@ import bibtex.dom.BibtexEntry;
 import bibtex.dom.BibtexFile;
 import bibtex.parser.BibtexParser;
 
-
-
+/**
+ * Bibliography: list of bibliographic entries.
+ * 
+ * @author Aurelien Naldi
+ */
 public class BiblioList implements XMLize, OpenHelper, GraphListener<GraphModel<?, ?>> {
 
 	private final Map<String, Date> files = new TreeMap<String, Date>();
@@ -188,7 +192,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener<GraphModel<
 		while (it.hasNext()) {
 			Entry e = (Entry)it.next();
 			if (!"file".equals(e.getKey())) {
-				return IOUtils.getLink(e.getKey(), e.getValue());
+				return OpenUtils.getLink(e.getKey(), e.getValue());
 			}
 		}
 		return null;
@@ -255,13 +259,13 @@ class Ref {
 	}
 
 	public void open() {
-		if (links.containsKey("file") && IOUtils.open("file", links.get("file"))) {
+		if (links.containsKey("file") && OpenUtils.open("file", links.get("file"))) {
 			return;
 		}
 		Iterator it = links.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry e = (Entry)it.next();
-			if (IOUtils.open(e.getKey(), e.getValue())) {
+			if (OpenUtils.open(e.getKey(), e.getValue())) {
 				return;
 			}
 		}

@@ -3,7 +3,7 @@ package org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.tre
 import java.util.Hashtable;
 import java.util.Vector;
 
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.LogManager;
 
 
 public class ParamTreeLeafValue extends ParamTreeLeaf {

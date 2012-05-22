@@ -20,8 +20,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
+import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.service.ServiceGUIManager;
 import org.ginsim.gui.service.common.ImportAction;
 import org.ginsim.gui.shell.callbacks.FileCallBack;

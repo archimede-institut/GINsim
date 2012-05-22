@@ -5,7 +5,7 @@ import java.awt.Insets;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
-import org.ginsim.gui.resource.ImageLoader;
+import org.ginsim.commongui.utils.ImageLoader;
 
 
 public class GsButton extends JButton {

@@ -8,7 +8,7 @@ import java.awt.Color;
 import java.io.File;
 
 import org.ginsim.TestFileUtils;
-import org.ginsim.common.OptionStore;
+import org.ginsim.common.application.OptionStore;
 import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.regulatorygraph.BasicRegulatoryGraphTest;

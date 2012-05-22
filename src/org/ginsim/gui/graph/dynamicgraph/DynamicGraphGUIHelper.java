@@ -12,8 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
 
-import org.ginsim.common.utils.Translator;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.LogManager;
+import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;

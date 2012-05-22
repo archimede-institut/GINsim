@@ -14,8 +14,8 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;

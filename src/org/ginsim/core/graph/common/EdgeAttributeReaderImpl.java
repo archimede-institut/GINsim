@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.common.OptionStore;
+import org.ginsim.common.application.OptionStore;
 import org.ginsim.core.graph.view.Bezier;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgeEnd;

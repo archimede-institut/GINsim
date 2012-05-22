@@ -23,13 +23,13 @@ import javax.swing.UIManager;
 import javax.swing.text.DefaultHighlighter.DefaultHighlightPainter;
 import javax.swing.tree.TreePath;
 
+import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.LogicalFunctionPanel;
-import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.utils.widgets.GsButton;
 
 

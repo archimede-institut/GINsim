@@ -7,15 +7,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.ginsim.common.utils.DataUtils;
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.Translator;
+import org.ginsim.common.utils.MaskUtils;
+import org.ginsim.common.utils.ToolTipsable;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.common.AbstractGraph;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.common.ToolTipsable;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterList;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
@@ -25,7 +25,7 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamod
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.core.notification.resolvable.resolution.NotificationResolution;
+import org.ginsim.core.notification.resolvable.NotificationResolution;
 
 import fr.univmrs.tagc.javaMDD.MDDFactory;
 import fr.univmrs.tagc.javaMDD.MDDOperator;
@@ -203,7 +203,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	 * @param id the new id.
 	 */
 	public boolean setId(String id) {
-		if (DataUtils.isValidId(id)) {
+		if (XMLWriter.isValidId(id)) {
 			this.id = id;
 			return true;
 		}

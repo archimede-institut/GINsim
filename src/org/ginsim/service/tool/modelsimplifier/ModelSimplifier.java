@@ -13,8 +13,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;

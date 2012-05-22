@@ -25,14 +25,14 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
-import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.Translator;
+import org.ginsim.commongui.dialog.GUIMessageUtils;
+import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.css.CascadingStyleSheetManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
-import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 
 

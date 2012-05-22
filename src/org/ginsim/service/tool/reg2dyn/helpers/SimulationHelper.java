@@ -1,6 +1,6 @@
 package org.ginsim.service.tool.reg2dyn.helpers;
 
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 

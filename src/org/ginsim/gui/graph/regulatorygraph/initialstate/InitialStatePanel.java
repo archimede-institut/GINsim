@@ -17,8 +17,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.table.TableColumn;
 
-import org.ginsim.common.utils.Translator;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.LogManager;
+import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;

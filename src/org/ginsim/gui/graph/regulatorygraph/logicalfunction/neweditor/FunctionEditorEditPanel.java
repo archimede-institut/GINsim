@@ -23,8 +23,8 @@ import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 import javax.swing.table.DefaultTableCellRenderer;
 
+import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.gui.resource.ImageLoader;
 import org.ginsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
 import org.ginsim.gui.tbclient.decotreetable.DTreeTableBuilder;
 import org.ginsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;

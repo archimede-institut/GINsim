@@ -53,7 +53,8 @@ import java.util.Map;
  * When you subclass DocumentWriter, you can overwrite newLine() or simply set a new value for the NEW_LINE variable.</p>
  * @see org.ginsim.common.document.DocumentStyle
  * 
- * @author Naldi Aurelien, Berenguier Duncan
+ * @author Naldi Aurelien
+ * @author Berenguier Duncan
  *
  */
 public abstract class DocumentWriter {

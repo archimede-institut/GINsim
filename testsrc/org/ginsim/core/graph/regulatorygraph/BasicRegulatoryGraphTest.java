@@ -9,8 +9,8 @@ import org.junit.Test;
 import java.awt.Color;
 import java.util.Set;
 
-import org.ginsim.common.OptionStore;
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.OptionStore;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.common.Graph;

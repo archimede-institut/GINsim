@@ -4,7 +4,7 @@ import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.HashMap;
 
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;

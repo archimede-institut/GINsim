@@ -6,9 +6,9 @@ import java.util.List;
 
 import javax.swing.Action;
 
-import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.LogManager;
+import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;

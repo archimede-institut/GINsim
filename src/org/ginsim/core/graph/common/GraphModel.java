@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
 import org.ginsim.core.annotation.Annotation;
 
 
@@ -60,7 +60,7 @@ public interface GraphModel<V,E extends Edge<V>> {
      * @param graphName the new name.
      * @throws GsException if the name is invalid.
      */
-    void setGraphName( String graph_name) throws GsException;
+    void setGraphName( String graphName) throws GsException;
     
     
     //----------------------   GRAPH SAVING MANAGEMENT METHODS -------------------------------

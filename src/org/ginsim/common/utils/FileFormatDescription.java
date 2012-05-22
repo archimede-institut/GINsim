@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.LogManager;
 
 /**
  * Simple description of a file format.
@@ -51,8 +51,8 @@ public class FileFormatDescription {
 
 	/**
 	 * Retrieve a format by id.
-	 * @param id
-	 * @return
+	 * @param id a format identifier
+	 * @return the Format corresponding to this identifier
 	 */
 	public static FileFormatDescription getFormat(String id) {
 		return getFormat( FileFormatDescription.class, id);
@@ -63,7 +63,7 @@ public class FileFormatDescription {
 	 * 
 	 * @param cl
 	 * @param id
-	 * @return
+	 * @return the corresponding format
 	 */
 	public static <C extends FileFormatDescription> C getFormat( Class<C> cl, String id) {
 		for (FileFormatDescription d: ALL_FORMATS) {
@@ -78,7 +78,7 @@ public class FileFormatDescription {
 	 * Retrieve all formats of a given subclass.
 	 * 
 	 * @param cl
-	 * @return
+	 * @return the list of matching formats
 	 */
 	public static <C extends FileFormatDescription> Collection<C> getFormats( Class<C> cl) {
 		List<C> l = null;

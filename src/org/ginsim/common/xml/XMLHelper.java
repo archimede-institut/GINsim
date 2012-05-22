@@ -13,7 +13,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
 import org.ginsim.common.utils.IOUtils;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;

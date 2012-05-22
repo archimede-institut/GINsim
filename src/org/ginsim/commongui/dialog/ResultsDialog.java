@@ -14,12 +14,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
-import org.ginsim.common.utils.Translator;
-
+import org.ginsim.common.application.Translator;
 
 /**
  * A small dialog to display a textarea with a close button.
  *
+ * @author Duncan Berenguier
  */
 public class ResultsDialog extends SimpleDialog {
 	private static final long serialVersionUID = -4012429687480688324L;

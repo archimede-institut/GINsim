@@ -6,9 +6,9 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 
-import org.ginsim.common.exception.GsException;
-import org.ginsim.core.graph.GinmlParser;
+import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.io.parser.GinmlParser;
 import org.ginsim.service.export.nusmv.NuSMVConfig;
 import org.ginsim.service.export.nusmv.NuSMVEncoder;
 import org.junit.Assert;

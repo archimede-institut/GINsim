@@ -2,9 +2,9 @@ package org.ginsim.gui.service.common;
 
 import java.awt.event.ActionEvent;
 
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.FileFormatDescription;
-import org.ginsim.common.utils.log.LogManager;
 import org.ginsim.commongui.utils.FileFormatFilter;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.notification.NotificationManager;

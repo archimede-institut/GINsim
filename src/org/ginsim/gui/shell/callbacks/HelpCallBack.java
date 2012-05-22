@@ -8,10 +8,10 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
-import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.common.utils.IOUtils;
-import org.ginsim.common.utils.Translator;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.LogManager;
+import org.ginsim.common.application.Translator;
+import org.ginsim.common.utils.OpenUtils;
+import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.gui.shell.AboutDialog;
 import org.ginsim.gui.shell.FileSelectionHelper;
 
@@ -59,7 +59,7 @@ class HelpAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO: search for local help
-		IOUtils.openURI("http://gin.univ-mrs.fr/GINsim/doc.html");
+		OpenUtils.openURI("http://gin.univ-mrs.fr/GINsim/doc.html");
 		// GsEnv.error(new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_docPathError")), null);
 	}
 }

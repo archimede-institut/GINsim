@@ -4,13 +4,19 @@ import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.IOUtils;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.utils.OpenUtils;
 import org.ginsim.common.xml.CallDescription;
 import org.ginsim.common.xml.CallMode;
 import org.ginsim.common.xml.XMLHelper;
 import org.xml.sax.Attributes;
 
+/**
+ * Parse the list of MIRIAM databases and add custom aliases for backward compatibility.
+ * 
+ * @author Aurelien Naldi
+ */
 public class MiriamURNHelper {
 
 	private static boolean init = false;
@@ -25,9 +31,9 @@ public class MiriamURNHelper {
 		parse("miriam.xml");
 		
 		// add some aliases
-		IOUtils.addHelperClassAlias("pmid", "pubmed");
-		IOUtils.addHelperClassAlias("hugo", "hgnc");
-		IOUtils.addHelperClassAlias("entrez", "entrez.gene");
+		OpenUtils.addHelperClassAlias("pmid", "pubmed");
+		OpenUtils.addHelperClassAlias("hugo", "hgnc");
+		OpenUtils.addHelperClassAlias("entrez", "entrez.gene");
 	}
 	
 	private static void parse(String filename) {

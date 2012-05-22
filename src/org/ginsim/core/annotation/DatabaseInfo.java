@@ -1,8 +1,15 @@
 package org.ginsim.core.annotation;
 
-import org.ginsim.common.OpenHelper;
-import org.ginsim.common.utils.IOUtils;
+import org.ginsim.common.utils.OpenUtils;
+import org.ginsim.common.utils.OpenHelper;
 
+/**
+ * MIRIAM-based OpenHelper: open MIRIAM URNs
+ * MIRIAM provides a list of biological databases and the identifiers.org webservice
+ * to open generic links (Database, identifier pairs) in these databases (supporting mirrors)
+ * 
+ * @author Aurelien Naldi
+ */
 public class DatabaseInfo implements OpenHelper {
 
 	public final String name;
@@ -12,16 +19,16 @@ public class DatabaseInfo implements OpenHelper {
 		this.name = name;
 		this.description = description;
 		
-		IOUtils.addHelperClass(name, this);
+		OpenUtils.addHelperClass(name, this);
 	}
 	
 	public void open() {
-		IOUtils.openURI("http://identifiers.org/"+name);
+		OpenUtils.openURI("http://identifiers.org/"+name);
 	}
 	
 	@Override
 	public boolean open(String proto, String value) {
-	    return IOUtils.openURI(getLink(proto, value));
+	    return OpenUtils.openURI(getLink(proto, value));
 	}
 
 	@Override

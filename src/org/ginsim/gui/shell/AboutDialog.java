@@ -15,11 +15,12 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
-import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.application.GsException;
 import org.ginsim.common.utils.IOUtils;
+import org.ginsim.common.utils.OpenUtils;
 import org.ginsim.common.xml.XMLHelper;
-import org.ginsim.gui.resource.ImageLoader;
+import org.ginsim.commongui.dialog.GUIMessageUtils;
+import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.gui.utils.widgets.Frame;
 import org.xml.sax.Attributes;
 
@@ -177,7 +178,7 @@ public class AboutDialog extends Frame implements HyperlinkListener {
 	 */
 	public void hyperlinkUpdate(HyperlinkEvent event) {
 		if (event.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-			IOUtils.openURI(event.getDescription());
+			OpenUtils.openURI(event.getDescription());
 		}
 	}
 

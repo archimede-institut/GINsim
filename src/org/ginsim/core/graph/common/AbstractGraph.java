@@ -20,8 +20,8 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphBackend;
@@ -34,8 +34,17 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 
-
-
+/**
+ * Base class for graphs using a storage backend: it provides generic methods and storage abstraction.
+ * The actual structure is stored in the graph backend, and classes deriving from this one
+ * can provide specialised methods.
+ * 
+ * @author Lionel Spinelli
+ * @author Aurelien Naldi
+ *
+ * @param <V>
+ * @param <E>
+ */
 abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E> {
 	
 	private final GraphBackend<V,E> graphBackend;
@@ -216,7 +225,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	
 	/**
 	 * Hack required to forward the back-end to the GUI...
-	 * @return
+	 * @return the backend in use
 	 */
 	public GraphBackend<V, E> getBackend() {
 		return graphBackend;

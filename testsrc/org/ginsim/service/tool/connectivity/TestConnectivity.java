@@ -8,7 +8,7 @@ import java.awt.Color;
 import java.util.Set;
 import java.util.Vector;
 
-import org.ginsim.common.OptionStore;
+import org.ginsim.common.application.OptionStore;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.common.Graph;

@@ -5,7 +5,7 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.JSplitPane;
 
-import org.ginsim.common.OptionStore;
+import org.ginsim.common.application.OptionStore;
 
 
 

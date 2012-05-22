@@ -11,9 +11,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
 
-import org.ginsim.common.exception.GsException;
-import org.ginsim.common.utils.GUIMessageUtils;
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.LogManager;
+import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
@@ -27,7 +27,7 @@ import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.io.parser.GsXMLHelper;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.core.notification.resolvable.resolution.InvalidFunctionResolution;
+import org.ginsim.core.notification.resolvable.InvalidFunctionResolution;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -405,7 +405,8 @@ public final class RegulatoryParser extends GsXMLHelper {
     				LogManager.error( " Edge = " + entry.getKey().getShortDetail());
     				LogManager.error( "   Pased max value = " + entry.getValue());  
     			}
-    			throw new SAXException( new GsException( GsException.GRAVITY_ERROR, "Interaction inconsistency detected"));
+    			// TODO: should we report something to the user here?
+    			// throw new SAXException( new GsException( GsException.GRAVITY_ERROR, "Interaction inconsistency detected"));
     		}
     	}
 

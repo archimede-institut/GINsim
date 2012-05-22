@@ -5,7 +5,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import org.ginsim.common.utils.Translator;
+import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeNode;

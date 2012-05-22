@@ -2,7 +2,7 @@ package org.ginsim.gui.graph;
 
 import javax.swing.ImageIcon;
 
-import org.ginsim.gui.resource.ImageLoader;
+import org.ginsim.commongui.utils.ImageLoader;
 
 
 /**

@@ -8,8 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.ginsim.common.ColorPalette;
-import org.ginsim.common.utils.GUIMessageUtils;
+import org.ginsim.common.utils.ColorPalette;
+import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;

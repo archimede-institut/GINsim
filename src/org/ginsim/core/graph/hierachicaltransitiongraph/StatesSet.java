@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.xml.sax.SAXException;
 

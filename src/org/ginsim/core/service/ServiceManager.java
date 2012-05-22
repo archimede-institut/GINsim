@@ -6,7 +6,7 @@ import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.Set;
 
-import org.ginsim.common.utils.log.LogManager;
+import org.ginsim.common.application.LogManager;
 
 
 /**
@@ -99,7 +99,7 @@ public class ServiceManager{
 	 * Give access to the service by service class
 	 * 
 	 * @param service_class
-	 * @return
+	 * @return the service or null if not found
 	 */
 	public <S extends Service> S getService( Class<S> service_class){
 		
@@ -110,7 +110,7 @@ public class ServiceManager{
 	 * Give access to the service by service name 
 	 * 
 	 * @param service_class
-	 * @return
+	 * @return the service or null if not found
 	 */
 	public Service getService( String name){
 		
@@ -121,7 +121,7 @@ public class ServiceManager{
 	 * Get a service directly, i.e. shortcut for getManager().getService( service_class)
 	 * 
 	 * @param service_class
-	 * @return
+	 * @return the service or null if not found
 	 */
 	public static <S extends Service> S get( Class<S> service_class) {
 		return getManager().getService( service_class);
@@ -131,7 +131,7 @@ public class ServiceManager{
 	 * Get a service directly, i.e. shortcut for getManager().getService( name)
 	 * 
 	 * @param name
-	 * @return
+	 * @return the service or null if not found
 	 */
 	public static Service get( String name) {
 		return getManager().getService( name);

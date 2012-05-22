@@ -3,7 +3,7 @@ package org.ginsim.core.graph.objectassociation;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 
-import org.ginsim.common.exception.GsException;
+import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.common.Graph;
 
 /**
@@ -52,7 +52,7 @@ public interface GraphAssociatedObjectManager {
 	 * get the existing associated object for a graph
 	 * 
 	 * @param graph
-	 * @return
+	 * @return the existing object, or null if not created
 	 */
 	Object getObject( Graph graph);
 }
