@@ -224,15 +224,6 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 
 	
 	/**
-	 * Hack required to forward the back-end to the GUI...
-	 * @return the backend in use
-	 */
-	public GraphBackend<V, E> getBackend() {
-		return graphBackend;
-	}
-
-	
-	/**
 	 * @return the number of node in this graph.
 	 */
 	@Override
