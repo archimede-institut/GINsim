@@ -7,7 +7,12 @@ import java.util.Map;
 import org.ginsim.common.utils.OpenUtils;
 import org.ginsim.common.utils.OpenHelper;
 
-
+/**
+ * OpenHelper for generic HTTP links.
+ * It also adds a "wp" shortcut for wikipedia pages. 
+ * 
+ * @author Aurelien Naldi
+ */
 public class HttpHelper implements OpenHelper {
 
   static Map<String,String> m_proto = new HashMap<String,String>();

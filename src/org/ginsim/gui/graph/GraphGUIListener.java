@@ -1,6 +1,6 @@
 package org.ginsim.gui.graph;
 
-import org.ginsim.core.GraphEventCascade;
+import org.ginsim.core.graph.GraphEventCascade;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;

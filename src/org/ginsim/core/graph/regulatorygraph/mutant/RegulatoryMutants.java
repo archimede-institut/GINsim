@@ -2,7 +2,7 @@ package org.ginsim.core.graph.regulatorygraph.mutant;
 
 import java.util.Vector;
 
-import org.ginsim.core.GraphEventCascade;
+import org.ginsim.core.graph.GraphEventCascade;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphListener;

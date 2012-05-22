@@ -1,10 +1,11 @@
 package org.ginsim.core.graph.common;
 
-import org.ginsim.core.GraphEventCascade;
-
+import org.ginsim.core.graph.GraphEventCascade;
 
 /**
- * listen graph events
+ * Listen to graph edit events.
+ * 
+ * @author Aurelien Naldi
  */
 public interface GraphListener<G extends GraphModel<?,?>> {
 

@@ -23,7 +23,7 @@ import org.ginsim.common.utils.OpenHelper;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
-import org.ginsim.core.GraphEventCascade;
+import org.ginsim.core.graph.GraphEventCascade;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
@@ -38,8 +38,11 @@ import bibtex.dom.BibtexEntry;
 import bibtex.dom.BibtexFile;
 import bibtex.parser.BibtexParser;
 
-
-
+/**
+ * Bibliography: list of bibliographic entries.
+ * 
+ * @author Aurelien Naldi
+ */
 public class BiblioList implements XMLize, OpenHelper, GraphListener<GraphModel<?, ?>> {
 
 	private final Map<String, Date> files = new TreeMap<String, Date>();

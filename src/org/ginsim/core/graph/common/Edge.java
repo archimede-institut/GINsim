@@ -1,10 +1,12 @@
 package org.ginsim.core.graph.common;
 
+import org.ginsim.common.utils.ToolTipsable;
+
 
 /**
  * Base class for all edges: store the source and target nodes.
- * (Just a wrapper around GsDirectedEdge, waiting to be renamed...
  * 
+ * @author Lionel Spinelli
  * @author Aurelien Naldi
  *
  * @param <V> the node type
@@ -24,10 +26,20 @@ public class Edge<V> implements ToolTipsable {
     	this.target = g == null ? target : g.getExistingNode(target);
     }
 
+    /**
+     * Get the source of this edge.
+     * 
+     * @return the source node
+     */
     public V getSource() {
         return source;
     }
 
+    /**
+     * Get the target of this edge.
+     * 
+     * @return the target node.
+     */
     public V getTarget() {
         return target;
     }
@@ -35,4 +47,5 @@ public class Edge<V> implements ToolTipsable {
     @Override
 	public String toToolTip() {
 		return "";
-	}}
+	}
+}

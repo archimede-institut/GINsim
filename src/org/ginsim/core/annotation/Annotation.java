@@ -11,7 +11,9 @@ import org.ginsim.core.graph.common.Graph;
 
 
 /**
- * Annotation for Gene : contains text and a list of url
+ * Annotation for Gene : contains text and a list of url.
+ * 
+ * @author Aurelien Naldi
  */
 public class Annotation implements XMLize
 {

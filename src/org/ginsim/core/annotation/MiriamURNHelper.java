@@ -12,6 +12,11 @@ import org.ginsim.common.xml.CallMode;
 import org.ginsim.common.xml.XMLHelper;
 import org.xml.sax.Attributes;
 
+/**
+ * Parse the list of MIRIAM databases and add custom aliases for backward compatibility.
+ * 
+ * @author Aurelien Naldi
+ */
 public class MiriamURNHelper {
 
 	private static boolean init = false;

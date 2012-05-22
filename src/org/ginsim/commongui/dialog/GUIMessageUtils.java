@@ -6,7 +6,11 @@ import javax.swing.JOptionPane;
 
 import org.ginsim.common.application.Translator;
 
-
+/**
+ * Wrappers to create error and message dialogs.
+ * 
+ * @author Lionel Spinelli
+ */
 public class GUIMessageUtils {
 
 	/**

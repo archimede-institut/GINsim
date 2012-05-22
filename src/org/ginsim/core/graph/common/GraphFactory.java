@@ -1,7 +1,13 @@
 package org.ginsim.core.graph.common;
 
+/**
+ * Factory to open or create specialised gryph instances.
+ * 
+ * @author Aurelien Naldi
+ *
+ * @param <G>
+ */
 public interface GraphFactory<G extends Graph<?,?>> {
-	
 	
     /**
      * Return the class of graph this factory is managing
@@ -31,12 +37,5 @@ public interface GraphFactory<G extends Graph<?,?>> {
      * @return an instance of the graph type the factory is managing
      */
 	public G create();
-
-    /**
-     * Create a new graph of the type factory is managing
-     * 
-     * @return an instance of the graph type the factory is managing
-     */
-//	public G create(Object parameter);
 
 }

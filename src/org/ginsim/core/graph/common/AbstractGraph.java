@@ -34,8 +34,17 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 
-
-
+/**
+ * Base class for graphs using a storage backend: it provides generic methods and storage abstraction.
+ * The actual structure is stored in the graph backend, and classes deriving from this one
+ * can provide specialised methods.
+ * 
+ * @author Lionel Spinelli
+ * @author Aurelien Naldi
+ *
+ * @param <V>
+ * @param <E>
+ */
 abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E> {
 	
 	private final GraphBackend<V,E> graphBackend;

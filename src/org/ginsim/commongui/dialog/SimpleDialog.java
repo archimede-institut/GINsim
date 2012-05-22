@@ -12,7 +12,14 @@ import javax.swing.KeyStroke;
 
 import org.ginsim.common.application.OptionStore;
 
-
+/**
+ * Base dialog which can remember its default size.
+ * To restore its size, it must be named, and relies on the OptionStore.
+ * 
+ * This dialog handles close events. The close callback is also triggered by pressing "escape".
+ * 
+ * @author Aurelien Naldi
+ */
 public abstract class SimpleDialog extends JDialog {
 	private static final long	serialVersionUID	= -460464845250055098L;
 
@@ -21,7 +28,7 @@ public abstract class SimpleDialog extends JDialog {
 	Action actionListener = new AbstractAction() {
 		private static final long serialVersionUID = 448859746054492959L;
 		public void actionPerformed(ActionEvent actionEvent) {
-			escape();
+			closeEvent();
 		}
 	};
       
@@ -57,10 +64,6 @@ public abstract class SimpleDialog extends JDialog {
 		OptionStore.setOption(id+".width", new Integer(getWidth()));
 		OptionStore.setOption(id+".height", new Integer(getHeight()));
 		doClose();
-	}
-	
-	protected void escape() {
-		closeEvent();
 	}
 	
 	abstract public void doClose();

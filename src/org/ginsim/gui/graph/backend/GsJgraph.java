@@ -5,8 +5,8 @@ import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
 
 import org.ginsim.common.application.OptionStore;
+import org.ginsim.common.utils.ToolTipsable;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.ToolTipsable;
 import org.jgraph.JGraph;
 import org.jgraph.graph.CellViewFactory;
 import org.jgraph.graph.DefaultGraphCell;

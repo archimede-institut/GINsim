@@ -10,7 +10,11 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
 import org.xml.sax.Attributes;
 
-
+/**
+ * Associated data manager to save and restore bibliographies.
+ * 
+ * @author Aurelien Naldi
+ */
 public class BiblioManager extends BasicGraphAssociatedManager {
 
 	public static final String KEY = "biblio";

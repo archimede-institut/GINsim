@@ -9,7 +9,12 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 
 
-
+/**
+ * A link in an annotation.
+ * It has a "protocol" (database, bibliography, normal link) and a value (ID or real value).
+ * 
+ * @author Aurelien Naldi
+ */
 public class AnnotationLink {
 	
 	protected static Map m_helper = new HashMap();

@@ -19,7 +19,7 @@ import org.xml.sax.SAXException;
 
 
 /**
- * parses a ginml regulatory graph.
+ * parses a ginml file containing a STG.
  */
 public final class DynamicParser extends GsXMLHelper {
     

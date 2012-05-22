@@ -3,6 +3,13 @@ package org.ginsim.core.annotation;
 import org.ginsim.common.utils.OpenUtils;
 import org.ginsim.common.utils.OpenHelper;
 
+/**
+ * MIRIAM-based OpenHelper: open MIRIAM URNs
+ * MIRIAM provides a list of biological databases and the identifiers.org webservice
+ * to open generic links (Database, identifier pairs) in these databases (supporting mirrors)
+ * 
+ * @author Aurelien Naldi
+ */
 public class DatabaseInfo implements OpenHelper {
 
 	public final String name;

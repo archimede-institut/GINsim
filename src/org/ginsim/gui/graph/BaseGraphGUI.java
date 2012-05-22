@@ -17,7 +17,7 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
-import org.ginsim.core.GraphEventCascade;
+import org.ginsim.core.graph.GraphEventCascade;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.backend.JgraphtBackendImpl;

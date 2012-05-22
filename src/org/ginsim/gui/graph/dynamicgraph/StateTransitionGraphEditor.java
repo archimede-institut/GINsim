@@ -5,8 +5,8 @@ import java.awt.GridBagConstraints;
 
 import org.ginsim.common.application.Translator;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.GraphEventCascade;
 import org.ginsim.core.annotation.Annotation;
+import org.ginsim.core.graph.GraphEventCascade;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphListener;

@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.common;
+package org.ginsim.common.utils;
 
 /**
  * interface for "tooltipsables" objects

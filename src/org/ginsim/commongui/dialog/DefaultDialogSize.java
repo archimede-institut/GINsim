@@ -1,5 +1,10 @@
 package org.ginsim.commongui.dialog;
 
+/**
+ * Simple structure to store and remember the default size of a dialog.
+ * 
+ * @author Aurelien Naldi
+ */
 public class DefaultDialogSize {
 
 	public final String ID;
