@@ -43,12 +43,10 @@ import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 import org.ginsim.service.tool.reg2dyn.htg.HTGSimulation;
 
 
-
-
 /**
  * The frame displayed to the user when he want to run a simulation
  */
-public class SingleSimulationFrame extends BaseSimulationFrame implements ListSelectionListener{
+public class SingleSimulationFrame extends BaseSimulationFrame implements ListSelectionListener {
 	private static final long serialVersionUID = 8687415239702718705L;
 	
 	private static final String[] simulationMethodsNames = {Translator.getString("STR_STG"), Translator.getString("STR_SCCG"), Translator.getString("STR_HTG")};
@@ -349,11 +347,8 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 	
 /* *************** RUN AND SIMULATION **********************/
 
-	/**
-	 * simulation is done (or interrupted), now choose what to do with the new graph.
-	 * @param graph the dynamic graph
-	 */
-	public void endSimu( Graph graph) {
+	@Override
+	public void setResult( Graph graph) {
 		isrunning = false;
 		if (null == graph) {
 			GUIMessageUtils.openErrorDialog("no graph generated", regGraphFrame);
@@ -363,9 +358,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 		cancel();
 	}
 
-	/**
-	 * close the frame, eventually end the simulation first 
-	 */
+	@Override
 	protected void cancel() {
 		if (isrunning) {
 			sim.interrupt();	
@@ -376,6 +369,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 		OptionStore.setOption(id+".height", new Integer(getHeight()));
 		super.cancel();
 	}
+	@Override
 	protected void run() {
 		if (currentParameter == null) return;
 		setMessage(Translator.getString("STR_wait_msg"));
@@ -504,7 +498,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 	}
 
 	@Override
-	public void addStableState(SimulationQueuedState item) {
+	public void milestone(Object item) {
 	}
 
 }

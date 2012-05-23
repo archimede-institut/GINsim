@@ -8,9 +8,10 @@ import java.util.Map;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
+import org.ginsim.common.callable.ProgressListener;
+import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNodeSet;
-import org.ginsim.service.tool.reg2dyn.SimulationManager;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
 
@@ -49,13 +50,13 @@ public class TarjanSimulation {
 
 	private int nbnode;
 
-	private final SimulationManager frame;
+	private final ProgressListener<Graph> frame;
 	
 	private long queueSearchCount = 0;
 	protected Map<SimpleState, HTGSimulationQueueState> inQueue; 
 	
 
-	public TarjanSimulation(HTGSimulation htgSimulation, SimulationManager frame) {
+	public TarjanSimulation(HTGSimulation htgSimulation, ProgressListener<Graph> frame) {
 		this.htgSimulation = htgSimulation;
 		this.frame = frame;
 		nbnode = 0;

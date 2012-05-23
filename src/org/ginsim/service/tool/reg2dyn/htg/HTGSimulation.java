@@ -9,6 +9,7 @@ import java.util.Set;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
+import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
@@ -20,7 +21,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.service.tool.reg2dyn.Simulation;
-import org.ginsim.service.tool.reg2dyn.SimulationManager;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 import org.ginsim.service.tool.reg2dyn.helpers.HTGSimulationHelper;
@@ -102,8 +102,8 @@ public class HTGSimulation extends Simulation {
 	protected NodeAttributesReader vreader;
 
 	
-	public HTGSimulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params) {
-		super(regGraph, frame, params);
+	public HTGSimulation(RegulatoryGraph regGraph, ProgressListener<Graph> plist, SimulationParameters params) {
+		super(regGraph, plist, params);
 		
 		helper = new HTGSimulationHelper(regGraph, params);
 		this.params = params;

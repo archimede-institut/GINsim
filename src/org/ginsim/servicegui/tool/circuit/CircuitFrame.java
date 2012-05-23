@@ -412,7 +412,13 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         }
     }
 
-    public void setProgressText(String text) {
+    @Override
+    public void setProgress(int n) {
+        setProgress(""+n);
+    }
+
+    @Override
+    public void setProgress(String text) {
         getLabelProgression().setText(text);
     }
 
@@ -431,7 +437,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
             break;
         case STATUS_SHOW_CIRCUIT:
             this.status = status;
-            setProgressText("Number of circuits satisfying the requirements: "+ v_circuit.size());
+            setProgress("Number of circuits satisfying the requirements: "+ v_circuit.size());
             setRunText(Translator.getString("STR_circuit_analyse"), Translator.getString("STR_circuit_analyse_tooltip"));
             break;
         }
@@ -832,6 +838,10 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 
 	@Override
 	public void deleteNotification(Notification message) {
+	}
+
+	@Override
+	public void milestone(Object data) {
 	}
 }
 

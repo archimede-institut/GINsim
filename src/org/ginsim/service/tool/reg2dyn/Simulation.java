@@ -8,6 +8,7 @@ import java.util.Map;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
+import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -27,7 +28,7 @@ public class Simulation implements Runnable {
 
 	protected LinkedList queue = new LinkedList(); // exploration queue
 
-	protected SimulationManager frame;
+	protected ProgressListener<Graph> frame;
 	protected int maxnodes, maxdepth;
 	protected Iterator<byte[]> initStatesIterator;
 	protected SimulationHelper helper;
@@ -44,7 +45,7 @@ public class Simulation implements Runnable {
 	 * @param frame
 	 * @param params
 	 */
-    public Simulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params) {
+    public Simulation(RegulatoryGraph regGraph, ProgressListener<Graph> frame, SimulationParameters params) {
 		this.frame = frame;
 		this.maxdepth = params.maxdepth;
 		this.maxnodes = params.maxnodes;
@@ -71,7 +72,7 @@ public class Simulation implements Runnable {
     public void run() {
     	
     	try{
-    		frame.endSimu( do_simulation());
+    		frame.setResult( do_simulation());
     	}
     	catch ( GsException ge) {
     		GUIMessageUtils.openErrorDialog( "Unable to launch the simulation");
@@ -126,7 +127,7 @@ public class Simulation implements Runnable {
 						updater.setState(item.state, item.depth, helper.getNode());
 						if (!updater.hasNext()) {
 							helper.setStable();
-							frame.addStableState(item);
+							frame.milestone(item);
 							String display = "";
 							for (int i=0 ; i<item.state.length ; i++ ) {
 								display += item.state[i] + " ";
