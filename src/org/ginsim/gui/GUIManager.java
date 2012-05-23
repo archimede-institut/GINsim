@@ -23,6 +23,7 @@ import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.GraphGUIHelperFactory;
 import org.ginsim.gui.graph.backend.JgraphGUIImpl;
 import org.ginsim.gui.graph.canvas.CanvasGraphGUIImpl;
+import org.ginsim.gui.shell.AboutDialog;
 import org.ginsim.gui.shell.MainFrame;
 import org.ginsim.gui.shell.StartupDialog;
 import org.ginsim.gui.utils.widgets.Frame;
@@ -59,6 +60,20 @@ public class GUIManager {
 		}
 	}
 
+	/**
+	 * Load a graph from a GINML file and open a new frame for it.
+	 * 
+	 * @param filename
+	 */
+	public void loadGINMLfile(String filename) {
+		try {
+			Graph<?,?> graph = GraphManager.getInstance().open(filename);
+			newFrame( graph);
+		} catch (GsException e) {
+			LogManager.error(e);
+		}
+	}
+	
 	/**
 	 * Create a new graph (of the default type, i.e. a regulatory graph)
 	 * and then a new frame for it.
@@ -565,5 +580,12 @@ public class GUIManager {
 		if (graphToGUIObject.size() == 0) {
 			exit();
 		}
+	}
+
+	/**
+	 * Show an "about" dialog
+	 */
+	public void about() {
+		new AboutDialog().setVisible(true);
 	}
 }

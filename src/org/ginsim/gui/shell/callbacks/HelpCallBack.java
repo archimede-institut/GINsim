@@ -12,6 +12,7 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
 import org.ginsim.common.utils.OpenUtils;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
+import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.shell.AboutDialog;
 import org.ginsim.gui.shell.FileSelectionHelper;
 
@@ -47,7 +48,7 @@ class AboutAction extends AbstractAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		new AboutDialog().setVisible(true);
+		GUIManager.getInstance().about();
 	}
 }
 

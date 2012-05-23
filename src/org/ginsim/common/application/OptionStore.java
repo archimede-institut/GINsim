@@ -44,14 +44,14 @@ public class OptionStore extends DefaultHandler {
     	
     	String home = System.getProperty("user.home");
     	String prefix = home;
-    	switch (CurrentOS.os) {
-		case CurrentOS.SYS_MACOSX:
+    	switch (CurrentOS.CURRENT_OS) {
+		case MACOSX:
 			prefix = home+"/Library/Preferences/";
 			break;
-		case CurrentOS.SYS_LINUX:
+		case LINUX:
 			prefix = home+"/.config/";
 			break;
-		case CurrentOS.SYS_WINDOWS:
+		case WINDOWS:
 			prefix = home+"\\Application Data\\";
 			break;
 		}
