@@ -345,15 +345,15 @@ public final class SBMLXpathParser {
 							}
 							
 							Attribute att_sign = input.getAttribute( "sign", namespace);
-							if( att_sign != null) {
-								inputClass.setSign( att_sign.getValue());
-							}
 							
 							/**
 							 * Add input <element> to input list
 							 */
 							transitionClass.addInput(inputClass);
-							intput_to_sign.put( att_qual.getValue(), att_sign.getValue());
+							if( att_sign != null) {
+								inputClass.setSign( att_sign.getValue());
+								intput_to_sign.put( att_qual.getValue(), att_sign.getValue());
+							}
 							
 						} // for every <input>
 
