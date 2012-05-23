@@ -219,11 +219,12 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 
         switch (mode) {
 	    	case 2:
-	    	    EdgeAttributesReader ereader = getEdgeAttributeReader();
+	    	    EdgeAttributesReader ereader = getCachedEdgeAttributeReader();
+	    	    NodeAttributesReader nreader = getCachedNodeAttributeReader();
 		        while (it.hasNext()) {
 		        	RegulatoryMultiEdge edge = it.next();
 		            ereader.setEdge(edge);
-		            edge.toXML(out, GinmlHelper.getEdgeVS(ereader), mode);
+		            edge.toXML(out, GinmlHelper.getEdgeVS(ereader, nreader, edge), mode);
 		        }
 		        break;
         	default:

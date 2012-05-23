@@ -196,7 +196,8 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
         	edges = getEdges();
         }
 
-        EdgeAttributesReader eReader = getEdgeAttributeReader();
+        EdgeAttributesReader eReader = getCachedEdgeAttributeReader();
+        NodeAttributesReader nReader = getCachedNodeAttributeReader();
         
         switch (mode) {
         	case 2:
@@ -205,7 +206,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 		            String source = edge.getSource().toString();
 		            String target = edge.getTarget().toString();
 		            out.write("\t\t<edge id=\"s"+ source +"_s"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\">\n");
-		            out.write(GinmlHelper.getEdgeVS(eReader));
+		            out.write(GinmlHelper.getEdgeVS(eReader, nReader, edge));
 		            out.write("</edge>");
 		        }
         	    break;

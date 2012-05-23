@@ -95,7 +95,7 @@ public class GinmlHelper {
     				String[] ts = s.split(" ");
     			    try {
     					List l = new ArrayList();
-    					for (int j=0 ; j<ts.length ; j++) {
+    					for (int j=1 ; j<ts.length-1 ; j++) {
     					    String[] t_point = ts[j].split(",");
     				        l.add(new Point(Integer.parseInt(t_point[0]),Integer.parseInt(t_point[1])));
     					}
@@ -116,15 +116,11 @@ public class GinmlHelper {
 		}
 	}
 
-	/**
-	 * @param eReader
-	 * @return the corresponding ginml String
-	 */
-	public static String getEdgeVS(EdgeAttributesReader eReader) {
+	public static String getEdgeVS(EdgeAttributesReader eReader, NodeAttributesReader nReader, Edge edge) {
         String svs = "\t\t\t<edgevisualsetting>\n";
         svs += "\t\t\t\t<polyline";
         String s = "";
-        List l_point = eReader.getPoints();
+        List l_point = ViewHelper.getPoints(nReader, eReader, edge);
         if (l_point != null) {
             for (int i=0 ; i<l_point.size() ; i++) {
                 Point2D pt = (Point2D)l_point.get(i); 

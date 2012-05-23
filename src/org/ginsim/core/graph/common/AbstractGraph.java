@@ -54,6 +54,9 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     private Map<Edge<?>,EdgeVSdata> evsmap = null;
     private Map<Object, NodeVSdata> vvsmap = null;
 
+    // cache attribute readers for internal usage
+    private EdgeAttributesReader cachedEReader = null;
+    private NodeAttributesReader cachedNReader = null;
     
 	// The name of the graph
 	protected String graphName = "default_name";
@@ -404,6 +407,21 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	@Override
 	public NodeAttributesReader getNodeAttributeReader() {
 		return new NodeAttributeReaderImpl(this, getNodeVSMap());
+	}
+	
+	
+	protected EdgeAttributesReader getCachedEdgeAttributeReader() {
+		if (cachedEReader == null) {
+			cachedEReader = getEdgeAttributeReader();
+		}
+		return cachedEReader;
+	}
+	
+	protected NodeAttributesReader getCachedNodeAttributeReader() {
+		if (cachedNReader == null) {
+			cachedNReader = getNodeAttributeReader();
+		}
+		return cachedNReader;
 	}
 	
 	public Dimension getDimension() {
