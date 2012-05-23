@@ -168,32 +168,25 @@ public class GinmlHelper {
 	 * @return the corresponding ginml String
 	 */
 	public static String getFullNodeVS(NodeAttributesReader vReader) {
-        String svs = "\t\t\t<nodevisualsetting>\n";
-        switch (vReader.getShape()) {
-        	case RECTANGLE:
-        		svs += "\t\t\t\t<rect x=\""+vReader.getX()+
-					"\" y=\""+vReader.getY()+
-					"\" width=\""+vReader.getWidth()+
-					"\" height=\""+vReader.getHeight()+
-					"\" backgroundColor=\"#"+ ColorPalette.getColorCode(vReader.getBackgroundColor()) +
-					"\" foregroundColor=\"#"+ColorPalette.getColorCode(vReader.getForegroundColor()) +
-					"\" textColor=\"#"+ColorPalette.getColorCode(vReader.getTextColor()) +
-					"\"/>\n";
-        		break;
-            case ELLIPSE:
-        		svs += "\t\t\t\t<ellipse x=\""+vReader.getX()+
-				"\" y=\""+vReader.getY()+
-				"\" width=\""+vReader.getWidth()+
-				"\" height=\""+vReader.getHeight()+
-				"\" backgroundColor=\"#"+ ColorPalette.getColorCode(vReader.getBackgroundColor()) +
-				"\" foregroundColor=\"#"+ColorPalette.getColorCode(vReader.getForegroundColor()) +
-				"\" textColor=\"#"+ColorPalette.getColorCode(vReader.getTextColor()) +
-				"\"/>\n";
-        		break;
-        	default:
-        		svs += "\t\t\t\t<rect x=\""+vReader.getX()+"\" y=\""+vReader.getY()+"\"/>\n";	
+        StringBuffer svs = new StringBuffer("\t\t\t<nodevisualsetting>\n\t\t\t\t<");
+        if (vReader.getShape() == NodeShape.ELLIPSE) {
+        	svs.append("ellipse");
+        } else {
+        	svs.append("rect");
         }
-        svs += "\t\t\t</nodevisualsetting>\n";
-        return svs;
+		svs.append(" x=\""+vReader.getX()+
+			"\" y=\""+vReader.getY()+
+			"\" width=\""+vReader.getWidth()+
+			"\" height=\""+vReader.getHeight()+
+			"\" backgroundColor=\"#"+ ColorPalette.getColorCode(vReader.getBackgroundColor())
+		);
+		Color fg = vReader.getForegroundColor();
+		Color txt = vReader.getTextColor();
+		svs.append("\" foregroundColor=\"#"+ColorPalette.getColorCode(fg));
+		if (!txt.equals(fg)) {
+			svs.append("\" textColor=\"#"+ColorPalette.getColorCode(txt));
+		}
+		svs.append("\"/>\n\t\t\t</nodevisualsetting>\n");
+        return svs.toString();
 	}
 }
