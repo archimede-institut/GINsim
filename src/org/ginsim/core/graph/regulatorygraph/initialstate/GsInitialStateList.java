@@ -16,7 +16,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 public class GsInitialStateList implements GraphListener<RegulatoryGraph> {
 	RegulatoryGraph graph;
 
-	List nodeOrder;
     List inputNodes = new ArrayList();
     List normalNodes = new ArrayList();
 
@@ -26,7 +25,6 @@ public class GsInitialStateList implements GraphListener<RegulatoryGraph> {
     public GsInitialStateList( Graph<?,?> graph) {
     	
         this.graph = (RegulatoryGraph) graph;
-    	nodeOrder = this.graph.getNodeOrder();
         GraphManager.getInstance().addGraphListener( (RegulatoryGraph)graph, this);
         updateLists();
         
@@ -37,9 +35,7 @@ public class GsInitialStateList implements GraphListener<RegulatoryGraph> {
 	private void updateLists() {
 	    inputNodes.clear();
 	    normalNodes.clear();
-	    Iterator it = nodeOrder.iterator();
-	    while (it.hasNext()) {
-	        RegulatoryNode vertex = (RegulatoryNode)it.next();
+	    for (RegulatoryNode vertex: graph.getNodeOrder()) {
 	        if (vertex.isInput()) {
 	            inputNodes.add(vertex);
 	        } else {
@@ -99,6 +95,10 @@ public class GsInitialStateList implements GraphListener<RegulatoryGraph> {
 	            return new InitialStateCascadeUpdate(l_changes);
 	        }
 	        break;
+		case METADATACHANGE:
+			// update lists in case the node order changed
+			updateLists();
+			break;
 		}
 		return null;
 	}
