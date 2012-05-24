@@ -24,6 +24,7 @@ import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.service.tool.stablestates.StableStateFinder;
 
 import fr.univmrs.tagc.javaMDD.MDDFactory;
@@ -51,20 +52,22 @@ public class StableStateSwingUI extends StackDialog  {
 		this.m_finder = new StableStateFinder(lrg);
 		
 		model = new NewStableTableModel();
-		tresult = new JTable(model);
+		tresult = new EnhancedJTable(model);
 		
+		// needed for the scroll bars to appear as needed
+		tresult.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tresult.getTableHeader().setReorderingAllowed(false);
 		tresult.setDefaultRenderer(Object.class, new ColoredCellRenderer());
 		tresult.setAutoCreateRowSorter(true);
 		
 		JPanel panel = new JPanel(new GridBagLayout());
 		Insets insets = new Insets(2, 2, 2, 2);
-		GridBagConstraints cst = new GridBagConstraints(0, 0, 1, 1, 0, 0,
+		GridBagConstraints cst = new GridBagConstraints(0, 0, 1, 1, 1, 0,
 				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 				insets, 0, 0);
 		MutantSelectionPanel  mutantPanel = new MutantSelectionPanel(this, lrg, store);
 		panel.add(mutantPanel, cst);
-		JScrollPane pane = new JScrollPane();
-	    pane.setViewportView(tresult);
+		JScrollPane pane = new JScrollPane(tresult);
 	    cst = new GridBagConstraints(0, 1, 1, 1, 1, 1,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				insets, 0, 0);
