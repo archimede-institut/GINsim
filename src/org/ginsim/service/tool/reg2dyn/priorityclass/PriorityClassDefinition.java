@@ -341,9 +341,9 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
      *    the "transition filter" is a bit hacky: add it to your transition (which should be either +1 or -1)
      *    and if the result is zero (0), then this transition shouldn't be followed.
      *
-     * bytely: it is 0 for all transitions, 1 for negative transitions and -1 for positive ones
+     * shortly: it is 0 for all transitions, 1 for negative transitions and -1 for positive ones
      */
-    public int[][] getPclass(List<RegulatoryNode> nodeOrder) {
+    public int[][] getPclass(List nodeOrder) {
 
         Integer zaroo = new Integer(0);
         Integer one = new Integer(1);
@@ -353,8 +353,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
         //   - during the first pass asynchronous classes with the same priority are merged
         //   - then the real int[][] is created from the merged classes
 		List<List<Integer>> v_vpclass = new ArrayList<List<Integer>>();
-        for (int i=0 ; i<v_data.size() ; i++) {
-            Reg2dynPriorityClass pc = v_data.get(i);
+        for (Reg2dynPriorityClass pc: v_data) {
             List<Integer> v_content;
             if (pc.getMode() == Reg2dynPriorityClass.ASYNCHRONOUS) {
                 v_content = new ArrayList<Integer>();

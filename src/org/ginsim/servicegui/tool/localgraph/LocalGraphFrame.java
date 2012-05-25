@@ -30,6 +30,9 @@ import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
+import org.ginsim.core.logicalmodel.LogicalModel;
+import org.ginsim.core.logicalmodel.LogicalModelModifier;
+import org.ginsim.core.logicalmodel.SimpleModelModifier;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
@@ -143,9 +146,10 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 			colorizeButton.setText(Translator.getString("STR_do_colorize"));
 			isColorized = false;
 		}
-		
-		mutant = (Perturbation) mutantStore.getObject(0);
-		lg.setUpdater(new SynchronousSimulationUpdater(regGraph, mutant));
+
+		LogicalModelModifier modifier = new SimpleModelModifier((Perturbation) mutantStore.getObject(0));
+		LogicalModel model = modifier.apply(regGraph.getModel());
+		lg.setUpdater(new SynchronousSimulationUpdater(model));
 		List states = sst.getStates();
 		if (states == null) return;
 		

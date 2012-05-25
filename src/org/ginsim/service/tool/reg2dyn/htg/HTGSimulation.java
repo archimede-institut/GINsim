@@ -20,6 +20,7 @@ import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGr
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
+import org.ginsim.core.logicalmodel.LogicalModel;
 import org.ginsim.service.tool.reg2dyn.Simulation;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
@@ -60,10 +61,6 @@ public class HTGSimulation extends Simulation {
 	 * The HierarchicalTransitionGraph in construction
 	 */
 	protected HierarchicalTransitionGraph htg;
-	/**
-	 * The regulatory graph
-	 */
-	protected RegulatoryGraph regGraph;
 	
 	/**
 	 * An array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
@@ -102,10 +99,10 @@ public class HTGSimulation extends Simulation {
 	protected NodeAttributesReader vreader;
 
 	
-	public HTGSimulation(RegulatoryGraph regGraph, ProgressListener<Graph> plist, SimulationParameters params) {
-		super(regGraph, plist, params);
+	public HTGSimulation(LogicalModel model, ProgressListener<Graph> plist, SimulationParameters params) {
+		super(model, plist, params);
 		
-		helper = new HTGSimulationHelper(regGraph, params);
+		helper = new HTGSimulationHelper(model, params);
 		this.params = params;
 	}
   
@@ -119,7 +116,6 @@ public class HTGSimulation extends Simulation {
 		this.htg = (HierarchicalTransitionGraph) helper.getDynamicGraph();
 		this.vreader = htg.getNodeAttributeReader();
 		this.shouldCompactSCC = htg.areTransientCompacted();
-		this.regGraph = (RegulatoryGraph) helper.getRegulatoryGraph();
 		this.sigmaFactory = new HierarchicalSigmaSetFactory();
 		LogManager.setDebug(debug);
 				
@@ -176,7 +172,6 @@ public class HTGSimulation extends Simulation {
 		this.nodeSet.clear();
 		this.nodeSet = null;
 		this.htg = null;
-		this.regGraph = null;
 		this.queue.clear();
 		this.queue = null;
 
@@ -447,23 +442,12 @@ public class HTGSimulation extends Simulation {
 	}
 
 	/**
-	 * Create and initialize a SimulationUpdater for a given __state__.
-	 * @param state
-	 * @return
-	 */
-	private SimulationUpdater getUpdaterForState(byte[] state) {
-   		SimulationUpdater updater = SimulationUpdater.getInstance(regGraph, params);
-   		updater.setState(state, depth, null);
-   		return updater;
-	}
-
-	/**
 	 * Define the graphical properties (color, shape) of a hnode.
 	 * @param hnode
 	 */
 	private void setHnodeGraphicalProperties(HierarchicalNode hnode) {
 		vreader.setNode(hnode);
-	    vreader.setSize(15+10*params.nodeOrder.size(), 25);
+	    vreader.setSize(15+10*params.param_list.graph.getNodeOrder().size(), 25);
 		switch (hnode.getType()) {
 		case HierarchicalNode.TYPE_STABLE_STATE:
 			vreader.setShape(NodeShape.RECTANGLE);

@@ -6,6 +6,7 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
+import org.ginsim.core.logicalmodel.LogicalModel;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.ginsim.service.tool.reg2dyn.htg.HTGSimulation;
@@ -23,14 +24,14 @@ public class Reg2DynService implements Service {
         ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new SimulationParametersManager());
     }
     
-	public Simulation get( RegulatoryGraph graph, ProgressListener<Graph> plist, SimulationParameters currentParameter){
+	public Simulation get( LogicalModel model, ProgressListener<Graph> plist, SimulationParameters currentParameter){
 		
 		Simulation sim;
 		
 		if (currentParameter.simulationStrategy == SimulationParameters.STRATEGY_STG) {
-			sim = new Simulation( graph, plist, currentParameter);
+			sim = new Simulation( model, plist, currentParameter);
 		} else {
-			sim = new HTGSimulation( graph, plist, currentParameter);
+			sim = new HTGSimulation( model, plist, currentParameter);
 		}
 		
 		return sim;

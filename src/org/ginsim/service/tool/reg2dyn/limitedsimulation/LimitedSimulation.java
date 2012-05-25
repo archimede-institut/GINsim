@@ -15,6 +15,7 @@ import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.logicalmodel.LogicalModel;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 import org.ginsim.service.tool.reg2dyn.helpers.SimulationHelper;
@@ -36,7 +37,6 @@ public class LimitedSimulation implements Runnable {
 	private SimulationUpdater updater;
 	private SimulationHelper helper;
 	private Iterator<byte[]> initStatesIterator;
-	private RegulatoryGraph regGraph;
 	private boolean ready;
 
 	private SimulationConstraint constraint;
@@ -60,14 +60,15 @@ public class LimitedSimulation implements Runnable {
 		this.nbnode = 0;
 
 		try {
-			regGraph = htg.getAssociatedGraph();
+			RegulatoryGraph regGraph = htg.getAssociatedGraph();
+			LogicalModel model = regGraph.getModel();
+			helper = new STGLimitedSimulationHelper(model, htg, params, constraint);
+			updater = SimulationUpdater.getInstance(model, params);
+		    initStatesIterator = constraint.getNewIterator();
 		} catch (GsException e) {
 			LogManager.error("The htg is not associated with a regulatory graph");
 		}
 		
-		helper = new STGLimitedSimulationHelper(regGraph, htg, params, constraint);
-		updater = SimulationUpdater.getInstance(regGraph, params);
-	    initStatesIterator = constraint.getNewIterator();
 	}
 
 

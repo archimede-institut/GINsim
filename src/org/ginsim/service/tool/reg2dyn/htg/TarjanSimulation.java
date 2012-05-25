@@ -94,7 +94,7 @@ public class TarjanSimulation {
 			                                                                                        						
 			
 			if (indexesMap.get(new SimpleState(state)) == null) { 																				//  If the new state was not in the nodeSet, that is has not been processed
-				SimulationUpdater updater = getUpdaterForState(state);														//    Get the updater of the state
+				SimulationUpdater updater = htgSimulation.getUpdaterForState(state);														//    Get the updater of the state
 				if (!updater.hasNext()) {                                                                                   //    If it has no successor
 					processStableState(state);                                                                           	//      Process it as a stable state
 					continue;                                                                                                     
@@ -127,7 +127,7 @@ public class TarjanSimulation {
 		
 		while (e_updater.hasNext()) {																						//For each successors
 			byte[] n_state= ((SimulationQueuedState)e_updater.next()).state;												// n_state is the state of the successor
-			SimulationUpdater n_updater = getUpdaterForState(n_state);                          							
+			SimulationUpdater n_updater = htgSimulation.getUpdaterForState(n_state);                          							
 			if (!n_updater.hasNext()) {																						// n_state has no child No child => stable state
 				processStableState(n_state);
 			} else {
@@ -191,7 +191,7 @@ public class TarjanSimulation {
 		boolean isTerminal = true;
 		for (Iterator<byte[]> it = scc.statesSet.statesToFullList().iterator(); it.hasNext();) { //compute the edges and the sigma
 			byte[] state = it.next();
-			SimulationUpdater updater = getUpdaterForState(state);						//    Get the updater of the state
+			SimulationUpdater updater = htgSimulation.getUpdaterForState(state);						//    Get the updater of the state
 			while (updater.hasNext()) {
 				SimulationQueuedState successor = (SimulationQueuedState) updater.next();
 				HierarchicalNode hnode = state2sccMap.get(new SimpleState(successor.state));
@@ -244,17 +244,6 @@ public class TarjanSimulation {
 		return inQueue.get(new SimpleState(state));
 	}
 
-	/**
-	 * Create and initialize a SimulationUpdater for a given __state__.
-	 * @param state
-	 * @return
-	 */
-	private SimulationUpdater getUpdaterForState(byte[] state) {
-   		SimulationUpdater updater = SimulationUpdater.getInstance(htgSimulation.regGraph, htgSimulation.params);
-   		updater.setState(state, depth, null);
-   		return updater;
-	}
-	
 
 /* ****************** DEBUG AND LogManager.log STUFF**********/
 	

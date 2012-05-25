@@ -391,7 +391,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 		currentParameter.simulationStrategy = simulationMethodsComboBox.getSelectedIndex();
 		OptionStore.setOption("simulation.defaultMethod", new Integer(simulationMethodsComboBox.getSelectedIndex()));
 		Reg2DynService service = ServiceManager.getManager().getService( Reg2DynService.class);
-		sim = service.get( paramList.graph, this, currentParameter);
+		sim = service.get( paramList.graph.getModel(), this, currentParameter);
 		new Thread(sim).start();
 	}
 

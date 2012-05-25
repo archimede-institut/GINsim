@@ -13,6 +13,7 @@ import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStatesIterator;
+import org.ginsim.core.logicalmodel.LogicalModel;
 import org.ginsim.service.tool.reg2dyn.helpers.STGSimulationHelper;
 import org.ginsim.service.tool.reg2dyn.helpers.SimulationHelper;
 import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
@@ -28,7 +29,7 @@ public class Simulation implements Runnable {
 
 	protected LinkedList queue = new LinkedList(); // exploration queue
 
-	protected ProgressListener<Graph> frame;
+	protected final ProgressListener<Graph> frame;
 	protected int maxnodes, maxdepth;
 	protected Iterator<byte[]> initStatesIterator;
 	protected SimulationHelper helper;
@@ -37,26 +38,27 @@ public class Simulation implements Runnable {
 	protected boolean breadthFirst = false;
 	public int nbnode = 0;
 	protected boolean ready = false;
-	
+
 	/**
 	 * Constructs an empty dynamic graph
 	 *
-	 * @param regGraph the regulatory graph on which we are working
+	 * @param model the logical model on which we are working
 	 * @param frame
 	 * @param params
 	 */
-    public Simulation(RegulatoryGraph regGraph, ProgressListener<Graph> frame, SimulationParameters params) {
-		this.frame = frame;
+    public Simulation(LogicalModel model, ProgressListener<Graph> frame, SimulationParameters params) {
+    	this.frame = frame;
 		this.maxdepth = params.maxdepth;
 		this.maxnodes = params.maxnodes;
 
 		if (params.simulationStrategy == SimulationParameters.STRATEGY_STG) {
-			helper = new STGSimulationHelper(regGraph, params);
+			helper = new STGSimulationHelper(model, params);
 		}
 		breadthFirst = params.breadthFirst;
-   		updater = SimulationUpdater.getInstance(regGraph, params);
+		// TODO: fully remove regulatory graph from here
+   		updater = SimulationUpdater.getInstance(model, params);
 	    setInitStatesIterator(new InitialStatesIterator(params.nodeOrder, params));
-	}
+    }
 
     public void set_initialStates(List nodeOrder, Map inputs, Map m_initState) {
         setInitStatesIterator(new InitialStatesIterator(nodeOrder, inputs, m_initState));
@@ -65,6 +67,16 @@ public class Simulation implements Runnable {
     public void interrupt() {
 		ready = false;
 	}
+
+	/**
+	 * Create and initialize a SimulationUpdater for a given __state__.
+	 * @param state
+	 * @return
+	 */
+	public SimulationUpdater getUpdaterForState(byte[] state) {
+   		return updater.cloneForState(state);
+	}
+
 
     /**
      * run the simulation in a new thread.

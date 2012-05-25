@@ -1,12 +1,16 @@
 package org.ginsim.service.tool.reg2dyn.helpers;
 
+import java.util.List;
+
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.logicalmodel.LogicalModel;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 
@@ -17,14 +21,15 @@ import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
  * 
  * @author Duncan Berenguier
  */
-public class STGSimulationHelper extends SimulationHelper {
+public class STGSimulationHelper implements SimulationHelper {
 	protected DynamicNode node;
 	protected DynamicGraph stateTransitionGraph;
 	protected NodeAttributesReader vreader;
 	
-	public STGSimulationHelper(RegulatoryGraph regGraph, SimulationParameters params) {
+	public STGSimulationHelper(LogicalModel model, SimulationParameters params) {
 		stateTransitionGraph = GraphManager.getInstance().getNewGraph( DynamicGraph.class, params.nodeOrder);
-		stateTransitionGraph.setAssociatedGraph(regGraph);
+		// FIXME: associated graph in the new simulation
+		stateTransitionGraph.setAssociatedGraph(params.param_list.graph);
 		
         vreader = stateTransitionGraph.getNodeAttributeReader();
 	    vreader.setDefaultNodeSize(5+10*params.nodeOrder.size(), 25);
@@ -50,11 +55,6 @@ public class STGSimulationHelper extends SimulationHelper {
 		node.setStable(true, vreader);
 	}
 
-	public Graph getRegulatoryGraph() throws GsException{
-		
-		return this.stateTransitionGraph.getAssociatedGraph();
-	}
-	
 	public Graph getDynamicGraph() {
 		
 		return this.stateTransitionGraph;

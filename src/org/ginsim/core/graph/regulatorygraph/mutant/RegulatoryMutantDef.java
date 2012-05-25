@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
+import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
@@ -185,12 +186,18 @@ public class RegulatoryMutantDef implements NamedObject, Perturbation {
 
 	@Override
 	public int[] apply(MDDFactory factory, int[] nodes, RegulatoryGraph graph) {
+		List<NodeInfo> nodeInfo = graph.getNodeInfos();
+		return apply(factory, nodes, nodeInfo);
+	}
+	
+	@Override
+	public int[] apply(MDDFactory factory, int[] nodes, List<NodeInfo> order) {
 		int[] result = nodes.clone();
 		
         for (int i=0 ; i<v_changes.size() ; i++) {
             RegulatoryMutantChange change = (RegulatoryMutantChange)v_changes.get(i);
-            int index = graph.getNodeOrderForSimulation().indexOf(change.vertex);
-            result[index] = change.apply(factory, result[index], graph);
+            int index = order.indexOf(change.vertex);
+            result[index] = change.apply(factory, result[index]);
         }
 
 		return result;

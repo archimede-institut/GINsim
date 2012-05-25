@@ -5,6 +5,7 @@ import java.util.Iterator;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.logicalmodel.LogicalModel;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
@@ -38,20 +39,12 @@ abstract public class SimulationUpdater implements Iterator {
 	protected boolean multiple;
 	
 	protected ModelHelper modelHelper;
-	
-	public SimulationUpdater(RegulatoryGraph regGraph, SimulationParameters params) {
-		this(regGraph, (Perturbation)params.store.getObject(SimulationParameters.MUTANT));
-	}
 
-	public SimulationUpdater(RegulatoryGraph regGraph, Perturbation mutant) {
-		this(regGraph, mutant, false);
+	public SimulationUpdater(LogicalModel model) {
+		this(new ModelHelperNew(model));
 	}
-	public SimulationUpdater(RegulatoryGraph regGraph, Perturbation mutant, boolean useNewMDDs) {
-		if (useNewMDDs) {
-			modelHelper = new ModelHelperImpl(regGraph, mutant);
-		} else {
-			modelHelper = new ModelHelperNew(regGraph, mutant);
-		}
+	public SimulationUpdater(ModelHelper helper) {
+		modelHelper = helper;
 		this.length = modelHelper.length();
 	}
 
@@ -90,6 +83,14 @@ abstract public class SimulationUpdater implements Iterator {
 	abstract protected void doSetState();
 	abstract protected void doBuildNext();
 	
+	abstract protected SimulationUpdater doClone();
+	
+	public SimulationUpdater cloneForState(byte[] state) {
+		SimulationUpdater updater = doClone();
+		updater.setState(state, 0, null);
+		return updater;
+	}
+	
 	/**
 	 * get change step for a gene
 	 *
@@ -101,16 +102,16 @@ abstract public class SimulationUpdater implements Iterator {
 		return modelHelper.nodeChange(initState, i);
 	}
 	
-    static public SimulationUpdater getInstance(RegulatoryGraph regGraph, SimulationParameters params) {
+    static public SimulationUpdater getInstance(LogicalModel model, SimulationParameters params) {
 		PriorityClassDefinition pcdef = params.getPriorityClassDefinition();
 		if (pcdef.getNbElements(null) < 2) {
 			Reg2dynPriorityClass pc = (Reg2dynPriorityClass)pcdef.getElement(null,0);
 			if (pc.getMode() == Reg2dynPriorityClass.SYNCHRONOUS) {
-				return new SynchronousSimulationUpdater(regGraph, params);
+				return new SynchronousSimulationUpdater(model);
 			}
-			return new AsynchronousSimulationUpdater(regGraph, params);
+			return new AsynchronousSimulationUpdater(model);
 		}
-		return new PrioritySimulationUpdater(regGraph, params);
+		return new PrioritySimulationUpdater(model, pcdef);
 	}
 }
 
@@ -154,15 +155,12 @@ class ModelHelperImpl implements ModelHelper {
 
 class ModelHelperNew implements ModelHelper {
 
-	private MDDFactory factory;
-	private int[] nodes;
+	private final MDDFactory factory;
+	private final int[] nodes;
 
-	public ModelHelperNew(RegulatoryGraph model, Perturbation mutant) {
+	public ModelHelperNew(LogicalModel model) {
 		factory = model.getMDDFactory();
-		nodes = model.getMDDs(factory);
-        if (mutant != null) {
-            nodes = mutant.apply(factory, nodes, model);
-        }
+		nodes = model.getLogicalFunctions();
 	}
 	
 	public int length() {
@@ -181,7 +179,6 @@ class ModelHelperNew implements ModelHelper {
 		}
 		return 0;
 	}
-
 }
 
 
@@ -192,8 +189,11 @@ class AsynchronousSimulationUpdater extends SimulationUpdater {
 	int nextChange = -1;
 	int nextUpdate;
 
-	public AsynchronousSimulationUpdater(RegulatoryGraph regGraph, SimulationParameters params) {
-		super(regGraph, params);
+	public AsynchronousSimulationUpdater(ModelHelper helper) {
+		super(helper);
+	}
+	public AsynchronousSimulationUpdater(LogicalModel model) {
+		super(model);
 	}
 
 	protected void doBuildNext() {
@@ -242,6 +242,10 @@ class AsynchronousSimulationUpdater extends SimulationUpdater {
 			}
 		}
 	}
+	@Override
+	public SimulationUpdater doClone() {
+		return new AsynchronousSimulationUpdater(this.modelHelper);
+	}
 }
 
 
@@ -256,9 +260,13 @@ class PrioritySimulationUpdater extends SimulationUpdater {
     int priority;
 
 	
-    public PrioritySimulationUpdater(RegulatoryGraph regGraph, SimulationParameters params) {
-		super(regGraph, params);
-		pclass = params.getPriorityClassDefinition().getPclass(params.nodeOrder);
+    public PrioritySimulationUpdater(LogicalModel model, PriorityClassDefinition pcdef) {
+		super(model);
+		pclass = pcdef.getPclass(model.getNodeOrder());
+	}
+    public PrioritySimulationUpdater(ModelHelper helper,int[][] pclass) {
+		super(helper);
+		this.pclass = pclass;
 	}
 
 	protected void doBuildNext() {
@@ -388,5 +396,9 @@ class PrioritySimulationUpdater extends SimulationUpdater {
         	next[classChangesList[1]] += classChangesList[2];
         	nextIndex = 3;
         }
+	}
+	@Override
+	protected SimulationUpdater doClone() {
+		return new PrioritySimulationUpdater(this.modelHelper, this.pclass);
 	}
 }

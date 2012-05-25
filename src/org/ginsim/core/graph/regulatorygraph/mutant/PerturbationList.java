@@ -1,7 +1,9 @@
 package org.ginsim.core.graph.regulatorygraph.mutant;
 
 import java.util.ArrayList;
+import java.util.List;
 
+import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
@@ -21,9 +23,15 @@ public class PerturbationList extends ArrayList<Perturbation> implements Perturb
 
 	@Override
 	public int[] apply(MDDFactory factory, int[] nodes, RegulatoryGraph graph) {
+		List<NodeInfo> nodeInfo = graph.getNodeInfos();
+		return apply(factory, nodes, nodeInfo);
+	}
+
+	@Override
+	public int[] apply(MDDFactory factory, int[] nodes, List<NodeInfo> nodeInfo) {
 		int[] perturbed = nodes;
         for (Perturbation p: this) {
-            perturbed = p.apply(factory, perturbed, graph);
+            perturbed = p.apply(factory, perturbed, nodeInfo);
         }
 		return perturbed;
 	}

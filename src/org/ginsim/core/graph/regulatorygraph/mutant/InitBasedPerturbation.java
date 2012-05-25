@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
@@ -63,9 +64,14 @@ public class InitBasedPerturbation implements Perturbation {
 
 	@Override
 	public int[] apply(MDDFactory factory, int[] nodes, RegulatoryGraph graph) {
+		List<NodeInfo> nodeInfo = graph.getNodeInfos();
+		return apply(factory, nodes, nodeInfo);
+	}
+
+	@Override
+	public int[] apply(MDDFactory factory, int[] nodes, List<NodeInfo> order) {
 		int[] result = nodes.clone();
         Map<RegulatoryNode, List<Integer>> m_init = init.getMap();
-        List<RegulatoryNode> norder = graph.getNodeOrder();
         for (Entry<RegulatoryNode, List<Integer>> e: m_init.entrySet()) {
             RegulatoryNode vertex = e.getKey();
             List<Integer> values = e.getValue();
@@ -83,7 +89,7 @@ public class InitBasedPerturbation implements Perturbation {
             }
 
             // replace the MDD
-            int index  = norder.indexOf(vertex);
+            int index  = order.indexOf(vertex);
             int[] next = new int[tvals.length];
             for (int pos=0 ; pos<tvals.length ; pos++) {
                 if (tvals[pos]) {

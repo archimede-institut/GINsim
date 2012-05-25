@@ -2,17 +2,17 @@ package org.ginsim.service.tool.reg2dyn.updater;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
+import org.ginsim.core.logicalmodel.LogicalModel;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 
 
 public class SynchronousSimulationUpdater extends SimulationUpdater {
 
-	public SynchronousSimulationUpdater(RegulatoryGraph regGraph, SimulationParameters params) {
-		super(regGraph, params);
+	public SynchronousSimulationUpdater(ModelHelper helper) {
+		super(helper);
 	}
-
-	public SynchronousSimulationUpdater(RegulatoryGraph regGraph, Perturbation mutant) {
-		super(regGraph, mutant);
+	public SynchronousSimulationUpdater(LogicalModel model) {
+		super(model);
 	}
 
 	protected void doBuildNext() {
@@ -38,6 +38,11 @@ public class SynchronousSimulationUpdater extends SimulationUpdater {
 		if (!hasChange) {
 			next = null;
 		}
+	}
+
+	@Override
+	public SimulationUpdater doClone() {
+		return new SynchronousSimulationUpdater(this.modelHelper);
 	}
 }
 

@@ -8,6 +8,7 @@ import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGr
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
+import org.ginsim.core.logicalmodel.LogicalModel;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 import org.ginsim.service.tool.reg2dyn.helpers.STGSimulationHelper;
@@ -18,8 +19,8 @@ public class STGLimitedSimulationHelper extends STGSimulationHelper {
 	private final HierarchicalTransitionGraph htg;
 	private NodeAttributesReader htg_vreader;
 
-	public STGLimitedSimulationHelper(RegulatoryGraph regGraph, HierarchicalTransitionGraph htg, SimulationParameters params, SimulationConstraint constraint) {
-		super(regGraph, params);
+	public STGLimitedSimulationHelper(LogicalModel model, HierarchicalTransitionGraph htg, SimulationParameters params, SimulationConstraint constraint) {
+		super(model, params);
 		this.htg = htg;
 		this.htg_vreader = htg.getNodeAttributeReader();
 		this.constraint = constraint;

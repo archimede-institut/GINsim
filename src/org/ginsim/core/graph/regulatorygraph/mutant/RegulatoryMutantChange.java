@@ -142,7 +142,7 @@ public class RegulatoryMutantChange {
      * @param graph
      * @return
      */
-	public int apply(MDDFactory factory, int node, RegulatoryGraph graph) {
+	public int apply(MDDFactory factory, int node) {
         int maxValue = vertex.getMaxValue();
         if (min == 0 && max == maxValue) {
             // no change here!

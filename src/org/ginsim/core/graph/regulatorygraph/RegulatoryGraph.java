@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.logicalmodel.LogicalModel;
 
 import fr.univmrs.tagc.javaMDD.MDDFactory;
 
@@ -149,5 +151,19 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param l_conflict
      */
 	void canApplyNewMaxValue(RegulatoryNode node, byte newMax, List l_fixable, List l_conflict);
+
+	/**
+	 * Get a ready-to-be-used model (list of nodes and functions, no graph structure)
+	 * 
+	 * @return a model matching this RegulatoryGraph
+	 */
+	LogicalModel getModel();
+
+	/**
+	 * Get a list of lightweight objects representing the node order
+	 * 
+	 * @return the ordered list of minimal information on components
+	 */
+	List<NodeInfo> getNodeInfos();
     
 }
