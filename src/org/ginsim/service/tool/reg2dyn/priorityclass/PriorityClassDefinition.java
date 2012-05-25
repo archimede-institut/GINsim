@@ -8,8 +8,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
+import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.NamedObject;
@@ -343,7 +345,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
      *
      * shortly: it is 0 for all transitions, 1 for negative transitions and -1 for positive ones
      */
-    public int[][] getPclass(List nodeOrder) {
+    public int[][] getPclass(List<RegulatoryNode> nodeOrder) {
 
         Integer zaroo = new Integer(0);
         Integer one = new Integer(1);
@@ -411,6 +413,34 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
             pclass[i] = t;
         }
         return pclass;
+    }
+
+	/**
+     * @return the compiled priority class.
+     * @see <code>getPclass</code>
+     */
+    public int[][] getPclassNew(List<NodeInfo> nodeInfos) {
+    	
+    	Map<NodeInfo, RegulatoryNode> m_info2node = new HashMap<NodeInfo, RegulatoryNode>();
+    	for (RegulatoryNode node: m_elt.keySet()) {
+    		for (NodeInfo ni: nodeInfos) {
+    			if (ni.equals(node)) {
+    				m_info2node.put(ni, node);
+    				break;
+    			}
+    		}
+    	}
+    	
+    	List<RegulatoryNode> nodeOrder = new ArrayList<RegulatoryNode>();
+		for (NodeInfo ni: nodeInfos) {
+			RegulatoryNode node = m_info2node.get(ni);
+			nodeOrder.add(node);
+			if (node == null) {
+				LogManager.debug("No matching RegulatoryNode for "+ni);
+			}
+		}
+    	
+    	return getPclass(nodeOrder);
     }
 
 	public void lock() {
