@@ -391,9 +391,8 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
             vertex.setName(name);
         }
         vertex.setMaxValue(max, this);
-        if (addNode(vertex)) {
-        	nodeOrder.add(vertex);
-        }
+        addNode(vertex);
+
         return vertex;
     }
 
@@ -664,6 +663,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     	MultiValuedVariable[] variables = new MultiValuedVariable[getNodeCount()];
     	int i=0;
     	for (RegulatoryNode node: getNodeOrder()) {
+System.out.println("Node: " + node.getId());
     		variables[i++] = new MultiValuedVariable(node, node.getId(), node.getMaxValue()+1);
     	}
     	MDDFactory factory = new MDDFactory(variables, 10);
