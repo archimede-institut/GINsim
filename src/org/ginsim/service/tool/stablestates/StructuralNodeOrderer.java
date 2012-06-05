@@ -1,32 +1,44 @@
 package org.ginsim.service.tool.stablestates;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.logicalmodel.LogicalModel;
+
+import fr.univmrs.tagc.javaMDD.MDDFactory;
 
 public class StructuralNodeOrderer implements Iterable<Integer> {
 
 	protected final RegulatoryGraph regGraph;
+	protected final LogicalModel model;
 
 	public StructuralNodeOrderer( RegulatoryGraph regGraph) {
 		this.regGraph = regGraph;
+		this.model = null;
+	}
+
+	public StructuralNodeOrderer( LogicalModel model) {
+		this.regGraph = null;
+		this.model = model;
 	}
 
 	@Override
 	public Iterator<Integer> iterator() {
-		return new NodeIterator(regGraph);
+		if (regGraph != null) {
+			return new NodeIterator(regGraph);
+		}
+		return new NodeIterator(model);
 	}
 
 }
 
 class NodeIterator implements Iterator<Integer> {
 	
-	private final RegulatoryGraph regGraph;
-	private final List<RegulatoryNode> nodeOrder;
-
 	int nbgene, nbremain;
 	int bestIndex, bestValue;
 	
@@ -35,23 +47,55 @@ class NodeIterator implements Iterator<Integer> {
 
 	
 	public NodeIterator(RegulatoryGraph regGraph) {
-		this.regGraph = regGraph;
-		this.nodeOrder = regGraph.getNodeOrder();
-		buildAdjTable();
+		buildAdjTable(regGraph);
 	}
 
-	private void buildAdjTable() {
+	public NodeIterator(LogicalModel model) {
+		buildAdjTable(model);
+	}
+
+	private void buildAdjTable(RegulatoryGraph regGraph) {
+		List<RegulatoryNode> nodeOrder = regGraph.getNodeOrder();
 		nbgene = nbremain = nodeOrder.size();
 		t_newreg = new int[nbgene][2];
 		t_reg = new boolean[nbgene][nbgene];
 		bestValue = nbgene+1;
 		for (int i=0 ; i<nbgene ; i++) {
-			Iterator<RegulatoryMultiEdge> it_reg = regGraph.getIncomingEdges( (RegulatoryNode) nodeOrder.get(i)).iterator();
+			Iterator<RegulatoryMultiEdge> it_reg = regGraph.getIncomingEdges( nodeOrder.get(i)).iterator();
 			int cpt = 0;
 			boolean[] t_regline = t_reg[i];
 			while (it_reg.hasNext()) {
 				int j = nodeOrder.indexOf(it_reg.next().getSource());
 				t_regline[j] = true;
+				cpt++;
+			}
+			if (!t_reg[i][i]) {
+				t_reg[i][i] = true;
+				cpt++;
+			}
+			t_newreg[i][0] = i;
+			t_newreg[i][1] = cpt;
+			if (cpt < bestValue) {
+				bestValue = cpt;
+				bestIndex = i;
+			}
+		}
+	}
+
+	private void buildAdjTable(LogicalModel model) {
+		List<NodeInfo> nodeOrder = model.getNodeOrder();
+		MDDFactory factory = model.getMDDFactory();
+		nbgene = nbremain = nodeOrder.size();
+		t_newreg = new int[nbgene][2];
+		t_reg = new boolean[nbgene][nbgene];
+		bestValue = nbgene+1;
+		int[] functions = model.getLogicalFunctions();
+		for (int i=0 ; i<nbgene ; i++) {
+			List<Integer> regulators = getRegulators(factory, functions[i]);
+			int cpt = 0;
+			boolean[] t_regline = t_reg[i];
+			for (int r: regulators) {
+				t_regline[r] = true;
 				cpt++;
 			}
 			if (!t_reg[i][i]) {
@@ -114,4 +158,21 @@ class NodeIterator implements Iterator<Integer> {
 		throw new UnsupportedOperationException();
 	}
 
+	
+	private static List<Integer> getRegulators(MDDFactory factory, int f) {
+		List<Integer> regulators = new ArrayList<Integer>();
+		addRegulators(regulators, factory, f);
+		return regulators;
+	}
+	
+	private static void addRegulators(List<Integer> regulators, MDDFactory factory, int f) {
+		if (factory.isleaf(f)) {
+			return;
+		}
+		
+		int n = factory.getNbValues( factory.getLevel(f) );
+		for (int v=0 ; v<n ; v++) {
+			addRegulators(regulators, factory, factory.getChild(f, v));
+		}
+	}
 }

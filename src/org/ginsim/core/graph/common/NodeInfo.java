@@ -13,18 +13,13 @@ public class NodeInfo {
 	
 	public static final byte UNDEFINED_MAX = -1;
 	
-	private final String nodeID;
-	private final byte max;
+	private String nodeID;
+	private byte max;
 
 	public NodeInfo(String name) {
 		super();
 		this.nodeID = name;
 		this.max = UNDEFINED_MAX;
-	}
-	
-	
-	public NodeInfo(NodeInfo other) {
-		this( other.getNodeID(), other.getMax());
 	}
 	
 	public NodeInfo(String name, byte max) {
@@ -33,37 +28,33 @@ public class NodeInfo {
 		this.max = max;
 	}
 
-	public NodeInfo(RegulatoryNode vertex) {
-		
-		this( vertex.getId(), vertex.getMaxValue());
-	}
-	
 	public String getNodeID() {
-		
 		return nodeID;
 	}
 	
+	public void setNodeID( String id) {
+		this.nodeID = id;
+	}
+	
 	public byte getMax() {
-		
 		return max;
+	}
+	
+	public void setMax(byte max) {
+		this.max = max;
 	}
 	
 	/**
 	 * Compare the object to the given one. If the given object is a RegulatoryNode, the IDs are compared
-	 * 
 	 */
 	@Override
 	public boolean equals( Object obj) {
 		
-		if( obj instanceof NodeInfo){
-			
+		if ( obj instanceof NodeInfo) {
 			return super.equals(obj);
-		}
-		else if( obj instanceof RegulatoryNode){
-			
-			return nodeID.equals( ((RegulatoryNode) obj).getId());
-		}
-		else{
+		} else if( obj instanceof RegulatoryNode) {
+			return super.equals(((RegulatoryNode)obj).getNodeInfo());
+		} else {
 			return false;
 		}
 	}
@@ -73,4 +64,6 @@ public class NodeInfo {
 		
 		return nodeID;
 	}
+
+
 }

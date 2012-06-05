@@ -2,10 +2,12 @@ package org.ginsim.service.tool.stablestates;
 
 import java.util.List;
 
+import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
+import org.ginsim.core.logicalmodel.LogicalModel;
 
 import fr.univmrs.tagc.javaMDD.MDDFactory;
 
@@ -17,13 +19,13 @@ import fr.univmrs.tagc.javaMDD.MDDFactory;
  * @author Aurelien Naldi
  */
 public class StableStateFinder implements StableStateSearcherNew {
-	private final RegulatoryGraph model;
 	private final MDDFactory m_factory;
+	private final LogicalModel model;
 	
 	Perturbation p;
 	Iterable<Integer> ordering;
 
-	InitialState state = null; // no state restriction by default
+	InitialState stateRestriction = null; // no state restriction by default
 	boolean[][] t_reg;
 	int[][] t_newreg;
 	
@@ -31,12 +33,8 @@ public class StableStateFinder implements StableStateSearcherNew {
 	int nbgene, nbremain;
 	
 	public StableStateFinder(RegulatoryGraph lrg) {
-		this(lrg, lrg.getMDDFactory());
-	}
-
-	public StableStateFinder(RegulatoryGraph lrg, MDDFactory factory) {
-		model = lrg;
-		m_factory = factory;
+		this.model = lrg.getModel();
+		m_factory = model.getMDDFactory();
 	}
 
 	@Override
@@ -51,22 +49,26 @@ public class StableStateFinder implements StableStateSearcherNew {
 	
 	@Override
 	public Integer call() {
+		LogicalModel workingModel = model;
 		ordering = new StructuralNodeOrderer(model);
 		StableOperation sop = new StableOperation();
-		int[] mdds = model.getMDDs(m_factory);
 		if (p != null) {
-			mdds = p.apply(m_factory, mdds, model);
+			workingModel = model.clone();
+			p.apply(workingModel);
 		}
+		int[] mdds = workingModel.getLogicalFunctions();
 
-		// loop over the existing nodes!
+		// search domain: all nodes or simple restriction
 		int prev=1;
-		if (state != null) {
-			prev = state.getMDD(m_factory);
+		if (stateRestriction != null) {
+			prev = stateRestriction.getMDD(m_factory);
 		}
+		
+		// loop over the existing nodes!
 		int result=prev;
-		List<RegulatoryNode> nodes = model.getNodeOrder();
+		List<NodeInfo> nodes = workingModel.getNodeOrder();
 		for (int i: ordering) {
-			RegulatoryNode node = nodes.get(i);
+			NodeInfo node = nodes.get(i);
 			prev = result;
 			int var = m_factory.getVariableID(node);
 			int f = mdds[i];
@@ -84,6 +86,6 @@ public class StableStateFinder implements StableStateSearcherNew {
 
 	@Override
 	public void setStateRestriction( InitialState state) {
-		this.state = state;
+		this.stateRestriction = state;
 	}
 }

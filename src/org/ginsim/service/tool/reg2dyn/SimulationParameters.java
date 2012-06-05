@@ -74,18 +74,6 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
     }
 
     /**
-     * get priority class.
-     *
-     * @return a list listing all priority classes.
-     *
-     * see also <code>getMelt</code> to get association between nodes and classes
-     */
-    public List getVclass() {
-    	PriorityClassDefinition pcdef = getPriorityClassDefinition();
-    	return pcdef.v_data;
-    }
-
-    /**
      * a not so simple toString method.
      * It shows the full content of this simu parameters, used to add a usefull comment to the state transition graph.
      * @return a human readable description of the parameter

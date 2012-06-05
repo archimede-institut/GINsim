@@ -16,6 +16,10 @@ public class LogicalModelImpl implements LogicalModel {
 		this.nodeOrder = nodeOrder;
 		this.factory = factory;
 		this.functions = functions;
+		
+		for (int f: functions) {
+			factory.use(f);
+		}
 	}
 	
 	
@@ -34,5 +38,8 @@ public class LogicalModelImpl implements LogicalModel {
 		return functions;
 	}
 
-	
+	public LogicalModel clone() {
+		int[] functionsClone = functions.clone();
+		return new LogicalModelImpl(nodeOrder, factory, functionsClone);
+	}
 }

@@ -19,7 +19,7 @@ public class HTGSimulationQueueSCC implements HTGSimulationQueueItem {
 	
 	/**
 	 * Simple constructor.
-	 * @param state
+	 * @param stateRestriction
 	 * @param index
 	 * @param low_index
 	 * @param updater

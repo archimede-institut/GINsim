@@ -10,6 +10,7 @@ import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.logicalmodel.LogicalModel;
 import org.ginsim.core.utils.data.NamedObject;
 
 import fr.univmrs.tagc.javaMDD.MDDFactory;
@@ -184,22 +185,20 @@ public class RegulatoryMutantDef implements NamedObject, Perturbation {
 		return ((RegulatoryMutantChange)v_changes.get(index)).s_condition == null;
 	}
 
-	@Override
-	public int[] apply(MDDFactory factory, int[] nodes, RegulatoryGraph graph) {
-		List<NodeInfo> nodeInfo = graph.getNodeInfos();
-		return apply(factory, nodes, nodeInfo);
-	}
 	
 	@Override
-	public int[] apply(MDDFactory factory, int[] nodes, List<NodeInfo> order) {
-		int[] result = nodes.clone();
+	public void apply(LogicalModel model) {
+		MDDFactory factory = model.getMDDFactory();
+		int[] nodes = model.getLogicalFunctions();
+		List<NodeInfo> order = model.getNodeOrder();
 		
         for (int i=0 ; i<v_changes.size() ; i++) {
             RegulatoryMutantChange change = (RegulatoryMutantChange)v_changes.get(i);
             int index = order.indexOf(change.vertex);
-            result[index] = change.apply(factory, result[index]);
+            
+            int newnode = change.apply(factory, nodes[index]);
+            factory.free(nodes[index]);
+            nodes[index] = newnode;
         }
-
-		return result;
 	}
 }

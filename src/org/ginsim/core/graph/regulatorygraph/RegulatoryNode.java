@@ -48,14 +48,14 @@ import fr.univmrs.tagc.javaMDD.operators.MDDBaseOperators;
  */
 public class RegulatoryNode implements ToolTipsable, XMLize {
 
-	private byte 	maxValue = 1;
+	private final NodeInfo nodeInfo;
+	
 	private boolean isInput = false;
 	private boolean isOutput = true;
 	private final LogicalParameterList v_logicalParameters = new LogicalParameterList();
 
 	private String 		name = "";
 	private Annotation	gsa = new Annotation();
-	private String 		id;
 
 	private TreeInteractionsModel interactionsModel;
 	private RegulatoryGraph graph;
@@ -72,7 +72,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	 */
 	public RegulatoryNode(String id, RegulatoryGraph graph) {
 		super();
-		this.id = id;
+		this.nodeInfo = new NodeInfo(id, (byte)1);
 		this.graph = graph;
 		interactionsModel = new TreeInteractionsModel(graph);
 	}
@@ -81,10 +81,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	 * @param num number of the gene.
 	 */
 	public RegulatoryNode(int num, RegulatoryGraph graph) {
-		super();
-		this.id = "G"+num;
-		this.graph = graph;
-		interactionsModel = new TreeInteractionsModel(graph);
+		this("G"+num, graph);
 	}
 
     public boolean isInput() {
@@ -111,7 +108,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	 * @return the max value of the node
 	 */
 	public byte getMaxValue() {
-		return maxValue;
+		return nodeInfo.getMax();
 	}
 
 	/**
@@ -120,8 +117,8 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	 * @param graph the graph (to propagate changes if needed)
 	 */
 	public void setMaxValue(byte max, RegulatoryGraph graph) {
-	    if (max>0 && max<= MAXVALUE && max != maxValue) {
-	    	byte oldmax = maxValue;
+    	byte oldmax = nodeInfo.getMax();
+	    if (max>0 && max<= MAXVALUE && max != oldmax) {
 	    	if (oldmax > max) {
 	    		List l_fixable = new ArrayList();
 	    		List l_conflict = new ArrayList();
@@ -186,7 +183,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	    			return;
 	    		}
 	    	}
-	    	maxValue = max;
+	    	nodeInfo.setMax(max);
     		((AbstractGraph) graph).fireGraphChange( GraphChangeType.NODEUPDATED, this);
     		getInteractionsModel().refreshNode();
 	    }
@@ -196,7 +193,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	 * @return the id of this node.
 	 */
 	public String getId() {
-	    return id;
+	    return nodeInfo.getNodeID();
 	}
 
 	/**
@@ -205,7 +202,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	 */
 	public boolean setId(String id) {
 		if (XMLWriter.isValidId(id)) {
-			this.id = id;
+			nodeInfo.setNodeID(id);
 			return true;
 		}
 		return false;
@@ -343,7 +340,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
         if (isInput) {
             root = new OMDDNode();
             root.level = nodeOrder.indexOf(this);
-            root.next = new OMDDNode[maxValue+1];
+            root.next = new OMDDNode[getMaxValue()+1];
             for (int i=0 ; i<root.next.length ; i++) {
                 root.next[i] = OMDDNode.TERMINALS[i];
             }
@@ -363,9 +360,9 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
     }
 
 	public String toToolTip() {
-		return    Translator.getString( S_ID) + ":" + id + "|"
+		return    Translator.getString( S_ID) + ":" + getId() + "|"
 				+ Translator.getString( S_NAME) + ":" + name + "|"
-                + Translator.getString( S_MAX) + ":" + maxValue
+                + Translator.getString( S_MAX) + ":" + getMaxValue()
                 + (isOutput() ? "(output)" : "");
 	}
 
@@ -376,7 +373,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 			if (name.length()>0) {
 			    out.addAttr("name", name);
 			}
-		    out.addAttr("maxvalue", ""+maxValue);
+		    out.addAttr("maxvalue", ""+getMaxValue());
 		    
 		    if (isInput) {
 	            out.addAttr("input", ""+isInput);
@@ -415,8 +412,8 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	}
 
 	public RegulatoryNode clone(RegulatoryGraph graph) {
-		RegulatoryNode clone = new RegulatoryNode(id, graph);
-		clone.maxValue = maxValue;
+		RegulatoryNode clone = new RegulatoryNode(nodeInfo.getNodeID(), graph);
+		clone.nodeInfo.setMax(nodeInfo.getMax());
 		clone.name = name;
 		clone.setGsa((Annotation)gsa.clone());
 		clone.isInput = isInput;
@@ -459,7 +456,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	}
 
     public String toString() {
-        return id;
+        return getId();
     }
 
     /**
@@ -509,5 +506,24 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
     public void incomingEdgeAdded(RegulatoryMultiEdge me) {
       interactionsModel.addEdge(me);
     }
+    
+	/**
+	 * Compare the object to the given one, using the internal NodeInfo.
+	 */
+	@Override
+	public boolean equals( Object obj) {
+		return nodeInfo.equals(obj);
+	}
+
+	/**
+	 * Get the internal NodeInfo.
+	 * The node info stores the ID and max value of the node. It should NOT be modified directly.
+	 * 
+	 * @return
+	 */
+	public NodeInfo getNodeInfo() {
+		return nodeInfo;
+	}
+
 }
 

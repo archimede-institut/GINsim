@@ -21,9 +21,14 @@ public class SimpleModelModifier implements LogicalModelModifier {
 	@Override
 	public LogicalModel apply(LogicalModel model) {
 		
-		if (perturbation != null) {
-			// clone (?) and update the model
+		if (perturbation == null) {
+			return model;
 		}
+		
+		// clone (?) and update the model
+		LogicalModel m = model.clone();
+		perturbation.apply(m);
+		
 		return model;
 	}
 

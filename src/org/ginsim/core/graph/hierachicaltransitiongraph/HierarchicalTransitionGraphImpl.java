@@ -66,7 +66,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 		
 	    this();
 	    for (RegulatoryNode vertex: nodeOrder) {
-	    	this.nodeOrder.add(new NodeInfo(vertex));
+	    	this.nodeOrder.add(vertex.getNodeInfo());
 	    }
 	    this.transientCompactionMode = transientCompactionMode;
 	}

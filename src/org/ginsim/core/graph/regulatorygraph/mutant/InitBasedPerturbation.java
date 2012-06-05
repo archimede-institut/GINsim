@@ -9,6 +9,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.logicalmodel.LogicalModel;
 
 import fr.univmrs.tagc.javaMDD.MDDFactory;
 
@@ -63,14 +64,11 @@ public class InitBasedPerturbation implements Perturbation {
     }
 
 	@Override
-	public int[] apply(MDDFactory factory, int[] nodes, RegulatoryGraph graph) {
-		List<NodeInfo> nodeInfo = graph.getNodeInfos();
-		return apply(factory, nodes, nodeInfo);
-	}
-
-	@Override
-	public int[] apply(MDDFactory factory, int[] nodes, List<NodeInfo> order) {
-		int[] result = nodes.clone();
+	public void apply(LogicalModel model) {
+		MDDFactory factory = model.getMDDFactory();
+		int[] nodes = model.getLogicalFunctions();
+		List<NodeInfo> order = model.getNodeOrder();
+		
         Map<RegulatoryNode, List<Integer>> m_init = init.getMap();
         for (Entry<RegulatoryNode, List<Integer>> e: m_init.entrySet()) {
             RegulatoryNode vertex = e.getKey();
@@ -99,8 +97,9 @@ public class InitBasedPerturbation implements Perturbation {
                     next[pos] = min;
                 }
             }
-            result[index] = factory.get_mnode(factory.getVariableID(vertex), next);
+            int newnode = factory.get_mnode(factory.getVariableID(vertex), next);
+            factory.free(nodes[index]);
+            nodes[index] = newnode;
         }
-		return result;
 	}
 }

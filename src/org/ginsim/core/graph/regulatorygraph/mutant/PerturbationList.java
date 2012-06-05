@@ -6,6 +6,7 @@ import java.util.List;
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.logicalmodel.LogicalModel;
 
 import fr.univmrs.tagc.javaMDD.MDDFactory;
 
@@ -22,17 +23,9 @@ public class PerturbationList extends ArrayList<Perturbation> implements Perturb
     }
 
 	@Override
-	public int[] apply(MDDFactory factory, int[] nodes, RegulatoryGraph graph) {
-		List<NodeInfo> nodeInfo = graph.getNodeInfos();
-		return apply(factory, nodes, nodeInfo);
-	}
-
-	@Override
-	public int[] apply(MDDFactory factory, int[] nodes, List<NodeInfo> nodeInfo) {
-		int[] perturbed = nodes;
+	public void apply(LogicalModel model) {
         for (Perturbation p: this) {
-            perturbed = p.apply(factory, perturbed, nodeInfo);
+            p.apply(model);
         }
-		return perturbed;
 	}
 }

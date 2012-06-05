@@ -62,10 +62,10 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	    NodeInfo node_info;
 	    for (Object node: nodeOrder) {
 	    	if (node instanceof NodeInfo) {
-	    		node_info = new NodeInfo( (NodeInfo) node);
+	    		node_info = (NodeInfo)node;
 	    	} else if (node instanceof RegulatoryNode) {
 	    		RegulatoryNode regNode = (RegulatoryNode) node;
-	    		node_info = new NodeInfo( regNode );
+	    		node_info = regNode.getNodeInfo();
 	    	} else {
 	    		node_info = new NodeInfo( node.toString());
 	    	}

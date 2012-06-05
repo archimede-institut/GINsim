@@ -715,7 +715,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 	public List<NodeInfo> getNodeInfos() {
 		List<NodeInfo> n_info = new ArrayList<NodeInfo>();
 		for (RegulatoryNode node: nodeOrder) {
-			n_info.add(new NodeInfo(node));
+			n_info.add(node.getNodeInfo());
 		}
 		return n_info;
 	}

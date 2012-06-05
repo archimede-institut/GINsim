@@ -19,5 +19,7 @@ public interface LogicalModel {
 	MDDFactory getMDDFactory();
 	
 	int[] getLogicalFunctions();
+
+	LogicalModel clone();
 	
 }

@@ -6,6 +6,7 @@ import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.logicalmodel.LogicalModel;
 import org.ginsim.core.logicalmodel.LogicalModelModifier;
 
 import fr.univmrs.tagc.javaMDD.MDDFactory;
@@ -27,15 +28,11 @@ public interface Perturbation {
     void apply(OMDDNode[] t_tree, RegulatoryGraph graph);
 
     /**
-     * Apply this perturbation on the OMDD.
+     * Apply this perturbation on a logical model.
+     * Warning: the model will be modified. clone it in advance to preserve old functions.
      * 
-     * @param factory
-     * @param nodes
-     * @param graph
-     * @return the roots for the modified MDDs
+     * @param model
+     * @return
      */
-    int[] apply(MDDFactory factory, int[] nodes, RegulatoryGraph graph);
-    
-    
-    int[] apply(MDDFactory factory, int[] nodes, List<NodeInfo> nodeInfo);
+    void apply(LogicalModel model);
 }
