@@ -14,12 +14,37 @@ import fr.univmrs.tagc.javaMDD.MDDFactory;
  */
 public interface LogicalModel {
 
+	/**
+	 * Get the MDD factory holding logical functions for this model.
+	 * @return the MDD factory in which logical function are stored.
+	 */
+	MDDFactory getMDDFactory();
+
+	/**
+	 * Get the list of core nodes in this model.
+	 * Logical functions for these nodes (in the same order) can be obtained with the
+	 * <code>getLogicalFunctions()</code> method.
+	 * 
+	 * @return the list of nodeInfo objects for core components.
+	 */
 	List<NodeInfo> getNodeOrder();
 	
-	MDDFactory getMDDFactory();
-	
+	/**
+	 * Get the logical function of core components in this model.
+	 * The order used is the same as for <code>getNodeOrder()</code>.
+	 * These functions are just identifiers, actual functions are store in
+	 * the MDD factory provided by <code>getMDDFactory</code>.
+	 * 
+	 * @return the list of logical function identifiers for core components
+	 */
 	int[] getLogicalFunctions();
 
+	/**
+	 * Make a copy of this model.
+	 * This will duplicate logical functions pointers, but not the actual MDD Factory.
+	 * 
+	 * @return a copy of this model.
+	 */
 	LogicalModel clone();
 	
 }

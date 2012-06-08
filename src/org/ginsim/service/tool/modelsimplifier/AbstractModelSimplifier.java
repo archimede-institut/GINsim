@@ -7,6 +7,8 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
+import fr.univmrs.tagc.javaMDD.MDDFactory;
+
 abstract public class AbstractModelSimplifier extends Thread implements Runnable {
 
 	
@@ -170,6 +172,146 @@ abstract public class AbstractModelSimplifier extends Thread implements Runnable
 		}
 		return ret;
 	}
+
+	/* *************************************************************
+	 *  
+	 *  The real algo is here, duplicated for MDDFactory use.
+	 *  The old version will be deprecated at some point...
+	 *  
+	 *  Deleting a node means removing it (by taking into account its logical
+	 *  function) from all of its targets
+	 *  
+	 ***************************************************************/
 	
+	/**
+	 * Internal hack to get the list of children.
+	 * This should be moved the the MDDFactory itself.
+	 * 
+	 * @param factory
+	 * @param node
+	 * @return
+	 */
+	private int[] getChildren(MDDFactory factory, int node) {
+		if (factory.isleaf(node)) {
+			return null;
+		}
+		
+		int nbchildren = factory.getNbValues(factory.getLevel(node));
+		int[] next = new int[nbchildren];
+		for (int i=0 ; i<nbchildren ; i++) {
+			next[i] = factory.getChild(node, i);
+		}
+		return next;
+	}
+	
+	/**
+	 * Remove <code>regulator</code> from its target <code>node</code>.
+	 * This is the first part of the algo: we have not yet found the 
+	 * regulator in the logical function.
+	 * It will be called recursively until we find it (or go too far)
+	 * 
+	 * @param node
+	 * @param regulator
+	 * @param level
+	 * @return
+	 */
+	public int remove(MDDFactory factory, int node, int regulator, int level) throws GsException {
+		if (factory.isleaf(node) || factory.getLevel(node) > level) {
+			return node;
+		}
+		int nlevel = factory.getLevel(node);
+		
+		if (nlevel == level) {
+			if (factory.isleaf(regulator)) {
+				return factory.getChild(node, regulator);
+			}
+			if (factory.getLevel(regulator) == level) {
+				throw new GsException(GsException.GRAVITY_ERROR, 
+						"Can not continue the simplification: a circuit would get lost");
+			}
+			
+			return remove(factory, getChildren(factory, node), regulator);
+		}
+		
+		int nextLevel;
+		int[] next;
+		if (factory.isleaf(regulator) || factory.getLevel(regulator) > nlevel) {
+			nextLevel = nlevel;
+			next = new int[factory.getNbValues(nextLevel)];
+			for (int i=0 ; i<next.length ; i++) {
+				next[i] = remove(factory, factory.getChild(node,i), regulator, level);
+			}
+		} else if (nlevel > factory.getLevel(regulator)) {
+			nextLevel = factory.getLevel(regulator);
+			next = new int[factory.getNbValues(nextLevel)];
+			for (int i=0 ; i<next.length ; i++) {
+				next[i] = remove(factory, node, factory.getChild(regulator, i), level);
+			}
+		} else {
+			nextLevel = nlevel;
+			next = new int[factory.getNbValues(nextLevel)];
+			for (int i=0 ; i<next.length ; i++) {
+				next[i] = remove(factory, factory.getChild(node, i), factory.getChild(regulator, i), level);
+			}
+		}
+		
+		return factory.get_mnode(nextLevel, next);
+	}
+
+	/**
+	 * Remove <code>regulator</code> from its target <code>node</code>.
+	 * This is the second part of the algo: we have found the regulator 
+	 * in the logical function.
+	 * We must thus follow all branches corresponding to its possible values,
+	 * until we can take the final decision.
+	 * 
+	 * @param t_ori
+	 * @param regulator
+	 * @return
+	 */
+	public int remove(MDDFactory factory, int[] t_ori, int regulator) {
+		if (factory.isleaf(regulator)) {
+			return t_ori[regulator];
+		}
+		// first, lookup for the best next step
+		int best = factory.getLevel(regulator);
+		int index = -1;
+		for (int i=0 ; i<t_ori.length ; i++) {
+			int node = t_ori[i];
+			if (!factory.isleaf(node) && factory.getLevel(node) <= best) { 
+				// also update when equal to avoid stupid optimisations...
+				best = factory.getLevel(node);
+				index = i;
+			}
+		}
+		
+		int nbnext = factory.getNbValues(best);
+		int[] next = new int[nbnext];
+		if (index == -1) {
+			for (int i=0 ; i<nbnext ; i++) {
+				next[i] = remove(factory, t_ori, factory.getChild(regulator,i));
+			}
+		} else {
+			for (int i=0 ; i<nbnext ; i++) {
+				int[] t_recur = new int[t_ori.length];
+				for (int j=0 ; j<t_recur.length ; j++) {
+					int node = t_ori[j];
+					if (factory.isleaf(node) || factory.getLevel(node) > best) {
+						t_recur[j] = node;
+					} else {
+						t_recur[j] = factory.getChild(node, i);
+					}
+				}
+				if (factory.getLevel(regulator) == best) {
+					next[i] = remove(factory, t_recur, factory.getChild(regulator,i));
+				} else {
+					next[i] = remove(factory, t_recur, regulator);
+				}
+			}
+		}
+		return factory.get_mnode(best, next);
+	}
+	
+
 }
 
