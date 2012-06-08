@@ -26,6 +26,8 @@ import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.application.Translator;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
+import org.ginsim.core.logicalmodel.LogicalModel;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
@@ -391,7 +393,12 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 		currentParameter.simulationStrategy = simulationMethodsComboBox.getSelectedIndex();
 		OptionStore.setOption("simulation.defaultMethod", new Integer(simulationMethodsComboBox.getSelectedIndex()));
 		Reg2DynService service = ServiceManager.getManager().getService( Reg2DynService.class);
-		sim = service.get( paramList.graph.getModel(), this, currentParameter);
+		LogicalModel model = paramList.graph.getModel();
+		Perturbation perturbation = (Perturbation)currentParameter.store.getObject(SimulationParameters.MUTANT);
+		if (perturbation != null) {
+			perturbation.apply(model);
+		}
+		sim = service.get( model, this, currentParameter);
 		new Thread(sim).start();
 	}
 
