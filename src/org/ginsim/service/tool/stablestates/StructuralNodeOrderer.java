@@ -1,8 +1,11 @@
 package org.ginsim.service.tool.stablestates;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -91,7 +94,7 @@ class NodeIterator implements Iterator<Integer> {
 		bestValue = nbgene+1;
 		int[] functions = model.getLogicalFunctions();
 		for (int i=0 ; i<nbgene ; i++) {
-			List<Integer> regulators = getRegulators(factory, functions[i]);
+			Collection<Integer> regulators = getRegulators(factory, functions[i]);
 			int cpt = 0;
 			boolean[] t_regline = t_reg[i];
 			for (int r: regulators) {
@@ -159,18 +162,20 @@ class NodeIterator implements Iterator<Integer> {
 	}
 
 	
-	private static List<Integer> getRegulators(MDDFactory factory, int f) {
-		List<Integer> regulators = new ArrayList<Integer>();
+	private static Collection<Integer> getRegulators(MDDFactory factory, int f) {
+		Set<Integer> regulators = new HashSet<Integer>();
 		addRegulators(regulators, factory, f);
 		return regulators;
 	}
 	
-	private static void addRegulators(List<Integer> regulators, MDDFactory factory, int f) {
+	private static void addRegulators(Set<Integer> regulators, MDDFactory factory, int f) {
 		if (factory.isleaf(f)) {
 			return;
 		}
 		
-		int n = factory.getNbValues( factory.getLevel(f) );
+		int n = factory.getLevel(f);
+		regulators.add(n);
+		n = factory.getNbValues( n );
 		for (int v=0 ; v<n ; v++) {
 			addRegulators(regulators, factory, factory.getChild(f, v));
 		}
