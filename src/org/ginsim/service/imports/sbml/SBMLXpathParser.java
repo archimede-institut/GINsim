@@ -303,8 +303,8 @@ public final class SBMLXpathParser {
 			/**
 			 * get a transition Id
 			 */
-				String trans_Id = transition.getAttributeValue("id", namespace); 
-				transitionClass = new Transition(trans_Id);
+				Output transitionOutput = null; 
+				transitionClass = new Transition();
 				
 				/**
 				 * Get Attributes for one transition <element>.
@@ -428,8 +428,6 @@ public final class SBMLXpathParser {
 							v_function = new Vector<String>();	
 							
 							if("functionTerm".equals(child.getName())) {
-								List<Attribute> fctAttribList = child.getAttributes();	
-								
 								/**
 								 * Get <functionTerm> resultLevel attribute
 								 */
@@ -438,8 +436,9 @@ public final class SBMLXpathParser {
 							
 								FunctionTerm function_term = deal( child);
 								
-								if( function_term != null) {
-									addEdgesToMutliEdges( function_term, getNodeId(trans_Id), intput_to_sign, graph);
+								if( function_term != null && transitionClass.output != null) {
+									
+									addEdgesToMutliEdges( function_term, transitionClass.output.getQualitativeSpecies(), intput_to_sign, graph);
 									v_function.addElement( function_term.getLogicalFunction());
 								}
  
@@ -515,8 +514,11 @@ public final class SBMLXpathParser {
 	public FunctionTerm deal(Element root) throws SAXException, IOException {
 
 		List<Element> rootConv = root.getChildren();
+		if (rootConv.size() == 0) {
+			return null;
+		}
 		Element math = rootConv.get(0);
-		XMLOutputter outputer = new XMLOutputter(Format.getPrettyFormat());
+		XMLOutputter outputer = new XMLOutputter(Format.getCompactFormat());
 		String xml = outputer.outputString(math);
 		InputSource file = new InputSource(new ByteArrayInputStream(xml.getBytes()));
 		
@@ -749,6 +751,17 @@ public final class SBMLXpathParser {
 			}
 			m.appendTail(sb);
 			
+			code = sb.toString();
+			p = Pattern.compile( "\\(theta_t(\\d)_[^\\)]*\\)");
+			m = p.matcher( code);
+			
+			sb = new StringBuffer();
+			while (m.find()) {
+				
+				m.appendReplacement(sb, "(1)");
+			}
+			m.appendTail(sb);
+			
 			return sb.toString();
 		}
 		
@@ -862,29 +875,6 @@ public final class SBMLXpathParser {
 	     }
 	
 	
-	
-	/** To get node ID corresponding to the current <transition> element **/
-	public String getNodeId(String transId) {	
-		String nodeName = null;
-		int new_index;
-
-			new_index = transId.indexOf( "_", 0);
-			if( new_index >=0){
-				Pattern pattern = Pattern.compile("tr_(.*)");
-				Matcher matcher = pattern.matcher(transId);
-				if(matcher.matches()){
-					nodeName = matcher.group(1);
-				}
-			}
-			else{			
-				nodeName = transId;
-			}
-			
-		return nodeName;
-		
-	}
-
-
 	/** To place every node in the graph **/
 	private void placeNodeOrder() {
 		Vector<RegulatoryNode> v_order = new Vector<RegulatoryNode>();
@@ -1600,20 +1590,10 @@ public String toString() {
 
 class Transition {
  
-private String id;	 
 private List<Input> listOfInputs;
 private Output output;
  
-public String getId() {
-	return id;
-}
-
-public void setId(String id) {
-	this.id = id;
-}
-
-public Transition(String id) {
-	this.id = id;
+public Transition() {
 	this.listOfInputs = new ArrayList<Input>();
 	this.output = null;
 }
