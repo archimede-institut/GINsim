@@ -395,6 +395,7 @@ public class GUIManager {
 		
 		// If the graph is below the limit, a new frame is opened
 		if( new_graph.getNodeCount() < WhatToDoWithGraph.LITMIT_ASK_QUESTION){
+			WhatToDoWithGraph.layoutIfNeeded(new_graph);
 			newFrame( new_graph);
 			return;
 		}
