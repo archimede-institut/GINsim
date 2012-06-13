@@ -1,5 +1,7 @@
 package org.ginsim.gui;
 
+import java.awt.Component;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -25,6 +27,9 @@ import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.graph.GraphGUIHelper;
+import org.ginsim.gui.graph.GraphGUIHelperFactory;
 import org.ginsim.gui.service.ServiceGUIManager;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.GenericGraphAction;
@@ -83,7 +88,6 @@ public class WhatToDoWithGraph extends JFrame {
 		this.graph = graph;
 		// Retrieve the list of available actions for the graph type
 		List<Action> available_actions = ServiceGUIManager.getManager().getAvailableActions( graph);
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 450);
 		contentPane = new JPanel();
@@ -108,7 +112,21 @@ public class WhatToDoWithGraph extends JFrame {
 		JLabel lbl_MainQuestion = new JLabel( Translator.getString( "STR_whatToDo_question"));
 		lbl_MainQuestion.setBounds(56, 66, 368, 15);
 		contentPane.add(lbl_MainQuestion);
-		
+
+		// add graph info panel
+		try {
+			GraphGUIHelper guiHelper = GraphGUIHelperFactory.getFactory().getGraphGUIHelper(graph);
+			Component panel = guiHelper.getInfoPanel(graph);
+			if (panel != null) {
+				panel.setBounds(450, 10, 200, 440);
+				contentPane.add(panel);
+				Rectangle bounds = getBounds();
+				bounds.width += 220;
+				setBounds(bounds);
+			}
+			
+		} catch (Exception e) {}
+
 
 		// Build the Layout radio button and the Layout combo box
 		rdbtn_view = new JRadioButton( Translator.getString( "STR_whatToDo_view"));
