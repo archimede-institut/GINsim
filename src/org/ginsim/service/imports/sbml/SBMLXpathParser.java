@@ -28,6 +28,7 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.BooleanParser;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
+import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.InvalidFunctionResolution;
 import org.jdom.Attribute;
@@ -282,6 +283,40 @@ public final class SBMLXpathParser {
 											
 			} // premier for
 			graph.setNodeOrder(v_nodeOrder);
+
+			// retrieve some layout information
+			Namespace layoutNamespace = Namespace.getNamespace("layout", "http://www.sbml.org/sbml/level3/version1/layout/version1");
+			XPath pathLayoutSpeciesGlyphs = XPath.newInstance("//layout:speciesGlyph");
+			pathLayoutSpeciesGlyphs.addNamespace(layoutNamespace);
+			XPath pathLayoutPosition = XPath.newInstance("./layout:boundingBox/layout:position");
+			pathLayoutPosition.addNamespace(layoutNamespace);
+			XPath pathLayoutDimensions = XPath.newInstance("./layout:boundingBox/layout:dimensions");
+			pathLayoutDimensions.addNamespace(layoutNamespace);
+			List<Element> layoutGlyphs = pathLayoutSpeciesGlyphs.selectNodes(racine);
+			NodeAttributesReader nreader = graph.getNodeAttributeReader();
+			for (Element elt: layoutGlyphs) {
+				String speciesID = elt.getAttribute("species", layoutNamespace).getValue();
+				RegulatoryNode node = graph.getNodeByName(speciesID);
+				if (node != null) {
+					nreader.setNode(node);
+					Element position = (Element) pathLayoutPosition.selectSingleNode(elt);
+					if (position != null) {
+						Attribute attr = position.getAttribute("x", layoutNamespace);
+						int x = attr.getIntValue();
+						attr = position.getAttribute("y", layoutNamespace);
+						int y = attr.getIntValue();
+						nreader.setPos(x, y);
+					}
+					position = (Element) pathLayoutDimensions.selectSingleNode(elt);
+					if (position != null) {
+						Attribute attr = position.getAttribute("width", layoutNamespace);
+						int w = attr.getIntValue();
+						attr = position.getAttribute("height", layoutNamespace);
+						int h = attr.getIntValue();
+						nreader.setSize(w, h);
+					}
+				}
+			}
 			
 			
 			//*****************   dealing a transition list   ********************//
@@ -752,7 +787,7 @@ public final class SBMLXpathParser {
 			m.appendTail(sb);
 			
 			code = sb.toString();
-			p = Pattern.compile( "\\(theta_t(\\d)_[^\\)]*\\)");
+			p = Pattern.compile( "\\(theta_t(\\d*)_[^\\)]*\\)");
 			m = p.matcher( code);
 			
 			sb = new StringBuffer();
