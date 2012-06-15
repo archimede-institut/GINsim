@@ -41,11 +41,11 @@ abstract public class SimulationUpdater implements Iterator {
 	protected ModelHelper modelHelper;
 
 	public SimulationUpdater(LogicalModel model) {
-		this(new ModelHelperNew(model));
+		this(new ModelHelper(model));
 	}
 	public SimulationUpdater(ModelHelper helper) {
 		modelHelper = helper;
-		this.length = modelHelper.length();
+		this.length = modelHelper.size();
 	}
 
 	public boolean hasNext() {
@@ -116,60 +116,23 @@ abstract public class SimulationUpdater implements Iterator {
 }
 
 /* ******* MDD helper *********/
-interface ModelHelper {
-	
-	int nodeChange(byte[] initState, int i);
-	
-	int length();
-}
+class ModelHelper {
 
-class ModelHelperImpl implements ModelHelper {
+	private final int size;
+	private final LogicalModel model;
 
-	private final OMDDNode[] t_tree;
-
-	public ModelHelperImpl(RegulatoryGraph model, Perturbation mutant) {
-		t_tree = model.getParametersForSimulation(true);
-        if (mutant != null) {
-            mutant.apply(t_tree, model);
-        }
+	public ModelHelper(LogicalModel model) {
+		this.model = model;
+		size = model.getLogicalFunctions().length;
 	}
 	
-	public int length() {
-		return t_tree.length;
+	public int size() {
+		return size;
 	}
 	
 	public int nodeChange(byte[] initState, int i) {
 		byte curState = initState[i];
-		byte nextState = t_tree[i].testStatus(initState);
-
-		// now see if the node is willing to change it's state
-		if (nextState > curState){
-		    return 1;
-		} else if (nextState < curState){
-		    return -1;
-		}
-		return 0;
-	}
-
-}
-
-class ModelHelperNew implements ModelHelper {
-
-	private final MDDFactory factory;
-	private final int[] nodes;
-
-	public ModelHelperNew(LogicalModel model) {
-		factory = model.getMDDFactory();
-		nodes = model.getLogicalFunctions();
-	}
-	
-	public int length() {
-		return nodes.length;
-	}
-	
-	public int nodeChange(byte[] initState, int i) {
-		byte curState = initState[i];
-		byte nextState = factory.reach(nodes[i], initState);
+		byte nextState = model.getTargetValue(i, initState);
 
 		// now see if the node is willing to change it's state
 		if (nextState > curState){

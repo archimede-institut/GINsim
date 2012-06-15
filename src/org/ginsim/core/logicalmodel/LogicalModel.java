@@ -32,13 +32,24 @@ public interface LogicalModel {
 	/**
 	 * Get the logical function of core components in this model.
 	 * The order used is the same as for <code>getNodeOrder()</code>.
-	 * These functions are just identifiers, actual functions are store in
+	 * These functions are just identifiers, actual functions are stored in
 	 * the MDD factory provided by <code>getMDDFactory</code>.
 	 * 
 	 * @return the list of logical function identifiers for core components
 	 */
 	int[] getLogicalFunctions();
 
+	/**
+	 * Compute the target value of a component for a given state.
+	 * 
+	 * @param nodeIdx index of the component in the node order
+	 * @param state value of components
+	 * @return the target value reached for this state
+	 */
+	byte getTargetValue(int componentIdx, byte[] state);
+	
+	byte getComponentValue(int componentIdx, byte[] path);
+	
 	/**
 	 * Make a copy of this model.
 	 * This will duplicate logical functions pointers, but not the actual MDD Factory.
