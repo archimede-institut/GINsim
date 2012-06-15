@@ -1,5 +1,7 @@
 package org.ginsim.gui;
 
+import java.awt.Component;
+import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -24,6 +26,10 @@ import org.ginsim.common.application.Translator;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.graph.GraphGUIHelper;
+import org.ginsim.gui.graph.GraphGUIHelperFactory;
 import org.ginsim.gui.service.ServiceGUIManager;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.GenericGraphAction;
@@ -61,6 +67,7 @@ public class WhatToDoWithGraph extends JFrame {
 	private Graph graph;
 	
 	private final ButtonGroup buttonGroup = new ButtonGroup();
+	private JRadioButton rdbtn_view;
 	private JRadioButton rdbtn_applyLayoutAndOpen;
 	private JRadioButton rdbtn_ApplyATool;
 	private JRadioButton rdbtn_Save;
@@ -81,9 +88,8 @@ public class WhatToDoWithGraph extends JFrame {
 		this.graph = graph;
 		// Retrieve the list of available actions for the graph type
 		List<Action> available_actions = ServiceGUIManager.getManager().getAvailableActions( graph);
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 425);
+		setBounds(100, 100, 450, 450);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -106,12 +112,31 @@ public class WhatToDoWithGraph extends JFrame {
 		JLabel lbl_MainQuestion = new JLabel( Translator.getString( "STR_whatToDo_question"));
 		lbl_MainQuestion.setBounds(56, 66, 368, 15);
 		contentPane.add(lbl_MainQuestion);
-		
+
+		// add graph info panel
+		try {
+			GraphGUIHelper guiHelper = GraphGUIHelperFactory.getFactory().getGraphGUIHelper(graph);
+			Component panel = guiHelper.getInfoPanel(graph);
+			if (panel != null) {
+				panel.setBounds(450, 10, 200, 440);
+				contentPane.add(panel);
+				Rectangle bounds = getBounds();
+				bounds.width += 220;
+				setBounds(bounds);
+			}
+			
+		} catch (Exception e) {}
+
 
 		// Build the Layout radio button and the Layout combo box
+		rdbtn_view = new JRadioButton( Translator.getString( "STR_whatToDo_view"));
+		buttonGroup.add(rdbtn_view);
+		rdbtn_view.setBounds(80, 95, 344, 23);
+		contentPane.add(rdbtn_view);
+		
 		rdbtn_applyLayoutAndOpen = new JRadioButton( Translator.getString( "STR_whatToDo_applyLayoutAndOpen"));
 		buttonGroup.add(rdbtn_applyLayoutAndOpen);
-		rdbtn_applyLayoutAndOpen.setBounds(80, 96, 344, 23);
+		rdbtn_applyLayoutAndOpen.setBounds(80, 127, 344, 23);
 		contentPane.add(rdbtn_applyLayoutAndOpen);
 		
 		comboBox_Layouts = new JComboBox();
@@ -120,19 +145,20 @@ public class WhatToDoWithGraph extends JFrame {
 				rdbtn_applyLayoutAndOpen.setSelected( true);
 			}
 		});
-		comboBox_Layouts.setBounds(127, 127, 231, 24);
+		comboBox_Layouts.setBounds(127, 150, 231, 24);
 		fillLayouts( comboBox_Layouts, available_actions);
 		contentPane.add(comboBox_Layouts);
 		// If display limit is reached, display option is grayed out
 		if( graph_size >= LIMIT_DISABLE_DISPLAY){
 			rdbtn_applyLayoutAndOpen.setEnabled( false);
+			rdbtn_view.setEnabled( false);
 			comboBox_Layouts.setEnabled( false);
 		}
 
 		// Build the Tool radio button and the Tool combo box
 		rdbtn_ApplyATool = new JRadioButton(  Translator.getString( "STR_whatToDo_applyTool"));
 		buttonGroup.add(rdbtn_ApplyATool);
-		rdbtn_ApplyATool.setBounds(80, 170, 344, 23);
+		rdbtn_ApplyATool.setBounds(80, 190, 344, 23);
 		contentPane.add(rdbtn_ApplyATool);
 		
 		comboBox_Tools = new JComboBox();
@@ -141,14 +167,14 @@ public class WhatToDoWithGraph extends JFrame {
 				rdbtn_ApplyATool.setSelected( true);
 			}
 		});
-		comboBox_Tools.setBounds(127, 201, 231, 24);
+		comboBox_Tools.setBounds(127, 215, 231, 24);
 		fillTools( comboBox_Tools, available_actions);
 		contentPane.add(comboBox_Tools);
 		
 		// Build the Export radio button and the Export combo box
 		rdbtn_Export = new JRadioButton( Translator.getString( "STR_whatToDo_Export"));
 		buttonGroup.add(rdbtn_Export);
-		rdbtn_Export.setBounds(80, 246, 344, 23);
+		rdbtn_Export.setBounds(80, 260, 344, 23);
 		contentPane.add(rdbtn_Export);
 		
 		comboBox_Exports = new JComboBox();
@@ -158,13 +184,13 @@ public class WhatToDoWithGraph extends JFrame {
 			}
 		});
 		fillExports( comboBox_Exports, available_actions);
-		comboBox_Exports.setBounds(127, 277, 231, 24);
+		comboBox_Exports.setBounds(127, 297, 231, 24);
 		contentPane.add(comboBox_Exports);
 		
 		// Build the Save radio button
 		rdbtn_Save = new JRadioButton( Translator.getString( "STR_whatToDo_Save"));
 		buttonGroup.add(rdbtn_Save);
-		rdbtn_Save.setBounds(80, 317, 344, 23);
+		rdbtn_Save.setBounds(80, 337, 344, 23);
 		contentPane.add(rdbtn_Save);
 		
 		// Build the OK button
@@ -178,7 +204,7 @@ public class WhatToDoWithGraph extends JFrame {
 				}
 			}
 		});
-		btn_Ok.setBounds(115, 362, 117, 25);
+		btn_Ok.setBounds(115, 380, 117, 25);
 		contentPane.add(btn_Ok);
 		
 		//Build the Cancel button 
@@ -189,14 +215,18 @@ public class WhatToDoWithGraph extends JFrame {
 				closeWindow();
 			}
 		});
-		btn_Cancel.setBounds(244, 362, 117, 25);
+		btn_Cancel.setBounds(244, 380, 117, 25);
 		contentPane.add(btn_Cancel);
 		
 		// If display limit is reached, default selected option is "apply tool" instead of "display"
 		if( graph_size < LIMIT_DISABLE_DISPLAY){
-			rdbtn_applyLayoutAndOpen.setSelected( true);
-		}
-		else{
+			// guess if a layout is needed
+			if (needLayout(graph)) {
+				rdbtn_applyLayoutAndOpen.setSelected( true);
+			} else {
+				rdbtn_view.setSelected( true);
+			}
+		} else{
 			rdbtn_ApplyATool.setSelected( true);
 		}
 		this.setVisible( true);
@@ -263,7 +293,11 @@ public class WhatToDoWithGraph extends JFrame {
 		while( button_enum.hasMoreElements()){
 			AbstractButton current_button = button_enum.nextElement();
 			if( current_button.isSelected()){
-				if( current_button.equals( rdbtn_applyLayoutAndOpen)){
+				if( current_button.equals( rdbtn_view)){
+					GUIManager.getInstance().newFrame( graph);
+					return true;
+				}
+				else if( current_button.equals( rdbtn_applyLayoutAndOpen)){
 					boolean result = executeSelectedLayout();
 					if( !result){
 						GUIMessageUtils.openErrorDialog( "STR_whatToDo_selectedLayoutNotCorrect");
@@ -378,4 +412,37 @@ public class WhatToDoWithGraph extends JFrame {
 		this.setVisible( false);
 		this.dispose();
 	}
+	
+	private static boolean needLayout(Graph graph) {
+		NodeAttributesReader nreader = graph.getNodeAttributeReader();
+		int n = 0;
+		for (Object o: graph.getNodes()) {
+			nreader.setNode(o);
+			int x = nreader.getX();
+			int y = nreader.getY();
+			if (x != 0 || y != 0) {
+				return false;
+			}
+			
+			if (n > 100) {
+				break;
+			}
+			n++;
+		}
+
+		return true;
+	}
+
+	public static void layoutIfNeeded(Graph<?, ?> graph) {
+		if (needLayout(graph)) {
+			for (Action action: ServiceGUIManager.getManager().getAvailableActions( graph)) {
+				if (action instanceof LayoutAction) {
+					action.actionPerformed(null);
+					break;
+				}
+			}
+		}
+		
+	}
+
 }

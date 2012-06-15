@@ -23,6 +23,9 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 
 	private static char ELLIPSIS = '\u2026';
 	
+	private static final int MAX_SIZE = 200;
+	private static final int MIN_SIZE = 15;
+	
 	public static final int SW = 6;      // width of the selection mark
 	public static final int hSW = SW/2;  // half width of the selection mark
 
@@ -234,6 +237,16 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
         if (vvsd == null) {
             return;
         }
+        if (w > MAX_SIZE) {
+        	w = MAX_SIZE;
+        } else if (w < MIN_SIZE) {
+        	w = MIN_SIZE;
+        }
+        if (h > MAX_SIZE) {
+        	h = MAX_SIZE;
+        } else if (h < MIN_SIZE) {
+        	h = MIN_SIZE;
+        }
         vvsd.bounds.setFrame(vvsd.bounds.getX(), vvsd.bounds.getY(), w, h);
     }
 
@@ -318,8 +331,18 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 	 */
 	public void setDefaultNodeSize(int w, int h) {
 		
-		OptionStore.getOption( VERTEX_HEIGHT, h);
-		OptionStore.getOption( VERTEX_WIDTH, w);
+        if (w > MAX_SIZE) {
+        	w = MAX_SIZE;
+        } else if (w < MIN_SIZE) {
+        	w = MIN_SIZE;
+        }
+        if (h > MAX_SIZE) {
+        	h = MAX_SIZE;
+        } else if (h < MIN_SIZE) {
+        	h = MIN_SIZE;
+        }
+        OptionStore.setOption( VERTEX_HEIGHT, h);
+        OptionStore.setOption( VERTEX_WIDTH, w);
 		width = w;
 		height = h;
 	}
