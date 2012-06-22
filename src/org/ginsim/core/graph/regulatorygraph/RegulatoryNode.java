@@ -7,6 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDOperator;
+import org.colomoto.mddlib.MDDVariable;
+import org.colomoto.mddlib.operators.MDDBaseOperators;
 import org.ginsim.common.application.Translator;
 import org.ginsim.common.utils.MaskUtils;
 import org.ginsim.common.utils.ToolTipsable;
@@ -28,9 +32,6 @@ import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.NotificationResolution;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
-import fr.univmrs.tagc.javaMDD.MDDOperator;
-import fr.univmrs.tagc.javaMDD.operators.MDDBaseOperators;
 
 
 
@@ -297,17 +298,17 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 	 * @param factory
 	 * @return
 	 */
-	public int getMDD(RegulatoryGraph graph, MDDFactory factory) {
+	public int getMDD(RegulatoryGraph graph, MDDManager factory) {
         if (isInput) {
-        	int level = factory.getVariableID(this);
+        	MDDVariable level = factory.getVariableForKey(getNodeInfo());
         	if (getMaxValue() == 1) {
-        		return factory.get_bnode(level, 0, 1);
+        		return level.getNode(0, 1);
         	}
         	int[] children = new int[getMaxValue()+1];
             for (int i=0 ; i<children.length ; i++) {
                 children[i] = i;
             }
-    		return factory.get_mnode(level, children);
+    		return level.getNode(children);
         }
 
         if (v_logicalParameters.size() == 0) {

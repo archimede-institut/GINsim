@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.colomoto.mddlib.MDDManager;
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -11,7 +12,6 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.logicalmodel.LogicalModel;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
 
 
 /**
@@ -65,7 +65,7 @@ public class InitBasedPerturbation implements Perturbation {
 
 	@Override
 	public void apply(LogicalModel model) {
-		MDDFactory factory = model.getMDDFactory();
+		MDDManager factory = model.getMDDFactory();
 		int[] nodes = model.getLogicalFunctions();
 		List<NodeInfo> order = model.getNodeOrder();
 		

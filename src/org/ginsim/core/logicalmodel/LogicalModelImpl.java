@@ -2,37 +2,28 @@ package org.ginsim.core.logicalmodel;
 
 import java.util.List;
 
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.internal.MDDManagerOrderingProxy;
 import org.ginsim.core.graph.common.NodeInfo;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
 
 public class LogicalModelImpl implements LogicalModel {
 
 	private final List<NodeInfo> nodeOrder;
-	private final MDDFactory factory;
+	private final MDDManager factory;
 	private final int[] functions;
-	private final int[] factory2modelOrderMap;
-	private final int[] model2factoryOrderMap;
+	private final MDDManagerOrderingProxy MDDorder;
 	
-	public LogicalModelImpl(List<NodeInfo> nodeOrder, MDDFactory factory, int[] functions) {
+	public LogicalModelImpl(List<NodeInfo> nodeOrder, MDDManager factory, int[] functions) {
 		this.nodeOrder = nodeOrder;
 		this.factory = factory;
 		this.functions = functions;
-		this.factory2modelOrderMap = factory.getOrderMapping(nodeOrder);
-		model2factoryOrderMap = new int[nodeOrder.size()];
-		int i=0;
-		for (int k: factory2modelOrderMap) {
-			if (k >= 0) {
-				model2factoryOrderMap[k] = i;
-			}
-			i++;
-		}
+		this.MDDorder = new MDDManagerOrderingProxy(factory, nodeOrder);
 		
 		for (int f: functions) {
 			factory.use(f);
 		}
 	}
-	
 	
 	@Override
 	public List<NodeInfo> getNodeOrder() {
@@ -40,7 +31,7 @@ public class LogicalModelImpl implements LogicalModel {
 	}
 
 	@Override
-	public MDDFactory getMDDFactory() {
+	public MDDManager getMDDFactory() {
 		return factory;
 	}
 
@@ -56,12 +47,12 @@ public class LogicalModelImpl implements LogicalModel {
 
 	@Override
 	public byte getTargetValue(int nodeIdx, byte[] state) {
-		return factory.reach(functions[nodeIdx], state, factory2modelOrderMap);
+		return MDDorder.reach(functions[nodeIdx], state);
 	}
 
 
 	@Override
 	public byte getComponentValue(int componentIdx, byte[] path) {
-		return path[ model2factoryOrderMap[componentIdx] ];
+		return path[ MDDorder.custom2factory[componentIdx] ];
 	}
 }

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
 
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.operators.MDDBaseOperators;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.common.AbstractGraph;
@@ -18,8 +20,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
-import fr.univmrs.tagc.javaMDD.operators.MDDBaseOperators;
 
 
 /**
@@ -305,7 +305,7 @@ public class LogicalParameter implements XMLize {
 	 * @param factory
 	 * @return
 	 */
-	public int getMDD(RegulatoryGraph graph, RegulatoryNode node, MDDFactory factory) {
+	public int getMDD(RegulatoryGraph graph, RegulatoryNode node, MDDManager factory) {
 
 		if (value == 0) {
 			return 0;

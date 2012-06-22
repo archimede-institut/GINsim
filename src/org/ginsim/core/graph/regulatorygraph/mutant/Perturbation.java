@@ -2,6 +2,7 @@ package org.ginsim.core.graph.regulatorygraph.mutant;
 
 import java.util.List;
 
+import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -9,7 +10,6 @@ import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.logicalmodel.LogicalModel;
 import org.ginsim.core.logicalmodel.LogicalModelModifier;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
 
 /**
  * A perturbation is a (series of) change that can be applied to a regulatory graph.

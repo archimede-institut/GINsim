@@ -3,9 +3,11 @@ package org.ginsim.service.tool.stablestates;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
-import fr.univmrs.tagc.javaMDD.NodeRelation;
-import fr.univmrs.tagc.javaMDD.operators.AbstractFlexibleOperator;
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDVariable;
+import org.colomoto.mddlib.NodeRelation;
+import org.colomoto.mddlib.operators.AbstractFlexibleOperator;
+
 
 /**
  * MDD operation used to build a stability condition.
@@ -16,7 +18,8 @@ import fr.univmrs.tagc.javaMDD.operators.AbstractFlexibleOperator;
  */
 public class StableOperation extends AbstractFlexibleOperator {
 	
-	int ref, nbVal;
+	MDDVariable ref;
+	byte nbVal;
 	
 	public StableOperation() {
 		super(MergeAction.ASKME);
@@ -35,15 +38,15 @@ public class StableOperation extends AbstractFlexibleOperator {
 	 * @param var ID of the corresponding variable in the factory
 	 * @return the ID of the merged stability condition
 	 */
-	public int getStable(MDDFactory factory, int known, int f, int var) {
+	public int getStable(MDDManager factory, int known, int f, MDDVariable var) {
 		this.ref = var;
-		this.nbVal = factory.getNbValues(var);
+		this.nbVal = var.nbval;
 		int ret = combine(factory, known, f);
 		return ret;
 	}
 
 	@Override
-	public MergeAction ask(MDDFactory factory, NodeRelation type, int first, int other) {
+	public MergeAction ask(MDDManager factory, NodeRelation type, int first, int other) {
 		switch (type) {
 			case LL:
 				if (first == 0) {
@@ -73,7 +76,7 @@ public class StableOperation extends AbstractFlexibleOperator {
 	}
 
 	@Override
-	public int custom(MDDFactory factory, NodeRelation type, int first, int other) {
+	public int custom(MDDManager factory, NodeRelation type, int first, int other) {
 		int[] children = new int[nbVal];
 		switch (type) {
 		case LL:
@@ -87,7 +90,7 @@ public class StableOperation extends AbstractFlexibleOperator {
 					children[i] = (i==other) ? first : 0;
 				}
 			}
-			return factory.get_mnode(ref, children);
+			return ref.getNode(children);
 		case LN:
 		case NN:
 		case NNf:
@@ -109,7 +112,7 @@ public class StableOperation extends AbstractFlexibleOperator {
 					children[i] = IsStableOperation.getOp(i).combine(factory, first, other);
 				}
 			}
-			return factory.get_mnode(ref, children);
+			return ref.getNode(children);
 		}
 		System.err.println("DEBUG: Stable custom should not come here!");
 		return -1;
@@ -155,7 +158,7 @@ class IsStableOperation extends AbstractFlexibleOperator {
 	}
 
 	@Override
-	public MergeAction ask(MDDFactory factory, NodeRelation type, int first, int other) {
+	public MergeAction ask(MDDManager factory, NodeRelation type, int first, int other) {
 		switch (type) {
 		case LN:
 			if (first == 0) {
@@ -168,7 +171,7 @@ class IsStableOperation extends AbstractFlexibleOperator {
 	}
 
 	@Override
-	public int custom(MDDFactory factory, NodeRelation type, int first, int other) {
+	public int custom(MDDManager factory, NodeRelation type, int first, int other) {
 		switch (type) {
 		case LL:
 		case NL:

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.common.NodeInfo;
@@ -13,7 +14,6 @@ import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.logicalmodel.LogicalModel;
 import org.ginsim.core.utils.data.NamedObject;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
 
 
 /**
@@ -188,7 +188,7 @@ public class RegulatoryMutantDef implements NamedObject, Perturbation {
 	
 	@Override
 	public void apply(LogicalModel model) {
-		MDDFactory factory = model.getMDDFactory();
+		MDDManager factory = model.getMDDFactory();
 		int[] nodes = model.getLogicalFunctions();
 		List<NodeInfo> order = model.getNodeOrder();
 		

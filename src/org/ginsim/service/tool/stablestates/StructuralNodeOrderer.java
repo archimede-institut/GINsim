@@ -7,13 +7,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.colomoto.mddlib.MDDManager;
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.logicalmodel.LogicalModel;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
 
 public class StructuralNodeOrderer implements Iterable<Integer> {
 
@@ -87,7 +87,7 @@ class NodeIterator implements Iterator<Integer> {
 
 	private void buildAdjTable(LogicalModel model) {
 		List<NodeInfo> nodeOrder = model.getNodeOrder();
-		MDDFactory factory = model.getMDDFactory();
+		MDDManager factory = model.getMDDFactory();
 		nbgene = nbremain = nodeOrder.size();
 		t_newreg = new int[nbgene][2];
 		t_reg = new boolean[nbgene][nbgene];
@@ -162,13 +162,13 @@ class NodeIterator implements Iterator<Integer> {
 	}
 
 	
-	private static Collection<Integer> getRegulators(MDDFactory factory, int f) {
+	private static Collection<Integer> getRegulators(MDDManager factory, int f) {
 		Set<Integer> regulators = new HashSet<Integer>();
 		addRegulators(regulators, factory, f);
 		return regulators;
 	}
 	
-	private static void addRegulators(Set<Integer> regulators, MDDFactory factory, int f) {
+	private static void addRegulators(Set<Integer> regulators, MDDManager factory, int f) {
 		if (factory.isleaf(f)) {
 			return;
 		}

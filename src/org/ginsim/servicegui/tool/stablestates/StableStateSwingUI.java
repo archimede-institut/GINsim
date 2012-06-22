@@ -18,6 +18,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDVariable;
+import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
@@ -27,9 +30,6 @@ import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.service.tool.stablestates.StableStateFinder;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
-import fr.univmrs.tagc.javaMDD.MultiValuedVariable;
-import fr.univmrs.tagc.javaMDD.PathSearcher;
 
 
 /**
@@ -109,19 +109,19 @@ class NewStableTableModel extends AbstractTableModel {
 
 	int nbcol = 0;
 	List<int[]> result = new ArrayList<int[]>();
-	MultiValuedVariable[] variables;
+	MDDManager factory;
 
 	public int[] getState(int sel) {
 		return result.get(sel);
 	}
 
-	public void setResult(MDDFactory factory, int idx) {
+	public void setResult(MDDManager factory, int idx) {
 		result.clear();
-		variables = factory.getVariables();
-		nbcol = variables.length;
+		this.factory = factory;
+		nbcol = factory.getVariableNumber();
 		if (!factory.isleaf(idx)) {
-			PathSearcher searcher = new PathSearcher(1);
-			int[] path = searcher.setNode(factory, idx);
+			PathSearcher searcher = new PathSearcher(factory, 1);
+			int[] path = searcher.setNode(idx);
 			for (int l: searcher) {
 				result.add(path.clone());
 			}
@@ -154,8 +154,8 @@ class NewStableTableModel extends AbstractTableModel {
 
 	@Override
 	public String getColumnName(int column) {
-		if (variables != null && variables[column] != null) {
-			return variables[column].name;
+		if (factory != null) {
+			return factory.getVariable(column).key.toString();
 		}
 		return super.getColumnName(column);
 	}

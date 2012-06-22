@@ -3,12 +3,12 @@ package org.ginsim.core.graph.regulatorygraph.mutant;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.colomoto.mddlib.MDDManager;
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.logicalmodel.LogicalModel;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
 
 /**
  * A list of perturbations, allowing to apply several of them at the same time without duplication.

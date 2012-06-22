@@ -2,13 +2,13 @@ package org.ginsim.core.graph.regulatorygraph;
 
 import java.util.List;
 
+import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.logicalmodel.LogicalModel;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
 
 
 /**
@@ -111,13 +111,13 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param factory a MDDFactory associated with the nodes of this graph 
      * @return an array containing references to the MDD roots in the factory
      */
-    int[] getMDDs(MDDFactory factory);
+    int[] getMDDs(MDDManager factory);
 
     /**
      * Construct a MDDFactory associated to the nodes of this graph
      * @return a new MDDFactory.
      */
-    MDDFactory getMDDFactory();
+    MDDManager getMDDFactory();
 
     
     /**

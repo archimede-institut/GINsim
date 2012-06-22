@@ -2,6 +2,8 @@ package org.ginsim.service.tool.stablestates;
 
 import java.util.List;
 
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDVariable;
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -9,7 +11,6 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.logicalmodel.LogicalModel;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
 
 /**
  * Main entry point to lookup the stable states of a logical model.
@@ -19,7 +20,7 @@ import fr.univmrs.tagc.javaMDD.MDDFactory;
  * @author Aurelien Naldi
  */
 public class StableStateFinder implements StableStateSearcherNew {
-	private final MDDFactory m_factory;
+	private final MDDManager m_factory;
 	private final LogicalModel model;
 	
 	Perturbation p;
@@ -38,7 +39,7 @@ public class StableStateFinder implements StableStateSearcherNew {
 	}
 
 	@Override
-	public MDDFactory getFactory() {
+	public MDDManager getFactory() {
 		return m_factory;
 	}
 	
@@ -70,7 +71,7 @@ public class StableStateFinder implements StableStateSearcherNew {
 		for (int i: ordering) {
 			NodeInfo node = nodes.get(i);
 			prev = result;
-			int var = m_factory.getVariableID(node);
+			MDDVariable var = m_factory.getVariableForKey(node);
 			int f = mdds[i];
 			result = sop.getStable(m_factory, prev, f, var);
 			m_factory.free(prev);

@@ -2,9 +2,9 @@ package org.ginsim.core.logicalmodel;
 
 import java.util.List;
 
+import org.colomoto.mddlib.MDDManager;
 import org.ginsim.core.graph.common.NodeInfo;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
 
 /**
  * A LogicalModel is a ready to use object containing all necessary information to perform simulations and analysis,
@@ -18,7 +18,7 @@ public interface LogicalModel {
 	 * Get the MDD factory holding logical functions for this model.
 	 * @return the MDD factory in which logical function are stored.
 	 */
-	MDDFactory getMDDFactory();
+	MDDManager getMDDFactory();
 
 	/**
 	 * Get the list of core nodes in this model.

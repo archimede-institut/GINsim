@@ -3,11 +3,12 @@ package org.ginsim.service.tool.modelsimplifier;
 import java.util.List;
 import java.util.Map;
 
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDVariable;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
 
 abstract public class AbstractModelSimplifier extends Thread implements Runnable {
 
@@ -191,12 +192,12 @@ abstract public class AbstractModelSimplifier extends Thread implements Runnable
 	 * @param node
 	 * @return
 	 */
-	private int[] getChildren(MDDFactory factory, int node) {
+	private int[] getChildren(MDDManager factory, int node) {
 		if (factory.isleaf(node)) {
 			return null;
 		}
 		
-		int nbchildren = factory.getNbValues(factory.getLevel(node));
+		int nbchildren = factory.getNodeVariable(node).nbval;
 		int[] next = new int[nbchildren];
 		for (int i=0 ; i<nbchildren ; i++) {
 			next[i] = factory.getChild(node, i);
@@ -212,20 +213,21 @@ abstract public class AbstractModelSimplifier extends Thread implements Runnable
 	 * 
 	 * @param node
 	 * @param regulator
-	 * @param level
+	 * @param rmVar
 	 * @return
 	 */
-	public int remove(MDDFactory factory, int node, int regulator, int level) throws GsException {
-		if (factory.isleaf(node) || factory.getLevel(node) > level) {
+	public int remove(MDDManager factory, int node, int regulator, MDDVariable rmVar) throws GsException {
+		MDDVariable nvar = factory.getNodeVariable(node);
+		if (nvar == null || nvar.after(rmVar)) {
 			return node;
 		}
-		int nlevel = factory.getLevel(node);
 		
-		if (nlevel == level) {
-			if (factory.isleaf(regulator)) {
+		MDDVariable regVar = factory.getNodeVariable(regulator);
+		if (nvar == rmVar) {
+			if (regVar == null) {
 				return factory.getChild(node, regulator);
 			}
-			if (factory.getLevel(regulator) == level) {
+			if (regVar == rmVar) {
 				throw new GsException(GsException.GRAVITY_ERROR, 
 						"Can not continue the simplification: a circuit would get lost");
 			}
@@ -233,29 +235,29 @@ abstract public class AbstractModelSimplifier extends Thread implements Runnable
 			return remove(factory, getChildren(factory, node), regulator);
 		}
 		
-		int nextLevel;
+		MDDVariable nextVariable;
 		int[] next;
-		if (factory.isleaf(regulator) || factory.getLevel(regulator) > nlevel) {
-			nextLevel = nlevel;
-			next = new int[factory.getNbValues(nextLevel)];
+		if (regVar == null || regVar.after(nvar)) {
+			nextVariable = nvar;
+			next = new int[nextVariable.nbval];
 			for (int i=0 ; i<next.length ; i++) {
-				next[i] = remove(factory, factory.getChild(node,i), regulator, level);
+				next[i] = remove(factory, factory.getChild(node,i), regulator, rmVar);
 			}
-		} else if (nlevel > factory.getLevel(regulator)) {
-			nextLevel = factory.getLevel(regulator);
-			next = new int[factory.getNbValues(nextLevel)];
+		} else if (nvar.after(regVar)) {
+			nextVariable = regVar;
+			next = new int[nextVariable.nbval];
 			for (int i=0 ; i<next.length ; i++) {
-				next[i] = remove(factory, node, factory.getChild(regulator, i), level);
+				next[i] = remove(factory, node, factory.getChild(regulator, i), rmVar);
 			}
 		} else {
-			nextLevel = nlevel;
-			next = new int[factory.getNbValues(nextLevel)];
+			nextVariable = nvar;
+			next = new int[nextVariable.nbval];
 			for (int i=0 ; i<next.length ; i++) {
-				next[i] = remove(factory, factory.getChild(node, i), factory.getChild(regulator, i), level);
+				next[i] = remove(factory, factory.getChild(node, i), factory.getChild(regulator, i), rmVar);
 			}
 		}
 		
-		return factory.get_mnode(nextLevel, next);
+		return nextVariable.getNode(next);
 	}
 
 	/**
@@ -269,47 +271,48 @@ abstract public class AbstractModelSimplifier extends Thread implements Runnable
 	 * @param regulator
 	 * @return
 	 */
-	public int remove(MDDFactory factory, int[] t_ori, int regulator) {
+	public int remove(MDDManager factory, int[] t_ori, int regulator) {
 		if (factory.isleaf(regulator)) {
 			return t_ori[regulator];
 		}
 		// first, lookup for the best next step
-		int best = factory.getLevel(regulator);
+		MDDVariable regVar = factory.getNodeVariable(regulator);
+		MDDVariable bestVar = regVar;
 		int index = -1;
 		for (int i=0 ; i<t_ori.length ; i++) {
-			int node = t_ori[i];
-			if (!factory.isleaf(node) && factory.getLevel(node) <= best) { 
+			MDDVariable nvar = factory.getNodeVariable(t_ori[i]);
+			if (nvar != null && bestVar.after(nvar)) { 
 				// also update when equal to avoid stupid optimisations...
-				best = factory.getLevel(node);
+				bestVar = nvar;
 				index = i;
 			}
 		}
 		
-		int nbnext = factory.getNbValues(best);
-		int[] next = new int[nbnext];
+		int[] next = new int[bestVar.nbval];
 		if (index == -1) {
-			for (int i=0 ; i<nbnext ; i++) {
+			for (int i=0 ; i<bestVar.nbval ; i++) {
 				next[i] = remove(factory, t_ori, factory.getChild(regulator,i));
 			}
 		} else {
-			for (int i=0 ; i<nbnext ; i++) {
+			for (int i=0 ; i<bestVar.nbval ; i++) {
 				int[] t_recur = new int[t_ori.length];
 				for (int j=0 ; j<t_recur.length ; j++) {
 					int node = t_ori[j];
-					if (factory.isleaf(node) || factory.getLevel(node) > best) {
+					MDDVariable nvar = factory.getNodeVariable(node);
+					if (nvar == null || nvar.after(bestVar)) {
 						t_recur[j] = node;
 					} else {
 						t_recur[j] = factory.getChild(node, i);
 					}
 				}
-				if (factory.getLevel(regulator) == best) {
+				if (regVar == bestVar) {
 					next[i] = remove(factory, t_recur, factory.getChild(regulator,i));
 				} else {
 					next[i] = remove(factory, t_recur, regulator);
 				}
 			}
 		}
-		return factory.get_mnode(best, next);
+		return bestVar.getNode(next);
 	}
 	
 

@@ -8,6 +8,9 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDManagerFactory;
+import org.colomoto.mddlib.MDDVariableFactory;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.BiblioManager;
@@ -29,8 +32,6 @@ import org.ginsim.core.logicalmodel.LogicalModelImpl;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.NotificationResolution;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
-import fr.univmrs.tagc.javaMDD.MultiValuedVariable;
 
 
 public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, RegulatoryMultiEdge> 
@@ -662,19 +663,18 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     }
 
     @Override
-    public MDDFactory getMDDFactory() {
-    	MultiValuedVariable[] variables = new MultiValuedVariable[getNodeCount()];
-    	int i=0;
+    public MDDManager getMDDFactory() {
+    	MDDVariableFactory vbuilder = new MDDVariableFactory();
     	for (RegulatoryNode node: getNodeOrder()) {
-System.out.println("Node: " + node.getId());
-    		variables[i++] = new MultiValuedVariable(node, node.getId(), node.getMaxValue()+1);
+    		System.out.println("Node: " + node.getId());
+    		vbuilder.add(node.getNodeInfo(), (byte)(node.getMaxValue()+1));
     	}
-    	MDDFactory factory = new MDDFactory(variables, 10);
+    	MDDManager factory = MDDManagerFactory.getManager(vbuilder, 10);
     	return factory;
     }
 
     @Override
-    public int[] getMDDs(MDDFactory factory) {
+    public int[] getMDDs(MDDManager factory) {
     	int[] mdds = new int[getNodeCount()];
     	int i=0;
     	for (RegulatoryNode node: getNodeOrder()) {
@@ -705,7 +705,7 @@ System.out.println("Node: " + node.getId());
 
 	@Override
 	public LogicalModel getModel() {
-		MDDFactory factory = getMDDFactory();
+		MDDManager factory = getMDDFactory();
 		int[] functions = getMDDs(factory);
 		return new LogicalModelImpl(getNodeInfos(), factory, functions);
 	}
