@@ -3,7 +3,6 @@ package org.ginsim.core.logicalmodel;
 import java.util.List;
 
 import org.colomoto.mddlib.MDDManager;
-import org.colomoto.mddlib.internal.MDDManagerOrderingProxy;
 import org.ginsim.core.graph.common.NodeInfo;
 
 
