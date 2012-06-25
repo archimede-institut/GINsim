@@ -35,7 +35,8 @@ public class StableOperation extends AbstractFlexibleOperator {
 	 * @param factory the MDD factory
 	 * @param known ID of the existing result in factory
 	 * @param f ID of the function of the considered node in the factory
-	 * @param var ID of the corresponding variable in the factory
+	 * @param var the corresponding variable in the factory
+	 * 
 	 * @return the ID of the merged stability condition
 	 */
 	public int getStable(MDDManager factory, int known, int f, MDDVariable var) {
@@ -104,7 +105,7 @@ public class StableOperation extends AbstractFlexibleOperator {
 				for (int i=0 ; i<nbVal ; i++) {
 					children[i] = IsStableOperation.getOp(i).combine(factory, factory.getChild(first, i), factory.getChild(other, i));
 				}
-			} else if (type != NodeRelation.NNn && ref.equals(firstVar)) {
+			} else if (type != NodeRelation.NNn && ref.equals(factory.getNodeVariable(other))) {
 				for (int i=0 ; i<nbVal ; i++) {
 					children[i] = IsStableOperation.getOp(i).combine(factory, first, factory.getChild(other, i));
 				}
