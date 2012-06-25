@@ -323,7 +323,7 @@ public class LogicalParameter implements XMLize {
 					allowed[j] = value;
 				}
 			}
-			constraints[i-1] = factory.get_mnode(factory.getVariableID(src), allowed);
+			constraints[i-1] = factory.getVariableForKey(src).getNode(allowed);
 		}
 		
 		int result;

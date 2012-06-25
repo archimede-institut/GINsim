@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDVariable;
 import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -87,17 +88,18 @@ class NodeIterator implements Iterator<Integer> {
 
 	private void buildAdjTable(LogicalModel model) {
 		List<NodeInfo> nodeOrder = model.getNodeOrder();
-		MDDManager factory = model.getMDDFactory();
+		MDDManager ddmanager = model.getMDDManager();
 		nbgene = nbremain = nodeOrder.size();
 		t_newreg = new int[nbgene][2];
 		t_reg = new boolean[nbgene][nbgene];
 		bestValue = nbgene+1;
 		int[] functions = model.getLogicalFunctions();
 		for (int i=0 ; i<nbgene ; i++) {
-			Collection<Integer> regulators = getRegulators(factory, functions[i]);
+			Collection<MDDVariable> regulators = getRegulators(ddmanager, functions[i]);
 			int cpt = 0;
 			boolean[] t_regline = t_reg[i];
-			for (int r: regulators) {
+			for (MDDVariable var: regulators) {
+				int r = ddmanager.getVariableIndex(var);
 				t_regline[r] = true;
 				cpt++;
 			}
@@ -162,21 +164,20 @@ class NodeIterator implements Iterator<Integer> {
 	}
 
 	
-	private static Collection<Integer> getRegulators(MDDManager factory, int f) {
-		Set<Integer> regulators = new HashSet<Integer>();
+	private static Collection<MDDVariable> getRegulators(MDDManager factory, int f) {
+		Set<MDDVariable> regulators = new HashSet<MDDVariable>();
 		addRegulators(regulators, factory, f);
 		return regulators;
 	}
 	
-	private static void addRegulators(Set<Integer> regulators, MDDManager factory, int f) {
+	private static void addRegulators(Set<MDDVariable> regulators, MDDManager factory, int f) {
 		if (factory.isleaf(f)) {
 			return;
 		}
 		
-		int n = factory.getLevel(f);
-		regulators.add(n);
-		n = factory.getNbValues( n );
-		for (int v=0 ; v<n ; v++) {
+		MDDVariable var = factory.getNodeVariable(f);
+		regulators.add(var);
+		for (int v=0 ; v<var.nbval ; v++) {
 			addRegulators(regulators, factory, factory.getChild(f, v));
 		}
 	}

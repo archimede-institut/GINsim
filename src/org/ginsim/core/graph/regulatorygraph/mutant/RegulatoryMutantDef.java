@@ -188,7 +188,7 @@ public class RegulatoryMutantDef implements NamedObject, Perturbation {
 	
 	@Override
 	public void apply(LogicalModel model) {
-		MDDManager factory = model.getMDDFactory();
+		MDDManager factory = model.getMDDManager();
 		int[] nodes = model.getLogicalFunctions();
 		List<NodeInfo> order = model.getNodeOrder();
 		

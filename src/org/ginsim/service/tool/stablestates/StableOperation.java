@@ -56,7 +56,7 @@ public class StableOperation extends AbstractFlexibleOperator {
 			case NL:
 			case NN:
 			case NNn:
-				if (factory.getLevel(first) < ref) {
+				if (ref.after( factory.getNodeVariable(first) )) {
 					return MergeAction.RECURSIVE;
 				}
 				return MergeAction.CUSTOM;
@@ -66,7 +66,7 @@ public class StableOperation extends AbstractFlexibleOperator {
 					return MergeAction.THIS;
 				}
 			case NNf:
-				if (factory.getLevel(other) < ref) {
+				if (ref.after( factory.getNodeVariable(other) )) {
 					return MergeAction.RECURSIVE;
 				}
 				return MergeAction.CUSTOM;
@@ -78,10 +78,11 @@ public class StableOperation extends AbstractFlexibleOperator {
 	@Override
 	public int custom(MDDManager factory, NodeRelation type, int first, int other) {
 		int[] children = new int[nbVal];
+		MDDVariable firstVar = factory.getNodeVariable(first);
 		switch (type) {
 		case LL:
 		case NL:
-			if (factory.getLevel(first) == ref) {
+			if ( ref.equals( firstVar)) {
 				for (int i=0 ; i<nbVal ; i++) {
 					children[i] = (i==other) ? factory.getChild(first, i) : 0;
 				}
@@ -95,15 +96,15 @@ public class StableOperation extends AbstractFlexibleOperator {
 		case NN:
 		case NNf:
 		case NNn:
-			if (type == NodeRelation.NNn && factory.getLevel(first) == ref) {
+			if (type == NodeRelation.NNn && ref.equals(firstVar)) {
 				for (int i=0 ; i<nbVal ; i++) {
 					children[i] = IsStableOperation.getOp(i).combine(factory, factory.getChild(first, i), other);
 				}
-			} else if (type == NodeRelation.NN && factory.getLevel(first) == ref) {
+			} else if (type == NodeRelation.NN && ref.equals(firstVar)) {
 				for (int i=0 ; i<nbVal ; i++) {
 					children[i] = IsStableOperation.getOp(i).combine(factory, factory.getChild(first, i), factory.getChild(other, i));
 				}
-			} else if (type != NodeRelation.NNn && factory.getLevel(other) == ref) {
+			} else if (type != NodeRelation.NNn && ref.equals(firstVar)) {
 				for (int i=0 ; i<nbVal ; i++) {
 					children[i] = IsStableOperation.getOp(i).combine(factory, first, factory.getChild(other, i));
 				}

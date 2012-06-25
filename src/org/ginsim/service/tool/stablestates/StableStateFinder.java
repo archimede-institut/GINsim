@@ -35,7 +35,7 @@ public class StableStateFinder implements StableStateSearcherNew {
 	
 	public StableStateFinder(RegulatoryGraph lrg) {
 		this.model = lrg.getModel();
-		m_factory = model.getMDDFactory();
+		m_factory = model.getMDDManager();
 	}
 
 	@Override

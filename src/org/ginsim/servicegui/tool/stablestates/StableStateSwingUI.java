@@ -110,6 +110,7 @@ class NewStableTableModel extends AbstractTableModel {
 	int nbcol = 0;
 	List<int[]> result = new ArrayList<int[]>();
 	MDDManager factory;
+	MDDVariable[] variables;
 
 	public int[] getState(int sel) {
 		return result.get(sel);
@@ -118,7 +119,8 @@ class NewStableTableModel extends AbstractTableModel {
 	public void setResult(MDDManager factory, int idx) {
 		result.clear();
 		this.factory = factory;
-		nbcol = factory.getVariableNumber();
+		this.variables = factory.getAllVariables();
+		nbcol = variables.length;
 		if (!factory.isleaf(idx)) {
 			PathSearcher searcher = new PathSearcher(factory, 1);
 			int[] path = searcher.setNode(idx);
@@ -155,7 +157,7 @@ class NewStableTableModel extends AbstractTableModel {
 	@Override
 	public String getColumnName(int column) {
 		if (factory != null) {
-			return factory.getVariable(column).key.toString();
+			return variables[column].key.toString();
 		}
 		return super.getColumnName(column);
 	}

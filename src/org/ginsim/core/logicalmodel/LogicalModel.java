@@ -18,7 +18,7 @@ public interface LogicalModel {
 	 * Get the MDD factory holding logical functions for this model.
 	 * @return the MDD factory in which logical function are stored.
 	 */
-	MDDManager getMDDFactory();
+	MDDManager getMDDManager();
 
 	/**
 	 * Get the list of core nodes in this model.
@@ -48,7 +48,10 @@ public interface LogicalModel {
 	 */
 	byte getTargetValue(int componentIdx, byte[] state);
 	
-	byte getComponentValue(int componentIdx, byte[] path);
+	/**
+	 * FIXME: find a proper solution for getComponentValue()
+	 */
+//	byte getComponentValue(int componentIdx, byte[] path);
 	
 	/**
 	 * Make a copy of this model.

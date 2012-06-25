@@ -65,7 +65,7 @@ public class InitBasedPerturbation implements Perturbation {
 
 	@Override
 	public void apply(LogicalModel model) {
-		MDDManager factory = model.getMDDFactory();
+		MDDManager factory = model.getMDDManager();
 		int[] nodes = model.getLogicalFunctions();
 		List<NodeInfo> order = model.getNodeOrder();
 		
@@ -97,7 +97,7 @@ public class InitBasedPerturbation implements Perturbation {
                     next[pos] = min;
                 }
             }
-            int newnode = factory.get_mnode(factory.getVariableID(vertex), next);
+            int newnode = factory.getVariableForKey(vertex).getNode(next);
             factory.free(nodes[index]);
             nodes[index] = newnode;
         }

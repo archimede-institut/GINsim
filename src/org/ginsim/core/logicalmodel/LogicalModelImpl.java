@@ -10,15 +10,13 @@ import org.ginsim.core.graph.common.NodeInfo;
 public class LogicalModelImpl implements LogicalModel {
 
 	private final List<NodeInfo> nodeOrder;
-	private final MDDManager factory;
+	private final MDDManager ddmanager;
 	private final int[] functions;
-	private final MDDManagerOrderingProxy MDDorder;
 	
 	public LogicalModelImpl(List<NodeInfo> nodeOrder, MDDManager factory, int[] functions) {
 		this.nodeOrder = nodeOrder;
-		this.factory = factory;
+		this.ddmanager = factory.getManager(nodeOrder);
 		this.functions = functions;
-		this.MDDorder = new MDDManagerOrderingProxy(factory, nodeOrder);
 		
 		for (int f: functions) {
 			factory.use(f);
@@ -31,8 +29,8 @@ public class LogicalModelImpl implements LogicalModel {
 	}
 
 	@Override
-	public MDDManager getMDDFactory() {
-		return factory;
+	public MDDManager getMDDManager() {
+		return ddmanager;
 	}
 
 	@Override
@@ -42,17 +40,18 @@ public class LogicalModelImpl implements LogicalModel {
 
 	public LogicalModel clone() {
 		int[] functionsClone = functions.clone();
-		return new LogicalModelImpl(nodeOrder, factory, functionsClone);
+		return new LogicalModelImpl(nodeOrder, ddmanager, functionsClone);
 	}
 
 	@Override
 	public byte getTargetValue(int nodeIdx, byte[] state) {
-		return MDDorder.reach(functions[nodeIdx], state);
+		return ddmanager.reach(functions[nodeIdx], state);
 	}
 
 
-	@Override
-	public byte getComponentValue(int componentIdx, byte[] path) {
-		return path[ MDDorder.custom2factory[componentIdx] ];
-	}
+//	@Override
+//	public byte getComponentValue(int componentIdx, byte[] path) {
+//		return path[ ddmanager.custom2factory[componentIdx] ];
+//	}
+
 }
