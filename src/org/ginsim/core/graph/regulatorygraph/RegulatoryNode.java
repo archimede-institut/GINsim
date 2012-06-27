@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.NodeInfoHolder;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDOperator;
 import org.colomoto.mddlib.MDDVariable;
@@ -20,7 +22,6 @@ import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.common.AbstractGraph;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterList;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
@@ -47,7 +48,7 @@ import org.ginsim.core.notification.resolvable.NotificationResolution;
  *			which the gene tends when some incoming edges are actives </li>
  * </ul>
  */
-public class RegulatoryNode implements ToolTipsable, XMLize {
+public class RegulatoryNode implements ToolTipsable, XMLize, NodeInfoHolder {
 
 	private final NodeInfo nodeInfo;
 	
@@ -516,12 +517,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize {
 		return nodeInfo.equals(obj);
 	}
 
-	/**
-	 * Get the internal NodeInfo.
-	 * The node info stores the ID and max value of the node. It should NOT be modified directly.
-	 * 
-	 * @return
-	 */
+	@Override
 	public NodeInfo getNodeInfo() {
 		return nodeInfo;
 	}

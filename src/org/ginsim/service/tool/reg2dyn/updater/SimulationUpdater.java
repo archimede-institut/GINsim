@@ -2,11 +2,11 @@ package org.ginsim.service.tool.reg2dyn.updater;
 
 import java.util.Iterator;
 
+import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.mddlib.MDDManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.core.logicalmodel.LogicalModel;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;

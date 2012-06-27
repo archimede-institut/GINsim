@@ -5,9 +5,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.awt.Color;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.Vector;
 
+import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.core.graph.GraphManager;
@@ -105,24 +107,29 @@ public class TestStableStates {
 		node_g1.addLogicalParameter(lp, true);
 		
 		//Get the stable states
-		StableStateSearcher stableStateSearcher = ServiceManager.get(StableStatesService.class).getSearcher(regGraph);
+		StableStateSearcherNew stableStateSearcher = ServiceManager.get(StableStatesService.class).getSearcher(regGraph);
         assertNotNull("The service didn't return any result", stableStateSearcher);
         
         //Get the OMDD containing the stable states
-        OMDDNode root = stableStateSearcher.call();
-        assertNotNull("The root of the OMDD is null", root);
+        int root = stableStateSearcher.call();
+        assertEquals(false, (root < 0));
         
-        //Check the states 
-        try {
-        	assertEquals("The state 00 was expected to be stable", OMDDNode.TERMINALS[1], root.next[0].next[0]);
-        	assertEquals("The state 01 was expected to be unstable", OMDDNode.TERMINALS[0], root.next[0].next[1]);
-        	assertEquals("The states 1* was expected to be unstable", OMDDNode.TERMINALS[0], root.next[1]);
-        } catch (ArrayIndexOutOfBoundsException e) {
-        	fail("Expected stable state(s) not found, one OMDD has no next");
-        }
+        //Check the states
+        PathSearcher ps = new PathSearcher(stableStateSearcher.getFactory(), 1);
+        int[] path = ps.setNode(root);
+        assertEquals(2, path.length);
+        System.out.println(root);
+        Iterator<Integer> it = ps.iterator();
         
+        int v = it.next();
+        assertEquals(1, v);
+        assertEquals(0, path[0]);
+        assertEquals(0, path[0]);
+        
+        // no other path leads to 1
+        assertEquals(false, it.hasNext());
+         
 		GraphManager.getInstance().close( regGraph);
-
 	}
 	
 }

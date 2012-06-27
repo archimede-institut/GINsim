@@ -29,7 +29,7 @@ import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.utils.data.SimpleStateListTableModel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
-import org.ginsim.service.tool.stablestates.StableStateSearcher;
+import org.ginsim.service.tool.stablestates.StableStateSearcherNew;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.ginsim.servicegui.tool.stablestates.StableTableModel;
 
@@ -200,7 +200,7 @@ class StableState extends TabComponantProvidingAState {
 	private RegulatoryGraph g;
 	private JButton computeStableStateButton;
 	
-	private StableStateSearcher sss;
+	private StableStateSearcherNew sss;
 
 	private StableTableModel tableModel;
 
@@ -232,7 +232,8 @@ class StableState extends TabComponantProvidingAState {
 		c.weightx = 1;
 		c.weighty = 1;
 		c.ipady = 0;
-		tableModel = new StableTableModel(g.getNodeOrder(), false);
+		tableModel = new StableTableModel();
+		tableModel.setResult(null, g.getNodeOrder());
         table = new EnhancedJTable(tableModel);
         table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -260,16 +261,21 @@ class StableState extends TabComponantProvidingAState {
 	protected void run() {
 		sss = ServiceManager.get(StableStatesService.class).getSearcher(g);
 		sss.setPerturbation((Perturbation) mutantStore.getObject(0));
-		OMDDNode stable;
+		int stable;
 		try {
 			stable = sss.call();
-			tableModel.setResult(stable, g);
+			tableModel.setResult(sss.getFactory(), stable);
 		} catch (Exception e) {
 			LogManager.error(e);
 		}
 	}
 
 	public byte[] getState() {
-		return tableModel.getState(table.getSelectedRow());
+		int[] state = tableModel.getState(table.getSelectedRow());
+		byte[] ret = new byte[state.length];
+		for (int i=0 ; i<state.length ; i++) {
+			ret[i] = (byte)state[i];
+		}
+		return ret;
 	}
 }

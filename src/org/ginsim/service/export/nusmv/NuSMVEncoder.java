@@ -14,6 +14,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -25,7 +26,7 @@ import org.ginsim.service.tool.modelsimplifier.ModelRewiring;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierService;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
-import org.ginsim.service.tool.stablestates.StableStateSearcher;
+import org.ginsim.service.tool.stablestates.StableStateSearcherNew;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 
 /**
@@ -652,19 +653,21 @@ public class NuSMVEncoder {
 
 		String sRet = "\nweakSS := ";
 		try {
-			StableStateSearcher sss = ServiceManager.getManager()
+			StableStateSearcherNew sss = ServiceManager.getManager()
 					.getService(StableStatesService.class)
 					.getSearcher(config.getGraph());
 			sss.setNodeOrder(sortedVars);
 			sss.setPerturbation(mutant);
-			OMDDNode omdds = sss.call();
+			int omdds = sss.call();  // FIXME: Stable state search in NuSMV encoder
+			PathSearcher psearcher = new PathSearcher(sss.getFactory(), 1);
 
 			int[] stateValues = new int[sortedVars.size()];
 			for (int i = 0; i < stateValues.length; i++)
 				stateValues[i] = -1;
 			ArrayList<String> alSSdesc;
 			if (bWeakSS) {
-				alSSdesc = writeSSs(false, stateValues, omdds, orderStateVars,
+				psearcher.setNode(omdds);
+				alSSdesc = writeSSs(false, stateValues, psearcher, orderStateVars,
 						0);
 				if (alSSdesc == null || alSSdesc.size() == 0) {
 					sRet += "\n  FALSE";
@@ -680,7 +683,8 @@ public class NuSMVEncoder {
 				}
 			}
 			sRet += ";\nstrongSS := ";
-			alSSdesc = writeSSs(true, stateValues, omdds, orderStateVars, 0);
+			psearcher.setNode(omdds);
+			alSSdesc = writeSSs(true, stateValues, psearcher, orderStateVars, 0);
 			if (alSSdesc == null || alSSdesc.size() == 0) {
 				sRet += "\n  FALSE";
 			} else {
@@ -702,6 +706,7 @@ public class NuSMVEncoder {
 		return sRet;
 	}
 
+	@Deprecated
 	private ArrayList<String> writeSSs(boolean bStrong, int[] stateValues,
 			OMDDNode nodes, List<RegulatoryNode> stateVars, int level) {
 		ArrayList<String> alSSdesc = new ArrayList<String>();
@@ -730,6 +735,17 @@ public class NuSMVEncoder {
 					stateVars, level + 1));
 		}
 		stateValues[nodes.level] = -1;
+		return alSSdesc;
+	}
+	
+
+	private ArrayList<String> writeSSs(boolean bStrong, int[] stateValues,
+			PathSearcher paths, List<RegulatoryNode> stateVars, int level) {
+		ArrayList<String> alSSdesc = new ArrayList<String>();
+		int[] path = paths.getPath();
+		for (int v: paths) {
+			// FIXME: write the actual SMV code here
+		}
 		return alSSdesc;
 	}
 }

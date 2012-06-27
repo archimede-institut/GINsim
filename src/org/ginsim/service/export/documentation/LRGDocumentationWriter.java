@@ -36,7 +36,7 @@ import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
-import org.ginsim.service.tool.stablestates.StableStateSearcher;
+import org.ginsim.service.tool.stablestates.StableStateSearcherNew;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.ginsim.servicegui.tool.stablestates.StableTableModel;
 
@@ -115,8 +115,8 @@ public class LRGDocumentationWriter {
 
 	private void writeMutants() throws Exception {
 		RegulatoryMutants mutantList = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, MutantListManager.KEY, true);
-		StableStateSearcher stableSearcher = ServiceManager.get(StableStatesService.class).getSearcher(graph);
-		OMDDNode stable;
+		StableStateSearcherNew stableSearcher = ServiceManager.get(StableStatesService.class).getSearcher(graph);
+		int stable;
 		
 		String[] cols;
 		if (config.searchStableStates && config.putComment) {
@@ -141,7 +141,7 @@ public class LRGDocumentationWriter {
 			doc.openTableCell("Stable States", true);
 		}
 		
-		StableTableModel model = new StableTableModel(nodeOrder);
+		StableTableModel model = new StableTableModel();
 		for (int i=-1 ; i<mutantList.getNbElements(null) ; i++) {
 			RegulatoryMutantDef mutant = null;
 			Object perturbation  = null;
@@ -158,7 +158,7 @@ public class LRGDocumentationWriter {
 			if (config.searchStableStates) {
 				stableSearcher.setPerturbation(mutant);
 				stable = stableSearcher.call();
-				model.setResult(stable, graph);
+				model.setResult(stableSearcher.getFactory(), stable);
 			}
 			int nbrow;
 			Iterator it_multicellularChanges = null;

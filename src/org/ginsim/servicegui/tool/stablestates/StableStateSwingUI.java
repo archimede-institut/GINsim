@@ -42,7 +42,7 @@ public class StableStateSwingUI extends StackDialog  {
 
 	RegulatoryGraph m_lrg;
 	StableStateFinder m_finder;
-	NewStableTableModel model;
+	StableTableModel model;
 	JTable tresult;
 	ObjectStore store = new ObjectStore();
 	
@@ -51,7 +51,7 @@ public class StableStateSwingUI extends StackDialog  {
 		this.m_lrg = lrg;
 		this.m_finder = new StableStateFinder(lrg);
 		
-		model = new NewStableTableModel();
+		model = new StableTableModel();
 		tresult = new EnhancedJTable(model);
 		
 		// needed for the scroll bars to appear as needed
@@ -101,67 +101,6 @@ public class StableStateSwingUI extends StackDialog  {
 }
 
 
-/**
- * Simple table model to view stable state search results.
- */
-@SuppressWarnings("serial")
-class NewStableTableModel extends AbstractTableModel {
-
-	int nbcol = 0;
-	List<int[]> result = new ArrayList<int[]>();
-	MDDManager factory;
-	MDDVariable[] variables;
-
-	public int[] getState(int sel) {
-		return result.get(sel);
-	}
-
-	public void setResult(MDDManager factory, int idx) {
-		result.clear();
-		this.factory = factory;
-		this.variables = factory.getAllVariables();
-		nbcol = variables.length;
-		if (!factory.isleaf(idx)) {
-			PathSearcher searcher = new PathSearcher(factory, 1);
-			int[] path = searcher.setNode(idx);
-			for (int l: searcher) {
-				result.add(path.clone());
-			}
-		}
-		
-		fireTableStructureChanged();
-	}
-	
-	@Override
-	public int getRowCount() {
-		return result.size();
-	}
-
-	@Override
-	public int getColumnCount() {
-		return nbcol;
-	}
-
-	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		int v = result.get(rowIndex)[columnIndex];
-		if (v == 0) {
-			return "";
-		}
-		if (v < 0) {
-			return "*";
-		}
-		return ""+v;
-	}
-
-	@Override
-	public String getColumnName(int column) {
-		if (factory != null) {
-			return variables[column].key.toString();
-		}
-		return super.getColumnName(column);
-	}
-}
 
 /**
  * custom cell renderer to colorize cells

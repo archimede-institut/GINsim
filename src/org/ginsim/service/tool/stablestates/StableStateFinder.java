@@ -2,14 +2,18 @@ package org.ginsim.service.tool.stablestates;
 
 import java.util.List;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.tool.stablestate.StableOperation;
+import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
+import org.colomoto.logicalmodel.tool.stablestate.StructuralNodeOrderer;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
-import org.ginsim.core.graph.common.NodeInfo;
+import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
-import org.ginsim.core.logicalmodel.LogicalModel;
 
 
 /**
@@ -51,34 +55,19 @@ public class StableStateFinder implements StableStateSearcherNew {
 	@Override
 	public Integer call() {
 		LogicalModel workingModel = model;
-		ordering = new StructuralNodeOrderer(model);
-		StableOperation sop = new StableOperation();
 		if (p != null) {
 			workingModel = model.clone();
 			p.apply(workingModel);
 		}
-		int[] mdds = workingModel.getLogicalFunctions();
 
-		// search domain: all nodes or simple restriction
-		int prev=1;
 		if (stateRestriction != null) {
-			prev = stateRestriction.getMDD(m_factory);
+			throw new RuntimeException("state restriction unsupported");
 		}
 		
-		// loop over the existing nodes!
-		int result=prev;
-		List<NodeInfo> nodes = workingModel.getNodeOrder();
-		for (int i: ordering) {
-			NodeInfo node = nodes.get(i);
-			prev = result;
-			MDDVariable var = m_factory.getVariableForKey(node);
-			int f = mdds[i];
-			result = sop.getStable(m_factory, prev, f, var);
-			m_factory.free(prev);
-		}
-		return result;
+		StableStateSearcher searcher = new StableStateSearcher(workingModel);
+		return searcher.getResult();
 	}
-
+	
 	@Override
 	public void setNodeOrder(List<RegulatoryNode> sortedVars) {
 		// TODO select node order

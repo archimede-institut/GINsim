@@ -32,22 +32,12 @@ public class StableStatesService implements Service {
 	public StableStatesService() {
 	}
 
-	public StableStateSearcher getSearcher(RegulatoryGraph graph) {
-		return new StableStatesAlgoImpl( graph);
-	}
-	
-	public StableStateSearcherNew getSearcherNew(RegulatoryGraph graph) {
+	public StableStateSearcherNew getSearcher(RegulatoryGraph graph) {
 		return new StableStateFinder( graph);
 	}
 	
-	public StableStateSearcher getStableStateSearcher( RegulatoryGraph regGraph, List<RegulatoryNode> nodeOrder, Perturbation mutant) {
-		StableStateSearcher searcher = getSearcher(regGraph);
-		searcher.setPerturbation(mutant);
-		return searcher;
-	}
-
-	public StableStateSearcherNew getNewStableStateSearcher( RegulatoryGraph regGraph, List<RegulatoryNode> nodeOrder, Perturbation mutant) {
-		StableStateSearcherNew searcher = getSearcherNew(regGraph);
+	public StableStateSearcherNew getStableStateSearcher( RegulatoryGraph regGraph, List<RegulatoryNode> nodeOrder, Perturbation mutant) {
+		StableStateSearcherNew searcher = getSearcher(regGraph);
 		searcher.setPerturbation(mutant);
 		return searcher;
 	}

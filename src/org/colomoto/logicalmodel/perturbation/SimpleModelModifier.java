@@ -1,5 +1,7 @@
-package org.ginsim.core.logicalmodel;
+package org.colomoto.logicalmodel.perturbation;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.LogicalModelModifier;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 
 /**
