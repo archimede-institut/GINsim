@@ -664,15 +664,31 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 
     @Override
     public MDDManager getMDDFactory() {
+    	return  getMDDFactory(getNodeOrder());
+    }
+
+    /**
+     * Build a MDDManager with a custom variable order
+     * 
+     * @param order the desired order or null to use the default order
+     * 
+     * @return a new MDDManager with the required order
+     */
+    private MDDManager getMDDFactory(List<RegulatoryNode> order) {
+    	if (order == null) {
+    		// default to the node order
+    		order = getNodeOrder();
+    	}
     	MDDVariableFactory vbuilder = new MDDVariableFactory();
-    	for (RegulatoryNode node: getNodeOrder()) {
+    	for (RegulatoryNode node: order) {
     		System.out.println("Node: " + node.getId());
     		vbuilder.add(node.getNodeInfo(), (byte)(node.getMaxValue()+1));
     	}
     	MDDManager factory = MDDManagerFactory.getManager(vbuilder, 10);
     	return factory;
+    	
     }
-
+    
     @Override
     public int[] getMDDs(MDDManager factory) {
     	int[] mdds = new int[getNodeCount()];
@@ -705,16 +721,21 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 
 	@Override
 	public LogicalModel getModel() {
-		MDDManager factory = getMDDFactory();
-		int[] functions = getMDDs(factory);
-		return new LogicalModelImpl(getNodeInfos(), factory, functions);
+		return getModel(getNodeOrder());
 	}
 
+	public LogicalModel getModel(List<RegulatoryNode> order) {
+		if (order == null) {
+			order = getNodeOrder();
+		}
+		MDDManager factory = getMDDFactory(order);
+		int[] functions = getMDDs(factory);
+		return new LogicalModelImpl(getNodeInfos(order), factory, functions);
+	}
 
-	@Override
-	public List<NodeInfo> getNodeInfos() {
+	private List<NodeInfo> getNodeInfos(List<RegulatoryNode> order) {
 		List<NodeInfo> n_info = new ArrayList<NodeInfo>();
-		for (RegulatoryNode node: nodeOrder) {
+		for (RegulatoryNode node: order) {
 			n_info.add(node.getNodeInfo());
 		}
 		return n_info;

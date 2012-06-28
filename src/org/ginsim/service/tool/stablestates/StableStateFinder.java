@@ -38,8 +38,13 @@ public class StableStateFinder implements StableStateSearcherNew {
 	int nbgene, nbremain;
 	
 	public StableStateFinder(RegulatoryGraph lrg) {
-		this.model = lrg.getModel();
+		this(lrg.getModel());
+	}
+	
+	public StableStateFinder(LogicalModel model) {
+		this.model = model;
 		m_factory = model.getMDDManager();
+		
 	}
 
 	@Override

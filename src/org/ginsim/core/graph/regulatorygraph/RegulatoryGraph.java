@@ -160,10 +160,12 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
 	LogicalModel getModel();
 
 	/**
-	 * Get a list of lightweight objects representing the node order
+	 * Get a ready-to-be-used model (list of nodes and functions, no graph structure)
 	 * 
-	 * @return the ordered list of minimal information on components
+	 * @param order the desired node order
+	 * 
+	 * @return a model matching this RegulatoryGraph
 	 */
-	List<NodeInfo> getNodeInfos();
+	LogicalModel getModel(List<RegulatoryNode> order);
     
 }
