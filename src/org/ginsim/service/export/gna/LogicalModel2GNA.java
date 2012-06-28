@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
 import org.colomoto.mddlib.PathSearcher;
@@ -32,6 +33,7 @@ public class LogicalModel2GNA {
 	public void write() throws IOException {
 
 		MDDManager ddmanager = model.getMDDManager();
+		List<NodeInfo> coreNodes = model.getNodeOrder();
 		PathSearcher searcher = new PathSearcher(ddmanager);
 		int[] functions = model.getLogicalFunctions();
 		MDDVariable[] variables = ddmanager.getAllVariables();
@@ -40,8 +42,7 @@ public class LogicalModel2GNA {
 			int mdd = functions[p];
 			String id = var.toString();
 			
-			// FIXME: input node support in LogicalModel
-			boolean input = false;
+			boolean input = coreNodes.get(p).isInput();
 			out.write((input ? "input" : "state") + "-variable: " + id
 					+ "\n" + "  zero-parameter: zero_" + id + "\n"
 					+ "  box-parameter: max_" + id

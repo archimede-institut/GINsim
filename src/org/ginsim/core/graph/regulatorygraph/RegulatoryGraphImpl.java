@@ -724,6 +724,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 		return getModel(getNodeOrder());
 	}
 
+	@Override
 	public LogicalModel getModel(List<RegulatoryNode> order) {
 		if (order == null) {
 			order = getNodeOrder();

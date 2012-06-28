@@ -52,7 +52,6 @@ public class RegulatoryNode implements ToolTipsable, XMLize, NodeInfoHolder {
 
 	private final NodeInfo nodeInfo;
 	
-	private boolean isInput = false;
 	private boolean isOutput = true;
 	private final LogicalParameterList v_logicalParameters = new LogicalParameterList();
 
@@ -87,17 +86,17 @@ public class RegulatoryNode implements ToolTipsable, XMLize, NodeInfoHolder {
 	}
 
     public boolean isInput() {
-        return isInput;
+        return nodeInfo.isInput();
     }
     public void setInput(boolean input, Graph graph) {
-        if (input != this.isInput) {
-            this.isInput = input;
+        if (input != isInput()) {
+            nodeInfo.setInput(input);
             ((AbstractGraph) graph).fireGraphChange( GraphChangeType.NODEUPDATED, this);
         }
     }
 
     public boolean isOutput() {
-        return !isInput && isOutput;
+        return !isInput() && isOutput;
     }
     public void setOutput(boolean output, Graph graph) {
         if (output != this.isOutput) {
@@ -300,7 +299,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize, NodeInfoHolder {
 	 * @return
 	 */
 	public int getMDD(RegulatoryGraph graph, MDDManager factory) {
-        if (isInput) {
+        if (isInput()) {
         	MDDVariable level = factory.getVariableForKey(getNodeInfo());
         	if (getMaxValue() == 1) {
         		return level.getNode(0, 1);
@@ -339,7 +338,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize, NodeInfoHolder {
 	}
 	public OMDDNode getTreeParameters(RegulatoryGraph graph, List<RegulatoryNode> nodeOrder) {
         OMDDNode root;
-        if (isInput) {
+        if (isInput()) {
             root = new OMDDNode();
             root.level = nodeOrder.indexOf(this);
             root.next = new OMDDNode[getMaxValue()+1];
@@ -377,8 +376,8 @@ public class RegulatoryNode implements ToolTipsable, XMLize, NodeInfoHolder {
 			}
 		    out.addAttr("maxvalue", ""+getMaxValue());
 		    
-		    if (isInput) {
-	            out.addAttr("input", ""+isInput);
+		    if (isInput()) {
+	            out.addAttr("input", ""+isInput());
 		    }	    
 		    // TODO: at some point stop saving logical parameters
 		 	LogicalParameterList lpl = this.getV_logicalParameters();
@@ -418,7 +417,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize, NodeInfoHolder {
 		clone.nodeInfo.setMax(nodeInfo.getMax());
 		clone.name = name;
 		clone.setGsa((Annotation)gsa.clone());
-		clone.isInput = isInput;
+		clone.setInput(isInput(), graph);
 		return clone;
 	}
 	
