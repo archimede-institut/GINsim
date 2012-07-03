@@ -681,7 +681,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     	}
     	MDDVariableFactory vbuilder = new MDDVariableFactory();
     	for (RegulatoryNode node: order) {
-    		System.out.println("Node: " + node.getId());
     		vbuilder.add(node.getNodeInfo(), (byte)(node.getMaxValue()+1));
     	}
     	MDDManager factory = MDDManagerFactory.getManager(vbuilder, 10);

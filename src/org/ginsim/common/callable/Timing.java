@@ -41,4 +41,17 @@ public class Timing {
 		return (int)(System.currentTimeMillis()-t);
 	}
 
+	/**
+	 * Get the time taken by a Callable's call method
+	 * 
+	 * @param c
+	 * @return the time for a single run in milliseconds
+	 * @throws Exception
+	 */
+	public static int time(Runnable c) throws Exception {
+		long t = System.currentTimeMillis();
+		c.run();
+		return (int)(System.currentTimeMillis()-t);
+	}
+
 }

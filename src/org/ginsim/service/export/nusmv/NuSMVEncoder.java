@@ -14,6 +14,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.Translator;
@@ -26,7 +27,6 @@ import org.ginsim.service.tool.modelsimplifier.ModelRewiring;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierService;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
-import org.ginsim.service.tool.stablestates.StableStateSearcherNew;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 
 /**
@@ -658,13 +658,13 @@ public class NuSMVEncoder {
 
 		String sRet = "";
 		try {
-			StableStateSearcherNew sss = ServiceManager
+			StableStateSearcher sss = ServiceManager
 					.getManager()
 					.getService(StableStatesService.class)
 					.getStableStateSearcher(config.getGraph(), sortedNodes,
 							mutant);
-			int omdds = sss.call();
-			PathSearcher psearcher = new PathSearcher(sss.getFactory(), 1);
+			int omdds = sss.getResult();
+			PathSearcher psearcher = new PathSearcher(sss.getMDDManager(), 1);
 
 			ArrayList<String> alSSdesc;
 			if (bWeakSS) {

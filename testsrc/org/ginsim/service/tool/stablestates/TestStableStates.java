@@ -6,9 +6,9 @@ import static org.junit.Assert.fail;
 
 import java.awt.Color;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.Vector;
 
+import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.OptionStore;
@@ -22,7 +22,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.service.ServiceManager;
@@ -107,15 +106,15 @@ public class TestStableStates {
 		node_g1.addLogicalParameter(lp, true);
 		
 		//Get the stable states
-		StableStateSearcherNew stableStateSearcher = ServiceManager.get(StableStatesService.class).getSearcher(regGraph);
+		StableStateSearcher stableStateSearcher = ServiceManager.get(StableStatesService.class).getSearcher(regGraph);
         assertNotNull("The service didn't return any result", stableStateSearcher);
         
         //Get the OMDD containing the stable states
-        int root = stableStateSearcher.call();
+        int root = stableStateSearcher.getResult();
         assertEquals(false, (root < 0));
         
         //Check the states
-        PathSearcher ps = new PathSearcher(stableStateSearcher.getFactory(), 1);
+        PathSearcher ps = new PathSearcher(stableStateSearcher.getMDDManager(), 1);
         int[] path = ps.setNode(root);
         assertEquals(2, path.length);
         System.out.println(root);
