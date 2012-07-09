@@ -163,15 +163,12 @@ public class ModelRewiring extends AbstractModelSimplifier implements Callable<R
 		Queue<RegulatoryNode> queue = new ArrayDeque<RegulatoryNode>();
 		
 		for (RegulatoryNode node: graph.getNodeOrder()) {
-			if (node.isInput()) {
-				nodes.put(node, 0);
-				continue;
-			}
-			
 			Collection<RegulatoryMultiEdge> outedges = graph.getOutgoingEdges(node);
 			int targetCount = outedges==null ? 0 : outedges.size();
 			if (targetCount == 0) {
-				queue.add(node);
+				if (!node.isInput()) {
+					queue.add(node);
+				}
 			} else {
 				nodes.put(node, targetCount);
 			}
@@ -190,9 +187,11 @@ public class ModelRewiring extends AbstractModelSimplifier implements Callable<R
 					RegulatoryNode regulator = me.getSource();
 					int targetCount = nodes.get(regulator) - 1;
 					if (targetCount == 0) {
-						queue.add(regulator);
-						rewiredtargets.add(regulator);
-						orderedPseudoOutputs.add(regulator);
+						if (!node.isInput()) {
+							queue.add(regulator);
+							rewiredtargets.add(regulator);
+							orderedPseudoOutputs.add(regulator);
+						}
 					} else {
 						nodes.put(regulator, targetCount);
 					}
