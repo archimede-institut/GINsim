@@ -29,7 +29,7 @@ public class SimpleModelModifier implements LogicalModelModifier {
 		
 		// clone (?) and update the model
 		LogicalModel m = model.clone();
-		perturbation.apply(m);
+		perturbation.update(m);
 		
 		return model;
 	}

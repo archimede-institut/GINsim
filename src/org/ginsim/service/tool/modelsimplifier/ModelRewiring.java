@@ -164,6 +164,7 @@ public class ModelRewiring extends AbstractModelSimplifier implements Callable<R
 		
 		for (RegulatoryNode node: graph.getNodeOrder()) {
 			if (node.isInput()) {
+				nodes.put(node, 0);
 				continue;
 			}
 			

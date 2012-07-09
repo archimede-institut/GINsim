@@ -6,6 +6,7 @@ import java.util.Map.Entry;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.perturbation.AbstractPerturbation;
 import org.colomoto.mddlib.MDDManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -19,7 +20,7 @@ import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
  * It is meant to be used to restrict ourself to some input conditions: it will replace the MDD such that only values allowed by the initial state will be stable.
  * All other values are replaced by the closest lower allowed value (or closest higher for the first values).
  */
-public class InitBasedPerturbation implements Perturbation {
+public class InitBasedPerturbation extends AbstractPerturbation implements Perturbation {
 
     InitialState init;
     
@@ -64,7 +65,7 @@ public class InitBasedPerturbation implements Perturbation {
     }
 
 	@Override
-	public void apply(LogicalModel model) {
+	public void update(LogicalModel model) {
 		MDDManager factory = model.getMDDManager();
 		int[] nodes = model.getLogicalFunctions();
 		List<NodeInfo> order = model.getNodeOrder();

@@ -40,7 +40,9 @@ public class StableStatesService implements Service {
 	
 	public StableStateSearcher getStableStateSearcher( RegulatoryGraph regGraph, List<RegulatoryNode> nodeOrder, Perturbation mutant) {
 		LogicalModel model = regGraph.getModel();
-		mutant.apply(model);
+		if (mutant != null) {
+			mutant.update(model);
+		}
 		return getStableStateSearcher(model);
 	}
 

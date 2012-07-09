@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.perturbation.AbstractPerturbation;
 import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
@@ -19,7 +20,7 @@ import org.ginsim.core.utils.data.NamedObject;
 /**
  * store the definition of a mutant
  */
-public class RegulatoryMutantDef implements NamedObject, Perturbation {
+public class RegulatoryMutantDef extends AbstractPerturbation implements NamedObject, Perturbation {
     String name;
     List<RegulatoryMutantChange> v_changes = new ArrayList<RegulatoryMutantChange>();
     Annotation annotation = new Annotation();
@@ -187,7 +188,7 @@ public class RegulatoryMutantDef implements NamedObject, Perturbation {
 
 	
 	@Override
-	public void apply(LogicalModel model) {
+	public void update(LogicalModel model) {
 		MDDManager factory = model.getMDDManager();
 		int[] nodes = model.getLogicalFunctions();
 		List<NodeInfo> order = model.getNodeOrder();

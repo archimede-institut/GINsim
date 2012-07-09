@@ -157,7 +157,7 @@ public class LRGDocumentationWriter {
 			
 			LogicalModel lmodel = graph.getModel();
 			if (config.searchStableStates) {
-				mutant.apply(lmodel);
+				mutant.update(lmodel);
 				StableStateSearcher stableSearcher = sss.getStableStateSearcher(lmodel);
 				stable = stableSearcher.getResult();
 				model.setResult(stableSearcher.getMDDManager(), stable);

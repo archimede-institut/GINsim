@@ -262,7 +262,7 @@ class StableState extends TabComponantProvidingAState {
 		LogicalModel model = g.getModel();
 		Perturbation p = (Perturbation) mutantStore.getObject(0);
 		if (p != null) {
-			p.apply(model);
+			p.update(model);
 		}
 		sss = ServiceManager.get(StableStatesService.class).getStableStateSearcher(model);
 		int stable;

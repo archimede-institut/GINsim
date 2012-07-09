@@ -78,7 +78,7 @@ public class StableStateSwingUI extends StackDialog  {
 		Perturbation perturbation = (Perturbation)store.getObject(0);
 		LogicalModel lmodel = m_lrg.getModel();
 		if (perturbation != null) {
-			perturbation.apply(lmodel);
+			perturbation.update(lmodel);
 		}
 		StableStateSearcher m_finder = sss.getStableStateSearcher(lmodel);
 		try {

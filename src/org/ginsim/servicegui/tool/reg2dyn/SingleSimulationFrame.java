@@ -396,7 +396,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 		LogicalModel model = paramList.graph.getModel();
 		Perturbation perturbation = (Perturbation)currentParameter.store.getObject(SimulationParameters.MUTANT);
 		if (perturbation != null) {
-			perturbation.apply(model);
+			perturbation.update(model);
 		}
 		sim = service.get( model, this, currentParameter);
 		new Thread(sim).start();
