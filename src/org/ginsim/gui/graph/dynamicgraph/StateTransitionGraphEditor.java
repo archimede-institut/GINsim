@@ -3,6 +3,7 @@ package org.ginsim.gui.graph.dynamicgraph;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.Translator;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
@@ -10,7 +11,6 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphEventCascade;
 import org.ginsim.core.graph.common.GraphListener;
-import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.utils.data.GenericList;
 import org.ginsim.core.utils.data.SimpleGenericList;

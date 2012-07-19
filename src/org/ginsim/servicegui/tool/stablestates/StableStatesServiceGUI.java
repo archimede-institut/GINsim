@@ -15,7 +15,6 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.service.common.ToolAction;
-import org.ginsim.gui.utils.dialog.stackdialog.HandledStackDialog;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -33,7 +32,7 @@ public class StableStatesServiceGUI extends AbstractServiceGUI {
 		
 		if (graph instanceof RegulatoryGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new StableStatesAction( (RegulatoryGraph)graph, this));
+			actions.add(new NewStableStatesAction( (RegulatoryGraph)graph, this));
 			return actions;
 		}
 		return null;
@@ -45,12 +44,12 @@ public class StableStatesServiceGUI extends AbstractServiceGUI {
 	}
 }
 
-class StableStatesAction extends ToolAction {
+class NewStableStatesAction extends ToolAction {
 
-	private static final long serialVersionUID = -6910432442433953521L;
+	private static final long serialVersionUID = -368269624983512268L;
 	private final RegulatoryGraph graph;
 	
-	public StableStatesAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+	public NewStableStatesAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
 		
 		super( "STR_stableStates", "STR_stableStates_descr", serviceGUI);
 		this.graph = graph;
@@ -64,7 +63,7 @@ class StableStatesAction extends ToolAction {
     		return;
     	}
 
-    	new HandledStackDialog( new StableStateUI( graph));
+    	new StableStateSwingUI(null, graph);
 	}
 	
 }

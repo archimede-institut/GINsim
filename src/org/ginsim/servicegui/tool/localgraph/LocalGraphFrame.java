@@ -21,6 +21,9 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.LogicalModelModifier;
+import org.colomoto.logicalmodel.perturbation.SimpleModelModifier;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.Translator;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
@@ -143,9 +146,10 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 			colorizeButton.setText(Translator.getString("STR_do_colorize"));
 			isColorized = false;
 		}
-		
-		mutant = (Perturbation) mutantStore.getObject(0);
-		lg.setUpdater(new SynchronousSimulationUpdater(regGraph, mutant));
+
+		LogicalModelModifier modifier = new SimpleModelModifier((Perturbation) mutantStore.getObject(0));
+		LogicalModel model = modifier.apply(regGraph.getModel());
+		lg.setUpdater(new SynchronousSimulationUpdater(model));
 		List states = sst.getStates();
 		if (states == null) return;
 		

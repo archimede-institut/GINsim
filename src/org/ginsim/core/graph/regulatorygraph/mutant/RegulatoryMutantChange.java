@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -14,7 +15,6 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalFunctionList
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
 
 
 public class RegulatoryMutantChange {
@@ -142,7 +142,7 @@ public class RegulatoryMutantChange {
      * @param graph
      * @return
      */
-	public int apply(MDDFactory factory, int node, RegulatoryGraph graph) {
+	public int apply(MDDManager factory, int node) {
         int maxValue = vertex.getMaxValue();
         if (min == 0 && max == maxValue) {
             // no change here!

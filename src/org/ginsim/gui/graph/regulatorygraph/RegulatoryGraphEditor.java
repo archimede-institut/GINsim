@@ -153,4 +153,14 @@ class GsGraphOrderList extends SimpleGenericList {
 		GUIManager.getInstance().getGraphGUI(graph).getSelection().selectNode(v_data.get(row));
 	}
 	
+	@Override
+	public boolean move(int[] sel, int diff) {
+		if (super.move(sel, diff)) {
+			// trigger change event for node reordering
+			graph.fireGraphChange(GraphChangeType.METADATACHANGE, null);
+			return true;
+		}
+		return false;
+	}
+
 }

@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
 import org.ginsim.common.document.DocumentStyle;
 import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.common.utils.IOUtils;
@@ -33,10 +35,8 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamod
 import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
 import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
-import org.ginsim.service.tool.stablestates.StableStateSearcher;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.ginsim.servicegui.tool.stablestates.StableTableModel;
 
@@ -115,8 +115,8 @@ public class LRGDocumentationWriter {
 
 	private void writeMutants() throws Exception {
 		RegulatoryMutants mutantList = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, MutantListManager.KEY, true);
-		StableStateSearcher stableSearcher = ServiceManager.get(StableStatesService.class).getSearcher(graph);
-		OMDDNode stable;
+		StableStatesService sss = ServiceManager.get(StableStatesService.class);
+		int stable;
 		
 		String[] cols;
 		if (config.searchStableStates && config.putComment) {
@@ -141,7 +141,7 @@ public class LRGDocumentationWriter {
 			doc.openTableCell("Stable States", true);
 		}
 		
-		StableTableModel model = new StableTableModel(nodeOrder);
+		StableTableModel model = new StableTableModel();
 		for (int i=-1 ; i<mutantList.getNbElements(null) ; i++) {
 			RegulatoryMutantDef mutant = null;
 			Object perturbation  = null;
@@ -155,10 +155,12 @@ public class LRGDocumentationWriter {
 				continue;
 			}
 			
+			LogicalModel lmodel = graph.getModel();
 			if (config.searchStableStates) {
-				stableSearcher.setPerturbation(mutant);
-				stable = stableSearcher.call();
-				model.setResult(stable, graph);
+				mutant.update(lmodel);
+				StableStateSearcher stableSearcher = sss.getStableStateSearcher(lmodel);
+				stable = stableSearcher.getResult();
+				model.setResult(stableSearcher.getMDDManager(), stable);
 			}
 			int nbrow;
 			Iterator it_multicellularChanges = null;

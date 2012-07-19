@@ -28,6 +28,7 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.BooleanParser;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
+import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.InvalidFunctionResolution;
 import org.jdom.Attribute;
@@ -282,6 +283,40 @@ public final class SBMLXpathParser {
 											
 			} // premier for
 			graph.setNodeOrder(v_nodeOrder);
+
+			// retrieve some layout information
+			Namespace layoutNamespace = Namespace.getNamespace("layout", "http://www.sbml.org/sbml/level3/version1/layout/version1");
+			XPath pathLayoutSpeciesGlyphs = XPath.newInstance("//layout:speciesGlyph");
+			pathLayoutSpeciesGlyphs.addNamespace(layoutNamespace);
+			XPath pathLayoutPosition = XPath.newInstance("./layout:boundingBox/layout:position");
+			pathLayoutPosition.addNamespace(layoutNamespace);
+			XPath pathLayoutDimensions = XPath.newInstance("./layout:boundingBox/layout:dimensions");
+			pathLayoutDimensions.addNamespace(layoutNamespace);
+			List<Element> layoutGlyphs = pathLayoutSpeciesGlyphs.selectNodes(racine);
+			NodeAttributesReader nreader = graph.getNodeAttributeReader();
+			for (Element elt: layoutGlyphs) {
+				String speciesID = elt.getAttribute("species", layoutNamespace).getValue();
+				RegulatoryNode node = graph.getNodeByName(speciesID);
+				if (node != null) {
+					nreader.setNode(node);
+					Element position = (Element) pathLayoutPosition.selectSingleNode(elt);
+					if (position != null) {
+						Attribute attr = position.getAttribute("x", layoutNamespace);
+						int x = attr.getIntValue();
+						attr = position.getAttribute("y", layoutNamespace);
+						int y = attr.getIntValue();
+						nreader.setPos(x, y);
+					}
+					position = (Element) pathLayoutDimensions.selectSingleNode(elt);
+					if (position != null) {
+						Attribute attr = position.getAttribute("width", layoutNamespace);
+						int w = attr.getIntValue();
+						attr = position.getAttribute("height", layoutNamespace);
+						int h = attr.getIntValue();
+						nreader.setSize(w, h);
+					}
+				}
+			}
 			
 			
 			//*****************   dealing a transition list   ********************//
@@ -303,8 +338,8 @@ public final class SBMLXpathParser {
 			/**
 			 * get a transition Id
 			 */
-				String trans_Id = transition.getAttributeValue("id", namespace); 
-				transitionClass = new Transition(trans_Id);
+				Output transitionOutput = null; 
+				transitionClass = new Transition();
 				
 				/**
 				 * Get Attributes for one transition <element>.
@@ -345,15 +380,15 @@ public final class SBMLXpathParser {
 							}
 							
 							Attribute att_sign = input.getAttribute( "sign", namespace);
-							if( att_sign != null) {
-								inputClass.setSign( att_sign.getValue());
-							}
 							
 							/**
 							 * Add input <element> to input list
 							 */
 							transitionClass.addInput(inputClass);
-							intput_to_sign.put( att_qual.getValue(), att_sign.getValue());
+							if( att_sign != null) {
+								inputClass.setSign( att_sign.getValue());
+								intput_to_sign.put( att_qual.getValue(), att_sign.getValue());
+							}
 							
 						} // for every <input>
 
@@ -428,8 +463,6 @@ public final class SBMLXpathParser {
 							v_function = new Vector<String>();	
 							
 							if("functionTerm".equals(child.getName())) {
-								List<Attribute> fctAttribList = child.getAttributes();	
-								
 								/**
 								 * Get <functionTerm> resultLevel attribute
 								 */
@@ -438,8 +471,9 @@ public final class SBMLXpathParser {
 							
 								FunctionTerm function_term = deal( child);
 								
-								if( function_term != null) {
-									addEdgesToMutliEdges( function_term, getNodeId(trans_Id), intput_to_sign, graph);
+								if( function_term != null && transitionClass.output != null) {
+									
+									addEdgesToMutliEdges( function_term, transitionClass.output.getQualitativeSpecies(), intput_to_sign, graph);
 									v_function.addElement( function_term.getLogicalFunction());
 								}
  
@@ -515,8 +549,11 @@ public final class SBMLXpathParser {
 	public FunctionTerm deal(Element root) throws SAXException, IOException {
 
 		List<Element> rootConv = root.getChildren();
+		if (rootConv.size() == 0) {
+			return null;
+		}
 		Element math = rootConv.get(0);
-		XMLOutputter outputer = new XMLOutputter(Format.getPrettyFormat());
+		XMLOutputter outputer = new XMLOutputter(Format.getCompactFormat());
 		String xml = outputer.outputString(math);
 		InputSource file = new InputSource(new ByteArrayInputStream(xml.getBytes()));
 		
@@ -749,6 +786,17 @@ public final class SBMLXpathParser {
 			}
 			m.appendTail(sb);
 			
+			code = sb.toString();
+			p = Pattern.compile( "\\(theta_t(\\d*)_[^\\)]*\\)");
+			m = p.matcher( code);
+			
+			sb = new StringBuffer();
+			while (m.find()) {
+				
+				m.appendReplacement(sb, "(1)");
+			}
+			m.appendTail(sb);
+			
 			return sb.toString();
 		}
 		
@@ -862,29 +910,6 @@ public final class SBMLXpathParser {
 	     }
 	
 	
-	
-	/** To get node ID corresponding to the current <transition> element **/
-	public String getNodeId(String transId) {	
-		String nodeName = null;
-		int new_index;
-
-			new_index = transId.indexOf( "_", 0);
-			if( new_index >=0){
-				Pattern pattern = Pattern.compile("tr_(.*)");
-				Matcher matcher = pattern.matcher(transId);
-				if(matcher.matches()){
-					nodeName = matcher.group(1);
-				}
-			}
-			else{			
-				nodeName = transId;
-			}
-			
-		return nodeName;
-		
-	}
-
-
 	/** To place every node in the graph **/
 	private void placeNodeOrder() {
 		Vector<RegulatoryNode> v_order = new Vector<RegulatoryNode>();
@@ -1600,20 +1625,10 @@ public String toString() {
 
 class Transition {
  
-private String id;	 
 private List<Input> listOfInputs;
 private Output output;
  
-public String getId() {
-	return id;
-}
-
-public void setId(String id) {
-	this.id = id;
-}
-
-public Transition(String id) {
-	this.id = id;
+public Transition() {
 	this.listOfInputs = new ArrayList<Input>();
 	this.output = null;
 }

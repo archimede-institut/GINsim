@@ -22,10 +22,12 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.application.Translator;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
@@ -43,12 +45,10 @@ import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 import org.ginsim.service.tool.reg2dyn.htg.HTGSimulation;
 
 
-
-
 /**
  * The frame displayed to the user when he want to run a simulation
  */
-public class SingleSimulationFrame extends BaseSimulationFrame implements ListSelectionListener{
+public class SingleSimulationFrame extends BaseSimulationFrame implements ListSelectionListener {
 	private static final long serialVersionUID = 8687415239702718705L;
 	
 	private static final String[] simulationMethodsNames = {Translator.getString("STR_STG"), Translator.getString("STR_SCCG"), Translator.getString("STR_HTG")};
@@ -349,11 +349,8 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 	
 /* *************** RUN AND SIMULATION **********************/
 
-	/**
-	 * simulation is done (or interrupted), now choose what to do with the new graph.
-	 * @param graph the dynamic graph
-	 */
-	public void endSimu( Graph graph) {
+	@Override
+	public void setResult( Graph graph) {
 		isrunning = false;
 		if (null == graph) {
 			GUIMessageUtils.openErrorDialog("no graph generated", regGraphFrame);
@@ -363,9 +360,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 		cancel();
 	}
 
-	/**
-	 * close the frame, eventually end the simulation first 
-	 */
+	@Override
 	protected void cancel() {
 		if (isrunning) {
 			sim.interrupt();	
@@ -376,6 +371,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 		OptionStore.setOption(id+".height", new Integer(getHeight()));
 		super.cancel();
 	}
+	@Override
 	protected void run() {
 		if (currentParameter == null) return;
 		setMessage(Translator.getString("STR_wait_msg"));
@@ -397,7 +393,12 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 		currentParameter.simulationStrategy = simulationMethodsComboBox.getSelectedIndex();
 		OptionStore.setOption("simulation.defaultMethod", new Integer(simulationMethodsComboBox.getSelectedIndex()));
 		Reg2DynService service = ServiceManager.getManager().getService( Reg2DynService.class);
-		sim = service.get( paramList.graph, this, currentParameter);
+		LogicalModel model = paramList.graph.getModel();
+		Perturbation perturbation = (Perturbation)currentParameter.store.getObject(SimulationParameters.MUTANT);
+		if (perturbation != null) {
+			perturbation.update(model);
+		}
+		sim = service.get( model, this, currentParameter);
 		new Thread(sim).start();
 	}
 
@@ -504,7 +505,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 	}
 
 	@Override
-	public void addStableState(SimulationQueuedState item) {
+	public void milestone(Object item) {
 	}
 
 }

@@ -14,6 +14,8 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
+import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -25,7 +27,6 @@ import org.ginsim.service.tool.modelsimplifier.ModelRewiring;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierService;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
-import org.ginsim.service.tool.stablestates.StableStateSearcher;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 
 /**
@@ -87,6 +88,9 @@ public class NuSMVEncoder {
 			RegulatoryNode node = nodeOrder.get(i);
 			t_vertex[i] = node;
 			t_regulators[i] = node.getId();
+			if (node.getId().length() == 1)
+				throw new GsException(GsException.GRAVITY_ERROR,
+						"NuSMV does not support single-letter component names");
 			if (node.isInput())
 				hasInputVars = true;
 		}
@@ -437,7 +441,7 @@ public class NuSMVEncoder {
 				out.write(");\n");
 			}
 		}
-
+		System.out.println("nodeOrder: " + nodeOrder);
 		// Write StrongSSs. If Type2 write also WeakSSs
 		out.write(writeStableStates(nodeOrder, mutant, config, !bType1));
 
@@ -463,7 +467,10 @@ public class NuSMVEncoder {
 			out.write("next(" + t_regulators[i] + ") != ");
 			out.write(t_regulators[i] + " |\n");
 		}
-		out.write("strongSS | weakSS;\n");
+		out.write("strongSS");
+		if (!bType1)
+			out.write(" | weakSS");
+		out.write(";\n");
 
 		Iterator<InitialState> it;
 		Map<RegulatoryNode, List<Integer>> m_states;
@@ -637,50 +644,51 @@ public class NuSMVEncoder {
 
 	private String writeStableStates(List<RegulatoryNode> origOrder,
 			Perturbation mutant, NuSMVConfig config, boolean bWeakSS) {
-		List<RegulatoryNode> sortedVars = new ArrayList<RegulatoryNode>();
-		List<RegulatoryNode> orderStateVars = new ArrayList<RegulatoryNode>();
-		List<RegulatoryNode> orderInputVars = new ArrayList<RegulatoryNode>();
+		List<RegulatoryNode> sortedNodes = new ArrayList<RegulatoryNode>();
+		List<RegulatoryNode> inputNodes = new ArrayList<RegulatoryNode>();
 		for (int i = 0; i < origOrder.size(); i++) {
 			if (origOrder.get(i).isInput())
-				orderInputVars.add(origOrder.get(i));
+				inputNodes.add(origOrder.get(i));
 			else {
-				orderStateVars.add(origOrder.get(i));
-				sortedVars.add(origOrder.get(i));
+				sortedNodes.add(origOrder.get(i));
 			}
 		} // reordered [ stateVar1 ... stateVarN inputVar1 ... inputVarN ]
-		sortedVars.addAll(orderInputVars);
+		int stateNodesSize = sortedNodes.size();
+		sortedNodes.addAll(inputNodes);
 
-		String sRet = "\nweakSS := ";
+		String sRet = "";
 		try {
-			StableStateSearcher sss = ServiceManager.getManager()
+			StableStateSearcher sss = ServiceManager
+					.getManager()
 					.getService(StableStatesService.class)
-					.getSearcher(config.getGraph());
-			sss.setNodeOrder(sortedVars);
-			sss.setPerturbation(mutant);
-			OMDDNode omdds = sss.call();
+					.getStableStateSearcher(config.getGraph(), sortedNodes,
+							mutant);
+			int omdds = sss.getResult();
+			PathSearcher psearcher = new PathSearcher(sss.getMDDManager(), 1);
 
-			int[] stateValues = new int[sortedVars.size()];
-			for (int i = 0; i < stateValues.length; i++)
-				stateValues[i] = -1;
 			ArrayList<String> alSSdesc;
 			if (bWeakSS) {
-				alSSdesc = writeSSs(false, stateValues, omdds, orderStateVars,
-						0);
+				sRet += "\nweakSS := ";
+				psearcher.setNode(omdds);
+				alSSdesc = writeSSs(false, psearcher, sortedNodes,
+						stateNodesSize);
 				if (alSSdesc == null || alSSdesc.size() == 0) {
-					sRet += "\n  FALSE";
+					sRet += "\n  FALSE;";
 				} else {
 					for (int i = 0; i < alSSdesc.size(); i++) {
 						if (i > 0)
 							sRet += " | ";
 						sRet += "weakSS" + i;
 					}
+					sRet += ";";
 					for (int i = 0; i < alSSdesc.size(); i++) {
-						sRet += ";\nweakSS" + i + " := " + alSSdesc.get(i);
+						sRet += "\nweakSS" + i + " := " + alSSdesc.get(i) + ";";
 					}
 				}
 			}
-			sRet += ";\nstrongSS := ";
-			alSSdesc = writeSSs(true, stateValues, omdds, orderStateVars, 0);
+			sRet += "\nstrongSS := ";
+			psearcher.setNode(omdds);
+			alSSdesc = writeSSs(true, psearcher, sortedNodes, stateNodesSize);
 			if (alSSdesc == null || alSSdesc.size() == 0) {
 				sRet += "\n  FALSE";
 			} else {
@@ -702,34 +710,38 @@ public class NuSMVEncoder {
 		return sRet;
 	}
 
-	private ArrayList<String> writeSSs(boolean bStrong, int[] stateValues,
-			OMDDNode nodes, List<RegulatoryNode> stateVars, int level) {
+	private ArrayList<String> writeSSs(boolean bStrong, PathSearcher paths,
+			List<RegulatoryNode> nodeOrder, int stateNodesSize) {
 		ArrayList<String> alSSdesc = new ArrayList<String>();
-		if (nodes.next == null) {
-			if (nodes.value == 1
-					&& (bStrong && level == stateVars.size() || !bStrong
-							&& level > stateVars.size())) {
-				// we have a stable state:
-				String desc = "";
-				for (int i = 0; i < stateVars.size(); i++) {
-					if (stateValues[i] == -1)
-						continue;
-					if (stateVars.get(i).isOutput())
-						continue;
-					if (i > 0)
-						desc += " & ";
-					desc += stateVars.get(i) + "=" + stateValues[i];
+		int[] iaSSPath = paths.getPath();
+		SSsearch: for (int v : paths) {
+			String sSSdesc = "";
+			int undef = 0;
+			for (int i = 0; i < nodeOrder.size(); i++) {
+				if (bStrong) {
+					if (i >= stateNodesSize) {
+						// Then not a Strong SS
+						if (iaSSPath[i] > -1)
+							continue SSsearch;
+					} else {
+						if (sSSdesc.length() > 0)
+							sSSdesc += " & ";
+						sSSdesc += nodeOrder.get(i) + "=" + iaSSPath[i];
+					}
+				} else {
+					if (iaSSPath[i] == -1) {
+						undef++;
+						if (nodeOrder.size() - undef == stateNodesSize)
+							continue SSsearch;
+					} else {
+						if (sSSdesc.length() > 0)
+							sSSdesc += " & ";
+						sSSdesc += nodeOrder.get(i) + "=" + iaSSPath[i];
+					}
 				}
-				alSSdesc.add(desc);
 			}
-			return alSSdesc;
+			alSSdesc.add(sSSdesc);
 		}
-		for (int i = 0; i < nodes.next.length; i++) {
-			stateValues[nodes.level] = i;
-			alSSdesc.addAll(writeSSs(bStrong, stateValues, nodes.next[i],
-					stateVars, level + 1));
-		}
-		stateValues[nodes.level] = -1;
 		return alSSdesc;
 	}
 }

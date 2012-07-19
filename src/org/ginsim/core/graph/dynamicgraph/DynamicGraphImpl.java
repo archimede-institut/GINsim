@@ -9,13 +9,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.AbstractDerivedGraph;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -62,10 +62,10 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	    NodeInfo node_info;
 	    for (Object node: nodeOrder) {
 	    	if (node instanceof NodeInfo) {
-	    		node_info = new NodeInfo( (NodeInfo) node);
+	    		node_info = (NodeInfo)node;
 	    	} else if (node instanceof RegulatoryNode) {
 	    		RegulatoryNode regNode = (RegulatoryNode) node;
-	    		node_info = new NodeInfo( regNode );
+	    		node_info = regNode.getNodeInfo();
 	    	} else {
 	    		node_info = new NodeInfo( node.toString());
 	    	}
@@ -196,7 +196,8 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
         	edges = getEdges();
         }
 
-        EdgeAttributesReader eReader = getEdgeAttributeReader();
+        EdgeAttributesReader eReader = getCachedEdgeAttributeReader();
+        NodeAttributesReader nReader = getCachedNodeAttributeReader();
         
         switch (mode) {
         	case 2:
@@ -205,7 +206,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 		            String source = edge.getSource().toString();
 		            String target = edge.getTarget().toString();
 		            out.write("\t\t<edge id=\"s"+ source +"_s"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\">\n");
-		            out.write(GinmlHelper.getEdgeVS(eReader));
+		            out.write(GinmlHelper.getEdgeVS(eReader, nReader, edge));
 		            out.write("</edge>");
 		        }
         	    break;

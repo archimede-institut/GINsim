@@ -11,6 +11,8 @@ import java.util.List;
 abstract public class GenericNamedList<T> extends ArrayList<T> {
 	private static final long serialVersionUID = -6886269451843627038L;
 	
+	private List<GenericListListener> v_listeners = new ArrayList<GenericListListener>();
+	
 	/**
 	 * Get the names of available add modes.
 	 * @return a list of names, null if unneeded 
@@ -47,15 +49,27 @@ abstract public class GenericNamedList<T> extends ArrayList<T> {
     abstract public boolean doEdit(T object, int col, Object value);
 
     /**
-     * Signal forwarding method, does nothing for non-listenable lists
+     * Signal forwarding method, does nothing if no listener was declared
      */
     protected void refresh() {
+		if (v_listeners == null) {
+			return;
+		}
+		for (GenericListListener l: v_listeners) {
+			l.contentChanged();
+		}
     }
 
     /**
-     * Signal forwarding method, does nothing for non-listenable lists
+     * Signal forwarding method, does nothing if no listener was declared
      */
 	protected void removed(T item, int index) {
+		if (v_listeners == null) {
+			return;
+		}
+		for (GenericListListener l: v_listeners) {
+			l.itemRemoved(item, index);
+		}
 	}
 
     public boolean edit(int row, int col, Object value) {
@@ -189,4 +203,11 @@ abstract public class GenericNamedList<T> extends ArrayList<T> {
 	public Object getAction(int row, int col) {
 		return "->";
 	}
+	
+    public void addListListener(GenericListListener l) {
+    	v_listeners.add(l);
+    }
+    public void removeListListener(GenericListListener l) {
+    	v_listeners.remove(l);
+    }
 }

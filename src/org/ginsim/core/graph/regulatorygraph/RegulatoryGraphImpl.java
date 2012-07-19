@@ -8,6 +8,12 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.LogicalModelImpl;
+import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDManagerFactory;
+import org.colomoto.mddlib.MDDVariableFactory;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.BiblioManager;
@@ -26,8 +32,6 @@ import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.NotificationResolution;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
-import fr.univmrs.tagc.javaMDD.MultiValuedVariable;
 
 
 public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, RegulatoryMultiEdge> 
@@ -219,11 +223,12 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 
         switch (mode) {
 	    	case 2:
-	    	    EdgeAttributesReader ereader = getEdgeAttributeReader();
+	    	    EdgeAttributesReader ereader = getCachedEdgeAttributeReader();
+	    	    NodeAttributesReader nreader = getCachedNodeAttributeReader();
 		        while (it.hasNext()) {
 		        	RegulatoryMultiEdge edge = it.next();
 		            ereader.setEdge(edge);
-		            edge.toXML(out, GinmlHelper.getEdgeVS(ereader), mode);
+		            edge.toXML(out, GinmlHelper.getEdgeVS(ereader, nreader, edge), mode);
 		        }
 		        break;
         	default:
@@ -390,9 +395,8 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
             vertex.setName(name);
         }
         vertex.setMaxValue(max, this);
-        if (addNode(vertex)) {
-        	nodeOrder.add(vertex);
-        }
+        addNode(vertex);
+
         return vertex;
     }
 
@@ -659,18 +663,33 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     }
 
     @Override
-    public MDDFactory getMDDFactory() {
-    	MultiValuedVariable[] variables = new MultiValuedVariable[getNodeCount()];
-    	int i=0;
-    	for (RegulatoryNode node: getNodeOrder()) {
-    		variables[i++] = new MultiValuedVariable(node, node.getId(), node.getMaxValue()+1);
-    	}
-    	MDDFactory factory = new MDDFactory(variables, 10);
-    	return factory;
+    public MDDManager getMDDFactory() {
+    	return  getMDDFactory(getNodeOrder());
     }
 
+    /**
+     * Build a MDDManager with a custom variable order
+     * 
+     * @param order the desired order or null to use the default order
+     * 
+     * @return a new MDDManager with the required order
+     */
+    private MDDManager getMDDFactory(List<RegulatoryNode> order) {
+    	if (order == null) {
+    		// default to the node order
+    		order = getNodeOrder();
+    	}
+    	MDDVariableFactory vbuilder = new MDDVariableFactory();
+    	for (RegulatoryNode node: order) {
+    		vbuilder.add(node.getNodeInfo(), (byte)(node.getMaxValue()+1));
+    	}
+    	MDDManager factory = MDDManagerFactory.getManager(vbuilder, 10);
+    	return factory;
+    	
+    }
+    
     @Override
-    public int[] getMDDs(MDDFactory factory) {
+    public int[] getMDDs(MDDManager factory) {
     	int[] mdds = new int[getNodeCount()];
     	int i=0;
     	for (RegulatoryNode node: getNodeOrder()) {
@@ -699,5 +718,27 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 	}
 
 
+	@Override
+	public LogicalModel getModel() {
+		return getModel(getNodeOrder());
+	}
+
+	@Override
+	public LogicalModel getModel(List<RegulatoryNode> order) {
+		if (order == null) {
+			order = getNodeOrder();
+		}
+		MDDManager factory = getMDDFactory(order);
+		int[] functions = getMDDs(factory);
+		return new LogicalModelImpl(getNodeInfos(order), factory, functions);
+	}
+
+	private List<NodeInfo> getNodeInfos(List<RegulatoryNode> order) {
+		List<NodeInfo> n_info = new ArrayList<NodeInfo>();
+		for (RegulatoryNode node: order) {
+			n_info.add(node.getNodeInfo());
+		}
+		return n_info;
+	}
 
 }

@@ -5,30 +5,29 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.List;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
+import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
-import org.ginsim.service.tool.stablestates.StableStateFinder;
+import org.ginsim.gui.utils.widgets.EnhancedJTable;
+import org.ginsim.service.tool.stablestates.StableStatesService;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
-import fr.univmrs.tagc.javaMDD.MultiValuedVariable;
-import fr.univmrs.tagc.javaMDD.PathSearcher;
 
 
 /**
@@ -39,32 +38,34 @@ import fr.univmrs.tagc.javaMDD.PathSearcher;
 @SuppressWarnings("serial")
 public class StableStateSwingUI extends StackDialog  {
 
+	private static StableStatesService sss = ServiceManager.getManager().getService(StableStatesService.class);
+	
 	RegulatoryGraph m_lrg;
-	StableStateFinder m_finder;
-	NewStableTableModel model;
+	StableTableModel model;
 	JTable tresult;
 	ObjectStore store = new ObjectStore();
 	
 	public StableStateSwingUI(JFrame f, RegulatoryGraph lrg) {
 		super(f, "stableStatesGUI", 600, 400);
 		this.m_lrg = lrg;
-		this.m_finder = new StableStateFinder(lrg);
 		
-		model = new NewStableTableModel();
-		tresult = new JTable(model);
+		model = new StableTableModel();
+		tresult = new EnhancedJTable(model);
 		
+		// needed for the scroll bars to appear as needed
+		tresult.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+        tresult.getTableHeader().setReorderingAllowed(false);
 		tresult.setDefaultRenderer(Object.class, new ColoredCellRenderer());
 		tresult.setAutoCreateRowSorter(true);
 		
 		JPanel panel = new JPanel(new GridBagLayout());
 		Insets insets = new Insets(2, 2, 2, 2);
-		GridBagConstraints cst = new GridBagConstraints(0, 0, 1, 1, 0, 0,
+		GridBagConstraints cst = new GridBagConstraints(0, 0, 1, 1, 1, 0,
 				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
 				insets, 0, 0);
 		MutantSelectionPanel  mutantPanel = new MutantSelectionPanel(this, lrg, store);
 		panel.add(mutantPanel, cst);
-		JScrollPane pane = new JScrollPane();
-	    pane.setViewportView(tresult);
+		JScrollPane pane = new JScrollPane(tresult);
 	    cst = new GridBagConstraints(0, 1, 1, 1, 1, 1,
 				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
 				insets, 0, 0);
@@ -75,18 +76,26 @@ public class StableStateSwingUI extends StackDialog  {
 	@Override
 	protected void run() {
 		Perturbation perturbation = (Perturbation)store.getObject(0);
-		m_finder.setPerturbation(perturbation);
-		int result = m_finder.call();
-		model.setResult(m_finder.getFactory(), result);
-		m_finder.getFactory().free(result);
-
-		TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
-		Enumeration<TableColumn> columns = tresult.getColumnModel().getColumns();
-		while (columns.hasMoreElements()) {
-		   TableColumn col = columns.nextElement();
-		   col.setHeaderRenderer(headerRenderer);
-		   col.setMinWidth(20);
-		   col.setMaxWidth(25);
+		LogicalModel lmodel = m_lrg.getModel();
+		if (perturbation != null) {
+			perturbation.update(lmodel);
+		}
+		StableStateSearcher m_finder = sss.getStableStateSearcher(lmodel);
+		try {
+			int result = m_finder.getResult();
+			model.setResult(m_finder.getMDDManager(), result);
+			m_finder.getMDDManager().free(result);
+	
+			TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
+			Enumeration<TableColumn> columns = tresult.getColumnModel().getColumns();
+			while (columns.hasMoreElements()) {
+			   TableColumn col = columns.nextElement();
+			   col.setHeaderRenderer(headerRenderer);
+			   col.setMinWidth(20);
+			   col.setMaxWidth(25);
+			}
+		} catch (Exception e) {
+			LogManager.error(e);
 		}
 	}
 	
@@ -98,65 +107,6 @@ public class StableStateSwingUI extends StackDialog  {
 }
 
 
-/**
- * Simple table model to view stable state search results.
- */
-@SuppressWarnings("serial")
-class NewStableTableModel extends AbstractTableModel {
-
-	int nbcol = 0;
-	List<int[]> result = new ArrayList<int[]>();
-	MultiValuedVariable[] variables;
-
-	public int[] getState(int sel) {
-		return result.get(sel);
-	}
-
-	public void setResult(MDDFactory factory, int idx) {
-		result.clear();
-		variables = factory.getVariables();
-		nbcol = variables.length;
-		if (!factory.isleaf(idx)) {
-			PathSearcher searcher = new PathSearcher(1);
-			int[] path = searcher.setNode(factory, idx);
-			for (int l: searcher) {
-				result.add(path.clone());
-			}
-		}
-		
-		fireTableStructureChanged();
-	}
-	
-	@Override
-	public int getRowCount() {
-		return result.size();
-	}
-
-	@Override
-	public int getColumnCount() {
-		return nbcol;
-	}
-
-	@Override
-	public Object getValueAt(int rowIndex, int columnIndex) {
-		int v = result.get(rowIndex)[columnIndex];
-		if (v == 0) {
-			return "";
-		}
-		if (v < 0) {
-			return "*";
-		}
-		return ""+v;
-	}
-
-	@Override
-	public String getColumnName(int column) {
-		if (variables != null && variables[column] != null) {
-			return variables[column].name;
-		}
-		return super.getColumnName(column);
-	}
-}
 
 /**
  * custom cell renderer to colorize cells

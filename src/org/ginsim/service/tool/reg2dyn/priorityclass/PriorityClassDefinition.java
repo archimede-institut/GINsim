@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.colomoto.logicalmodel.NodeInfo;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -341,7 +343,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
      *    the "transition filter" is a bit hacky: add it to your transition (which should be either +1 or -1)
      *    and if the result is zero (0), then this transition shouldn't be followed.
      *
-     * bytely: it is 0 for all transitions, 1 for negative transitions and -1 for positive ones
+     * shortly: it is 0 for all transitions, 1 for negative transitions and -1 for positive ones
      */
     public int[][] getPclass(List<RegulatoryNode> nodeOrder) {
 
@@ -353,8 +355,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
         //   - during the first pass asynchronous classes with the same priority are merged
         //   - then the real int[][] is created from the merged classes
 		List<List<Integer>> v_vpclass = new ArrayList<List<Integer>>();
-        for (int i=0 ; i<v_data.size() ; i++) {
-            Reg2dynPriorityClass pc = v_data.get(i);
+        for (Reg2dynPriorityClass pc: v_data) {
             List<Integer> v_content;
             if (pc.getMode() == Reg2dynPriorityClass.ASYNCHRONOUS) {
                 v_content = new ArrayList<Integer>();
@@ -412,6 +413,34 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
             pclass[i] = t;
         }
         return pclass;
+    }
+
+	/**
+     * @return the compiled priority class.
+     * @see <code>getPclass</code>
+     */
+    public int[][] getPclassNew(List<NodeInfo> nodeInfos) {
+    	
+    	Map<NodeInfo, RegulatoryNode> m_info2node = new HashMap<NodeInfo, RegulatoryNode>();
+    	for (RegulatoryNode node: m_elt.keySet()) {
+    		for (NodeInfo ni: nodeInfos) {
+    			if (ni.equals(node)) {
+    				m_info2node.put(ni, node);
+    				break;
+    			}
+    		}
+    	}
+    	
+    	List<RegulatoryNode> nodeOrder = new ArrayList<RegulatoryNode>();
+		for (NodeInfo ni: nodeInfos) {
+			RegulatoryNode node = m_info2node.get(ni);
+			nodeOrder.add(node);
+			if (node == null) {
+				LogManager.debug("No matching RegulatoryNode for "+ni);
+			}
+		}
+    	
+    	return getPclass(nodeOrder);
     }
 
 	public void lock() {

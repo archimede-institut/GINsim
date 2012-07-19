@@ -4,9 +4,11 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 
+import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
+import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
@@ -14,7 +16,6 @@ import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.service.tool.reg2dyn.SimulationManager;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 import org.ginsim.service.tool.reg2dyn.helpers.SimulationHelper;
@@ -31,12 +32,11 @@ public class LimitedSimulation implements Runnable {
 	
 	protected LinkedList<SimulationQueuedState> queue = new LinkedList<SimulationQueuedState>(); // exploration queue
 
-	private SimulationManager simulationManager;
+	private ProgressListener<Graph> simulationManager;
 	private boolean breadthFirst;
 	private SimulationUpdater updater;
 	private SimulationHelper helper;
 	private Iterator<byte[]> initStatesIterator;
-	private RegulatoryGraph regGraph;
 	private boolean ready;
 
 	private SimulationConstraint constraint;
@@ -52,7 +52,7 @@ public class LimitedSimulation implements Runnable {
 	 * @param simulationManager
 	 * @param params
 	 */
-    public LimitedSimulation(HierarchicalTransitionGraph htg, SimulationConstraint constraint, SimulationParameters params, SimulationManager simulationManager) {
+    public LimitedSimulation(HierarchicalTransitionGraph htg, SimulationConstraint constraint, SimulationParameters params, ProgressListener<Graph> simulationManager) {
     	this.htg = htg;
 		this.constraint = constraint;
 		this.simulationManager = simulationManager;
@@ -60,14 +60,15 @@ public class LimitedSimulation implements Runnable {
 		this.nbnode = 0;
 
 		try {
-			regGraph = htg.getAssociatedGraph();
+			RegulatoryGraph regGraph = htg.getAssociatedGraph();
+			LogicalModel model = regGraph.getModel();
+			helper = new STGLimitedSimulationHelper(model, htg, params, constraint);
+			updater = SimulationUpdater.getInstance(model, params);
+		    initStatesIterator = constraint.getNewIterator();
 		} catch (GsException e) {
 			LogManager.error("The htg is not associated with a regulatory graph");
 		}
 		
-		helper = new STGLimitedSimulationHelper(regGraph, htg, params, constraint);
-		updater = SimulationUpdater.getInstance(regGraph, params);
-	    initStatesIterator = constraint.getNewIterator();
 	}
 
 
@@ -81,7 +82,7 @@ public class LimitedSimulation implements Runnable {
     public void run() {
     	
     	try{
-    		simulationManager.endSimu( do_simulation());
+    		simulationManager.setResult( do_simulation());
     		constructMapping(helper.getDynamicGraph());
     	}
     	catch ( GsException ge) {
@@ -130,7 +131,7 @@ public class LimitedSimulation implements Runnable {
 						updater.setState(item.state, item.depth, helper.getNode());
 						if (!updater.hasNext()) {
 							helper.setStable();
-							simulationManager.addStableState(item);
+							simulationManager.milestone(item);
 							String display = "";
 							for (int i=0 ; i<item.state.length ; i++ ) {
 								display += item.state[i] + " ";

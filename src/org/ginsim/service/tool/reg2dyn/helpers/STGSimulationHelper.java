@@ -1,5 +1,9 @@
 package org.ginsim.service.tool.reg2dyn.helpers;
 
+import java.util.List;
+
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
@@ -17,14 +21,15 @@ import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
  * 
  * @author Duncan Berenguier
  */
-public class STGSimulationHelper extends SimulationHelper {
+public class STGSimulationHelper implements SimulationHelper {
 	protected DynamicNode node;
 	protected DynamicGraph stateTransitionGraph;
 	protected NodeAttributesReader vreader;
 	
-	public STGSimulationHelper(RegulatoryGraph regGraph, SimulationParameters params) {
+	public STGSimulationHelper(LogicalModel model, SimulationParameters params) {
 		stateTransitionGraph = GraphManager.getInstance().getNewGraph( DynamicGraph.class, params.nodeOrder);
-		stateTransitionGraph.setAssociatedGraph(regGraph);
+		// FIXME: associated graph in the new simulation
+		stateTransitionGraph.setAssociatedGraph(params.param_list.graph);
 		
         vreader = stateTransitionGraph.getNodeAttributeReader();
 	    vreader.setDefaultNodeSize(5+10*params.nodeOrder.size(), 25);
@@ -50,11 +55,6 @@ public class STGSimulationHelper extends SimulationHelper {
 		node.setStable(true, vreader);
 	}
 
-	public Graph getRegulatoryGraph() throws GsException{
-		
-		return this.stateTransitionGraph.getAssociatedGraph();
-	}
-	
 	public Graph getDynamicGraph() {
 		
 		return this.stateTransitionGraph;

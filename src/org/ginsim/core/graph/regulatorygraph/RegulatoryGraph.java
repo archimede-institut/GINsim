@@ -2,11 +2,13 @@ package org.ginsim.core.graph.regulatorygraph;
 
 import java.util.List;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
 
 
 /**
@@ -109,13 +111,13 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param factory a MDDFactory associated with the nodes of this graph 
      * @return an array containing references to the MDD roots in the factory
      */
-    int[] getMDDs(MDDFactory factory);
+    int[] getMDDs(MDDManager factory);
 
     /**
      * Construct a MDDFactory associated to the nodes of this graph
      * @return a new MDDFactory.
      */
-    MDDFactory getMDDFactory();
+    MDDManager getMDDFactory();
 
     
     /**
@@ -149,5 +151,21 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param l_conflict
      */
 	void canApplyNewMaxValue(RegulatoryNode node, byte newMax, List l_fixable, List l_conflict);
+
+	/**
+	 * Get a ready-to-be-used model (list of nodes and functions, no graph structure)
+	 * 
+	 * @return a model matching this RegulatoryGraph
+	 */
+	LogicalModel getModel();
+
+	/**
+	 * Get a ready-to-be-used model (list of nodes and functions, no graph structure)
+	 * 
+	 * @param order the desired node order
+	 * 
+	 * @return a model matching this RegulatoryGraph
+	 */
+	LogicalModel getModel(List<RegulatoryNode> order);
     
 }

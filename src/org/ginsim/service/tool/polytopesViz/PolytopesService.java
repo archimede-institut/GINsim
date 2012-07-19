@@ -2,7 +2,7 @@ package org.ginsim.service.tool.polytopesViz;
 
 import java.text.ParseException;
 
-import org.ginsim.core.graph.common.NodeInfo;
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.StatesSet;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;

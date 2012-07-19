@@ -5,202 +5,85 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.common.application.GsException;
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphAssociation;
-import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDVariable;
+import org.colomoto.mddlib.PathSearcher;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
-
+/**
+ * Simple table model to view stable state search results.
+ */
+@SuppressWarnings("serial")
 public class StableTableModel extends AbstractTableModel {
-	private static final long serialVersionUID = 3483674324331745743L;
-	
-	List nodeOrder;
-	List v_stable;
-	String[] matches;
-	
-	boolean checkbox;
-	List checklist;
-	
-	int checkIndex = -1;
-	
-	public StableTableModel(List nodeOrder) {
-		this(nodeOrder, false);
-	}
-	
-	public StableTableModel(List nodeOrder, boolean checkbox) {
-		this.nodeOrder = nodeOrder;
-		this.checkbox = checkbox;
-		v_stable = new ArrayList();
-	}
-	
-	public int getColumnCount() {
-		return checkbox ? nodeOrder.size()+2 : nodeOrder.size()+1;
+
+	int nbcol = 0;
+	List<int[]> result = new ArrayList<int[]>();
+	MDDManager factory;
+	Object[] variables;
+
+	public int[] getState(int sel) {
+		return result.get(sel);
 	}
 
+	public void setResult(MDDManager factory, int idx) {
+		result.clear();
+		this.factory = factory;
+		this.variables = factory.getAllVariables();
+		nbcol = variables.length;
+		if (!factory.isleaf(idx)) {
+			PathSearcher searcher = new PathSearcher(factory, 1);
+			int[] path = searcher.setNode(idx);
+			for (int l: searcher) {
+				result.add(path.clone());
+			}
+		}
+		
+		fireTableStructureChanged();
+	}
+	
+	public void setResult(List<byte[]> stables, List<?> variables) {
+		result.clear();
+		this.factory = null;
+		for (byte[] path: stables) {
+			int[] r = new int[path.length];
+			for (int i=0 ; i<path.length ; i++) {
+				r[i] = path[i];
+			}
+			result.add(r);
+		}
+		
+		this.variables = variables.toArray();
+		
+		fireTableStructureChanged();
+	}
+	
+	@Override
 	public int getRowCount() {
-		return v_stable.size();
+		return result.size();
 	}
 
-	public Class getColumnClass(int columnIndex) {
-		if (checkbox && columnIndex == 0) {
-			return Boolean.class;
-		}
-		return super.getColumnClass(columnIndex);
+	@Override
+	public int getColumnCount() {
+		return nbcol;
 	}
 
-	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		if (checkbox && columnIndex == 0) {
-			return true;
-		}
-		return false;
-	}
-
-	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-		if (checkbox && columnIndex == 0) {
-			if (aValue == Boolean.TRUE) {
-				checkIndex = rowIndex;
-			} else if (rowIndex == checkIndex) {
-				checkIndex = -1;
-			}
-		}
-	}
-
+	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		byte[] t_state = (byte[])v_stable.get(rowIndex);
-		int val;
-		int column = columnIndex;
-		if (checkbox) {
-			if (column == 0) {
-				return rowIndex == checkIndex ? Boolean.TRUE : Boolean.FALSE;
-			}
-			column--;
+		int v = result.get(rowIndex)[columnIndex];
+		if (v == 0) {
+			return "";
 		}
-		if (column == 0) {
-			return matches == null ? "" : matches[rowIndex];
-		}
-		column--;
-		val = t_state[column];
-		if (val == -1) {
+		if (v < 0) {
 			return "*";
 		}
-		return ""+val;
+		return ""+v;
 	}
 
-	public void setResult(OMDDNode stable, Graph graph) {
-		v_stable.clear();
-		
-		byte[] state = new byte[nodeOrder.size()];
-		for (int i=0 ; i<state.length ; i++) {
-			state[i] = -1;
+	@Override
+	public String getColumnName(int column) {
+		if (factory != null) {
+			return variables[column].toString();
 		}
-		findStableState(state, stable);
-		fireTableDataChanged();
-		checkIndex = -1;
-		checklist = new ArrayList();
-		checklist.clear();
-		updateMatches( graph);
-	}
-	
-	public void setResult(List v_stable, Graph graph) throws GsException {
-		this.v_stable = v_stable;
-		fireTableDataChanged();
-		updateMatches( ((GraphAssociation) graph).getAssociatedGraph());
-	}
-	
-	private void updateMatches( Graph graph) {
-		InitialStateList initstates = null;
-		if (graph != null && graph instanceof RegulatoryGraph) {
-		    GsInitialStateList ilist = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, InitialStateManager.KEY, false);
-		    if (ilist != null) {
-		        initstates = ilist.getInitialStates();
-		    }
-		}
-		if (initstates == null) {
-			matches = null;
-			return;
-		}
-		int len = v_stable.size();
-		matches = new String[len];
-		int nbinit = initstates.getNbElements();
-		OMDDNode[] t_initMDD = new OMDDNode[nbinit];
-		for (int init=0 ; init<nbinit ; init++) {
-			t_initMDD[init] = ((InitialState)initstates.getElement(null, init)).getMDD(nodeOrder);
-		}
-		for (int line=0 ; line<len ; line++) {
-			byte[] curstate = (byte[])v_stable.get(line);
-			for (int i=0 ; i<nbinit ; i++) {
-				OMDDNode node = t_initMDD[i];
-				while (node.next != null) {
-					byte value = curstate[node.level];
-					if (value == -1) {
-						OMDDNode next = node.next[0];
-						for (int val=0 ; val<node.next.length ; val++) {
-							OMDDNode maybenext = node.next[val];
-							if (maybenext.next != null || maybenext.value != 0) {
-								next = maybenext;
-								break;
-							}
-						}
-						node = next;
-					} else {
-						node = node.next[value];
-					}
-				}
-				if (node.value == 1) {
-					String name = ((InitialState)initstates.getElement(null, i)).getName();
-					if (matches[line] != null) {
-						matches[line] += " ; "+name; 
-					} else {
-					    matches[line] = name;
-					}
-				}
-			}
-		}
-	}
-	
-	public String getColumnName(int columnIndex) {
-		int column = columnIndex;
-		if (checkbox) {
-			if (column == 0) {
-				return "check";
-			}
-			column--;
-		}
-		if (column == 0) {
-			return Translator.getString("STR_name");
-		}
-		return nodeOrder.get(column-1).toString();
-	}
-
-	private void findStableState(byte[] state, OMDDNode stable) {
-		if (stable.next == null) {
-			if (stable.value == 1) {
-				v_stable.add(state.clone());
-			}
-			return;
-		}
-		for (byte i=0 ; i<stable.next.length ; i++) {
-			state[stable.level] = i;
-			findStableState(state, stable.next[i]);
-		}
-		state[stable.level] = -1;
-	}
-	
-	public byte[] getCheckedRow() {
-		if (checkIndex == -1 || checkIndex >= getRowCount()) {
-			return null;
-		}
-		return (byte[])v_stable.get(checkIndex);
-	}
-
-	public byte[] getState(int selectedRow) {
-		return (byte[])v_stable.get(selectedRow);
+		return super.getColumnName(column);
 	}
 }

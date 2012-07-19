@@ -16,12 +16,13 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.view.css.Colorizer;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
@@ -29,7 +30,6 @@ import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.utils.data.SimpleStateListTableModel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
-import org.ginsim.service.tool.stablestates.StableStateSearcher;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.ginsim.servicegui.tool.stablestates.StableTableModel;
 
@@ -232,7 +232,8 @@ class StableState extends TabComponantProvidingAState {
 		c.weightx = 1;
 		c.weighty = 1;
 		c.ipady = 0;
-		tableModel = new StableTableModel(g.getNodeOrder(), false);
+		tableModel = new StableTableModel();
+		tableModel.setResult(null, g.getNodeOrder());
         table = new EnhancedJTable(tableModel);
         table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -258,18 +259,27 @@ class StableState extends TabComponantProvidingAState {
 	}
 
 	protected void run() {
-		sss = ServiceManager.get(StableStatesService.class).getSearcher(g);
-		sss.setPerturbation((Perturbation) mutantStore.getObject(0));
-		OMDDNode stable;
+		LogicalModel model = g.getModel();
+		Perturbation p = (Perturbation) mutantStore.getObject(0);
+		if (p != null) {
+			p.update(model);
+		}
+		sss = ServiceManager.get(StableStatesService.class).getStableStateSearcher(model);
+		int stable;
 		try {
-			stable = sss.call();
-			tableModel.setResult(stable, g);
+			stable = sss.getResult();
+			tableModel.setResult(sss.getMDDManager(), stable);
 		} catch (Exception e) {
 			LogManager.error(e);
 		}
 	}
 
 	public byte[] getState() {
-		return tableModel.getState(table.getSelectedRow());
+		int[] state = tableModel.getState(table.getSelectedRow());
+		byte[] ret = new byte[state.length];
+		for (int i=0 ; i<state.length ; i++) {
+			ret[i] = (byte)state[i];
+		}
+		return ret;
 	}
 }

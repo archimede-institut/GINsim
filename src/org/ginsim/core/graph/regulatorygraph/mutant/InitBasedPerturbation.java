@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.perturbation.AbstractPerturbation;
+import org.colomoto.mddlib.MDDManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
 
 
 /**
@@ -17,7 +20,7 @@ import fr.univmrs.tagc.javaMDD.MDDFactory;
  * It is meant to be used to restrict ourself to some input conditions: it will replace the MDD such that only values allowed by the initial state will be stable.
  * All other values are replaced by the closest lower allowed value (or closest higher for the first values).
  */
-public class InitBasedPerturbation implements Perturbation {
+public class InitBasedPerturbation extends AbstractPerturbation implements Perturbation {
 
     InitialState init;
     
@@ -62,10 +65,12 @@ public class InitBasedPerturbation implements Perturbation {
     }
 
 	@Override
-	public int[] apply(MDDFactory factory, int[] nodes, RegulatoryGraph graph) {
-		int[] result = nodes.clone();
+	public void update(LogicalModel model) {
+		MDDManager factory = model.getMDDManager();
+		int[] nodes = model.getLogicalFunctions();
+		List<NodeInfo> order = model.getNodeOrder();
+		
         Map<RegulatoryNode, List<Integer>> m_init = init.getMap();
-        List<RegulatoryNode> norder = graph.getNodeOrder();
         for (Entry<RegulatoryNode, List<Integer>> e: m_init.entrySet()) {
             RegulatoryNode vertex = e.getKey();
             List<Integer> values = e.getValue();
@@ -83,7 +88,7 @@ public class InitBasedPerturbation implements Perturbation {
             }
 
             // replace the MDD
-            int index  = norder.indexOf(vertex);
+            int index  = order.indexOf(vertex);
             int[] next = new int[tvals.length];
             for (int pos=0 ; pos<tvals.length ; pos++) {
                 if (tvals[pos]) {
@@ -93,8 +98,9 @@ public class InitBasedPerturbation implements Perturbation {
                     next[pos] = min;
                 }
             }
-            result[index] = factory.get_mnode(factory.getVariableID(vertex), next);
+            int newnode = factory.getVariableForKey(vertex).getNode(next);
+            factory.free(nodes[index]);
+            nodes[index] = newnode;
         }
-		return result;
 	}
 }

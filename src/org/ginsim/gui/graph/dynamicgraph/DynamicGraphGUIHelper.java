@@ -12,10 +12,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
 
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.gui.GUIManager;
@@ -113,9 +113,9 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
         frame.setSize(Math.min(30*(nodeOrder.size()+1), 800),
         		Math.min(25*(stables.size()+2), 600));
         JScrollPane scroll = new JScrollPane();
-        StableTableModel model = new StableTableModel(nodeOrder);
+        StableTableModel model = new StableTableModel();
         try {
-	        model.setResult(stables, graph);
+	        model.setResult(stables, graph.getNodeOrder());
 	        scroll.setViewportView(new EnhancedJTable(model));
 	        frame.setContentPane(scroll);
 	        frame.setVisible(true);

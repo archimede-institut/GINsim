@@ -5,9 +5,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
+import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -27,7 +29,7 @@ public class Simulation implements Runnable {
 
 	protected LinkedList queue = new LinkedList(); // exploration queue
 
-	protected SimulationManager frame;
+	protected final ProgressListener<Graph> frame;
 	protected int maxnodes, maxdepth;
 	protected Iterator<byte[]> initStatesIterator;
 	protected SimulationHelper helper;
@@ -36,26 +38,27 @@ public class Simulation implements Runnable {
 	protected boolean breadthFirst = false;
 	public int nbnode = 0;
 	protected boolean ready = false;
-	
+
 	/**
 	 * Constructs an empty dynamic graph
 	 *
-	 * @param regGraph the regulatory graph on which we are working
+	 * @param model the logical model on which we are working
 	 * @param frame
 	 * @param params
 	 */
-    public Simulation(RegulatoryGraph regGraph, SimulationManager frame, SimulationParameters params) {
-		this.frame = frame;
+    public Simulation(LogicalModel model, ProgressListener<Graph> frame, SimulationParameters params) {
+    	this.frame = frame;
 		this.maxdepth = params.maxdepth;
 		this.maxnodes = params.maxnodes;
 
 		if (params.simulationStrategy == SimulationParameters.STRATEGY_STG) {
-			helper = new STGSimulationHelper(regGraph, params);
+			helper = new STGSimulationHelper(model, params);
 		}
 		breadthFirst = params.breadthFirst;
-   		updater = SimulationUpdater.getInstance(regGraph, params);
+		// TODO: fully remove regulatory graph from here
+   		updater = SimulationUpdater.getInstance(model, params);
 	    setInitStatesIterator(new InitialStatesIterator(params.nodeOrder, params));
-	}
+    }
 
     public void set_initialStates(List nodeOrder, Map inputs, Map m_initState) {
         setInitStatesIterator(new InitialStatesIterator(nodeOrder, inputs, m_initState));
@@ -65,13 +68,23 @@ public class Simulation implements Runnable {
 		ready = false;
 	}
 
+	/**
+	 * Create and initialize a SimulationUpdater for a given __state__.
+	 * @param state
+	 * @return
+	 */
+	public SimulationUpdater getUpdaterForState(byte[] state) {
+   		return updater.cloneForState(state);
+	}
+
+
     /**
      * run the simulation in a new thread.
      */
     public void run() {
     	
     	try{
-    		frame.endSimu( do_simulation());
+    		frame.setResult( do_simulation());
     	}
     	catch ( GsException ge) {
     		GUIMessageUtils.openErrorDialog( "Unable to launch the simulation");
@@ -126,7 +139,7 @@ public class Simulation implements Runnable {
 						updater.setState(item.state, item.depth, helper.getNode());
 						if (!updater.hasNext()) {
 							helper.setStable();
-							frame.addStableState(item);
+							frame.milestone(item);
 							String display = "";
 							for (int i=0 ; i<item.state.length ; i++ ) {
 								display += item.state[i] + " ";

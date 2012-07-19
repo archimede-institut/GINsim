@@ -29,6 +29,8 @@ import org.ginsim.core.graph.view.ViewHelper;
  */
 public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
+	private static final int MAX_EDGE_SIZE = 15;
+	
 	public static final String EDGE_COLOR = "vs.edgecolor";
 	
     protected static Map<String, float[]> m_pattern = null;
@@ -88,6 +90,11 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
     
     public void setDefaultEdgeSize(float s) {
+        if (s > MAX_EDGE_SIZE) {
+        	s = MAX_EDGE_SIZE;
+        } else if (s < 1) {
+        	s = 1;
+        }
         defaultsize = s;
     }
 
@@ -105,6 +112,11 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     public void setLineWidth(float w) {
         if (evsd == null) {
             return;
+        }
+        if (w > MAX_EDGE_SIZE) {
+        	w = MAX_EDGE_SIZE;
+        } else if (w < 1) {
+        	w = 1;
         }
         evsd.size = w;
     }

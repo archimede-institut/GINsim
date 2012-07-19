@@ -8,7 +8,7 @@ import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 
 
-public class ReachabilitySetHelper extends SimulationHelper {
+public class ReachabilitySetHelper implements SimulationHelper {
 	protected DynamicNode node;
 	protected int[] t_max;
 	protected int length;
@@ -96,10 +96,6 @@ public class ReachabilitySetHelper extends SimulationHelper {
 	
 	public Object getNode() {
 		return node;
-	}
-	
-	public Graph getRegulatoryGraph() {
-		return null;
 	}
 	
 	public Graph getDynamicGraph() {

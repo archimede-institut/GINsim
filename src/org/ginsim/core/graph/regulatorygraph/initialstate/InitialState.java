@@ -6,13 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDOperator;
+import org.colomoto.mddlib.MDDVariable;
+import org.colomoto.mddlib.operators.MDDBaseOperators;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.utils.data.NamedObject;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
-import fr.univmrs.tagc.javaMDD.MDDOperator;
-import fr.univmrs.tagc.javaMDD.operators.MDDBaseOperators;
 
 
 public class InitialState implements NamedObject {
@@ -118,7 +119,7 @@ public class InitialState implements NamedObject {
 		}
 		return ret;
 	}
-	public int getMDD(MDDFactory factory) {
+	public int getMDD(MDDManager factory) {
 
 		int[] nodes = new int[m.size()];
 		int idx = 0;
@@ -130,7 +131,7 @@ public class InitialState implements NamedObject {
 				continue;
 			}
 			
-			int level = factory.getVariableID(node);
+			MDDVariable var = factory.getVariableForKey(node);
 			int[] next = new int[node.getMaxValue()+1];
 			// just to be sure: reset the array
 			for (int v=0 ; v<next.length ; v++) {
@@ -143,7 +144,7 @@ public class InitialState implements NamedObject {
 				next[n] = 1;
 			}
 			
-			nodes[idx++] = factory.get_mnode(level, next);
+			nodes[idx++] = var.getNode(next);
 		}
 		return MDDBaseOperators.AND.combine(factory, nodes);
 	}

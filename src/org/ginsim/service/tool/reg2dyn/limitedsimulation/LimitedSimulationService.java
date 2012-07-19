@@ -3,6 +3,7 @@ package org.ginsim.service.tool.reg2dyn.limitedsimulation;
 import java.util.HashMap;
 
 import org.ginsim.common.application.GsException;
+import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
@@ -11,7 +12,6 @@ import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGr
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.service.Service;
-import org.ginsim.service.tool.reg2dyn.SimulationManager;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 import org.mangosdk.spi.ProviderFor;
@@ -53,31 +53,28 @@ public class LimitedSimulationService implements Service {
 	}
 }
 
-class SimpleSimulationManager implements SimulationManager {
+class SimpleSimulationManager implements ProgressListener<Graph> {
 
 	protected Graph graph;
 
 	@Override
-	public void endSimu(Graph graph) {
+	public void setResult(Graph graph) {
 		this.graph = graph;		
 	}
 
 	@Override
 	public void setProgress(int n) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
 	public void setProgress(String s) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
-	public void addStableState(SimulationQueuedState item) {
+	public void milestone(Object item) {
 		// TODO Auto-generated method stub
-		
 	}
 	
 }

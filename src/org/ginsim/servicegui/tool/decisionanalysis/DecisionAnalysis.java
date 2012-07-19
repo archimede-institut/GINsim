@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.hierachicaltransitiongraph.DecisionOnEdge;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
@@ -21,9 +22,9 @@ import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
 public class DecisionAnalysis extends Thread {
 
 	private HierarchicalTransitionGraph htg;
-	private RegulatoryGraph regGraph;
 	private SimulationParameters params;
 	private int geneCount;
+	private LogicalModel model;
 
 	/**
 	 * 
@@ -31,8 +32,8 @@ public class DecisionAnalysis extends Thread {
 	public DecisionAnalysis(HierarchicalTransitionGraph htg, SimulationParameters params) throws GsException{
 		
 		this.htg = htg;
-		this.regGraph = (RegulatoryGraph) htg.getAssociatedGraph();
 		this.params = params;
+		this.model = htg.getAssociatedGraph().getModel();
 		this.geneCount = htg.getNodeOrderSize();
 	}
 
@@ -82,7 +83,7 @@ public class DecisionAnalysis extends Thread {
 	 * @return
 	 */
 	private SimulationUpdater getUpdaterForState(byte[] state) {
-   		SimulationUpdater updater = SimulationUpdater.getInstance(regGraph, params);
+   		SimulationUpdater updater = SimulationUpdater.getInstance(model, params);
    		updater.setState(state, 0, null);
    		return updater;
 	}

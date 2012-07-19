@@ -2,6 +2,7 @@ package org.ginsim.service.tool.reg2dyn.limitedsimulation;
 
 import java.awt.Color;
 
+import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
@@ -18,8 +19,8 @@ public class STGLimitedSimulationHelper extends STGSimulationHelper {
 	private final HierarchicalTransitionGraph htg;
 	private NodeAttributesReader htg_vreader;
 
-	public STGLimitedSimulationHelper(RegulatoryGraph regGraph, HierarchicalTransitionGraph htg, SimulationParameters params, SimulationConstraint constraint) {
-		super(regGraph, params);
+	public STGLimitedSimulationHelper(LogicalModel model, HierarchicalTransitionGraph htg, SimulationParameters params, SimulationConstraint constraint) {
+		super(model, params);
 		this.htg = htg;
 		this.htg_vreader = htg.getNodeAttributeReader();
 		this.constraint = constraint;

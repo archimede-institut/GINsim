@@ -2,6 +2,8 @@ package org.ginsim.service.tool.stablestates;
 
 import java.util.List;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
@@ -33,23 +35,19 @@ public class StableStatesService implements Service {
 	}
 
 	public StableStateSearcher getSearcher(RegulatoryGraph graph) {
-		return new StableStatesAlgoImpl( graph);
-	}
-	
-	public StableStateSearcherNew getSearcherNew(RegulatoryGraph graph) {
-		return new StableStateFinder( graph);
+		return getStableStateSearcher(graph.getModel());
 	}
 	
 	public StableStateSearcher getStableStateSearcher( RegulatoryGraph regGraph, List<RegulatoryNode> nodeOrder, Perturbation mutant) {
-		StableStateSearcher searcher = getSearcher(regGraph);
-		searcher.setPerturbation(mutant);
-		return searcher;
+		LogicalModel model = regGraph.getModel();
+		if (mutant != null) {
+			mutant.update(model);
+		}
+		return getStableStateSearcher(model);
 	}
 
-	public StableStateSearcherNew getNewStableStateSearcher( RegulatoryGraph regGraph, List<RegulatoryNode> nodeOrder, Perturbation mutant) {
-		StableStateSearcherNew searcher = getSearcherNew(regGraph);
-		searcher.setPerturbation(mutant);
-		return searcher;
+	public StableStateSearcher getStableStateSearcher( LogicalModel model) {
+		return new StableStateSearcher(model);
 	}
 
 }

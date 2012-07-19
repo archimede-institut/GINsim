@@ -138,20 +138,18 @@ public class Launcher {
 		}
 		
     	// register OSX callback if appropriate
-        if (CurrentOS.os == CurrentOS.SYS_MACOSX) {
+        if (CurrentOS.CURRENT_OS == CurrentOS.MACOSX) {
             try {
-            	OSXCallBack osxCallBack = new OSXCallBack();
                 // Generate and register the OSXAdapter, passing it a hash of all the methods we wish to
                 // use as delegates for various com.apple.eawt.ApplicationListener methods
-                OSXAdapter.setQuitHandler(osxCallBack, osxCallBack.getClass().getDeclaredMethod("quit", (Class[])null));
-                //OSXAdapter.setAboutHandler(this, getClass().getDeclaredMethod("about", (Class[])null));
-                //OSXAdapter.setPreferencesHandler(this, getClass().getDeclaredMethod("preferences", (Class[])null));
-                OSXAdapter.setFileHandler(osxCallBack, osxCallBack.getClass().getDeclaredMethod("loadGINMLfile", new Class[] { String.class }));
+            	GUIManager guiManager = GUIManager.getInstance();
+                OSXAdapter.setQuitHandler(guiManager, guiManager.getClass().getDeclaredMethod("quit", (Class[])null));
+                OSXAdapter.setAboutHandler(guiManager, guiManager.getClass().getDeclaredMethod("about", (Class[])null));
+                OSXAdapter.setFileHandler(guiManager, guiManager.getClass().getDeclaredMethod("loadGINMLfile", new Class[] { String.class }));
             } catch (Exception e) {
                 System.err.println("Error while loading the OSXAdapter:");
                 e.printStackTrace();
             }
         }
     }
-	
  }

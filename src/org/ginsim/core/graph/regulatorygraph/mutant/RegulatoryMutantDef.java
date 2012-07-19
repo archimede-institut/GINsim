@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.perturbation.AbstractPerturbation;
+import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -11,13 +15,12 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.utils.data.NamedObject;
 
-import fr.univmrs.tagc.javaMDD.MDDFactory;
 
 
 /**
  * store the definition of a mutant
  */
-public class RegulatoryMutantDef implements NamedObject, Perturbation {
+public class RegulatoryMutantDef extends AbstractPerturbation implements NamedObject, Perturbation {
     String name;
     List<RegulatoryMutantChange> v_changes = new ArrayList<RegulatoryMutantChange>();
     Annotation annotation = new Annotation();
@@ -183,16 +186,20 @@ public class RegulatoryMutantDef implements NamedObject, Perturbation {
 		return ((RegulatoryMutantChange)v_changes.get(index)).s_condition == null;
 	}
 
+	
 	@Override
-	public int[] apply(MDDFactory factory, int[] nodes, RegulatoryGraph graph) {
-		int[] result = nodes.clone();
+	public void update(LogicalModel model) {
+		MDDManager factory = model.getMDDManager();
+		int[] nodes = model.getLogicalFunctions();
+		List<NodeInfo> order = model.getNodeOrder();
 		
         for (int i=0 ; i<v_changes.size() ; i++) {
             RegulatoryMutantChange change = (RegulatoryMutantChange)v_changes.get(i);
-            int index = graph.getNodeOrderForSimulation().indexOf(change.vertex);
-            result[index] = change.apply(factory, result[index], graph);
+            int index = order.indexOf(change.vertex);
+            
+            int newnode = change.apply(factory, nodes[index]);
+            factory.free(nodes[index]);
+            nodes[index] = newnode;
         }
-
-		return result;
 	}
 }

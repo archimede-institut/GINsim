@@ -3,6 +3,7 @@ package org.ginsim.service.tool.reg2dyn.helpers;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
@@ -14,14 +15,14 @@ import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 
 
-public class HTGSimulationHelper  extends SimulationHelper {
+public class HTGSimulationHelper  implements SimulationHelper {
 	protected HierarchicalNode node;
 	protected HierarchicalTransitionGraph htg;
 	public Map arcs;
-	protected RegulatoryGraph regGraph;
+	protected LogicalModel model;
 	
-	public HTGSimulationHelper(RegulatoryGraph regGraph, SimulationParameters params) {
-		this.regGraph = regGraph;
+	public HTGSimulationHelper(LogicalModel model, SimulationParameters params) {
+		this.model = model;
 		int mode;
 		if (params.simulationStrategy == SimulationParameters.STRATEGY_HTG) {
 			mode = HierarchicalTransitionGraphImpl.MODE_HTG;
@@ -29,7 +30,10 @@ public class HTGSimulationHelper  extends SimulationHelper {
 			mode = HierarchicalTransitionGraphImpl.MODE_SCC;
 		}
 		this.htg = GraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, params.nodeOrder, mode);
-		htg.setAssociatedGraph(regGraph);
+		
+		// FIXME: associated graph based on LogicalModel
+		// htg.setAssociatedGraph(model);
+		
 		NodeAttributesReader vreader = htg.getNodeAttributeReader();
 		vreader.setDefaultNodeSize(5+10*params.nodeOrder.size(), 25);
         htg.getAnnotation().setComment(params.getDescr()+"\n");
@@ -54,11 +58,6 @@ public class HTGSimulationHelper  extends SimulationHelper {
 	
 	public void setNode(Object node) {
 		this.node = (HierarchicalNode) node;
-	}
-	
-	public Graph getRegulatoryGraph() {
-		
-		return this.regGraph;
 	}
 	
 	public Graph getDynamicGraph() {

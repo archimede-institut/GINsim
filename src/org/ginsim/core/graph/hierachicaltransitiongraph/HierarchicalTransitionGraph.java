@@ -3,9 +3,9 @@ package org.ginsim.core.graph.hierachicaltransitiongraph;
 import java.util.List;
 import java.util.Map;
 
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphAssociation;
-import org.ginsim.core.graph.common.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
