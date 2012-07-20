@@ -12,6 +12,7 @@ testbuild/
 testreports/
 dist/
 bin/
+target
 GINsim-*.jar
 GINsim.app
 bak/

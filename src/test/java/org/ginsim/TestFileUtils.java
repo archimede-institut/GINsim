@@ -20,8 +20,7 @@ import org.ginsim.core.graph.view.NodeShape;
 public class TestFileUtils {
 
 	// The directory where are stored the predefined files for the tests
-	public static File testFileDirectory = new File( ".", "testfiles");
-	
+	public static File testFileDirectory = new File(".", "target/test-classes");
 	
 	/**
 	 * Returns the directory where test files are stored
