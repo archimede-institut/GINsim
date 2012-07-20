@@ -30,7 +30,7 @@ public class NuSMVExportTest {
 	public static void setUp() {
 		// TODO: this should not be here...
 		// Should be either unnecessary or done Once before All tests
-		Translator.pushBundle("org.ginsim.gui.resource.messages");
+		Translator.pushBundle("org.ginsim.messages");
 		dir = TestFileUtils.getTestFileDirectory(module);
 		FilenameFilter filter = new FilenameFilter() {
 			public boolean accept(File dir, String name) {
