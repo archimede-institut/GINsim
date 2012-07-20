@@ -13,6 +13,9 @@
   <packaging>jar</packaging>
   <url>TODO</url>
 
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
 
   <repositories>
     <!-- GINsim repository provides ready-to-use jars for MDDlib, JSBML and mangosdk.spi  -->
@@ -23,7 +26,6 @@
        <name>GINsim temporary repo</name>
        <url>http://crfb.univ-mrs.fr/~naldi/maven</url>
     </repository>
-
 
     <!-- BIBsonomy: a maintained bibtex parser  -->
     <repository>
@@ -48,7 +50,6 @@
         <artifactId>jfreechart</artifactId>
         <version>1.0.13</version>
     </dependency>
-
 
     <dependency>
       <groupId>junit</groupId>
@@ -182,6 +183,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
         <configuration>
           <archive>
             <manifest>
