@@ -1,5 +1,12 @@
 package org.ginsim.service.imports.sbml;
 
+import java.io.File;
+import java.io.IOException;
+
+import javax.xml.stream.XMLStreamException;
+
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.io.sbml.SBMLqualImport;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
@@ -21,5 +28,23 @@ public class SBMLImportService implements Service {
 		RegulatoryGraph new_graph = parser.getGraph();
 		
 		return new_graph;
+	}
+
+	
+	public LogicalModel runJSBML( String filename) throws IOException {
+
+		try {
+			SBMLqualImport simport = new SBMLqualImport(new File(filename));
+			LogicalModel model = simport.getModel();
+			
+			// TODO: import layout information
+			
+			// TODO: turn into a regulatory graph
+			
+			return model;
+			
+		} catch (XMLStreamException e) {
+			throw new IOException(e);
+		}
 	}
 }

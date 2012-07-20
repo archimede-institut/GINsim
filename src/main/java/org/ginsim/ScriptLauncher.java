@@ -8,7 +8,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
@@ -33,6 +32,7 @@ import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceManager;
+import org.python.core.Py;
 import org.python.util.PythonInterpreter;
 
 /**
@@ -117,8 +117,8 @@ public class ScriptLauncher {
         // Create and set up python interpreter:
         //  * add the selected folder to the classpath
         //  * add a "gs" object pointing to this script launcher
+        Py.getSystemState().path.add(0, dir.getAbsolutePath());
         PythonInterpreter pi = new PythonInterpreter();
-        pi.getSystemState().path.add(0, dir.getAbsolutePath());
 		pi.set("gs", this);
 		
         // actually run the script

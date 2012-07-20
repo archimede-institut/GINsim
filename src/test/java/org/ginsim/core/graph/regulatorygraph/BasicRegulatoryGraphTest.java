@@ -66,17 +66,18 @@ public class BasicRegulatoryGraphTest {
 	public void createAndCloseGraphWithDefaultMethodTest() {
 		
 		// Create a new RegulatoryGraph
+		int old_graph_list_count = GraphManager.getInstance().getAllGraphs().size();
 		RegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
 		assertNotNull( "Create graph : the graph is null.", graph);
 		
 		int graph_list_count = GraphManager.getInstance().getAllGraphs().size();
-		assertEquals( "Registering graph : graph was not unregistered.", 1, graph_list_count);
+		assertEquals( "Registering graph : graph was not unregistered.", old_graph_list_count+1, graph_list_count);
 		
 		// Close the graph
 		GraphManager.getInstance().close( graph);
 		
 		graph_list_count = GraphManager.getInstance().getAllGraphs().size();
-		assertEquals( "Unregistering graph : graph was not unregistered.", 0, graph_list_count);	
+		assertEquals( "Unregistering graph : graph was not unregistered.", old_graph_list_count, graph_list_count);	
 		
 	}
 	
