@@ -16,7 +16,7 @@ public class NuSMVConfig implements InitialStateStore {
 	public static final int CFG_SYNC = 0;
 	public static final int CFG_ASYNC = 1;
 	public static final int CFG_PCLASS = 2;
-	public static final int CFG_INPUT_FRONZEN = 10;
+	public static final int CFG_INPUT_FROZEN = 10;
 	public static final int CFG_INPUT_IVAR = 11;
 
 	private RegulatoryGraph graph;
@@ -37,7 +37,7 @@ public class NuSMVConfig implements InitialStateStore {
 		m_input = new HashMap<InitialState, Object>();
 		this.graph = graph;
 		updatePolicy = CFG_ASYNC; // Default update policy
-		exportType = CFG_INPUT_FRONZEN; // Default export type
+		exportType = CFG_INPUT_FROZEN; // Default export type
 	}
 	
 	public void setUpdatePolicy() {

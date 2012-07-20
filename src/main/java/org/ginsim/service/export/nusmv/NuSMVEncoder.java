@@ -57,7 +57,7 @@ public class NuSMVEncoder {
 		out.write("-- NuSMV version 2.5.1 (or higher) required --\n");
 		out.write("-- ");
 
-		boolean bType1 = (config.getExportType() == NuSMVConfig.CFG_INPUT_FRONZEN);
+		boolean bType1 = (config.getExportType() == NuSMVConfig.CFG_INPUT_FROZEN);
 		if (bType1)
 			out.write(Translator.getString("STR_NuSMV_Type1"));
 		else
@@ -703,9 +703,9 @@ public class NuSMVEncoder {
 			}
 			sRet += ";\n";
 		} catch (Exception e) {
-			sRet += "\n  FALSE;\nstrongSS := FALSE;\n";
-			sRet += "\n -- An error occurred when computing the stable states!!\n";
-			sRet += "\n -- This SMV description may no longer be valid!!\n";
+			sRet = "\nweakSS := FALSE;\nstrongSS := FALSE;";
+			sRet += "\n-- An error occurred when computing the stable states!!";
+			sRet += "\n-- This SMV description may no longer be valid!!\n";
 		}
 		return sRet;
 	}

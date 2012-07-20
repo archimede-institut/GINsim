@@ -74,14 +74,14 @@ public class NuSMVExportTest {
 	}
 
 	@Test
-	public void testExportFixInputAsynchronous() {
+	public void testExportType1Async() {
 		File tmpDir = TestFileUtils.getTempTestFileDirectory(module);
 
 		for (int i = 0; i < saModel.length; i++) {
 			File tmpFile = new File(tmpDir, saModel[i]);
 
 			NuSMVConfig config = new NuSMVConfig(saGraph[i]);
-			config.setExportType(NuSMVConfig.CFG_INPUT_FRONZEN);
+			config.setExportType(NuSMVConfig.CFG_INPUT_FROZEN);
 			config.setUpdatePolicy(NuSMVConfig.CFG_ASYNC);
 
 			runService(config, tmpFile);
@@ -90,7 +90,7 @@ public class NuSMVExportTest {
 
 			File origFile = new File(
 					TestFileUtils.getTestFileDirectory(module), saModel[i]
-							+ ".fixinput.async.smv");
+							+ ".type1.async.smv");
 			StringBuffer sbOrig = readFile(origFile);
 
 			// Discard first line, containing the generation date
@@ -100,14 +100,14 @@ public class NuSMVExportTest {
 	}
 
 	@Test
-	public void testExportFixInputSynchronous() {
+	public void testExportType1Sync() {
 		File tmpDir = TestFileUtils.getTempTestFileDirectory(module);
 
 		for (int i = 0; i < saModel.length; i++) {
 			File tmpFile = new File(tmpDir, saModel[i]);
 
 			NuSMVConfig config = new NuSMVConfig(saGraph[i]);
-			config.setExportType(NuSMVConfig.CFG_INPUT_FRONZEN);
+			config.setExportType(NuSMVConfig.CFG_INPUT_FROZEN);
 			config.setUpdatePolicy(NuSMVConfig.CFG_SYNC);
 
 			runService(config, tmpFile);
@@ -116,7 +116,7 @@ public class NuSMVExportTest {
 
 			File origFile = new File(
 					TestFileUtils.getTestFileDirectory(module), saModel[i]
-							+ ".fixinput.sync.smv");
+							+ ".type1.sync.smv");
 			StringBuffer sbOrig = readFile(origFile);
 
 			// Discard first line, containing the generation date
@@ -126,7 +126,7 @@ public class NuSMVExportTest {
 	}
 
 	@Test
-	public void testExportVariableInputAsynchronous() {
+	public void testExportType2Async() {
 		File tmpDir = TestFileUtils.getTempTestFileDirectory(module);
 
 		for (int i = 0; i < saModel.length; i++) {
@@ -142,7 +142,7 @@ public class NuSMVExportTest {
 
 			File origFile = new File(
 					TestFileUtils.getTestFileDirectory(module), saModel[i]
-							+ ".variableinput.async.smv");
+							+ ".type2.async.smv");
 			StringBuffer sbOrig = readFile(origFile);
 
 			// Discard first line, containing the generation date
@@ -152,7 +152,7 @@ public class NuSMVExportTest {
 	}
 
 	@Test
-	public void testExportVariableInputSynchronous() {
+	public void testExportType2Sync() {
 		File tmpDir = TestFileUtils.getTempTestFileDirectory(module);
 
 		for (int i = 0; i < saModel.length; i++) {
@@ -168,7 +168,7 @@ public class NuSMVExportTest {
 
 			File origFile = new File(
 					TestFileUtils.getTestFileDirectory(module), saModel[i]
-							+ ".variableinput.sync.smv");
+							+ ".type2.sync.smv");
 			StringBuffer sbOrig = readFile(origFile);
 
 			// Discard first line, containing the generation date
