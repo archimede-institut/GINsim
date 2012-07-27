@@ -17,8 +17,10 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( Service.class)
 @Alias("SBMLe")
-public class SBMLQualExportService implements Service{
+public class SBMLQualExportService implements Service {
 
+	private static boolean USEJSBML = false;
+	
 	/**
 	 * Execute the export by instantiating the right encoder
 	 * 
@@ -29,9 +31,12 @@ public class SBMLQualExportService implements Service{
 	 */
 	public void export( RegulatoryGraph graph, SBMLQualConfig config, String filename) throws IOException{
 		
-		SBMLQualEncoder encoder = new SBMLQualEncoder( );
-		
-		encoder.doExport( graph, config, filename);
+		if (USEJSBML) {
+			exportJSBML(graph, filename+".jsbml");
+		} else {
+			SBMLQualEncoder encoder = new SBMLQualEncoder( );
+			encoder.doExport( graph, config, filename);
+		}
 	}
 	
 	/**
