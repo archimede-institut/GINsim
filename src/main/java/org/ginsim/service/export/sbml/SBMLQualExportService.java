@@ -19,7 +19,7 @@ import org.mangosdk.spi.ProviderFor;
 @Alias("SBMLe")
 public class SBMLQualExportService implements Service {
 
-	private static boolean USEJSBML = false;
+	private static boolean USEJSBML = true;
 	
 	/**
 	 * Execute the export by instantiating the right encoder

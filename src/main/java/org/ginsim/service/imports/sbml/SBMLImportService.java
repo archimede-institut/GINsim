@@ -17,7 +17,7 @@ import org.mangosdk.spi.ProviderFor;
 @Alias("SBMLi")
 public class SBMLImportService implements Service {
 
-	private static boolean USEJSBML = false;
+	private static boolean USEJSBML = true;
 	
 	/**
 	 * Return the graph built from the SBML file at the given path
