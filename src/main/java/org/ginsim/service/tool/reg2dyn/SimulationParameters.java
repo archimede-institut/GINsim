@@ -7,6 +7,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
@@ -36,7 +37,6 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
 	public static final int STRATEGY_HTG = 2;
 
 	public String name = "new_parameter";
-    public List<RegulatoryNode> nodeOrder;
 
     public int maxdepth;
     public int maxnodes;
@@ -57,7 +57,6 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
      */
     public SimulationParameters(SimulationParameterList param_list) {
     	this.param_list = param_list;
-        this.nodeOrder = param_list.graph.getNodeOrder();
         store.setObject(PCLASS, param_list.pcmanager.getElement(null, 0));
     }
 
@@ -74,12 +73,11 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
     }
 
     /**
-     * a not so simple toString method.
-     * It shows the full content of this simu parameters, used to add a usefull comment to the state transition graph.
+     * Describe this parameter.
+     * It shows the full content of this simulation parameter, used to add a useful comment to the state transition graph.
      * @return a human readable description of the parameter
      */
-
-    public String getDescr() {
+    public String getDescr(List<NodeInfo> nodeOrder) {
         String name = param_list.graph.getGraphName();
         String saveName = GraphManager.getInstance().getGraphPath( param_list.graph);
         if (saveName != null) {
@@ -122,8 +120,8 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
                 Map m_init = ((InitialState)it.next()).getMap();
                 s += "\n      ";
                 for (int j=0 ; j<nodeOrder.size() ; j++) {
-                    RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(j);
-                    s += "  "+InitStateTableModel.showValue((List)m_init.get(vertex), vertex.getMaxValue());
+                    NodeInfo vertex = nodeOrder.get(j);
+                    s += "  "+InitStateTableModel.showValue((List)m_init.get(vertex), vertex.getMax());
                 }
             }
             s += "\n";
@@ -140,8 +138,8 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
                     Map m_init = init.getMap();
                     s += "\n      ";
                     for (int j=0 ; j<nodeOrder.size() ; j++) {
-                        RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(j);
-                        s += "  "+InitStateTableModel.showValue((List)m_init.get(vertex), vertex.getMaxValue());
+                        NodeInfo vertex = nodeOrder.get(j);
+                        s += "  "+InitStateTableModel.showValue((List)m_init.get(vertex), vertex.getMax());
                     }
                 }
             }
@@ -160,6 +158,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
         return s;
     }
 
+    @Override
 	public void toXML(XMLWriter out, Object param, int xmlmode) throws IOException {
 		PriorityClassDefinition pcdef = (PriorityClassDefinition)store.getObject(PCLASS);
 		out.openTag("parameter");
@@ -205,7 +204,8 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
 		out.closeTag();
 	}
 
-    public Object clone() {
+    @Override
+    public SimulationParameters clone() {
     	SimulationParameters newp = new SimulationParameters(param_list);
     	newp.simulationStrategy = simulationStrategy;
     	newp.name = name;
@@ -224,17 +224,21 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
     	return newp;
     }
 
+    @Override
 	public String getName() {
 		return name;
 	}
 
+    @Override
 	public void setName(String name) {
 		this.name = name;
 	}
 
+    @Override
 	public Map getInitialState() {
 		return m_initState;
 	}
+    @Override
     public Map getInputState() {
         return m_input;
     }

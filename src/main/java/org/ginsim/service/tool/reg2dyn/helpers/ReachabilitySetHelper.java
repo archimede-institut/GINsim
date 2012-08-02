@@ -1,8 +1,11 @@
 package org.ginsim.service.tool.reg2dyn.helpers;
 
+import java.util.List;
+
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
@@ -14,11 +17,12 @@ public class ReachabilitySetHelper implements SimulationHelper {
 	protected int length;
 	protected OMDDNode dd_reachable = OMDDNode.TERMINALS[0];
 	
-	ReachabilitySetHelper(SimulationParameters params) {
-		length = params.nodeOrder.size();
+	ReachabilitySetHelper(LogicalModel model, SimulationParameters params) {
+		List<NodeInfo> nodes = model.getNodeOrder();
+		length = nodes.size();
 		t_max = new int[length];
 		for (int i=0 ; i<length ; i++) {
-			t_max[i] = ((RegulatoryNode)params.nodeOrder.get(i)).getMaxValue()+1;
+			t_max[i] = (nodes.get(i)).getMax()+1;
 		}
 	}
 	

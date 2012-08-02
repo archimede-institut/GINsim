@@ -57,7 +57,7 @@ public class Simulation implements Runnable {
 		breadthFirst = params.breadthFirst;
 		// TODO: fully remove regulatory graph from here
    		updater = SimulationUpdater.getInstance(model, params);
-	    setInitStatesIterator(new InitialStatesIterator(params.nodeOrder, params));
+   		set_initialStates(model.getNodeOrder(), params.m_input, params.m_initState);
     }
 
     public void set_initialStates(List nodeOrder, Map inputs, Map m_initState) {

@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
@@ -111,11 +112,11 @@ final class Reg2DynStatesIterator implements Iterator {
         
 		line = new int[nodeOrder.size()][];
 		for (int i=0 ; i<nodeOrder.size() ; i++) {
-			RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(i);
-			List v_val = (List)m_line.get(vertex);
+			NodeInfo ni = (NodeInfo)nodeOrder.get(i);
+			List v_val = (List)m_line.get(ni);
 			if (v_val == null || v_val.size() == 0) {
 			    if (refLine != null && refLine[i] == -1) {
-    				line[i] = new int[vertex.getMaxValue()+1];
+    				line[i] = new int[ni.getMax()+1];
     				for (int j=0 ; j<line[i].length ; j++) {
     					line[i][j] = j;
     				}

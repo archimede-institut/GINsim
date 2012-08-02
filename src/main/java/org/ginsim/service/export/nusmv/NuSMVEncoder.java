@@ -139,7 +139,7 @@ public class NuSMVEncoder {
 			}
 			out.write(" };\n");
 
-			iaTmp = priorities.getPclass(nodeOrder);
+			iaTmp = priorities.getPclass(config.getGraph().getNodeInfos());
 			for (int i = 0; i < iaTmp.length; i++) {
 				sTmp = tmPcNum2Name.get(i + 1);
 				out.write("  " + sTmp + "_vars : { ");

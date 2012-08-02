@@ -345,7 +345,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
      *
      * shortly: it is 0 for all transitions, 1 for negative transitions and -1 for positive ones
      */
-    public int[][] getPclass(List<RegulatoryNode> nodeOrder) {
+    public int[][] getPclass(List<NodeInfo> nodeOrder) {
 
         Integer zaroo = new Integer(0);
         Integer one = new Integer(1);
@@ -431,11 +431,10 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
     		}
     	}
     	
-    	List<RegulatoryNode> nodeOrder = new ArrayList<RegulatoryNode>();
+    	List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>();
 		for (NodeInfo ni: nodeInfos) {
-			RegulatoryNode node = m_info2node.get(ni);
-			nodeOrder.add(node);
-			if (node == null) {
+			nodeOrder.add(ni);
+			if (ni == null) {
 				LogManager.debug("No matching RegulatoryNode for "+ni);
 			}
 		}
