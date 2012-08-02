@@ -31,6 +31,7 @@ public class STGSimulationHelper implements SimulationHelper {
 		stateTransitionGraph = GraphManager.getInstance().getNewGraph( DynamicGraph.class, nodes);
 		// FIXME: associated graph in the new simulation
 		stateTransitionGraph.setAssociatedGraph(params.param_list.graph);
+		stateTransitionGraph.setLogicalModel(model);
 		
         vreader = stateTransitionGraph.getNodeAttributeReader();
 	    vreader.setDefaultNodeSize(5+10*nodes.size(), 25);

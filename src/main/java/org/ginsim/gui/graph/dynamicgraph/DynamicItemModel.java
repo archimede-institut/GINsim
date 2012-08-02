@@ -8,6 +8,7 @@ import java.util.List;
 import javax.swing.JButton;
 import javax.swing.table.AbstractTableModel;
 
+import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
@@ -108,7 +109,10 @@ public class DynamicItemModel extends AbstractTableModel {
             prevState = null;
             nbNext = nextState != null ? nextState.length : 0;
             nbRelated = nbNext;
+        } else if (obj != null) {
+        	LogManager.error("Invalid type of dynamic item: "+obj.getClass());
         }
+
         if (nbRelated == 0) {
             go2Next = null;
         } else {

@@ -9,13 +9,17 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.AbstractDerivedGraph;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.common.GraphEventCascade;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -42,6 +46,10 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	protected List v_stables = null;
 
     private List<NodeInfo> nodeOrder;
+    
+    private String[] extraNames = null;
+    private MDDManager ddmanager = null;
+    private int[] extraFunctions = null;
     
 	/**
 	 */
@@ -374,54 +382,54 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
         }
         return RegulatoryGraphImpl.associationValid((RegulatoryGraph)graph, this);
     }
-  
 
-    // FIXME: move all this to a new GraphGUIHelper
+	@Override
+	public String[] getExtraNames() {
+		return extraNames;
+	}
 
-//    private GsParameterPanel vertexPanel = null;
-//    private GsParameterPanel edgePanel;
-//    
-//    public Vector getEditingModes() {
-//        Vector v_mode = new Vector();
-//        v_mode.add(new GsEditModeDescriptor("STR_addEdgePoint", "STR_addEdgePoint_descr", ImageLoader.getImageIcon("custumizeedgerouting.gif"), GsActions.MODE_ADD_EDGE_POINT, 0));
-//        return v_mode;
-//    }
-//	public GsParameterPanel getEdgeAttributePanel() {
-//	    if (edgePanel == null) {
-//	        edgePanel = new DynamicItemAttributePanel(this);
-//	    }
-//		return edgePanel;
-//	}
-//
-//	public GsParameterPanel getNodeAttributePanel() {
-//	    if (vertexPanel == null) {
-//	        vertexPanel = new DynamicItemAttributePanel(this);
-//	    }
-//		return vertexPanel;
-//	}
-//
-//	protected FileFilter doGetFileFilter() {
-//		GsFileFilter ffilter = new GsFileFilter();
-//		ffilter.setExtensionList(new String[] {"ginml"}, "ginml files");
-//		return ffilter;
-//	}
-//
-//	public String getAutoFileExtension() {
-//		return ".ginml";
-//	}
-//
-//	protected JPanel doGetFileChooserPanel() {
-//		return getOptionPanel();
-//	}
-//
-//	private JPanel getOptionPanel() {
-//		if (optionPanel == null) {
-//            Object[] t_mode = { Translator.getString("STR_saveNone"),
-//                    Translator.getString("STR_savePosition"),
-//                    Translator.getString("STR_saveComplet") };
-//            optionPanel = new RegulatoryGraphOptionPanel(t_mode, mainFrame != null ? 2 : 0);
-//		}
-//		return optionPanel;
-//	}
-	
+	@Override
+	public byte[] fillExtraValues(byte[] state, byte[] extraValues) {
+		if (extraFunctions == null) {
+			return null;
+		}
+		
+		byte[] extra = extraValues;
+		
+		if (extra == null || extra.length != extraFunctions.length) {
+			extra = new byte[extraFunctions.length];
+		}
+		
+		for (int i=0 ; i<extra.length ; i++) {
+			extra[i] = ddmanager.reach(extraFunctions[i], state);
+		}
+		return extra;
+	}
+
+	@Override
+	public void setLogicalModel(LogicalModel model) {
+		List<NodeInfo> extraNodes = null;
+		if (model != null) {
+			extraNodes = model.getExtraComponents();
+			if (extraNodes == null || extraNodes.size() < 1) {
+				model = null;
+			}
+		}
+		if (model == null) {
+			// reset extra information
+			ddmanager = null;
+			extraNames = null;
+			extraFunctions = null;
+			return;
+		}
+		
+		ddmanager = model.getMDDManager();
+		extraFunctions = model.getExtraLogicalFunctions();
+		extraNames= new String[extraFunctions.length];
+
+		for (int i=0 ; i<extraNames.length ; i++) {
+			extraNames[i] = extraNodes.get(i).getNodeID();
+		}
+	}
+
 }
