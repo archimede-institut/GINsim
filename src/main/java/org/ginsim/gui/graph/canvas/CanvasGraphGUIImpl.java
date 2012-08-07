@@ -2,6 +2,8 @@ package org.ginsim.gui.graph.canvas;
 
 import java.awt.Component;
 
+import javax.swing.JMenu;
+
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.graph.BaseGraphGUI;
@@ -39,7 +41,6 @@ public class CanvasGraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> exte
 	@Override
 	public void refresh(Object o) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	@Override
@@ -47,4 +48,10 @@ public class CanvasGraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> exte
 		canvas.zoom(direction);
 	}
 
+	@Override
+	public JMenu getViewMenu(JMenu layout) {
+		JMenu menu = super.getViewMenu(layout);
+		menu.add(new CanvasHelpAction(canvas));
+		return menu;
+	}
 }

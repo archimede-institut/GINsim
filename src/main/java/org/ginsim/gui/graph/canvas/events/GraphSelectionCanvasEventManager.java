@@ -33,6 +33,10 @@ public class GraphSelectionCanvasEventManager implements CanvasEventManager {
 	
 	private DragStatus dragstatus = DragStatus.NODRAG;
 	private MovingPoint movingPoint = null;
+
+	private Object selectedObject = null;
+	private boolean isAlternate = false;
+
 	
 	private Point startPoint=null;
 	int movex=0, movey=0;
@@ -62,8 +66,12 @@ public class GraphSelectionCanvasEventManager implements CanvasEventManager {
 		dragstatus = DragStatus.NODRAG;
 		startPoint = p;
 		
-		Object o = renderer.getObjectUnderPoint(p);
-		
+		selectedObject = renderer.getObjectUnderPoint(p);
+		isAlternate = alternate;
+	}
+	
+	private void simpleClick(Point p, boolean alternate) {
+		Object o = selectedObject;
 		if (alternate) {
 			if (o == null) {
 				// do nothing
@@ -100,6 +108,56 @@ public class GraphSelectionCanvasEventManager implements CanvasEventManager {
 		}
 	}
 
+	private void applyMove() {
+		// first mark all moving items as damaged
+		for (Object o: movingEdges.keySet()) {
+			renderer.damageItem(o);
+		}
+		for (Object o: renderer.selectionCache) {
+			renderer.damageItem(o);
+		}
+		
+		// then move them
+		for (Object o: renderer.selectionCache) {
+			if (o instanceof Edge) {
+				ereader.setEdge((Edge)o);
+				ereader.move(movex, movey);
+			} else {
+				nreader.setNode(o);
+				nreader.move(movex, movey);
+			}
+			renderer.damageItem(o);
+		}
+
+		// finally mark them as damaged again and repaint
+		for (Object o: movingEdges.keySet()) {
+			renderer.damageItem(o);
+		}
+		for (Object o: renderer.selectionCache) {
+			renderer.damageItem(o);
+		}
+		dragstatus = DragStatus.NODRAG;
+		movingEdges.clear();
+		renderer.repaintCanvas();
+	}
+	
+	private void applyMovedPoint() {
+		if (movingPoint == null) {
+			LogManager.error("MOVEPOINT without an actual moving point");
+		}
+		renderer.damageItem(movingPoint.edge);
+		ereader.setEdge(movingPoint.edge);
+		List<Point> points = ereader.getPoints();
+		Point pt = points.get(movingPoint.pointIdx);
+		points.set(movingPoint.pointIdx, new Point(pt.x+movex, pt.y + movey));
+		graph.fireGraphChange(GraphChangeType.EDGEUPDATED, movingPoint.edge);
+		renderer.damageItem(movingPoint.edge);
+		movingPoint = null;
+		dragstatus = DragStatus.NODRAG;
+		movingEdges.clear();
+		renderer.repaintCanvas();
+	}
+	
 	@Override
 	public void released(Point p) {
 		if (startPoint != null) {
@@ -110,58 +168,16 @@ public class GraphSelectionCanvasEventManager implements CanvasEventManager {
 		}
 		
 		switch (dragstatus) {
+		case NODRAG:
+			simpleClick(p, isAlternate);
+			break;
 		case MOVEPOINT:
-			if (movingPoint == null) {
-				LogManager.error("MOVEPOINT without an actual moving point");
-				break;
-			}
-			renderer.damageItem(movingPoint.edge);
-			ereader.setEdge(movingPoint.edge);
-			List<Point> points = ereader.getPoints();
-			Point pt = points.get(movingPoint.pointIdx);
-			points.set(movingPoint.pointIdx, new Point(pt.x+movex, pt.y + movey));
-			graph.fireGraphChange(GraphChangeType.EDGEUPDATED, movingPoint.edge);
-			renderer.damageItem(movingPoint.edge);
-			movingPoint = null;
-			dragstatus = DragStatus.NODRAG;
-			movingEdges.clear();
-			renderer.repaintCanvas();
+			applyMovedPoint();
 			break;
 		case MOVE:
-			// first mark all moving items as damaged
-			for (Object o: movingEdges.keySet()) {
-				renderer.damageItem(o);
-			}
-			for (Object o: renderer.selectionCache) {
-				renderer.damageItem(o);
-			}
-			
-			// then move them
-			for (Object o: renderer.selectionCache) {
-				if (o instanceof Edge) {
-					ereader.setEdge((Edge)o);
-					ereader.move(movex, movey);
-				} else {
-					nreader.setNode(o);
-					nreader.move(movex, movey);
-				}
-				renderer.damageItem(o);
-			}
-
-			// finally mark them as damaged again and repaint
-			for (Object o: movingEdges.keySet()) {
-				renderer.damageItem(o);
-			}
-			for (Object o: renderer.selectionCache) {
-				renderer.damageItem(o);
-			}
-			dragstatus = DragStatus.NODRAG;
-			movingEdges.clear();
-			renderer.repaintCanvas();
+			applyMove();
 			break;
-
 		case SELECT:
-			
 			Rectangle selectionClip = ViewHelper.getRectangle(startPoint.x, startPoint.y, startPoint.x+movex, startPoint.y+movey);
 			renderer.select(selectionClip);
 			dragstatus = DragStatus.NODRAG;
@@ -174,6 +190,7 @@ public class GraphSelectionCanvasEventManager implements CanvasEventManager {
 		startPoint = null;
 		movex = movey = 0;
 		movingPoint = null;
+		selectedObject = null;
 	}
 
 	@Override
@@ -182,6 +199,26 @@ public class GraphSelectionCanvasEventManager implements CanvasEventManager {
 			return;
 		}
 		if (dragstatus == DragStatus.NODRAG) {
+			if (selectedObject == null) {
+				selection.unselectAll();
+			} else if (isAlternate) {
+				if (! renderer.selectionCache.contains(selectedObject) ) {
+					// add it to the selection
+					if (selectedObject instanceof Edge) {
+						selection.addEdgeToSelection((Edge)selectedObject);
+					} else {
+						selection.addNodeToSelection(selectedObject);
+					}
+				}
+			} else {
+				// reset selection
+				if (selectedObject instanceof Edge) {
+					selection.selectEdge((Edge)selectedObject);
+				} else {
+					selection.selectNode(selectedObject);
+				}
+			}
+			
 			if (renderer.selectionCache.size() > 0) {
 				dragstatus = DragStatus.MOVE;
 				
@@ -360,7 +397,7 @@ public class GraphSelectionCanvasEventManager implements CanvasEventManager {
 	
 	@Override
 	public void cancel() {
-		// TODO Auto-generated method stub
+		dragstatus = DragStatus.CANCELED;
 	}
 
 	
@@ -413,10 +450,14 @@ public class GraphSelectionCanvasEventManager implements CanvasEventManager {
 
 	@Override
 	public void helpOverlay(Graphics2D g, Rectangle area) {
-		g.setColor(Color.GRAY);
+		g.setColor(Color.LIGHT_GRAY);
 		g.fill(area);
 		System.out.println("TODO: help...");
 		// TODO: help overlay
+		g.setColor(Color.RED);
+		g.drawString("TODO: some help text", 50, 50);
+		g.drawString("Click to hide", 70, 70);
+		g.drawString("Press '?' to show it again.", 70, 90);
 	}
 
 }
