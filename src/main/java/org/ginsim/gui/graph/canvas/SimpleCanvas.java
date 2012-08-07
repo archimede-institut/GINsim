@@ -176,8 +176,7 @@ public class SimpleCanvas extends JComponent {
 		g2.scale(zoom, zoom);
 
 		if (showHelp) {
-			AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.8f); 
-			g2.setComposite(ac);
+			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.9f));
 			renderer.helpOverlay(g2, getCanvasRectangle(new Rectangle(0,0, getWidth(), getHeight())));
 			showHelp = false;
 		} else {

@@ -1,7 +1,6 @@
 package org.ginsim.gui.graph.canvas.events;
 
 import java.awt.AlphaComposite;
-import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -19,13 +18,11 @@ import org.ginsim.core.graph.view.MovingEdgeType;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.ViewHelper;
 import org.ginsim.gui.graph.GraphSelection;
-import org.ginsim.gui.graph.canvas.CanvasEventManager;
 import org.ginsim.gui.graph.canvas.GraphCanvasRenderer;
 import org.ginsim.gui.shell.editpanel.SelectionType;
 
-public class GraphSelectionCanvasEventManager implements CanvasEventManager {
+public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventManager {
 
-	private final GraphCanvasRenderer renderer;
 	private final GraphSelection selection;
 	private final Graph graph;
 	private final NodeAttributesReader nreader;
@@ -48,7 +45,7 @@ public class GraphSelectionCanvasEventManager implements CanvasEventManager {
 
 	
 	public GraphSelectionCanvasEventManager(Graph<?,?> graph, GraphCanvasRenderer renderer, GraphSelection selection) {
-		this.renderer = renderer;
+		super(renderer);
 		this.selection = selection;
 		
 		this.graph = graph;
@@ -449,15 +446,17 @@ public class GraphSelectionCanvasEventManager implements CanvasEventManager {
 	}
 
 	@Override
-	public void helpOverlay(Graphics2D g, Rectangle area) {
-		g.setColor(Color.LIGHT_GRAY);
-		g.fill(area);
-		System.out.println("TODO: help...");
-		// TODO: help overlay
-		g.setColor(Color.RED);
-		g.drawString("TODO: some help text", 50, 50);
-		g.drawString("Click to hide", 70, 70);
-		g.drawString("Press '?' to show it again.", 70, 90);
+	void extraHelpOverlay(Graphics2D g, Rectangle area, int voffset) {
+		g.drawString("Selection:", 50, voffset);
+		g.drawString("Click to select an object", 70, voffset+20);
+		g.drawString("ctrl-click for multiple selection", 70, voffset+40);
+		g.drawString("draw a rectangle on the background to select its content", 70, voffset+60);
+
+		g.drawString("Drag selected objects to move them", 50, voffset+90);
+
+		g.drawString("ctrl-click on a selected edge to add or remove intermediate points", 50, voffset+120);
+
+		g.drawString("Drag intermediate points to move them", 50, voffset+140);
 	}
 
 }

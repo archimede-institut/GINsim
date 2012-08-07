@@ -4,20 +4,14 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 
-import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.graph.AddNodeAction;
 import org.ginsim.gui.graph.EditAction;
-import org.ginsim.gui.graph.EditMode;
-import org.ginsim.gui.graph.canvas.CanvasEventManager;
 import org.ginsim.gui.graph.canvas.GraphCanvasRenderer;
-import org.jgrapht.event.GraphEdgeChangeEvent;
 
-public class AddNodeInGraphCanvasEventManager implements CanvasEventManager {
-
-	private final GraphCanvasRenderer renderer;
+public class AddNodeInGraphCanvasEventManager extends AbstractHelpCanvasEventManager {
 
 	public AddNodeInGraphCanvasEventManager(GraphCanvasRenderer renderer) {
-		this.renderer = renderer;
+		super(renderer);
 	}
 	
 	@Override
@@ -50,7 +44,8 @@ public class AddNodeInGraphCanvasEventManager implements CanvasEventManager {
 	}
 
 	@Override
-	public void helpOverlay(Graphics2D g, Rectangle area) {
+	void extraHelpOverlay(Graphics2D g, Rectangle area, int voffset) {
+		g.drawString("Click on the canvas to add a new node", 70, voffset);
 	}
 
 
