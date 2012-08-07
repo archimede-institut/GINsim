@@ -67,13 +67,7 @@
     </dependency>
 
 
-    <!-- should be deprecated in the future -->
-    <dependency>
-      <groupId>jgraph</groupId>
-      <artifactId>jgraph</artifactId>
-      <version>5.13.0.0</version>
-    </dependency>
-
+    <!-- for the custom SBML import: will be deprecated -->
     <dependency>
       <groupId>net.sf.jsci</groupId>
       <artifactId>jsci</artifactId>
