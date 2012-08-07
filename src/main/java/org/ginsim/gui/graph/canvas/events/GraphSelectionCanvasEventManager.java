@@ -373,15 +373,15 @@ public class GraphSelectionCanvasEventManager implements CanvasEventManager {
 		
 		switch (dragstatus) {
 		case MOVEPOINT:
-		case MOVE:
-			AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.5f); 
-			g.setComposite(ac);
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.5f));
 			
 			if (movingPoint != null) {
 				ereader.renderMovingPoint(g, movingPoint.pointIdx, movex, movey);
-				break;
 			}
-
+			break;
+		case MOVE:
+			g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.5f));
+			
 			for (Object o: renderer.selectionCache) {
 		    	if (o instanceof Edge) {
 		    		// nothing to do here?
