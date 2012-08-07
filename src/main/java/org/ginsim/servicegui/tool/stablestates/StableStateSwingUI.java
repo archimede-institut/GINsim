@@ -48,7 +48,7 @@ public class StableStateSwingUI extends LogicalModelActionDialog  {
 	public StableStateSwingUI(JFrame f, RegulatoryGraph lrg) {
 		super(lrg, f, "stableStatesGUI", 600, 400);
 		
-		model = new StableTableModel();
+		model = new StableTableModel(lrg);
 		tresult = new EnhancedJTable(model);
 		
 		// needed for the scroll bars to appear as needed
@@ -72,12 +72,19 @@ public class StableStateSwingUI extends LogicalModelActionDialog  {
 	
 			TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
 			Enumeration<TableColumn> columns = tresult.getColumnModel().getColumns();
-			while (columns.hasMoreElements()) {
-			   TableColumn col = columns.nextElement();
-			   col.setHeaderRenderer(headerRenderer);
-			   col.setMinWidth(20);
-			   col.setMaxWidth(25);
+			
+			if (columns.hasMoreElements()) {
+				TableColumn col = columns.nextElement();
+				col.setMinWidth(150);
+				col.setMaxWidth(400);
 			}
+			while (columns.hasMoreElements()) {
+				TableColumn col = columns.nextElement();
+				col.setHeaderRenderer(headerRenderer);
+				col.setMinWidth(20);
+				col.setMaxWidth(25);
+			}
+			
 		} catch (Exception e) {
 			LogManager.error(e);
 		}
@@ -100,15 +107,20 @@ class ColoredCellRenderer extends DefaultTableCellRenderer {
                                                                                         int row , int column ) {
         Component cmp = super.getTableCellRendererComponent( table , value , isSelected , hasFocus , row , column );
         if( table != null && row >= 0) {
-            if ("*".equals(value)) {
-                cmp.setBackground(STAR_BG);
-            } else if ("0".equals(value)) {
+            if (column == 0 || "0".equals(value)) {
             	if (isSelected) {
             		cmp.setBackground(table.getSelectionBackground());
             	} else {
             		cmp.setBackground(row%2 == 0 ? EVEN_BG : ODD_BG);
             	}
-        		cmp.setForeground(cmp.getBackground());
+            	if (column == 0) {
+            		cmp.setForeground(Color.BLACK);
+            	} else {
+            		cmp.setForeground(cmp.getBackground());
+            	}
+        	} else if ("*".equals(value)) {
+                cmp.setBackground(STAR_BG);
+        		cmp.setForeground(Color.BLACK);
             } else {
         		cmp.setForeground(Color.BLACK);
             	cmp.setBackground(ACTIVE_BG);

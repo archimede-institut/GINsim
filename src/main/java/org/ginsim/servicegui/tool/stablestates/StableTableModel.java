@@ -8,7 +8,12 @@ import javax.swing.table.AbstractTableModel;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
 import org.colomoto.mddlib.PathSearcher;
+import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
+import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
+import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 
 /**
  * Simple table model to view stable state search results.
@@ -17,11 +22,21 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 public class StableTableModel extends AbstractTableModel {
 
 	int nbcol = 0;
-	List<int[]> result = new ArrayList<int[]>();
+	List<byte[]> result = new ArrayList<byte[]>();
 	MDDManager factory;
 	Object[] variables;
+	InitialStateList istates = null;
 
-	public int[] getState(int sel) {
+	public StableTableModel() {
+	}
+	public StableTableModel(RegulatoryGraph lrg) {
+		GsInitialStateList gsistates = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(lrg, InitialStateManager.KEY, false);
+		if (gsistates != null) {
+			istates = gsistates.getInitialStates();
+		}
+	}
+
+	public byte[] getState(int sel) {
 		return result.get(sel);
 	}
 
@@ -34,7 +49,11 @@ public class StableTableModel extends AbstractTableModel {
 			PathSearcher searcher = new PathSearcher(factory, 1);
 			int[] path = searcher.setNode(idx);
 			for (int l: searcher) {
-				result.add(path.clone());
+				byte[] r = new byte[path.length];
+				for (int i=0 ; i<path.length ; i++) {
+					r[i] = (byte)path[i];
+				}
+				result.add(r);
 			}
 		}
 		
@@ -45,7 +64,7 @@ public class StableTableModel extends AbstractTableModel {
 		result.clear();
 		this.factory = null;
 		for (byte[] path: stables) {
-			int[] r = new int[path.length];
+			byte[] r = new byte[path.length];
 			for (int i=0 ; i<path.length ; i++) {
 				r[i] = path[i];
 			}
@@ -64,12 +83,21 @@ public class StableTableModel extends AbstractTableModel {
 
 	@Override
 	public int getColumnCount() {
-		return nbcol;
+		if (nbcol > 0) {
+			return nbcol+1;
+		}
+		return 0;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		int v = result.get(rowIndex)[columnIndex];
+		if (columnIndex == 0) {
+			if (istates != null && variables != null) {
+				return istates.nameStateInfo(result.get(rowIndex), variables);
+			}
+			return "";
+		}
+		int v = result.get(rowIndex)[columnIndex-1];
 		if (v == 0) {
 			return "0";
 		}
@@ -81,9 +109,13 @@ public class StableTableModel extends AbstractTableModel {
 
 	@Override
 	public String getColumnName(int column) {
-		if (factory != null) {
-			return variables[column].toString();
+		if (column == 0) {
+			return "Name";
 		}
-		return super.getColumnName(column);
+		
+		if (factory != null) {
+			return variables[column-1].toString();
+		}
+		return super.getColumnName(column-1);
 	}
 }

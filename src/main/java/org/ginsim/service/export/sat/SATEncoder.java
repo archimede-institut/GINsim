@@ -9,6 +9,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
@@ -74,9 +75,9 @@ public class SATEncoder {
 		Iterator<InitialState> it = config.getInitialState().keySet()
 				.iterator();
 		if (it.hasNext()) {
-			Map<RegulatoryNode, List<Integer>> m_states = (it.hasNext()) ? it
+			Map<NodeInfo, List<Integer>> m_states = (it.hasNext()) ? it
 					.next().getMap()
-					: new HashMap<RegulatoryNode, List<Integer>>();
+					: new HashMap<NodeInfo, List<Integer>>();
 			clauses += writeInitialState(sb, t_vertex, false, m_states);
 		} else {
 			sb.append("Not specified!");
@@ -84,9 +85,9 @@ public class SATEncoder {
 		sb.append("\nc Input variable domain restrictions: ");
 		it = config.getInputState().keySet().iterator();
 		if (it.hasNext()) {
-			Map<RegulatoryNode, List<Integer>> m_states = (it.hasNext()) ? it
+			Map<NodeInfo, List<Integer>> m_states = (it.hasNext()) ? it
 					.next().getMap()
-					: new HashMap<RegulatoryNode, List<Integer>>();
+					: new HashMap<NodeInfo, List<Integer>>();
 			clauses += writeInitialState(sb, t_vertex, true, m_states);
 		} else {
 			sb.append("Not specified!");
@@ -170,13 +171,13 @@ public class SATEncoder {
 	}
 
 	private int writeInitialState(StringBuffer sb, RegulatoryNode[] t_vertex, boolean bInput,
-			Map<RegulatoryNode, List<Integer>> mInitStates) {
+			Map<NodeInfo, List<Integer>> mInitStates) {
 		int clauses = 0;
 		for (int i = 0; i < t_vertex.length; i++) {
 			if (t_vertex[i].isInput() != bInput)
 				continue;
 			String s_init = "";
-			List<Integer> v = mInitStates.get(t_vertex[i]);
+			List<Integer> v = mInitStates.get(t_vertex[i].getNodeInfo());
 			if (v != null && v.size() > 0) {
 				for (int j = 0; j < v.size(); j++) {
 					s_init += getSATVariable(t_vertex, i, j) + " ";

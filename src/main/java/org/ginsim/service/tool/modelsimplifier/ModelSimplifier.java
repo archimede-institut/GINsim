@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.annotation.Annotation;
@@ -373,11 +374,11 @@ public class ModelSimplifier extends AbstractModelSimplifier  {
     					InitialState newIstate = (InitialState)newInit.getElement(null, epos);
     					newIstate.setName(istate.getName());
     					m_alldata.put(istate, newIstate);
-    					Map<RegulatoryNode, List<Integer>> m_init = newIstate.getMap();
-    					for (Entry<RegulatoryNode, List<Integer>> e: istate.getMap().entrySet()) {
+    					Map<NodeInfo, List<Integer>> m_init = newIstate.getMap();
+    					for (Entry<NodeInfo, List<Integer>> e: istate.getMap().entrySet()) {
     						RegulatoryNode o = (RegulatoryNode)copyMap.get(e.getKey());
     						if (o != null) {
-    							m_init.put( o, e.getValue());
+    							m_init.put( o.getNodeInfo(), e.getValue());
     						}
     					}
     				}

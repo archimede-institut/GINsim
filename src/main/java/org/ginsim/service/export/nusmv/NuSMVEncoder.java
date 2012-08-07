@@ -14,6 +14,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeMap;
 
+import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
@@ -473,11 +474,11 @@ public class NuSMVEncoder {
 		out.write(";\n");
 
 		Iterator<InitialState> it;
-		Map<RegulatoryNode, List<Integer>> m_states;
+		Map<NodeInfo, List<Integer>> m_states;
 		// Initial States - State variables
 		it = config.getInitialState().keySet().iterator();
 		m_states = (it.hasNext()) ? it.next().getMap()
-				: new HashMap<RegulatoryNode, List<Integer>>();
+				: new HashMap<NodeInfo, List<Integer>>();
 		// TODO: make use of the name given by the user
 		// referencing the atomic proposition
 		out.write("\n-- State variables initialization\n");
@@ -487,7 +488,7 @@ public class NuSMVEncoder {
 		if (bType1 && hasInputVars) {
 			it = config.getInputState().keySet().iterator();
 			m_states = (it.hasNext()) ? it.next().getMap()
-					: new HashMap<RegulatoryNode, List<Integer>>();
+					: new HashMap<NodeInfo, List<Integer>>();
 			out.write("-- Input variables initialization\n");
 			out.write(writeInitialState(t_vertex, true, m_states));
 		}
@@ -617,14 +618,14 @@ public class NuSMVEncoder {
 	 * @return A string of values in the NuSMV format.
 	 */
 	private String writeInitialState(RegulatoryNode[] t_vertex, boolean bInput,
-			Map<RegulatoryNode, List<Integer>> mInitStates) {
+			Map<NodeInfo, List<Integer>> mInitStates) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < t_vertex.length; i++) {
 			if (bInput && !t_vertex[i].isInput() || !bInput
 					&& t_vertex[i].isOutput())
 				continue;
 			String s_init = "";
-			List<Integer> v = mInitStates.get(t_vertex[i]);
+			List<Integer> v = mInitStates.get(t_vertex[i].getNodeInfo());
 			if (v != null && v.size() > 0) {
 				for (int j = 0; j < v.size(); j++) {
 					if (j > 0)

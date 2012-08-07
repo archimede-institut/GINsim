@@ -5,12 +5,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.SimpleGenericList;
 
 
-public class InitialStateList extends SimpleGenericList {
+public class InitialStateList extends SimpleGenericList<InitialState> {
 	List nodeOrder;
 	
     public InitialStateList(List nodeOrder, boolean input) {
@@ -27,7 +28,7 @@ public class InitialStateList extends SimpleGenericList {
 		return nodeOrder;
 	}
 
-	protected Object doCreate(String name, int mode) {
+	protected InitialState doCreate(String name, int mode) {
 		InitialState i = new InitialState();
 		i.setName(name);
 		return i;
@@ -108,11 +109,39 @@ public class InitialStateList extends SimpleGenericList {
         }
     }
 
+	public String nameStateInfo(byte[] state, Object[] no) {
+        if (getNbElements(null) > 0) {
+            for (InitialState istate: this) {
+                Map<NodeInfo, List<Integer>> m_istate = istate.getMap();
+                boolean ok = true;
+                for (int j=0 ; j<no.length ; j++) {
+                    List<Integer> values = m_istate.get(no[j]);
+                    if (values != null) {
+                        ok = false;
+                        int val = state[j];
+                        for (int v: values) {
+                            if (v == val) {
+                                ok = true;
+                                break;
+                            }
+                        }
+                        if (!ok) {
+                            break;
+                        }
+                    }
+                }
+                if (ok) {
+                    return istate.getName();
+                }
+            }
+        }
+        return null;
+	}
 	public String nameState(byte[] state, List<RegulatoryNode> no) {
         if (getNbElements(null) > 0) {
             for (int i=0 ; i<getNbElements(null) ; i++) {
                 InitialState istate = (InitialState)getElement(null, i);
-                Map<RegulatoryNode, List<Integer>> m_istate = istate.getMap();
+                Map<NodeInfo, List<Integer>> m_istate = istate.getMap();
                 boolean ok = true;
                 for (int j=0 ; j<no.size() ; j++) {
                     List<Integer> values = m_istate.get(no.get(j));

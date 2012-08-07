@@ -275,7 +275,7 @@ class StableState extends TabComponantProvidingAState {
 	}
 
 	public byte[] getState() {
-		int[] state = tableModel.getState(table.getSelectedRow());
+		byte[] state = tableModel.getState(table.getSelectedRow());
 		byte[] ret = new byte[state.length];
 		for (int i=0 ; i<state.length ; i++) {
 			ret[i] = (byte)state[i];

@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDOperator;
 import org.colomoto.mddlib.MDDVariable;
@@ -18,7 +19,7 @@ import org.ginsim.core.utils.data.NamedObject;
 
 public class InitialState implements NamedObject {
 	String name;
-	Map<RegulatoryNode, List<Integer>> m = new HashMap<RegulatoryNode, List<Integer>>();
+	Map<NodeInfo, List<Integer>> m = new HashMap<NodeInfo, List<Integer>>();
 	
     public void setState(int[] state, List<RegulatoryNode> nodeOrder) {
         setState(state, nodeOrder, false);
@@ -36,12 +37,12 @@ public class InitialState implements NamedObject {
         setData(t_s, nodeOrder);
     }
     
-    public Map<RegulatoryNode, List<Integer>> getMaxValueTable() {
+    public Map<NodeInfo, List<Integer>> getMaxValueTable() {
     	
 		return m;
 	}
     
-    public void setMaxValueTable( Map<RegulatoryNode, List<Integer>> m) {
+    public void setMaxValueTable( Map<NodeInfo, List<Integer>> m) {
     	
 		this.m = m;
 	}
@@ -81,7 +82,7 @@ public class InitialState implements NamedObject {
                         }
                     }
                     if (!v_val.isEmpty() && v_val.size() <= vertex.getMaxValue()) {
-                        m.put(vertex, v_val);
+                        m.put(vertex.getNodeInfo(), v_val);
                     }
                 }
             }
@@ -93,7 +94,7 @@ public class InitialState implements NamedObject {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Map<RegulatoryNode,List<Integer>> getMap() {
+	public Map<NodeInfo,List<Integer>> getMap() {
 		return m;
 	}
 	public OMDDNode getMDD(List<RegulatoryNode> nodeOrder) {
@@ -123,8 +124,8 @@ public class InitialState implements NamedObject {
 
 		int[] nodes = new int[m.size()];
 		int idx = 0;
-		for (Entry<RegulatoryNode, List<Integer>> e: m.entrySet()) {
-			RegulatoryNode node = e.getKey();
+		for (Entry<NodeInfo, List<Integer>> e: m.entrySet()) {
+			NodeInfo node = e.getKey();
 			List<Integer> values = e.getValue();
 			if (values == null) {
 				nodes[idx++] = 1;
@@ -132,7 +133,7 @@ public class InitialState implements NamedObject {
 			}
 			
 			MDDVariable var = factory.getVariableForKey(node);
-			int[] next = new int[node.getMaxValue()+1];
+			int[] next = new int[node.getMax()+1];
 			// just to be sure: reset the array
 			for (int v=0 ; v<next.length ; v++) {
 				next[v] = 0;

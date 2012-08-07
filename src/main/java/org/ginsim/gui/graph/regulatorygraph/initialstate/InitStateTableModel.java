@@ -97,7 +97,7 @@ public class InitStateTableModel extends AbstractTableModel {
 			return "";
 		}
         Map m_row = ((InitialState)imanager.getElement(null, rowIndex)).getMaxValueTable();
-        element = (List)m_row.get(nodeOrder.get(ci));
+        element = (List)m_row.get(nodeOrder.get(ci).getNodeInfo());
         return showValue(element, nodeOrder.get(ci).getMaxValue());
     }
     
@@ -300,7 +300,7 @@ public class InitStateTableModel extends AbstractTableModel {
             	}
             }
             Map m_line = ((InitialState)imanager.getElement(null, rowIndex)).getMaxValueTable();
-            m_line.put(nodeOrder.get(ci),newcell);
+            m_line.put(nodeOrder.get(ci).getNodeInfo(),newcell);
 			fireTableCellUpdated(rowIndex,ci+2);
 		} catch (Exception e) {}
 	}

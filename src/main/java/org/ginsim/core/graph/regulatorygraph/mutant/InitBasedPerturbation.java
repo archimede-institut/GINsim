@@ -29,39 +29,7 @@ public class InitBasedPerturbation extends AbstractPerturbation implements Pertu
     }
     
     public void apply(OMDDNode[] t_tree, RegulatoryGraph graph) {
-        Map<RegulatoryNode, List<Integer>> m_init = init.getMap();
-        List<RegulatoryNode> norder = graph.getNodeOrder();
-        for (Entry<RegulatoryNode, List<Integer>> e: m_init.entrySet()) {
-            RegulatoryNode vertex = e.getKey();
-            List<Integer> values = e.getValue();
-            if (values == null || values.size() < 1) {
-                continue; // nothing to apply here
-            }
-            int min = vertex.getMaxValue();
-            boolean[] tvals = new boolean[vertex.getMaxValue()+1];
-            // set all values in the array
-            for (int v: values ) {
-                if (v < min) {
-                    min = v;
-                }
-                tvals[v] = true;
-            }
-
-            // replace the MDD
-            int index  = norder.indexOf(vertex);
-            OMDDNode node = new OMDDNode();
-            node.level = index;
-            node.next = new OMDDNode[tvals.length];
-            for (int pos=0 ; pos<tvals.length ; pos++) {
-                if (tvals[pos]) {
-                    min = pos;
-                    node.next[pos] = OMDDNode.TERMINALS[pos];
-                } else {
-                    node.next[pos] = OMDDNode.TERMINALS[min];
-                }
-            }
-            t_tree[index] = node;
-        }
+    	throw new RuntimeException("Unsupported perturbation application");
     }
 
 	@Override
@@ -70,15 +38,15 @@ public class InitBasedPerturbation extends AbstractPerturbation implements Pertu
 		int[] nodes = model.getLogicalFunctions();
 		List<NodeInfo> order = model.getNodeOrder();
 		
-        Map<RegulatoryNode, List<Integer>> m_init = init.getMap();
-        for (Entry<RegulatoryNode, List<Integer>> e: m_init.entrySet()) {
-            RegulatoryNode vertex = e.getKey();
+        Map<NodeInfo, List<Integer>> m_init = init.getMap();
+        for (Entry<NodeInfo, List<Integer>> e: m_init.entrySet()) {
+        	NodeInfo vertex = e.getKey();
             List<Integer> values = e.getValue();
             if (values == null || values.size() < 1) {
                 continue; // nothing to apply here
             }
-            int min = vertex.getMaxValue();
-            boolean[] tvals = new boolean[vertex.getMaxValue()+1];
+            int min = vertex.getMax();
+            boolean[] tvals = new boolean[vertex.getMax()+1];
             // set all values in the array
             for (int v: values ) {
                 if (v < min) {
