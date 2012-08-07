@@ -29,7 +29,7 @@ import org.ginsim.core.graph.view.ViewHelper;
  */
 public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
-	private static final int MAX_EDGE_SIZE = 15;
+	private static final int MAX_EDGE_SIZE = 7;
 	
 	public static final String EDGE_COLOR = "vs.edgecolor";
 	
@@ -309,12 +309,13 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
 
 	private void dorender(Graphics2D g, List<Point> points) {
-		g.setColor(getLineColor());
 		stroke.setWidth(getLineWidth());
 		g.setStroke(stroke);
 		if (selected) {
 			// TODO: better selection markup
 			g.setColor(Color.PINK);
+		} else {
+			g.setColor(getLineColor());
 		}
 		
 		Shape s;
@@ -410,6 +411,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 	
 	private Shape getPath() {
 		if (cachedPath == null) {
+			stroke.setWidth(getLineWidth());
 			cachedPoints = ViewHelper.getPoints(nreader, this, edge);
 			cachedPath = createPath(cachedPoints, isCurve());
 		}

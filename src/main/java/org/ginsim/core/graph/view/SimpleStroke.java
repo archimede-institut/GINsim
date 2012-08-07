@@ -28,7 +28,9 @@ public class SimpleStroke implements Stroke {
 	public void setWidth(float width) {
 		if (width < 1) {
 			width = 1;
-		} else if (this.width != width) {
+		}
+		
+		if (this.width != width) {
 			this.width = width;
 			cachedStroke = null;
 			cachedSimpleStroke = null;
@@ -36,13 +38,17 @@ public class SimpleStroke implements Stroke {
 	}
 
 	public void setDashed(boolean dashed) {
+		if (dashed && this.dash != null) {
+			// no change
+			return;
+		}
+		
 		if (dashed) {
 			this.dash = DASHPATTERN;
 		} else {
 			this.dash = null;
-			cachedStroke = null;
-			cachedSimpleStroke = null;
 		}
+		cachedStroke = null;
 	}
 	
 	@Override
