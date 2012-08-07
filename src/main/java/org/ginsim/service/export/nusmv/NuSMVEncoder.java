@@ -676,14 +676,15 @@ public class NuSMVEncoder {
 				if (alSSdesc == null || alSSdesc.size() == 0) {
 					sRet += "\n  FALSE;";
 				} else {
-					for (int i = 0; i < alSSdesc.size(); i++) {
-						if (i > 0)
+					for (int i = 1; i <= alSSdesc.size(); i++) {
+						if (i > 1)
 							sRet += " | ";
 						sRet += "weakSS" + i;
 					}
 					sRet += ";";
 					for (int i = 0; i < alSSdesc.size(); i++) {
-						sRet += "\nweakSS" + i + " := " + alSSdesc.get(i) + ";";
+						sRet += "\nweakSS" + (i + 1) + " := " + alSSdesc.get(i)
+								+ ";";
 					}
 				}
 			}
@@ -693,13 +694,13 @@ public class NuSMVEncoder {
 			if (alSSdesc == null || alSSdesc.size() == 0) {
 				sRet += "\n  FALSE";
 			} else {
-				for (int i = 0; i < alSSdesc.size(); i++) {
-					if (i > 0)
+				for (int i = 1; i <= alSSdesc.size(); i++) {
+					if (i > 1)
 						sRet += " | ";
 					sRet += "strongSS" + i;
 				}
 				for (int i = 0; i < alSSdesc.size(); i++) {
-					sRet += ";\nstrongSS" + i + " := " + alSSdesc.get(i);
+					sRet += ";\nstrongSS" + (i + 1) + " := " + alSSdesc.get(i);
 				}
 			}
 			sRet += ";\n";
