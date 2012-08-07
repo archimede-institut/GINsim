@@ -6,6 +6,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.awt.geom.Dimension2D;
+import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -44,6 +46,8 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 
 	public final Graph graph;
 	public final EditActionManager amanager;
+	
+	private boolean nodesOnTop = true;
 	
 	private Dimension bounds = new Dimension();
 	
@@ -88,46 +92,43 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 	@Override
 	public void render(Graphics2D g, Rectangle area) {
 
-		int maxx=0, maxy=0;
-		int tmpmax=0;
-		
+		SimpleDimension dim = new SimpleDimension();
+
+		if (nodesOnTop) {
+			renderEdges(g, area, dim);
+			renderNodes(g, area, dim);
+		} else {
+			renderNodes(g, area, dim);
+			renderEdges(g, area, dim);
+		}
+		// update global bounds
+		bounds.width = dim.getWidth() + 5;
+		bounds.height = dim.getHeight() + 5;
+	}
+
+	private void renderNodes(Graphics2D g, Rectangle area, SimpleDimension dim) {
     	for (Object node: graph.getNodes()) {
     		nreader.setNode(node, selectionCache.contains(node));
     		Rectangle bounds = nreader.getBounds();
-    		tmpmax = bounds.x+bounds.width;
-    		if (tmpmax > maxx) {
-    			maxx = tmpmax;
-    		}
-    		tmpmax = bounds.y+bounds.height;
-    		if (tmpmax > maxy) {
-    			maxy = tmpmax;
-    		}
+    		dim.extend(bounds);
     		if (bounds.intersects(area)) {
     			nreader.render(g);
     		}
     	}
-    	
+	}
+
+	private void renderEdges(Graphics2D g, Rectangle area, SimpleDimension dim) {
+		int tmpmax=0;
     	for (Object edge: graph.getEdges()) {
     		ereader.setEdge((Edge)edge, selectionCache.contains(edge));
     		Rectangle bounds = ereader.getBounds();
-    		tmpmax = bounds.x+bounds.width;
-    		if (tmpmax > maxx) {
-    			maxx = tmpmax;
-    		}
-    		tmpmax = bounds.y+bounds.height;
-    		if (tmpmax > maxy) {
-    			maxy = tmpmax;
-    		}
+    		dim.extend(bounds);
     		if (bounds.intersects(area)) {
     			ereader.render(g);
     		}
     	}
-    	
-    	// update global bounds
-    	bounds.width = maxx + 5;
-    	bounds.height = maxy + 5;
 	}
-
+	
 	@Override
 	public void overlay(Graphics2D g, Rectangle area) {
 		getEventManager().overlay(g, area);
@@ -223,21 +224,26 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 
 	public Object getObjectUnderPoint(Point p) {
 
+		Object sel = null;
+		
     	for (Object node: graph.getNodes()) {
     		nreader.setNode(node);
     		if (nreader.select(p)) {
-    			return node;
+    			sel = node;
     		}
+    	}
+    	if (sel != null) {
+    		return sel;
     	}
     	
     	for (Object edge: graph.getEdges()) {
     		ereader.setEdge((Edge)edge);
     		if (ereader.select(p)) {
-    			return edge;
+    			sel = edge;
     		}
     	}
     	
-    	return null;
+    	return sel;
 	}
 
 	@Override
@@ -304,3 +310,4 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 		return bounds;
 	}
 }
+
