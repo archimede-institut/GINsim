@@ -27,14 +27,16 @@ public class STGSimulationHelper implements SimulationHelper {
 	protected NodeAttributesReader vreader;
 	
 	public STGSimulationHelper(LogicalModel model, SimulationParameters params) {
-		stateTransitionGraph = GraphManager.getInstance().getNewGraph( DynamicGraph.class, params.nodeOrder);
+		List<NodeInfo> nodes = model.getNodeOrder();
+		stateTransitionGraph = GraphManager.getInstance().getNewGraph( DynamicGraph.class, nodes);
 		// FIXME: associated graph in the new simulation
 		stateTransitionGraph.setAssociatedGraph(params.param_list.graph);
+		stateTransitionGraph.setLogicalModel(model);
 		
         vreader = stateTransitionGraph.getNodeAttributeReader();
-	    vreader.setDefaultNodeSize(5+10*params.nodeOrder.size(), 25);
+	    vreader.setDefaultNodeSize(5+10*nodes.size(), 25);
         // add some default comments to the state transition graph
-        stateTransitionGraph.getAnnotation().setComment(params.getDescr()+"\n");
+        stateTransitionGraph.getAnnotation().setComment(params.getDescr(nodes)+"\n");
 	}
 
 	public boolean addNode(SimulationQueuedState item) {

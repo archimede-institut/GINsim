@@ -42,9 +42,7 @@ public class LocalGraphServiceGUI extends AbstractServiceGUI {
 				actions.add( new LocalGraphAction((DynamicGraph)graph, this));
 			}
 			catch( GsException ge){
-	    		GUIMessageUtils.openErrorDialog( "The Local Graph tool will not be available since the associated Regulatory graph was not found");
-	    		LogManager.error( "Unable to add action for this graph since its associated graph was not retrieved");
-	    		LogManager.error( ge);
+	    		LogManager.debug( "Unable to add action for this graph since its associated graph was not retrieved");
 			}
 		}
 		return actions;

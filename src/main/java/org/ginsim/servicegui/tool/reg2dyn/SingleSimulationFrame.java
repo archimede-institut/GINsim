@@ -28,7 +28,6 @@ import org.ginsim.common.application.Translator;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
-import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
@@ -41,8 +40,6 @@ import org.ginsim.service.tool.reg2dyn.Reg2DynService;
 import org.ginsim.service.tool.reg2dyn.Simulation;
 import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
-import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
-import org.ginsim.service.tool.reg2dyn.htg.HTGSimulation;
 
 
 /**
@@ -70,7 +67,6 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 	private JPanel mainPanel;
 	private JPanel simulationStrategyPanel;
 	private JPanel graphSizeLimits;
-	private MutantSelectionPanel mutantPanel;
 	private GenericListPanel listPanel;
 	private InitialStatePanel initStatePanel = null;
 	
@@ -93,7 +89,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 	
 	
 	public SingleSimulationFrame(Frame regGraphFrame, SimulationParameterList paramList) {
-		super(regGraphFrame, "display.simulation", 800, 400);
+		super(paramList.graph, regGraphFrame, "display.simulation", 800, 400);
 		this.regGraphFrame = regGraphFrame;
 		this.paramList = paramList;
 		GUIManager.getInstance().addBlockEdit( paramList.graph, this);
@@ -135,21 +131,10 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 			GridBagConstraints c = new GridBagConstraints();
 			c.gridx = 0;
 			c.gridy = 0;
-			//c.gridheight = 2;
 			c.fill = GridBagConstraints.BOTH;
 			c.weightx = 0.4;
 			mainPanel.add(getSimulationStrategyPanel(), c);
 			
-		
-			// bottom-right part with mutants
-			c.gridx++;
-			c.fill = GridBagConstraints.BOTH;
-			c.weightx = 0.6;
-			c.gridheight = 1;
-			ObjectStore store = currentParameter == null ? null : currentParameter.store;
-			mutantPanel = new MutantSelectionPanel(this, paramList.graph, store);
-			mainPanel.add(mutantPanel, c);
-
 			// size limits
 			c.gridy++;
 			mainPanel.add(getGraphSizeLimitsPanel(), c);
@@ -350,12 +335,12 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 /* *************** RUN AND SIMULATION **********************/
 
 	@Override
-	public void setResult( Graph graph) {
+	public void setResult( Object graph) {
 		isrunning = false;
 		if (null == graph) {
 			GUIMessageUtils.openErrorDialog("no graph generated", regGraphFrame);
 		} else {
-			GUIManager.getInstance().whatToDoWithGraph( graph, true);
+			GUIManager.getInstance().whatToDoWithGraph( (Graph)graph, true);
 		}
 		cancel();
 	}
@@ -372,8 +357,11 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 		super.cancel();
 	}
 	@Override
-	protected void run() {
-		if (currentParameter == null) return;
+	public void run(LogicalModel model) {
+		if (currentParameter == null) {
+			return;
+		}
+		
 		setMessage(Translator.getString("STR_wait_msg"));
 		bcancel.setText(Translator.getString("STR_abort"));
 		
@@ -384,7 +372,6 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 		
 		initStatePanel.setEnabled(false);
 		brun.setEnabled(false);
-		mutantPanel.setEnabled(false);
 		initStatePanel.setEnabled(false);
 		textMaxDepth.setEnabled(false);
 		textMaxNodes.setEnabled(false);
@@ -393,11 +380,6 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 		currentParameter.simulationStrategy = simulationMethodsComboBox.getSelectedIndex();
 		OptionStore.setOption("simulation.defaultMethod", new Integer(simulationMethodsComboBox.getSelectedIndex()));
 		Reg2DynService service = ServiceManager.getManager().getService( Reg2DynService.class);
-		LogicalModel model = paramList.graph.getModel();
-		Perturbation perturbation = (Perturbation)currentParameter.store.getObject(SimulationParameters.MUTANT);
-		if (perturbation != null) {
-			perturbation.update(model);
-		}
 		sim = service.get( model, this, currentParameter);
 		new Thread(sim).start();
 	}
@@ -474,7 +456,6 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 			currentParameter = null;
 		} else {
 			currentParameter = (SimulationParameters)paramList.getElement(null, t_sel[0]);
-			mutantPanel.setStore(currentParameter.store);
 			initStatePanel.setParam(currentParameter);
 			selectPriorityClass.setStore(currentParameter.store, SimulationParameters.PCLASS);
 			if (currentParameter.breadthFirst) {
@@ -489,13 +470,10 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 	private void refresh() {
 		refreshing = true;
 		if (currentParameter == null) {
-			mutantPanel.setEnabled(false);
 			textMaxDepth.setEnabled(false);
 			textMaxNodes.setEnabled(false);
 			initStatePanel.setEnabled(false);
 		} else {
-			mutantPanel.setEnabled(true);
-			mutantPanel.refresh();
 			textMaxDepth.setText(currentParameter.maxdepth > 0 ? ""+currentParameter.maxdepth : "");
 			textMaxNodes.setText(currentParameter.maxnodes > 0 ? ""+currentParameter.maxnodes : "");
 			textMaxDepth.setEnabled(true);

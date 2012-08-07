@@ -1,9 +1,11 @@
 package org.ginsim.service.tool.reg2dyn.helpers;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
@@ -29,14 +31,15 @@ public class HTGSimulationHelper  implements SimulationHelper {
 		} else {
 			mode = HierarchicalTransitionGraphImpl.MODE_SCC;
 		}
-		this.htg = GraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, params.nodeOrder, mode);
+		List<NodeInfo> nodes = model.getNodeOrder();
+		this.htg = GraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, nodes, mode);
 		
 		// FIXME: associated graph based on LogicalModel
 		// htg.setAssociatedGraph(model);
 		
 		NodeAttributesReader vreader = htg.getNodeAttributeReader();
-		vreader.setDefaultNodeSize(5+10*params.nodeOrder.size(), 25);
-        htg.getAnnotation().setComment(params.getDescr()+"\n");
+		vreader.setDefaultNodeSize(5+10*nodes.size(), 25);
+        htg.getAnnotation().setComment(params.getDescr(nodes)+"\n");
         arcs = new HashMap();
 	}
 

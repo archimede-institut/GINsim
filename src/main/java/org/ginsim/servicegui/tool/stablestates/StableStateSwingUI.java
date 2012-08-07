@@ -24,6 +24,7 @@ import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
+import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.service.tool.stablestates.StableStatesService;
@@ -36,18 +37,17 @@ import org.ginsim.service.tool.stablestates.StableStatesService;
  * @author Aurelien Naldi
  */
 @SuppressWarnings("serial")
-public class StableStateSwingUI extends StackDialog  {
+public class StableStateSwingUI extends LogicalModelActionDialog  {
 
 	private static StableStatesService sss = ServiceManager.getManager().getService(StableStatesService.class);
 	
-	RegulatoryGraph m_lrg;
+//	RegulatoryGraph m_lrg;
 	StableTableModel model;
 	JTable tresult;
 	ObjectStore store = new ObjectStore();
 	
 	public StableStateSwingUI(JFrame f, RegulatoryGraph lrg) {
-		super(f, "stableStatesGUI", 600, 400);
-		this.m_lrg = lrg;
+		super(lrg, f, "stableStatesGUI", 600, 400);
 		
 		model = new StableTableModel();
 		tresult = new EnhancedJTable(model);
@@ -58,28 +58,13 @@ public class StableStateSwingUI extends StackDialog  {
 		tresult.setDefaultRenderer(Object.class, new ColoredCellRenderer());
 		tresult.setAutoCreateRowSorter(true);
 		
-		JPanel panel = new JPanel(new GridBagLayout());
 		Insets insets = new Insets(2, 2, 2, 2);
-		GridBagConstraints cst = new GridBagConstraints(0, 0, 1, 1, 1, 0,
-				GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-				insets, 0, 0);
-		MutantSelectionPanel  mutantPanel = new MutantSelectionPanel(this, lrg, store);
-		panel.add(mutantPanel, cst);
 		JScrollPane pane = new JScrollPane(tresult);
-	    cst = new GridBagConstraints(0, 1, 1, 1, 1, 1,
-				GridBagConstraints.CENTER, GridBagConstraints.BOTH,
-				insets, 0, 0);
-	    panel.add(pane, cst);
-		setMainPanel(panel);
+		setMainPanel(pane);
 	}
 	
 	@Override
-	protected void run() {
-		Perturbation perturbation = (Perturbation)store.getObject(0);
-		LogicalModel lmodel = m_lrg.getModel();
-		if (perturbation != null) {
-			perturbation.update(lmodel);
-		}
+	public void run(LogicalModel lmodel) {
 		StableStateSearcher m_finder = sss.getStableStateSearcher(lmodel);
 		try {
 			int result = m_finder.getResult();
@@ -98,12 +83,6 @@ public class StableStateSwingUI extends StackDialog  {
 			LogManager.error(e);
 		}
 	}
-	
-	@Override
-    protected void cancel() {
-		// TODO: ???
-		super.cancel();
-    }
 }
 
 

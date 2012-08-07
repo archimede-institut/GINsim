@@ -128,7 +128,7 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 
 	public void changeExportType() {
 		int type = (jrbType2.isSelected()) ? NuSMVConfig.CFG_INPUT_IVAR
-				: NuSMVConfig.CFG_INPUT_FRONZEN;
+				: NuSMVConfig.CFG_INPUT_FROZEN;
 		this.config.setExportType(type);
 	}
 

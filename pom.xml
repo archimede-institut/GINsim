@@ -21,7 +21,7 @@
     <!-- GINsim repository provides ready-to-use jars for MDDlib, JSBML and mangosdk.spi  -->
     <repository>
        <id>ginsim_temp</id>
-       <snapshots><enabled>false</enabled></snapshots>
+       <snapshots><enabled>true</enabled></snapshots>
        <releases><enabled>true</enabled></releases>
        <name>GINsim temporary repo</name>
        <url>http://crfb.univ-mrs.fr/~naldi/maven</url>
@@ -126,13 +126,13 @@
     <dependency>
       <groupId>org.colomoto</groupId>
       <artifactId>MDDlib</artifactId>
-      <version>0.2</version>
+      <version>0.2-SNAPSHOT</version>
     </dependency>
 
     <dependency>
       <groupId>org.colomoto</groupId>
       <artifactId>LogicalModel</artifactId>
-      <version>0.2</version>
+      <version>0.2-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -212,7 +212,9 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.12</version>
         <configuration>
-          <skipTests>true</skipTests>
+          <includes>
+             <include>org/ginsim/AllTests.java</include>
+         </includes>
         </configuration>
       </plugin>
 
