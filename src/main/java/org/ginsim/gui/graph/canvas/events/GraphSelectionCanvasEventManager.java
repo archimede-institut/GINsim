@@ -95,8 +95,8 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 			// nothing to do here
 		} else {
 			// reset the selection
+			selection.unselectAll();
 			if (o == null) {
-				selection.unselectAll();
 			} else if (o instanceof Edge) {
 				selection.selectEdge((Edge)o);
 			} else {
@@ -209,6 +209,7 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 				}
 			} else {
 				// reset selection
+				selection.unselectAll();
 				if (selectedObject instanceof Edge) {
 					selection.selectEdge((Edge)selectedObject);
 				} else {
