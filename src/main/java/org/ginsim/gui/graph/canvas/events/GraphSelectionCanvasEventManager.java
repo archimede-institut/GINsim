@@ -65,6 +65,16 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 		
 		selectedObject = renderer.getObjectUnderPoint(p);
 		isAlternate = alternate;
+		
+		if (selectedObject != null && selectedObject instanceof Edge) {
+			if (renderer.selectionCache.size() == 1 && renderer.selectionCache.contains(selectedObject)) {
+				if (alternate) {
+					switchEdgePoint((Edge)selectedObject, p);
+				} else {
+					detectMovingPoint(p);
+				}
+			}
+		}
 	}
 	
 	private void simpleClick(Point p, boolean alternate) {
@@ -75,11 +85,7 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 			} else if (renderer.selectionCache.contains(o)) {
 				// remove it from selection
 				if (o instanceof Edge) {
-					if (switchEdgePoint((Edge)o, p)) {
-						// nothing to do here
-					} else {
-						selection.unselectEdge((Edge)o);
-					}
+					selection.unselectEdge((Edge)o);
 				} else {
 					selection.unselectNode(o);
 				}
@@ -91,8 +97,6 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 					selection.addNodeToSelection(o);
 				}
 			}
-		} else if (detectMovingPoint(p)) {
-			// nothing to do here
 		} else {
 			// reset the selection
 			selection.unselectAll();

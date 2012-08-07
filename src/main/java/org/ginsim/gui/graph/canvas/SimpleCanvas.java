@@ -149,26 +149,28 @@ public class SimpleCanvas extends JComponent {
 			vmaxy = 100;
 		}
 
-		// extract width and height
-		int vw = (int)vmaxx - vx;
-		int vh = (int)vmaxy - vy;
-
-		// translate into screen coordinates
-		vx = vx *cw / 100;
-		vw = vw * cw / 100;
-		vy = vy * ch / 100;
-		vh = vh * ch / 100;
+		// do we need scroll bars?
+		if (vx > 0 || vmaxx < 100 || vy > 0 || vmaxy < 100) {
+			// extract width and height
+			int vw = (int)vmaxx - vx;
+			int vh = (int)vmaxy - vy;
+	
+			// translate into screen coordinates
+			vx = vx *cw / 100;
+			vw = vw * cw / 100;
+			vy = vy * ch / 100;
+			vh = vh * ch / 100;
 		
-		// scroll information background
-		g.setColor(Color.LIGHT_GRAY);
-		g.fillRect(0, ch+1, cw, sw);
-		g.fillRect(cw+1, 0, sw, ch);
-		
-		// actual scroll information
-		g.setColor(Color.DARK_GRAY);
-		g.fillRect(vx, ch+1, vw, sw);
-		g.fillRect(cw+1, vy, sw, vh);
-
+			// scroll information background
+			g.setColor(Color.LIGHT_GRAY);
+			g.fillRect(0, ch+1, cw, sw);
+			g.fillRect(cw+1, 0, sw, ch);
+			
+			// actual scroll information
+			g.setColor(Color.DARK_GRAY);
+			g.fillRect(vx, ch+1, vw, sw);
+			g.fillRect(cw+1, vy, sw, vh);
+		}
 		
 		// add overlay layer to the image, by the renderer
 		Graphics2D g2 = (Graphics2D)g;
@@ -243,12 +245,20 @@ public class SimpleCanvas extends JComponent {
 	}
 
 	private void moveImage(int dx, int dy) {
+		Dimension dim = renderer.getBounds();
+		int maxdx = -(int)dim.getWidth() + 35 - this.tr_x;
+		int maxdy = -(int)dim.getHeight() + 35 - this.tr_y;
 		// prevent going to negative coordinates
 		if (dx > 0 && dx > -this.tr_x) {
 			dx = -this.tr_x;
+		} else if (dx < 0 && dx < maxdx) {
+			dx = maxdx;
 		}
+		
 		if (dy > 0 && dy > -this.tr_y) {
 			dy = -this.tr_y;
+		} else if (dy < 0 && dy < maxdy) {
+			dy = maxdy;
 		}
 		
 		// moving coordinates
@@ -294,6 +304,7 @@ public class SimpleCanvas extends JComponent {
 	}
 
 	public void scroll(int wheelRotation, boolean alternate) {
+		Dimension dim = renderer.getBounds();
 		int tr = -10*wheelRotation;
 		if (alternate) {
 			moveImage(tr, 0);
