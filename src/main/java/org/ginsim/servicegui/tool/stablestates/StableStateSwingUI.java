@@ -41,7 +41,6 @@ public class StableStateSwingUI extends LogicalModelActionDialog  {
 
 	private static StableStatesService sss = ServiceManager.getManager().getService(StableStatesService.class);
 	
-//	RegulatoryGraph m_lrg;
 	StableTableModel model;
 	JTable tresult;
 	ObjectStore store = new ObjectStore();
@@ -103,13 +102,15 @@ class ColoredCellRenderer extends DefaultTableCellRenderer {
         if( table != null && row >= 0) {
             if ("*".equals(value)) {
                 cmp.setBackground(STAR_BG);
-            } else if ("".equals(value)) {
+            } else if ("0".equals(value)) {
             	if (isSelected) {
             		cmp.setBackground(table.getSelectionBackground());
             	} else {
             		cmp.setBackground(row%2 == 0 ? EVEN_BG : ODD_BG);
             	}
+        		cmp.setForeground(cmp.getBackground());
             } else {
+        		cmp.setForeground(Color.BLACK);
             	cmp.setBackground(ACTIVE_BG);
             }
         }

@@ -71,7 +71,7 @@ public class StableTableModel extends AbstractTableModel {
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		int v = result.get(rowIndex)[columnIndex];
 		if (v == 0) {
-			return "";
+			return "0";
 		}
 		if (v < 0) {
 			return "*";
