@@ -94,11 +94,9 @@ public class InitialStateList extends SimpleGenericList<InitialState> {
             out.openTag(tag);
             out.addAttr("name", is.name);
             String s = "";
-            Iterator it_line = is.m.keySet().iterator();
-            while (it_line.hasNext()) {
-                RegulatoryNode vertex = (RegulatoryNode)it_line.next();
-                List v_val = (List)is.m.get(vertex);
-                s += vertex.getId();
+            for (NodeInfo ni: is.m.keySet()) {
+                List v_val = (List)is.m.get(ni);
+                s += ni.getNodeID();
                 for (int j=0 ; j<v_val.size() ; j++) {
                         s += ";"+((Integer)v_val.get(j)).intValue();
                 }
