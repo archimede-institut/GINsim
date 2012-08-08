@@ -11,9 +11,9 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
+import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
 import org.ginsim.core.utils.data.GenericList;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
@@ -33,7 +33,7 @@ public class MutantSelectionPanel extends GenericListSelectionPanel implements G
      * @return a panel to configure mutants
      */
     public static JPanel getMutantConfigPanel(RegulatoryGraph graph) {
-        RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, MutantListManager.KEY, true);
+        RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, PerturbationManager.KEY, true);
         MutantPanel mpanel = new MutantPanel();
         Map m = new HashMap();
         m.put(RegulatoryMutantDef.class, mpanel);
@@ -46,7 +46,7 @@ public class MutantSelectionPanel extends GenericListSelectionPanel implements G
 	RegulatoryGraph graph;
 	
 	public MutantSelectionPanel(StackDialog dialog, RegulatoryGraph graph, ObjectStore store) {
-		super(dialog, (GenericList) ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.KEY, false),
+		super(dialog, (GenericList) ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, false),
 				Translator.getString("STR_mutants"), true, Translator.getString("STR_configure_mutants"));
 		this.graph = graph;
 		setStore(store);

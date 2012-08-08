@@ -13,8 +13,8 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
-import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
+import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
@@ -131,7 +131,7 @@ public class SimulationParametersParser extends XMLHelper {
                 } else if (qName.equals("mutant")) {
                     String s = attributes.getValue("value");
                     if (!s.trim().equals("")) {
-                    	RegulatoryMutants mutantList = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.KEY, true);
+                    	RegulatoryMutants mutantList = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, true);
                     	Object mutant = mutantList.get(s);
                         param.store.setObject(SimulationParameters.MUTANT, mutantList.get(s));
                         if (mutant == null) {

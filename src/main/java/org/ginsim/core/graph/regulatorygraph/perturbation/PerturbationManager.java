@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.regulatorygraph.mutant;
+package org.ginsim.core.graph.regulatorygraph.perturbation;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,13 +13,13 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 
 
 /**
- * Save/open simulation parameters along with the model.
+ * Save/open perturbation definitions along with the model.
  */
-public class MutantListManager extends BasicGraphAssociatedManager {
+public class PerturbationManager extends BasicGraphAssociatedManager {
 
 	public static final String KEY = "mutant";
 	
-	public MutantListManager() {
+	public PerturbationManager() {
 		super(KEY, null);
 	}
 	

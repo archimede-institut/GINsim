@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.regulatorygraph.mutant;
+package org.ginsim.core.graph.regulatorygraph.perturbation;
 
 /**
  * be warned when a mutant is added or removed.

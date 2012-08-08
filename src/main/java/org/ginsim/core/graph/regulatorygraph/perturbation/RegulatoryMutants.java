@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.regulatorygraph.mutant;
+package org.ginsim.core.graph.regulatorygraph.perturbation;
 
 import java.util.Vector;
 

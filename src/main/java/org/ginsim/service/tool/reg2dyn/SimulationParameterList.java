@@ -13,9 +13,9 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
-import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
-import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
+import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
+import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
 import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.SimpleGenericList;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
@@ -54,7 +54,7 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
     	canRemove = true;
     	canOrder = true;
         GraphManager.getInstance().addGraphListener( this.graph, this);
-        RegulatoryMutants mutants = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.KEY, true);
+        RegulatoryMutants mutants = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, true);
         mutants.addListListener(this);
         if (param == null) {
         	add();

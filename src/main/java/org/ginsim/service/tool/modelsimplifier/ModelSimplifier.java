@@ -29,10 +29,10 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalFunctionBrowser;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
-import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutantDef;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
+import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutantDef;
+import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
@@ -321,9 +321,9 @@ public class ModelSimplifier extends AbstractModelSimplifier  {
 		// get as much of the associated data as possible
 		Map m_alldata = new HashMap();
 		// mutants: only copy mutants that don't affect removed nodes
-		RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( graph, MutantListManager.KEY, false);
+		RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, false);
 		if (mutants != null && mutants.getNbElements(null) > 0) {
-			RegulatoryMutants newMutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, MutantListManager.KEY, true);
+			RegulatoryMutants newMutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, PerturbationManager.KEY, true);
 			RegulatoryMutantDef mutant, newMutant;
 			int mutantPos=0;
 			for (int i=0 ; i<mutants.getNbElements(null) ; i++) {

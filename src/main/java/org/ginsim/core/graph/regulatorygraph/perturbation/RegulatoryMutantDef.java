@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.regulatorygraph.mutant;
+package org.ginsim.core.graph.regulatorygraph.perturbation;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -202,4 +202,5 @@ public class RegulatoryMutantDef extends AbstractPerturbation implements NamedOb
             nodes[index] = newnode;
         }
 	}
+
 }

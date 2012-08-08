@@ -1,5 +1,6 @@
-package org.ginsim.core.graph.regulatorygraph.mutant;
+package org.ginsim.core.graph.regulatorygraph.perturbation;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.colomoto.logicalmodel.LogicalModel;
@@ -7,7 +8,7 @@ import org.colomoto.logicalmodel.LogicalModelModifier;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.perturbation.LogicalModelPerturbation;
 import org.colomoto.mddlib.MDDManager;
-import org.ginsim.common.xml.XMLize;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
@@ -20,7 +21,6 @@ import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
  * 
  * @author Aurelien Naldi
  */
-@Deprecated
 public interface Perturbation extends LogicalModelPerturbation {
 
     /**
@@ -32,4 +32,6 @@ public interface Perturbation extends LogicalModelPerturbation {
 	@Deprecated
     void apply(OMDDNode[] t_tree, RegulatoryGraph graph);
 
+	
+	void toXML(XMLWriter out) throws IOException;
 }

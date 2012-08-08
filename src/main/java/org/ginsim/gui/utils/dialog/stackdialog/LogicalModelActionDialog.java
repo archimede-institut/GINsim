@@ -16,7 +16,7 @@ import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
+import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 

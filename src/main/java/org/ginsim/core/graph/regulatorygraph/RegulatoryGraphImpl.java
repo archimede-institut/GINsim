@@ -23,8 +23,8 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.css.CSSFilesAssociatedManager;
@@ -46,7 +46,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     private static Graph copiedGraph = null;
 
     static {
-    	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new MutantListManager());
+    	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new PerturbationManager());
     	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class,  new BiblioManager());
     	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new CSSFilesAssociatedManager());
     }

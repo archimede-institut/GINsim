@@ -23,9 +23,9 @@ import javax.swing.table.AbstractTableModel;
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.mutant.MutantListManager;
-import org.ginsim.core.graph.regulatorygraph.mutant.Perturbation;
-import org.ginsim.core.graph.regulatorygraph.mutant.RegulatoryMutants;
+import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
+import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
@@ -324,7 +324,7 @@ class GsNuSMVMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
 	GsNuSMVMutantModel(NuSMVConfig cfg) {
 		this.cfg = cfg;
 		this.listMutants = (RegulatoryMutants) ObjectAssociationManager
-				.getInstance().getObject(cfg.getGraph(), MutantListManager.KEY,
+				.getInstance().getObject(cfg.getGraph(), PerturbationManager.KEY,
 						true);
 	}
 

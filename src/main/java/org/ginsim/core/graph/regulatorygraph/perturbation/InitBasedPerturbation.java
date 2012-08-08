@@ -1,5 +1,6 @@
-package org.ginsim.core.graph.regulatorygraph.mutant;
+package org.ginsim.core.graph.regulatorygraph.perturbation;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -8,6 +9,7 @@ import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.perturbation.AbstractPerturbation;
 import org.colomoto.mddlib.MDDManager;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
@@ -70,5 +72,11 @@ public class InitBasedPerturbation extends AbstractPerturbation implements Pertu
             factory.free(nodes[index]);
             nodes[index] = newnode;
         }
+	}
+
+	@Override
+	public void toXML(XMLWriter out) throws IOException {
+		// TODO Auto-generated method stub
+		
 	}
 }
