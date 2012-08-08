@@ -764,10 +764,10 @@ update_SuFu_a_OK := (PCs = PC_c34) & (PC_c34_vars = PC_c34_SuFu_a);
 update_Cos2_p_OK := (PCs = PC_c35) & (PC_c35_vars = PC_c35_Cos2_p);
 update_Cos2_a_OK := (PCs = PC_c36) & (PC_c36_vars = PC_c36_Cos2_a);
 
-strongSS := strongSS0 | strongSS1 | strongSS2;
-strongSS0 := Wg_p=0 & Wg_a=0 & Fz_p=0 & Fz_a=0 & Dsh_p=0 & Dsh_a=0 & Slp_p=0 & Slp_a=0 & Nkd_p=1 & Nkd_a=1 & Zw3_p=1 & Zw3_a=1 & Arm_p=0 & Arm_a=0 & En_p=0 & En_a=0 & Hh_p=0 & Hh_a=0 & Ci_p=1 & Ci_a=1 & Ciact_p=0 & Ciact_a=0 & Cirep_p=1 & Cirep_a=1 & Ptc_p=1 & Ptc_a=1 & Smo_p=0 & Smo_a=0 & Pka_p=2 & Pka_a=2 & Fu_p=0 & Fu_a=0 & SuFu_p=1 & SuFu_a=1 & Cos2_p=1 & Cos2_a=1;
-strongSS1 := Wg_p=0 & Wg_a=2 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=0 & Slp_a=1 & Nkd_p=0 & Nkd_a=2 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=1 & En_a=0 & Hh_p=2 & Hh_a=2 & Ci_p=0 & Ci_a=1 & Ciact_p=0 & Ciact_a=2 & Cirep_p=0 & Cirep_a=0 & Ptc_p=0 & Ptc_a=2 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
-strongSS2 := Wg_p=2 & Wg_a=0 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=1 & Slp_a=0 & Nkd_p=2 & Nkd_a=0 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=0 & En_a=1 & Hh_p=2 & Hh_a=2 & Ci_p=1 & Ci_a=0 & Ciact_p=2 & Ciact_a=0 & Cirep_p=0 & Cirep_a=0 & Ptc_p=2 & Ptc_a=0 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
+strongSS := strongSS1 | strongSS2 | strongSS3;
+strongSS1 := Wg_p=0 & Wg_a=0 & Fz_p=0 & Fz_a=0 & Dsh_p=0 & Dsh_a=0 & Slp_p=0 & Slp_a=0 & Nkd_p=1 & Nkd_a=1 & Zw3_p=1 & Zw3_a=1 & Arm_p=0 & Arm_a=0 & En_p=0 & En_a=0 & Hh_p=0 & Hh_a=0 & Ci_p=1 & Ci_a=1 & Ciact_p=0 & Ciact_a=0 & Cirep_p=1 & Cirep_a=1 & Ptc_p=1 & Ptc_a=1 & Smo_p=0 & Smo_a=0 & Pka_p=2 & Pka_a=2 & Fu_p=0 & Fu_a=0 & SuFu_p=1 & SuFu_a=1 & Cos2_p=1 & Cos2_a=1;
+strongSS2 := Wg_p=0 & Wg_a=2 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=0 & Slp_a=1 & Nkd_p=0 & Nkd_a=2 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=1 & En_a=0 & Hh_p=2 & Hh_a=2 & Ci_p=0 & Ci_a=1 & Ciact_p=0 & Ciact_a=2 & Cirep_p=0 & Cirep_a=0 & Ptc_p=0 & Ptc_a=2 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
+strongSS3 := Wg_p=2 & Wg_a=0 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=1 & Slp_a=0 & Nkd_p=2 & Nkd_a=0 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=0 & En_a=1 & Hh_p=2 & Hh_a=2 & Ci_p=1 & Ci_a=0 & Ciact_p=2 & Ciact_a=0 & Cirep_p=0 & Cirep_a=0 & Ptc_p=2 & Ptc_a=0 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
 
 -- Output variables declaration
 
