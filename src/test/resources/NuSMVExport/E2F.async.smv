@@ -1,4 +1,4 @@
--- August 9, 2012 12:37:29 PM WEST
+-- August 9, 2012 4:18:11 PM WEST
 -- GINsim implicit representation for NuSMV
 -- Requires NuSMV v2.1+ for CTL properties
 -- Requires NuSMV-ARCTL for ARCTL properties
@@ -483,26 +483,11 @@ next(TP53) != TP53 |
 next(p14ARF) != p14ARF |
 stableStates;
 
--- State variables initialization
---  INIT DNAdamage = 0;
---  INIT GrowthFactors = 0;
---  INIT GrowthInhibitors = 0;
---  INIT HRAS = 0;
---  INIT E2F1 = 0;
---  INIT E2F3 = 0;
---  INIT CyclinD1 = 0;
---  INIT CyclinE1 = 0;
---  INIT CyclinA = 0;
---  INIT CDC25A = 0;
---  INIT p16INK4a = 0;
---  INIT RB1 = 0;
---  INIT RBL2 = 0;
---  INIT p21CIP = 0;
---  INIT ATM = 0;
---  INIT CHEK1 = 0;
---  INIT MDM2 = 0;
---  INIT TP53 = 0;
---  INIT p14ARF = 0;
+DEFINE
+-- Declaration of core variables restriction list
+-- No Initial State list restriction selected !
+-- Declaration of input variables restriction list
+-- No Initial State list restriction selected !
 
 --------------------------------------------------
 -- Reachability Properties using VARYING INPUTS --

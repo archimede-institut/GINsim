@@ -1,4 +1,4 @@
--- August 9, 2012 12:32:29 PM WEST
+-- August 9, 2012 4:17:58 PM WEST
 -- GINsim implicit representation for NuSMV
 -- Requires NuSMV v2.1+ for CTL properties
 -- Requires NuSMV-ARCTL for ARCTL properties
@@ -783,43 +783,11 @@ next(Cos2_p) != Cos2_p |
 next(Cos2_a) != Cos2_a |
 stableStates;
 
--- State variables initialization
---  INIT Wg_p = 0;
---  INIT Wg_a = 0;
---  INIT Fz_p = 0;
---  INIT Fz_a = 0;
---  INIT Dsh_p = 0;
---  INIT Dsh_a = 0;
---  INIT Slp_p = 0;
---  INIT Slp_a = 0;
---  INIT Nkd_p = 0;
---  INIT Nkd_a = 0;
---  INIT Zw3_p = 0;
---  INIT Zw3_a = 0;
---  INIT Arm_p = 0;
---  INIT Arm_a = 0;
---  INIT En_p = 0;
---  INIT En_a = 0;
---  INIT Hh_p = 0;
---  INIT Hh_a = 0;
---  INIT Ci_p = 0;
---  INIT Ci_a = 0;
---  INIT Ciact_p = 0;
---  INIT Ciact_a = 0;
---  INIT Cirep_p = 0;
---  INIT Cirep_a = 0;
---  INIT Ptc_p = 0;
---  INIT Ptc_a = 0;
---  INIT Smo_p = 0;
---  INIT Smo_a = 0;
---  INIT Pka_p = 0;
---  INIT Pka_a = 0;
---  INIT Fu_p = 0;
---  INIT Fu_a = 0;
---  INIT SuFu_p = 0;
---  INIT SuFu_a = 0;
---  INIT Cos2_p = 0;
---  INIT Cos2_a = 0;
+DEFINE
+-- Declaration of core variables restriction list
+-- No Initial State list restriction selected !
+-- Declaration of input variables restriction list
+-- No Initial State list restriction selected !
 
 --------------------------------------------------
 -- Reachability Properties using VARYING INPUTS --
