@@ -1,50 +1,17 @@
--- July 20, 2012 6:32:35 PM WEST
--- GINsim implicit representation for NuSMV --
--- NuSMV version 2.5.1 (or higher) required --
--- Type I: Input variables are considered as FROZENVARs
+-- August 9, 2012 12:32:29 PM WEST
+-- GINsim implicit representation for NuSMV
+-- Requires NuSMV v2.1+ for CTL properties
+-- Requires NuSMV-ARCTL for ARCTL properties
+-- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE
+
 
 MODULE main
 
 IVAR
 -- Simulation mode declaration --
--- Asynchronous
-  PCs : { PC_c1, PC_c2, PC_c3, PC_c4, PC_c5, PC_c6, PC_c7, PC_c8, PC_c9, PC_c10, PC_c11, PC_c12, PC_c13, PC_c14, PC_c15, PC_c16, PC_c17, PC_c18, PC_c19, PC_c20, PC_c21, PC_c22, PC_c23, PC_c24, PC_c25, PC_c26, PC_c27, PC_c28, PC_c29, PC_c30, PC_c31, PC_c32, PC_c33, PC_c34, PC_c35, PC_c36 };
-  PC_c1_vars : { PC_c1_Wg_p };
-  PC_c2_vars : { PC_c2_Wg_a };
-  PC_c3_vars : { PC_c3_Fz_p };
-  PC_c4_vars : { PC_c4_Fz_a };
-  PC_c5_vars : { PC_c5_Dsh_p };
-  PC_c6_vars : { PC_c6_Dsh_a };
-  PC_c7_vars : { PC_c7_Slp_p };
-  PC_c8_vars : { PC_c8_Slp_a };
-  PC_c9_vars : { PC_c9_Nkd_p };
-  PC_c10_vars : { PC_c10_Nkd_a };
-  PC_c11_vars : { PC_c11_Zw3_p };
-  PC_c12_vars : { PC_c12_Zw3_a };
-  PC_c13_vars : { PC_c13_Arm_p };
-  PC_c14_vars : { PC_c14_Arm_a };
-  PC_c15_vars : { PC_c15_En_p };
-  PC_c16_vars : { PC_c16_En_a };
-  PC_c17_vars : { PC_c17_Hh_p };
-  PC_c18_vars : { PC_c18_Hh_a };
-  PC_c19_vars : { PC_c19_Ci_p };
-  PC_c20_vars : { PC_c20_Ci_a };
-  PC_c21_vars : { PC_c21_Ciact_p };
-  PC_c22_vars : { PC_c22_Ciact_a };
-  PC_c23_vars : { PC_c23_Cirep_p };
-  PC_c24_vars : { PC_c24_Cirep_a };
-  PC_c25_vars : { PC_c25_Ptc_p };
-  PC_c26_vars : { PC_c26_Ptc_a };
-  PC_c27_vars : { PC_c27_Smo_p };
-  PC_c28_vars : { PC_c28_Smo_a };
-  PC_c29_vars : { PC_c29_Pka_p };
-  PC_c30_vars : { PC_c30_Pka_a };
-  PC_c31_vars : { PC_c31_Fu_p };
-  PC_c32_vars : { PC_c32_Fu_a };
-  PC_c33_vars : { PC_c33_SuFu_p };
-  PC_c34_vars : { PC_c34_SuFu_a };
-  PC_c35_vars : { PC_c35_Cos2_p };
-  PC_c36_vars : { PC_c36_Cos2_a };
+-- Synchronous
+  PCs : { PC_c1 };
+  PC_c1_vars : { PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a };
 
 VAR
 -- State variables declaration
@@ -727,47 +694,52 @@ Cos2_a_inc := Cos2_a_focal > Cos2_a;
 Cos2_a_dec := Cos2_a_focal < Cos2_a;
 Cos2_a_std := Cos2_a_focal = Cos2_a;
 
-update_Wg_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p);
-update_Wg_a_OK := (PCs = PC_c2) & (PC_c2_vars = PC_c2_Wg_a);
-update_Fz_p_OK := (PCs = PC_c3) & (PC_c3_vars = PC_c3_Fz_p);
-update_Fz_a_OK := (PCs = PC_c4) & (PC_c4_vars = PC_c4_Fz_a);
-update_Dsh_p_OK := (PCs = PC_c5) & (PC_c5_vars = PC_c5_Dsh_p);
-update_Dsh_a_OK := (PCs = PC_c6) & (PC_c6_vars = PC_c6_Dsh_a);
-update_Slp_p_OK := (PCs = PC_c7) & (PC_c7_vars = PC_c7_Slp_p);
-update_Slp_a_OK := (PCs = PC_c8) & (PC_c8_vars = PC_c8_Slp_a);
-update_Nkd_p_OK := (PCs = PC_c9) & (PC_c9_vars = PC_c9_Nkd_p);
-update_Nkd_a_OK := (PCs = PC_c10) & (PC_c10_vars = PC_c10_Nkd_a);
-update_Zw3_p_OK := (PCs = PC_c11) & (PC_c11_vars = PC_c11_Zw3_p);
-update_Zw3_a_OK := (PCs = PC_c12) & (PC_c12_vars = PC_c12_Zw3_a);
-update_Arm_p_OK := (PCs = PC_c13) & (PC_c13_vars = PC_c13_Arm_p);
-update_Arm_a_OK := (PCs = PC_c14) & (PC_c14_vars = PC_c14_Arm_a);
-update_En_p_OK := (PCs = PC_c15) & (PC_c15_vars = PC_c15_En_p);
-update_En_a_OK := (PCs = PC_c16) & (PC_c16_vars = PC_c16_En_a);
-update_Hh_p_OK := (PCs = PC_c17) & (PC_c17_vars = PC_c17_Hh_p);
-update_Hh_a_OK := (PCs = PC_c18) & (PC_c18_vars = PC_c18_Hh_a);
-update_Ci_p_OK := (PCs = PC_c19) & (PC_c19_vars = PC_c19_Ci_p);
-update_Ci_a_OK := (PCs = PC_c20) & (PC_c20_vars = PC_c20_Ci_a);
-update_Ciact_p_OK := (PCs = PC_c21) & (PC_c21_vars = PC_c21_Ciact_p);
-update_Ciact_a_OK := (PCs = PC_c22) & (PC_c22_vars = PC_c22_Ciact_a);
-update_Cirep_p_OK := (PCs = PC_c23) & (PC_c23_vars = PC_c23_Cirep_p);
-update_Cirep_a_OK := (PCs = PC_c24) & (PC_c24_vars = PC_c24_Cirep_a);
-update_Ptc_p_OK := (PCs = PC_c25) & (PC_c25_vars = PC_c25_Ptc_p);
-update_Ptc_a_OK := (PCs = PC_c26) & (PC_c26_vars = PC_c26_Ptc_a);
-update_Smo_p_OK := (PCs = PC_c27) & (PC_c27_vars = PC_c27_Smo_p);
-update_Smo_a_OK := (PCs = PC_c28) & (PC_c28_vars = PC_c28_Smo_a);
-update_Pka_p_OK := (PCs = PC_c29) & (PC_c29_vars = PC_c29_Pka_p);
-update_Pka_a_OK := (PCs = PC_c30) & (PC_c30_vars = PC_c30_Pka_a);
-update_Fu_p_OK := (PCs = PC_c31) & (PC_c31_vars = PC_c31_Fu_p);
-update_Fu_a_OK := (PCs = PC_c32) & (PC_c32_vars = PC_c32_Fu_a);
-update_SuFu_p_OK := (PCs = PC_c33) & (PC_c33_vars = PC_c33_SuFu_p);
-update_SuFu_a_OK := (PCs = PC_c34) & (PC_c34_vars = PC_c34_SuFu_a);
-update_Cos2_p_OK := (PCs = PC_c35) & (PC_c35_vars = PC_c35_Cos2_p);
-update_Cos2_a_OK := (PCs = PC_c36) & (PC_c36_vars = PC_c36_Cos2_a);
+update_Wg_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Wg_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Fz_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Fz_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Dsh_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Dsh_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Slp_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Slp_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Nkd_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Nkd_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Zw3_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Zw3_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Arm_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Arm_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_En_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_En_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Hh_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Hh_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Ci_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Ci_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Ciact_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Ciact_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Cirep_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Cirep_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Ptc_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Ptc_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Smo_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Smo_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Pka_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Pka_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Fu_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Fu_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_SuFu_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_SuFu_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Cos2_p_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
+update_Cos2_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a);
 
+-- There are no input nor output variables in the weak/strong stable states description
+stableStates := weakSS | strongSS;
+-- Weak stable states differing only on input variables will not be distinguished !!
+weakSS := FALSE;
+--
 strongSS := strongSS1 | strongSS2 | strongSS3;
-strongSS1 := Wg_p=0 & Wg_a=0 & Fz_p=0 & Fz_a=0 & Dsh_p=0 & Dsh_a=0 & Slp_p=0 & Slp_a=0 & Nkd_p=1 & Nkd_a=1 & Zw3_p=1 & Zw3_a=1 & Arm_p=0 & Arm_a=0 & En_p=0 & En_a=0 & Hh_p=0 & Hh_a=0 & Ci_p=1 & Ci_a=1 & Ciact_p=0 & Ciact_a=0 & Cirep_p=1 & Cirep_a=1 & Ptc_p=1 & Ptc_a=1 & Smo_p=0 & Smo_a=0 & Pka_p=2 & Pka_a=2 & Fu_p=0 & Fu_a=0 & SuFu_p=1 & SuFu_a=1 & Cos2_p=1 & Cos2_a=1;
-strongSS2 := Wg_p=0 & Wg_a=2 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=0 & Slp_a=1 & Nkd_p=0 & Nkd_a=2 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=1 & En_a=0 & Hh_p=2 & Hh_a=2 & Ci_p=0 & Ci_a=1 & Ciact_p=0 & Ciact_a=2 & Cirep_p=0 & Cirep_a=0 & Ptc_p=0 & Ptc_a=2 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
-strongSS3 := Wg_p=2 & Wg_a=0 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=1 & Slp_a=0 & Nkd_p=2 & Nkd_a=0 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=0 & En_a=1 & Hh_p=2 & Hh_a=2 & Ci_p=1 & Ci_a=0 & Ciact_p=2 & Ciact_a=0 & Cirep_p=0 & Cirep_a=0 & Ptc_p=2 & Ptc_a=0 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
+strongSS1 := Wg_p=0 & Wg_a=2 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=0 & Slp_a=1 & Nkd_p=0 & Nkd_a=2 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=1 & En_a=0 & Hh_p=2 & Hh_a=2 & Ci_p=0 & Ci_a=1 & Ciact_p=0 & Ciact_a=2 & Cirep_p=0 & Cirep_a=0 & Ptc_p=0 & Ptc_a=2 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
+strongSS2 := Wg_p=2 & Wg_a=0 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=1 & Slp_a=0 & Nkd_p=2 & Nkd_a=0 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=0 & En_a=1 & Hh_p=2 & Hh_a=2 & Ci_p=1 & Ci_a=0 & Ciact_p=2 & Ciact_a=0 & Cirep_p=0 & Cirep_a=0 & Ptc_p=2 & Ptc_a=0 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
+strongSS3 := Wg_p=0 & Wg_a=0 & Fz_p=0 & Fz_a=0 & Dsh_p=0 & Dsh_a=0 & Slp_p=0 & Slp_a=0 & Nkd_p=1 & Nkd_a=1 & Zw3_p=1 & Zw3_a=1 & Arm_p=0 & Arm_a=0 & En_p=0 & En_a=0 & Hh_p=0 & Hh_a=0 & Ci_p=1 & Ci_a=1 & Ciact_p=0 & Ciact_a=0 & Cirep_p=1 & Cirep_a=1 & Ptc_p=1 & Ptc_a=1 & Smo_p=0 & Smo_a=0 & Pka_p=2 & Pka_a=2 & Fu_p=0 & Fu_a=0 & SuFu_p=1 & SuFu_a=1 & Cos2_p=1 & Cos2_a=1;
 
 -- Output variables declaration
 
@@ -809,7 +781,7 @@ next(SuFu_p) != SuFu_p |
 next(SuFu_a) != SuFu_a |
 next(Cos2_p) != Cos2_p |
 next(Cos2_a) != Cos2_a |
-strongSS;
+stableStates;
 
 -- State variables initialization
 --  INIT Wg_p = 0;
@@ -849,4 +821,37 @@ strongSS;
 --  INIT Cos2_p = 0;
 --  INIT Cos2_a = 0;
 
--- Include properties specifications here
+--------------------------------------------------
+-- Reachability Properties using VARYING INPUTS --
+-- i.e. there is NO CONTROL on the input change at each transition
+--
+-- 1. Between an initial state (pattern) and a stable state (pattern)
+--   a. Existence of at least one path connecting two state patterns
+-- INIT initState;
+-- SPEC EF ( stableState );
+--   b. Existence of all the paths connecting two state patterns
+-- INIT initState;
+-- SPEC AF ( stableState );
+--
+-- 2. Between all the weak/strong stable states
+-- INIT weakSS1;
+--  SPEC EF ( weakSS2 );
+--  ...
+--  SPEC EF ( weakSSn );
+--------------------------------------------------
+-- Reachability Properties using FIXED INPUTS --
+-- i.e. a VALUE RESTRICTION can be forced at each transition
+-- 
+-- 1. Between an initial state (pattern) and a stable state (pattern)
+--   a. Existence of at least one path connecting two state patterns
+-- INIT initState; SPEC EAF ( inpVar1=0 & inpVar3=1 )( stableState );
+--   b. Existence of all the paths
+-- INIT initState; SPEC AAF ( inpVar1=0 & inpVar3=1 )( stableState );
+--
+-- 2. Testing input combinations
+-- INIT weakSS1;
+--  SPEC EAF ( inpVar1=0 & inpVar2=0 )( weakSS2 );
+--  SPEC EAF ( inpVar1=0 & inpVar2=1 )( weakSS2 );
+--  SPEC EAF ( inpVar1=1 & inpVar2=0 )( weakSS2 );
+--  SPEC EAF ( inpVar1=1 & inpVar2=1 )( weakSS2 );
+--  ...

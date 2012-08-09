@@ -9,14 +9,10 @@ import java.awt.event.ActionListener;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.ButtonGroup;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.table.AbstractTableModel;
 
@@ -48,8 +44,6 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	JTextArea area;
 	private GsNuSMVConfigModel model;
 	private GsNuSMVMutantModel mutantModel;
-
-	private JRadioButton jrbType2;
 
 	public NuSMVExportConfigPanel(NuSMVConfig config, NuSMVExportAction action) {
 		this.config = config;
@@ -94,42 +88,10 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 		initPanel.setParam(config);
 		add(initPanel, BorderLayout.CENTER);
 		this.setMinimumSize(new Dimension(450, 320));
-
-		JPanel jpExportType = new JPanel();
-		jpExportType
-				.setLayout(new BoxLayout(jpExportType, BoxLayout.PAGE_AXIS));
-		jpExportType.setBorder(BorderFactory.createTitledBorder(Translator
-				.getString("STR_NuSMV_Type")));
-		JRadioButton jrb1 = new JRadioButton(
-				Translator.getString("STR_NuSMV_Type1"));
-		jrb1.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				changeExportType();
-			}
-		});
-		jrbType2 = new JRadioButton(Translator.getString("STR_NuSMV_Type2"));
-		jrbType2.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				changeExportType();
-			}
-		});
-		ButtonGroup group = new ButtonGroup();
-		group.add(jrb1);
-		group.add(jrbType2);
-		jrb1.setSelected(true);
-		jpExportType.add(jrb1);
-		jpExportType.add(jrbType2);
-		add(jpExportType, BorderLayout.SOUTH);
 	}
 
 	public void changeUpdatePolicy() {
 		this.config.setUpdatePolicy();
-	}
-
-	public void changeExportType() {
-		int type = (jrbType2.isSelected()) ? NuSMVConfig.CFG_INPUT_IVAR
-				: NuSMVConfig.CFG_INPUT_FROZEN;
-		this.config.setExportType(type);
 	}
 
 	/**

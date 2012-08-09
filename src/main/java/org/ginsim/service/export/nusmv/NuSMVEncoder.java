@@ -12,13 +12,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
-import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
@@ -54,15 +54,10 @@ public class NuSMVEncoder {
 		DateFormat dateformat = DateFormat.getDateTimeInstance(DateFormat.LONG,
 				DateFormat.LONG);
 		out.write("-- " + dateformat.format(new Date()) + "\n");
-		out.write("-- GINsim implicit representation for NuSMV --\n");
-		out.write("-- NuSMV version 2.5.1 (or higher) required --\n");
-		out.write("-- ");
-
-		boolean bType1 = (config.getExportType() == NuSMVConfig.CFG_INPUT_FROZEN);
-		if (bType1)
-			out.write(Translator.getString("STR_NuSMV_Type1"));
-		else
-			out.write(Translator.getString("STR_NuSMV_Type2"));
+		out.write("-- GINsim implicit representation for NuSMV\n");
+		out.write("-- Requires NuSMV v2.1+ for CTL properties\n");
+		out.write("-- Requires NuSMV-ARCTL for ARCTL properties\n");
+		out.write("-- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE\n");
 		out.write("\n\nMODULE main\n");
 
 		// RegulatoryNode simplification on pseudo-outputs
@@ -222,9 +217,7 @@ public class NuSMVEncoder {
 		}
 
 		if (hasInputVars) {
-			if (bType1)
-				out.write("\nFROZENVAR\n");
-			out.write("-- Input variables declaration\n");
+			out.write("\n-- Input variables declaration\n");
 			for (int i = 0; i < t_vertex.length; i++) {
 				if (t_vertex[i].isInput()) {
 					String s_levels = "0";
@@ -442,9 +435,13 @@ public class NuSMVEncoder {
 				out.write(");\n");
 			}
 		}
-		System.out.println("nodeOrder: " + nodeOrder);
-		// Write StrongSSs. If Type2 write also WeakSSs
-		out.write(writeStableStates(nodeOrder, mutant, config, !bType1));
+
+		out.write("\n-- There are no input nor output variables in the ");
+		out.write("weak/strong stable states description\n");
+		out.write("stableStates := weakSS | strongSS;\n");
+		out.write("-- Weak stable states differing only on input variables ");
+		out.write("will not be distinguished !!");
+		out.write(writeStableStates(nodeOrder, mutant, config));
 
 		out.write("\n");
 		out.write("-- Output variables declaration\n");
@@ -468,10 +465,7 @@ public class NuSMVEncoder {
 			out.write("next(" + t_regulators[i] + ") != ");
 			out.write(t_regulators[i] + " |\n");
 		}
-		out.write("strongSS");
-		if (!bType1)
-			out.write(" | weakSS");
-		out.write(";\n");
+		out.write("stableStates;\n");
 
 		Iterator<InitialState> it;
 		Map<NodeInfo, List<Integer>> m_states;
@@ -484,17 +478,42 @@ public class NuSMVEncoder {
 		out.write("\n-- State variables initialization\n");
 		out.write(writeInitialState(t_vertex, false, m_states));
 
-		// Initial States - Input variables
-		if (bType1 && hasInputVars) {
-			it = config.getInputState().keySet().iterator();
-			m_states = (it.hasNext()) ? it.next().getMap()
-					: new HashMap<NodeInfo, List<Integer>>();
-			out.write("-- Input variables initialization\n");
-			out.write(writeInitialState(t_vertex, true, m_states));
-		}
-
 		out.write("\n");
-		out.write("-- Include properties specifications here\n");
+		out.write("--------------------------------------------------\n");
+		out.write("-- Reachability Properties using VARYING INPUTS --\n");
+		out.write("-- i.e. there is NO CONTROL on the input change at each transition\n");
+		out.write("--\n");
+		out.write("-- 1. Between an initial state (pattern) and a stable state (pattern)\n");
+		out.write("--   a. Existence of at least one path connecting two state patterns\n");
+		out.write("-- INIT initState;\n");
+		out.write("-- SPEC EF ( stableState );\n");
+		out.write("--   b. Existence of all the paths connecting two state patterns\n");
+		out.write("-- INIT initState;\n");
+		out.write("-- SPEC AF ( stableState );\n");
+		out.write("--\n");
+		out.write("-- 2. Between all the weak/strong stable states\n");
+		out.write("-- INIT weakSS1;\n");
+		out.write("--  SPEC EF ( weakSS2 );\n");
+		out.write("--  ...\n");
+		out.write("--  SPEC EF ( weakSSn );\n");
+		out.write("--");
+		out.write("------------------------------------------------\n");
+		out.write("-- Reachability Properties using FIXED INPUTS --\n");
+		out.write("-- i.e. a VALUE RESTRICTION can be forced at each transition\n");
+		out.write("-- \n");
+		out.write("-- 1. Between an initial state (pattern) and a stable state (pattern)\n");
+		out.write("--   a. Existence of at least one path connecting two state patterns\n");
+		out.write("-- INIT initState; SPEC EAF ( inpVar1=0 & inpVar3=1 )( stableState );\n");
+		out.write("--   b. Existence of all the paths\n");
+		out.write("-- INIT initState; SPEC AAF ( inpVar1=0 & inpVar3=1 )( stableState );\n");
+		out.write("--\n");
+		out.write("-- 2. Testing input combinations\n");
+		out.write("-- INIT weakSS1;\n");
+		out.write("--  SPEC EAF ( inpVar1=0 & inpVar2=0 )( weakSS2 );\n");
+		out.write("--  SPEC EAF ( inpVar1=0 & inpVar2=1 )( weakSS2 );\n");
+		out.write("--  SPEC EAF ( inpVar1=1 & inpVar2=0 )( weakSS2 );\n");
+		out.write("--  SPEC EAF ( inpVar1=1 & inpVar2=1 )( weakSS2 );\n");
+		out.write("--  ...\n");
 
 		// ModelRewiring END code
 		mr.unMarkPseudoOutputs();
@@ -644,7 +663,8 @@ public class NuSMVEncoder {
 	}
 
 	private String writeStableStates(List<RegulatoryNode> origOrder,
-			Perturbation mutant, NuSMVConfig config, boolean bWeakSS) {
+			Perturbation mutant, NuSMVConfig config) {
+		
 		List<RegulatoryNode> sortedNodes = new ArrayList<RegulatoryNode>();
 		List<RegulatoryNode> inputNodes = new ArrayList<RegulatoryNode>();
 		for (int i = 0; i < origOrder.size(); i++) {
@@ -666,43 +686,9 @@ public class NuSMVEncoder {
 							mutant);
 			int omdds = sss.getResult();
 			PathSearcher psearcher = new PathSearcher(sss.getMDDManager(), 1);
-
-			ArrayList<String> alSSdesc;
-			if (bWeakSS) {
-				sRet += "\nweakSS := ";
-				psearcher.setNode(omdds);
-				alSSdesc = writeSSs(false, psearcher, sortedNodes,
-						stateNodesSize);
-				if (alSSdesc == null || alSSdesc.size() == 0) {
-					sRet += "\n  FALSE;";
-				} else {
-					for (int i = 1; i <= alSSdesc.size(); i++) {
-						if (i > 1)
-							sRet += " | ";
-						sRet += "weakSS" + i;
-					}
-					sRet += ";";
-					for (int i = 0; i < alSSdesc.size(); i++) {
-						sRet += "\nweakSS" + (i + 1) + " := " + alSSdesc.get(i)
-								+ ";";
-					}
-				}
-			}
-			sRet += "\nstrongSS := ";
 			psearcher.setNode(omdds);
-			alSSdesc = writeSSs(true, psearcher, sortedNodes, stateNodesSize);
-			if (alSSdesc == null || alSSdesc.size() == 0) {
-				sRet += "\n  FALSE";
-			} else {
-				for (int i = 1; i <= alSSdesc.size(); i++) {
-					if (i > 1)
-						sRet += " | ";
-					sRet += "strongSS" + i;
-				}
-				for (int i = 0; i < alSSdesc.size(); i++) {
-					sRet += ";\nstrongSS" + (i + 1) + " := " + alSSdesc.get(i);
-				}
-			}
+
+			sRet = writeSSs(psearcher, sortedNodes, stateNodesSize);
 			sRet += ";\n";
 		} catch (Exception e) {
 			sRet = "\nweakSS := FALSE;\nstrongSS := FALSE;";
@@ -712,38 +698,56 @@ public class NuSMVEncoder {
 		return sRet;
 	}
 
-	private ArrayList<String> writeSSs(boolean bStrong, PathSearcher paths,
+	private String writeSSs(PathSearcher paths,
 			List<RegulatoryNode> nodeOrder, int stateNodesSize) {
-		ArrayList<String> alSSdesc = new ArrayList<String>();
+		Set<String> sWeak = new HashSet<String>();
+		Set<String> sStrong = new HashSet<String>();
+		boolean bWeak = false;
+		
 		int[] iaSSPath = paths.getPath();
-		SSsearch: for (int v : paths) {
+		for (@SuppressWarnings("unused") int v : paths) {
 			String sSSdesc = "";
-			int undef = 0;
+
 			for (int i = 0; i < nodeOrder.size(); i++) {
-				if (bStrong) {
-					if (i >= stateNodesSize) {
-						// Then not a Strong SS
-						if (iaSSPath[i] > -1)
-							continue SSsearch;
-					} else {
-						if (sSSdesc.length() > 0)
-							sSSdesc += " & ";
-						sSSdesc += nodeOrder.get(i) + "=" + iaSSPath[i];
-					}
-				} else {
-					if (iaSSPath[i] == -1) {
-						undef++;
-						if (nodeOrder.size() - undef == stateNodesSize)
-							continue SSsearch;
-					} else {
-						if (sSSdesc.length() > 0)
-							sSSdesc += " & ";
-						sSSdesc += nodeOrder.get(i) + "=" + iaSSPath[i];
-					}
-				}
+				if (nodeOrder.get(i).isOutput())
+					continue;
+				if (i < stateNodesSize) {
+					if (sSSdesc.length() > 0)
+						sSSdesc += " & ";
+					sSSdesc += nodeOrder.get(i) + "=" + iaSSPath[i];
+				} else if (iaSSPath[i] > -1)
+						bWeak = true;
 			}
-			alSSdesc.add(sSSdesc);
+			if (bWeak) sWeak.add(sSSdesc);
+			else sStrong.add(sSSdesc);
 		}
-		return alSSdesc;
+		
+		String sRet = "\nweakSS := ";
+		if (sWeak.size() == 0)
+			sRet += "FALSE";
+		else {
+			for (int i = 0; i < sWeak.size(); i++) {
+				if (i > 0)
+					sRet += " | ";
+				sRet += "weakSS" + (i+1);
+			}
+			int i = 0;
+			for (String ss : sWeak)
+				sRet += ";\nweakSS" + (++i) + " := " + ss;
+		}
+		sRet += ";\n--\nstrongSS := ";
+		if (sStrong.size() == 0)
+			sRet += "FALSE";
+		else {
+			for (int i = 0; i < sStrong.size(); i++) {
+				if (i > 0)
+					sRet += " | ";
+				sRet += "strongSS" + (i+1);
+			}
+			int i = 0;
+			for (String ss : sStrong)
+				sRet += ";\nstrongSS" + (++i) + " := " + ss;
+		}
+		return sRet;
 	}
 }
