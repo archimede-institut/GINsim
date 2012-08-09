@@ -467,17 +467,13 @@ public class NuSMVEncoder {
 		}
 		out.write("stableStates;\n");
 
-		Iterator<InitialState> it;
-		Map<NodeInfo, List<Integer>> m_states;
-		// Initial States - State variables
-		it = config.getInitialState().keySet().iterator();
-		m_states = (it.hasNext()) ? it.next().getMap()
-				: new HashMap<NodeInfo, List<Integer>>();
-		// TODO: make use of the name given by the user
-		// referencing the atomic proposition
-		out.write("\n-- State variables initialization\n");
-		out.write(writeInitialState(t_vertex, false, m_states));
-
+		// Initial States Macro definition
+		out.write("\nDEFINE\n");
+		out.write("-- Declaration of core variables restriction list\n");
+		out.write(writeStateList(t_vertex, config.getInitialState().keySet().iterator()));
+		out.write("-- Declaration of input variables restriction list\n");
+		out.write(writeStateList(t_vertex, config.getInputState().keySet().iterator()));
+		
 		out.write("\n");
 		out.write("--------------------------------------------------\n");
 		out.write("-- Reachability Properties using VARYING INPUTS --\n");
@@ -624,39 +620,32 @@ public class NuSMVEncoder {
 		alSorted.add(new Integer(currindex));
 	}
 
-	/**
-	 * Gets the set of values of a given @see {@link RegulatoryNode}
-	 * 
-	 * @param t_vertex
-	 *            the array of regulatory nodes
-	 * @param bInput
-	 *            true (false) if writing the initialization of input (state)
-	 *            variables.
-	 * @param mInitStates
-	 *            The map containing the initial values of all the nodes.
-	 * @return A string of values in the NuSMV format.
-	 */
-	private String writeInitialState(RegulatoryNode[] t_vertex, boolean bInput,
-			Map<NodeInfo, List<Integer>> mInitStates) {
+	private String writeStateList(RegulatoryNode[] t_vertex,
+			Iterator<InitialState> iter) {
 		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < t_vertex.length; i++) {
-			if (bInput && !t_vertex[i].isInput() || !bInput
-					&& t_vertex[i].isOutput())
-				continue;
-			String s_init = "";
-			List<Integer> v = mInitStates.get(t_vertex[i].getNodeInfo());
-			if (v != null && v.size() > 0) {
-				for (int j = 0; j < v.size(); j++) {
-					if (j > 0)
-						s_init += " | ";
-					s_init += t_vertex[i].getId() + "=" + v.get(j);
+		if (!iter.hasNext())
+			sb.append("-- No Initial State list restriction selected !\n");
+		else {
+			while (iter.hasNext()) {
+				InitialState iState = iter.next();
+				Map<NodeInfo, List<Integer>> m_states = iState.getMap();
+				String s_init = "";
+				
+				for (int i = 0; i < t_vertex.length; i++) {
+					List<Integer> v = m_states.get(t_vertex[i].getNodeInfo());
+					if (v != null && v.size() > 0) {
+						if (!s_init.isEmpty())
+							s_init += " & ";
+						s_init += "(";
+						for (int j = 0; j < v.size(); j++) {
+							if (j > 0)
+								s_init += " | ";
+							s_init += t_vertex[i].getId() + "=" + v.get(j);
+						}
+						s_init += ")";
+					}
 				}
-			}
-			if (s_init.isEmpty()) {
-				sb.append("--  INIT ").append(t_vertex[i].getId())
-						.append(" = 0;\n");
-			} else {
-				sb.append("  INIT ").append(s_init).append(";\n");
+				sb.append(iState.getName()).append(" := ").append(s_init).append(";\n");
 			}
 		}
 		return sb.toString();

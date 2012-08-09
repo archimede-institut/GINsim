@@ -84,8 +84,9 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 			}
 		});
 
-		initPanel = new InitialStatePanel( config.getGraph(), false);
+		initPanel = new InitialStatePanel( config.getGraph(), true);
 		initPanel.setParam(config);
+		initPanel.setMessage(Translator.getString("STR_NuSMV_Checked"));
 		add(initPanel, BorderLayout.CENTER);
 		this.setMinimumSize(new Dimension(450, 320));
 	}
