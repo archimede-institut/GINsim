@@ -57,6 +57,9 @@ public class OptionStore extends DefaultHandler {
 		}
     	
     	File f = new File(prefix);
+    	if (!f.exists()) {
+    		f.mkdirs();
+    	}
     	if (!f.isDirectory()) {
     		throw new Exception("Could not find the base directory for option file: "+prefix);
     	}
