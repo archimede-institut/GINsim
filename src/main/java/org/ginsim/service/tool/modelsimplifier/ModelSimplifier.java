@@ -5,13 +5,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.GsException;
@@ -19,7 +16,6 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -27,12 +23,7 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalFunctionBrowser;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
-import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutantDef;
-import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
@@ -320,42 +311,44 @@ public class ModelSimplifier extends AbstractModelSimplifier  {
 		
 		// get as much of the associated data as possible
 		Map m_alldata = new HashMap();
-		// mutants: only copy mutants that don't affect removed nodes
-		RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, false);
-		if (mutants != null && mutants.getNbElements(null) > 0) {
-			RegulatoryMutants newMutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, PerturbationManager.KEY, true);
-			RegulatoryMutantDef mutant, newMutant;
-			int mutantPos=0;
-			for (int i=0 ; i<mutants.getNbElements(null) ; i++) {
-				mutant = (RegulatoryMutantDef)mutants.getElement(null, i);
-				mutantPos = newMutants.add();
-				newMutant = (RegulatoryMutantDef)newMutants.getElement(null, mutantPos);
-				newMutant.setName(mutant.getName());
-				boolean ok = true;
-				for (int j=0 ; j<mutant.getNbChanges() ; j++ ) {
-					String id = mutant.getName(j);
-					RegulatoryNode vertex = null;
-					for (RegulatoryNode v: simplified_nodeOrder) {
-						if (id.equals(v.getId())) {
-							vertex = v;
-							break;
-						}
-					}
-					if (vertex == null) {
-						ok = false;
-						break;
-					}
-					newMutant.addChange(vertex, mutant.getMin(j), mutant.getMax(j));
-					// TODO: transfer condition only if it does not involve removed nodes
-					newMutant.setCondition(j, simplifiedGraph, mutant.getCondition(j));
-				}
-				if (!ok) {
-					newMutants.remove(null, new int[] {mutantPos});
-				} else {
-                    m_alldata.put(mutant, newMutant);
-				}
-			}
-		}
+		
+		// FIXME: for not do not try to deal with mutants!
+//		// mutants: only copy mutants that don't affect removed nodes
+//		RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, false);
+//		if (mutants != null && mutants.getNbElements(null) > 0) {
+//			RegulatoryMutants newMutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, PerturbationManager.KEY, true);
+//			RegulatoryMutantDef mutant, newMutant;
+//			int mutantPos=0;
+//			for (int i=0 ; i<mutants.getNbElements(null) ; i++) {
+//				mutant = (RegulatoryMutantDef)mutants.getElement(null, i);
+//				mutantPos = newMutants.add();
+//				newMutant = (RegulatoryMutantDef)newMutants.getElement(null, mutantPos);
+//				newMutant.setName(mutant.getName());
+//				boolean ok = true;
+//				for (int j=0 ; j<mutant.getNbChanges() ; j++ ) {
+//					String id = mutant.getName(j);
+//					RegulatoryNode vertex = null;
+//					for (RegulatoryNode v: simplified_nodeOrder) {
+//						if (id.equals(v.getId())) {
+//							vertex = v;
+//							break;
+//						}
+//					}
+//					if (vertex == null) {
+//						ok = false;
+//						break;
+//					}
+//					newMutant.addChange(vertex, mutant.getMin(j), mutant.getMax(j));
+//					// TODO: transfer condition only if it does not involve removed nodes
+//					newMutant.setCondition(j, simplifiedGraph, mutant.getCondition(j));
+//				}
+//				if (!ok) {
+//					newMutants.remove(null, new int[] {mutantPos});
+//				} else {
+//                    m_alldata.put(mutant, newMutant);
+//				}
+//			}
+//		}
 		
 		// initial states
         GsInitialStateList linit = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject( graph, InitialStateManager.KEY, false);

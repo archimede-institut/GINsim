@@ -129,16 +129,18 @@ public class SimulationParametersParser extends XMLHelper {
                     pos = POS_INPUTS;
                     param.m_input = new HashMap();
                 } else if (qName.equals("mutant")) {
-                    String s = attributes.getValue("value");
-                    if (!s.trim().equals("")) {
-                    	RegulatoryMutants mutantList = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, true);
-                    	Object mutant = mutantList.get(s);
-                        param.store.setObject(SimulationParameters.MUTANT, mutantList.get(s));
-                        if (mutant == null) {
-                            // TODO: report mutant not found
-                        	LogManager.error( "Mutant not found "+s+" ("+mutantList.getNbElements(null)+")");
-                        }
-                    }
+                	
+                	// FIXME: what should we do with perturbation stored in old parameters?
+//                    String s = attributes.getValue("value");
+//                    if (!s.trim().equals("")) {
+//                    	RegulatoryMutants mutantList = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, true);
+//                    	Object mutant = mutantList.get(s);
+//                        param.store.setObject(SimulationParameters.MUTANT, mutantList.get(s));
+//                        if (mutant == null) {
+//                            // TODO: report mutant not found
+//                        	LogManager.error( "Mutant not found "+s+" ("+mutantList.getNbElements(null)+")");
+//                        }
+//                    }
                 } else if (qName.equals("priorityClassList")) {
                 	int index = paramLists.pcmanager.add();
                 	pcdef = (PriorityClassDefinition)paramLists.pcmanager.getElement(null, index);

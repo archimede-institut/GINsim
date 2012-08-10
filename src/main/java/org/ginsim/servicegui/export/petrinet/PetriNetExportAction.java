@@ -76,7 +76,7 @@ class PNExportConfigPanel extends AbstractStackDialogHandler {
     	initPanel.setParam(config);
     	
     	setLayout(new GridBagLayout());
-    	mutantPanel = new MutantSelectionPanel(stack, graph, config.store);
+    	mutantPanel = new MutantSelectionPanel(stack, graph, config);
     	GridBagConstraints c = new GridBagConstraints();
     	c.gridx = 0;
 		c.gridy = 1;

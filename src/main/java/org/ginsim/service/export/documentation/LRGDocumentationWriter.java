@@ -32,15 +32,13 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
+import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
-import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutantDef;
 import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.ginsim.servicegui.tool.stablestates.StableTableModel;
-
-
 
 /**
  * GenericDocumentExport is a plugin to export the documentation of a model into multiples document format.
@@ -142,29 +140,19 @@ public class LRGDocumentationWriter {
 		}
 		
 		StableTableModel model = new StableTableModel();
-		for (int i=-1 ; i<mutantList.getNbElements(null) ; i++) {
-			RegulatoryMutantDef mutant = null;
-			Object perturbation  = null;
-			if (i >= 0) {
-				perturbation = mutantList.getElement(null, i);
-			}
-			if (perturbation instanceof RegulatoryMutantDef) {
-				mutant = i<0 ? null : (RegulatoryMutantDef)perturbation;
-			} else {
-				// TODO: find a way to document all perturbation types
-				continue;
-			}
+		for (Perturbation mutant: mutantList) {
 			
-			LogicalModel lmodel = graph.getModel();
 			if (config.searchStableStates) {
+				// FIXME: also do it for WT
+				LogicalModel lmodel = graph.getModel();
 				mutant.update(lmodel);
 				StableStateSearcher stableSearcher = sss.getStableStateSearcher(lmodel);
 				stable = stableSearcher.getResult();
 				model.setResult(stableSearcher.getMDDManager(), stable);
 			}
-			int nbrow;
+			int nbrow = 1;
 			Iterator it_multicellularChanges = null;
-			if (i<0) { // wild type
+			if (mutant == null) { // wild type
 				nbrow = 1;
 				doc.openTableRow(null);
 				doc.openTableCell(1, (model.getRowCount() > 0?2:1), "Wild Type", true);
@@ -176,51 +164,52 @@ public class LRGDocumentationWriter {
 					doc.openTableCell("");
 				}
 			} else {
-				if (!config.multicellular) {
-					nbrow = mutant.getNbChanges();
-				} else {
-					nbrow = mutant.getNbChanges();
-					Map m_multicellularChanges = new HashMap();
-					for (int c=0 ; c<nbrow ; c++) {
-						String s = mutant.getName(c);
-						// TODO: check that the mutant is indeed the same everywhere before doing so ?
-						if (s.endsWith("1")) {
-							m_multicellularChanges.put(s.substring(0, s.length()-1), 
-									new int[] {mutant.getMin(c), mutant.getMax(c)});
-						}
-					}
-					nbrow = m_multicellularChanges.size();
-					it_multicellularChanges = m_multicellularChanges.entrySet().iterator();
-				}
-				if (nbrow < 1) {
-					nbrow = 1;
-				}
-				doc.openTableRow(null);
-				doc.openTableCell(1, (nbrow+(model.getRowCount() > 0?1:0)), mutant.getName(), true);
-				if (mutant.getNbChanges() == 0) {
-					doc.openTableCell("-");
-					doc.openTableCell("-");
-                    doc.openTableCell("-");
-				} else if (it_multicellularChanges == null){
-					doc.openTableCell(mutant.getName(0));
-					doc.openTableCell(""+mutant.getMin(0));
-					doc.openTableCell(""+mutant.getMax(0));
-				} else {
-					Entry e = (Entry)it_multicellularChanges.next();
-					doc.openTableCell(e.getKey().toString());
-					int[] t_changes = (int[])e.getValue();
-					doc.openTableCell(""+t_changes[0]);
-					doc.openTableCell(""+t_changes[1]);
-				}
-				if (mutant.getNbChanges() > 0) {
-				    doc.openTableCell(mutant.getCondition(0));
-				} else {
-				    doc.openTableCell("");
-				}
-				if (config.putComment) {
-					doc.openTableCell(1, nbrow, "", false);
-					writeAnnotation(mutant.getAnnotation());//BUG?
-				}
+				
+				// perturbation information disabled for now!
+				
+//				nbrow = mutant.getNbChanges();
+//				if (config.multicellular) {
+//					Map m_multicellularChanges = new HashMap();
+//					for (int c=0 ; c<nbrow ; c++) {
+//						String s = mutant.getName(c);
+//						// TODO: check that the mutant is indeed the same everywhere before doing so ?
+//						if (s.endsWith("1")) {
+//							m_multicellularChanges.put(s.substring(0, s.length()-1), 
+//									new int[] {mutant.getMin(c), mutant.getMax(c)});
+//						}
+//					}
+//					nbrow = m_multicellularChanges.size();
+//					it_multicellularChanges = m_multicellularChanges.entrySet().iterator();
+//				}
+//				if (nbrow < 1) {
+//					nbrow = 1;
+//				}
+//				doc.openTableRow(null);
+//				doc.openTableCell(1, (nbrow+(model.getRowCount() > 0?1:0)), mutant.getName(), true);
+//				if (mutant.getNbChanges() == 0) {
+//					doc.openTableCell("-");
+//					doc.openTableCell("-");
+//                    doc.openTableCell("-");
+//				} else if (it_multicellularChanges == null){
+//					doc.openTableCell(mutant.getName(0));
+//					doc.openTableCell(""+mutant.getMin(0));
+//					doc.openTableCell(""+mutant.getMax(0));
+//				} else {
+//					Entry e = (Entry)it_multicellularChanges.next();
+//					doc.openTableCell(e.getKey().toString());
+//					int[] t_changes = (int[])e.getValue();
+//					doc.openTableCell(""+t_changes[0]);
+//					doc.openTableCell(""+t_changes[1]);
+//				}
+//				if (mutant.getNbChanges() > 0) {
+//				    doc.openTableCell(mutant.getCondition(0));
+//				} else {
+//				    doc.openTableCell("");
+//				}
+//				if (config.putComment) {
+//					doc.openTableCell(1, nbrow, "", false);
+//					writeAnnotation(mutant.getAnnotation());//BUG?
+//				}
 			}
 			
 			if (config.searchStableStates) {
@@ -234,22 +223,25 @@ public class LRGDocumentationWriter {
 
 			// more data on mutants:
 			if (mutant != null) {
-				for (int j=1 ; j<nbrow ; j++) {
-					if (it_multicellularChanges == null) {
-						doc.openTableRow(null);
-						doc.openTableCell(mutant.getName(j));
-						doc.openTableCell(""+mutant.getMin(j));
-						doc.openTableCell(""+mutant.getMax(j));
-					} else {
-						Entry e = (Entry)it_multicellularChanges.next();
-						doc.openTableRow(null);
-						doc.openTableCell(e.getKey().toString());
-						int[] t_changes = (int[])e.getValue();
-						doc.openTableCell(""+t_changes[0]);
-						doc.openTableCell(""+t_changes[1]);
-					}
-                    doc.openTableCell(""+mutant.getCondition(j));
-				}
+
+				// FIXME: perturbation info disabled for now
+				
+//				for (int j=1 ; j<nbrow ; j++) {
+//					if (it_multicellularChanges == null) {
+//						doc.openTableRow(null);
+//						doc.openTableCell(mutant.getName(j));
+//						doc.openTableCell(""+mutant.getMin(j));
+//						doc.openTableCell(""+mutant.getMax(j));
+//					} else {
+//						Entry e = (Entry)it_multicellularChanges.next();
+//						doc.openTableRow(null);
+//						doc.openTableCell(e.getKey().toString());
+//						int[] t_changes = (int[])e.getValue();
+//						doc.openTableCell(""+t_changes[0]);
+//						doc.openTableCell(""+t_changes[1]);
+//					}
+//                    doc.openTableCell(""+mutant.getCondition(j));
+//				}
 			}
 			
 			// more data on stable states:

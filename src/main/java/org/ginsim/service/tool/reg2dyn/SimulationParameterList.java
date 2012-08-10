@@ -27,7 +27,7 @@ import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
  * Also deals with updating them when the graph is changed
  */
 public class SimulationParameterList extends SimpleGenericList<SimulationParameters> 
-	implements GraphListener<RegulatoryGraph>, GenericListListener {
+	implements GraphListener<RegulatoryGraph>,  GenericListListener {
 
     public final RegulatoryGraph graph;
     public final GsInitialStateList imanager;
@@ -54,8 +54,6 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
     	canRemove = true;
     	canOrder = true;
         GraphManager.getInstance().addGraphListener( this.graph, this);
-        RegulatoryMutants mutants = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, true);
-        mutants.addListListener(this);
         if (param == null) {
         	add();
         } else {
@@ -117,15 +115,6 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
 	}
 
 	public void itemRemoved(Object item, int pos) {
-		if (item instanceof Perturbation) {
-	        for (int i=0 ; i< v_data.size() ; i++) {
-	            SimulationParameters param = (SimulationParameters)v_data.get(i);
-	            if (param.store.getObject(SimulationParameters.MUTANT) == item) {
-	                param.store.setObject(SimulationParameters.MUTANT, null);
-	            }
-	        }
-	        return;
-		}
 		
 		for (int i=0 ; i<v_data.size() ; i++) {
 			SimulationParameters param = (SimulationParameters)v_data.get(i);

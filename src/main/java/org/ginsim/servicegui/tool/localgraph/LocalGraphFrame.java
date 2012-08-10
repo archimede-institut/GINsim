@@ -33,6 +33,8 @@ import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
@@ -55,7 +57,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 	private LocalGraph lg;
 	private boolean isColorized = false;
 	private MutantSelectionPanel mutantSelectionPanel;
-	private ObjectStore mutantStore;
+	private PerturbationHolder mutantStore;
 	private Perturbation mutant;
 	private StateSelectorTable sst;
 	private JCheckBox autoUpdateCheckbox;
@@ -108,7 +110,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 			
 			c.gridy++;
 			c.gridx = 0;
-		    mutantStore = new ObjectStore();
+		    mutantStore = new PerturbationStore();
 			mutantSelectionPanel = new MutantSelectionPanel(this, regGraph, mutantStore);
 			mainPanel.add(mutantSelectionPanel, c);
 		    
@@ -147,7 +149,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 			isColorized = false;
 		}
 
-		LogicalModelModifier modifier = new SimpleModelModifier((Perturbation) mutantStore.getObject(0));
+		LogicalModelModifier modifier = new SimpleModelModifier(mutantStore.getPerturbation());
 		LogicalModel model = modifier.apply(regGraph.getModel());
 		lg.setUpdater(new SynchronousSimulationUpdater(model));
 		List states = sst.getStates();

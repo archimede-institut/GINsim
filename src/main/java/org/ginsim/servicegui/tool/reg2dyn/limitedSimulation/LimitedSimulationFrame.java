@@ -21,6 +21,8 @@ import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.StatesSet;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
@@ -41,7 +43,7 @@ public class LimitedSimulationFrame extends StackDialog {
 	private HierarchicalTransitionGraph htg;
 	private JPanel mainPanel;
 	private JCheckBox strategy;
-	private ObjectStore mutantstore = new ObjectStore();
+	private PerturbationHolder mutantstore = new PerturbationStore();
 	private MutantSelectionPanel mutantPanel = null;
 
 	public LimitedSimulationFrame(JFrame frame, HierarchicalTransitionGraph htg) {
@@ -101,7 +103,7 @@ public class LimitedSimulationFrame extends StackDialog {
 	}
 	
 	private Perturbation getMutant() {
-		return (Perturbation) mutantstore.getObject(0);
+		return mutantstore.getPerturbation();
 	}
 
 	private StatesSet getStateSet() {

@@ -23,6 +23,7 @@ import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
 import org.ginsim.core.graph.view.css.Colorizer;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
@@ -43,7 +44,6 @@ import org.ginsim.servicegui.tool.stablestates.StableTableModel;
 public class StateInRegGraphFrame extends StackDialog {
 	private static final long serialVersionUID = -5576209151262677441L;
 
-	//private JFrame frame;
 	private RegulatoryGraph regGraph;
 
 	private Container mainPanel;
@@ -54,12 +54,9 @@ public class StateInRegGraphFrame extends StackDialog {
 
 	public StateInRegGraphFrame(JFrame frame, Graph graph) {
 		super(frame, "stateInRegGraph", 420, 260);
-		//this.frame = frame;
 		this.regGraph = (RegulatoryGraph) graph;
 		setMainPanel(getMainPanel());
 	}
-
-
 
 	private Container getMainPanel() {
 		if (mainPanel == null) {
@@ -196,7 +193,7 @@ class StableState extends TabComponantProvidingAState {
 	
 	JTable table;
 	private MutantSelectionPanel mutantSelectionPanel;
-	private ObjectStore mutantStore;
+	private PerturbationStore mutantStore;
 	private RegulatoryGraph g;
 	private JButton computeStableStateButton;
 	
@@ -224,7 +221,7 @@ class StableState extends TabComponantProvidingAState {
 
 		c.gridy++;
 		c.ipady = 0;
-		mutantStore = new ObjectStore();
+		mutantStore = new PerturbationStore();
 		mutantSelectionPanel = new MutantSelectionPanel(stateInRegGraphFrame, g, mutantStore);
 		add(mutantSelectionPanel, c);
 
@@ -260,7 +257,7 @@ class StableState extends TabComponantProvidingAState {
 
 	protected void run() {
 		LogicalModel model = g.getModel();
-		Perturbation p = (Perturbation) mutantStore.getObject(0);
+		Perturbation p = mutantStore.getPerturbation();
 		if (p != null) {
 			p.update(model);
 		}

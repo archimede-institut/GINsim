@@ -7,6 +7,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 
@@ -25,6 +27,8 @@ public class NuSMVConfig implements InitialStateStore {
 	
 	// Store has two objects: 0- Mutant & 1- PriorityClass
 	public ObjectStore store = new ObjectStore(2);
+	// FIXME: get the perturbation from this one instead of the other store...
+	public PerturbationHolder perturbationstore = new PerturbationStore();
 	public Perturbation mutant;
 	private int updatePolicy;
 	private int exportType;

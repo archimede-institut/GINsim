@@ -1,9 +1,6 @@
 package org.ginsim.gui.graph.regulatorygraph.mutant;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.JPanel;
+import java.util.List;
 
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.GraphChangeType;
@@ -11,51 +8,47 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
-import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutantDef;
-import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
-import org.ginsim.core.utils.data.GenericList;
-import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIListener;
-import org.ginsim.gui.utils.data.GenericListPanel;
-import org.ginsim.gui.utils.data.GenericListSelectionPanel;
+import org.ginsim.gui.utils.data.ListSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 
 
-public class MutantSelectionPanel extends GenericListSelectionPanel implements GraphGUIListener<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> {
+public class MutantSelectionPanel extends ListSelectionPanel<Perturbation> implements GraphGUIListener<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> {
 	private static final long serialVersionUID = 1213902700181873169L;
 	
-    /**
-     * edit mutants associated with a graph
-     * @param graph
-     * @return a panel to configure mutants
-     */
-    public static JPanel getMutantConfigPanel(RegulatoryGraph graph) {
-        RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, PerturbationManager.KEY, true);
-        MutantPanel mpanel = new MutantPanel();
-        Map m = new HashMap();
-        m.put(RegulatoryMutantDef.class, mpanel);
-        GenericListPanel lp = new GenericListPanel(m, "mutantList");
-        lp.setList(mutants);
-        mpanel.setEditedObject(mutants, lp);
-    	return lp;
-    }
+	private final RegulatoryGraph graph;
+	private final PerturbationHolder holder;
 	
-	RegulatoryGraph graph;
-	
-	public MutantSelectionPanel(StackDialog dialog, RegulatoryGraph graph, ObjectStore store) {
-		super(dialog, (GenericList) ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, false),
-				Translator.getString("STR_mutants"), true, Translator.getString("STR_configure_mutants"));
+	public MutantSelectionPanel(StackDialog dialog, RegulatoryGraph graph, PerturbationHolder holder) {
 		this.graph = graph;
-		setStore(store);
+		this.holder = holder;
+		
         GraphGUI<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> gui = GUIManager.getInstance().getGraphGUI(graph);
         gui.addGraphGUIListener(this);
+
+        initialize(dialog, (List<Perturbation>) ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, false),
+				Translator.getString("STR_mutants"), true);
 	}
 	
-	protected void configure() {
-        dialog.addTempPanel(getMutantConfigPanel(graph));
+	@Override
+	public void configure() {
+		// FIXME: use gui helper to get a configuration panel!
+        // dialog.addTempPanel(getMutantConfigPanel(graph));
+
+		System.err.println("TODO: new perturbation config panel!!");
+	}
+
+	public Perturbation getSelected() {
+		return holder.getPerturbation();
+	}
+	
+	public void setSelected(Perturbation p) {
+		holder.setPerturbation(p);
 	}
 
 	@Override

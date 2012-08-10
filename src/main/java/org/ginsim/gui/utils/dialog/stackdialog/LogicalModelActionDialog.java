@@ -17,19 +17,18 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
 
-abstract public class LogicalModelActionDialog extends StackDialog implements ProgressListener {
+abstract public class LogicalModelActionDialog extends StackDialog implements ProgressListener, PerturbationHolder {
 
-//	protected final LogicalModel model;
 	
 	protected final RegulatoryGraph lrg;
+	private Perturbation perturbation;
 	
 	private JPanel mainPanel = new JPanel(new GridBagLayout());
-	
 	private JCheckBox cb_simplify = new JCheckBox("Strip outputs");
-	private ObjectStore store = new ObjectStore();
 	
     public LogicalModelActionDialog(RegulatoryGraph lrg, Frame parent, String id, int w, int h) {
         super(parent, id, w, h);
@@ -52,7 +51,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 		mainPanel.add(cb_simplify, c);
 
 		// mutant panel
-		Component mutantPanel = new MutantSelectionPanel(this, lrg, store);
+		Component mutantPanel = new MutantSelectionPanel(this, lrg, this);
 		c = new GridBagConstraints();
 		c.gridx = 1;
 		c.weightx = 1;
@@ -72,6 +71,16 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	@Override
 	public void milestone(Object data) {
     	setMessage(data.toString());
+	}
+
+	@Override
+	public Perturbation getPerturbation() {
+		return perturbation;
+	}
+	
+	@Override
+	public void setPerturbation(Perturbation perturbation) {
+		this.perturbation = perturbation;
 	}
 
 	@Override
@@ -101,7 +110,6 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	protected void run() throws GsException {
 		LogicalModel model = lrg.getModel();
 		
-		LogicalModelPerturbation perturbation = (LogicalModelPerturbation)store.getObject(0);
 		if (perturbation != null) {
 			model = perturbation.apply(model);
 		}

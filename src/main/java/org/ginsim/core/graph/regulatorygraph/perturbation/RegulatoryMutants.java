@@ -1,128 +1,272 @@
 package org.ginsim.core.graph.regulatorygraph.perturbation;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
-import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.common.GraphEventCascade;
-import org.ginsim.core.graph.common.GraphListener;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.utils.data.SimpleGenericList;
-
+import org.colomoto.logicalmodel.NodeInfo;
+import org.ginsim.common.application.LogManager;
 
 /**
- * Associate a list of mutants to the regulatory graph, and offer the UI to edit this list.
+ * The list of perturbations.
+ * It behaves like a single list, but it contains two separate lists for
+ * perturbations of single components and multiple perturbations.
+ * As a result, not all list operations are supported,
+ * iterator() and get(int) are the main intended uses.
+ * 
+ * perturbations should be added using specialised methods.
+ * 
+ * @author Aurelien Naldi
  */
-public class RegulatoryMutants extends SimpleGenericList implements GraphListener<RegulatoryGraph> {
+public class RegulatoryMutants implements List<Perturbation>, Iterable<Perturbation> {
 
-    private final RegulatoryGraph graph;
-    
-    /**
-     * edit mutants associated with the graph
-     * @param graph
-     */
-    public RegulatoryMutants( RegulatoryGraph graph) {
-        this.graph = graph;
-        GraphManager.getInstance().addGraphListener( graph, this);
-        
-        prefix = "mutant_";
-        canAdd = true;
-        canOrder = true;
-        canRemove = true;
-        canEdit = true;
-    }
-    
-    @Override
-    public GraphEventCascade graphChanged (RegulatoryGraph G, GraphChangeType type, Object data) {
-    	if (type == GraphChangeType.NODEREMOVED) {
-	        Vector v = new Vector();
-	        for (int i=0 ; i<v_data.size() ; i++) {
-	            RegulatoryMutantDef m = (RegulatoryMutantDef)v_data.get(i);
-	            for (int j=0 ; j<m.getChanges().size() ; j++) {
-	                RegulatoryMutantChange change = (RegulatoryMutantChange)m.getChange( j);
-	                if (change.getNode() == data) {
-	                    m.removeChange( change);
-	                    v.add(m);
-	                }
-	            }
-	        }
-	        if (v.size() > 0) {
-	            return new MutantCascadeUpdate (v);
-	        }
-    	} else if (type == GraphChangeType.NODEUPDATED) {
-            Vector v = new Vector();
-            for (int i=0 ; i<v_data.size() ; i++) {
-                RegulatoryMutantDef m = (RegulatoryMutantDef)v_data.get(i);
-                for (int j=0 ; j<m.getChanges().size() ; j++) {
-                    RegulatoryMutantChange change = (RegulatoryMutantChange)m.getChange(j);
-                    if (change.getNode() == data) {
-                        // check that it is up to date
-                        RegulatoryNode vertex = (RegulatoryNode)data;
-                        if (change.getMax() > vertex.getMaxValue()) {
-                            change.setMax( vertex.getMaxValue());
-                            if (change.getMin() > vertex.getMaxValue()) {
-                                change.setMin( vertex.getMaxValue());
-                            }
-                            v.add(m);
-                        }
-                    }
-                }
-            }
-            if (v.size() > 0) {
-                return new MutantCascadeUpdate (v);
-            }
-    	}
-        return null;
-    }
-    
-    /**
-     * @param o
-     * @return the index of o, -1 if not found
-     */
-    public int indexOf(Object o) {
-        return v_data.indexOf(o);
-    }
+	private final List<Perturbation> simplePerturbations = new ArrayList<Perturbation>();
+	private final List<Perturbation> multiplePerturbations = new ArrayList<Perturbation>();
 
-    /**
-     * get a mutant by its name.
-     * @param value
-     * @return the correct mutant, or null if none.
-     */
-    public RegulatoryMutantDef get(String value) {
-        for (int i=0 ; i<v_data.size() ; i++) {
-            RegulatoryMutantDef mdef = (RegulatoryMutantDef)v_data.get(i);
-            if (mdef.getName().equals(value)) {
-                return mdef;
-            }
-        }
-        return null;
-    }
-
-	protected Object doCreate(String name, int mode) {
-        RegulatoryMutantDef m = new RegulatoryMutantDef();
-        m.setName( name);
-        graph.fireGraphChange(GraphChangeType.ASSOCIATEDUPDATED, this);
-		return m;
+	
+	/**
+	 * Add a perturbation to fix a component.
+	 * 
+	 * @param component
+	 * @param value
+	 * @return
+	 */
+	public Perturbation addFixedPerturbation(NodeInfo component, int value) {
+		Perturbation p = new PerturbationFixed(component, value);
+		return addSimplePerturbation(p);
 	}
 
-	public RegulatoryGraph getGraph() {
-		return graph;
+	/**
+	 * Add a perturbation to fix the value of a component in a range.
+	 * 
+	 * @param component
+	 * @param min
+	 * @param max
+	 * @return
+	 */
+	public Perturbation addRangePerturbation(NodeInfo component, int min, int max) {
+		if (min == max) {
+			return addFixedPerturbation(component, min);
+		}
+		
+		Perturbation p = new PerturbationRange(component, min, max);
+		return addSimplePerturbation(p);
+	}
+
+	public Perturbation addMultiplePerturbation(List<Perturbation> perturbations) {
+		if (!simplePerturbations.containsAll(perturbations)) {
+			LogManager.debug("unknown perturbations when adding multiple...");
+		}
+		Perturbation p = new PerturbationMultiple(perturbations);
+		multiplePerturbations.add(p);
+		return p;
+	}
+	
+	/**
+	 * Add a new simple perturbation.
+	 * First lookup if it exists to avoid duplicates.
+	 * 
+	 * @param p
+	 * @return the added perturbation or an existing equivalent one.
+	 */
+	private Perturbation addSimplePerturbation(Perturbation p) {
+		if (p == null) {
+			throw new RuntimeException("Can not add an undefined perturbation");
+		}
+		
+		// for for an existing perturbation
+		for (Perturbation other: simplePerturbations) {
+			if (other.equals(p)) {
+				return other;
+			}
+		}
+		
+		// no equivalent perturbation way found: add it
+		simplePerturbations.add(p);
+		return p;
+	}
+	
+
+	@Override
+	public int size() {
+		return simplePerturbations.size() + multiplePerturbations.size();
+	}
+
+	@Override
+	public Perturbation get(int index) {
+		int nbsimple = simplePerturbations.size();
+		if (index < nbsimple) {
+			return simplePerturbations.get(index);
+		}
+		
+		return multiplePerturbations.get(index-nbsimple);
+	}
+
+
+	@Override
+	public Iterator<Perturbation> iterator() {
+		if (multiplePerturbations.size() == 0) {
+			return simplePerturbations.iterator();
+		}
+		return new JoinedIterator<Perturbation>(simplePerturbations.iterator(), multiplePerturbations.iterator());
+	}
+
+
+	@Override
+	public void clear() {
+		multiplePerturbations.clear();
+		simplePerturbations.clear();
+	}
+
+	@Override
+	public boolean contains(Object o) {
+		return simplePerturbations.contains(o) || multiplePerturbations.contains(o);
+	}
+
+	@Override
+	public boolean containsAll(Collection<?> c) {
+		for (Object o: c) {
+			if (!contains(o)) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public int indexOf(Object o) {
+		int idx = simplePerturbations.indexOf(o);
+		if (idx >= 0) {
+			return idx;
+		}
+
+		idx = multiplePerturbations.indexOf(o);
+		if (idx >= 0) {
+			return idx + simplePerturbations.size();
+		}
+		return -1;
+	}
+
+
+	@Override
+	public boolean isEmpty() {
+		return simplePerturbations.isEmpty() && multiplePerturbations.isEmpty();
+	}
+
+	@Override
+	public int lastIndexOf(Object o) {
+		int idx = multiplePerturbations.lastIndexOf(o);
+		if (idx >= 0) {
+			return simplePerturbations.size() + idx;
+		}
+
+		return simplePerturbations.lastIndexOf(o);
+	}
+
+	@Override
+	public boolean remove(Object o) {
+		boolean removed = multiplePerturbations.remove(o);
+		if (removed) {
+			return removed;
+		}
+		
+		// FIXME: clean removal of simple perturbations?
+		return false;
+	}
+
+
+	@Override
+	public Perturbation remove(int index) {
+		int nbsimple = simplePerturbations.size();
+		if (index >= nbsimple) {
+			multiplePerturbations.remove(index-nbsimple);
+		}
+		
+		// FIXME: clean removal of simple perturbations?
+		return null;
+	}
+
+	
+	@Override
+	public boolean add(Perturbation e) {
+		throw new UnsupportedOperationException();
+	}
+	@Override
+	public void add(int index, Perturbation element) {
+		throw new UnsupportedOperationException();
+	}
+	@Override
+	public boolean addAll(Collection<? extends Perturbation> c) {
+		throw new UnsupportedOperationException();
+	}
+	@Override
+	public boolean addAll(int index, Collection<? extends Perturbation> c) {
+		throw new UnsupportedOperationException();
+	}
+
+	
+	@Override
+	public ListIterator<Perturbation> listIterator() {
+		throw new UnsupportedOperationException();
+	}
+	@Override
+	public ListIterator<Perturbation> listIterator(int index) {
+		throw new UnsupportedOperationException();
+	}
+	@Override
+	public boolean removeAll(Collection<?> c) {
+		throw new UnsupportedOperationException();
+	}
+	@Override
+	public boolean retainAll(Collection<?> c) {
+		throw new UnsupportedOperationException();
+	}
+	@Override
+	public Perturbation set(int index, Perturbation element) {
+		throw new UnsupportedOperationException();
+	}
+	@Override
+	public List<Perturbation> subList(int fromIndex, int toIndex) {
+		throw new UnsupportedOperationException();
+	}
+	@Override
+	public Object[] toArray() {
+		throw new UnsupportedOperationException();
+	}
+	@Override
+	public <T> T[] toArray(T[] a) {
+		throw new UnsupportedOperationException();
 	}
 }
 
-class MutantCascadeUpdate implements GraphEventCascade {
-    protected MutantCascadeUpdate(Vector v) {
-        this.v = v;
-    }
-    Vector v;
 
-    public String toString() {
-        StringBuffer s = new StringBuffer("updated mutants:");
-        for (int i=0 ; i<v.size() ; i++) {
-            s.append(" ");
-            s.append(v.get(i));
-        }
-        return s.toString();
-    }
+class JoinedIterator<T> implements Iterator<T> {
+
+	private final Iterator<T> it1, it2;
+
+	public JoinedIterator(Iterator<T> it1, Iterator<T> it2) {
+		this.it1 = it1;
+		this.it2 = it2;
+	}
+	
+	@Override
+	public boolean hasNext() {
+		return it1.hasNext() || it2.hasNext();
+	}
+
+	@Override
+	public T next() {
+		if (it1.hasNext()) {
+			return it1.next();
+		}
+		return it2.next();
+	}
+
+	@Override
+	public void remove() {
+		throw new RuntimeException("Remove not supported");
+	}
+	
 }

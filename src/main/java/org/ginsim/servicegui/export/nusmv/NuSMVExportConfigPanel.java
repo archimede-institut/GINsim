@@ -62,7 +62,7 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 
 		JPanel jpTmp = new JPanel(new GridBagLayout());
 		mutantPanel = new MutantSelectionPanel(stack, config.getGraph(),
-				config.store);
+				config.perturbationstore);
 		GridBagConstraints cst = new GridBagConstraints();
 		cst.gridx = 0;
 		cst.gridy = 0;
@@ -353,13 +353,13 @@ class GsNuSMVMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
 		if (index == 0 || listMutants == null) {
 			return "--";
 		}
-		return listMutants.getElement(null, index - 1);
+		return listMutants.get(index - 1);
 	}
 
 	public int getSize() {
 		if (listMutants == null) {
 			return 1;
 		}
-		return listMutants.getNbElements(null) + 1;
+		return listMutants.size() + 1;
 	}
 }

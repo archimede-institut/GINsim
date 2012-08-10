@@ -9,7 +9,6 @@ import javax.swing.JPanel;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
-import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutantDef;
 import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
 import org.ginsim.gui.guihelpers.GUIHelper;
 import org.ginsim.gui.service.common.GUIFor;
@@ -27,14 +26,15 @@ public class PerturbationGUIHelper implements GUIHelper {
 		}
 		
         RegulatoryMutants mutants = (RegulatoryMutants) o;
-        MutantPanel mpanel = new MutantPanel();
-        Map m = new HashMap();
-        m.put(RegulatoryMutantDef.class, mpanel);
-        GenericListPanel lp = new GenericListPanel(m, "mutantList");
-        lp.setList(mutants);
-        mpanel.setEditedObject(mutants, lp);
-    	return lp;
+//        MutantPanel mpanel = new MutantPanel();
+//        Map m = new HashMap();
+//        m.put(RegulatoryMutantDef.class, mpanel);
+//        GenericListPanel lp = new GenericListPanel(m, "mutantList");
+//        lp.setList(mutants);
+//        mpanel.setEditedObject(mutants, lp);
+//        return lp;
 
+        return new PerturbationConfigurationPanel();
 	}
 
 	@Override

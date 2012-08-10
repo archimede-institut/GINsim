@@ -36,9 +36,8 @@ public class PerturbationManager extends BasicGraphAssociatedManager {
         try {
             XMLWriter out = new XMLWriter(os, null);
             out.openTag("mutantList");
-            for (int i=0 ; i<lMutant.getNbElements(null) ; i++) {
-                RegulatoryMutantDef mutant = (RegulatoryMutantDef)lMutant.getElement(null, i);
-                mutant.toXML(out);
+            for (Perturbation p: lMutant) {
+                p.toXML(out);
             }
             out.closeTag();
         } catch (IOException e) {
@@ -48,6 +47,6 @@ public class PerturbationManager extends BasicGraphAssociatedManager {
 
     @Override
 	public Object doCreate( Graph graph) {
-		return new RegulatoryMutants( (RegulatoryGraph)graph);
+		return new RegulatoryMutants();
 	}
 }

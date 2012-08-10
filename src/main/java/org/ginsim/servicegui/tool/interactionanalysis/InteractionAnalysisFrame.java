@@ -22,6 +22,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
@@ -43,7 +45,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 	private InteractionAnalysisService iaService = null;
 	private InteractionAnalysisAlgoResult algoResult = null;
 	private MutantSelectionPanel mutantSelectionPanel;
-	private ObjectStore mutantStore;
+	private PerturbationHolder mutantStore;
 	private ColorizerPanel colorizerPanel;
 	
 	private static final long serialVersionUID = -9126723853606423085L;
@@ -77,7 +79,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 			c.gridx = 0;
 			c.ipadx = 0;
 			c.ipady = 0;
-		    mutantStore = new ObjectStore();
+		    mutantStore = new PerturbationStore();
 			mutantSelectionPanel = new MutantSelectionPanel(this, regGraph, mutantStore);
 			mainPanel.add(mutantSelectionPanel, c);
 		    
@@ -111,7 +113,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 
 		}
 		iaService = ServiceManager.getManager().getService( InteractionAnalysisService.class);
-		algoResult = iaService.run(regGraph, (Perturbation) mutantStore.getObject(0), selectedNodes);
+		algoResult = iaService.run(regGraph, mutantStore.getPerturbation(), selectedNodes);
 	    saveReportButton.setEnabled(true);
 	    colorizerPanel.setNewColorizer(algoResult.getColorizer());
 	}

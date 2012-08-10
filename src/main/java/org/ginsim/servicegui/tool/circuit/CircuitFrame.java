@@ -40,6 +40,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
 import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromCircuit;
@@ -98,7 +100,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
     private JTextArea jta = null;
     private CircuitSearchStoreConfig config = null;
     private JCheckBox cb_cleanup = null;
-    ObjectStore mutantstore = new ObjectStore();
+    PerturbationHolder mutantstore = new PerturbationStore();
     MutantSelectionPanel mutantPanel;
 
 	private JButton	but_pyexport;
@@ -716,7 +718,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 
     protected void runAnalyse() {
     	brun.setEnabled(false);
-        treemodel.analyse(graph, config, (Perturbation)mutantstore.getObject(0), cb_cleanup.isSelected());
+        treemodel.analyse(graph, config, mutantstore.getPerturbation(), cb_cleanup.isSelected());
         brun.setEnabled(true);
 
         if (sp2 == null) {
