@@ -8,35 +8,30 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableCellEditor;
 
-import org.ginsim.core.utils.data.GenericList;
-import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.MultiColObject;
-import org.ginsim.gui.utils.widgets.ButtonPopup;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.SplitPane;
-import org.ginsim.gui.utils.widgets.StatusTextField;
 import org.ginsim.gui.utils.widgets.StockButton;
 
 
@@ -46,7 +41,7 @@ import org.ginsim.gui.utils.widgets.StockButton;
  * using the GenericList interface as a backend.
  */
 public class ListPanel<T> extends JPanel 
-	implements ListSelectionListener, MultiActionListener {
+	implements ListSelectionListener {
     
 	JScrollPane sp = new JScrollPane();
     protected List<T> list;
@@ -59,7 +54,7 @@ public class ListPanel<T> extends JPanel
     
     JButton b_up;
     JButton b_down;
-    ButtonPopup b_add;
+    JButton b_add;
     JButton b_del;
     JLabel l_title = new JLabel();
     
@@ -70,8 +65,6 @@ public class ListPanel<T> extends JPanel
 
 	// TODO: fix ugly hack for the size of the action column
     int bsize = 25;
-    
-//	private GenericPropertyInfo	pinfo;
     
     public ListPanel(ListPanelHelper<T> helper, String name) {
     	this.helper = helper;
@@ -145,8 +138,8 @@ public class ListPanel<T> extends JPanel
         c = new GridBagConstraints();
         c.gridx = 2;
         c.gridy = 2;
-        b_add = new ButtonPopup("list-add.png", true, null);
-        b_add.addActionListener(this);
+        b_add = new StockButton("list-add.png", true);
+        b_add.addActionListener(new AddAction(helper));
         targetpanel.add(b_add, c);
         
         c = new GridBagConstraints();
@@ -230,9 +223,6 @@ public class ListPanel<T> extends JPanel
         b_up.setVisible(helper.canOrder);
         b_down.setVisible(helper.canOrder);
         b_add.setVisible(helper.canAdd && !helper.doInlineAddRemove);
-        if (b_add.isVisible()) {
-        	b_add.setOptions(helper.addOptions);
-        }
         
         b_del.setVisible(helper.canRemove && !helper.doInlineAddRemove);
         if (list.size() > 0) {
@@ -304,19 +294,6 @@ public class ListPanel<T> extends JPanel
         }
     }
     
-    private void doAdd(int mode) {
-        if (list == null) {
-            return;
-        }
-        
-        // FIXME: add action
-//        int n = list.add(jl.getSelectedRow(), mode);
-//        if (n != -1) {
-//            refresh();
-//            jl.getSelectionModel().setSelectionInterval(n, n);
-//        }
-    }
-    
     private void doRemove() {
         if (list == null) {
             return;
@@ -338,7 +315,6 @@ public class ListPanel<T> extends JPanel
     public void refresh() {
         model.fireTableDataChanged();
         refreshHide();
-        b_add.refresh();
     }
     
     private void refreshHide() {
@@ -362,24 +338,69 @@ public class ListPanel<T> extends JPanel
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		int[] sel = jl.getSelectedRows();
-		if (sel == null || sel.length == 0) {
-			// TODO: no selection
-			return;
-		}
-		
-		if (sel.length == 1) {
-			// TODO: single selection
-			
-			return;
-		}
-		
-		// TODO: multiple selection
-		
+		helper.selectionChanged(sel);
+	}
+	
+}
+
+class AddAction extends AbstractAction {
+
+	private final ListPanelHelper helper;
+	
+	public AddAction(ListPanelHelper helper) {
+		this.helper = helper;
 	}
 	
 	@Override
-	public void actionPerformed(ActionEvent e, int mode) {
-		doAdd(mode);
+	public void actionPerformed(ActionEvent e) {
+		// Note: here I would love to hide the menu if it is visible...
+		// but menu.isVisible() seems to always returns false! Not worth the extra headache!
+		
+		Object[] modes = helper.getCreateTypes();
+		if (modes == null || modes.length < 1) {
+			helper.create(null);
+			return;
+		}
+		
+		if (modes.length == 1) {
+			helper.create(modes[0]);
+			return;
+		}
+		
+		// several possibilities, build a menu for them!
+		JPopupMenu menu = new JPopupMenu();
+		for (Object o: modes) {
+			Action action = null;
+			if (o instanceof Action) {
+				action = (Action)o;
+			} else {
+				action = new CreateModeAction(o);
+			}
+			menu.add(action);
+		}
+		
+		Object src = e.getSource();
+		if (src instanceof Component) {
+			Component dropdown = (Component)src;
+			menu.show(dropdown, 0, dropdown.getHeight());
+			return;
+		}
+
+	}
+
+}
+
+class CreateModeAction extends AbstractAction {
+	private final Object mode;
+	
+	public CreateModeAction(Object mode) {
+		super(mode.toString());
+		this.mode = mode;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		System.out.println("TODO: call create for mode: "+mode);
 	}
 }
 
@@ -482,18 +503,4 @@ class SimpleListModel<T> extends AbstractTableModel implements TableActionListen
 	public void actionPerformed(int row, int col) {
 		panel.helper.runAction(row, col);
 	}
-
-
-//    void firechange(int min, int max) {
-//        fireTableRowsUpdated(min, max);
-//    }
-//	public void contentChanged() {
-//		fireTableDataChanged();
-//	}
-//	public void itemAdded(Object item, int pos) {
-//		fireTableRowsInserted(pos, pos);
-//	}
-//	public void itemRemoved(Object item, int pos) {
-//		fireTableRowsDeleted(pos, pos);
-//	}
 }
