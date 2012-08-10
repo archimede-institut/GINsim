@@ -98,7 +98,9 @@ public class RegulatoryMutantParser extends XMLHelper {
                 if (vertex.getId().equals(s_vertex)) {
             		// add it to the main list if needed, and to the current list
                 	Perturbation p = mutantList.addRangePerturbation(vertex.getNodeInfo(), min, max);
-        			perturbations.add(p);
+                	if (perturbations != null) {
+                		perturbations.add(p);
+                	}
                     return;
                 }
             }

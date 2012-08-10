@@ -1,5 +1,6 @@
 package org.ginsim.core.graph.regulatorygraph.perturbation;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -8,6 +9,7 @@ import java.util.ListIterator;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
+import org.ginsim.common.xml.XMLWriter;
 
 /**
  * The list of perturbations.
@@ -186,6 +188,25 @@ public class RegulatoryMutants implements List<Perturbation>, Iterable<Perturbat
 		
 		// FIXME: clean removal of simple perturbations?
 		return null;
+	}
+
+	
+	public void toXML(XMLWriter out) throws IOException {
+		
+        out.openTag("mutantList");
+        for (Perturbation p: simplePerturbations) {
+        	// wrap them
+            out.openTag("mutant");
+            out.addAttr("name", p.toString());
+            p.toXML(out);
+            out.closeTag();
+        }
+        for (Perturbation p: multiplePerturbations) {
+            p.toXML(out);
+        }
+        out.closeTag();
+
+		
 	}
 
 	

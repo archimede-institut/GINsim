@@ -26,8 +26,11 @@ public class PerturbationRange extends RangePerturbation implements Perturbation
 
 	@Override
 	public void toXML(XMLWriter out) throws IOException {
-		// TODO Auto-generated method stub
-		
+        out.openTag("change");
+        out.addAttr("target", component.getNodeID());
+        out.addAttr("min", ""+min);
+        out.addAttr("max", ""+max);
+        out.closeTag();
 	}
 
 }

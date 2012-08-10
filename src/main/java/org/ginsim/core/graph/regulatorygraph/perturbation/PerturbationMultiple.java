@@ -40,8 +40,12 @@ public class PerturbationMultiple extends AbstractPerturbation implements Pertur
 
 	@Override
 	public void toXML(XMLWriter out) throws IOException {
-		// TODO Auto-generated method stub
-		
+        out.openTag("mutant");
+        out.addAttr("name", toString());
+        for (Perturbation p: perturbations) {
+            p.toXML(out);
+        }
+        out.closeTag();
 	}
 	
 	public String toString() {

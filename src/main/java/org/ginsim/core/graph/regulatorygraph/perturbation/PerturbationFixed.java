@@ -23,8 +23,11 @@ public class PerturbationFixed extends FixedValuePerturbation implements Perturb
 
 	@Override
 	public void toXML(XMLWriter out) throws IOException {
-		// TODO Auto-generated method stub
-		
+        out.openTag("change");
+        out.addAttr("target", component.getNodeID());
+        out.addAttr("min", ""+value);
+        out.addAttr("max", ""+value);
+        out.closeTag();
 	}
 
 }
