@@ -11,6 +11,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
+import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIListener;
@@ -25,14 +26,15 @@ public class MutantSelectionPanel extends ListSelectionPanel<Perturbation> imple
 	private final PerturbationHolder holder;
 	
 	public MutantSelectionPanel(StackDialog dialog, RegulatoryGraph graph, PerturbationHolder holder) {
+		super(dialog, Translator.getString("STR_mutants"));
+		
 		this.graph = graph;
 		this.holder = holder;
 		
         GraphGUI<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> gui = GUIManager.getInstance().getGraphGUI(graph);
         gui.addGraphGUIListener(this);
 
-        initialize(dialog, (List<Perturbation>) ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, false),
-				Translator.getString("STR_mutants"), true);
+        initialize(Translator.getString("STR_mutants"), true);
 	}
 	
 	@Override
@@ -66,5 +68,12 @@ public class MutantSelectionPanel extends ListSelectionPanel<Perturbation> imple
 		if (type == GraphChangeType.ASSOCIATEDADDED || type == GraphChangeType.ASSOCIATEDUPDATED) {
 			refresh();
 		}
+	}
+
+	@Override
+	protected List<Perturbation> getList() {
+        RegulatoryMutants perturbations = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, false);
+        List<Perturbation> allPerturbations = perturbations == null ? null : perturbations.getAllPerturbations();
+		return allPerturbations;
 	}
 }

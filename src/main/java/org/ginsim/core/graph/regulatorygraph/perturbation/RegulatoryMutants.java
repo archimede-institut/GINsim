@@ -22,7 +22,7 @@ import org.ginsim.common.xml.XMLWriter;
  * 
  * @author Aurelien Naldi
  */
-public class RegulatoryMutants implements List<Perturbation>, Iterable<Perturbation> {
+public class RegulatoryMutants implements Iterable<Perturbation> {
 
 	private final List<Perturbation> simplePerturbations = new ArrayList<Perturbation>();
 	private final List<Perturbation> multiplePerturbations = new ArrayList<Perturbation>();
@@ -90,13 +90,27 @@ public class RegulatoryMutants implements List<Perturbation>, Iterable<Perturbat
 		return p;
 	}
 	
+	public List<Perturbation> getSimplePerturbations() {
+		return simplePerturbations;
+	}
+	public List<Perturbation> getMultiplePerturbations() {
+		return multiplePerturbations;
+	}
+	public List<Perturbation> getAllPerturbations() {
+		if (multiplePerturbations.size() < 1) {
+			return simplePerturbations;
+		}
+		
+		List<Perturbation> all = new ArrayList<Perturbation>(simplePerturbations);
+		all.addAll(multiplePerturbations);
+		return all;
+	}
+	
 
-	@Override
 	public int size() {
 		return simplePerturbations.size() + multiplePerturbations.size();
 	}
 
-	@Override
 	public Perturbation get(int index) {
 		int nbsimple = simplePerturbations.size();
 		if (index < nbsimple) {
@@ -115,82 +129,6 @@ public class RegulatoryMutants implements List<Perturbation>, Iterable<Perturbat
 		return new JoinedIterator<Perturbation>(simplePerturbations.iterator(), multiplePerturbations.iterator());
 	}
 
-
-	@Override
-	public void clear() {
-		multiplePerturbations.clear();
-		simplePerturbations.clear();
-	}
-
-	@Override
-	public boolean contains(Object o) {
-		return simplePerturbations.contains(o) || multiplePerturbations.contains(o);
-	}
-
-	@Override
-	public boolean containsAll(Collection<?> c) {
-		for (Object o: c) {
-			if (!contains(o)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	@Override
-	public int indexOf(Object o) {
-		int idx = simplePerturbations.indexOf(o);
-		if (idx >= 0) {
-			return idx;
-		}
-
-		idx = multiplePerturbations.indexOf(o);
-		if (idx >= 0) {
-			return idx + simplePerturbations.size();
-		}
-		return -1;
-	}
-
-
-	@Override
-	public boolean isEmpty() {
-		return simplePerturbations.isEmpty() && multiplePerturbations.isEmpty();
-	}
-
-	@Override
-	public int lastIndexOf(Object o) {
-		int idx = multiplePerturbations.lastIndexOf(o);
-		if (idx >= 0) {
-			return simplePerturbations.size() + idx;
-		}
-
-		return simplePerturbations.lastIndexOf(o);
-	}
-
-	@Override
-	public boolean remove(Object o) {
-		boolean removed = multiplePerturbations.remove(o);
-		if (removed) {
-			return removed;
-		}
-		
-		// FIXME: clean removal of simple perturbations?
-		return false;
-	}
-
-
-	@Override
-	public Perturbation remove(int index) {
-		int nbsimple = simplePerturbations.size();
-		if (index >= nbsimple) {
-			multiplePerturbations.remove(index-nbsimple);
-		}
-		
-		// FIXME: clean removal of simple perturbations?
-		return null;
-	}
-
-	
 	public void toXML(XMLWriter out) throws IOException {
 		
         out.openTag("mutantList");
@@ -209,57 +147,6 @@ public class RegulatoryMutants implements List<Perturbation>, Iterable<Perturbat
 		
 	}
 
-	
-	@Override
-	public boolean add(Perturbation e) {
-		throw new UnsupportedOperationException();
-	}
-	@Override
-	public void add(int index, Perturbation element) {
-		throw new UnsupportedOperationException();
-	}
-	@Override
-	public boolean addAll(Collection<? extends Perturbation> c) {
-		throw new UnsupportedOperationException();
-	}
-	@Override
-	public boolean addAll(int index, Collection<? extends Perturbation> c) {
-		throw new UnsupportedOperationException();
-	}
-
-	
-	@Override
-	public ListIterator<Perturbation> listIterator() {
-		throw new UnsupportedOperationException();
-	}
-	@Override
-	public ListIterator<Perturbation> listIterator(int index) {
-		throw new UnsupportedOperationException();
-	}
-	@Override
-	public boolean removeAll(Collection<?> c) {
-		throw new UnsupportedOperationException();
-	}
-	@Override
-	public boolean retainAll(Collection<?> c) {
-		throw new UnsupportedOperationException();
-	}
-	@Override
-	public Perturbation set(int index, Perturbation element) {
-		throw new UnsupportedOperationException();
-	}
-	@Override
-	public List<Perturbation> subList(int fromIndex, int toIndex) {
-		throw new UnsupportedOperationException();
-	}
-	@Override
-	public Object[] toArray() {
-		throw new UnsupportedOperationException();
-	}
-	@Override
-	public <T> T[] toArray(T[] a) {
-		throw new UnsupportedOperationException();
-	}
 }
 
 
