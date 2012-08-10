@@ -1,5 +1,6 @@
 package org.ginsim.gui.graph.regulatorygraph.mutant;
 
+import java.awt.Component;
 import java.util.List;
 
 import org.ginsim.common.application.Translator;
@@ -39,10 +40,8 @@ public class MutantSelectionPanel extends ListSelectionPanel<Perturbation> imple
 	
 	@Override
 	public void configure() {
-		// FIXME: use gui helper to get a configuration panel!
-        // dialog.addTempPanel(getMutantConfigPanel(graph));
-
-		System.err.println("TODO: new perturbation config panel!!");
+		Component panel = PerturbationGUIHelper.getPerturbationPanel(getPerturbationsObject(true));
+        dialog.addTempPanel(panel);
 	}
 
 	public Perturbation getSelected() {
@@ -70,9 +69,13 @@ public class MutantSelectionPanel extends ListSelectionPanel<Perturbation> imple
 		}
 	}
 
+	private RegulatoryMutants getPerturbationsObject(boolean force) {
+		return (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, force);
+	}
+	
 	@Override
 	protected List<Perturbation> getList() {
-        RegulatoryMutants perturbations = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, false);
+        RegulatoryMutants perturbations = getPerturbationsObject(false);
         List<Perturbation> allPerturbations = perturbations == null ? null : perturbations.getAllPerturbations();
 		return allPerturbations;
 	}

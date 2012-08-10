@@ -8,19 +8,19 @@ import java.awt.Component;
  * 
  * @author Aurelien Naldi
  */
-public interface GUIHelper {
+public interface GUIHelper<T> {
 
 	/**
 	 * get a panel to edit this data
 	 * @return a specialised component.
 	 */
-	Component getPanel(Object o);
+	Component getPanel(T o);
 	
 	/**
 	 * get a panel to select an item (for lists of elements)
 	 * @return a specialised component.
 	 */
-	Component getSelectionPanel(Object o);
+	Component getSelectionPanel(T o);
 
 	/**
 	 * Test if this helper supports a given object
