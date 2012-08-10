@@ -64,7 +64,8 @@ public final class TruthTableParser {
 		if (tmLines.size() == 0 || tmLines.size() < getTableLines()) {
 			// components are at least boolean and there are lines missing
 			throw new GsException(GsException.GRAVITY_NORMAL,
-					Translator.getString("STR_TruthTable_incomplete"));
+					Translator.getString("STR_TruthTable_incomplete") + ": found " + 
+			tmLines.size() + " lines, expecting at least " + getTableLines());
 		}
 		baTruthTable = new byte[tmLines.size()][];
 		ArrayList<String> alTmp = new ArrayList<String>(tmLines.keySet());
@@ -81,7 +82,8 @@ public final class TruthTableParser {
 		return size;
 	}
 
-	public RegulatoryGraph buildNonCompactLRG() {
+	// TODO: to be tested with multi-valued models
+	private RegulatoryGraph buildNonCompactLRG() {
 		RegulatoryGraph graph = new RegulatoryGraphFactory().create();
 
 		// Add each RegNode with corresponding Max value
