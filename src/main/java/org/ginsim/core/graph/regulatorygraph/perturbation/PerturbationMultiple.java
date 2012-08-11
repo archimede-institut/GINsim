@@ -3,16 +3,12 @@ package org.ginsim.core.graph.regulatorygraph.perturbation;
 import java.io.IOException;
 import java.util.List;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.perturbation.AbstractPerturbation;
-import org.colomoto.logicalmodel.perturbation.LogicalModelPerturbation;
+import org.colomoto.logicalmodel.perturbation.MultiplePerturbation;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
-public class PerturbationMultiple extends AbstractPerturbation implements Perturbation {
-
-	private final List<Perturbation> perturbations;
+public class PerturbationMultiple extends MultiplePerturbation<Perturbation> implements Perturbation {
 
 	/**
 	 * Create a multiple perturbation
@@ -20,16 +16,9 @@ public class PerturbationMultiple extends AbstractPerturbation implements Pertur
 	 * @param perturbations list of perturbations to apply.
 	 */
 	public PerturbationMultiple(List<Perturbation> perturbations) {
-		this.perturbations = perturbations;
+		super(perturbations);
 	}
 	
-	@Override
-	public void update(LogicalModel model) {
-		for (LogicalModelPerturbation perturbation: perturbations) {
-			perturbation.update(model);
-		}
-	}
-
 	@Override
 	@Deprecated
 	public void apply(OMDDNode[] t_tree, RegulatoryGraph graph) {
@@ -46,14 +35,5 @@ public class PerturbationMultiple extends AbstractPerturbation implements Pertur
             p.toXML(out);
         }
         out.closeTag();
-	}
-	
-	public String toString() {
-		StringBuffer sb = new StringBuffer();
-		for (Perturbation p: perturbations) {
-			sb.append(" ");
-			sb.append(p.toString());
-		}
-		return sb.toString();
 	}
 }
