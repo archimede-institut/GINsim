@@ -2,6 +2,7 @@ package org.ginsim.gui.graph.regulatorygraph.mutant;
 
 import java.awt.Component;
 
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
 import org.ginsim.gui.guihelpers.GUIHelper;
 import org.ginsim.gui.service.common.GUIFor;

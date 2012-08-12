@@ -37,8 +37,10 @@ import org.ginsim.gui.utils.widgets.StockButton;
 
 /**
  * Generic UI to display the content of a list.
- * It offers optional UI to reorder and alter the content of the list,
- * using the GenericList interface as a backend.
+ * It offers optional UI to reorder and alter the content of a list.
+ * It works with any type of list, relying on a helper to provide
+ * capabilities and methods to alter the list.
+ * It can be used as part of a ListEditionPanel.
  */
 public class ListPanel<T> extends JPanel 
 	implements ListSelectionListener {
@@ -374,7 +376,7 @@ class AddAction extends AbstractAction {
 			if (o instanceof Action) {
 				action = (Action)o;
 			} else {
-				action = new CreateModeAction(o);
+				action = new CreateModeAction(helper, o);
 			}
 			menu.add(action);
 		}
@@ -392,15 +394,17 @@ class AddAction extends AbstractAction {
 
 class CreateModeAction extends AbstractAction {
 	private final Object mode;
+	private final ListPanelHelper helper;
 	
-	public CreateModeAction(Object mode) {
+	public CreateModeAction(ListPanelHelper helper, Object mode) {
 		super(mode.toString());
+		this.helper = helper;
 		this.mode = mode;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		System.out.println("TODO: call create for mode: "+mode);
+		helper.create(mode);
 	}
 }
 
