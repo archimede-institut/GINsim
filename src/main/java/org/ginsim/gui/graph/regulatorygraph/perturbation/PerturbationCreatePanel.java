@@ -28,7 +28,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 	private final PerturbationPanelListHelper helper;
 	private PerturbationType type = null;
 	
-	private final JComboBox<NodeInfo> selectNode;
+	private final JComboBox selectNode;
 	private NodeInfo selected = null;
 	
 	// setup value slider
@@ -51,7 +51,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		cst.gridx = 1;
 		cst.weightx = 1;
 		cst.fill = GridBagConstants.HORIZONTAL;
-		selectNode = new JComboBox<NodeInfo>(perturbations.getNodes());
+		selectNode = new JComboBox(perturbations.getNodes());
 		selectNode.addActionListener(this);
 		add(selectNode, cst);
 
