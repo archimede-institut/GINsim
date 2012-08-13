@@ -1,4 +1,4 @@
-package org.ginsim.gui.graph.regulatorygraph.mutant;
+package org.ginsim.gui.graph.regulatorygraph.perturbation;
 
 import java.awt.Component;
 import java.util.List;
@@ -12,7 +12,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
-import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
+import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIListener;
@@ -20,13 +20,13 @@ import org.ginsim.gui.utils.data.ListSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 
 
-public class MutantSelectionPanel extends ListSelectionPanel<Perturbation> implements GraphGUIListener<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> {
+public class PerturbationSelectionPanel extends ListSelectionPanel<Perturbation> implements GraphGUIListener<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> {
 	private static final long serialVersionUID = 1213902700181873169L;
 	
 	private final RegulatoryGraph graph;
 	private final PerturbationHolder holder;
 	
-	public MutantSelectionPanel(StackDialog dialog, RegulatoryGraph graph, PerturbationHolder holder) {
+	public PerturbationSelectionPanel(StackDialog dialog, RegulatoryGraph graph, PerturbationHolder holder) {
 		super(dialog, Translator.getString("STR_mutants"));
 		
 		this.graph = graph;
@@ -69,13 +69,13 @@ public class MutantSelectionPanel extends ListSelectionPanel<Perturbation> imple
 		}
 	}
 
-	private RegulatoryMutants getPerturbationsObject(boolean force) {
-		return (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, force);
+	private ListOfPerturbations getPerturbationsObject(boolean force) {
+		return (ListOfPerturbations) ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, force);
 	}
 	
 	@Override
 	protected List<Perturbation> getList() {
-        RegulatoryMutants perturbations = getPerturbationsObject(false);
+        ListOfPerturbations perturbations = getPerturbationsObject(false);
         List<Perturbation> allPerturbations = perturbations == null ? null : perturbations.getAllPerturbations();
 		return allPerturbations;
 	}

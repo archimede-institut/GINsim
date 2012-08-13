@@ -21,9 +21,9 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
-import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
+import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
+import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.service.export.nusmv.NuSMVConfig;
 import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
@@ -37,7 +37,7 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	private final NuSMVExportAction action;
 
 	private PrioritySelectionPanel priorityPanel = null;
-	private MutantSelectionPanel mutantPanel = null;
+	private PerturbationSelectionPanel mutantPanel = null;
 	private InitialStatePanel initPanel;
 
 	JButton butCfgMutant = null;
@@ -55,7 +55,7 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 		setLayout(new BorderLayout());
 
 		JPanel jpTmp = new JPanel(new GridBagLayout());
-		mutantPanel = new MutantSelectionPanel(stack, config.getGraph(),
+		mutantPanel = new PerturbationSelectionPanel(stack, config.getGraph(),
 				config.perturbationstore);
 		GridBagConstraints cst = new GridBagConstraints();
 		cst.gridx = 0;
@@ -281,17 +281,17 @@ class GsNuSMVConfigModel extends AbstractTableModel {
 class GsNuSMVMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
 	private static final long serialVersionUID = 2348678706086666489L;
 
-	RegulatoryMutants listMutants;
+	ListOfPerturbations listMutants;
 	NuSMVConfig cfg;
 
 	GsNuSMVMutantModel(NuSMVConfig cfg) {
 		this.cfg = cfg;
-		this.listMutants = (RegulatoryMutants) ObjectAssociationManager
+		this.listMutants = (ListOfPerturbations) ObjectAssociationManager
 				.getInstance().getObject(cfg.getGraph(), PerturbationManager.KEY,
 						true);
 	}
 
-	void setMutantList(RegulatoryMutants mutants) {
+	void setMutantList(ListOfPerturbations mutants) {
 		this.listMutants = mutants;
 		fireContentsChanged(this, 0, getSize());
 	}

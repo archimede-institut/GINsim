@@ -39,7 +39,7 @@ import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
+import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.utils.data.SimpleStateListTableModel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
@@ -56,7 +56,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 	
 	private LocalGraph lg;
 	private boolean isColorized = false;
-	private MutantSelectionPanel mutantSelectionPanel;
+	private PerturbationSelectionPanel mutantSelectionPanel;
 	private PerturbationHolder mutantStore;
 	private Perturbation mutant;
 	private StateSelectorTable sst;
@@ -111,7 +111,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 			c.gridy++;
 			c.gridx = 0;
 		    mutantStore = new PerturbationStore();
-			mutantSelectionPanel = new MutantSelectionPanel(this, regGraph, mutantStore);
+			mutantSelectionPanel = new PerturbationSelectionPanel(this, regGraph, mutantStore);
 			mainPanel.add(mutantSelectionPanel, c);
 		    
 			c.gridy++;

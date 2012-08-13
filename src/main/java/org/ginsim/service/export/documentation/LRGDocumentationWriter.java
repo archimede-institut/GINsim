@@ -34,7 +34,7 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInt
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
-import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
+import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
 import org.ginsim.service.tool.stablestates.StableStatesService;
@@ -112,7 +112,7 @@ public class LRGDocumentationWriter {
 	}
 
 	private void writeMutants() throws Exception {
-		RegulatoryMutants mutantList = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, PerturbationManager.KEY, true);
+		ListOfPerturbations mutantList = (ListOfPerturbations) ObjectAssociationManager.getInstance().getObject(graph, PerturbationManager.KEY, true);
 		StableStatesService sss = ServiceManager.get(StableStatesService.class);
 		int stable;
 		

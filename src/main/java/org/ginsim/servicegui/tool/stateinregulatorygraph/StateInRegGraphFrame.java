@@ -27,7 +27,7 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
 import org.ginsim.core.graph.view.css.Colorizer;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
+import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.utils.data.SimpleStateListTableModel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
@@ -192,7 +192,7 @@ class StableState extends TabComponantProvidingAState {
 	private static final long serialVersionUID = 1301082532863004279L;
 	
 	JTable table;
-	private MutantSelectionPanel mutantSelectionPanel;
+	private PerturbationSelectionPanel mutantSelectionPanel;
 	private PerturbationStore mutantStore;
 	private RegulatoryGraph g;
 	private JButton computeStableStateButton;
@@ -222,7 +222,7 @@ class StableState extends TabComponantProvidingAState {
 		c.gridy++;
 		c.ipady = 0;
 		mutantStore = new PerturbationStore();
-		mutantSelectionPanel = new MutantSelectionPanel(stateInRegGraphFrame, g, mutantStore);
+		mutantSelectionPanel = new PerturbationSelectionPanel(stateInRegGraphFrame, g, mutantStore);
 		add(mutantSelectionPanel, c);
 
 		c.gridy++;

@@ -14,24 +14,22 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
 /**
- * The list of perturbations.
- * It behaves like a single list, but it contains two separate lists for
- * perturbations of single components and multiple perturbations.
- * As a result, not all list operations are supported,
- * iterator() and get(int) are the main intended uses.
+ * The list of perturbations associated to a regulatory graph.
+ * It contains two separate lists for perturbations of single components and multiple perturbations.
+ * For convenience, it provides an iterator for all perturbations.
  * 
- * perturbations should be added using specialised methods.
+ * Perturbations should be added using specialised methods.
  * 
  * @author Aurelien Naldi
  */
-public class RegulatoryMutants implements Iterable<Perturbation> {
+public class ListOfPerturbations implements Iterable<Perturbation> {
 
 	private final List<Perturbation> simplePerturbations = new ArrayList<Perturbation>();
 	private final List<Perturbation> multiplePerturbations = new ArrayList<Perturbation>();
 
 	private final RegulatoryGraph lrg;
 	
-	public RegulatoryMutants(RegulatoryGraph lrg) {
+	public ListOfPerturbations(RegulatoryGraph lrg) {
 		this.lrg = lrg;
 	}
 	
@@ -97,12 +95,24 @@ public class RegulatoryMutants implements Iterable<Perturbation> {
 		return p;
 	}
 	
+	/**
+	 * Get the list of perturbations affecting a single component.
+	 * @return the list of single-component perturbations.
+	 */
 	public List<Perturbation> getSimplePerturbations() {
 		return simplePerturbations;
 	}
+	/**
+	 * Get the list of multiple perturbations.
+	 * @return the list of multiple perturbations.
+	 */
 	public List<Perturbation> getMultiplePerturbations() {
 		return multiplePerturbations;
 	}
+	/**
+	 * Get all perturbation
+	 * @return a merged list with all perturbations.
+	 */
 	public List<Perturbation> getAllPerturbations() {
 		if (multiplePerturbations.size() < 1) {
 			return simplePerturbations;
@@ -118,6 +128,12 @@ public class RegulatoryMutants implements Iterable<Perturbation> {
 		return simplePerturbations.size() + multiplePerturbations.size();
 	}
 
+	/**
+	 * Get a perturbation directly. Single-component-perturbations come first.
+	 * 
+	 * @param index
+	 * @return
+	 */
 	public Perturbation get(int index) {
 		int nbsimple = simplePerturbations.size();
 		if (index < nbsimple) {

@@ -52,7 +52,7 @@ import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
+import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.Label;
 import org.ginsim.gui.utils.widgets.treetable.AbstractTreeTableModel;
@@ -101,7 +101,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
     private CircuitSearchStoreConfig config = null;
     private JCheckBox cb_cleanup = null;
     PerturbationHolder mutantstore = new PerturbationStore();
-    MutantSelectionPanel mutantPanel;
+    PerturbationSelectionPanel mutantPanel;
 
 	private JButton	but_pyexport;
 
@@ -183,7 +183,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 
         	c.gridx = 0;
         	c.gridy = 0;
-        	mutantPanel = new MutantSelectionPanel(this, graph, mutantstore);
+        	mutantPanel = new PerturbationSelectionPanel(this, graph, mutantstore);
         	resultPanel.add(mutantPanel, c);
 
         	c.gridy++;

@@ -19,7 +19,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.utils.data.ObjectStore;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
+import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 
 abstract public class LogicalModelActionDialog extends StackDialog implements ProgressListener, PerturbationHolder {
 
@@ -51,7 +51,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 		mainPanel.add(cb_simplify, c);
 
 		// mutant panel
-		Component mutantPanel = new MutantSelectionPanel(this, lrg, this);
+		Component mutantPanel = new PerturbationSelectionPanel(this, lrg, this);
 		c = new GridBagConstraints();
 		c.gridx = 1;
 		c.weightx = 1;

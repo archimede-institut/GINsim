@@ -32,7 +32,7 @@ import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
+import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.utils.data.GenericListPanel;
 import org.ginsim.gui.utils.data.GenericListSelectionPanel;
 import org.ginsim.gui.utils.widgets.SplitPane;

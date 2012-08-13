@@ -15,7 +15,7 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
-import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
+import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.SimpleGenericList;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;

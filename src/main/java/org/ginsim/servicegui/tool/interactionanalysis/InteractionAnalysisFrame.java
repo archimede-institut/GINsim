@@ -28,7 +28,7 @@ import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
+import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.graph.view.css.ColorizerPanel;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
@@ -44,7 +44,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 	
 	private InteractionAnalysisService iaService = null;
 	private InteractionAnalysisAlgoResult algoResult = null;
-	private MutantSelectionPanel mutantSelectionPanel;
+	private PerturbationSelectionPanel mutantSelectionPanel;
 	private PerturbationHolder mutantStore;
 	private ColorizerPanel colorizerPanel;
 	
@@ -80,7 +80,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 			c.ipadx = 0;
 			c.ipady = 0;
 		    mutantStore = new PerturbationStore();
-			mutantSelectionPanel = new MutantSelectionPanel(this, regGraph, mutantStore);
+			mutantSelectionPanel = new PerturbationSelectionPanel(this, regGraph, mutantStore);
 			mainPanel.add(mutantSelectionPanel, c);
 		    
 			c.gridy++;

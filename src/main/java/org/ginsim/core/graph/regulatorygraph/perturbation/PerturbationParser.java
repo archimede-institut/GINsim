@@ -16,7 +16,7 @@ import org.xml.sax.Attributes;
 /**
  * parser for perturbation definition file
  */
-public class RegulatoryMutantParser extends XMLHelper {
+public class PerturbationParser extends XMLHelper {
 
 	private static Map CALLMAP = new TreeMap();
 	
@@ -39,7 +39,7 @@ public class RegulatoryMutantParser extends XMLHelper {
 
 	}
 	
-    RegulatoryMutants mutantList = null;
+    ListOfPerturbations mutantList = null;
     RegulatoryGraph graph;
     List nodeOrder;
     String[] t_order;
@@ -51,11 +51,11 @@ public class RegulatoryMutantParser extends XMLHelper {
     /**
      * @param graph
      */
-    public RegulatoryMutantParser(RegulatoryGraph graph) {
+    public PerturbationParser(RegulatoryGraph graph) {
     	this.graph = graph;
         this.nodeOrder = graph.getNodeOrder();
         this.m_call = CALLMAP;
-        mutantList = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject(graph, PerturbationManager.KEY, true);
+        mutantList = (ListOfPerturbations) ObjectAssociationManager.getInstance().getObject(graph, PerturbationManager.KEY, true);
     }
 
     protected void endElement(int id) {

@@ -24,14 +24,14 @@ public class PerturbationManager extends BasicGraphAssociatedManager {
 	
     public Object doOpen(InputStream is, Graph graph)  throws GsException{
     	
-        RegulatoryMutantParser parser = new RegulatoryMutantParser((RegulatoryGraph) graph);
+        PerturbationParser parser = new PerturbationParser((RegulatoryGraph) graph);
         parser.startParsing(is, false);
         return parser.getParameters();
     }
 
     public void doSave(OutputStreamWriter os, Graph graph) throws GsException{
     	
-        RegulatoryMutants lMutant = (RegulatoryMutants) getObject(graph);
+        ListOfPerturbations lMutant = (ListOfPerturbations) getObject(graph);
         try {
             XMLWriter out = new XMLWriter(os, null);
             lMutant.toXML(out);
@@ -43,7 +43,7 @@ public class PerturbationManager extends BasicGraphAssociatedManager {
     @Override
 	public Object doCreate( Graph graph) {
     	if (graph instanceof RegulatoryGraph) {
-    		return new RegulatoryMutants((RegulatoryGraph)graph);
+    		return new ListOfPerturbations((RegulatoryGraph)graph);
     	}
     	return null;
 	}

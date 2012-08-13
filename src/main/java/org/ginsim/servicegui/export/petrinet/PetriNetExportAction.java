@@ -9,7 +9,7 @@ import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
+import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
@@ -70,13 +70,13 @@ class PNExportConfigPanel extends AbstractStackDialogHandler {
 	@Override
 	public void init() {
 		RegulatoryGraph graph = config.graph;
-    	MutantSelectionPanel mutantPanel = null;
+    	PerturbationSelectionPanel mutantPanel = null;
     	
     	InitialStatePanel initPanel = new InitialStatePanel(graph, false);
     	initPanel.setParam(config);
     	
     	setLayout(new GridBagLayout());
-    	mutantPanel = new MutantSelectionPanel(stack, graph, config);
+    	mutantPanel = new PerturbationSelectionPanel(stack, graph, config);
     	GridBagConstraints c = new GridBagConstraints();
     	c.gridx = 0;
 		c.gridy = 1;

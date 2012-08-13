@@ -1,4 +1,4 @@
-package org.ginsim.gui.graph.regulatorygraph.mutant;
+package org.ginsim.gui.graph.regulatorygraph.perturbation;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;
@@ -12,21 +12,21 @@ import javax.swing.JPanel;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
-import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
+import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.gui.utils.data.ListPanelHelper;
 
 public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation> {
 
 	private static final String CREATE = "CREATE";
 	
-	private final RegulatoryMutants perturbations;
+	private final ListOfPerturbations perturbations;
 	
 	private JLabel selectedLabel = null;
 	private JButton multipleLabel = null;
 	
 	private PerturbationCreatePanel createPanel = null;
 	
-	public PerturbationPanelListHelper(RegulatoryMutants perturbations) {
+	public PerturbationPanelListHelper(ListOfPerturbations perturbations) {
 		this.perturbations = perturbations;
 	}
 	
@@ -75,10 +75,10 @@ public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation> {
 
 class AddMultiplePerturbationAction extends AbstractAction {
 	
-	private final RegulatoryMutants perturbations;
+	private final ListOfPerturbations perturbations;
 	private final int[] selected;
 	
-	public AddMultiplePerturbationAction(RegulatoryMutants perturbations, int[] selected) {
+	public AddMultiplePerturbationAction(ListOfPerturbations perturbations, int[] selected) {
 		super("Create multiple perturbation");
 		this.perturbations = perturbations;
 		this.selected = selected;

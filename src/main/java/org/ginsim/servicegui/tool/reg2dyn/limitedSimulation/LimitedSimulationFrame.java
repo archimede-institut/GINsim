@@ -28,7 +28,7 @@ import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
-import org.ginsim.gui.graph.regulatorygraph.mutant.MutantSelectionPanel;
+import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.shell.MainFrame;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.Frame;
@@ -44,7 +44,7 @@ public class LimitedSimulationFrame extends StackDialog {
 	private JPanel mainPanel;
 	private JCheckBox strategy;
 	private PerturbationHolder mutantstore = new PerturbationStore();
-	private MutantSelectionPanel mutantPanel = null;
+	private PerturbationSelectionPanel mutantPanel = null;
 
 	public LimitedSimulationFrame(JFrame frame, HierarchicalTransitionGraph htg) {
 		super(frame, "STR_limitedSimulation", 475, 260);
@@ -87,7 +87,7 @@ public class LimitedSimulationFrame extends StackDialog {
 	private Component getMutantSelectionPanel() {
 		if (mutantPanel == null) {
 			try {
-				mutantPanel = new MutantSelectionPanel(this, htg.getAssociatedGraph(), mutantstore);				
+				mutantPanel = new PerturbationSelectionPanel(this, htg.getAssociatedGraph(), mutantstore);				
 			} catch (GsException e) {
 				return null;
 			}

@@ -1,4 +1,4 @@
-package org.ginsim.gui.graph.regulatorygraph.mutant;
+package org.ginsim.gui.graph.regulatorygraph.perturbation;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -19,12 +19,12 @@ import javax.swing.event.ChangeListener;
 import org.apache.batik.ext.swing.GridBagConstants;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.core.graph.regulatorygraph.perturbation.RegulatoryMutants;
+import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.gui.utils.widgets.RangeSlider;
 
 public class PerturbationCreatePanel extends JPanel implements ActionListener, ChangeListener {
 
-	private final RegulatoryMutants perturbations;
+	private final ListOfPerturbations perturbations;
 	private final PerturbationPanelListHelper helper;
 	private PerturbationType type = null;
 	
@@ -39,7 +39,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 	
 	private final CreateAction acCreate = new CreateAction(this);
 	
-	public PerturbationCreatePanel(PerturbationPanelListHelper helper, RegulatoryMutants perturbations) {
+	public PerturbationCreatePanel(PerturbationPanelListHelper helper, ListOfPerturbations perturbations) {
 		super(new GridBagLayout());
 		this.perturbations = perturbations;
 		this.helper = helper;
