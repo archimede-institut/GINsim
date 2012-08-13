@@ -18,9 +18,7 @@ public class NuSMVConfig implements InitialStateStore {
 	public static final int CFG_SYNC = 0;
 	public static final int CFG_ASYNC = 1;
 	public static final int CFG_PCLASS = 2;
-	public static final int CFG_INPUT_FROZEN = 10;
-	public static final int CFG_INPUT_IVAR = 11;
-
+	
 	private RegulatoryGraph graph;
 	private Map<InitialState, Object> m_initStates;
 	private Map<InitialState, Object> m_input;
@@ -31,7 +29,6 @@ public class NuSMVConfig implements InitialStateStore {
 	public PerturbationHolder perturbationstore = new PerturbationStore();
 	public Perturbation mutant;
 	private int updatePolicy;
-	private int exportType;
 
 	/**
 	 * @param graph
@@ -41,7 +38,6 @@ public class NuSMVConfig implements InitialStateStore {
 		m_input = new HashMap<InitialState, Object>();
 		this.graph = graph;
 		updatePolicy = CFG_ASYNC; // Default update policy
-		exportType = CFG_INPUT_FROZEN; // Default export type
 	}
 	
 	public void setUpdatePolicy() {
@@ -64,14 +60,6 @@ public class NuSMVConfig implements InitialStateStore {
 
 	public int getUpdatePolicy() {
 		return updatePolicy;
-	}
-
-	public void setExportType(int type) {
-		exportType = type;
-	}
-
-	public int getExportType() {
-		return exportType;
 	}
 
 	public Map<InitialState, Object> getInitialState() {

@@ -1,7 +1,9 @@
--- July 20, 2012 6:32:50 PM WEST
--- GINsim implicit representation for NuSMV --
--- NuSMV version 2.5.1 (or higher) required --
--- Type II: Input variables are annotated on transitions
+-- August 9, 2012 4:17:43 PM WEST
+-- GINsim implicit representation for NuSMV
+-- Requires NuSMV v2.1+ for CTL properties
+-- Requires NuSMV-ARCTL for ARCTL properties
+-- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE
+
 
 MODULE main
 
@@ -764,14 +766,15 @@ update_SuFu_a_OK := (PCs = PC_c34) & (PC_c34_vars = PC_c34_SuFu_a);
 update_Cos2_p_OK := (PCs = PC_c35) & (PC_c35_vars = PC_c35_Cos2_p);
 update_Cos2_a_OK := (PCs = PC_c36) & (PC_c36_vars = PC_c36_Cos2_a);
 
-weakSS := weakSS1 | weakSS2 | weakSS3;
-weakSS1 := Wg_p=0 & Wg_a=0 & Fz_p=0 & Fz_a=0 & Dsh_p=0 & Dsh_a=0 & Slp_p=0 & Slp_a=0 & Nkd_p=1 & Nkd_a=1 & Zw3_p=1 & Zw3_a=1 & Arm_p=0 & Arm_a=0 & En_p=0 & En_a=0 & Hh_p=0 & Hh_a=0 & Ci_p=1 & Ci_a=1 & Ciact_p=0 & Ciact_a=0 & Cirep_p=1 & Cirep_a=1 & Ptc_p=1 & Ptc_a=1 & Smo_p=0 & Smo_a=0 & Pka_p=2 & Pka_a=2 & Fu_p=0 & Fu_a=0 & SuFu_p=1 & SuFu_a=1 & Cos2_p=1 & Cos2_a=1;
-weakSS2 := Wg_p=0 & Wg_a=2 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=0 & Slp_a=1 & Nkd_p=0 & Nkd_a=2 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=1 & En_a=0 & Hh_p=2 & Hh_a=2 & Ci_p=0 & Ci_a=1 & Ciact_p=0 & Ciact_a=2 & Cirep_p=0 & Cirep_a=0 & Ptc_p=0 & Ptc_a=2 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
-weakSS3 := Wg_p=2 & Wg_a=0 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=1 & Slp_a=0 & Nkd_p=2 & Nkd_a=0 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=0 & En_a=1 & Hh_p=2 & Hh_a=2 & Ci_p=1 & Ci_a=0 & Ciact_p=2 & Ciact_a=0 & Cirep_p=0 & Cirep_a=0 & Ptc_p=2 & Ptc_a=0 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
+-- There are no input nor output variables in the weak/strong stable states description
+stableStates := weakSS | strongSS;
+-- Weak stable states differing only on input variables will not be distinguished !!
+weakSS := FALSE;
+--
 strongSS := strongSS1 | strongSS2 | strongSS3;
-strongSS1 := Wg_p=0 & Wg_a=0 & Fz_p=0 & Fz_a=0 & Dsh_p=0 & Dsh_a=0 & Slp_p=0 & Slp_a=0 & Nkd_p=1 & Nkd_a=1 & Zw3_p=1 & Zw3_a=1 & Arm_p=0 & Arm_a=0 & En_p=0 & En_a=0 & Hh_p=0 & Hh_a=0 & Ci_p=1 & Ci_a=1 & Ciact_p=0 & Ciact_a=0 & Cirep_p=1 & Cirep_a=1 & Ptc_p=1 & Ptc_a=1 & Smo_p=0 & Smo_a=0 & Pka_p=2 & Pka_a=2 & Fu_p=0 & Fu_a=0 & SuFu_p=1 & SuFu_a=1 & Cos2_p=1 & Cos2_a=1;
-strongSS2 := Wg_p=0 & Wg_a=2 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=0 & Slp_a=1 & Nkd_p=0 & Nkd_a=2 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=1 & En_a=0 & Hh_p=2 & Hh_a=2 & Ci_p=0 & Ci_a=1 & Ciact_p=0 & Ciact_a=2 & Cirep_p=0 & Cirep_a=0 & Ptc_p=0 & Ptc_a=2 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
-strongSS3 := Wg_p=2 & Wg_a=0 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=1 & Slp_a=0 & Nkd_p=2 & Nkd_a=0 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=0 & En_a=1 & Hh_p=2 & Hh_a=2 & Ci_p=1 & Ci_a=0 & Ciact_p=2 & Ciact_a=0 & Cirep_p=0 & Cirep_a=0 & Ptc_p=2 & Ptc_a=0 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
+strongSS1 := Wg_p=0 & Wg_a=2 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=0 & Slp_a=1 & Nkd_p=0 & Nkd_a=2 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=1 & En_a=0 & Hh_p=2 & Hh_a=2 & Ci_p=0 & Ci_a=1 & Ciact_p=0 & Ciact_a=2 & Cirep_p=0 & Cirep_a=0 & Ptc_p=0 & Ptc_a=2 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
+strongSS2 := Wg_p=2 & Wg_a=0 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=1 & Slp_a=0 & Nkd_p=2 & Nkd_a=0 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=0 & En_a=1 & Hh_p=2 & Hh_a=2 & Ci_p=1 & Ci_a=0 & Ciact_p=2 & Ciact_a=0 & Cirep_p=0 & Cirep_a=0 & Ptc_p=2 & Ptc_a=0 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
+strongSS3 := Wg_p=0 & Wg_a=0 & Fz_p=0 & Fz_a=0 & Dsh_p=0 & Dsh_a=0 & Slp_p=0 & Slp_a=0 & Nkd_p=1 & Nkd_a=1 & Zw3_p=1 & Zw3_a=1 & Arm_p=0 & Arm_a=0 & En_p=0 & En_a=0 & Hh_p=0 & Hh_a=0 & Ci_p=1 & Ci_a=1 & Ciact_p=0 & Ciact_a=0 & Cirep_p=1 & Cirep_a=1 & Ptc_p=1 & Ptc_a=1 & Smo_p=0 & Smo_a=0 & Pka_p=2 & Pka_a=2 & Fu_p=0 & Fu_a=0 & SuFu_p=1 & SuFu_a=1 & Cos2_p=1 & Cos2_a=1;
 
 -- Output variables declaration
 
@@ -813,44 +816,45 @@ next(SuFu_p) != SuFu_p |
 next(SuFu_a) != SuFu_a |
 next(Cos2_p) != Cos2_p |
 next(Cos2_a) != Cos2_a |
-strongSS | weakSS;
+stableStates;
 
--- State variables initialization
---  INIT Wg_p = 0;
---  INIT Wg_a = 0;
---  INIT Fz_p = 0;
---  INIT Fz_a = 0;
---  INIT Dsh_p = 0;
---  INIT Dsh_a = 0;
---  INIT Slp_p = 0;
---  INIT Slp_a = 0;
---  INIT Nkd_p = 0;
---  INIT Nkd_a = 0;
---  INIT Zw3_p = 0;
---  INIT Zw3_a = 0;
---  INIT Arm_p = 0;
---  INIT Arm_a = 0;
---  INIT En_p = 0;
---  INIT En_a = 0;
---  INIT Hh_p = 0;
---  INIT Hh_a = 0;
---  INIT Ci_p = 0;
---  INIT Ci_a = 0;
---  INIT Ciact_p = 0;
---  INIT Ciact_a = 0;
---  INIT Cirep_p = 0;
---  INIT Cirep_a = 0;
---  INIT Ptc_p = 0;
---  INIT Ptc_a = 0;
---  INIT Smo_p = 0;
---  INIT Smo_a = 0;
---  INIT Pka_p = 0;
---  INIT Pka_a = 0;
---  INIT Fu_p = 0;
---  INIT Fu_a = 0;
---  INIT SuFu_p = 0;
---  INIT SuFu_a = 0;
---  INIT Cos2_p = 0;
---  INIT Cos2_a = 0;
+DEFINE
+-- Declaration of core variables restriction list
+-- No Initial State list restriction selected !
+-- Declaration of input variables restriction list
+-- No Initial State list restriction selected !
 
--- Include properties specifications here
+--------------------------------------------------
+-- Reachability Properties using VARYING INPUTS --
+-- i.e. there is NO CONTROL on the input change at each transition
+--
+-- 1. Between an initial state (pattern) and a stable state (pattern)
+--   a. Existence of at least one path connecting two state patterns
+-- INIT initState;
+-- SPEC EF ( stableState );
+--   b. Existence of all the paths connecting two state patterns
+-- INIT initState;
+-- SPEC AF ( stableState );
+--
+-- 2. Between all the weak/strong stable states
+-- INIT weakSS1;
+--  SPEC EF ( weakSS2 );
+--  ...
+--  SPEC EF ( weakSSn );
+--------------------------------------------------
+-- Reachability Properties using FIXED INPUTS --
+-- i.e. a VALUE RESTRICTION can be forced at each transition
+-- 
+-- 1. Between an initial state (pattern) and a stable state (pattern)
+--   a. Existence of at least one path connecting two state patterns
+-- INIT initState; SPEC EAF ( inpVar1=0 & inpVar3=1 )( stableState );
+--   b. Existence of all the paths
+-- INIT initState; SPEC AAF ( inpVar1=0 & inpVar3=1 )( stableState );
+--
+-- 2. Testing input combinations
+-- INIT weakSS1;
+--  SPEC EAF ( inpVar1=0 & inpVar2=0 )( weakSS2 );
+--  SPEC EAF ( inpVar1=0 & inpVar2=1 )( weakSS2 );
+--  SPEC EAF ( inpVar1=1 & inpVar2=0 )( weakSS2 );
+--  SPEC EAF ( inpVar1=1 & inpVar2=1 )( weakSS2 );
+--  ...

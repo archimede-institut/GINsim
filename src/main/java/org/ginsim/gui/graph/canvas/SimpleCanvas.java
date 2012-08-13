@@ -404,7 +404,7 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 	}
 
 	private boolean alternate(MouseEvent e) {
-		return e.isControlDown() || e.getButton() == MouseEvent.BUTTON2;
+		return e.isControlDown() || e.isMetaDown() || e.getButton() == MouseEvent.BUTTON2;
 	}
 	
 	@Override

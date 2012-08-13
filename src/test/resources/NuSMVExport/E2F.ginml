@@ -1,0 +1,1132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gxl SYSTEM "http://gin.univ-mrs.fr/GINsim/GINML_2_1.dtd">
+<gxl xmlns:xlink="http://www.w3.org/1999/xlink">
+	<graph id="model_26_07" class="regulatory" nodeorder="DNAdamage GrowthFactors GrowthInhibitors E2F1_Apoptosis Proliferation Growth_Arrest Senescence HRAS E2F1 E2F3 CyclinD1 CyclinE1 CyclinA CDC25A p16INK4a RB1 RBL2 p21CIP ATM CHEK1 MDM2 TP53 p14ARF">
+<node id="p21CIP" maxvalue="1">
+  <value val="1">
+    <exp str="!CyclinE1 &amp; (GrowthInhibitors | TP53)"/>
+  </value>
+  <annotation>
+    <linklist>
+      <link xlink:href="http://www.ncbi.nlm.nih.gov/pubmed/12730199"/>
+    </linklist>
+    <comment>- p21 promotes the translocation and activation of CycD/CDK complexes
+- p21 is high in senescent cells
+
+
+p21 is phosphorylated by CycE/CDK2 at Ser130. But p21 can be degraded via Skp2 independently of this phosphorylation (but it's slower). 
+Bornstein, JBC 2003. PMID: 12730199
+</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="1135" y="227" width="63" height="25" backgroundColor="#666666" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="RB1" maxvalue="2">
+  <value val="2">
+    <exp str="!CyclinD1 &amp; !CyclinE1 &amp; !p16INK4a &amp; !CyclinA"/>
+  </value>
+  <value val="1">
+    <exp str="!CyclinE1 &amp; CyclinD1 &amp; !p16INK4a &amp; !CyclinA"/>
+  </value>
+  <annotation>
+    <linklist>
+      <link xlink:href="http://www.ncbi.nlm.nih.gov/pubmed/19015245"/>
+    </linklist>
+    <comment>Chong et al 2009 Mol Cell Biol
+Rb-/- leads to apoptosis (increase of E2F3a, no change to E2F3b)
+Rb-/-, E2F3a-/- recovers
+Rb-/-, E2F3b-/- leads also to apoptosis
+We added the interaction to growth_arrest to ensure that in case of RB maintenance, we get growth arrest (hence outcomes are not only exclusive but one of them needs to be activated - equal to 1)
+PMID: 19015245</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<rect x="665" y="138" width="63" height="25" backgroundColor="#666666" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="CHEK1" maxvalue="1">
+  <value val="1">
+    <exp str="ATM &amp; E2F1"/>
+  </value>
+  <annotation>
+    <linklist>
+      <link xlink:href="http://www.ncbi.nlm.nih.gov/pubmed/15190206"/>
+    </linklist>
+    <comment>Rogoff and Kowalik, Cell cycle 3:7, 2004
+Expression of E2F1 leads to an increase in Chk2 mRNA and accumulation of Chk2 protein.
+PMID: 15190206
+
+ATTENTION: this interaction (E2F1 =&gt; CHEK1) is non functional because we want to distinguish Apoptosis and E2F1-dependent apoptosis. MAY CHANGE</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="159" y="333" width="63" height="25" backgroundColor="#666666" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="E2F1_Apoptosis" maxvalue="1">
+  <value val="1">
+    <exp str="E2F1:2 &amp; TP53"/>
+  </value>
+
+			<nodevisualsetting>
+				<ellipse x="410" y="525" width="120" height="25" backgroundColor="#000000" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="E2F3" maxvalue="2">
+  <value val="2">
+    <exp str="CHEK1 &amp; !RB1:2 &amp; HRAS"/>
+  </value>
+  <value val="1">
+    <exp str="!CHEK1 &amp; HRAS &amp; !RB1"/>
+  </value>
+  <annotation>
+    <comment>E2F3 has two levels:
+1 for cell cycle functions in G1/S
+2 for apoptotic functions
+
+No distinction is made on E2F3a and E2F3b.
+
+Level 1 corresponds to normal E2F3 activation of cell cycle events. 
+Level 2 corresponds to E2F3 apoptotic effect, which is reached in the absence of RB and presence of Chk1_2. Its basal value is 1 and and it decreases to 0 in the presence of RB.
+
+E2F3 transcription is induced by Myc through RAS
+</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<rect x="464" y="67" width="63" height="25" backgroundColor="#666666" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="RBL2" maxvalue="1">
+  <value val="1">
+    <exp str="!CyclinD1 &amp; !CyclinE1"/>
+  </value>
+  <annotation>
+    <linklist>
+      <link xlink:href="PMID:12717421"/>
+    </linklist>
+    <comment>Wikipathway but no reference
+SMAD2/3/5 activate RBL2
+
+Helmbolt et al Oncogenes 2009
+Activation of RBL2 seems to be dependent of p53/p21 DNA damage pathway
+
+Not sure about the phosphorylation by CyclinE. Another explanation of the interaction from CycE to RBL2 could be through the activation of SKP2 by CycE. SKP2 binds to RBL2 and accelarates ubiquitylation and degradation of RBL2 in human cells (T98G cells). 
+PMID: 12717421</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="951" y="200" width="63" height="25" backgroundColor="#666666" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="GrowthInhibitors" maxvalue="1" input="true">
+  <annotation>
+    <linklist>
+      <link xlink:href="http://www.genego.com/map_544.php"/>
+    </linklist>
+    <comment>TGFb is an input of the model.
+
+It plays a role in tissue homeostasis. Its main role is to inhibit cell proliferation. TGFb receptor (TGFb type II) is mutated in many cancers (about 30% of colorectal carcinomas).
+
+TGFb pathway is involved in many cellular processes such as apoptosis, causes G1 arrest by induction of CDK inhibitors through the SMADs (SMAD3) proteins and JunB.
+
+http://www.genego.com/map_544.php :
+"TGFb receptor I activates by phosphorylation SMAD family member 2 and 3 ( Smad2 and Smad3 ), which form complexes with SMAD family member 4 ( Smad4 ) that accumulate in the nucleus and regulate transcription of target genes. Smads stimulate transcription of proteins from INK4 ( p16INK and p15 ) and Kip/Cip ( p21 and p27KIP1 ) families of cell cycle kinase inhibitors directly or indirectly (for example, via b-Jun and SP1 transfactors). These inhibitors interfere with interactions between cyclin-dependent kinases ( CDK ) and cyclins. Contact inhibition, replicative senescence and DNA damage  also may stimulate the G1/S checkpoint arrest through p15, p21 or p27KIP1."</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="801" y="6" width="120" height="25" backgroundColor="#0033cc" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="Senescence" maxvalue="1">
+  <value val="1">
+    <exp str="p21CIP &amp; ((RBL2 &amp; TP53) | p16INK4a)"/>
+  </value>
+  <annotation>
+    <comment>2 steps in senescence:
+- reversible: activation of RBL2 via a TP53 pathway (in response to telomere shortening)
+- irreversible: activation of p16INK4a (added p21 as a necessary accompanying component to account for cell cycle arrest, otherwise p16INK4a can be activated even in the case of some proliferative steady states =&gt; if CyclinD is no longer needed, p16INK4a can be ON).</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="1091" y="527" width="120" height="25" backgroundColor="#000000" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="TP53" maxvalue="1">
+  <value val="1">
+    <exp str="ATM &amp; CHEK1 &amp; !MDM2 &amp; E2F1"/>
+  </value>
+  <annotation>
+    <linklist>
+      <link xlink:href="http://www.ncbi.nlm.nih.gov/pubmed/15140942"/>
+    </linklist>
+    <comment>Two links through miRNA exist but haven't been included in the model: 
+p53 =&gt; E2F1: positive influence because p53 is inhibiting the transcription of miR17 which inhibits E2F1 transcription
+
+p53 =&gt; E2F3: negative influence because p53 is inhibiting the transcription of miR34 which inhibits E2F3 transcription
+
+Powers, Mol. Cancer Res. 2004
+ATM and ATR phosphorylate p53 at ser15 and stabilize it
+PMID: 15140942
+
+Note: p53 is present in the absence of Mdm2 and presence of both Chk1_2 and ATM (response to DNA damage) or when E2F2 is at its highest apoptotic level 3 (which implies the presence of ATM and Chk1_2)
+
+ATTENTION: this interaction (E2F1 =&gt; TP53) is non functional because we want to distinguish Apoptosis and E2F1-dependent apoptosis. MAY CHANGE</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="324" y="426" width="63" height="25" backgroundColor="#666666" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="HRAS" maxvalue="1">
+  <value val="1">
+    <exp str="GrowthFactors"/>
+  </value>
+  <annotation>
+    <linklist>
+      <link xlink:href="http://books.google.fr/books?id=ScEuiD2V6GoC&amp;pg=PA244&amp;lpg=PA244&amp;dq=RAS+MYC+activates+E2F1&amp;source=bl&amp;ots=xMvbLtSjs1&amp;sig=fxvnggfm55ijhKODba7lFWH6FKA&amp;hl=fr&amp;ei=2JgkTcX2EdKG5AaKvOH6CQ&amp;sa=X&amp;oi=book_result&amp;ct=result&amp;resnum=1&amp;ved=0CB0Q6AEwAA#v=onepage&amp;q=RAS%20MYC%20activates%20E2F1&amp;f=false"/>
+    </linklist>
+    <comment>RAS represents the MAPK pathway activated by growth factors.
+
+RAS is often mutated in cancers.
+
+Induction of mitogens seem to activate E2F1. This would explain the role of hyperproliferative signals that lead to apoptosis through E2F1
+</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="1067" y="70" width="63" height="25" backgroundColor="#666666" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="DNAdamage" maxvalue="1" input="true">
+  <annotation>
+    <comment>DNA damage is an input of the model. </comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="172" y="13" width="120" height="25" backgroundColor="#0033cc" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="CyclinD1" maxvalue="1">
+  <value val="1">
+    <exp str="HRAS &amp; !p16INK4a &amp; !p21CIP"/>
+  </value>
+  <annotation>
+    <comment>CycD stands for the CDK complexes CycD1/CDK4 or CycD1/CDK6
+
+- p16 binds to the kinase subunits of the complex CDK4 and CDK6. This binding inhibits the binding and activation of the CDK complex
+
+CycD1 is high in senescent cells but inactive because in complex with p21 (discussions with Vjeko Dulic) so in this model it will be equal to 0 in senescence
+</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="1123" y="143" width="63" height="25" backgroundColor="#666666" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="p16INK4a" maxvalue="1">
+  <value val="1">
+    <exp str="GrowthInhibitors &amp; !RB1"/>
+  </value>
+  <annotation>
+    <linklist>
+      <link xlink:href="http://www.ncbi.nlm.nih.gov/pubmed/7972006"/>
+      <link xlink:href="http://www.ncbi.nlm.nih.gov/pubmed/15655836"/>
+    </linklist>
+    <comment>p16 stands for CDKN2A or p16INK4a. 
+In this model, p16 also represents p15 (CDKN2B).
+
+- p16 is activated in response of oncogenic stresses. In a normal cell cycle, it is not expressed at high levels
+
+- p16 is high in senescent cells
+
+- p16 inhibits RB
+(1) Okamoto, A., Demetrick, D.J., Spillare, E.A., Hagiwara, K., Hussain, S.P., Bennett, W.P., Forrester, K., Gerwin, B., Serrano, M., Beach, D.H. and Harris, C.C. (1994) Proc. Natl. Acad. Sci. USA 91, 11045-11049.
+The presence of p16INK4 protein is inversely correlated with detectable RB or cyclin D1 proteins and is not correlated with p53 mutations.
+PMID: 7972006
+
+(2) Li, Y., Nichols, M.A., Shay, J.W. and Xiong, Y. (1994) Cancer Res. 54, 6078 6082. 
+Transcriptional repression of the D-type cyclin-dependent kinase inhibitor p16 by the retinoblastoma susceptibility gene product pRb. 
+
+"Whether the p16 gene contains a weak E2F binding site or pRb represses p16 transcription by a mechanism independent of E2F factors are currently under investigation."
+PMID: 7954450
+
+(3) Ma et al. World J. Gastroenterol 2005; 11 (5): 744:747
+In gallbladder cancer: "Inactivation of RB may stimulate cells to increase p16INK4 expression, which inhibits the activity of CDK4 and inactivates CycD1/CDK4 complex. On the contrary, pRb overexpression stimulates cells to increase p16INK4 protein loss, which enhances the activity of CDK4, thus inactivating excrescent RB."
+PMID: 15655836
+
+</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="829" y="101" width="68" height="25" backgroundColor="#666666" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="E2F1" maxvalue="2">
+  <value val="2">
+    <exp str="!RBL2:1 &amp; !RB1:2 &amp; ATM &amp; CHEK1 &amp; (HRAS | E2F3)"/>
+  </value>
+  <value val="1">
+    <exp str="!RBL2:1 &amp; !RB1:2 &amp; !(CHEK1 &amp; ATM) &amp; (HRAS | E2F3)"/>
+  </value>
+  <annotation>
+    <linklist>
+      <link xlink:href="http://www.ncbi.nlm.nih.gov/pubmed/15190206"/>
+      <link xlink:href="http://www.ncbi.nlm.nih.gov/pubmed/18037967"/>
+      <link xlink:href="http://www.ncbi.nlm.nih.gov/pubmed/19776743"/>
+      <link xlink:href="http://www.ncbi.nlm.nih.gov/pubmed/10594030"/>
+      <link xlink:href="http://www.ncbi.nlm.nih.gov/pubmed/18235226"/>
+    </linklist>
+    <comment>E2F1 has two levels:
+1 for cell cycle functions in G1/S
+2 for apoptotic functions
+
+The sole presence of RB leads to the level 0.
+To reach its level 1, E2F1 needs to be activated by RAS of E2F3, whatever the levels of ATM and Chk1_2. E2F1 reaches its level 2 when E2F3 is at level 2 and in the presence of both ATM and Chk1_2.
+
+Hurst, Oncogene 2008
+However, excess of E2F1 can promote both proliferation and apoptosis. The balance between the two phenotypes depends on E2F1 level of deregulation and cell context 
+Its transcription is mediated by E2F3.
+E2F1 is phosphorylated by Chek1/2 at Ser364
+E2F1 is phosphorylated by ATM at Ser31 
+PMID: 18037967
+
+Reference to find.
+p53 inhibits miR17 which inhibits E2F1
+
+Polager, Nat Rev 2009
+p14ARF favours E2F1 degradation (not included in the model)
+MDM2 avoids interaction between E2F1 and SKP2 (which targets E2F1 for degradation)
+PMID: 19776743
+
+Powers, mol. Cancer Res. 2004
+E2F1 requires ATM and CHEK2 to activate apoptosis
+PMID: 15140942
+
+Goberdhan et al. MCB 2000 (20): 273-285
+"p53 is required for the senescence response induced by either E2F1 or p14ARF."
+Novel activity of E2F1: "the ability to induce a premature senescence-like phenotype when constitutively overexpressed in normal human cells."
+"E2F1 did not induce apoptosis in normal human fibroblasts, although it has been shown to induce apoptosis in immortal cells."
+"Whether E2F1 induces apoptosis or senescence may be cell type and genotype specific. Our preliminary data suggest that E2F1 stimulates cell death, possibly by apoptosis, in human fibroblasts that lack pRb function. Thus, at least in human fibroblasts, inappropriate E2F1 expression may result in senescence (normal cells), life span extension (p53-compromised cells), or possibly apoptosis (pRb-compromised cells)"
+PMID: 10594030
+Error in pubmed first author is Dimri.
+
+Rogoff and Kowalik, Cell cycle 3:7, 2004"
+Inactivation of RB and overexpression of E2F1 results in apoptosis that is independent of p19ARF. 
+E2F1 protein levels increase following DNA damage (mediated by an ATM-dependent phosphorylation of E2F1)
+IMPORTANT: "There are common features in the apoptosis signaling pathways that respond to both loss of cellular proliferation control (inactivation of RB) and generation of DNA damage. In absence of RB, E2F1 signals to p53 through activation of ATM and induction of Chk2."
+=&gt; E2F1 is rarely mutated in tumour, probably due to its dual role.
+PMID: 15190206
+
+Hong et al. Cell Cycle 7:3 1-10
+"E2F1 induces p53 phosphorylation and apoptosis are reduced in the absence of ATM but not the stimulation of cell cycle progression."
+"Kowalik and coworkers suggested that E2F1 deregulation, either by overexpression or Rb inactivation, leads to an accumulation of DNA breaks, which in turn activates the ATM pathway"
+PMID: 18235226
+
+Question for the model: is RBL2 capable of inhibiting E2F1:2. Is it a strong inhibitor of E2F1? To which extent, it can replace RB1?
+</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<rect x="634" y="260" width="63" height="25" backgroundColor="#666666" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="CyclinA" maxvalue="1">
+  <value val="1">
+    <exp str="(E2F1 | E2F3) &amp; CDC25A &amp; !p21CIP &amp; !RBL2"/>
+  </value>
+  <annotation>
+    <comment>Helmbold et al Oncogenes 2006 "regulation of cellular senescence by RB2/p130
+
+RBL2 represses with E2F4 the activation of Cyclin A. </comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="912" y="369" width="63" height="25" backgroundColor="#666666" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="CyclinE1" maxvalue="1">
+  <value val="1">
+    <exp str="!RBL2 &amp; !p21CIP &amp; CDC25A &amp; (E2F1:1 | (!E2F1:1 &amp; E2F3:1))"/>
+  </value>
+  <annotation>
+    <comment>E2F3 plays its role on CycE when E2F1 is absent (eg deleted)</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="759" y="404" width="70" height="25" backgroundColor="#666666" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="Growth_Arrest" maxvalue="1">
+  <value val="1">
+    <exp str="p21CIP | RB1:2 | RBL2:1"/>
+  </value>
+
+			<nodevisualsetting>
+				<ellipse x="940" y="529" width="120" height="25" backgroundColor="#000000" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="CDC25A" maxvalue="1">
+  <value val="1">
+    <exp str="!CHEK1 &amp; !RBL2:1 &amp; (E2F1 | E2F3)"/>
+  </value>
+  <annotation>
+    <linklist>
+      <link xlink:href="http://www.genecards.org/cgi-bin/carddisp.pl?gene=CDC25A"/>
+      <link xlink:href="http://www.ncbi.nlm.nih.gov/pubmed/15210709"/>
+      <link xlink:href="http://atlasgeneticsoncology.org/Genes/CDC25AID40004ch3p21.html"/>
+    </linklist>
+    <comment>The logical rule assumes that E2F1 or E2F3 are required for transcription and CycE is required for activation (phosphorylation)
+
+From Genecards:
+CDC25A is a member of the CDC25 family of phosphatases. CDC25A is required for progression from G1 to the S phase of the cell cycle. It activates the cyclin-dependent kinase CDC2 by removing two phosphate groups. CDC25A is specifically degraded in response to DNA damage, which prevents cells with chromosomal abnormalities from progressing through cell division. CDC25A is an oncogene.
+
+CDC25 activates CDK complexes that control progression through the cell cycle. CDC25 is also involved in the DNA damage checkpoints. Regulation of CDC25 occurs through a variety of mechanisms including phosphorylation, interaction with 14.3.3 proteins, subcellular localization and protein degradation.
+
+----
+Chk1 promotes degradation of CDC25A.
+CDC25C interacts more with CDC2 (CycB) whereas CDC25A and B interact with CDK2 (CycE)
+
+----
+ATLAS GENETICS ONCOLOGY
+E2F1 is active during the G1 to S transition, and thus its target genes, which include regulatory elements of the cell cycle, such as CDC2, CDC25A and cyclin E, and essential components of DNA replication machinery are expressed in a cell cycle dependent manner (i.e. only in late G1 and early S phase of the cell cycle).
+
+CDC25A is overexpressed in a variety of human cancers including breast, hepatocellular, ovarian, colorectal, esophageal, head and neck cancer and also in non-Hodgkin lymphoma.
+
+----
+Dasgupta JBC 2004 279 (37)
+E2F3 is a transcription factor of CDC25A
+PMID: 15210709
+</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="379" y="248" width="63" height="25" backgroundColor="#666666" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="p14ARF" maxvalue="1">
+  <value val="1">
+    <exp str="E2F1"/>
+  </value>
+  <annotation>
+    <comment>p14ARF and p16INK4a share the same gene CDKN2A
+
+A link is not included: ARF =| E2F1 by degradation of E2F1 through SKP2. This inhibition is complex/ It will be added later.
+ATLAS GENETICS ONCOLOGY: E2F1 is phosphorylated at S31 by ATM and at S364 by Chk2. These phosphorylations interfere with the ARF/SKP2- and MDM2-dependent degradation of E2F1, thus stabilizing the latter by decreasing its turnover rate. 
+</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="665" y="411" width="58" height="25" backgroundColor="#666666" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="MDM2" maxvalue="1">
+  <value val="1">
+    <exp str="TP53 &amp; !p14ARF &amp; !ATM"/>
+  </value>
+  <annotation>
+    <linklist>
+      <link xlink:href="http://atlasgeneticsoncology.org/Genes/MDM2ID115ch12q15.html"/>
+    </linklist>
+    <comment>p53 and Mdm2 are involved in a negative feedback loop: p53 synthesizes Mdm2 and Mdm2 ubiquitinates p53.</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="544" y="386" width="63" height="25" backgroundColor="#666666" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="ATM" maxvalue="1">
+  <value val="1">
+    <exp str="E2F1 &amp; DNAdamage"/>
+  </value>
+  <annotation>
+    <linklist>
+      <link xlink:href="http://www.ncbi.nlm.nih.gov/pubmed/15190206"/>
+      <link xlink:href="http://www.ncbi.nlm.nih.gov/pubmed/18235226"/>
+    </linklist>
+    <comment>Rogoff and Kowalik, Cell cycle 3:7, 2004
+IMPORTANT: There are common features in the apoptosis signaling pathways that respond to both loss of cellular proliferation control (inactivation of RB) and generation of DNA damage. In absence of RB, E2F1 signals to p53 through activation of ATM and induction of Chk2.
+PMID: 15190206
+
+Hong et al. 2008, Cell Cycle 7:3 391-400
+ATM responds to DNA double strand breaks
+"ATM autophosphorylates itself at serine 1981 in response to DNA damage and some other cellular stresses. The exact role of serine 1981 autophosphorylation in ATM activation is controversial but this event has nonetheless become a well-established marker of ATM activation."
+PMID: 18235226
+
+ATTENTION: this interaction (E2F1 =&gt; ATM) is non functional because we want to distinguish Apoptosis and E2F1-dependent apoptosis. MAY CHANGE
+</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="185" y="189" width="63" height="25" backgroundColor="#666666" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="GrowthFactors" maxvalue="1" input="true">
+  <annotation>
+    <comment>EGFR is activated and causes the cell to enter a cell cycle</comment>
+  </annotation>
+
+			<nodevisualsetting>
+				<ellipse x="1038" y="6" width="120" height="25" backgroundColor="#0033cc" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="Proliferation" maxvalue="1">
+  <value val="1">
+    <exp str="CyclinE1:1 | CyclinA"/>
+  </value>
+
+			<nodevisualsetting>
+				<ellipse x="784" y="528" width="120" height="25" backgroundColor="#000000" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+		<edge id="p21CIP:CyclinD1" from="p21CIP" to="CyclinD1" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is positive
+This interaction is not functional
+p21 facilitates the transport of CycD by binding to the complex but is not required for its activationThis edge is negative
+This edge is negative
+This edge is negative
+This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="1161,224 1161,214 1161,171" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="p21CIP:CyclinE1" from="p21CIP" to="CyclinE1" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is negative
+This edge is negative
+This edge is negative
+This edge is negative
+This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="1132,234 806,234 806,401" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="p21CIP:CyclinA" from="p21CIP" to="CyclinA" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="1148,255 1148,380 978,380" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="p21CIP:Growth_Arrest" from="p21CIP" to="Growth_Arrest" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="1132,255 1080,257 1081,493 1024,492 1024,526" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="p21CIP:Senescence" from="p21CIP" to="Senescence" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="1185,255 1185,320 1185,524" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="RB1:E2F1" from="RB1" to="E2F1" minvalue="2" sign="negative">
+<annotation>
+  <comment>This edge is negative
+This edge is negative
+This edge is negative
+This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="682,166 682,220 682,257" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="RB1:E2F3" from="RB1" to="E2F3" minvalue="2" sign="negative">
+<annotation>
+  <comment>This edge is negative
+This edge is negative
+This edge is negative
+This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="690,135 690,88 530,88" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="RB1:Growth_Arrest" from="RB1" to="Growth_Arrest" minvalue="2" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is non functional
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="723,166 723,488 965,493 965,526" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="RB1:p16INK4a" from="RB1" to="p16INK4a" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is non functional
+This edge is negative
+This edge is negative
+This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="731,149 858,149 859,149 859,129" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="CHEK1:E2F3" from="CHEK1" to="E2F3" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="179,330 179,79 461,79" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="CHEK1:TP53" from="CHEK1" to="TP53" minvalue="1" sign="positive">
+<annotation>
+  <comment>
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="193,361 193,436 321,436" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="CHEK1:E2F1" from="CHEK1" to="E2F1" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is dual
+This edge is dual
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="225,347 655,347 655,288" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="CHEK1:CDC25A" from="CHEK1" to="CDC25A" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is negative
+This edge is negative
+This edge is negative
+This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="207,330 207,257 376,257" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="E2F3:E2F1" from="E2F3" to="E2F1" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="530,95 663,96 663,257" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="E2F3:CyclinE1" from="E2F3" to="CyclinE1" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is non functional
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="530,84 781,84 781,401" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="E2F3:CDC25A" from="E2F3" to="CDC25A" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="461,89 414,89 414,245" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="E2F3:CyclinA" from="E2F3" to="CyclinA" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="512,95 512,365 909,366" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="RBL2:Growth_Arrest" from="RBL2" to="Growth_Arrest" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is non functional
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="996,228 996,412 996,526" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="RBL2:CyclinA" from="RBL2" to="CyclinA" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="971,228 971,306 971,366" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="RBL2:CDC25A" from="RBL2" to="CDC25A" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="948,213 426,213 426,245" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="RBL2:Senescence" from="RBL2" to="Senescence" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="1017,217 1111,217 1111,524" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="RBL2:CyclinE1" from="RBL2" to="CyclinE1" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="984,228 984,314 824,314 824,401" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="RBL2:E2F1" from="RBL2" to="E2F1" minvalue="1" sign="negative">
+			<edgevisualsetting>
+				<polyline points="948,206 693,206 693,257" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="GrowthInhibitors:p21CIP" from="GrowthInhibitors" to="p21CIP" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="902,34 902,241 1132,241" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="GrowthInhibitors:p16INK4a" from="GrowthInhibitors" to="p16INK4a" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="862,34 862,53 862,98" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="TP53:p21CIP" from="TP53" to="p21CIP" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="390,448 1160,448 1160,255" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="TP53:MDM2" from="TP53" to="MDM2" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="390,438 569,438 569,414" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="TP53:E2F1_Apoptosis" from="TP53" to="E2F1_Apoptosis" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="364,454 364,482 446,482 446,522" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="TP53:Senescence" from="TP53" to="Senescence" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="390,454 1131,453 1131,524" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="HRAS:CyclinD1" from="HRAS" to="CyclinD1" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="1133,82 1163,82 1163,140" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="HRAS:E2F3" from="HRAS" to="E2F3" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="1064,73 920,73 530,73" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="HRAS:E2F1" from="HRAS" to="E2F1" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="1100,98 1100,268 700,268" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="DNAdamage:ATM" from="DNAdamage" to="ATM" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="236,41 236,126 236,186" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="CyclinD1:RB1" from="CyclinD1" to="RB1" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is negative
+This edge is negative
+This edge is negative
+This edge is negative
+This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="1120,156 959,156 731,156" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="CyclinD1:RBL2" from="CyclinD1" to="RBL2" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="1140,171 1140,206 1017,206" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="p16INK4a:CyclinD1" from="p16INK4a" to="CyclinD1" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is negative
+This edge is negative
+This edge is negative
+This edge is negative
+This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="900,117 1136,117 1136,140" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="p16INK4a:RB1" from="p16INK4a" to="RB1" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is negative
+This edge is negative
+This edge is negative
+This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="845,129 845,142 731,142" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="p16INK4a:Senescence" from="p16INK4a" to="Senescence" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="900,109 1122,109 1122,524" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="E2F1:CyclinE1" from="E2F1" to="CyclinE1" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is dual
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="700,278 790,278 790,401" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="E2F1:p14ARF" from="E2F1" to="p14ARF" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="688,288 688,343 688,408" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="E2F1:ATM" from="E2F1" to="ATM" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="653,257 653,198 251,198" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="E2F1:CHEK1" from="E2F1" to="CHEK1" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="631,284 214,284 214,330" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="E2F1:TP53" from="E2F1" to="TP53" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is non functional
+This edge is positive
+This edge is positive
+This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="648,288 648,324 356,326 356,423" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="E2F1:E2F1_Apoptosis" from="E2F1" to="E2F1_Apoptosis" minvalue="2" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="664,288 664,483 658,483 494,483 494,522" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="E2F1:CDC25A" from="E2F1" to="CDC25A" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="631,264 532,264 445,264" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="E2F1:CyclinA:1" from="E2F1" to="CyclinA" minvalue="1" maxvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="700,273 950,273 950,366" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="E2F1:CyclinA:2" from="E2F1" to="CyclinA" minvalue="2" sign="positive">
+			<edgevisualsetting>
+				<polyline points="700,273 950,273 950,366" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="CyclinA:Proliferation" from="CyclinA" to="Proliferation" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="936,397 936,480 854,480 854,525" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="CyclinA:RB1" from="CyclinA" to="RB1" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="932,366 932,161 731,161" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="CyclinE1:Proliferation" from="CyclinE1" to="Proliferation" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="786,432 786,481 830,482 830,502 830,525" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="CyclinE1:RB1" from="CyclinE1" to="RB1" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is negative
+This edge is negative
+This edge is negative
+This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="771,401 771,166 731,166" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="CyclinE1:p21CIP" from="CyclinE1" to="p21CIP" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is negative
+This edge is negative
+This edge is negative
+This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="813,401 813,248 1132,248" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="CyclinE1:RBL2" from="CyclinE1" to="RBL2" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="798,401 798,221 948,221" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="CDC25A:CyclinE1" from="CDC25A" to="CyclinE1" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="431,276 431,356 762,356 762,401" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="CDC25A:CyclinA" from="CDC25A" to="CyclinA" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="422,276 422,377 909,377" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="p14ARF:MDM2" from="p14ARF" to="MDM2" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is negative
+This edge is negative
+This edge is negative
+This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="676,408 676,396 610,396" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="MDM2:TP53" from="MDM2" to="TP53" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is negative
+This edge is negative
+This edge is negative
+This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="552,414 552,432 390,432" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="ATM:CHEK1" from="ATM" to="CHEK1" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="196,217 196,293 196,330" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="ATM:E2F1" from="ATM" to="E2F1" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is dual
+This edge is dual
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="251,205 643,205 643,257" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="ATM:TP53" from="ATM" to="TP53" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="228,217 228,422 321,423" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="ATM:MDM2" from="ATM" to="MDM2" minvalue="1" sign="negative">
+<annotation>
+  <comment>This edge is negative
+This edge is negative
+This edge is negative
+This edge is negative
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="237,217 237,257 238,313 238,316 238,396 273,397 541,397" line_style="straight" line_color="#ff0033" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="GrowthFactors:HRAS" from="GrowthFactors" to="HRAS" minvalue="1" sign="positive">
+<annotation>
+  <comment>This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+This edge is positive
+</comment>
+</annotation>
+			<edgevisualsetting>
+				<polyline points="1103,34 1103,44 1103,67" line_style="straight" line_color="#00ff00" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+<annotation>
+  <comment>The model contains: 
+14 nodes
+4 inputs (DNA damage, TGFb, EGFR and FGFR3)
+3 outputs (Apoptosis, Proliferation and growth_arrest)
+
+More specifically, the outputs corresponds to possible phenotypes in response to cell signals. They correspond to:
+
+Proliferation: CycE/CDK2 activation is the readout for cell proliferation. When CycE/CDK complex is active, DNA replication can be initiated. The "proliferation" phenotype corresponds in reality to entry into S phase. The cell cycle could be blocked downstream.
+
+Apoptosis: p53-E2F1 dependent activation is the readout for apoptosis. Activation of p53 is the signal for possible apoptosis but there are events downstream that can still counteract the activation of the apoptotic signal. 
+The model concentrates on the E2F1-dependent apoptosis. E2F1 is also capable of activating p73 and launch another apoptotic program but the conditions in which this happened are not yet clear and this, not included in the model.
+
+Growth arrest: p21 and RB are breaks in cell transitions. They insure that the cycle remains arrested until an external signal relieves the break. It is not rare to see apoptosis and growth arrest coexist. p21 synthesis is mediated by p53 that tries to arrest the cycle in order to repair the damage. If the damage is not repairable, apoptosis is initiated.
+
+
+</comment>
+</annotation>
+	</graph>
+</gxl>
