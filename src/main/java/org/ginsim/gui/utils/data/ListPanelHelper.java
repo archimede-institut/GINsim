@@ -4,20 +4,19 @@ import java.awt.Component;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.Action;
 import javax.swing.JLabel;
 
 /**
  * Provide configuration and helper methods for a list panel.
- * The helper defines capabilities, like reordering, adding and removing,
- * GUI hints such as available actions and methods to create new items.
+ * The helper defines capability switches (reordering, adding, removing),
+ * GUI hints such as available actions, and methods to create new items.
  * 
  * @author Aurelien Naldi
  * @param <T> the type of objects in the list
  */
 public class ListPanelHelper<T> {
 	
-	private static final String SEL_EMPTY="SEL_EMPTY", SEL_SINGLE="SEL_SINGLE", SEL_MULTIPLE="SEL_MULTIPLE";
+	public static final String SEL_EMPTY="SEL_EMPTY", SEL_SINGLE="SEL_SINGLE", SEL_MULTIPLE="SEL_MULTIPLE";
 	
 	public int nbAction = 0;
 	
@@ -34,7 +33,7 @@ public class ListPanelHelper<T> {
 
 	public boolean canRemove = true;
 
-	private ListEditionPanel<T> editPanel;
+	public ListEditionPanel<T> editPanel;
 	
 	public Object getColumn(T o, int column) {
 		return o;
@@ -69,18 +68,26 @@ public class ListPanelHelper<T> {
 		}
 		
 		if (selection == null || selection.length < 1) {
+			updateEmptyPanel();
 			editPanel.showPanel(SEL_EMPTY);
 			return;
 		}
 		
 		if (selection.length == 1) {
-			// TODO: update edit panel
+			updateSelectionPanel(selection[0]);
 			editPanel.showPanel(SEL_SINGLE);
 			return;
 		}
-		
-		// TODO: update edit panel
+
+		updateMultipleSelectionPanel(selection);
 		editPanel.showPanel(SEL_MULTIPLE);
+	}
+	
+	public void updateEmptyPanel() {
+	}
+	public void updateSelectionPanel(int index) {
+	}
+	public void updateMultipleSelectionPanel(int[] indices) {
 	}
 	
 	public void setEditPanel(ListEditionPanel<T> editPanel) {
