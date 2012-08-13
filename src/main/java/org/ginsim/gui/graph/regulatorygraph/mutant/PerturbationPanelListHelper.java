@@ -40,7 +40,7 @@ public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation> {
 			PerturbationType type = (PerturbationType)arg;
 			
 			if (createPanel == null) {
-				createPanel = new PerturbationCreatePanel(null);
+				createPanel = new PerturbationCreatePanel(this, perturbations);
 				editPanel.addPanel(createPanel, CREATE);
 			}
 			createPanel.setType(type);

@@ -33,7 +33,8 @@ public class ListPanelHelper<T> {
 
 	public boolean canRemove = true;
 
-	public ListEditionPanel<T> editPanel;
+	public ListEditionPanel<T> editPanel = null;
+	public ListPanel<T> listPanel = null;
 	
 	public Object getColumn(T o, int column) {
 		return o;
@@ -89,7 +90,17 @@ public class ListPanelHelper<T> {
 	}
 	public void updateMultipleSelectionPanel(int[] indices) {
 	}
+
+	public void refresh() {
+		if (listPanel != null) {
+			listPanel.refresh();
+		}
+	}
 	
+	public void setListPanel(ListPanel<T> listPanel) {
+		this.listPanel = listPanel;
+	}
+
 	public void setEditPanel(ListEditionPanel<T> editPanel) {
 		this.editPanel = editPanel;
 		editPanel.addPanel(getEmptyPanel(), SEL_EMPTY);

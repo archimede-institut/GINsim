@@ -10,6 +10,8 @@ import java.util.ListIterator;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
 /**
  * The list of perturbations.
@@ -27,6 +29,11 @@ public class RegulatoryMutants implements Iterable<Perturbation> {
 	private final List<Perturbation> simplePerturbations = new ArrayList<Perturbation>();
 	private final List<Perturbation> multiplePerturbations = new ArrayList<Perturbation>();
 
+	private final RegulatoryGraph lrg;
+	
+	public RegulatoryMutants(RegulatoryGraph lrg) {
+		this.lrg = lrg;
+	}
 	
 	/**
 	 * Add a perturbation to fix a component.
@@ -145,6 +152,16 @@ public class RegulatoryMutants implements Iterable<Perturbation> {
         out.closeTag();
 
 		
+	}
+
+	public NodeInfo[] getNodes() {
+		List<RegulatoryNode> nodes = lrg.getNodeOrder();
+		NodeInfo[] ret = new NodeInfo[nodes.size()];
+		int idx = 0;
+		for (RegulatoryNode node: nodes) {
+			ret[idx++] = node.getNodeInfo();
+		}
+		return ret;
 	}
 
 }

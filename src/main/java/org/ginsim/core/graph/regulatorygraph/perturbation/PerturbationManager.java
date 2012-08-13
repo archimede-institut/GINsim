@@ -3,7 +3,6 @@ package org.ginsim.core.graph.regulatorygraph.perturbation;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.util.List;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLWriter;
@@ -43,6 +42,9 @@ public class PerturbationManager extends BasicGraphAssociatedManager {
 
     @Override
 	public Object doCreate( Graph graph) {
-		return new RegulatoryMutants();
+    	if (graph instanceof RegulatoryGraph) {
+    		return new RegulatoryMutants((RegulatoryGraph)graph);
+    	}
+    	return null;
 	}
 }
