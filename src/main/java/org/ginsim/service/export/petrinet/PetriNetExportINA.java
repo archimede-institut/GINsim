@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
@@ -264,4 +265,5 @@ public class PetriNetExportINA extends BasePetriNetExport {
 		// Close the file
 		out.close();
 	}
+
 }

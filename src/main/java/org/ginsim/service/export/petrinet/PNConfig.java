@@ -14,7 +14,7 @@ public class PNConfig implements InitialStateStore, PerturbationHolder {
 
 	public final RegulatoryGraph graph;
 	public final ObjectStore store = new ObjectStore(2);
-	public BasePetriNetExport format;
+	public final BasePetriNetExport format;
 	private Perturbation perturbation;
 	
     Map m_init = new HashMap();

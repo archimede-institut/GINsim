@@ -50,7 +50,7 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> {
 		// FIXME return the filter associated to the selected format
 		// return config.format.ffilter
 		
-		return null;
+		return config.format.getFormatDescription();
 	}
 
 }

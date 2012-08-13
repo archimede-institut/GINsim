@@ -5,8 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStatesIterator;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
@@ -62,11 +63,11 @@ public abstract class BasePetriNetExport {
      * @param v_node all nodes
      * @param len number of nodes in the original graph
      */
-    protected void browse(List v_result, OMDDNode node, int[][] t_priorities, int nodeIndex, List v_node, int len) {
+    protected void browse(List v_result, OMDDNode node, int[][] t_priorities, int nodeIndex, List<NodeInfo> v_node, int len) {
         if (node.next == null) {
             TransitionData td = new TransitionData();
             td.value = node.value;
-            td.maxValue = ((RegulatoryNode)v_node.get(nodeIndex)).getMaxValue();
+            td.maxValue = v_node.get(nodeIndex).getMax();
             td.nodeIndex = nodeIndex;
             td.t_cst = null;
             if (t_priorities != null) {
@@ -83,11 +84,11 @@ public abstract class BasePetriNetExport {
         }
     }
 
-    private void browse(List v_result, int[][] t_cst, int level, OMDDNode node, int[][] t_priorities, int nodeIndex, List v_node) {
+    private void browse(List v_result, int[][] t_cst, int level, OMDDNode node, int[][] t_priorities, int nodeIndex, List<NodeInfo> v_node) {
         if (node.next == null) {
             TransitionData td = new TransitionData();
             td.value = node.value;
-            td.maxValue = ((RegulatoryNode)v_node.get(nodeIndex)).getMaxValue();
+            td.maxValue = v_node.get(nodeIndex).getMax();
             td.nodeIndex = nodeIndex;
             if (t_priorities != null) {
 				td.increasePriority = t_priorities[nodeIndex][0];
@@ -106,7 +107,7 @@ public abstract class BasePetriNetExport {
                 } else {
                     td.t_cst[ti][0] = index;
                     td.t_cst[ti][1] = t_cst[i][1];
-                    td.t_cst[ti][2] = ((RegulatoryNode)v_node.get(index)).getMaxValue() - t_cst[i][2];
+                    td.t_cst[ti][2] = v_node.get(index).getMax() - t_cst[i][2];
                     if (td.t_cst[ti][1] > 0 || td.t_cst[ti][2] > 0) {
                         ti++;
                     }
@@ -154,7 +155,7 @@ public abstract class BasePetriNetExport {
 	 * @return the initial markup
 	 */
     protected byte[][] prepareExport( PNConfig config, List[] t_transition, OMDDNode[] t_tree) {
-    	List nodeOrder = config.graph.getNodeOrder();
+    	List<NodeInfo> nodeOrder = config.graph.getNodeInfos();
 		int len = nodeOrder.size();
 		// get the selected initial state
 		Iterator it_state = new InitialStatesIterator(nodeOrder, config);
@@ -195,7 +196,7 @@ public abstract class BasePetriNetExport {
 		byte[][] t_markup = new byte[len][2];
         for (int i=0 ; i<len ; i++) {
             OMDDNode node = t_tree[i];
-            RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(i);
+            NodeInfo vertex = nodeOrder.get(i);
 
 //            if (manager.getIncomingEdges(vertex).size() == 0) {
 //                // input node: no regulator, use basal value as initial markup ??
@@ -204,7 +205,7 @@ public abstract class BasePetriNetExport {
 //            } else {
                 // normal node, initial markup = 0
                 t_markup[i][0] = (byte)t_state[i];
-                t_markup[i][1] = (byte)(vertex.getMaxValue()-t_state[i]);
+                t_markup[i][1] = (byte)(vertex.getMax()-t_state[i]);
                 Vector v_transition = new Vector();
                 t_transition[i] = v_transition;
                 browse(v_transition, node, t_priorities, i, nodeOrder, len);
@@ -219,6 +220,10 @@ public abstract class BasePetriNetExport {
     	// TODO: share outputstream creation here
     	doExport(config, filename);
     }
+
+	public FileFormatDescription getFormatDescription() {
+		return new FileFormatDescription(filterDescr, extension);
+	}
 }
 
 class TransitionData {
