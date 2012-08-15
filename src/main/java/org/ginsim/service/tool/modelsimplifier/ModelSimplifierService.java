@@ -1,5 +1,7 @@
 package org.ginsim.service.tool.modelsimplifier;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.Alias;
@@ -16,7 +18,16 @@ public class ModelSimplifierService implements Service {
         }
     }
 
+    @Deprecated
     public ModelRewiring getRewirer( RegulatoryGraph graph) {
     	return new ModelRewiring(graph);
+    }
+    
+    public ModelReducer getModelReducer( RegulatoryGraph graph) {
+    	return getModelReducer(graph.getModel());
+    }
+
+    public ModelReducer getModelReducer( LogicalModel model) {
+    	return new ModelReducer(model);
     }
 }

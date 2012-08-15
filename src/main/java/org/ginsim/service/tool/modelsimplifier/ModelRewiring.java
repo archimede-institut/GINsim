@@ -30,6 +30,7 @@ import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
  * 
  * @author Aurelien Naldi
  */
+@Deprecated
 public class ModelRewiring extends AbstractModelSimplifier implements Callable<RegulatoryGraph>  {
 
 	private final RegulatoryGraph graph;
