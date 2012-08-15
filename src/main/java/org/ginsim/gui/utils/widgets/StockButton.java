@@ -32,9 +32,9 @@ public class StockButton extends JButton {
 		}
 	}
 	public void setStockIcon(String iconname) {
-		URL url = ImageLoader.getImagePath(iconname);
-		if (url != null) {
-			setAll(null, new ImageIcon(url));
+		ImageIcon icon = ImageLoader.getImageIcon(iconname);
+		if (icon != null) {
+			setAll(null, icon);
 		}
 	}
 	private void setAll(String text, Icon icon) {

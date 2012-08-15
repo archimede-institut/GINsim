@@ -3,13 +3,9 @@ File                                                          LICENSE   URL
 
 org.ginsim.common.application.OSXAdapter                       ??
 
-org.ginsim.common.application.Translator                       GPL
-
 org.ginsim.commongui.utils.DefaultTableHeaderCellRenderer   
 org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer
-org.ginsim.commongui.utils.VerticalLabelUI                     ??        http://tips4java.wordpress.com/2009/03/06/vertical-table-header-cell-renderer
-
-org.ginsim.commongui.utils.ImageLoader                         GPL  
+org.ginsim.commongui.utils.VerticalLabelUI                     public    http://tips4java.wordpress.com/2009/03/06/vertical-table-header-cell-renderer
 
 org.ginsim.gui.utils.widgets.RangeSlider
 org.ginsim.gui.utils.widgets.RangeSliderUI                     MIT       https://github.com/ernieyu/Swing-range-slider/

@@ -21,10 +21,7 @@ public abstract class BaseAction extends AbstractAction {
 
 	public static ImageIcon getIcon(String name) {
 		if (name != null && !"".equals(name)) {
-			URL url = ImageLoader.getImagePath(name);
-			if (url != null) {
-				return new ImageIcon(url);
-			}
+			return ImageLoader.getImageIcon(name);
 		}
 		return null;
 	}
