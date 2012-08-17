@@ -12,6 +12,7 @@ import java.util.Map.Entry;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
+import org.ginsim.common.callable.BasicProgressListener;
 import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.common.document.LaTeXDocumentWriter;
 import org.ginsim.common.document.OOoDocumentWriter;
@@ -336,4 +337,9 @@ public class ScriptLauncher {
 		}
 		doc.closeList();
 	}
+	
+	public BasicProgressListener progressListener() {
+		return new BasicProgressListener();
+	}
+	
 }

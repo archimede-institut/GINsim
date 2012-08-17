@@ -3,6 +3,7 @@ package org.ginsim.service.tool.reg2dyn.limitedsimulation;
 import java.util.HashMap;
 
 import org.ginsim.common.application.GsException;
+import org.ginsim.common.callable.BasicProgressListener;
 import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
@@ -41,40 +42,13 @@ public class LimitedSimulationService implements Service {
 		SimulationParameters params = new SimulationParameters(htg.getAssociatedGraph());
 		params.store.setObject(SimulationParameters.MUTANT, mutant);
 		
-		SimpleSimulationManager simulationManager = new SimpleSimulationManager();
+		BasicProgressListener<Graph> simulationManager = new BasicProgressListener<Graph>();
 		this.simu = new LimitedSimulation(htg, constraint, params, simulationManager);
 		simu.run();
-		return (DynamicGraph) simulationManager.graph;
-		
+		return (DynamicGraph) simulationManager.result;
 	}
 
 	public static HashMap<DynamicNode, HierarchicalNode> getStatesToHierarchicalNodes(DynamicGraph dynamicGraph) {
 		return 	(HashMap<DynamicNode, HierarchicalNode>) ObjectAssociationManager.getInstance().getObject(dynamicGraph, StatesToHierarchicalMappingManager.KEY, true);
 	}
-}
-
-class SimpleSimulationManager implements ProgressListener<Graph> {
-
-	protected Graph graph;
-
-	@Override
-	public void setResult(Graph graph) {
-		this.graph = graph;		
-	}
-
-	@Override
-	public void setProgress(int n) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void setProgress(String s) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void milestone(Object item) {
-		// TODO Auto-generated method stub
-	}
-	
 }
