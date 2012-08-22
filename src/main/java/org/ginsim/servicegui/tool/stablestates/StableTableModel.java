@@ -72,7 +72,7 @@ public class StableTableModel extends AbstractTableModel {
 		}
 		
 		this.variables = variables.toArray();
-		
+		this.nbcol = this.variables.length;
 		fireTableStructureChanged();
 	}
 	
@@ -113,7 +113,7 @@ public class StableTableModel extends AbstractTableModel {
 			return "Name";
 		}
 		
-		if (factory != null) {
+		if (variables != null) {
 			return variables[column-1].toString();
 		}
 		return super.getColumnName(column-1);

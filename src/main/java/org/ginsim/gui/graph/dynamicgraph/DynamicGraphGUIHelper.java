@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -13,6 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.colomoto.logicalmodel.NodeInfo;
+import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Edge;
@@ -91,7 +93,7 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
      * browse the graph, looking for stable states
      * @return the list of stable states found
      */
-    private List getStableStates( DynamicGraph graph) {
+    private List<byte[]> getStableStates( DynamicGraph graph) {
     	// TODO: use cache from the graph itself?
     	
     	List<byte[]> stables = new ArrayList<byte[]>();
@@ -102,54 +104,17 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
         }
         return stables;
     }
-    
-	
-	/**
-	 * Callback for the info panel: open a dialog with the list of stable states
-	 */
-	protected void viewStable( DynamicGraph graph, List<byte[]> stables) {
-		List<NodeInfo> nodeOrder = graph.getNodeOrder();
-        JFrame frame = new JFrame(Translator.getString("STR_stableStates"));
-        frame.setSize(Math.min(30*(nodeOrder.size()+1), 800),
-        		Math.min(25*(stables.size()+2), 600));
-        JScrollPane scroll = new JScrollPane();
-        StableTableModel model = new StableTableModel();
-        try {
-	        model.setResult(stables, graph.getNodeOrder());
-	        scroll.setViewportView(new EnhancedJTable(model));
-	        frame.setContentPane(scroll);
-	        frame.setVisible(true);
-        } catch (Exception e) {
-        	LogManager.error(e);
-        }
-	}
-	
+
+
 	@Override
 	public JPanel getInfoPanel( DynamicGraph graph) {
         JPanel pinfo = new JPanel();
         List<byte[]> stables = getStableStates( graph);
 
-        // just display the number of stable states here and a "show more" button
+        // just display the number of stable states here and a "View" button
         if (stables.size() > 0) {
             pinfo.add(new JLabel("nb stable: "+stables.size()));
-            JButton b_view = new JButton("view");
-            // show all stables: quickly done but, it is "good enough" :)
-            b_view.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent e) {
-                	
-                	// TODO : REFACTORING ACTION
-                	// FIXME: restore info panel for the dynamic graph
-                	
-//                	try{
-//                		viewStable(graph);
-//                	}
-//                	catch( GsException ge){
-//                		// TODO : REFACTORING ACTION
-//                		// TODO : Launch a message box to the user
-//                		LogManager.log( "Unable to get the stable states" + ge);
-//                	}
-                }
-            });
+            JButton b_view = new JButton(new ViewStableAction(graph, stables));
             pinfo.add(b_view);
         } else if (stables.size() > 1) {
             pinfo.add(new JLabel("no stable state."));
@@ -166,4 +131,37 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
 	public List<EditAction> getEditActions(DynamicGraph graph) {
 		return null;
 	}
+}
+
+
+class ViewStableAction extends AbstractAction {
+	
+	private final DynamicGraph graph;
+	private final List<byte[]> stables;
+	
+	public ViewStableAction(DynamicGraph graph, List<byte[]> stables) {
+		super("View");
+		this.graph = graph;
+		this.stables = stables;
+	}
+	
+    public void actionPerformed(ActionEvent e) {
+		List<NodeInfo> nodeOrder = graph.getNodeOrder();
+        int width = 30*(nodeOrder.size()+1);
+        int height = 30 * (stables.size() + 2);
+		JFrame frame = new JFrame(Translator.getString("Stable States in this STG"));
+        frame.setSize(width, height);
+        
+        JScrollPane scroll = new JScrollPane();
+        StableTableModel model = new StableTableModel();
+        try {
+	        model.setResult(stables, graph.getNodeOrder());
+	        scroll.setViewportView(new EnhancedJTable(model));
+	        frame.setContentPane(scroll);
+	        frame.setVisible(true);
+        } catch (Exception ex) {
+        	LogManager.error(ex);
+        }
+	}
+
 }
