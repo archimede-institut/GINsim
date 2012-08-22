@@ -140,12 +140,6 @@ public class Simulation implements Runnable {
 						if (!updater.hasNext()) {
 							helper.setStable();
 							frame.milestone(item);
-							String display = "";
-							for (int i=0 ; i<item.state.length ; i++ ) {
-								display += item.state[i] + " ";
-							}
-							display += "\n";
-							LogManager.trace( display, false); 
 						} else {
 							if (maxdepth == 0 || item.depth < maxdepth) {
 								while (updater.hasNext()) {
