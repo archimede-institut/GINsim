@@ -1,4 +1,4 @@
--- August 9, 2012 4:18:20 PM WEST
+-- August 27, 2012 12:05:17 PM WEST
 -- GINsim implicit representation for NuSMV
 -- Requires NuSMV v2.1+ for CTL properties
 -- Requires NuSMV-ARCTL for ARCTL properties
@@ -11,7 +11,7 @@ IVAR
 -- Simulation mode declaration --
 -- Synchronous
   PCs : { PC_c1 };
-  PC_c1_vars : { PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF };
+  PC_c1_vars : { PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF };
 
 -- Input variables declaration
   DNAdamage : { 0, 1};
@@ -21,21 +21,21 @@ IVAR
 VAR
 -- State variables declaration
   HRAS : {0, 1};
-  ATM : {0, 1};
-  E2F1 : {0, 1, 2};
   p14ARF : {0, 1};
+  ATM : {0, 1};
   CHEK1 : {0, 1};
-  TP53 : {0, 1};
-  MDM2 : {0, 1};
-  CyclinE1 : {0, 1};
-  p21CIP : {0, 1};
-  RB1 : {0, 1, 2};
+  RBL2 : {0, 1};
   p16INK4a : {0, 1};
   CyclinD1 : {0, 1};
-  RBL2 : {0, 1};
   E2F3 : {0, 1, 2};
+  MDM2 : {0, 1};
+  p21CIP : {0, 1};
   CDC25A : {0, 1};
+  RB1 : {0, 1, 2};
+  TP53 : {0, 1};
   CyclinA : {0, 1};
+  CyclinE1 : {0, 1};
+  E2F1 : {0, 1, 2};
 
 ASSIGN
 -- Variable update if conditions are met
@@ -140,183 +140,109 @@ DEFINE
 -- Variable next level regulation
 HRAS_focal :=
   case
-    (GrowthFactors = 0) : 0;
     (GrowthFactors = 1) : 1;
+    TRUE : 0;
   esac;
 E2F1_focal :=
   case
-    (HRAS = 0) & (E2F3 = 0) : 0;
     (HRAS = 0) & (E2F3 = 1) & (RB1 = 0) & (RBL2 = 0) & (ATM = 0) : 1;
     (HRAS = 0) & (E2F3 = 1) & (RB1 = 0) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 0) : 1;
-    (HRAS = 0) & (E2F3 = 1) & (RB1 = 0) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 1) : 2;
-    (HRAS = 0) & (E2F3 = 1) & (RB1 = 0) & (RBL2 = 1) : 0;
     (HRAS = 0) & (E2F3 = 1) & (RB1 = 1) & (RBL2 = 0) & (ATM = 0) : 1;
     (HRAS = 0) & (E2F3 = 1) & (RB1 = 1) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 0) : 1;
-    (HRAS = 0) & (E2F3 = 1) & (RB1 = 1) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 1) : 2;
-    (HRAS = 0) & (E2F3 = 1) & (RB1 = 1) & (RBL2 = 1) : 0;
-    (HRAS = 0) & (E2F3 = 1) & (RB1 = 2) : 0;
     (HRAS = 0) & (E2F3 = 2) & (RB1 = 0) & (RBL2 = 0) & (ATM = 0) : 1;
     (HRAS = 0) & (E2F3 = 2) & (RB1 = 0) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 0) : 1;
-    (HRAS = 0) & (E2F3 = 2) & (RB1 = 0) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 1) : 2;
-    (HRAS = 0) & (E2F3 = 2) & (RB1 = 0) & (RBL2 = 1) : 0;
     (HRAS = 0) & (E2F3 = 2) & (RB1 = 1) & (RBL2 = 0) & (ATM = 0) : 1;
     (HRAS = 0) & (E2F3 = 2) & (RB1 = 1) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 0) : 1;
-    (HRAS = 0) & (E2F3 = 2) & (RB1 = 1) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 1) : 2;
-    (HRAS = 0) & (E2F3 = 2) & (RB1 = 1) & (RBL2 = 1) : 0;
-    (HRAS = 0) & (E2F3 = 2) & (RB1 = 2) : 0;
     (HRAS = 1) & (RB1 = 0) & (RBL2 = 0) & (ATM = 0) : 1;
     (HRAS = 1) & (RB1 = 0) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 0) : 1;
-    (HRAS = 1) & (RB1 = 0) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 1) : 2;
-    (HRAS = 1) & (RB1 = 0) & (RBL2 = 1) : 0;
     (HRAS = 1) & (RB1 = 1) & (RBL2 = 0) & (ATM = 0) : 1;
     (HRAS = 1) & (RB1 = 1) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 0) : 1;
-    (HRAS = 1) & (RB1 = 1) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 1) : 2;
-    (HRAS = 1) & (RB1 = 1) & (RBL2 = 1) : 0;
-    (HRAS = 1) & (RB1 = 2) : 0;
+    TRUE : 0;
   esac;
 E2F3_focal :=
   case
-    (HRAS = 0) : 0;
     (HRAS = 1) & (RB1 = 0) & (CHEK1 = 0) : 1;
-    (HRAS = 1) & (RB1 = 0) & (CHEK1 = 1) : 2;
     (HRAS = 1) & (RB1 = 1) & (CHEK1 = 0) : 1;
-    (HRAS = 1) & (RB1 = 1) & (CHEK1 = 1) : 2;
-    (HRAS = 1) & (RB1 = 2) : 0;
+    TRUE : 0;
   esac;
 CyclinD1_focal :=
   case
-    (HRAS = 0) : 0;
     (HRAS = 1) & (p16INK4a = 0) & (p21CIP = 0) : 1;
-    (HRAS = 1) & (p16INK4a = 0) & (p21CIP = 1) : 0;
-    (HRAS = 1) & (p16INK4a = 1) : 0;
+    TRUE : 0;
   esac;
 CyclinE1_focal :=
   case
-    (E2F1 = 0) & (E2F3 = 0) : 0;
-    (E2F1 = 0) & (E2F3 = 1) & (CDC25A = 0) : 0;
     (E2F1 = 0) & (E2F3 = 1) & (CDC25A = 1) & (RBL2 = 0) & (p21CIP = 0) : 1;
-    (E2F1 = 0) & (E2F3 = 1) & (CDC25A = 1) & (RBL2 = 0) & (p21CIP = 1) : 0;
-    (E2F1 = 0) & (E2F3 = 1) & (CDC25A = 1) & (RBL2 = 1) : 0;
-    (E2F1 = 0) & (E2F3 = 2) & (CDC25A = 0) : 0;
     (E2F1 = 0) & (E2F3 = 2) & (CDC25A = 1) & (RBL2 = 0) & (p21CIP = 0) : 1;
-    (E2F1 = 0) & (E2F3 = 2) & (CDC25A = 1) & (RBL2 = 0) & (p21CIP = 1) : 0;
-    (E2F1 = 0) & (E2F3 = 2) & (CDC25A = 1) & (RBL2 = 1) : 0;
-    (E2F1 = 1) & (CDC25A = 0) : 0;
     (E2F1 = 1) & (CDC25A = 1) & (RBL2 = 0) & (p21CIP = 0) : 1;
-    (E2F1 = 1) & (CDC25A = 1) & (RBL2 = 0) & (p21CIP = 1) : 0;
-    (E2F1 = 1) & (CDC25A = 1) & (RBL2 = 1) : 0;
-    (E2F1 = 2) & (CDC25A = 0) : 0;
     (E2F1 = 2) & (CDC25A = 1) & (RBL2 = 0) & (p21CIP = 0) : 1;
-    (E2F1 = 2) & (CDC25A = 1) & (RBL2 = 0) & (p21CIP = 1) : 0;
-    (E2F1 = 2) & (CDC25A = 1) & (RBL2 = 1) : 0;
+    TRUE : 0;
   esac;
 CyclinA_focal :=
   case
-    (E2F1 = 0) & (E2F3 = 0) : 0;
-    (E2F1 = 0) & (E2F3 = 1) & (CDC25A = 0) : 0;
     (E2F1 = 0) & (E2F3 = 1) & (CDC25A = 1) & (RBL2 = 0) & (p21CIP = 0) : 1;
-    (E2F1 = 0) & (E2F3 = 1) & (CDC25A = 1) & (RBL2 = 0) & (p21CIP = 1) : 0;
-    (E2F1 = 0) & (E2F3 = 1) & (CDC25A = 1) & (RBL2 = 1) : 0;
-    (E2F1 = 0) & (E2F3 = 2) & (CDC25A = 0) : 0;
     (E2F1 = 0) & (E2F3 = 2) & (CDC25A = 1) & (RBL2 = 0) & (p21CIP = 0) : 1;
-    (E2F1 = 0) & (E2F3 = 2) & (CDC25A = 1) & (RBL2 = 0) & (p21CIP = 1) : 0;
-    (E2F1 = 0) & (E2F3 = 2) & (CDC25A = 1) & (RBL2 = 1) : 0;
-    (E2F1 = 1) & (CDC25A = 0) : 0;
     (E2F1 = 1) & (CDC25A = 1) & (RBL2 = 0) & (p21CIP = 0) : 1;
-    (E2F1 = 1) & (CDC25A = 1) & (RBL2 = 0) & (p21CIP = 1) : 0;
-    (E2F1 = 1) & (CDC25A = 1) & (RBL2 = 1) : 0;
-    (E2F1 = 2) & (CDC25A = 0) : 0;
     (E2F1 = 2) & (CDC25A = 1) & (RBL2 = 0) & (p21CIP = 0) : 1;
-    (E2F1 = 2) & (CDC25A = 1) & (RBL2 = 0) & (p21CIP = 1) : 0;
-    (E2F1 = 2) & (CDC25A = 1) & (RBL2 = 1) : 0;
+    TRUE : 0;
   esac;
 CDC25A_focal :=
   case
-    (E2F1 = 0) & (E2F3 = 0) : 0;
     (E2F1 = 0) & (E2F3 = 1) & (RBL2 = 0) & (CHEK1 = 0) : 1;
-    (E2F1 = 0) & (E2F3 = 1) & (RBL2 = 0) & (CHEK1 = 1) : 0;
-    (E2F1 = 0) & (E2F3 = 1) & (RBL2 = 1) : 0;
     (E2F1 = 0) & (E2F3 = 2) & (RBL2 = 0) & (CHEK1 = 0) : 1;
-    (E2F1 = 0) & (E2F3 = 2) & (RBL2 = 0) & (CHEK1 = 1) : 0;
-    (E2F1 = 0) & (E2F3 = 2) & (RBL2 = 1) : 0;
     (E2F1 = 1) & (RBL2 = 0) & (CHEK1 = 0) : 1;
-    (E2F1 = 1) & (RBL2 = 0) & (CHEK1 = 1) : 0;
-    (E2F1 = 1) & (RBL2 = 1) : 0;
     (E2F1 = 2) & (RBL2 = 0) & (CHEK1 = 0) : 1;
-    (E2F1 = 2) & (RBL2 = 0) & (CHEK1 = 1) : 0;
-    (E2F1 = 2) & (RBL2 = 1) : 0;
+    TRUE : 0;
   esac;
 p16INK4a_focal :=
   case
-    (GrowthInhibitors = 0) : 0;
     (GrowthInhibitors = 1) & (RB1 = 0) : 1;
-    (GrowthInhibitors = 1) & (RB1 = 1) : 0;
-    (GrowthInhibitors = 1) & (RB1 = 2) : 0;
+    TRUE : 0;
   esac;
 RB1_focal :=
   case
-    (CyclinD1 = 0) & (CyclinE1 = 0) & (CyclinA = 0) & (p16INK4a = 0) : 2;
-    (CyclinD1 = 0) & (CyclinE1 = 0) & (CyclinA = 0) & (p16INK4a = 1) : 0;
-    (CyclinD1 = 0) & (CyclinE1 = 0) & (CyclinA = 1) : 0;
-    (CyclinD1 = 0) & (CyclinE1 = 1) : 0;
     (CyclinD1 = 1) & (CyclinE1 = 0) & (CyclinA = 0) & (p16INK4a = 0) : 1;
-    (CyclinD1 = 1) & (CyclinE1 = 0) & (CyclinA = 0) & (p16INK4a = 1) : 0;
-    (CyclinD1 = 1) & (CyclinE1 = 0) & (CyclinA = 1) : 0;
-    (CyclinD1 = 1) & (CyclinE1 = 1) : 0;
+    TRUE : 0;
   esac;
 RBL2_focal :=
   case
     (CyclinD1 = 0) & (CyclinE1 = 0) : 1;
-    (CyclinD1 = 0) & (CyclinE1 = 1) : 0;
-    (CyclinD1 = 1) : 0;
+    TRUE : 0;
   esac;
 p21CIP_focal :=
   case
-    (GrowthInhibitors = 0) & (CyclinE1 = 0) & (TP53 = 0) : 0;
     (GrowthInhibitors = 0) & (CyclinE1 = 0) & (TP53 = 1) : 1;
-    (GrowthInhibitors = 0) & (CyclinE1 = 1) : 0;
     (GrowthInhibitors = 1) & (CyclinE1 = 0) : 1;
-    (GrowthInhibitors = 1) & (CyclinE1 = 1) : 0;
+    TRUE : 0;
   esac;
 ATM_focal :=
   case
-    (DNAdamage = 0) : 0;
-    (DNAdamage = 1) & (E2F1 = 0) : 0;
     (DNAdamage = 1) & (E2F1 = 1) : 1;
     (DNAdamage = 1) & (E2F1 = 2) : 1;
+    TRUE : 0;
   esac;
 CHEK1_focal :=
   case
-    (E2F1 = 0) : 0;
-    (E2F1 = 1) & (ATM = 0) : 0;
     (E2F1 = 1) & (ATM = 1) : 1;
-    (E2F1 = 2) & (ATM = 0) : 0;
     (E2F1 = 2) & (ATM = 1) : 1;
+    TRUE : 0;
   esac;
 MDM2_focal :=
   case
-    (ATM = 0) & (TP53 = 0) : 0;
     (ATM = 0) & (TP53 = 1) & (p14ARF = 0) : 1;
-    (ATM = 0) & (TP53 = 1) & (p14ARF = 1) : 0;
-    (ATM = 1) : 0;
+    TRUE : 0;
   esac;
 TP53_focal :=
   case
-    (E2F1 = 0) : 0;
-    (E2F1 = 1) & (ATM = 0) : 0;
-    (E2F1 = 1) & (ATM = 1) & (CHEK1 = 0) : 0;
     (E2F1 = 1) & (ATM = 1) & (CHEK1 = 1) & (MDM2 = 0) : 1;
-    (E2F1 = 1) & (ATM = 1) & (CHEK1 = 1) & (MDM2 = 1) : 0;
-    (E2F1 = 2) & (ATM = 0) : 0;
-    (E2F1 = 2) & (ATM = 1) & (CHEK1 = 0) : 0;
     (E2F1 = 2) & (ATM = 1) & (CHEK1 = 1) & (MDM2 = 0) : 1;
-    (E2F1 = 2) & (ATM = 1) & (CHEK1 = 1) & (MDM2 = 1) : 0;
+    TRUE : 0;
   esac;
 p14ARF_focal :=
   case
-    (E2F1 = 0) : 0;
     (E2F1 = 1) : 1;
     (E2F1 = 2) : 1;
+    TRUE : 0;
   esac;
 
 HRAS_inc := HRAS_focal > HRAS;
@@ -383,72 +309,68 @@ p14ARF_inc := p14ARF_focal > p14ARF;
 p14ARF_dec := p14ARF_focal < p14ARF;
 p14ARF_std := p14ARF_focal = p14ARF;
 
-update_HRAS_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_E2F1_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_E2F3_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_CyclinD1_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_CyclinE1_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_CyclinA_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_CDC25A_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_p16INK4a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_RB1_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_RBL2_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_p21CIP_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_ATM_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_CHEK1_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_MDM2_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_TP53_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_p14ARF_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_E2F1_Apoptosis_Proliferation_Growth_Arrest_Senescence_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_HRAS_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_E2F1_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_E2F3_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_CyclinD1_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_CyclinE1_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_CyclinA_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_CDC25A_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_p16INK4a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_RB1_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_RBL2_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_p21CIP_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_ATM_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_CHEK1_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_MDM2_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_TP53_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_p14ARF_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
 
--- There are no input nor output variables in the weak/strong stable states description
+-- DISCLAIMER: There are no INput nor OUTput variables in the weak/strong stable states description
 stableStates := weakSS | strongSS;
+
 -- Weak stable states differing only on input variables will not be distinguished !!
 weakSS := weakSS1 | weakSS2 | weakSS3 | weakSS4 | weakSS5 | weakSS6 | weakSS7;
-weakSS1 := HRAS=0 & E2F1=1 & E2F3=0 & CyclinD1=0 & CyclinE1=0 & CyclinA=0 & CDC25A=0 & p16INK4a=0 & RB1=0 & RBL2=0 & p21CIP=0 & ATM=2 & CHEK1=1 & MDM2=1 & TP53=0 & p14ARF=0;
-weakSS2 := HRAS=1 & E2F1=0 & E2F3=0 & CyclinD1=1 & CyclinE1=1 & CyclinA=1 & CDC25A=1 & p16INK4a=1 & RB1=1 & RBL2=1 & p21CIP=0 & ATM=0 & CHEK1=0 & MDM2=0 & TP53=0 & p14ARF=0;
-weakSS3 := HRAS=1 & E2F1=0 & E2F3=0 & CyclinD1=1 & CyclinE1=1 & CyclinA=1 & CDC25A=0 & p16INK4a=1 & RB1=1 & RBL2=1 & p21CIP=1 & ATM=0 & CHEK1=0 & MDM2=0 & TP53=0 & p14ARF=0;
-weakSS4 := HRAS=0 & E2F1=1 & E2F3=1 & CyclinD1=0 & CyclinE1=0 & CyclinA=0 & CDC25A=0 & p16INK4a=0 & RB1=0 & RBL2=0 & p21CIP=1 & ATM=0 & CHEK1=1 & MDM2=1 & TP53=0 & p14ARF=0;
-weakSS5 := HRAS=0 & E2F1=1 & E2F3=0 & CyclinD1=0 & CyclinE1=0 & CyclinA=0 & CDC25A=0 & p16INK4a=0 & RB1=0 & RBL2=0 & p21CIP=0 & ATM=2 & CHEK1=1 & MDM2=0 & TP53=0 & p14ARF=0;
-weakSS6 := HRAS=0 & E2F1=1 & E2F3=1 & CyclinD1=1 & CyclinE1=0 & CyclinA=1 & CDC25A=0 & p16INK4a=0 & RB1=0 & RBL2=0 & p21CIP=1 & ATM=0 & CHEK1=1 & MDM2=1 & TP53=0 & p14ARF=0;
-weakSS7 := HRAS=0 & E2F1=1 & E2F3=0 & CyclinD1=1 & CyclinE1=0 & CyclinA=0 & CDC25A=0 & p16INK4a=0 & RB1=0 & RBL2=0 & p21CIP=0 & ATM=2 & CHEK1=1 & MDM2=1 & TP53=0 & p14ARF=0;
---
+weakSS1 := HRAS=1 & E2F1=0 & E2F3=1 & CyclinD1=0 & CyclinE1=0 & CyclinA=0 & CDC25A=0 & p16INK4a=1 & RB1=0 & RBL2=1 & p21CIP=1 & ATM=0 & CHEK1=0 & MDM2=0 & TP53=0 & p14ARF=0;
+weakSS2 := HRAS=1 & E2F1=1 & E2F3=1 & CyclinD1=1 & CyclinE1=1 & CyclinA=1 & CDC25A=1 & p16INK4a=0 & RB1=0 & RBL2=0 & p21CIP=0 & ATM=0 & CHEK1=0 & MDM2=0 & TP53=0 & p14ARF=1;
+weakSS3 := HRAS=0 & E2F1=0 & E2F3=0 & CyclinD1=0 & CyclinE1=0 & CyclinA=0 & CDC25A=0 & p16INK4a=0 & RB1=2 & RBL2=1 & p21CIP=0 & ATM=0 & CHEK1=0 & MDM2=0 & TP53=0 & p14ARF=0;
+weakSS4 := HRAS=1 & E2F1=1 & E2F3=1 & CyclinD1=0 & CyclinE1=1 & CyclinA=1 & CDC25A=1 & p16INK4a=1 & RB1=0 & RBL2=0 & p21CIP=0 & ATM=0 & CHEK1=0 & MDM2=0 & TP53=0 & p14ARF=1;
+weakSS5 := HRAS=0 & E2F1=0 & E2F3=0 & CyclinD1=0 & CyclinE1=0 & CyclinA=0 & CDC25A=0 & p16INK4a=0 & RB1=2 & RBL2=1 & p21CIP=1 & ATM=0 & CHEK1=0 & MDM2=0 & TP53=0 & p14ARF=0;
+weakSS6 := HRAS=0 & E2F1=0 & E2F3=0 & CyclinD1=0 & CyclinE1=0 & CyclinA=0 & CDC25A=0 & p16INK4a=1 & RB1=0 & RBL2=1 & p21CIP=1 & ATM=0 & CHEK1=0 & MDM2=0 & TP53=0 & p14ARF=0;
+weakSS7 := HRAS=1 & E2F1=0 & E2F3=0 & CyclinD1=0 & CyclinE1=0 & CyclinA=0 & CDC25A=0 & p16INK4a=0 & RB1=2 & RBL2=1 & p21CIP=1 & ATM=0 & CHEK1=0 & MDM2=0 & TP53=0 & p14ARF=0;
+
+-- Strong stable states - for every valuation of input variables
 strongSS := FALSE;
 
--- Output variables declaration
+-- Declaration of output variables
 E2F1_Apoptosis :=
   case
-    (E2F1 = 0) : 0;
-    (E2F1 = 1) : 0;
-    (E2F1 = 2) & (TP53 = 0) : 0;
     (E2F1 = 2) & (TP53 = 1) : 1;
+    TRUE : 0;
   esac;
 Proliferation :=
   case
-    (CyclinE1 = 0) & (CyclinA = 0) : 0;
     (CyclinE1 = 0) & (CyclinA = 1) : 1;
     (CyclinE1 = 1) : 1;
+    TRUE : 0;
   esac;
 Growth_Arrest :=
   case
-    (RB1 = 0) & (RBL2 = 0) & (p21CIP = 0) : 0;
     (RB1 = 0) & (RBL2 = 0) & (p21CIP = 1) : 1;
     (RB1 = 0) & (RBL2 = 1) : 1;
-    (RB1 = 1) & (RBL2 = 0) & (p21CIP = 0) : 0;
     (RB1 = 1) & (RBL2 = 0) & (p21CIP = 1) : 1;
     (RB1 = 1) & (RBL2 = 1) : 1;
     (RB1 = 2) : 1;
+    TRUE : 0;
   esac;
 Senescence :=
   case
-    (p16INK4a = 0) & (RBL2 = 0) : 0;
-    (p16INK4a = 0) & (RBL2 = 1) & (p21CIP = 0) : 0;
-    (p16INK4a = 0) & (RBL2 = 1) & (p21CIP = 1) & (TP53 = 0) : 0;
     (p16INK4a = 0) & (RBL2 = 1) & (p21CIP = 1) & (TP53 = 1) : 1;
-    (p16INK4a = 1) & (p21CIP = 0) : 0;
     (p16INK4a = 1) & (p21CIP = 1) : 1;
+    TRUE : 0;
   esac;
 
-
+-- Authorized NuSMV transitions
 TRANS
 next(HRAS) != HRAS |
 next(E2F1) != E2F1 |
@@ -470,14 +392,16 @@ stableStates;
 
 DEFINE
 -- Declaration of core variables restriction list
--- No Initial State list restriction selected !
+-- Empty !
+
 -- Declaration of input variables restriction list
--- No Initial State list restriction selected !
+-- Empty !
 
 --------------------------------------------------
 -- Reachability Properties using VARYING INPUTS --
 -- i.e. there is NO CONTROL on the input change at each transition
 --
+-- EXAMPLES --
 -- 1. Between an initial state (pattern) and a stable state (pattern)
 --   a. Existence of at least one path connecting two state patterns
 -- INIT initState;

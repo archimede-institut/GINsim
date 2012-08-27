@@ -3,29 +3,24 @@ package org.ginsim.service.export.nusmv;
 import java.io.IOException;
 import java.io.Writer;
 import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
+import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
 import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
+import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.service.ServiceManager;
-import org.ginsim.service.tool.modelsimplifier.ModelRewiring;
-import org.ginsim.service.tool.modelsimplifier.ModelSimplifierService;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
 import org.ginsim.service.tool.stablestates.StableStatesService;
@@ -60,36 +55,36 @@ public class NuSMVEncoder {
 		out.write("-- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE\n");
 		out.write("\n\nMODULE main\n");
 
-		// RegulatoryNode simplification on pseudo-outputs
-		ModelSimplifierService mss = ServiceManager.getManager().getService(
-				ModelSimplifierService.class);
-		ModelRewiring mr = mss.getRewirer(config.getGraph());
+		LogicalModel model = config.getGraph().getModel();
+		List<NodeInfo> nodeOrder = model.getNodeOrder();
 
-		// Definition of the OMDD trees
-		// OMDDNode[] t_tree = config.getGraph().getAllTrees(true);
-		OMDDNode[] t_tree = mr.rewirePseudoOutputs();
-		// Application of the user-defined Perturbation
-		Perturbation mutant = (Perturbation) config.store.getObject(0);
-		if (mutant != null) {
-			mutant.apply(t_tree, config.getGraph());
-		}
-
-		// TODO: correct PCs when a subset has the same rank distinct from the
-		// rest
-		List<RegulatoryNode> nodeOrder = config.getGraph().getNodeOrder();
-		String[] t_regulators = new String[nodeOrder.size()];
-		RegulatoryNode[] t_vertex = new RegulatoryNode[nodeOrder.size()];
+		// Check all the names.lenght > 1
+		NodeInfo[] aNodeOrder = new NodeInfo[nodeOrder.size()];
 		boolean hasInputVars = false;
-		for (int i = 0; i < t_vertex.length; i++) {
-			RegulatoryNode node = nodeOrder.get(i);
-			t_vertex[i] = node;
-			t_regulators[i] = node.getId();
-			if (node.getId().length() == 1)
+		for (int i = 0; i < aNodeOrder.length; i++) {
+			NodeInfo node = model.getNodeOrder().get(i);
+			if (node.getNodeID().length() == 1)
 				throw new GsException(GsException.GRAVITY_ERROR,
 						"NuSMV does not support single-letter component names");
+			aNodeOrder[i] = node;
 			if (node.isInput())
 				hasInputVars = true;
 		}
+
+		// Apply perturbation
+		Perturbation mutant = (Perturbation) config.store.getObject(0);
+		if (mutant != null) {
+			// Application of the user-defined Perturbation
+			model = mutant.apply(model);
+		}
+		ModelReducer reducer = new ModelReducer(model);
+		reducer.removePseudoOutputs();
+		model = reducer.getModel();
+		List<NodeInfo> coreNodes = model.getNodeOrder();
+		List<NodeInfo> outputNodes = model.getExtraComponents();
+
+		// TODO: correct PCs
+		// when a subset has the same rank distinct from the rest
 
 		String sTmp;
 		int[][] iaTmp = null;
@@ -113,11 +108,11 @@ public class NuSMVEncoder {
 			sTmp = "PC_c1";
 			tmPcNum2Name.put(1, sTmp);
 			// every variable -> 1 class
-			for (int i = 0; i < nodeOrder.size(); i++) {
-				sTmp += "_" + t_regulators[i];
+			for (int i = 0; i < coreNodes.size(); i++) {
+				sTmp += "_" + coreNodes.get(i).getNodeID();
 				tmVarNum2PcNum.put(i, new Integer[] { 0, 1, 0 });
 			}
-			for (int i = 0; i < nodeOrder.size(); i++)
+			for (int i = 0; i < coreNodes.size(); i++)
 				tmVarNum2SubPcName.put(i, new String[] { null, sTmp, null });
 			out.write(sTmp + " };\n");
 			break;
@@ -144,7 +139,7 @@ public class NuSMVEncoder {
 				switch (iaTmp[i][1]) {
 				case 0: // Synchronous
 					for (int j = 2; j < iaTmp[i].length; j += 2) {
-						sTmp += "_" + t_regulators[iaTmp[i][j]];
+						sTmp += "_" + aNodeOrder[iaTmp[i][j]].getNodeID();
 						Integer[] aiSplits = (tmVarNum2PcNum
 								.containsKey(iaTmp[i][j])) ? tmVarNum2PcNum
 								.get(iaTmp[i][j]) : new Integer[] { 0, 0, 0 };
@@ -168,7 +163,8 @@ public class NuSMVEncoder {
 					for (int j = 2; j < iaTmp[i].length; j += 2) {
 						if (j > 2)
 							out.write(", ");
-						String sub = sTmp + "_" + t_regulators[iaTmp[i][j]];
+						String sub = sTmp + "_"
+								+ aNodeOrder[iaTmp[i][j]].getNodeID();
 						if (iaTmp[i][j + 1] != 0)
 							sub += (iaTmp[i][j + 1] == 1) ? "Plus" : "Minus";
 						out.write(sub);
@@ -193,8 +189,8 @@ public class NuSMVEncoder {
 		default:
 			out.write("-- Asynchronous\n  PCs : { ");
 			boolean bFirst = true;
-			for (int i = 0; i < t_vertex.length; i++) {
-				if (t_vertex[i].isInput() || t_vertex[i].isOutput())
+			for (int i = 0; i < coreNodes.size(); i++) {
+				if (coreNodes.get(i).isInput())
 					continue;
 				if (!bFirst)
 					out.write(", ");
@@ -206,10 +202,10 @@ public class NuSMVEncoder {
 				tmPcNum2Name.put(i + 1, sTmp);
 			}
 			out.write(" };\n");
-			for (int i = 0; i < t_vertex.length; i++) {
-				if (t_vertex[i].isInput() || t_vertex[i].isOutput())
+			for (int i = 0; i < coreNodes.size(); i++) {
+				if (coreNodes.get(i).isInput())
 					continue;
-				sTmp = "PC_c" + (i + 1) + "_" + t_regulators[i];
+				sTmp = "PC_c" + (i + 1) + "_" + coreNodes.get(i).getNodeID();
 				out.write("  PC_c" + (i + 1) + "_vars : { " + sTmp + " };\n");
 				tmVarNum2SubPcName.put(i, new String[] { null, sTmp, null });
 			}
@@ -218,13 +214,13 @@ public class NuSMVEncoder {
 
 		if (hasInputVars) {
 			out.write("\n-- Input variables declaration\n");
-			for (int i = 0; i < t_vertex.length; i++) {
-				if (t_vertex[i].isInput()) {
+			for (int i = 0; i < coreNodes.size(); i++) {
+				if (coreNodes.get(i).isInput()) {
 					String s_levels = "0";
-					for (int j = 1; j <= t_vertex[i].getMaxValue(); j++)
+					for (int j = 1; j <= coreNodes.get(i).getMax(); j++)
 						s_levels += ", " + j;
-					out.write("  " + t_regulators[i] + " : { " + s_levels
-							+ "};\n");
+					out.write("  " + coreNodes.get(i).getNodeID() + " : { "
+							+ s_levels + "};\n");
 				}
 			}
 		}
@@ -257,50 +253,20 @@ public class NuSMVEncoder {
 		}
 
 		// Topological sorting of the state variables
-		int[] t_cst = new int[nodeOrder.size()];
-		HashMap<String, ArrayList<String>> hmRegulators = new HashMap<String, ArrayList<String>>();
-		for (int i = 0; i < t_vertex.length; i++) {
-			for (int j = 0; j < t_cst.length; j++)
-				t_cst[j] = -1;
-			hmRegulators.put(t_regulators[i], new ArrayList<String>(
-					nodeRegulators(t_tree[i], t_vertex, t_cst)));
-		}
-		// Starting Nodes
-		ArrayList<Integer> alStarting = new ArrayList<Integer>();
-		int min = hmRegulators.size(), pos = -1;
-		boolean[] visited = new boolean[t_vertex.length];
-		for (int i = 0; i < t_vertex.length; i++) {
-			visited[i] = false;
-			ArrayList<String> alTmp = hmRegulators.get(t_regulators[i]);
-			if (alTmp.isEmpty() || alTmp.get(0) == t_regulators[i])
-				alStarting.add(new Integer(i));
-			else if (alTmp.size() < min) {
-				min = alTmp.size();
-				pos = i;
-			}
-		}
-		if (alStarting.isEmpty())
-			alStarting.add(new Integer(pos));
-		ArrayList<Integer> alSorted = new ArrayList<Integer>();
-		ListIterator<Integer> li = alStarting.listIterator();
-		while (li.hasNext())
-			topoSortVisit(hmRegulators, t_regulators, t_vertex,
-					((Integer) li.next()).intValue(), visited, alSorted);
-		Collections.reverse(alSorted);
+		NodeInfoSorter nis = new NodeInfoSorter();
+		List<NodeInfo> nodeOrderDecl = nis.getNodesByIncNumberRegulators(model);
 
-		// Print State variables according to the Topological Sort!!!
 		out.write("\n-- State variables declaration\n");
-		for (int i = 0; i < t_vertex.length; i++) {
-			int currIndex = alSorted.get(i).intValue();
-			if (t_vertex[currIndex].isInput() || t_vertex[currIndex].isOutput())
+		for (int i = 0; i < coreNodes.size(); i++) {
+			if (nodeOrderDecl.get(i).isInput())
 				continue;
 			String s_levels = "0";
 
-			for (int j = 1; j <= t_vertex[currIndex].getMaxValue(); j++)
+			for (int j = 1; j <= nodeOrderDecl.get(i).getMax(); j++)
 				s_levels += ", " + j;
 
-			out.write("  " + t_regulators[currIndex] + " : {" + s_levels
-					+ "};\n");
+			out.write("  " + nodeOrderDecl.get(i).getNodeID() + " : {"
+					+ s_levels + "};\n");
 		}
 
 		out.write("\nASSIGN");
@@ -315,19 +281,20 @@ public class NuSMVEncoder {
 						sTmp += "TRUE";
 					} else {
 						for (int v = 2; v < iaTmp[c].length; v += 2) {
-							if (t_vertex[iaTmp[c][v]].isOutput())
-								continue;
 							if (sTmp.length() > 0)
 								sTmp += " | ";
 							switch (iaTmp[c][v + 1]) {
 							case 1:
-								sTmp += t_regulators[iaTmp[c][v]] + "_inc";
+								sTmp += aNodeOrder[iaTmp[c][v]].getNodeID()
+										+ "_inc";
 								break;
 							case -1:
-								sTmp += t_regulators[iaTmp[c][v]] + "_dec";
+								sTmp += aNodeOrder[iaTmp[c][v]].getNodeID()
+										+ "_dec";
 								break;
 							default:
-								sTmp += "!" + t_regulators[iaTmp[c][v]]
+								sTmp += "!"
+										+ aNodeOrder[iaTmp[c][v]].getNodeID()
 										+ "_std";
 							}
 						}
@@ -347,72 +314,72 @@ public class NuSMVEncoder {
 		// that there is a dependency on Input variables :/
 
 		out.write("\n-- Variable update if conditions are met\n");
-		for (int v = 0; v < t_vertex.length; v++) {
-			if (t_vertex[v].isInput() || t_vertex[v].isOutput())
+		for (int v = 0; v < coreNodes.size(); v++) {
+			if (coreNodes.get(v).isInput())
 				continue;
 			// The real next(Variable) if conditions are satisfied
-			out.write("next(" + t_regulators[v] + ") := \n");
+			out.write("next(" + coreNodes.get(v).getNodeID() + ") := \n");
 			out.write("  case\n");
 
 			// Class entry conditions
 			Integer[] aiSplits = tmVarNum2PcNum.get(v);
-			out.write("    update_" + t_regulators[v]);
+			out.write("    update_" + coreNodes.get(v).getNodeID());
 			if (aiSplits[2] > 0)
 				out.write("Plus");
-			out.write("_OK & (" + t_regulators[v] + "_inc) : ");
-			out.write(((t_vertex[v].getMaxValue() > 1) ? t_regulators[v]
-					+ " + 1" : "1")
+			out.write("_OK & (" + coreNodes.get(v).getNodeID() + "_inc) : ");
+			out.write(((coreNodes.get(v).getMax() > 1) ? coreNodes.get(v)
+					.getNodeID() + " + 1" : "1")
 					+ ";\n");
-			out.write("    update_" + t_regulators[v]);
+			out.write("    update_" + coreNodes.get(v).getNodeID());
 			if (aiSplits[0] > 0)
 				out.write("Minus");
-			out.write("_OK & (" + t_regulators[v] + "_dec) : ");
-			out.write(((t_vertex[v].getMaxValue() > 1) ? t_regulators[v]
-					+ " - 1" : "0")
+			out.write("_OK & (" + coreNodes.get(v).getNodeID() + "_dec) : ");
+			out.write(((coreNodes.get(v).getMax() > 1) ? coreNodes.get(v)
+					.getNodeID() + " - 1" : "0")
 					+ ";\n");
-			out.write("    TRUE : " + t_regulators[v] + ";\n");
+			out.write("    TRUE : " + coreNodes.get(v).getNodeID() + ";\n");
 			out.write("  esac;\n");
 		}
 
 		out.write("\nDEFINE\n");
 
+		// Nodes actual logical rules
 		out.write("-- Variable next level regulation\n");
-		for (int i = 0; i < t_vertex.length; i++) {
-			if (t_vertex[i].isInput() || t_vertex[i].isOutput())
+		int[] kMDDs = model.getLogicalFunctions();
+		for (int i = 0; i < coreNodes.size(); i++) {
+			if (coreNodes.get(i).isInput())
 				continue;
-			out.write(t_vertex[i].getId() + "_focal :=\n");
+			out.write(coreNodes.get(i).getNodeID() + "_focal :=\n");
 			out.write("  case\n");
-			for (int j = 0; j < t_cst.length; j++)
-				t_cst[j] = -1;
-			node2SMV(t_tree[i], out, t_vertex, t_cst);
+			nodeRules2NuSMV(out, model, kMDDs[i], coreNodes);
 			out.write("  esac;\n");
 		}
 		out.write("\n");
 
-		for (int v = 0; v < t_vertex.length; v++) {
-			if (t_vertex[v].isInput() || t_vertex[v].isOutput())
+		for (int v = 0; v < coreNodes.size(); v++) {
+			if (coreNodes.get(v).isInput())
 				continue;
-			out.write(t_regulators[v] + "_inc := ");
-			out.write(t_regulators[v] + "_focal > ");
-			out.write(t_regulators[v] + ";\n");
-			out.write(t_regulators[v] + "_dec := ");
-			out.write(t_regulators[v] + "_focal < ");
-			out.write(t_regulators[v] + ";\n");
-			out.write(t_regulators[v] + "_std := ");
-			out.write(t_regulators[v] + "_focal = ");
-			out.write(t_regulators[v] + ";\n\n");
+			out.write(coreNodes.get(v).getNodeID() + "_inc := ");
+			out.write(coreNodes.get(v).getNodeID() + "_focal > ");
+			out.write(coreNodes.get(v).getNodeID() + ";\n");
+			out.write(coreNodes.get(v).getNodeID() + "_dec := ");
+			out.write(coreNodes.get(v).getNodeID() + "_focal < ");
+			out.write(coreNodes.get(v).getNodeID() + ";\n");
+			out.write(coreNodes.get(v).getNodeID() + "_std := ");
+			out.write(coreNodes.get(v).getNodeID() + "_focal = ");
+			out.write(coreNodes.get(v).getNodeID() + ";\n\n");
 		}
 
-		for (int v = 0; v < t_vertex.length; v++) {
-			if (t_vertex[v].isInput() || t_vertex[v].isOutput())
+		for (int v = 0; v < coreNodes.size(); v++) {
+			if (coreNodes.get(v).isInput())
 				continue;
 			Integer[] aiSplits = tmVarNum2PcNum.get(v);
 			String[] saSubName = tmVarNum2SubPcName.get(v);
 			boolean bPlus = (aiSplits[2] > 0);
 			int pc = (bPlus) ? aiSplits[2] : aiSplits[1];
 			String sub = (bPlus) ? saSubName[2] : saSubName[1];
-			out.write("update_" + t_regulators[v] + ((bPlus) ? "Plus" : "")
-					+ "_OK := (PCs = ");
+			out.write("update_" + coreNodes.get(v).getNodeID()
+					+ ((bPlus) ? "Plus" : "") + "_OK := (PCs = ");
 			out.write(tmPcNum2Name.get(pc) + ") & (");
 			out.write(tmPcNum2Name.get(pc) + "_vars = ");
 			out.write(sub);
@@ -424,7 +391,8 @@ public class NuSMVEncoder {
 
 			if (bPlus) { // There's also a Minus transition
 				pc = aiSplits[0];
-				out.write("update_" + t_regulators[v] + "Minus_OK := (PCs = ");
+				out.write("update_" + coreNodes.get(v).getNodeID()
+						+ "Minus_OK := (PCs = ");
 				out.write(tmPcNum2Name.get(pc) + ") & (");
 				out.write(tmPcNum2Name.get(pc) + "_vars = ");
 				out.write(saSubName[0]);
@@ -436,49 +404,55 @@ public class NuSMVEncoder {
 			}
 		}
 
-		out.write("\n-- There are no input nor output variables in the ");
-		out.write("weak/strong stable states description\n");
-		out.write("stableStates := weakSS | strongSS;\n");
+		out.write("\n-- DISCLAIMER: There are no INput nor OUTput variables ");
+		out.write("in the weak/strong stable states description\n");
+		out.write("stableStates := weakSS | strongSS;\n\n");
 		out.write("-- Weak stable states differing only on input variables ");
 		out.write("will not be distinguished !!");
-		out.write(writeStableStates(nodeOrder, mutant, config));
+		out.write(writeStableStates(model));
 
 		out.write("\n");
-		out.write("-- Output variables declaration\n");
-		for (int i = 0; i < t_vertex.length; i++) {
-			if (!t_vertex[i].isOutput())
-				continue;
-			out.write(t_vertex[i].getId() + " :=\n");
-			out.write("  case\n");
-			for (int j = 0; j < t_cst.length; j++)
-				t_cst[j] = -1;
-			node2SMV(t_tree[i], out, t_vertex, t_cst);
-			out.write("  esac;\n");
+		out.write("-- Declaration of output variables\n");
+		if (outputNodes.size() > 0) {
+			kMDDs = model.getExtraLogicalFunctions();
+			for (int i = 0; i < outputNodes.size(); i++) {
+				out.write(outputNodes.get(i).getNodeID() + " :=\n");
+				out.write("  case\n");
+				nodeRules2NuSMV(out, model, kMDDs[i], coreNodes);
+				out.write("  esac;\n");
+			}
+		} else {
+			out.write("-- Empty !\n");
 		}
 		out.write("\n");
 
+		out.write("-- Authorized NuSMV transitions");
 		out.write("\nTRANS\n");
-		for (int i = 0; i < t_vertex.length; i++) {
-			if (t_vertex[i].isInput() || t_vertex[i].isOutput()) {
+		for (int i = 0; i < coreNodes.size(); i++) {
+			if (coreNodes.get(i).isInput()) {
 				continue;
 			}
-			out.write("next(" + t_regulators[i] + ") != ");
-			out.write(t_regulators[i] + " |\n");
+			out.write("next(" + coreNodes.get(i).getNodeID() + ") != ");
+			out.write(coreNodes.get(i).getNodeID() + " |\n");
 		}
 		out.write("stableStates;\n");
 
 		// Initial States Macro definition
 		out.write("\nDEFINE\n");
 		out.write("-- Declaration of core variables restriction list\n");
-		out.write(writeStateList(t_vertex, config.getInitialState().keySet().iterator()));
+		out.write(writeStateList(aNodeOrder, config.getInitialState().keySet()
+				.iterator()));
+		out.write("\n");
 		out.write("-- Declaration of input variables restriction list\n");
-		out.write(writeStateList(t_vertex, config.getInputState().keySet().iterator()));
-		
+		out.write(writeStateList(aNodeOrder, config.getInputState().keySet()
+				.iterator()));
+
 		out.write("\n");
 		out.write("--------------------------------------------------\n");
 		out.write("-- Reachability Properties using VARYING INPUTS --\n");
 		out.write("-- i.e. there is NO CONTROL on the input change at each transition\n");
 		out.write("--\n");
+		out.write("-- EXAMPLES --\n");
 		out.write("-- 1. Between an initial state (pattern) and a stable state (pattern)\n");
 		out.write("--   a. Existence of at least one path connecting two state patterns\n");
 		out.write("-- INIT initState;\n");
@@ -511,128 +485,59 @@ public class NuSMVEncoder {
 		out.write("--  SPEC EAF ( inpVar1=1 & inpVar2=1 )( weakSS2 );\n");
 		out.write("--  ...\n");
 
-		// ModelRewiring END code
-		mr.unMarkPseudoOutputs();
 	}
 
-	/**
-	 * It creates an HashSet with the regulators of a given node given its OMDD.
-	 * It is used for the topological sort algorithm.
-	 * 
-	 * @param node
-	 *            The OMDD of a given node.
-	 * @param t_names
-	 *            The set of existing nodes in the model.
-	 * @param t_cst
-	 *            Auxiliary variable to help navigate through the tree.
-	 * @return The set of regulator names of a given node.
-	 */
-	private HashSet<String> nodeRegulators(OMDDNode node,
-			RegulatoryNode[] t_names, int[] t_cst) {
-		HashSet<String> hs = new HashSet<String>();
-		if (node.next == null) {
-			for (int i = 0; i < t_cst.length; i++)
-				if (t_cst[i] != -1)
-					hs.add(t_names[i].getId());
-			return hs;
-		}
-		for (int i = 0; i < node.next.length; i++) {
-			t_cst[node.level] = i;
-			hs.addAll(nodeRegulators(node.next[i], t_names, t_cst));
-		}
-		t_cst[node.level] = -1;
-		return hs;
-	}
+	private void nodeRules2NuSMV(Writer out, LogicalModel model, int nodeMDD,
+			List<NodeInfo> coreNodeOrder) throws IOException {
+		PathSearcher searcher = new PathSearcher(model.getMDDManager(), 1);
+		int[] path = searcher.getPath();
 
-	/**
-	 * Knows how to write the given logical function of a given node, specified
-	 * by its OMDD, into a NuSMV case construct.
-	 * 
-	 * @param node
-	 *            The OMDD to be written.
-	 * @param out
-	 *            The Writer where the specification is to be written.
-	 * @param t_names
-	 *            The set of model nodes.
-	 * @param t_cst
-	 *            Auxiliary variable to help navigate through the tree.
-	 * @throws IOException
-	 */
-	private void node2SMV(OMDDNode node, Writer out, RegulatoryNode[] t_names,
-			int[] t_cst) throws IOException {
-		if (node.next == null) // this is a leaf, write the constraint
-		{
-			String s = "";
+		searcher.setNode(nodeMDD);
+		if (searcher.countPaths() == 0) {
+			out.write("    TRUE : 0;\n");
+			return;
+		}
 
-			for (int i = 0; i < t_cst.length; i++) {
-				if (t_cst[i] != -1) {
-					s += "(" + t_names[i] + " = " + t_cst[i] + ") & ";
+		String s = "";
+		for (@SuppressWarnings("unused")
+		int l : searcher) {
+			boolean bWrite = false;
+			for (int i = 0; i < path.length; i++) {
+				if (path[i] != -1) {
+					if (!bWrite)
+						s += "    ";
+					if (bWrite)
+						s += " & ";
+					s += "(" + coreNodeOrder.get(i).getNodeID() + " = "
+							+ path[i] + ")";
+					bWrite = true;
 				}
 			}
-			if (s.isEmpty()) {
-				s = "TRUE ";
-			} else {
-				s = s.substring(0, s.length() - 2);
+			if (!s.isEmpty()) {
+				s += " : 1;\n";
 			}
-			out.write("    " + s + ": " + node.value + ";\n");
-			return;
 		}
-		for (int i = 0; i < node.next.length; i++) {
-			t_cst[node.level] = i;
-			node2SMV(node.next[i], out, t_names, t_cst);
+		if (s.isEmpty()) {
+			out.write("    TRUE : 1;\n");
+		} else {
+			out.write(s);
+			out.write("    TRUE : 0;\n");
 		}
-		t_cst[node.level] = -1;
 	}
 
-	/**
-	 * Implements a simple (recursive) topological sort for sorting, in
-	 * ascending order, the model variables by the number of regulators
-	 * affecting each one.
-	 * 
-	 * @param hmRegulators
-	 *            a String containing the set of regulators per variable.
-	 * @param t_regulators
-	 *            The name of each regulator.
-	 * @param t_vertex
-	 *            The set of nodes.
-	 * @param currindex
-	 *            The current index in the recursion.
-	 * @param visited
-	 *            A mark of visited nodes.
-	 * @param alSorted
-	 *            The list of nodes already sorted.
-	 */
-	private void topoSortVisit(HashMap<String, ArrayList<String>> hmRegulators,
-			String[] t_regulators, RegulatoryNode[] t_vertex, int currindex,
-			boolean[] visited, ArrayList<Integer> alSorted) {
-		if (visited[currindex])
-			return;
-		visited[currindex] = true;
-		String sReg = t_regulators[currindex];
-		for (int i = 0; i < t_vertex.length; i++) {
-			if (i == currindex)
-				continue;
-			ArrayList<String> alRegulators = hmRegulators.get(t_regulators[i]);
-			if (alRegulators.contains(sReg))
-				topoSortVisit(hmRegulators, t_regulators, t_vertex, i, visited,
-						alSorted);
-		}
-		alSorted.add(new Integer(currindex));
-	}
-
-	private String writeStateList(RegulatoryNode[] t_vertex,
+	private String writeStateList(NodeInfo[] t_vertex,
 			Iterator<InitialState> iter) {
 		StringBuffer sb = new StringBuffer();
 		if (!iter.hasNext())
-			sb.append("-- No Initial State list restriction selected !\n");
+			sb.append("-- Empty !\n");
 		else {
 			while (iter.hasNext()) {
 				InitialState iState = iter.next();
 				Map<NodeInfo, List<Integer>> m_states = iState.getMap();
 				String s_init = "";
-				
+
 				for (int i = 0; i < t_vertex.length; i++) {
-					List<Integer> v = m_states.get(t_vertex[i].getNodeInfo());
+					List<Integer> v = m_states.get(t_vertex[i]);
 					if (v != null && v.size() > 0) {
 						if (!s_init.isEmpty())
 							s_init += " & ";
@@ -640,44 +545,40 @@ public class NuSMVEncoder {
 						for (int j = 0; j < v.size(); j++) {
 							if (j > 0)
 								s_init += " | ";
-							s_init += t_vertex[i].getId() + "=" + v.get(j);
+							s_init += t_vertex[i].getNodeID() + "=" + v.get(j);
 						}
 						s_init += ")";
 					}
 				}
-				sb.append(iState.getName()).append(" := ").append(s_init).append(";\n");
+				sb.append(iState.getName()).append(" := ").append(s_init)
+						.append(";\n");
 			}
 		}
 		return sb.toString();
 	}
 
-	private String writeStableStates(List<RegulatoryNode> origOrder,
-			Perturbation mutant, NuSMVConfig config) {
-		
-		List<RegulatoryNode> sortedNodes = new ArrayList<RegulatoryNode>();
-		List<RegulatoryNode> inputNodes = new ArrayList<RegulatoryNode>();
-		for (int i = 0; i < origOrder.size(); i++) {
-			if (origOrder.get(i).isInput())
-				inputNodes.add(origOrder.get(i));
-			else {
-				sortedNodes.add(origOrder.get(i));
-			}
-		} // reordered [ stateVar1 ... stateVarN inputVar1 ... inputVarN ]
-		int stateNodesSize = sortedNodes.size();
-		sortedNodes.addAll(inputNodes);
-
+	private String writeStableStates(LogicalModel model) {
+		NodeInfoSorter nis = new NodeInfoSorter();
+		List<NodeInfo> newNodeOrder = nis.getNodesWithInputsAtEnd(model);
+		int inputs = 0;
+		for (int i = newNodeOrder.size() - 1; i > 0; i--) {
+			if (newNodeOrder.get(i).isInput()) {
+				inputs++;
+			} else
+				break;
+		}
 		String sRet = "";
 		try {
-			StableStateSearcher sss = ServiceManager
-					.getManager()
+			StableStateSearcher sss = ServiceManager.getManager()
 					.getService(StableStatesService.class)
-					.getStableStateSearcher(config.getGraph(), sortedNodes,
-							mutant);
+					.getStableStateSearcher(model);
 			int omdds = sss.getResult();
-			PathSearcher psearcher = new PathSearcher(sss.getMDDManager(), 1);
+			MDDManager ddmanager = sss.getMDDManager().getManager(newNodeOrder);
+			PathSearcher psearcher = new PathSearcher(ddmanager, 1);
 			psearcher.setNode(omdds);
 
-			sRet = writeSSs(psearcher, sortedNodes, stateNodesSize);
+			sRet = writeSSs(psearcher, newNodeOrder, newNodeOrder.size()
+					- inputs);
 			sRet += ";\n";
 		} catch (Exception e) {
 			sRet = "\nweakSS := FALSE;\nstrongSS := FALSE;";
@@ -687,30 +588,33 @@ public class NuSMVEncoder {
 		return sRet;
 	}
 
-	private String writeSSs(PathSearcher paths,
-			List<RegulatoryNode> nodeOrder, int stateNodesSize) {
+	private String writeSSs(PathSearcher paths, List<NodeInfo> nodeOrder,
+			int stateNodesSize) {
 		Set<String> sWeak = new HashSet<String>();
 		Set<String> sStrong = new HashSet<String>();
 		boolean bWeak = false;
-		
+
 		int[] iaSSPath = paths.getPath();
-		for (@SuppressWarnings("unused") int v : paths) {
+		for (@SuppressWarnings("unused")
+		int v : paths) {
 			String sSSdesc = "";
 
 			for (int i = 0; i < nodeOrder.size(); i++) {
-				if (nodeOrder.get(i).isOutput())
-					continue;
+				// if (nodeOrder.get(i).isOutput())
+				// continue;
 				if (i < stateNodesSize) {
 					if (sSSdesc.length() > 0)
 						sSSdesc += " & ";
 					sSSdesc += nodeOrder.get(i) + "=" + iaSSPath[i];
 				} else if (iaSSPath[i] > -1)
-						bWeak = true;
+					bWeak = true;
 			}
-			if (bWeak) sWeak.add(sSSdesc);
-			else sStrong.add(sSSdesc);
+			if (bWeak)
+				sWeak.add(sSSdesc);
+			else
+				sStrong.add(sSSdesc);
 		}
-		
+
 		String sRet = "\nweakSS := ";
 		if (sWeak.size() == 0)
 			sRet += "FALSE";
@@ -718,20 +622,21 @@ public class NuSMVEncoder {
 			for (int i = 0; i < sWeak.size(); i++) {
 				if (i > 0)
 					sRet += " | ";
-				sRet += "weakSS" + (i+1);
+				sRet += "weakSS" + (i + 1);
 			}
 			int i = 0;
 			for (String ss : sWeak)
 				sRet += ";\nweakSS" + (++i) + " := " + ss;
 		}
-		sRet += ";\n--\nstrongSS := ";
+		sRet += ";\n\n-- Strong stable states - for every valuation "
+				+ "of input variables\nstrongSS := ";
 		if (sStrong.size() == 0)
 			sRet += "FALSE";
 		else {
 			for (int i = 0; i < sStrong.size(); i++) {
 				if (i > 0)
 					sRet += " | ";
-				sRet += "strongSS" + (i+1);
+				sRet += "strongSS" + (i + 1);
 			}
 			int i = 0;
 			for (String ss : sStrong)

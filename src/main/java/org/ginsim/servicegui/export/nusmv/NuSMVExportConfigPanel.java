@@ -9,8 +9,6 @@ import java.awt.event.ActionListener;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
@@ -19,9 +17,6 @@ import javax.swing.table.AbstractTableModel;
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
-import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
-import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
@@ -43,7 +38,6 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	JButton butCfgMutant = null;
 	JTextArea area;
 	private GsNuSMVConfigModel model;
-	private GsNuSMVMutantModel mutantModel;
 
 	public NuSMVExportConfigPanel(NuSMVConfig config, NuSMVExportAction action) {
 		this.config = config;
@@ -102,16 +96,6 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 	 */
 	public void refresh(Vector<RegulatoryNode> nodeOrder) {
 		model.refresh(nodeOrder);
-	}
-
-	/**
-	 * @return the selected mutant (can be null)
-	 */
-	public Perturbation getMutant() {
-		if (mutantModel.getSelectedItem() instanceof Perturbation) {
-			return (Perturbation) mutantModel.getSelectedItem();
-		}
-		return null;
 	}
 
 	@Override
@@ -275,54 +259,5 @@ class GsNuSMVConfigModel extends AbstractTableModel {
 	public void refresh(Vector<RegulatoryNode> nodeOrder) {
 		this.nodeOrder = nodeOrder;
 		fireTableStructureChanged();
-	}
-}
-
-class GsNuSMVMutantModel extends DefaultComboBoxModel implements ComboBoxModel {
-	private static final long serialVersionUID = 2348678706086666489L;
-
-	ListOfPerturbations listMutants;
-	NuSMVConfig cfg;
-
-	GsNuSMVMutantModel(NuSMVConfig cfg) {
-		this.cfg = cfg;
-		this.listMutants = (ListOfPerturbations) ObjectAssociationManager
-				.getInstance().getObject(cfg.getGraph(), PerturbationManager.KEY,
-						true);
-	}
-
-	void setMutantList(ListOfPerturbations mutants) {
-		this.listMutants = mutants;
-		fireContentsChanged(this, 0, getSize());
-	}
-
-	public Object getSelectedItem() {
-		if (cfg.mutant == null) {
-			return "--";
-		}
-		return cfg.mutant;
-	}
-
-	public void setSelectedItem(Object anObject) {
-		super.setSelectedItem(anObject);
-		if (anObject instanceof Perturbation) {
-			cfg.mutant = (Perturbation) anObject;
-		} else {
-			cfg.mutant = null;
-		}
-	}
-
-	public Object getElementAt(int index) {
-		if (index == 0 || listMutants == null) {
-			return "--";
-		}
-		return listMutants.get(index - 1);
-	}
-
-	public int getSize() {
-		if (listMutants == null) {
-			return 1;
-		}
-		return listMutants.size() + 1;
 	}
 }
