@@ -673,7 +673,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 
     @Override
     public MDDManager getMDDFactory() {
-    	return  getMDDFactory(getNodeOrder());
+    	return  getMDDFactory(null);
     }
 
     /**
@@ -683,18 +683,26 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
      * 
      * @return a new MDDManager with the required order
      */
-    private MDDManager getMDDFactory(List<RegulatoryNode> order) {
+    private MDDManager getMDDFactory(List<NodeInfo> order) {
     	if (order == null) {
     		// default to the node order
-    		order = getNodeOrder();
+    		order = getNodeInfoOrder();
     	}
     	MDDVariableFactory vbuilder = new MDDVariableFactory();
-    	for (RegulatoryNode node: order) {
-    		vbuilder.add(node.getNodeInfo(), (byte)(node.getMaxValue()+1));
+    	for (NodeInfo ni: order) {
+    		vbuilder.add(ni, (byte)(ni.getMax()+1));
     	}
     	MDDManager factory = MDDManagerFactory.getManager(vbuilder, 10);
     	return factory;
     	
+    }
+    
+    private List<NodeInfo> getNodeInfoOrder() {
+		List<NodeInfo> order = new ArrayList<NodeInfo>();
+		for (RegulatoryNode node: getNodeOrder()) {
+			order.add(node.getNodeInfo());
+		}
+		return order;
     }
     
     @Override
@@ -729,17 +737,24 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 
 	@Override
 	public LogicalModel getModel() {
-		return getModel(getNodeOrder());
+		return getModel(null);
 	}
 
 	@Override
-	public LogicalModel getModel(List<RegulatoryNode> order) {
-		if (order == null) {
-			order = getNodeOrder();
+	public LogicalModel getModel(NodeOrderer orderer) {
+		List<NodeInfo> order = null;
+		if (orderer == null) {
+			order = new ArrayList<NodeInfo>();
+			for (RegulatoryNode node: getNodeOrder()) {
+				order.add(node.getNodeInfo());
+			}
+		} else {
+			order = orderer.getOrder(this);
 		}
+		
 		MDDManager factory = getMDDFactory(order);
 		int[] functions = getMDDs(factory);
-		return new LogicalModelImpl(getNodeInfos(order), factory, functions);
+		return new LogicalModelImpl(order, factory, functions);
 	}
 
 	private List<NodeInfo> getNodeInfos(List<RegulatoryNode> order) {

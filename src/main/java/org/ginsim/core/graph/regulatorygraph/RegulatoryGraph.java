@@ -168,6 +168,6 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
 	 * 
 	 * @return a model matching this RegulatoryGraph
 	 */
-	LogicalModel getModel(List<RegulatoryNode> order);
+	LogicalModel getModel(NodeOrderer orderer);
     
 }
