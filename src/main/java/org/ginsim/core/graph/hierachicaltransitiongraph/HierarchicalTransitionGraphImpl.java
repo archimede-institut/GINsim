@@ -62,11 +62,11 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	 * @param nodeOrder the node order
 	 * @param transientCompactionMode MODE_SCC or MODE_HTG
 	 */
-	public HierarchicalTransitionGraphImpl( List<RegulatoryNode> nodeOrder, int transientCompactionMode) {
+	public HierarchicalTransitionGraphImpl( List<NodeInfo> nodeOrder, int transientCompactionMode) {
 		
 	    this();
-	    for (RegulatoryNode vertex: nodeOrder) {
-	    	this.nodeOrder.add(vertex.getNodeInfo());
+	    for (NodeInfo vertex: nodeOrder) {
+	    	this.nodeOrder.add(vertex);
 	    }
 	    this.transientCompactionMode = transientCompactionMode;
 	}

@@ -2,8 +2,8 @@ package org.ginsim.core.graph.hierachicaltransitiongraph;
 
 import java.util.List;
 
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.common.GraphFactory;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.mangosdk.spi.ProviderFor;
 
 
@@ -57,7 +57,7 @@ public class HierarchicalTransitionGraphFactory implements GraphFactory<Hierarch
 		return new HierarchicalTransitionGraphImpl();
 	}
 	
-	public HierarchicalTransitionGraph create( List<RegulatoryNode> nodeOrder, int transientCompactionMode){
+	public HierarchicalTransitionGraph create( List<NodeInfo> nodeOrder, int transientCompactionMode){
 		
 		return new HierarchicalTransitionGraphImpl( nodeOrder, transientCompactionMode);
 	}
