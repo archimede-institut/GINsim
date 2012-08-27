@@ -42,18 +42,18 @@ public class ImageExportService implements Service {
     	Graphics2D g = img.createGraphics();
     	g.setColor(Color.white);
     	g.fill(new Rectangle(width, height));
-        NodeAttributesReader nreader = graph.getNodeAttributeReader();
-    	for (Object node: graph.getNodes()) {
-    		nreader.setNode(node);
-    		nreader.render(g);
-    	}
-    	
         EdgeAttributesReader ereader = graph.getEdgeAttributeReader();
     	for (Edge edge: graph.getEdges()) {
     		ereader.setEdge(edge);
     		ereader.render(g);
     	}
 
+        NodeAttributesReader nreader = graph.getNodeAttributeReader();
+    	for (Object node: graph.getNodes()) {
+    		nreader.setNode(node);
+    		nreader.render(g);
+    	}
+    	
     	try {
 			ImageIO.write(img, "png", new File(fileName));
 		} catch (IOException e) {
