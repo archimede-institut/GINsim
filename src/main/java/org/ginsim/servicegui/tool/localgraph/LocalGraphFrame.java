@@ -22,11 +22,8 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
 import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.LogicalModelModifier;
-import org.colomoto.logicalmodel.perturbation.SimpleModelModifier;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.Translator;
-import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
@@ -35,7 +32,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
-import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
@@ -149,7 +145,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 			isColorized = false;
 		}
 
-		LogicalModelModifier modifier = new SimpleModelModifier(mutantStore.getPerturbation());
+		Perturbation modifier = mutantStore.getPerturbation();
 		LogicalModel model = modifier.apply(regGraph.getModel());
 		lg.setUpdater(new SynchronousSimulationUpdater(model));
 		List states = sst.getStates();
