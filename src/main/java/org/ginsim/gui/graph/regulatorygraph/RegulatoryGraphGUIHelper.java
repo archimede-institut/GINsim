@@ -91,6 +91,11 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph,
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+	@Override
+	public boolean canCopyPaste(RegulatoryGraph graph) {
+		return true;
+	}
 	
 	// FIXME: option panel?
 //	private JPanel getOptionPanel() {

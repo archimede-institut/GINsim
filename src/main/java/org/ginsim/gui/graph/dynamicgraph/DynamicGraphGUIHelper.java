@@ -131,6 +131,11 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
 	public List<EditAction> getEditActions(DynamicGraph graph) {
 		return null;
 	}
+
+	@Override
+	public boolean canCopyPaste(DynamicGraph graph) {
+		return false;
+	}
 }
 
 

@@ -216,6 +216,10 @@ public abstract class BaseGraphGUI<G extends Graph<V,E>, V, E extends Edge<V>>
 	}
 
 	@Override
+	public boolean canCopyPaste() {
+		return helper.canCopyPaste(graph);
+	}
+	@Override
 	public GraphSelection<V, E> getSelection() {
 		return selection;
 	}

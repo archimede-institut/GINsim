@@ -97,4 +97,9 @@ public class HierarchicalTransitionGraphGUIHelper implements GraphGUIHelper<Hier
 	public List<EditAction> getEditActions(HierarchicalTransitionGraph graph) {
 		return null;
 	}
+
+	@Override
+	public boolean canCopyPaste(HierarchicalTransitionGraph graph) {
+		return false;
+	}
 }

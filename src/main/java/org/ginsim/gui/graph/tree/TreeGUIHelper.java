@@ -97,4 +97,9 @@ public class TreeGUIHelper implements GraphGUIHelper<Tree, TreeNode, Edge<TreeNo
 	public List<EditAction> getEditActions(Tree graph) {
 		return null;
 	}
+
+	@Override
+	public boolean canCopyPaste(Tree graph) {
+		return false;
+	}
 }

@@ -47,6 +47,13 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	EditActionManager getEditActionManager();
 
 	/**
+	 * Does this graph type support copy/paste actions?
+	 * 
+	 * @return true if copy/paste is supported, false otherwise.
+	 */
+	boolean canCopyPaste();
+
+	/**
 	 * Returns true if this graph has not been modified since the last change
 	 * 
 	 * @return true if this graph has not been modified since the last change
