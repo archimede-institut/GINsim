@@ -517,6 +517,11 @@ public class RegulatoryNode implements ToolTipsable, XMLize, NodeInfoHolder {
 	}
 
 	@Override
+	public int hashCode() {
+		return nodeInfo.hashCode();
+	}
+
+	@Override
 	public NodeInfo getNodeInfo() {
 		return nodeInfo;
 	}
