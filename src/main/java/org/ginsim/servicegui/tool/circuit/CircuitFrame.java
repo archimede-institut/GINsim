@@ -645,6 +645,11 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 
     protected void showInfo() {
         CircuitDescrInTree cdtree = getSelectedContextFromTreeTable();
+        if (cdtree == null) {
+            jta.setText("no data");
+            return;
+        }
+        
         int index = 0;
         if (cdtree.summary) {
             if (!treemodel.isLeaf(cdtree)) {
