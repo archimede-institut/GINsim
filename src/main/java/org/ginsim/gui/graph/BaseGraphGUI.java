@@ -176,15 +176,14 @@ public abstract class BaseGraphGUI<G extends Graph<V,E>, V, E extends Edge<V>>
 		String filename = FileSelectionHelper.selectSaveFilename(frame, ffilter);
 		if (filename != null) {
 			String graph_name = (new File( filename)).getName();
-			int dot_index = graph_name.indexOf( ".");
+			int dot_index = graph_name.lastIndexOf( ".");
 			if( dot_index > 0){
 				graph_name = graph_name.substring( 0, dot_index);
 			}
 			try {
 				graph.setGraphName( graph_name);
 			} catch (GsException gse) {
-				LogManager.error( "Unable to set graph name: " + graph_name);
-				LogManager.error( gse);
+				LogManager.debug( "Unable to set graph name: " + graph_name);
 			}
 			GraphManager.getInstance().registerGraph( graph, filename);
 			return save();
