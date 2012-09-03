@@ -63,7 +63,6 @@ public class SVGEncoder {
         Set<String>  m_marker = new HashSet<String>();
         for (Object obj: nodes) {
             vreader.setNode(obj);
-            writeNode(out, obj, vreader);
             boxes.put(obj, new Rectangle(vreader.getX(), vreader.getY(), vreader.getWidth(), vreader.getHeight()));
         }
         
@@ -72,6 +71,11 @@ public class SVGEncoder {
             Rectangle box2 = boxes.get(edge.getTarget());
             ereader.setEdge(edge);
             writeEdge(out, box1, box2, ereader, m_marker);
+        }
+        
+        for (Object obj: nodes) {
+            vreader.setNode(obj);
+            writeNode(out, obj, vreader);
         }
         
         out.write("</svg>");
