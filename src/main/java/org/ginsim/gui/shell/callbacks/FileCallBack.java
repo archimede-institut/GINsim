@@ -137,7 +137,11 @@ class OpenAction extends AbstractAction {
 		this.filename = filename;
 		if (filename != null) {
 			int idx = filename.lastIndexOf(File.separatorChar);
-			this.putValue(Action.NAME, filename.substring(idx+1));
+			String shortName = filename.substring(idx+1);
+			if (shortName.length() > 35) {
+				shortName = shortName.substring(0, 12) + '\u2026' + shortName.substring(shortName.length()-20);
+			}
+			this.putValue(Action.NAME, shortName);
 			this.putValue(Action.LONG_DESCRIPTION, "Open "+filename);
 		}
 	}
