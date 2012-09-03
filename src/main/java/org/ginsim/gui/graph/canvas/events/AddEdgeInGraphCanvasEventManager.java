@@ -46,6 +46,7 @@ public class AddEdgeInGraphCanvasEventManager extends AbstractHelpCanvasEventMan
 		Object to = renderer.getObjectUnderPoint(p);
 		if (start == null || to == null || to instanceof Edge) {
 			start = null;
+			renderer.repaintCanvas();
 			return;
 		}
 		
@@ -71,10 +72,12 @@ public class AddEdgeInGraphCanvasEventManager extends AbstractHelpCanvasEventMan
 
 	@Override
 	public void overlay(Graphics2D g, Rectangle area) {
-		if (dragged && p1 != null && p2 != null) {
+		if (start != null && dragged && p1 != null && p2 != null) {
 			Object o = renderer.getObjectUnderPoint(p2);
 			if (o != null && !(o instanceof Edge)) {
 				g.setColor(Color.GREEN);
+			} else {
+				g.setColor(Color.GRAY);
 			}
 			g.drawLine(p1.x, p1.y, p2.x, p2.y);
 		}
