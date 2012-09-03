@@ -24,8 +24,6 @@ import org.sbml.jsbml.ext.layout.SpeciesGlyph;
 @Alias("SBMLi")
 public class SBMLImportService implements Service {
 
-	private static boolean USEJSBML = true;
-	
 	/**
 	 * Return the graph built from the SBML file at the given path
 	 * 
@@ -33,35 +31,6 @@ public class SBMLImportService implements Service {
 	 * @return the graph built from the SBML file at the given path
 	 */
 	public RegulatoryGraph run( String filename) {
-		if (USEJSBML) {
-			return runJSBML(filename);
-		}
-		
-		return runLegacy(filename);
-	}
-
-	/**
-	 * SBML import based on a custom parser.
-	 * 
-	 * @param filename
-	 * @return
-	 */
-	@Deprecated
-	public RegulatoryGraph runLegacy( String filename){
-		
-		SBMLXpathParser parser = new SBMLXpathParser(filename);
-		RegulatoryGraph new_graph = parser.getGraph();
-		
-		return new_graph;
-	}
-
-	/**
-	 * SBML import using The JSBML-based parser in LogicalModel.
-	 * 
-	 * @param filename
-	 * @return
-	 */
-	public RegulatoryGraph runJSBML( String filename) {
 
 		try {
 			SBMLqualImport simport = new SBMLqualImport(new File(filename));

@@ -26,10 +26,19 @@ import org.sbml.jsbml.ext.layout.SpeciesGlyph;
 @Alias("SBMLe")
 public class SBMLQualExportService implements Service {
 
-	private static boolean USEJSBML = true;
-	
 	/**
-	 * Execute the export by instantiating the right encoder
+	 * Convenience method to export without having to configure anything.
+	 * 
+	 * @param graph
+	 * @param filename
+	 * @throws IOException
+	 */
+	public void export( RegulatoryGraph graph, String filename) throws IOException {
+		export(graph, new SBMLQualConfig(graph), filename);
+	}
+
+	/**
+	 * Perform the SBML export, using the JSBML-based encoder from LogicalModel.
 	 * 
 	 * @param graph the graph to export
 	 * @param config the configuration structure
@@ -37,34 +46,6 @@ public class SBMLQualExportService implements Service {
 	 * @throws IOException
 	 */
 	public void export( RegulatoryGraph graph, SBMLQualConfig config, String filename) throws IOException{
-		
-		if (USEJSBML) {
-			exportJSBML(graph, filename+".jsbml");
-		} else {
-			SBMLQualEncoder encoder = new SBMLQualEncoder( );
-			encoder.doExport( graph, config, filename);
-		}
-	}
-	
-	/**
-	 * Convenience method to export without having to configure anything
-	 * @param graph
-	 * @param filename
-	 * @throws IOException
-	 */
-	public void export( RegulatoryGraph graph, String filename) throws IOException {
-		SBMLQualConfig cfg = new SBMLQualConfig(graph);
-		export(graph, cfg, filename);
-	}
-
-	/**
-	 * Export using the JSBML encoder for logical models.
-	 * 
-	 * @param graph
-	 * @param filename
-	 * @throws IOException
-	 */
-	public void exportJSBML( RegulatoryGraph graph, String filename) throws IOException {
 		LogicalModel model = graph.getModel();
 		OutputStream out = new FileOutputStream(new File(filename));
 		try {
