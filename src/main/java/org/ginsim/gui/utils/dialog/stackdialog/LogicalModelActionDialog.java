@@ -8,7 +8,6 @@ import java.awt.GridBagLayout;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 
-import org.apache.batik.ext.swing.GridBagConstants;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.LogicalModelModifier;
 import org.colomoto.logicalmodel.perturbation.LogicalModelPerturbation;
@@ -55,7 +54,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 		c = new GridBagConstraints();
 		c.gridx = 1;
 		c.weightx = 1;
-		c.fill = GridBagConstants.HORIZONTAL;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		mainPanel.add(mutantPanel, c);
 
 		return mainPanel;
@@ -101,7 +100,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 		c.gridwidth = 2;
 		c.weightx = 1;
 		c.weighty = 1;
-		c.fill = GridBagConstants.BOTH;
+		c.fill = GridBagConstraints.BOTH;
 		
 		mainPanel.add(panel, c);
 	}

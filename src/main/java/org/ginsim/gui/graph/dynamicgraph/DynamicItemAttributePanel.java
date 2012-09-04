@@ -12,7 +12,6 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-import org.apache.batik.ext.swing.GridBagConstants;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
@@ -46,7 +45,7 @@ public class DynamicItemAttributePanel extends AbstractParameterPanel {
         GridBagConstraints c = new GridBagConstraints();
         c.weightx = 1;
         c.weighty = 1;
-        c.fill = GridBagConstants.BOTH;
+        c.fill = GridBagConstraints.BOTH;
         this.add(getScrollPane(tableModel), c);
 
         if (extra != null && extra.length > 0) {
@@ -58,7 +57,7 @@ public class DynamicItemAttributePanel extends AbstractParameterPanel {
 			c.gridy = 1;
 	        c.weightx = 1;
 	        c.weighty = 1;
-	        c.fill = GridBagConstants.BOTH;
+	        c.fill = GridBagConstraints.BOTH;
 	        this.add(getScrollPane(extraTableModel), c);
 	        System.out.println("ADDING an extra table... "+extra[0]);
 		} else {

@@ -16,7 +16,6 @@ import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.apache.batik.ext.swing.GridBagConstants;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
@@ -50,7 +49,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		cst = new GridBagConstraints();
 		cst.gridx = 1;
 		cst.weightx = 1;
-		cst.fill = GridBagConstants.HORIZONTAL;
+		cst.fill = GridBagConstraints.HORIZONTAL;
 		selectNode = new JComboBox(perturbations.getNodes());
 		selectNode.addActionListener(this);
 		add(selectNode, cst);
@@ -60,7 +59,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		cst.gridx = 0;
 		cst.gridy = 1;
 		cst.gridwidth = 2;
-		cst.fill = GridBagConstants.BOTH;
+		cst.fill = GridBagConstraints.BOTH;
 		setupPanel.setMinimumSize(new Dimension(100, 100));
 		add(setupPanel, cst);
 		
