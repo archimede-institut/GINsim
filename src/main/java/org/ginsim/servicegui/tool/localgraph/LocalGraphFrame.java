@@ -119,7 +119,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 			mainPanel.add(autoUpdateCheckbox, c);
 			
 			c.gridy++;
-			colorizeButton = new JButton(Translator.getString("STR_do_colorize"));
+			colorizeButton = new JButton(Translator.getString("STR_colorize_local"));
 		    colorizeButton.setEnabled(false);
 		    colorizeButton.addActionListener(this);
 		    mainPanel.add(colorizeButton, c);
@@ -141,12 +141,15 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 	protected void run() {
 		if (isColorized) {
 			lg.undoColorize();
-			colorizeButton.setText(Translator.getString("STR_do_colorize"));
+			colorizeButton.setText(Translator.getString("STR_colorize_local"));
 			isColorized = false;
 		}
 
 		Perturbation modifier = mutantStore.getPerturbation();
-		LogicalModel model = modifier.apply(regGraph.getModel());
+		LogicalModel model = regGraph.getModel();
+		if (modifier != null) {
+			model = modifier.apply(model);
+		}
 		lg.setUpdater(new SynchronousSimulationUpdater(model));
 		List states = sst.getStates();
 		if (states == null) return;
@@ -222,7 +225,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 	private void undoColorize() {
 		if (lg != null) {
 			lg.undoColorize();
-			colorizeButton.setText(Translator.getString("STR_do_colorize"));
+			colorizeButton.setText(Translator.getString("STR_colorize_local"));
 			isColorized = false;
 		}
 	}
