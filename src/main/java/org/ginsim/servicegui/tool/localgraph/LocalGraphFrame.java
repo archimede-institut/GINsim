@@ -232,15 +232,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 
 	public void cancel() {
 		if (isColorized) {
-			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_sure_close_undo_colorize"));
-			if (res == JOptionPane.NO_OPTION) {
-				super.cancel();
-			} else if (res == JOptionPane.CANCEL_OPTION) {
-				return;
-			} else if (res == JOptionPane.YES_OPTION) {
-				undoColorize();
-				super.cancel();
-			}
+			undoColorize();
 		}
 		super.cancel();
 	}
