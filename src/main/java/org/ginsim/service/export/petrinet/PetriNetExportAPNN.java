@@ -1,13 +1,12 @@
 package org.ginsim.service.export.petrinet;
 
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
+import org.mangosdk.spi.ProviderFor;
 
 
 /**
@@ -20,32 +19,36 @@ import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
  *  <li>CHARLIE: http://www.informatik.tu-cottbus.de/~ms/charlie/</li>
  * </ul>
  */
-
-public class PetriNetExportAPNN extends BasePetriNetExport {
-	
-	protected PetriNetExportAPNN() {
-		super(".apnn", "APNN");
+@ProviderFor(PNFormat.class)
+public class PetriNetExportAPNN extends PNFormat {
+	public PetriNetExportAPNN() {
+		super("APNN", "APNN", "apnn");
 	}
-	
-	@Override
-	protected void doExport( PNConfig config, String filename) throws IOException {
-		RegulatoryGraph graph = config.graph;
-        List v_no = graph.getNodeOrder();
-        int len = v_no.size();
-        OMDDNode[] t_tree = graph.getAllTrees(true);
-        List[] t_transition = new List[len];
-        byte[][] t_markup = prepareExport(config, t_transition, t_tree);
 
-        FileWriter out = new FileWriter(filename);
+	@Override
+	public BasePetriNetExport getWriter( LogicalModel model) {
+		return new APNNWriter( model);
+	}
+}
+
+class APNNWriter extends BasePetriNetExport {
+
+	public APNNWriter(LogicalModel model) {
+		super(model);
+	}
+
+	@Override
+	protected void doExport( String netName, List<NodeInfo> v_no, List[] t_transition, byte[][] t_markup, FileWriter out) throws IOException {
         
         // NET
-        out.write("\\beginnet{"+graph.getGraphName()+"}"+"\n\n");
+        out.write("\\beginnet{"+netName+"}"+"\n\n");
+		int len = t_transition.length;
         
         // PLACE
         /* Comments: We add the property CAPACITY defined by \capacity{INTEGER} which represents the maximum capacity of a place. 
            But we manage already this property and there is no possibility to overtake this value.*/
         
-        for (int i=0 ; i<t_tree.length ; i++) 
+        for (int i=0 ; i<len ; i++) 
         {
             out.write("\\place{"+v_no.get(i)+"}"+"{\\name{"+v_no.get(i)+"} \\init{"+t_markup[i][0]+"} \\capacity{"+(t_markup[i][0]+t_markup[i][1])+"} \\coords{"+50+" "+(10+80*i)+"}}\n");
             out.write("\\place{-"+v_no.get(i)+"}"+"{\\name{-"+v_no.get(i)+"} \\init{"+t_markup[i][1]+"} \\capacity{"+(t_markup[i][0]+t_markup[i][1])+"} \\coords{"+100+" "+(10+80*i)+"}}\n\n");
@@ -56,7 +59,7 @@ public class PetriNetExportAPNN extends BasePetriNetExport {
         {
         	List v_transition = t_transition[i];
             String s_node = v_no.get(i).toString();
-            int max = ((RegulatoryNode)v_no.get(i)).getMaxValue();
+            int max = v_no.get(i).getMax();
             int c = 0;
             
             if (v_transition != null) 
@@ -84,7 +87,7 @@ public class PetriNetExportAPNN extends BasePetriNetExport {
         {
         	List v_transition = t_transition[i];
             String s_node = v_no.get(i).toString();
-            int max = ((RegulatoryNode)v_no.get(i)).getMaxValue();
+            int max = v_no.get(i).getMax();
             
             if (v_transition != null) 
             {

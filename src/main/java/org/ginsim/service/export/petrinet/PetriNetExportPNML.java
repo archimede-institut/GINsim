@@ -4,10 +4,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.List;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.mangosdk.spi.ProviderFor;
 
 
 /**
@@ -20,29 +20,36 @@ import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
  *  <li>PIPE2: http://pipe2.sourceforge.net/</li>
  * </ul>
  */
-public class PetriNetExportPNML extends BasePetriNetExport {
+@ProviderFor(PNFormat.class)
+public class PetriNetExportPNML extends PNFormat {
 
-	protected PetriNetExportPNML() {
-		super("xml", "PNML");
+	public PetriNetExportPNML() {
+		super("PNML", "xml");
 	}
 
 	@Override
-	protected void doExport( PNConfig config, String filename) throws IOException{
-		RegulatoryGraph graph = config.graph;
-		List v_no = graph.getNodeOrder();
-        int len = v_no.size();
-        OMDDNode[] t_tree = graph.getAllTrees(true);
-        List[] t_transition = new List[len];
-        byte[][] t_markup = prepareExport(config, t_transition, t_tree);
+	public BasePetriNetExport getWriter( LogicalModel model) {
+		return new PNMLWriter( model);
+	}
+}
 
-        FileWriter fout = new FileWriter(filename);
+class PNMLWriter extends BasePetriNetExport {
+
+	public PNMLWriter(LogicalModel model) {
+		super(model);
+	}
+
+	@Override
+	protected void doExport( String netName, List<NodeInfo> v_no, List[] t_transition, byte[][] t_markup, FileWriter fout) throws IOException {
+
         XMLWriter out = new XMLWriter(fout, null);
-        
+		int len = t_transition.length;
+
         out.openTag("pnml");
-        out.openTag("net", new String[] {"id",graph.getGraphName() , "type","P/T net"});
+        out.openTag("net", new String[] {"id",netName , "type","P/T net"});
         
         // places data
-        for (int i=0 ; i<t_tree.length ; i++) {
+        for (int i=0 ; i<len ; i++) {
         	addPlace(out,  ""+v_no.get(i), t_markup[i][0],  50,(10+80*i));
         	addPlace(out, "-"+v_no.get(i), t_markup[i][1], 100,(10+80*i));
         }
@@ -51,7 +58,7 @@ public class PetriNetExportPNML extends BasePetriNetExport {
         for (int i=0 ; i<t_transition.length ; i++) {
         	List v_transition = t_transition[i];
             String s_node = v_no.get(i).toString();
-            int max = ((RegulatoryNode)v_no.get(i)).getMaxValue();
+            int max = v_no.get(i).getMax();
             int c = 0;
             if (v_transition != null) {
                 for (int j=0 ; j<v_transition.size() ; j++) {
@@ -73,7 +80,7 @@ public class PetriNetExportPNML extends BasePetriNetExport {
         for (int i=0 ; i<t_transition.length ; i++) {
         	List v_transition = t_transition[i];
             String s_node = v_no.get(i).toString();
-            int max = ((RegulatoryNode)v_no.get(i)).getMaxValue();
+            int max = v_no.get(i).getMax();
             if (v_transition != null) {
                 for (int j=0 ; j<v_transition.size() ; j++) {
                     

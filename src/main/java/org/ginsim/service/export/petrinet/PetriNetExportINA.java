@@ -5,10 +5,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ginsim.common.utils.FileFormatDescription;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
+import org.mangosdk.spi.ProviderFor;
 
 
 /**
@@ -46,27 +45,34 @@ import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
  * &#64;
  *</pre>
  */
-public class PetriNetExportINA extends BasePetriNetExport {
+@ProviderFor(PNFormat.class)
+public class PetriNetExportINA extends PNFormat {
 
-	protected PetriNetExportINA() {
-		super("pnt", "INA");
+	public PetriNetExportINA() {
+		super("INA", "INA", "pnt");
 	}
+
+	@Override
+	public BasePetriNetExport getWriter( LogicalModel model) {
+		return new PetriNetINAWriter( model);
+	}
+}
+
+
+class PetriNetINAWriter extends BasePetriNetExport {
 
 	// FIXME: INA does not like PN with "useless" places. Such places should be removed (with a warning)
 	// to prevent INA from believing the PN is not bounded! (maybe this should be an option ?)
 
+	public PetriNetINAWriter(LogicalModel model) {
+		super(model);
+	}
+
 	@Override
-	protected void doExport( PNConfig config, String filename) throws IOException {
-        RegulatoryGraph graph = config.graph;
+	protected void doExport( String netName, List<NodeInfo> nodes, List[] t_transition, byte[][] t_markup, FileWriter out) throws IOException {
 
-		List v_no = graph.getNodeOrder();
-        int len = v_no.size();
-        OMDDNode[] t_tree = ((RegulatoryGraph) graph).getAllTrees(true);
-        List[] t_transition = new List[len];
-        byte[][] t_markup = prepareExport(config, t_transition, t_tree);
-
-        FileWriter out = new FileWriter(filename);
-
+		int len = t_transition.length;
+		
         List[][] t_prepost = new ArrayList[2*len][2];
         List v_transition = new ArrayList();
 
@@ -76,9 +82,9 @@ public class PetriNetExportINA extends BasePetriNetExport {
         }
 
         for (int i=0 ; i<len ; i++) {
-            String vertex = v_no.get(i).toString();
+            String vertex = nodes.get(i).toString();
             if (t_transition[i] != null) {
-                int maxvalue = ((RegulatoryNode)v_no.get(i)).getMaxValue();
+                int maxvalue = ((NodeInfo)nodes.get(i)).getMax();
                 List v_trst = t_transition[i];
                 for (int j=0 ; j<v_trst.size() ; j++) {
                     TransitionData td = (TransitionData)v_trst.get(j);
@@ -216,8 +222,8 @@ public class PetriNetExportINA extends BasePetriNetExport {
         }
 
         // write the pre-post matrix
-        out.write("P   M   PRE,POST  NETZ 0:"+graph.getGraphName() +"\n");
-        for (int i=0 ; i<t_tree.length ; i++) {
+        out.write("P   M   PRE,POST  NETZ 0:"+netName +"\n");
+        for (int i=0 ; i<len ; i++) {
             String s_pp = "";
             List v = t_prepost[2*i][0];
             for (int j=0 ; j<v.size() ; j++) {
@@ -248,9 +254,9 @@ public class PetriNetExportINA extends BasePetriNetExport {
 
         // places data
         out.write("@\nplace nr.  name \t capacity time\n");
-        for (int i=0 ; i<t_tree.length ; i++) {
-        	RegulatoryNode vertex = (RegulatoryNode)v_no.get(i);
-        	String s = vertex + " \t "+vertex.getMaxValue()+ " 0\n";
+        for (int i=0 ; i<len ; i++) {
+        	NodeInfo ni = nodes.get(i);
+        	String s = ni + " \t "+ni.getMax()+ " 0\n";
             out.write(2*i+1+":  "+s);
             out.write(2*i+2+": -"+s);
         }

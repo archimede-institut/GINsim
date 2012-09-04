@@ -2,29 +2,28 @@ package org.ginsim.servicegui.export.petrinet;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.FileFormatDescription;
-import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
-import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.service.common.ExportAction;
-import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
-import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
+import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.service.export.petrinet.PNConfig;
-import org.ginsim.service.export.petrinet.PetrinetExportService;
-import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
-import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
 import org.ginsim.servicegui.tool.reg2dyn.PrioritySelectionPanel;
 
 public class PetriNetExportAction extends ExportAction<RegulatoryGraph> {
 
 	static final String PNFORMAT = "export.petriNet.defaultFormat";
 
-	PNConfig config;
+	private final PNConfig config = new PNConfig();
+	LogicalModel model = null;
 	
 	public PetriNetExportAction(RegulatoryGraph graph) {
 		super(graph, "STR_PetriNet", "STR_PetriNet_descr", null);
@@ -33,56 +32,49 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> {
 	protected void doExport( String filename) {
 		// call the selected export method to do the job
 		try {
-			config.format.export(config, filename);
+			config.format.getWriter( model).export(config, filename);
 		} catch (IOException e) {
 			LogManager.error(e);
 		}
 	}
 
 	@Override
-	public StackDialogHandler getConfigPanel() {
-		config = new PNConfig(graph);
-		return new PNExportConfigPanel(config, this);
-	}
-
-	@Override
 	protected FileFormatDescription getFileFilter() {
-		// FIXME return the filter associated to the selected format
-		// return config.format.ffilter
-		
 		return config.format.getFormatDescription();
 	}
 
-}
-
-class PNExportConfigPanel extends AbstractStackDialogHandler {
-    private static final long serialVersionUID = 9043565812912568136L;
-
-    private final PNConfig config;
-	private PrioritySelectionPanel priorityPanel = null;
-	private final PetriNetExportAction action;
-
-	protected PNExportConfigPanel ( PNConfig config, PetriNetExportAction action) {
-    	this.config = config;
-    	this.action = action;
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		PetriNetExportFrame frame = new PetriNetExportFrame(null, graph, this);
 	}
 	
-	@Override
-	public void init() {
-		RegulatoryGraph graph = config.graph;
-    	PerturbationSelectionPanel mutantPanel = null;
-    	
-    	InitialStatePanel initPanel = new InitialStatePanel(graph, false);
+
+	public void selectFile(LogicalModel model) {
+		this.model = model;
+		selectFile();
+	}
+}
+
+class PetriNetExportFrame extends LogicalModelActionDialog {
+
+	private final PetriNetExportAction action;
+	private final PNConfig config;
+	private PrioritySelectionPanel priorityPanel = null;
+
+	public PetriNetExportFrame(JFrame f, RegulatoryGraph lrg, PetriNetExportAction action) {
+		super(lrg, f, "PNGUI", 600, 400);
+		this.action = action;
+		this.config = new PNConfig();
+		
+    	InitialStatePanel initPanel = new InitialStatePanel(lrg, false);
     	initPanel.setParam(config);
     	
-    	setLayout(new GridBagLayout());
-    	mutantPanel = new PerturbationSelectionPanel(stack, graph, config);
-    	GridBagConstraints c = new GridBagConstraints();
-    	c.gridx = 0;
-		c.gridy = 1;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		add(mutantPanel, c);
+    	JPanel mainPanel = new JPanel();
+    	mainPanel.setLayout(new GridBagLayout());
+    	GridBagConstraints c;
 
+    	// TODO: restore settings (priority and initial states)
+/*    	
 		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject(graph, SimulationParametersManager.KEY, true);
         priorityPanel = new PrioritySelectionPanel(stack, paramList.pcmanager);
         priorityPanel.setStore(config.store, 1);
@@ -90,9 +82,9 @@ class PNExportConfigPanel extends AbstractStackDialogHandler {
 		c.gridx = 1;
 		c.gridy = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		add(priorityPanel, c);
+		mainPanel.add(priorityPanel, c);
 		priorityPanel.setFilter(PriorityClassManager.FILTER_NO_SYNCHRONOUS);
-
+		
 		c = new GridBagConstraints();
     	c.gridx = 0;
     	c.gridy = 2;
@@ -100,12 +92,16 @@ class PNExportConfigPanel extends AbstractStackDialogHandler {
     	c.weightx = 1;
     	c.weighty = 1;
     	c.fill = GridBagConstraints.BOTH;
-    	add(initPanel, c);
-    }
+    	mainPanel.add(initPanel, c);
+*/		
+
+    	setMainPanel(mainPanel);
+	}
 
 	@Override
-	public boolean run() {
-		action.selectFile();
-		return true;
+	public void run(LogicalModel model) {
+		action.selectFile(model);
+		cancel();
 	}
+
 }
