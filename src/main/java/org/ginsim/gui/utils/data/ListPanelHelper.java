@@ -119,5 +119,21 @@ public class ListPanelHelper<T> {
 	public Component getMultipleSelectionPanel() {
 		return new JLabel("Multiple selection");
 	}
+
+	public boolean doRemove(int[] sel) {
+        return false;
+	}
+	
+	public boolean remove(int[] sel) {
+		if (sel == null || sel.length < 1 || !canRemove) {
+			return false;
+		}
+		
+		if (doRemove(sel)) {
+			refresh();
+			return true;
+		}
+		return false;
+	}
 	
 }

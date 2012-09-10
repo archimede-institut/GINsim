@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.perturbation.MultiplePerturbation;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.GraphManager;
@@ -73,6 +74,7 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
 		}
 		Perturbation p = new PerturbationMultiple(perturbations);
 		multiplePerturbations.add(p);
+		lrg.fireGraphChange(GraphChangeType.ASSOCIATEDUPDATED, this);
 		return p;
 	}
 	
@@ -97,6 +99,7 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
 		
 		// no equivalent perturbation way found: add it
 		simplePerturbations.add(p);
+		lrg.fireGraphChange(GraphChangeType.ASSOCIATEDUPDATED, this);
 		return p;
 	}
 	
@@ -190,20 +193,46 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
 		switch (type) {
 		case NODEREMOVED:
 			NodeInfo ni = ((RegulatoryNode)data).getNodeInfo();
-			cleanup(ni, multiplePerturbations);
-			cleanup(ni, simplePerturbations);
+			boolean b = cleanup(ni, multiplePerturbations);
+			b = b || cleanup(ni, simplePerturbations);
+			if (b) {
+				lrg.fireGraphChange(GraphChangeType.ASSOCIATEDUPDATED, this);
+			}
 		}
 		return null;
 	}
 
-	private void cleanup(NodeInfo ni, List<Perturbation> perturbations) {
+	private boolean cleanup(NodeInfo ni, List<Perturbation> perturbations) {
 		List<Perturbation> removed = new ArrayList<Perturbation>();
 		for (Perturbation p: perturbations) {
 			if (p.affectsNode(ni)) {
 				removed.add(p);
 			}
 		}
-		perturbations.removeAll(removed);
+		if (removed != null && removed.size() > 0) {
+			perturbations.removeAll(removed);
+			return true;
+		}
+		return false;
+	}
+	
+	public void removePerturbation(List<Perturbation> removed) {
+		List<Perturbation> extraRemoved = new ArrayList<Perturbation>();
+		for (Perturbation p: multiplePerturbations) {
+			if (p instanceof PerturbationMultiple) {
+				PerturbationMultiple pm = (PerturbationMultiple)p;
+				for (Perturbation pi: removed) {
+					if (pm.perturbations.contains(pi)) {
+						extraRemoved.add(p);
+						break;
+					}
+				}
+			}
+		}
+		multiplePerturbations.removeAll(removed);
+		multiplePerturbations.removeAll(extraRemoved);
+		simplePerturbations.removeAll(removed);
+		lrg.fireGraphChange(GraphChangeType.ASSOCIATEDUPDATED, this);
 	}
 }
 

@@ -71,6 +71,17 @@ public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation> {
 		multipleLabel.setAction(new AddMultiplePerturbationAction(perturbations, indices));
 	}
 
+	@Override
+	public boolean doRemove(int[] sel) {
+		List<Perturbation> removed = new ArrayList<Perturbation>();
+		for (int i=0 ; i< sel.length ; i++) {
+			removed.add(perturbations.get(sel[i]));
+		}
+		
+		perturbations.removePerturbation(removed);
+        return true;
+	}
+
 }
 
 class AddMultiplePerturbationAction extends AbstractAction {
