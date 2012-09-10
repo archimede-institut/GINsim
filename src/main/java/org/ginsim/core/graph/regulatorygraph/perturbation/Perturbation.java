@@ -34,4 +34,6 @@ public interface Perturbation extends LogicalModelPerturbation {
 
 	
 	void toXML(XMLWriter out) throws IOException;
+	
+	boolean affectsNode(NodeInfo node);
 }

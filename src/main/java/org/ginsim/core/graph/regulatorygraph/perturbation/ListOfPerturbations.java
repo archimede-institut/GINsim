@@ -10,6 +10,10 @@ import java.util.ListIterator;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.common.GraphEventCascade;
+import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
@@ -22,7 +26,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
  * 
  * @author Aurelien Naldi
  */
-public class ListOfPerturbations implements Iterable<Perturbation> {
+public class ListOfPerturbations implements Iterable<Perturbation>, GraphListener<RegulatoryGraph> {
 
 	private final List<Perturbation> simplePerturbations = new ArrayList<Perturbation>();
 	private final List<Perturbation> multiplePerturbations = new ArrayList<Perturbation>();
@@ -31,6 +35,7 @@ public class ListOfPerturbations implements Iterable<Perturbation> {
 	
 	public ListOfPerturbations(RegulatoryGraph lrg) {
 		this.lrg = lrg;
+		GraphManager.getInstance().addGraphListener(lrg, this);
 	}
 	
 	/**
@@ -180,6 +185,26 @@ public class ListOfPerturbations implements Iterable<Perturbation> {
 		return ret;
 	}
 
+	@Override
+	public GraphEventCascade graphChanged(RegulatoryGraph g, GraphChangeType type, Object data) {
+		switch (type) {
+		case NODEREMOVED:
+			NodeInfo ni = ((RegulatoryNode)data).getNodeInfo();
+			cleanup(ni, multiplePerturbations);
+			cleanup(ni, simplePerturbations);
+		}
+		return null;
+	}
+
+	private void cleanup(NodeInfo ni, List<Perturbation> perturbations) {
+		List<Perturbation> removed = new ArrayList<Perturbation>();
+		for (Perturbation p: perturbations) {
+			if (p.affectsNode(ni)) {
+				removed.add(p);
+			}
+		}
+		perturbations.removeAll(removed);
+	}
 }
 
 

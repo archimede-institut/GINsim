@@ -30,4 +30,9 @@ public class PerturbationFixed extends FixedValuePerturbation implements Perturb
         out.closeTag();
 	}
 
+	@Override
+	public boolean affectsNode(NodeInfo node) {
+		return component.equals(node);
+	}
+
 }

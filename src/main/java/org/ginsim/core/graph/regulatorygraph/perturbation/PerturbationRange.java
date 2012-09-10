@@ -33,4 +33,9 @@ public class PerturbationRange extends RangePerturbation implements Perturbation
         out.closeTag();
 	}
 
+	@Override
+	public boolean affectsNode(NodeInfo node) {
+		return component.equals(node);
+	}
+
 }
