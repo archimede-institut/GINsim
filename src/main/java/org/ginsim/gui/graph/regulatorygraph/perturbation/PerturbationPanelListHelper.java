@@ -8,11 +8,9 @@ import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
+import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.gui.utils.data.ListPanelHelper;
 
 public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation> {
@@ -25,9 +23,11 @@ public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation> {
 	private JButton multipleLabel = null;
 	
 	private PerturbationCreatePanel createPanel = null;
+	private final PerturbationPanel perturbationPanel;
 	
-	public PerturbationPanelListHelper(ListOfPerturbations perturbations) {
+	public PerturbationPanelListHelper(ListOfPerturbations perturbations, PerturbationPanel perturbationPanel) {
 		this.perturbations = perturbations;
+		this.perturbationPanel = perturbationPanel;
 	}
 	
 	public Object[] getCreateTypes() {
@@ -68,7 +68,7 @@ public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation> {
 		selectedLabel.setText("selected: "+index);
 	}
 	public void updateMultipleSelectionPanel(int[] indices) {
-		multipleLabel.setAction(new AddMultiplePerturbationAction(perturbations, indices));
+		multipleLabel.setAction(new AddMultiplePerturbationAction(perturbationPanel, perturbations, indices));
 	}
 
 	@Override
@@ -87,11 +87,13 @@ public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation> {
 class AddMultiplePerturbationAction extends AbstractAction {
 	
 	private final ListOfPerturbations perturbations;
+	private final PerturbationPanel panel;
 	private final int[] selected;
 	
-	public AddMultiplePerturbationAction(ListOfPerturbations perturbations, int[] selected) {
+	public AddMultiplePerturbationAction(PerturbationPanel panel, ListOfPerturbations perturbations, int[] selected) {
 		super("Create multiple perturbation");
 		this.perturbations = perturbations;
+		this.panel = panel;
 		this.selected = selected;
 	}
 	
@@ -102,6 +104,7 @@ class AddMultiplePerturbationAction extends AbstractAction {
 			lselected.add(perturbations.get(i));
 		}
 		perturbations.addMultiplePerturbation(lselected);
+		panel.refresh();
 	}
 
 }
