@@ -73,7 +73,7 @@ public class CanvasScrolPane extends JPanel implements ChangeListener {
 	}
 
 	public void setScrollPosition(Rectangle visible, Dimension global) {
-		if (updating) {
+		if (hmodel.getValueIsAdjusting() || vmodel.getValueIsAdjusting()) {
 			return;
 		}
 		if ( global.width == width && global.height == height &&

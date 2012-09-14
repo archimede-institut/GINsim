@@ -60,7 +60,10 @@ public class SimpleCanvas extends JComponent {
 
 	/** part of the canvas that was changed and should be repainted */
     private Rectangle damagedRegion = null;
-    private Rectangle visibleScroll = null;
+    private final Rectangle visibleArea = new Rectangle();
+    private final Dimension virtualDimension = new Dimension();
+    
+    private boolean visibleAreaUpdated = true, virtualDimensionUpdated = true;
     
 	private Point lastPoint;
 
@@ -105,6 +108,7 @@ public class SimpleCanvas extends JComponent {
 			g.translate(tr_x, tr_y);
 			g.scale(zoom, zoom);
 			renderer.render(g,getCanvasRectangle(area));
+			virtualDimensionUpdated = true;
 		}
 
 		this.img = img;
@@ -127,14 +131,7 @@ public class SimpleCanvas extends JComponent {
 		
 
 		if (scrollPane != null) {
-			if (visibleScroll == null) {
-				visibleScroll = new Rectangle();
-			}
-			visibleScroll.x = -tr_x;
-			visibleScroll.y = -tr_y;
-			visibleScroll.width = (int)(getWidth()/zoom);
-			visibleScroll.height = (int)(getHeight()/zoom);
-			scrollPane.setScrollPosition( visibleScroll, renderer.getBounds());
+			scrollPane.setScrollPosition( getVisibleArea(), getVirtualDimension());
 		}
 
 		// add overlay layer to the image, by the renderer
@@ -149,6 +146,40 @@ public class SimpleCanvas extends JComponent {
 		} else {
 			renderer.overlay(g2, getCanvasRectangle(new Rectangle(0,0, getWidth(), getHeight())));
 		}
+	}
+	
+	private Dimension getVirtualDimension() {
+		if (virtualDimensionUpdated) {
+			getVisibleArea();
+			virtualDimension.setSize(renderer.getBounds());
+			// minimum: visible area
+			int min = 1 + visibleArea.width / 2;
+			if (virtualDimension.width <= min) {
+				virtualDimension.width = visibleArea.width;
+			} else {
+				virtualDimension.width += min;
+			}
+			
+			min = 1 + visibleArea.height / 2;
+			if (virtualDimension.height < min) {
+				virtualDimension.height = visibleArea.height;
+			} else {
+				virtualDimension.height += min;
+			}
+			virtualDimensionUpdated = false;
+		}
+		return virtualDimension;
+	}
+
+	private Rectangle getVisibleArea() {
+		if (visibleAreaUpdated) {
+			visibleArea.x = -tr_x;
+			visibleArea.y = -tr_y;
+			visibleArea.width = (int)(getWidth()/zoom);
+			visibleArea.height = (int)(getHeight()/zoom);
+			visibleAreaUpdated = false;
+		}
+		return visibleArea;
 	}
 	
 	private Rectangle getCanvasRectangle(Rectangle area) {
@@ -178,6 +209,7 @@ public class SimpleCanvas extends JComponent {
 			zoom = 1;
 		}
 		img = null;
+		visibleAreaUpdated = true;
 		repaint();
 	}
 	
@@ -210,36 +242,40 @@ public class SimpleCanvas extends JComponent {
 	}
 
 	private void moveImage(int dx, int dy) {
-		Dimension dim = renderer.getBounds();
+		Dimension dim = getVirtualDimension();
+		Rectangle visible = getVisibleArea();
 		
-		/* ****  ugly hack to decide where we should block the scrolling  **** */
-		
-		// start by getting the size of the visible area and allowed margin
-		// consistent with the one used when drawing scroll bars
-		int cw = getWidth();
-		int ch = getHeight();
-
-		cw /= zoom;
-		ch /= zoom;
-		
-		int maxdx = -(int)dim.getWidth() + 35 - this.tr_x;
-		int maxdy = -(int)dim.getHeight() + 35 - this.tr_y;
-		// prevent going to negative coordinates
-		if (dx > 0 && dx > -this.tr_x) {
-			dx = -this.tr_x;
-		} else if (dx < 0 && dx < maxdx) {
-			dx = maxdx;
+		// prevent going to negative coordinates or after the limit
+		if (dx > 0) {
+			if (dx > -tr_x) {
+				dx = -tr_x;
+			}
+		} else {
+			int maxdx = visible.width - dim.width - tr_x;
+			if (dx < maxdx) {
+				dx = maxdx;
+			}
 		}
 		
-		if (dy > 0 && dy > -this.tr_y) {
-			dy = -this.tr_y;
-		} else if (dy < 0 && dy < maxdy) {
-			dy = maxdy;
+		if (dy > 0) {
+			if (dy > -this.tr_y) {
+				dy = -this.tr_y;
+			}
+		} else { 
+			int maxdy = visible.height - dim.height - tr_y;
+			if (dy < 0 && dy < maxdy) {
+				dy = maxdy;
+			}
+		}
+		
+		if (dx == 0 && dy == 0) {
+			return;
 		}
 		
 		// moving coordinates
 		this.tr_x += dx;
 		this.tr_y += dy;
+		visibleAreaUpdated = true;
 		
 		if (img == null || (dx == 0 && dy == 0)) {
 			return;
@@ -280,7 +316,6 @@ public class SimpleCanvas extends JComponent {
 	}
 
 	public void scroll(int wheelRotation, boolean alternate) {
-		Dimension dim = renderer.getBounds();
 		int tr = -10*wheelRotation;
 		if (alternate) {
 			moveImage(tr, 0);
@@ -355,6 +390,7 @@ public class SimpleCanvas extends JComponent {
 		if (img != null) {
 			img = null;
 		}
+		visibleAreaUpdated = true;
 		super.reshape(x, y, w, h);
 	}
 }
