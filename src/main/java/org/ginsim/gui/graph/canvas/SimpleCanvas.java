@@ -14,7 +14,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
-import java.util.Date;
 
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputListener;
@@ -39,10 +38,6 @@ public class SimpleCanvas extends JComponent {
 	private final static double MAXZOOM = 10;
 	private final static double MINZOOM = 0.1;
 	
-	private final static int SCROLLMARGIN = 4;
-	private final static boolean SCROLLBARS = true;
-	private final double CANVASMARGIN = 0.5;
-	
 	private final static RenderingHints RENDER_HINTS;
 	
 	static {
@@ -52,6 +47,7 @@ public class SimpleCanvas extends JComponent {
 	
 	private CanvasRenderer renderer = null;
 	private final CanvasEventListener mouseListener;
+	private CanvasScrolPane scrollPane = null;
 	
 	/** zoom factor */
 	private double zoom = 1;
@@ -64,9 +60,9 @@ public class SimpleCanvas extends JComponent {
 
 	/** part of the canvas that was changed and should be repainted */
     private Rectangle damagedRegion = null;
+    private Rectangle visibleScroll = null;
     
 	private Point lastPoint;
-	private CanvasScrollPosition lastScrollPosition = null;
 
 	private Color backgroundColor = Color.white;
 	
@@ -82,13 +78,17 @@ public class SimpleCanvas extends JComponent {
 		mouseListener.setEventManager(renderer);
 	}
 
+	public void setScrollPane(CanvasScrolPane scrollPane) {
+		this.scrollPane = scrollPane;
+	}
+
 	public BufferedImage getNewBufferedImage() {
-    	return new BufferedImage(getWidth()-SCROLLMARGIN, getHeight()-SCROLLMARGIN, BufferedImage.TYPE_INT_RGB);
+    	return new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 	}
 	
 	private void paintBuffer() {
     	BufferedImage img = getNewBufferedImage();
-		Rectangle area = new Rectangle(0, 0, getWidth()-SCROLLMARGIN, getHeight()-SCROLLMARGIN);
+		Rectangle area = new Rectangle(0, 0, getWidth(), getHeight());
     	paintAreaInBuffer(img, area);
 	}
 	
@@ -125,77 +125,18 @@ public class SimpleCanvas extends JComponent {
 			return;
 		}
 		
-		// draw size indicators (pseudo scroll bars)
-		Dimension bounds = renderer.getBounds();
-		// canvas and scroll area size
-		int cw = getWidth()-SCROLLMARGIN;
-		int ch = getHeight()-SCROLLMARGIN;
-		int sw = SCROLLMARGIN-1;
 
-		// renderer size, including canvas margin
-		int vert_cmargin = (int)(CANVASMARGIN*cw/zoom);
-		int hor_cmargin = (int)(CANVASMARGIN*ch/zoom);
-		int rw = bounds.width + vert_cmargin;
-		int rh = bounds.height + hor_cmargin;
-
-		// visible area
-		int vx = (-tr_x * 100) / rw;
-		double vmaxx = ((-tr_x+(cw/zoom))*100) / rw;
-		
-		int vy = (-tr_y * 100) / rh;
-		double vmaxy = ((-tr_y+(ch/zoom))*100) / rh;
-		int cmaxy = tr_y+ch;
-		
-		// make sure to stay in the 0-100 range
-		if (vmaxx > 100) {
-			vmaxx = 100;
-		}
-		if (vmaxy > 100) {
-			vmaxy = 100;
+		if (scrollPane != null) {
+			if (visibleScroll == null) {
+				visibleScroll = new Rectangle();
+			}
+			visibleScroll.x = -tr_x;
+			visibleScroll.y = -tr_y;
+			visibleScroll.width = (int)(getWidth()/zoom);
+			visibleScroll.height = (int)(getHeight()/zoom);
+			scrollPane.setScrollPosition( visibleScroll, renderer.getBounds());
 		}
 
-		// minimum scrollbar size
-		if (vmaxx - vx < 10) {
-			vx = (int)vmaxx - 10;
-		}
-		if (vmaxy - vy < 10) {
-			vy = (int)vmaxy - 10;
-		}
-		
-
-		// do we need scroll bars?
-		if (vx > 0 || vmaxx < 100 || vy > 0 || vmaxy < 100) {
-			// extract width and height
-			int vw = (int)vmaxx - vx;
-			int vh = (int)vmaxy - vy;
-	
-			// translate into screen coordinates
-			vx = vx * cw / 100;
-			vw = vw * cw / 100;
-			vy = vy * ch / 100;
-			vh = vh * ch / 100;
-		
-			// scroll information background
-			g.setColor(Color.BLACK);
-			g.drawLine(0, ch, cw, ch);
-			g.drawLine(cw, 0, cw, ch);
-			g.setColor(Color.WHITE);
-			g.fillRect(0, ch+1, cw, sw);
-			g.fillRect(cw+1, 0, sw, ch);
-			
-			// actual scroll information
-			g.setColor(Color.BLUE);
-			g.fillRect(vx, ch+1, vw, sw);
-			g.fillRect(cw+1, vy, sw, vh);
-			
-			// position of markers for the real visible area
-			g.setColor(Color.GREEN);
-			int vmark = (bounds.height*ch) / rh;
-			g.fillRect(cw+1, vmark-1, sw, 2);
-			vmark = (bounds.width*cw) / rw;
-			g.fillRect(vmark-1, ch+1, 2, sw);
-		}
-		
 		// add overlay layer to the image, by the renderer
 		Graphics2D g2 = (Graphics2D)g;
 		g2.translate(tr_x, tr_y);
@@ -252,64 +193,10 @@ public class SimpleCanvas extends JComponent {
 	public void translate(double dx, double dy) {
 		moveImage((int)(dx/zoom), (int)(dy/zoom));
 	}
-	
-	private CanvasScrollPosition getScrollPosition(Point p) {
-		
-		if (p.x > getWidth() - SCROLLMARGIN) {
-			if (p.y > getHeight() - SCROLLMARGIN) {
-				return CanvasScrollPosition.CORNER;
-			}
-			
-			
-			return CanvasScrollPosition.VERT_HANDLE;
-		}
-		
-		if (p.y > getHeight() - SCROLLMARGIN) {
-			
-			
-			return CanvasScrollPosition.HOR_HANDLE;
-		}
-		
-		return CanvasScrollPosition.INTERNAL;
-	}
-	
-	protected boolean mousePressed(int mouseButton, Point p) {
-		this.lastPoint = p;
-		if (p == null) {
-			lastScrollPosition = null;
-		} else {
-			lastScrollPosition = getScrollPosition(p);
-		}
-		
-		if (lastScrollPosition == null || lastScrollPosition == CanvasScrollPosition.INTERNAL) {
-			return false;
-		}
 
-		// TODO: handle the click
-		
-		return true;
+	public void moveTo(int x, int y) {
+		moveImage(-(x + tr_x), -(y + tr_y));
 	}
-	
-	protected boolean click(int mouseButton, Point p) {
-		if (lastScrollPosition == null || lastScrollPosition == CanvasScrollPosition.INTERNAL) {
-			return false;
-		}
-		
-		// TODO: handle the click
-		
-		return true;
-	}
-	
-	protected boolean mouseReleased() {
-		if (lastScrollPosition == null || lastScrollPosition == CanvasScrollPosition.INTERNAL) {
-			return false;
-		}
-		
-		// TODO: handle the event
-		
-		return true;
-	}
-
 
 	/**
 	 * Drag to scroll the view.
@@ -329,10 +216,8 @@ public class SimpleCanvas extends JComponent {
 		
 		// start by getting the size of the visible area and allowed margin
 		// consistent with the one used when drawing scroll bars
-		int cw = getWidth()-SCROLLMARGIN;
-		int ch = getHeight()-SCROLLMARGIN;
-		int vert_cmargin = (int)(CANVASMARGIN*cw/zoom);
-		int hor_cmargin = (int)(CANVASMARGIN*ch/zoom);
+		int cw = getWidth();
+		int ch = getHeight();
 
 		cw /= zoom;
 		ch /= zoom;
@@ -368,18 +253,18 @@ public class SimpleCanvas extends JComponent {
 		// redraw only the sides
     	// Note: the corner is re-painted twice
     	if (dx > 0) {
-    		Rectangle area = new Rectangle(0, 0, dx, getHeight()-SCROLLMARGIN);
+    		Rectangle area = new Rectangle(0, 0, dx, getHeight());
         	paintAreaInBuffer(img, area);
     	} else if (dx < 0) {
-    		Rectangle area = new Rectangle(getWidth()+dx-SCROLLMARGIN, 0, -dx, getHeight()-SCROLLMARGIN);
+    		Rectangle area = new Rectangle(getWidth()+dx, 0, -dx, getHeight());
         	paintAreaInBuffer(img, area);
     	}
 
     	if (dy > 0) {
-    		Rectangle area = new Rectangle(0, 0, getWidth()-SCROLLMARGIN, dy);
+    		Rectangle area = new Rectangle(0, 0, getWidth(), dy);
         	paintAreaInBuffer(img, area);
     	} else if (dy < 0) {
-    		Rectangle area = new Rectangle(0, getHeight()+dy-SCROLLMARGIN, getWidth()-SCROLLMARGIN, -dy);
+    		Rectangle area = new Rectangle(0, getHeight()+dy, getWidth(), -dy);
         	paintAreaInBuffer(img, area);
     	}
 
@@ -502,10 +387,6 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 	public void mouseClicked(MouseEvent e) {
 		Point p = e.getPoint();
 		
-		if (canvas.click(mouseButton, p)) {
-			return;
-		}
-		
 		if (evtManager != null) {
 			evtManager.click(canvas.window2canvas(p), alternate(e));
 		}
@@ -517,10 +398,6 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 		Point p = e.getPoint();
 		mouseButton = e.getButton();
 
-		if (canvas.mousePressed(mouseButton, p)) {
-			return;
-		}
-		
 		if (evtManager != null) {
 			evtManager.pressed(canvas.window2canvas(p), alternate(e));
 		}
@@ -529,9 +406,7 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		mouseButton = -1;
-		if (canvas.mouseReleased()) {
-			return;
-		}
+		
 		if (evtManager != null) {
 			evtManager.released(canvas.window2canvas(e.getPoint()));
 		}
