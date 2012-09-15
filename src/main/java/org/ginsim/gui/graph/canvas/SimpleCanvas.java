@@ -66,8 +66,6 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
     
     private boolean visibleAreaUpdated = true, virtualDimensionUpdated = true;
     
-	private Point lastPoint;
-
 	private Color backgroundColor = Color.white;
 	
 	private boolean showHelp = false;
@@ -92,23 +90,25 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 	
 	private void paintBuffer() {
     	BufferedImage img = getNewBufferedImage();
-		Rectangle area = new Rectangle(0, 0, getWidth(), getHeight());
-    	paintAreaInBuffer(img, area);
+    	paintAreaInBuffer(img, null);
 	}
 	
 	private void paintAreaInBuffer(BufferedImage img, Rectangle area) {
-		
+		if (area == null) {
+			area = getVisibleArea();
+		} else {
+			area = getVisibleArea().intersection(area);
+		}
     	Graphics2D g = img.createGraphics();
     	g.setRenderingHints(RENDER_HINTS);
-    	g.clip(area);
 		// erase the whole area
 		g.setColor(backgroundColor);
-		g.fill(area);
 		
 		if (renderer != null) {
-			g.translate(tr_x, tr_y);
-			g.scale(zoom, zoom);
-			renderer.render(g,getCanvasRectangle(area));
+			transform(g);
+	    	g.clip(area);
+			g.fill(area);
+			renderer.render(g,area);
 			virtualDimensionUpdated = true;
 		}
 
@@ -136,18 +136,23 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 
 		// add overlay layer to the image, by the renderer
 		Graphics2D g2 = (Graphics2D)g;
-		g2.translate(tr_x, tr_y);
-		g2.scale(zoom, zoom);
+		transform(g2);
 
+		Rectangle overlayRect = new Rectangle(0,0, (int)(getWidth()/zoom), (int)(getHeight()/zoom));
 		if (showHelp) {
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.9f));
-			renderer.helpOverlay(g2, getCanvasRectangle(new Rectangle(0,0, getWidth(), getHeight())));
+			renderer.helpOverlay(g2, overlayRect);
 			showHelp = false;
 		} else {
-			renderer.overlay(g2, getCanvasRectangle(new Rectangle(0,0, getWidth(), getHeight())));
+			renderer.overlay(g2, overlayRect);
 		}
 	}
 
+	private void transform(Graphics2D g) {
+		g.translate(-tr_x*zoom, -tr_y*zoom);
+		g.scale(zoom, zoom);
+	}
+	
 	@Override
 	public Component getComponent() {
 		return this;
@@ -180,8 +185,8 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 	@Override
 	public Rectangle getVisibleArea() {
 		if (visibleAreaUpdated) {
-			visibleArea.x = -tr_x;
-			visibleArea.y = -tr_y;
+			visibleArea.x = tr_x;
+			visibleArea.y = tr_y;
 			visibleArea.width = (int)(getWidth()/zoom);
 			visibleArea.height = (int)(getHeight()/zoom);
 			visibleAreaUpdated = false;
@@ -189,27 +194,17 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 		return visibleArea;
 	}
 	
-	private Rectangle getCanvasRectangle(Rectangle area) {
-		Rectangle canvasArea = area;
-		if (zoom != 1) {
-			canvasArea = new Rectangle((int)((area.x-tr_x)/zoom), (int)((area.y-tr_y)/zoom), (int)(area.width/zoom), (int)(area.height/zoom));
-		} else if (tr_x != 0 || tr_y != 0) {
-			canvasArea = new Rectangle(area.x-tr_x, area.y-tr_y, area.width, area.height);
-		}
-		return canvasArea;
-	}
-
 	public void zoom(int n) {
-		if (n < 0) {
+		if (n > 0) {
 			if (zoom >= MAXZOOM) {
 				return;
 			}
-			zoom = zoom * 1.1;
-		} else if (n > 0) {
+			zoom += .1;
+		} else if (n < 0) {
 			if (zoom <= MINZOOM) {
 				return;
 			}
-			zoom = zoom / 1.1;
+			zoom -= .1;
 		} else if (zoom == 1) {
 			return;
 		} else {
@@ -220,115 +215,95 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 		repaint();
 	}
 	
-	/**
-	 * Translate the canvas.
-	 *   dx > 0 will reveal what is to the right of the current view (horizontal scroll)
-	 *   dy > 0 will reveal what is below the current view (scroll down)
-	 * Note: the zoom level affects this.
-	 *   
-	 * @param dx
-	 * @param dy
-	 */
-	public void translate(double dx, double dy) {
-		moveImage((int)(dx/zoom), (int)(dy/zoom));
-	}
 
 	@Override
 	public void setScrollPosition(int x, int y) {
-		moveImage(-(x + tr_x), -(y + tr_y));
-	}
-
-	/**
-	 * Drag to scroll the view.
-	 * Note: only the main event listener should call this method, the renderer should use "translate".
-	 * 
-	 * @param p
-	 */
-	public void drag(Point p) {
-		moveImage(lastPoint.x - p.x, lastPoint.y - p.y);
-		this.lastPoint = p;
-	}
-
-	private void moveImage(int dx, int dy) {
-		Dimension dim = getVirtualDimension();
+		if (x == tr_x && y == tr_y) {
+			return;
+		}
+		
 		Rectangle visible = getVisibleArea();
+		Dimension dim = getVirtualDimension();
+
+		int maxx = dim.width - visible.width;
+		int maxy = dim.height - visible.height;
 		
-		// prevent going to negative coordinates or after the limit
-		if (dx > 0) {
-			if (dx > -tr_x) {
-				dx = -tr_x;
-			}
-		} else {
-			int maxdx = visible.width - dim.width - tr_x;
-			if (dx < maxdx) {
-				dx = maxdx;
-			}
+		if (x < 0) {
+			x = 0;
+		} else if (x > maxx) {
+			x = maxx;
 		}
 		
-		if (dy > 0) {
-			if (dy > -this.tr_y) {
-				dy = -this.tr_y;
-			}
-		} else { 
-			int maxdy = visible.height - dim.height - tr_y;
-			if (dy < 0 && dy < maxdy) {
-				dy = maxdy;
-			}
+		if (y < 0) {
+			y = 0;
+		} else if (y > maxy) {
+			y = maxy;
 		}
+		
+		int dx = x - this.tr_x;
+		int dy = y - this.tr_y;
 		
 		if (dx == 0 && dy == 0) {
 			return;
 		}
 		
-		// moving coordinates
-		this.tr_x += dx;
-		this.tr_y += dy;
+		this.tr_x = x;
+		this.tr_y = y;
 		visibleAreaUpdated = true;
-		
-		if (img == null || (dx == 0 && dy == 0)) {
+
+		if (img == null) {
 			return;
 		}
 		
-    	BufferedImage img = getNewBufferedImage();
-    	Graphics2D g = img.createGraphics();
-    	
-    	g.drawImage(this.img, dx, dy, null);
-    	
-		// redraw only the sides
-    	// Note: the corner is re-painted twice
-    	if (dx > 0) {
-    		Rectangle area = new Rectangle(0, 0, dx, getHeight());
-        	paintAreaInBuffer(img, area);
-    	} else if (dx < 0) {
-    		Rectangle area = new Rectangle(getWidth()+dx, 0, -dx, getHeight());
-        	paintAreaInBuffer(img, area);
-    	}
-
-    	if (dy > 0) {
-    		Rectangle area = new Rectangle(0, 0, getWidth(), dy);
-        	paintAreaInBuffer(img, area);
-    	} else if (dy < 0) {
-    		Rectangle area = new Rectangle(0, getHeight()+dy, getWidth(), -dy);
-        	paintAreaInBuffer(img, area);
-    	}
-
-    	this.img = img;
-    	repaint();
+		dim = getVirtualDimension();
+		
+		// FIXME: move image and redraw only the revealed parts
+		paintAreaInBuffer(img, null);
+		
+//    	BufferedImage img = getNewBufferedImage();
+//    	Graphics2D g = img.createGraphics();
+//    	
+//    	dx *= zoom;
+//    	dy *= zoom;
+//    	
+//    	g.drawImage(this.img, dx, dy, null);
+//    	
+//		// redraw only the sides
+//    	// Note: the corner is re-painted twice
+//    	if (dx > 0) {
+//    		Rectangle area = new Rectangle(0, 0, dx, getHeight());
+//        	paintAreaInBuffer(img, area);
+//    	} else if (dx < 0) {
+//    		Rectangle area = new Rectangle(getWidth()+dx, 0, -dx, getHeight());
+//        	paintAreaInBuffer(img, area);
+//    	}
+//
+//    	if (dy > 0) {
+//    		Rectangle area = new Rectangle(0, 0, getWidth(), dy);
+//        	paintAreaInBuffer(img, area);
+//    	} else if (dy < 0) {
+//    		Rectangle area = new Rectangle(0, getHeight()+dy, getWidth(), -dy);
+//        	paintAreaInBuffer(img, area);
+//    	}
+//
+//    	this.img = img;
+		
+		
+		repaint();
 	}
-	
+
 	protected Point window2canvas(Point p) {
-		if (zoom == 1) {
-			return new Point(p.x-tr_x, p.y-tr_y);
-		}
-		return new Point((int)((p.x-tr_x)/zoom), (int)((p.y-tr_y)/zoom));
+		Point ret = new Point(tr_x + (int)(p.x/zoom), tr_y + (int)(p.y/zoom));
+		return ret;
 	}
 
 	public void scroll(int wheelRotation, boolean alternate) {
-		int tr = -10*wheelRotation;
+		int tr = (int)(10*wheelRotation*zoom);
+		Rectangle visible = getVisibleArea();
 		if (alternate) {
-			moveImage(tr, 0);
+			setScrollPosition(visible.x+tr, visible.y);
 		} else {
-			moveImage(0, tr);
+			setScrollPosition(visible.x, visible.y + tr);
 		}
 	}
 	
@@ -340,41 +315,13 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 	 * @param area the canvas area to mark as damaged
 	 */
 	public void damageCanvas(Rectangle area) {
-		int x = (int)(area.x * zoom) + tr_x - 1;
-		int y = (int)(area.y * zoom) + tr_y - 1;
-		
-		int width = (int)(area.width*zoom) +2;
-		int height = (int)(area.height*zoom) +2;
-
-		// only take into account visible parts
-		if (x < 0) {
-			width -= x;
-			x = 0;
-		}
-		if (y < 0) {
-			height -= y;
-			y = 0;
-		}
-		
-		if (width > 0 && height > 0) {
-			damageScreen(new Rectangle(x,y, width, height));
-		}
-	}
-	
-	/**
-	 * Mark a part of the screen as needing to be redrawn.
-	 * Note: this does NOT call repaint to let several calls happen before the actual redraw.
-	 * 
-	 * @param area
-	 */
-	public void damageScreen(Rectangle area) {
 		if (damagedRegion == null) {
 			damagedRegion = area;
 		} else {
 			damagedRegion = damagedRegion.union(area);
 		}
 	}
-
+	
 	/**
 	 * Throw away the cached image.
 	 * The next repaint will have to build the image from scratch.
@@ -466,10 +413,6 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if (mouseButton == MouseEvent.BUTTON2) {
-			canvas.drag(e.getPoint());
-			return;
-		}
 		
 		if (evtManager != null) {
 			evtManager.dragged(canvas.window2canvas(e.getPoint()));
@@ -491,7 +434,7 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 			return;
 		}
 		
-		canvas.zoom(e.getWheelRotation());
+		canvas.zoom(-e.getWheelRotation());
 	}
 
 	@Override
