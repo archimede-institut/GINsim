@@ -2,6 +2,7 @@ package org.ginsim.gui.graph.canvas;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -33,7 +34,7 @@ import javax.swing.event.MouseInputListener;
  * 
  * @author Aurelien Naldi
  */
-public class SimpleCanvas extends JComponent {
+public class SimpleCanvas extends JComponent implements VirtualScrollable {
 
 	private final static double MAXZOOM = 10;
 	private final static double MINZOOM = 0.1;
@@ -47,7 +48,7 @@ public class SimpleCanvas extends JComponent {
 	
 	private CanvasRenderer renderer = null;
 	private final CanvasEventListener mouseListener;
-	private CanvasScrolPane scrollPane = null;
+	private VirtualScrollPane scrollPane = null;
 	
 	/** zoom factor */
 	private double zoom = 1;
@@ -81,7 +82,7 @@ public class SimpleCanvas extends JComponent {
 		mouseListener.setEventManager(renderer);
 	}
 
-	public void setScrollPane(CanvasScrolPane scrollPane) {
+	public void setScrollPane(VirtualScrollPane scrollPane) {
 		this.scrollPane = scrollPane;
 	}
 
@@ -129,9 +130,8 @@ public class SimpleCanvas extends JComponent {
 			return;
 		}
 		
-
 		if (scrollPane != null) {
-			scrollPane.setScrollPosition( getVisibleArea(), getVirtualDimension());
+			scrollPane.fireViewUpdated();
 		}
 
 		// add overlay layer to the image, by the renderer
@@ -147,8 +147,14 @@ public class SimpleCanvas extends JComponent {
 			renderer.overlay(g2, getCanvasRectangle(new Rectangle(0,0, getWidth(), getHeight())));
 		}
 	}
+
+	@Override
+	public Component getComponent() {
+		return this;
+	}
 	
-	private Dimension getVirtualDimension() {
+	@Override
+	public Dimension getVirtualDimension() {
 		if (virtualDimensionUpdated) {
 			getVisibleArea();
 			virtualDimension.setSize(renderer.getBounds());
@@ -171,7 +177,8 @@ public class SimpleCanvas extends JComponent {
 		return virtualDimension;
 	}
 
-	private Rectangle getVisibleArea() {
+	@Override
+	public Rectangle getVisibleArea() {
 		if (visibleAreaUpdated) {
 			visibleArea.x = -tr_x;
 			visibleArea.y = -tr_y;
@@ -226,7 +233,8 @@ public class SimpleCanvas extends JComponent {
 		moveImage((int)(dx/zoom), (int)(dy/zoom));
 	}
 
-	public void moveTo(int x, int y) {
+	@Override
+	public void setScrollPosition(int x, int y) {
 		moveImage(-(x + tr_x), -(y + tr_y));
 	}
 

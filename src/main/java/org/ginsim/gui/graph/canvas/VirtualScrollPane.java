@@ -11,10 +11,17 @@ import javax.swing.JScrollBar;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-public class CanvasScrolPane extends JPanel implements ChangeListener {
+/**
+ * ScrollPane-like panel to host a "smart" canvas.
+ * Instead of showing only part of the viewed widget (as a regular ScrollPane does),
+ * it will collaborate with the widget based on its virtual dimensions and visible area.
+ * 
+ * @author Aurelien Naldi
+ */
+public class VirtualScrollPane extends JPanel implements ChangeListener {
 
 	private final BoundedRangeModel hmodel, vmodel;
-	private final SimpleCanvas canvas;
+	private final VirtualScrollable view;
 	
 	private int width = 100, height = 100;
 	private int x = 0, y = 0;
@@ -22,9 +29,9 @@ public class CanvasScrolPane extends JPanel implements ChangeListener {
 	
 	private boolean updating = false;
 	
-	public CanvasScrolPane(SimpleCanvas canvas) {
+	public VirtualScrollPane(VirtualScrollable view) {
 		super(new GridBagLayout());
-		this.canvas = canvas;
+		this.view = view;
 		
 		// add scrollbars
 		GridBagConstraints cst = new GridBagConstraints();
@@ -52,12 +59,12 @@ public class CanvasScrolPane extends JPanel implements ChangeListener {
 		cst.weightx = 1;
 		cst.weighty = 1;
 		cst.fill = GridBagConstraints.BOTH;
-		add(canvas, cst);
+		add(view.getComponent(), cst);
 		
 		vmodel.addChangeListener(this);
 		hmodel.addChangeListener(this);
 		
-		canvas.setScrollPane(this);
+		view.setScrollPane(this);
 	}
 
 	@Override
@@ -66,16 +73,17 @@ public class CanvasScrolPane extends JPanel implements ChangeListener {
 			return;
 		}
 		BoundedRangeModel rmodel = (BoundedRangeModel)e.getSource();
-		if (rmodel.getValueIsAdjusting()) {
-			return;
-		}
-		canvas.moveTo( hmodel.getValue(), vmodel.getValue() );
+		view.setScrollPosition( hmodel.getValue(), vmodel.getValue() );
 	}
 
-	public void setScrollPosition(Rectangle visible, Dimension global) {
+	public void fireViewUpdated() {
 		if (hmodel.getValueIsAdjusting() || vmodel.getValueIsAdjusting()) {
 			return;
 		}
+		
+		Rectangle visible = view.getVisibleArea();
+		Dimension global = view.getVirtualDimension();
+		
 		if ( global.width == width && global.height == height &&
 			 visible.x == x && visible.width == dx &&
 			 visible.y == y && visible.height == dy ) {

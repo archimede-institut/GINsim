@@ -12,7 +12,7 @@ import org.ginsim.gui.graph.GraphGUIHelper;
 public class CanvasGraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> extends BaseGraphGUI<G, V, E> {
 
 	private final SimpleCanvas canvas;
-	private final CanvasScrolPane canvasPanel;
+	private final VirtualScrollPane canvasPanel;
 	private final GraphCanvasRenderer renderer;
 	
 	public CanvasGraphGUIImpl(G g, GraphGUIHelper<G, V, E> helper,
@@ -21,7 +21,7 @@ public class CanvasGraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> exte
 
 		this.canvas = new SimpleCanvas();
 		renderer = new GraphCanvasRenderer(g, canvas, getSelection(), getEditActionManager());
-		this.canvasPanel = new CanvasScrolPane(canvas);
+		this.canvasPanel = new VirtualScrollPane(canvas);
 	}
 
 	@Override
