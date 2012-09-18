@@ -99,7 +99,7 @@ public class StableStateSwingUI extends LogicalModelActionDialog  {
 @SuppressWarnings("serial")
 class ColoredCellRenderer extends DefaultTableCellRenderer {
 
-	static final Color EVEN_BG = Color.WHITE, ODD_BG = new Color(220, 220, 220);
+	static final Color EVEN_BG = new Color(255, 255, 200), ODD_BG = new Color(220, 220, 150);
 	static final Color STAR_BG = Color.CYAN, ACTIVE_BG = new Color(142, 142, 142);
 	
 	@Override

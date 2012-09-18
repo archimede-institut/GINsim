@@ -103,6 +103,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 		c.fill = GridBagConstraints.BOTH;
 		
 		mainPanel.add(panel, c);
+		mainPanel.validate();
 	}
 	
 	@Override
