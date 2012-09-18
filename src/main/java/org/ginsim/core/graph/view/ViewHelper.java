@@ -268,26 +268,32 @@ public class ViewHelper {
 	 * @param ereader
 	 * @param edge
 	 */
-	public static void trimPoints(Edge edge, NodeAttributesReader nreader, EdgeAttributesReader ereader) {
+	public static void trimPoints(Edge edge, List<Point> points, NodeAttributesReader nreader, EdgeAttributesReader ereader) {
 		
 		Rectangle b1 = getBounds(nreader, edge.getSource());
 		Rectangle b2 = getBounds(nreader, edge.getTarget());
 		
 		ereader.setEdge(edge);
-		List<Point> points = ereader.getPoints();
 		if (points == null || points.size() < 1) {
 			return;
 		}
 		
-		if (b1.contains(points.get(0))) {
+		if ( contained(points.get(0), b1)) {
 			points.remove(0);
 		}
 		int last = points.size()-1;
-		if (b2.contains(points.get(last))) {
+		if (contained(points.get(last), b2)) {
 			points.remove(last);
 		}
 	}
 
+	private static boolean contained(Point p, Rectangle rect) {
+		if (p.x < rect.x - 3 || p.x > rect.x+rect.width+3 || p.y < rect.y - 3 || p.y > rect.y + rect.height + 3) {
+			return false;
+		}
+		return true;
+	}
+	
 	/**
 	 * Get the rotation angle between a vector and the horizontal axis.
 	 * 
