@@ -450,9 +450,11 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 	private void doRender(String text, Graphics2D g, boolean moving) {
 		int w = getWidth();
 		int h = getHeight();
+		int sw = 1;
 		
-		Shape s = getShape().getShape( 0, 0, w,h);
+		Shape s = getShape().getShape( sw, sw, w-2*sw,h-2*sw);
 		g.setColor(getBackgroundColor());
+		stroke.setWidth(sw);
 		g.setStroke(stroke);
 		g.fill(s);
 
@@ -467,7 +469,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 		
 		// shorten the text if needed
 		int textwidth = fm.stringWidth(text);
-		int targetWidth = w - 2;
+		int targetWidth = w - 4*sw;
 		int i = text.length()-3;
 		while ( textwidth > targetWidth && i > 0 ) {
 			text = text.substring(0, i) + ELLIPSIS;
