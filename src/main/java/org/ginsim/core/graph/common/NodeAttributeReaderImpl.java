@@ -14,6 +14,7 @@ import org.ginsim.common.application.OptionStore;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
+import org.ginsim.core.graph.view.SimpleStroke;
 
 
 /**
@@ -77,6 +78,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
     private Object vertex;
     private boolean selected;
     
+    private SimpleStroke stroke = new SimpleStroke();
 
     /**
      * @param map
@@ -451,6 +453,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 		
 		Shape s = getShape().getShape( 0, 0, w,h);
 		g.setColor(getBackgroundColor());
+		g.setStroke(stroke);
 		g.fill(s);
 
 		if (moving) {
