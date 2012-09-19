@@ -5,7 +5,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -15,10 +17,12 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterList;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
 
 @ProviderFor(Service.class)
 @Alias("composition")
@@ -125,7 +129,7 @@ public class CompositionService implements Service {
 				for (LogicalParameter logicalParameter : logicalParameterList) {
 					List<RegulatoryEdge> edgeList = (List<RegulatoryEdge>) logicalParameter
 							.getEdges();
-					List<RegulatoryEdge> newEdgeIndex = (List<RegulatoryEdge>) new ArrayList();
+					List<RegulatoryEdge> newEdgeIndex = new ArrayList<RegulatoryEdge>();
 					for (RegulatoryEdge edge : edgeList) {
 						RegulatoryMultiEdge oldMultiEdge = edge.me;
 						RegulatoryMultiEdge newMultiEdge = edgeAssociation.get(
@@ -144,12 +148,15 @@ public class CompositionService implements Service {
 		// TODO: add integration function interactions and respective functions
 
 		// Add integration function interactions
+		Collection<RegulatoryNode> mappedInputs = mapping.getMappedInputs();
+		Collection<RegulatoryNode> newMappedInputs = new ArrayList<RegulatoryNode>();
+		
 		for (int i = 0; i < topology.getNumberInstances(); i++) {
-			Collection<RegulatoryNode> mappedInputs = mapping.getMappedInputs();
 
 			for (RegulatoryNode oldInput : mappedInputs) {
 				RegulatoryNode newMapped = composedGraph
 						.getNodeByName(computeNewName(oldInput.getName(), i));
+				newMappedInputs.add(newMapped);
 
 				List<RegulatoryNode> properList = mapping
 						.getProperComponentsForInput(oldInput);
@@ -162,9 +169,12 @@ public class CompositionService implements Service {
 								.getNodeByName(computeNewName(
 										oldProper.getName(), j));
 
-						// Currently thresholds are being ignores
+						// Currently thresholds are being ignored
 						// Add as many edges as necessary
 						// Consider special case of THRESHOLD2
+						
+						// For the time being only one edge is being added per interaction. because only one functional level is being considered
+						
 						RegulatoryMultiEdge newInteraction = new RegulatoryMultiEdge(
 								composedGraph, newMapped, newProper);
 						composedGraph.addEdge(newInteraction);
@@ -185,8 +195,6 @@ public class CompositionService implements Service {
 					}
 				}
 
-				// For the time being we will be assuming that each
-				// MultiEdge has only one Edge
 
 				switch (mapping.getIntegrationFunctionForInput(newMapped)) {
 				case OR:
@@ -221,12 +229,33 @@ public class CompositionService implements Service {
 			}
 
 		}
-
-		// reduce the graph
-
-		return composedGraph;
+		
+		// Reduce the graph
+		ModelReducer reducer = new ModelReducer(composedGraph.getModel());
+		List<NodeInfo> nodeList = reducer.getModel().getNodeOrder();
+		
+		// Choose which variables to reduce
+		for(int varIndex = 0; varIndex < nodeList.size(); varIndex++){
+			NodeInfo node = nodeList.get(varIndex);
+			boolean toRemove = false;
+			for(RegulatoryNode input : newMappedInputs){
+				if (node.getNodeID().equals(input.getId())){
+					toRemove = true;
+					continue;
+				}
+			}
+			if (toRemove){
+				reducer.remove(varIndex);
+			}
+			
+		}
+		
+		LogicalModel newModel = reducer.getModel();
+		return LogicalModel2RegulatoryGraph.importModel(newModel);
 	}
 
+	
+	
 	private String computeNewName(String original, int moduleId) {
 		return original + "_" + moduleId;
 	}
