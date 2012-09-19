@@ -101,6 +101,10 @@ public class LogicalModel2RegulatoryGraph {
 					idxTh++;
 				}
 				
+				if (me == null) {
+					throw new RuntimeException("No effect found for " + regulator + " on " + target);
+				}
+				
 				t_values[regIdx][0] = reg;
 				t_me[regIdx] = me;
 				
