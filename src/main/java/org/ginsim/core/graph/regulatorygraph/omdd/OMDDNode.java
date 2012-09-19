@@ -774,8 +774,8 @@ public class OMDDNode {
                 if (node.next[i].conflict(this)) {
                     return true;
                 }
-                return false;
             }
+            return false;
         }
         
         if (node.next == null) {
