@@ -53,7 +53,7 @@ public class CSSFrame extends SimpleDialog {
 
 	private static final long serialVersionUID = 2012734705161939354L;
 	private Graph graph;
-	private JScrollPane cssListScrollPane, editorScrollPane;
+	private JScrollPane editorScrollPane;
 	private SimpleGenericList cssList;
 	private JTextArea editor;
 	private JButton closeButton, saveButton, applyButton, restoreButton;

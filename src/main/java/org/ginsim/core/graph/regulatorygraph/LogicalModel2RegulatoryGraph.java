@@ -27,7 +27,6 @@ public class LogicalModel2RegulatoryGraph {
 	private final RegulatoryGraph lrg;
 
 	private final List<NodeInfo> coreNodes;
-	private final MDDVariable[] variables;
 	private final Map<NodeInfo, RegulatoryNode> node2node;
 	
 	/**
@@ -43,7 +42,6 @@ public class LogicalModel2RegulatoryGraph {
 	
 	private LogicalModel2RegulatoryGraph( LogicalModel model) {
 		this.ddmanager = model.getMDDManager();
-		this.variables = ddmanager.getAllVariables();
 		this.lrg = RegulatoryGraphFactory.getInstance().create();
 		this.matrix = new ConnectivityMatrix(model);
 		
@@ -129,7 +127,6 @@ public class LogicalModel2RegulatoryGraph {
 	 */
 	private void browse(RegulatoryNode targetNode, RegulatoryMultiEdge[] t_me, int[][] t_values, PathSearcher searcher) {
 		
-		Collection<RegulatoryMultiEdge> edges = lrg.getIncomingEdges(targetNode);
 		List<LogicalParameter> paramList = new ArrayList<LogicalParameter>();
 		
 		int[] path = searcher.getPath();
@@ -142,7 +139,6 @@ public class LogicalModel2RegulatoryGraph {
 			for (int i=0 ; i<t_values.length ; i++) {
 				int nb = t_values[i][0];
 				int begin = path[nb];
-				int end = begin+1;
 				RegulatoryMultiEdge me = t_me[i];
 				nb = me.getEdgeCount();
 				

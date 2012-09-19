@@ -54,7 +54,7 @@ public class GUIManager {
 		if( graph_gui!= null && frame != null){
 			Graph graph = graph_gui.getGraph();
 			if( graph != null){
-				graphToGUIObject.put( graph, new GUIObject( graph, graph_gui, frame));
+				graphToGUIObject.put( graph, new GUIObject( graph_gui, frame));
 			}
 		}
 	}
@@ -141,7 +141,7 @@ public class GUIManager {
 		
 		// find the GUI component and show the graph...
 		GraphGUI<?,?,?> graphGUI = new CanvasGraphGUIImpl(graph, helper, can_be_saved);
-		graphToGUIObject.put( graph, new GUIObject( graph, graphGUI, null));
+		graphToGUIObject.put( graph, new GUIObject( graphGUI, null));
 		return graphGUI;
 	}
 	
@@ -402,15 +402,13 @@ public class GUIManager {
 	 */
 	private class GUIObject{
 		
-		private Graph graph;
 		private GraphGUI graphGUI;
 		private Frame frame;
 		private Vector<Object> blockEdit;
 		private Vector<Object> blockClose;
 		
-		public GUIObject( Graph graph, GraphGUI graph_gui, Frame frame){
+		public GUIObject( GraphGUI graph_gui, Frame frame){
 			
-			this.graph = graph;
 			this.graphGUI = graph_gui;
 			this.frame = frame;
 		}

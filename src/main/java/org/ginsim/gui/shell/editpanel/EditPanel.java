@@ -66,7 +66,6 @@ public class EditPanel extends JTabbedPane implements GraphGUIListener {
     public boolean removeTab(String name) {
         int i = indexOfTab(name);
         if (i != -1) {
-            Component c = getComponentAt(i);
             removeTabAt(i);
             tabs.remove(i);
             return true;

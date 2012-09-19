@@ -34,7 +34,6 @@ public class LogicalModel2GNA {
 
 		MDDManager ddmanager = model.getMDDManager();
 		List<NodeInfo> coreNodes = model.getNodeOrder();
-		PathSearcher searcher = new PathSearcher(ddmanager);
 		int[] functions = model.getLogicalFunctions();
 		MDDVariable[] variables = ddmanager.getAllVariables();
 		for (int p=0 ; p<functions.length ; p++) {

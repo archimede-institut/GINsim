@@ -68,8 +68,6 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 
 	private final GraphGUI graphGUI;
 	
-	private static final boolean alwaysForceClose = false;
-
 	public MainFrame(GraphGUI graph_gui) {
 		
 		super("MainFrame", 800, 700);

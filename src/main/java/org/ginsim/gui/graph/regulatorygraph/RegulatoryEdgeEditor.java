@@ -27,7 +27,6 @@ import org.ginsim.gui.utils.data.ObjectEditor;
 
 public class RegulatoryEdgeEditor extends ObjectEditor<RegulatoryMultiEdge> implements GraphGUIListener<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> {
 
-	private final RegulatoryGraph graph;
 	private final GraphGUI gui;
 	RegulatoryEdge edge;
 	EdgeList edgeList;
@@ -43,7 +42,6 @@ public class RegulatoryEdgeEditor extends ObjectEditor<RegulatoryMultiEdge> impl
 	}
 	
 	public RegulatoryEdgeEditor( RegulatoryGraph graph) {
-		this.graph = graph;
 		this.gui = GUIManager.getInstance().getGraphGUI(graph);
 		gui.addGraphGUIListener(this);
 		master = graph;

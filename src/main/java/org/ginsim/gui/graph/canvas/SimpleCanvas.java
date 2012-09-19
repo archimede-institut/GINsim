@@ -356,8 +356,6 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 	private final SimpleCanvas canvas;
 	private CanvasEventManager evtManager;
 	
-	private int mouseButton = -1;
-	
 	CanvasEventListener(SimpleCanvas canvas) {
 		this.canvas = canvas;
 		canvas.addMouseListener(this);
@@ -387,7 +385,6 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 	public void mousePressed(MouseEvent e) {
 		canvas.requestFocusInWindow();
 		Point p = e.getPoint();
-		mouseButton = e.getButton();
 
 		if (evtManager != null) {
 			evtManager.pressed(canvas.window2canvas(p), alternate(e));
@@ -396,7 +393,6 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		mouseButton = -1;
 		
 		if (evtManager != null) {
 			evtManager.released(canvas.window2canvas(e.getPoint()));

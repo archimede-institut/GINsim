@@ -35,7 +35,6 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 	private final GraphSelection selection;
 	
 	private final CanvasEventManager selectEventManager, addNodeEventManager, addEdgeEventManager;
-	private CanvasEventManager currentEventManager;
 
 	public final Graph graph;
 	public final EditActionManager amanager;

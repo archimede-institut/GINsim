@@ -72,7 +72,6 @@ public class VirtualScrollPane extends JPanel implements ChangeListener {
 		if (updating) {
 			return;
 		}
-		BoundedRangeModel rmodel = (BoundedRangeModel)e.getSource();
 		view.setScrollPosition( hmodel.getValue(), vmodel.getValue() );
 	}
 

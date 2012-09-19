@@ -39,8 +39,6 @@ public class LimitedSimulation implements Runnable {
 	private Iterator<byte[]> initStatesIterator;
 	private boolean ready;
 
-	private SimulationConstraint constraint;
-
 	private int nbnode;
 
 	private final HierarchicalTransitionGraph htg;
@@ -54,7 +52,6 @@ public class LimitedSimulation implements Runnable {
 	 */
     public LimitedSimulation(HierarchicalTransitionGraph htg, SimulationConstraint constraint, SimulationParameters params, ProgressListener<Graph> simulationManager) {
     	this.htg = htg;
-		this.constraint = constraint;
 		this.simulationManager = simulationManager;
 		this.breadthFirst = params.breadthFirst;
 		this.nbnode = 0;

@@ -13,7 +13,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
@@ -54,7 +53,6 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 	private boolean isColorized = false;
 	private PerturbationSelectionPanel mutantSelectionPanel;
 	private PerturbationHolder mutantStore;
-	private Perturbation mutant;
 	private StateSelectorTable sst;
 	private JCheckBox autoUpdateCheckbox;
 	

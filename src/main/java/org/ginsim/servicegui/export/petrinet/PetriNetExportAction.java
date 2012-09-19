@@ -45,7 +45,7 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		PetriNetExportFrame frame = new PetriNetExportFrame(null, graph, this);
+		new PetriNetExportFrame(null, graph, this);
 	}
 	
 
@@ -71,14 +71,13 @@ class PetriNetExportFrame extends LogicalModelActionDialog {
     	
     	JPanel mainPanel = new JPanel();
     	mainPanel.setLayout(new GridBagLayout());
-    	GridBagConstraints c;
 
     	// TODO: restore settings (priority and initial states)
 /*    	
 		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject(graph, SimulationParametersManager.KEY, true);
         priorityPanel = new PrioritySelectionPanel(stack, paramList.pcmanager);
         priorityPanel.setStore(config.store, 1);
-		c = new GridBagConstraints();
+		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 1;
 		c.gridy = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;

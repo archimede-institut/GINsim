@@ -2,13 +2,9 @@ package org.ginsim.servicegui.tool.stablestates;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.util.Enumeration;
 
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -20,12 +16,9 @@ import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.core.utils.data.ObjectStore;
-import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
-import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 
@@ -57,7 +50,6 @@ public class StableStateSwingUI extends LogicalModelActionDialog  {
 		tresult.setDefaultRenderer(Object.class, new ColoredCellRenderer());
 		tresult.setAutoCreateRowSorter(true);
 		
-		Insets insets = new Insets(2, 2, 2, 2);
 		JScrollPane pane = new JScrollPane(tresult);
 		setMainPanel(pane);
 	}

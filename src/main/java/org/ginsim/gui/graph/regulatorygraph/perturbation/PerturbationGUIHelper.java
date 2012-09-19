@@ -12,10 +12,8 @@ import org.mangosdk.spi.ProviderFor;
 @GUIFor(ListOfPerturbations.class)
 public class PerturbationGUIHelper implements GUIHelper<ListOfPerturbations> {
 
-	public static Component getPerturbationPanel(ListOfPerturbations o) {
-        ListOfPerturbations mutants = (ListOfPerturbations) o;
-        PerturbationPanel panel = new PerturbationPanel(o);
-        return panel;
+	public static Component getPerturbationPanel(ListOfPerturbations perturbations) {
+        return new PerturbationPanel(perturbations);
 	}
 	
 	@Override
