@@ -14,6 +14,7 @@ import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.ViewHelper;
 
 
 
@@ -110,7 +111,7 @@ public class DynamicLayoutMultidimention {
 		int change = get_change(diffstate);
 		
 		ereader.setEdge(edge);
-	   	List points = ereader.getPoints();
+	   	List points = ViewHelper.getPoints(vreader, ereader, edge);
 		Point2D first, p1, p2, last;
 		first = (Point2D)points.get(0);
 		last =  (Point2D)points.get(points.size()-1);
