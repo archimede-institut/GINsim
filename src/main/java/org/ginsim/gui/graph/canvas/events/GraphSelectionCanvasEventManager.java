@@ -127,7 +127,6 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 				nreader.setNode(o);
 				nreader.move(movex, movey);
 			}
-			renderer.damageItem(o);
 		}
 
 		// finally mark them as damaged again and repaint

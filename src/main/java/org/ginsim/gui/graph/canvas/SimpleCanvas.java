@@ -316,7 +316,7 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 	 */
 	public void damageCanvas(Rectangle area) {
 		if (damagedRegion == null) {
-			damagedRegion = area;
+			damagedRegion = new Rectangle(area);
 		} else {
 			damagedRegion = damagedRegion.union(area);
 		}
