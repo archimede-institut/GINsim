@@ -1,59 +1,71 @@
 package org.ginsim.servicegui.tool.composition;
 
 import java.awt.event.ActionEvent;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.Action;
 
-import org.ginsim.common.application.GsException;
-import org.ginsim.common.application.LogManager;
-import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.view.css.Colorizer;
-import org.ginsim.core.service.ServiceManager;
-import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.graph.GraphGUI;
-import org.ginsim.gui.graph.GraphSelection;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.ServiceStatus;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.composition.CompositionService;
 
 import org.mangosdk.spi.ProviderFor;
-
 
 /**
  * register the connectivity service
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(CompositionService.class)
-@ServiceStatus( ServiceStatus.RELEASED)
+@ServiceStatus(ServiceStatus.RELEASED)
 public class CompositionServiceGUI extends AbstractServiceGUI {
 
-	private int initialWeight = W_GRAPH_COLORIZE + 20;
-
 	@Override
-	public List<Action> getAvailableActions( Graph<?, ?> graph) {
-		List<Action> actions = new ArrayList<Action>();
+	public List<Action> getAvailableActions(Graph<?, ?> graph) {
+		if (graph instanceof RegulatoryGraph) {
+			List<Action> actions = new ArrayList<Action>();
+			actions.add(new CompositionAction((RegulatoryGraph) graph, this));
 
-		
-		return actions;
+			return actions;
+		} else {
+			// available composition actions for graphs other than LRGs/LRMs
+			return null;
+		}
 	}
 
 	@Override
 	public int getInitialWeight() {
-		return initialWeight;
+		return W_TOOLS_MAIN + 51;
 	}
 }
 
-class ComposeAction {
-	
-// TODO composition dialog
-	
-}
+class CompositionAction extends ToolAction {
+	private static final long serialVersionUID = -1993709762198153932L;
+	private final RegulatoryGraph graph;
 
+	public CompositionAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+		super("STR_compose", "STR_compose_descr", serviceGUI);
+		this.graph = graph;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		if (graph.getNodeCount() < 1) {
+			NotificationManager.publishWarning(graph,
+					graph instanceof RegulatoryGraph ? "STR_emptyGraph"
+							: "STR_notRegGraph");
+			return;
+		}
+
+		// TODO: reset edit mode
+		// mframe.getActions().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
+		new CompositionConfigDialog(graph).setVisible(true);
+	}
+
+}
