@@ -28,7 +28,11 @@ public class MaBoSSExportService implements Service {
 		encoder.write(writer);
 		writer.close();
 		
-		writer = new FileWriter(filename+".cfg");
+		if (filename.endsWith(".bnd")) {
+			writer = new FileWriter(filename.substring(0, filename.length()-4)+".cfg");
+		} else {
+			writer = new FileWriter(filename+".cfg");
+		}
 		encoder.writeConfig(writer);
 		writer.close();
 	}
