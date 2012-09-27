@@ -149,6 +149,7 @@ public class ServiceGUIManager{
 				if (server_services.contains( guifor_class)) {
 					try{
 						List<Action> service_actions = service.getAvailableActions( graph);
+
 						if( service_actions != null){
 							result.addAll( service_actions);
 						}

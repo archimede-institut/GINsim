@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import org.ginsim.common.application.GsException;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
@@ -19,6 +20,8 @@ import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifier;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
 import org.mangosdk.spi.ProviderFor;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
@@ -42,16 +45,19 @@ public class CompositionService implements Service {
 	 *            the integration functions to apply to each mapped input
 	 * 
 	 @return RegulatoryGraph
+	 * @throws GsException
 	 */
 
 	public RegulatoryGraph run(RegulatoryGraph graph, Topology topology,
-			IntegrationFunctionMapping mapping) {
+			IntegrationFunctionMapping mapping) throws GsException {
 
 		return computeComposedGraph(graph, topology, mapping);
+
 	}
 
 	public RegulatoryGraph computeComposedGraph(RegulatoryGraph graph,
-			Topology topology, IntegrationFunctionMapping mapping) {
+			Topology topology, IntegrationFunctionMapping mapping)
+			throws GsException {
 		RegulatoryGraph composedGraph = GraphManager.getInstance().getNewGraph(
 				RegulatoryGraph.class);
 
@@ -67,15 +73,22 @@ public class CompositionService implements Service {
 
 			for (int i = 0; i < topology.getNumberInstances(); i++) {
 				RegulatoryNode newNode = composedGraph.addNewNode(
-						computeNewName(node.getId(), i),
-						computeNewName(node.getName(), i), node.getMaxValue());
+						computeNewName(node.getNodeInfo().getNodeID(), i),
+						computeNewName(node.getNodeInfo().getNodeID(), i),
+						node.getMaxValue());
 
 				newNode.getNodeInfo().setMax(node.getNodeInfo().getMax());
+				newNode.getNodeInfo().setNodeID(
+						computeNewName(node.getNodeInfo().getNodeID(), i));
+				newNode.setName(computeNewName(node.getNodeInfo().getNodeID(),
+						i));
 				newNode.setGsa((Annotation) (node.getAnnotation().clone()));
 
-				// mapped inputs will no longer be inputs
+				// mapped inputs with neighbours will no longer be inputs
 				// unmapped input remain free
-				if (node.isInput() && !mapping.isMapped(node)) {
+				if (node.isInput()
+						&& (!mapping.isMapped(node) || !topology
+								.hasNeighbours(i))) {
 					newNode.setInput(node.isInput(), composedGraph);
 				}
 
@@ -94,9 +107,11 @@ public class CompositionService implements Service {
 				RegulatoryNode target = multiEdge.getTarget();
 
 				RegulatoryNode newSource = composedGraph
-						.getNodeByName(computeNewName(source.getName(), i));
+						.getNodeByName(computeNewName(source.getNodeInfo()
+								.getNodeID(), i));
 				RegulatoryNode newTarget = composedGraph
-						.getNodeByName(computeNewName(target.getName(), i));
+						.getNodeByName(computeNewName(target.getNodeInfo()
+								.getNodeID(), i));
 
 				RegulatoryMultiEdge newMultiEdge = new RegulatoryMultiEdge(
 						composedGraph, newSource, newTarget,
@@ -123,7 +138,8 @@ public class CompositionService implements Service {
 			for (int i = 0; i < topology.getNumberInstances(); i++) {
 
 				RegulatoryNode newNode = composedGraph
-						.getNodeByName(computeNewName(node.getName(), i));
+						.getNodeByName(computeNewName(node.getNodeInfo()
+								.getNodeID(), i));
 				LogicalParameterList logicalParameterList = node
 						.getV_logicalParameters();
 				for (LogicalParameter logicalParameter : logicalParameterList) {
@@ -150,13 +166,15 @@ public class CompositionService implements Service {
 		// Add integration function interactions
 		Collection<RegulatoryNode> mappedInputs = mapping.getMappedInputs();
 		Collection<RegulatoryNode> newMappedInputs = new ArrayList<RegulatoryNode>();
-		
+
 		for (int i = 0; i < topology.getNumberInstances(); i++) {
 
 			for (RegulatoryNode oldInput : mappedInputs) {
 				RegulatoryNode newMapped = composedGraph
-						.getNodeByName(computeNewName(oldInput.getName(), i));
-				newMappedInputs.add(newMapped);
+						.getNodeByName(computeNewName(oldInput.getNodeInfo()
+								.getNodeID(), i));
+				if (topology.hasNeighbours(i))
+					newMappedInputs.add(newMapped);
 
 				List<RegulatoryNode> properList = mapping
 						.getProperComponentsForInput(oldInput);
@@ -166,17 +184,19 @@ public class CompositionService implements Service {
 						continue;
 					for (RegulatoryNode oldProper : properList) {
 						RegulatoryNode newProper = composedGraph
-								.getNodeByName(computeNewName(
-										oldProper.getName(), j));
+								.getNodeByName(computeNewName(oldProper
+										.getNodeInfo().getNodeID(), j));
 
 						// Currently thresholds are being ignored
 						// Add as many edges as necessary
 						// Consider special case of THRESHOLD2
-						
-						// For the time being only one edge is being added per interaction. because only one functional level is being considered
-						
+
+						// For the time being only one edge is being added per
+						// interaction. because only one functional level is
+						// being considered
+
 						RegulatoryMultiEdge newInteraction = new RegulatoryMultiEdge(
-								composedGraph, newMapped, newProper);
+								composedGraph, newProper, newMapped);
 						composedGraph.addEdge(newInteraction);
 
 					}
@@ -189,73 +209,76 @@ public class CompositionService implements Service {
 						.getIncomingEdges(newMapped);
 				List<RegulatoryEdge> listEdges = new ArrayList<RegulatoryEdge>();
 
-				for (RegulatoryMultiEdge multiEdge : listMultiEdges) {
-					for (int k = 0; k < multiEdge.getEdgeCount(); k++) {
-						listEdges.add(multiEdge.getEdge(k));
-					}
-				}
-
-
-				switch (mapping.getIntegrationFunctionForInput(newMapped)) {
-				case OR:
-					for (int e1 = 0; e1 <= listEdges.size(); e1++) {
-						List<RegulatoryEdge> edgeList = new ArrayList<RegulatoryEdge>();
-						edgeList.add(listEdges.get(e1));
-						newMapped.addLogicalParameter(new LogicalParameter(
-								edgeList, 1), true);
-						for (int e2 = e1 + 1; e2 <= listEdges.size(); e2++) {
-							edgeList.add(listEdges.get(e2));
-							newMapped.addLogicalParameter(new LogicalParameter(
-									edgeList, 1), true);
+				if (listMultiEdges != null) {
+					// Make sure the list is not null
+					// which will happen if (i,j) are not neighbours
+					for (RegulatoryMultiEdge multiEdge : listMultiEdges) {
+						for (int k = 0; k < multiEdge.getEdgeCount(); k++) {
+							listEdges.add(multiEdge.getEdge(k));
 						}
 					}
-					continue;
-				case AND:
-					newMapped.addLogicalParameter(new LogicalParameter(
-							listEdges, 1), true);
-					continue;
-				case MIN:
-					continue;
-				case MAX:
-					continue;
-				case THRESHOLD2:
-					continue;
-				case MAX_LEFT:
-					continue;
-				case MAX_RIGHT:
-					continue;
+				}
+
+				IntegrationFunction integrationFunction = mapping
+						.getIntegrationFunctionForInput(oldInput);
+				if (integrationFunction != null && listEdges.size() != 0) {
+
+					switch (integrationFunction) {
+					case OR:
+						for (int e1 = 0; e1 < listEdges.size(); e1++) {
+							List<RegulatoryEdge> edgeList = new ArrayList<RegulatoryEdge>();
+							edgeList.add(listEdges.get(e1));
+							newMapped.addLogicalParameter(new LogicalParameter(
+									edgeList, 1), true);
+							for (int e2 = e1 + 1; e2 < listEdges.size(); e2++) {
+								edgeList.add(listEdges.get(e2));
+								newMapped
+										.addLogicalParameter(
+												new LogicalParameter(edgeList,
+														1), true);
+							}
+						}
+						continue;
+					case AND:
+						newMapped.addLogicalParameter(new LogicalParameter(
+								listEdges, 1), true);
+						continue;
+					case MIN:
+						continue;
+					case MAX:
+						continue;
+					case THRESHOLD2:
+						continue;
+					case MAX_LEFT:
+						continue;
+					case MAX_RIGHT:
+						continue;
+					}
 				}
 
 			}
 
 		}
-		
+
 		// Reduce the graph
-		ModelReducer reducer = new ModelReducer(composedGraph.getModel());
-		List<NodeInfo> nodeList = reducer.getModel().getNodeOrder();
+
+		// Build a ModelSimplifierConfig object
+		ModelSimplifierConfig config = new ModelSimplifierConfig();
+		for (RegulatoryNode input : newMappedInputs)
+			config.remove(input);
+
+		// Mimmick a ReductionLauncher object
+		ReductionStub launcher = new ReductionStub(composedGraph);
 		
-		// Choose which variables to reduce
-		for(int varIndex = 0; varIndex < nodeList.size(); varIndex++){
-			NodeInfo node = nodeList.get(varIndex);
-			boolean toRemove = false;
-			for(RegulatoryNode input : newMappedInputs){
-				if (node.getNodeID().equals(input.getId())){
-					toRemove = true;
-					continue;
-				}
-			}
-			if (toRemove){
-				reducer.remove(varIndex);
-			}
-			
-		}
+		ModelSimplifier simplifier = new ModelSimplifier(composedGraph,config,launcher,false);
+		simplifier.run();
 		
-		LogicalModel newModel = reducer.getModel();
-		return LogicalModel2RegulatoryGraph.importModel(newModel);
+		RegulatoryGraph finalComposedGraph = launcher.getReducedGraph();
+		
+		// return composedGraph;
+		return finalComposedGraph;
 	}
 
-	
-	
 	private String computeNewName(String original, int moduleId) {
 		return original + "_" + moduleId;
 	}
