@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,11 +37,15 @@ import org.ginsim.service.tool.composition.IntegrationFunction;
 import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
 import org.ginsim.service.tool.composition.Topology;
 
+/*
+ * The composition dialog
+ * 
+ * @author Nuno D. Mendes
+ */
 
 public class CompositionConfigDialog extends StackDialog {
 
-	// TODO: Find best dialog type for the information required concerning 1)
-	// topology, 2) integration function, 3) initial state
+	// TODO: Replace all strings by token in messages.properties
 
 	private static final long serialVersionUID = 8046844091168372569L;
 	RegulatoryGraph graph = null;
@@ -57,21 +62,25 @@ public class CompositionConfigDialog extends StackDialog {
 
 		CompositionConfigConfigurePanel panel = new CompositionConfigConfigurePanel(
 				graph);
-		this.config = panel;
-		this.brun.setText("Compose instances");
-		this.brun.setToolTipText("Compose");
-		this.setMainPanel(panel.getMainPanel());
-		this.setVisible(true);
-		this.setSize(getPreferredSize());
+		config = panel;
+		brun.setText("Compose instances");
+		brun.setToolTipText("Compose");
+		setMainPanel(panel.getMainPanel());
+		setVisible(true);
+		setSize(getPreferredSize());
 
 	}
 
 	protected void run() throws GsException {
-		this.setRunning(true);
-		this.brun.setEnabled(false);
+		setRunning(true);
+		brun.setEnabled(false);
 
 		CompositionService service = ServiceManager.getManager().getService(
 				CompositionService.class);
+
+		// TODO: Deal here with invalid integration functions w.r.t. to given
+		// input
+		// and proper components using NotificationManager
 		RegulatoryGraph composedGraph = service.run(graph,
 				config.getTopology(), config.getIntegrationFunctionMapping());
 		GUIManager.getInstance().whatToDoWithGraph(composedGraph, true);
@@ -113,18 +122,19 @@ public class CompositionConfigDialog extends StackDialog {
 						topology = new Topology(instances);
 					}
 					if (matrix[x][y].isSelected()) {
-						
-							topology.addNeighbour(x, y);
-	
+
+						topology.addNeighbour(x, y);
+
 					}
 				}
 			}
 			return topology;
 		}
 
-		public IntegrationFunctionMapping getIntegrationFunctionMapping() throws GsException {
+		public IntegrationFunctionMapping getIntegrationFunctionMapping()
+				throws GsException {
 
-				updateIntegrationFunction();
+			updateIntegrationFunction();
 			return mapping;
 		}
 
@@ -216,7 +226,7 @@ public class CompositionConfigDialog extends StackDialog {
 				} else {
 					input = this.numberInstances;
 				}
-	
+
 				input.setEnabled(true);
 				this.numberInstances = input;
 
@@ -352,12 +362,13 @@ public class CompositionConfigDialog extends StackDialog {
 
 					JLabel nodeLabel = new JLabel(node.getId());
 
-					Object[] listChoices = new Object[IntegrationFunction
-							.values().length + 1];
+					Collection<IntegrationFunction> listIF = IntegrationFunction
+							.whichCanApply(node);
+
+					Object[] listChoices = new Object[listIF.size() + 1];
 					int i = 0;
 					listChoices[i] = "unmapped";
-					for (IntegrationFunction intFun : IntegrationFunction
-							.values())
+					for (IntegrationFunction intFun : listIF)
 						listChoices[++i] = intFun;
 
 					JComboBox nodeCombo = new JComboBox(listChoices);
@@ -403,12 +414,21 @@ public class CompositionConfigDialog extends StackDialog {
 							listProper.add(properNodes.get(indices[i]));
 						}
 
+						if (!IntegrationFunction
+								.whichCanApply(node, listProper).contains(
+										selectedFunction))
+							throw new GsException(
+									GsException.GRAVITY_NORMAL,
+									"Cannot apply integration function "
+											+ (IntegrationFunction) selectedFunction
+											+ " to the given input/proper components");
+
 						mapping.addMapping(node, listProper,
 								(IntegrationFunction) selectedFunction);
 
 					}
 
-				} 
+				}
 			}
 
 		}

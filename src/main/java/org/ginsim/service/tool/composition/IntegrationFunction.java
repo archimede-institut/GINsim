@@ -1,5 +1,107 @@
 package org.ginsim.service.tool.composition;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+
+/*
+ * The enumeration of all prototypical Integration functions
+ * 
+ *  @author Nuno D. Mendes
+ */
+
 public enum IntegrationFunction {
-MAX,MIN,AND,OR,THRESHOLD2,MAX_LEFT,MAX_RIGHT	
+	MAX, MIN, AND, OR, THRESHOLD2, MAX_LEFT, MAX_RIGHT;
+
+	/*
+	 * @param integrationFunction An integration function
+	 * 
+	 * @result True if the given integration function is implemented, false
+	 * otherwise.
+	 */
+	public static boolean isImplemented(IntegrationFunction integrationFunction) {
+		if (integrationFunction.equals(AND) || integrationFunction.equals(OR)) {
+			return true;
+		}
+		return false;
+	}
+
+	/*
+	 * @param input An input component
+	 * 
+	 * @param properComponent A list of proper components
+	 * 
+	 * @result a list of integration functions that can be applied to the type
+	 * of input/proper components given
+	 */
+	public static Collection<IntegrationFunction> whichCanApply(
+			RegulatoryNode input, Collection<RegulatoryNode> properComponents) {
+		Collection<IntegrationFunction> canApply = new ArrayList<IntegrationFunction>();
+
+		for (IntegrationFunction integrationFunction : IntegrationFunction
+				.values()) {
+
+			switch (integrationFunction) {
+			case MAX:
+
+				int maxvalue = 0;
+				if (properComponents != null) {
+					for (RegulatoryNode proper : properComponents) {
+						if (proper.getMaxValue() > maxvalue)
+							maxvalue = proper.getMaxValue();
+					}
+					if (input.getMaxValue() >= maxvalue) {
+						canApply.add(integrationFunction);
+					}
+				} else {
+					if (input.getMaxValue() > 1)
+						canApply.add(integrationFunction);
+				}
+
+				continue;
+			case MIN:
+				canApply.add(integrationFunction);
+				continue;
+
+			case AND:
+			case OR:
+				if (input.getMaxValue() > 1)
+					continue;
+				boolean authorized = true;
+				if (properComponents != null) {
+					for (RegulatoryNode proper : properComponents) {
+						if (proper.getMaxValue() > 1) {
+							authorized = false;
+							continue;
+						}
+					}
+				}
+				if (authorized)
+					canApply.add(integrationFunction);
+				continue;
+			case THRESHOLD2:
+				if (input.getMaxValue() > 1)
+					continue;
+				canApply.add(integrationFunction);
+				continue;
+			case MAX_LEFT:
+			case MAX_RIGHT:
+				continue;
+
+			}
+		}
+
+		Collection<IntegrationFunction> implementedCanApply = new ArrayList<IntegrationFunction>();
+		for(IntegrationFunction integrationFunction : canApply)
+			if (IntegrationFunction.isImplemented(integrationFunction))
+				implementedCanApply.add(integrationFunction);
+		return implementedCanApply;
+
+	}
+
+	public static Collection<IntegrationFunction> whichCanApply(
+			RegulatoryNode input) {
+		return whichCanApply(input, null);
+	}
 }

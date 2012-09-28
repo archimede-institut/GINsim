@@ -2,6 +2,13 @@ package org.ginsim.service.tool.composition;
 
 import org.ginsim.common.application.GsException;
 
+/*
+ * Represents the topological relationships between Logical Regulatory Modules
+ * being composed.
+ * 
+ * @author Nuno D. Mendes
+ */
+
 public class Topology {
 
 	private int _numberInstances = 0;
@@ -17,6 +24,9 @@ public class Topology {
 		initNeighbours();
 	}
 
+	/*
+	 * @return Number of module instances in the Topology.
+	 */
 	public int getNumberInstances() {
 		return _numberInstances;
 	}
@@ -36,15 +46,27 @@ public class Topology {
 		neighbourhoodRelation[neighindex1][neighindex2] = true;
 	}
 
+	/*
+	 * @param neighindex1 Index of first module
+	 * @param neighindex2 Index of second module
+	 * 
+	 * @return True if the two modules are neighbours, false otherwise
+	 */
 	public boolean areNeighbours(int neighindex1, int neighindex2) {
 		return neighbourhoodRelation[neighindex1][neighindex2];
 	}
 
+	/*
+	 * @param index A module index
+	 * 
+	 * @return True if the module has neighbours, false otherwise
+	 */
 	public boolean hasNeighbours(int index) throws GsException {
 		boolean result = false;
 		if (index >= _numberInstances)
-			throw new GsException(GsException.GRAVITY_NORMAL, "Invalid neighbor index value : (" + index +")");
-		
+			throw new GsException(GsException.GRAVITY_NORMAL,
+					"Invalid neighbor index value : (" + index + ")");
+
 		for (int i = 0; i < neighbourhoodRelation.length; i++) {
 			if (neighbourhoodRelation[index][i] == true) {
 				result = true;
@@ -54,10 +76,18 @@ public class Topology {
 		return result;
 	}
 
-	private void set_numberInstances(int _numberInstances) {
-		this._numberInstances = _numberInstances;
+	
+	/*
+	 * @param numberInstances the new number of module instances
+	 * 
+	 */
+	private void set_numberInstances(int numberInstances) {
+		this._numberInstances = numberInstances;
 	}
 
+	/*
+	 * Sets up the adjacency matrix representing the neighbourhood relation between Module instances
+	 */
 	private void initNeighbours() {
 		int i, j;
 		neighbourhoodRelation = new boolean[_numberInstances][_numberInstances];

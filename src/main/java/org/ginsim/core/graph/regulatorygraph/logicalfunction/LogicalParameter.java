@@ -91,7 +91,7 @@ public class LogicalParameter implements XMLize {
 		edge_index.add(edge);
 	}
 
-	public boolean isDurty() {
+	public boolean isDirty() {
 		for (int i=0 ; i<edge_index.size() ; i++) {
 			if (((RegulatoryEdge)edge_index.get(i)).index == -1) {
 				return true;

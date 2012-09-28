@@ -238,7 +238,7 @@ public class LogicalParameterList extends ArrayList<LogicalParameter> {
 		LogicalParameter lp;
 		for (int i=size()-1 ; i>=0 ; i--) {
 			lp = (LogicalParameter)get(i);
-			if (lp.isDurty()) {
+			if (lp.isDirty()) {
 				manualp.remove(lp);
 				functionp.remove(lp);
 				remove(lp);

@@ -27,6 +27,9 @@ import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
 
+/*
+ * @author Nuno D. Mendes
+ */
 @ProviderFor(Service.class)
 @Alias("composition")
 public class CompositionService implements Service {
@@ -44,7 +47,7 @@ public class CompositionService implements Service {
 	 * @param mapping
 	 *            the integration functions to apply to each mapped input
 	 * 
-	 @return RegulatoryGraph
+	 * @return RegulatoryGraph
 	 * @throws GsException
 	 */
 
@@ -235,7 +238,7 @@ public class CompositionService implements Service {
 								if ((bitmask & curmask) != 0)
 									edgeList.add(listEdges.get(pos));
 							}
-							System.out.println("bitmask is " + bitmask + " and edgeList is" + edgeList.size());
+							// System.out.println("bitmask is " + bitmask + " and edgeList is" + edgeList.size());
 							newMapped.addLogicalParameter(new LogicalParameter(edgeList,1),true);
 							
 						}
@@ -280,8 +283,15 @@ public class CompositionService implements Service {
 		return finalComposedGraph;
 	}
 
+	/*
+	 * @param original The original name of the component
+	 * @param moduleId The index of the module if belongs to
+	 * 
+	 * @return The new name of the component
+	 */
 	private String computeNewName(String original, int moduleId) {
-		return original + "_" + moduleId;
+		// moduleId starts at 1, as all iterations begin at 0, we add 1 here
+		return original + "_" + (moduleId + 1);
 	}
 
 }

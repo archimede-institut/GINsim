@@ -19,7 +19,9 @@ import org.ginsim.service.tool.composition.CompositionService;
 import org.mangosdk.spi.ProviderFor;
 
 /**
- * register the connectivity service
+ * Register the Composition Service
+ * 
+ * @author Nuno D. Mendes
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(CompositionService.class)
@@ -63,8 +65,6 @@ class CompositionAction extends ToolAction {
 			return;
 		}
 
-		// TODO: reset edit mode
-		// mframe.getActions().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
 		new CompositionConfigDialog(graph).setVisible(true);
 	}
 
