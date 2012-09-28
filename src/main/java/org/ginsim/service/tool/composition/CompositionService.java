@@ -194,6 +194,8 @@ public class CompositionService implements Service {
 						// For the time being only one edge is being added per
 						// interaction. because only one functional level is
 						// being considered
+						
+						// TODO: Add edges for different thresholds
 
 						RegulatoryMultiEdge newInteraction = new RegulatoryMultiEdge(
 								composedGraph, newProper, newMapped);
@@ -225,18 +227,17 @@ public class CompositionService implements Service {
 
 					switch (integrationFunction) {
 					case OR:
-						for (int e1 = 0; e1 < listEdges.size(); e1++) {
+						int bitmask = 0x00;
+						while (++bitmask < Math.pow(2,(listEdges.size()))){
 							List<RegulatoryEdge> edgeList = new ArrayList<RegulatoryEdge>();
-							edgeList.add(listEdges.get(e1));
-							newMapped.addLogicalParameter(new LogicalParameter(
-									edgeList, 1), true);
-							for (int e2 = e1 + 1; e2 < listEdges.size(); e2++) {
-								edgeList.add(listEdges.get(e2));
-								newMapped
-										.addLogicalParameter(
-												new LogicalParameter(edgeList,
-														1), true);
+							for (int pos = 0; pos < listEdges.size(); pos++){
+								int curmask = (int) Math.pow(2, pos);
+								if ((bitmask & curmask) != 0)
+									edgeList.add(listEdges.get(pos));
 							}
+							System.out.println("bitmask is " + bitmask + " and edgeList is" + edgeList.size());
+							newMapped.addLogicalParameter(new LogicalParameter(edgeList,1),true);
+							
 						}
 						continue;
 					case AND:
