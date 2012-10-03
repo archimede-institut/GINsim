@@ -35,8 +35,17 @@ public void run(RegulatoryGraph graph, Topology topology, IntegrationFunctionMap
 	File exp = new File(fileheadname + ".exp");
 	File svl = new File(fileheadname + ".svl");
 
+	
+	
+	// TODO: Create directory with all these files and a README file with instructions
 
 }
+
+public void export()  {
+	
+	
+}
+
 /*
 	public void export(NuSMVConfig config, File file) throws IOException, GsException {
 

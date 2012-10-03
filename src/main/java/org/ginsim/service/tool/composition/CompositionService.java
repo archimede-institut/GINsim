@@ -51,16 +51,20 @@ public class CompositionService implements Service {
 	 * @throws GsException
 	 */
 
-	public RegulatoryGraph run(RegulatoryGraph graph, Topology topology,
-			IntegrationFunctionMapping mapping) throws GsException {
+	public RegulatoryGraph run(RegulatoryGraph graph, CompositionConfig config) throws GsException {
 
-		return computeComposedGraph(graph, topology, mapping);
+		return computeComposedGraph(graph, config);
 
 	}
-
+	
 	public RegulatoryGraph computeComposedGraph(RegulatoryGraph graph,
-			Topology topology, IntegrationFunctionMapping mapping)
+			CompositionConfig config)
 			throws GsException {
+		
+		Topology topology = config.getTopology();
+		IntegrationFunctionMapping mapping = config.getMapping();
+		boolean reduce = config.isReduce();
+		
 		RegulatoryGraph composedGraph = GraphManager.getInstance().getNewGraph(
 				RegulatoryGraph.class);
 
@@ -266,21 +270,24 @@ public class CompositionService implements Service {
 
 		// Reduce the graph
 
+		if (reduce){
 		// Build a ModelSimplifierConfig object
-		ModelSimplifierConfig config = new ModelSimplifierConfig();
+		ModelSimplifierConfig simplifierConfig = new ModelSimplifierConfig();
 		for (RegulatoryNode input : newMappedInputs)
-			config.remove(input);
+			simplifierConfig.remove(input);
 
 		// Mimmick a ReductionLauncher object
 		ReductionStub launcher = new ReductionStub(composedGraph);
 		
-		ModelSimplifier simplifier = new ModelSimplifier(composedGraph,config,launcher,false);
+		ModelSimplifier simplifier = new ModelSimplifier(composedGraph,simplifierConfig,launcher,false);
 		simplifier.run();
 		
 		RegulatoryGraph finalComposedGraph = launcher.getReducedGraph();
 		
-		// return composedGraph;
-		return finalComposedGraph;
+			return finalComposedGraph;
+		}
+		
+		return composedGraph;
 	}
 
 	/*

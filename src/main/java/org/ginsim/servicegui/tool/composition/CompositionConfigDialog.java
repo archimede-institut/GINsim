@@ -5,6 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,13 +13,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.Action;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.ListSelectionModel;
@@ -32,6 +36,7 @@ import org.ginsim.core.service.ServiceManager;
 
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.service.tool.composition.CompositionConfig;
 import org.ginsim.service.tool.composition.CompositionService;
 import org.ginsim.service.tool.composition.IntegrationFunction;
 import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
@@ -49,7 +54,7 @@ public class CompositionConfigDialog extends StackDialog {
 
 	private static final long serialVersionUID = 8046844091168372569L;
 	RegulatoryGraph graph = null;
-	CompositionConfigConfigurePanel config = null;
+	CompositionConfigConfigurePanel dialog = null;
 	boolean isRunning = false;
 
 	CompositionConfigDialog(RegulatoryGraph graph) {
@@ -57,12 +62,9 @@ public class CompositionConfigDialog extends StackDialog {
 		this.graph = graph;
 		setTitle("Specify Composition parameters");
 
-		// change name of run button
-		// brun.setName("Compose modules");
-
 		CompositionConfigConfigurePanel panel = new CompositionConfigConfigurePanel(
 				graph);
-		config = panel;
+		dialog = panel;
 		brun.setText("Compose instances");
 		brun.setToolTipText("Compose");
 		setMainPanel(panel.getMainPanel());
@@ -81,8 +83,7 @@ public class CompositionConfigDialog extends StackDialog {
 		// TODO: Deal here with invalid integration functions w.r.t. to given
 		// input
 		// and proper components using NotificationManager
-		RegulatoryGraph composedGraph = service.run(graph,
-				config.getTopology(), config.getIntegrationFunctionMapping());
+		RegulatoryGraph composedGraph = service.run(graph, dialog.getConfig());
 		GUIManager.getInstance().whatToDoWithGraph(composedGraph, true);
 
 		cancel();
@@ -93,16 +94,19 @@ public class CompositionConfigDialog extends StackDialog {
 		private RegulatoryGraph graph = null;
 		private Topology topology = null;
 		private IntegrationFunctionMapping mapping = null;
+		private boolean symmetricTopology = false; // default is asymmetric
 		private JPanel mainPanel = null;
 		private JPanel instanceSelectorPanel = null;
 		private JPanel adjacencyMatrixPanel = null;
 		private JPanel integrationPanel = null;
+		private JPanel reducePanel = null;
 		private List<RegulatoryNode> inputNodes = null;
 		private List<RegulatoryNode> properNodes = null;
 		private Map<RegulatoryNode, JCheckBox> mappedInputSelection = new HashMap<RegulatoryNode, JCheckBox>();
 		private Map<RegulatoryNode, JComboBox> mappedFunctionSelection = new HashMap<RegulatoryNode, JComboBox>();
 		private Map<RegulatoryNode, JList> mappedProperSelection = new HashMap<RegulatoryNode, JList>();
 		private Map<RegulatoryNode, JScrollPane> mappedPane = new HashMap<RegulatoryNode, JScrollPane>();
+		private JCheckBox toReduce = null;
 
 		private int instances = 2;
 
@@ -114,7 +118,16 @@ public class CompositionConfigDialog extends StackDialog {
 			init();
 		}
 
-		public Topology getTopology() throws GsException {
+		public CompositionConfig getConfig() throws GsException {
+			CompositionConfig config = new CompositionConfig();
+			config.setTopology(getTopology());
+			config.setMapping(getMapping());
+			config.setReduce(toReduce.isSelected());
+			return config;
+
+		}
+
+		private Topology getTopology() throws GsException {
 			topology = new Topology(instances);
 			for (int x = 0; x < matrix.length; x++) {
 				for (int y = 0; y < matrix.length; y++) {
@@ -131,8 +144,7 @@ public class CompositionConfigDialog extends StackDialog {
 			return topology;
 		}
 
-		public IntegrationFunctionMapping getIntegrationFunctionMapping()
-				throws GsException {
+		private IntegrationFunctionMapping getMapping() throws GsException {
 
 			updateIntegrationFunction();
 			return mapping;
@@ -148,25 +160,35 @@ public class CompositionConfigDialog extends StackDialog {
 			panel.setLayout(new GridBagLayout());
 			GridBagConstraints constraints = new GridBagConstraints();
 
+			constraints.weighty = 0;
 			constraints.gridx = 0;
 			constraints.gridy = 0;
 			constraints.fill = GridBagConstraints.BOTH;
-			constraints.weightx = 0.4;
-
-			// TODO: Add all subPaness
 			constraints.gridwidth = GridBagConstraints.REMAINDER;
 			panel.add(getInstanceSelectorPanel(), constraints);
+
 			constraints.gridwidth = 5;
-			constraints.weightx = 1.0;
+			constraints.weightx = 1;
+			constraints.weighty = 1;
 			constraints.gridx = 0;
 			constraints.gridy = 2;
-			constraints.gridheight = GridBagConstraints.REMAINDER;
 			panel.add(getAdjacencyMatrixPanel(), constraints);
 
+			constraints.weightx = 2;
 			constraints.gridx = 5;
 			constraints.gridy = 2;
 			constraints.gridwidth = GridBagConstraints.REMAINDER;
 			panel.add(getIntegrationPanel(), constraints);
+
+			constraints.weighty = 0;
+			constraints.gridx = 0;
+			constraints.gridy = 10;
+			constraints.fill = GridBagConstraints.BOTH;
+			constraints.gridwidth = GridBagConstraints.REMAINDER;
+			constraints.gridheight = GridBagConstraints.REMAINDER;
+			panel.add(getReducePanel(), constraints);
+
+			panel.setSize(panel.getPreferredSize());
 
 		}
 
@@ -180,11 +202,9 @@ public class CompositionConfigDialog extends StackDialog {
 			mainPanel.removeAll();
 			// redraw both Panels
 			instanceSelectorPanel.removeAll();
-			// adjacencyMatrixPanel.removeAll();
-			instanceSelectorPanel.revalidate();
-			adjacencyMatrixPanel.revalidate();
 			instanceSelectorPanel = null;
 			adjacencyMatrixPanel = null;
+			reducePanel = null;
 
 			// recreate adjacency matrix with new dimensions
 
@@ -246,6 +266,8 @@ public class CompositionConfigDialog extends StackDialog {
 
 				instanceSelectorPanel.add(input);
 				instanceSelectorPanel.add(update);
+				instanceSelectorPanel.setSize(instanceSelectorPanel
+						.getPreferredSize());
 			}
 			return instanceSelectorPanel;
 
@@ -256,42 +278,73 @@ public class CompositionConfigDialog extends StackDialog {
 				adjacencyMatrixPanel = new JPanel();
 				adjacencyMatrixPanel.setLayout(new GridBagLayout());
 				GridBagConstraints constraints = new GridBagConstraints();
+				GridBagConstraints topConstraints = new GridBagConstraints();
+				GridBagConstraints bottomConstraints = new GridBagConstraints();
 
 				// TODO: replace with STR_comp_nrInstances
 				adjacencyMatrixPanel.setBorder(BorderFactory
 						.createTitledBorder("Specify Neighbouring modules"));
 
 				constraints.fill = GridBagConstraints.NONE;
-
+				topConstraints.fill = GridBagConstraints.NONE;
+				bottomConstraints.fill = GridBagConstraints.NONE;
+				
 				if (instances <= 1) {
 					return adjacencyMatrixPanel;
 				}
 
+				JPanel top = new JPanel();
+				top.setLayout(new GridBagLayout());
+				
 				int x = 0;
 				int y = 0;
 				while (x <= instances && y <= instances) {
-					constraints.gridx = x;
-					constraints.gridy = y;
+					topConstraints.gridx = x;
+					topConstraints.gridy = y;
+					topConstraints.weighty = 0;
+					topConstraints.weightx = 0;
 
+					
 					if (x == 0 && y == 0)
-						adjacencyMatrixPanel.add(new JLabel(), constraints);
+						top.add(new JLabel(), topConstraints);
+					
+					
 					if (y == 0 && x > 0)
-						adjacencyMatrixPanel.add(new JLabel("M" + x),
-								constraints);
+						top.add(new JLabel("M" + x),
+								topConstraints);
 					if (x == 0 && y > 0) {
-						adjacencyMatrixPanel.add(new JLabel("M" + y),
-								constraints);
+						top.add(new JLabel("M" + y),
+								topConstraints);
 					}
 					if (x > 0 && y > 0) {
 						JCheckBox checkBox = new JCheckBox();
 
-						// Modules cannot be their own neighgbours
+						// Modules cannot be their own neighbours
 						if (x == y)
 							checkBox.setEnabled(false);
 						else
 							checkBox.setEnabled(true);
+
+						checkBox.addActionListener(new ActionListener() {
+
+							@Override
+							public void actionPerformed(ActionEvent e) {
+								boolean selection = ((JCheckBox) e.getSource()).isSelected();
+								if (symmetricTopology)
+									forceSymmetry(selection);
+							}
+
+						});
 						matrix[x - 1][y - 1] = checkBox;
-						adjacencyMatrixPanel.add(checkBox, constraints);
+						top.add(checkBox, topConstraints);
+						
+					}
+					
+					if (x == instances){
+						topConstraints.gridx = x + 1;
+						topConstraints.gridy = y;
+						topConstraints.weightx = 1;
+						top.add(new JLabel(),topConstraints);
 					}
 
 					x++;
@@ -301,6 +354,101 @@ public class CompositionConfigDialog extends StackDialog {
 					}
 				}
 
+
+				ButtonGroup symmetry = new ButtonGroup();
+				JRadioButton buttonSym = new JRadioButton("Symmetric topology");
+				buttonSym.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						symmetricTopology = true;
+					}
+
+				});
+				JRadioButton buttonAsy = new JRadioButton(
+						"Non-symmetric topology");
+				buttonAsy.addActionListener(new ActionListener() {
+
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						symmetricTopology = false;
+
+					}
+
+				});
+				
+				if (symmetricTopology)
+					buttonSym.setSelected(true);
+				else
+					buttonAsy.setSelected(true);
+
+				symmetry.add(buttonSym);
+				symmetry.add(buttonAsy);
+			
+				constraints.gridx = 0;
+				constraints.gridy = GridBagConstraints.RELATIVE;
+				constraints.weighty = 1;
+				constraints.weightx = 1;
+				constraints.gridwidth = GridBagConstraints.REMAINDER;
+				adjacencyMatrixPanel.add(new JLabel(),constraints);
+				
+				top.setSize(top.getPreferredSize());
+				constraints.gridwidth = GridBagConstraints.REMAINDER;
+				adjacencyMatrixPanel.add(top, constraints);
+				
+				
+				JPanel bottom = new JPanel();
+				bottom.setLayout(new GridBagLayout());
+				
+				bottomConstraints.gridx = 0;
+				bottomConstraints.gridy = 0;
+				bottomConstraints.weighty = 0;
+				bottomConstraints.weightx = 0;
+				bottomConstraints.gridwidth = 1;
+				bottom.add(new JLabel(),bottomConstraints);
+				
+				bottomConstraints.gridx = 1;
+				bottomConstraints.weightx = 0;
+				bottom.add(buttonSym,bottomConstraints);
+
+				bottomConstraints.gridx = GridBagConstraints.RELATIVE;
+				bottomConstraints.gridwidth = GridBagConstraints.REMAINDER;
+				bottomConstraints.weightx = 1;
+				bottom.add(new JLabel(),bottomConstraints);
+				
+				bottomConstraints.gridx = 0;
+				bottomConstraints.gridy = 1;
+				bottomConstraints.weightx = 0;
+				bottomConstraints.weighty = 0;
+				bottomConstraints.gridwidth = 1;
+				bottom.add(new JLabel(),bottomConstraints);
+				
+				
+				bottomConstraints.gridx = 1;
+				bottomConstraints.weightx = 0;
+				bottom.add(buttonAsy,bottomConstraints);
+				
+				bottomConstraints.gridx = GridBagConstraints.RELATIVE;
+				bottomConstraints.gridwidth = GridBagConstraints.REMAINDER;
+				bottomConstraints.weightx = 1;
+				bottom.add(new JLabel(),bottomConstraints);
+				
+				bottomConstraints.gridy = 2;
+				bottomConstraints.weighty = 1;
+				bottomConstraints.weightx = 1;
+				bottomConstraints.gridheight = GridBagConstraints.REMAINDER;
+				bottomConstraints.gridwidth = GridBagConstraints.REMAINDER;
+				bottom.add(new JLabel(),bottomConstraints);
+				
+				bottom.setSize(bottom.getPreferredSize());
+				constraints.gridx = 0;
+				constraints.gridy = GridBagConstraints.RELATIVE;
+				constraints.gridheight = GridBagConstraints.REMAINDER;
+				constraints.gridwidth = GridBagConstraints.REMAINDER;
+				adjacencyMatrixPanel.add(bottom,constraints);
+				
+				adjacencyMatrixPanel.setSize(adjacencyMatrixPanel
+						.getPreferredSize());
 			}
 
 			return adjacencyMatrixPanel;
@@ -393,9 +541,35 @@ public class CompositionConfigDialog extends StackDialog {
 					constraints.gridx = 3;
 					constraints.gridwidth = GridBagConstraints.REMAINDER;
 					integrationPanel.add(nodeScroll, constraints);
+					integrationPanel.setSize(integrationPanel
+							.getPreferredSize());
 				}
 			}
 			return integrationPanel;
+		}
+
+		private JPanel getReducePanel() {
+			if (reducePanel == null) {
+				reducePanel = new JPanel();
+				reducePanel.setLayout(new GridBagLayout());
+				reducePanel.setBorder(BorderFactory.createTitledBorder(""));
+				GridBagConstraints constraints = new GridBagConstraints();
+				constraints.gridx = 0;
+				constraints.gridy = 0;
+				constraints.weightx = 0;
+				toReduce = new JCheckBox();
+				toReduce.setEnabled(true);
+				toReduce.setSelected(true);
+				reducePanel.add(toReduce, constraints);
+				constraints.gridx = GridBagConstraints.RELATIVE;
+				constraints.weightx = 0;
+				reducePanel.add(new JLabel("Reduce mapped input components"),
+						constraints);
+				constraints.weightx = 2;
+				reducePanel.add(new JLabel(""), constraints);
+				reducePanel.setSize(reducePanel.getPreferredSize());
+			}
+			return reducePanel;
 		}
 
 		private void updateIntegrationFunction() throws GsException {
@@ -433,5 +607,17 @@ public class CompositionConfigDialog extends StackDialog {
 
 		}
 
+		private void forceSymmetry(boolean selection) {
+			for (int x = 0; x < matrix.length; x++)
+				for (int y = 0; y < matrix.length; y++)
+					if (selection){
+					if (matrix[x][y].isSelected())
+						matrix[y][x].setSelected(true);
+					} else {
+						if (! matrix[x][y].isSelected())
+							matrix[y][x].setSelected(false);
+					}
+			
+		}
 	}
 }
