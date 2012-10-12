@@ -2,7 +2,11 @@ package org.ginsim.service.export.gna;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
@@ -63,15 +67,15 @@ public class GNAEncoder {
 				// Note that, in GNA, there it is possible to also regulate the
 				// degradation parameters
 				out.write("\n  degradation-parameters: g_" + id + "\n");
+
 				out.write("  state-equation:\n    d/dt " + id + " = ");
 				if (mdd == 0) {
 					out.write("k_" + id);
-					out.write(" - g_" + id + " * " + id + "\n");
 				} else {
 					// iterate over paths
 					browse(searcher, mdd, variables, id, out);
-					out.write("\n        - g_" + id + " * " + id + "\n");
 				}
+				out.write("\n        - g_" + id + " * " + id + "\n");
 
 			} // end !input
 
@@ -107,18 +111,14 @@ public class GNAEncoder {
 			MDDVariable[] variables, String nodeID, Writer out)
 			throws IOException {
 		int[] path = searcher.setNode(mdd);
-		boolean first = true;
+		Map<Integer, Set<String>> mapEq = new HashMap<Integer, Set<String>>();
+
 		for (int leaf : searcher) {
 			if (leaf == 0) {
 				continue;
 			}
 
-			if (first) {
-				first = false;
-			} else {
-				out.write("\n        + ");
-			}
-			out.write("k" + leaf + "_" + nodeID);
+			String expr = "k" + leaf + "_" + nodeID;
 			for (int i = 0; i < path.length; i++) {
 				int value = path[i];
 				if (value == -1) {
@@ -127,13 +127,35 @@ public class GNAEncoder {
 				int end = value + 1;
 				String nodeName = variables[i].toString();
 				if (value > 0) {
-					out.write(" * s+(" + nodeName + ",t" + value + "_"
-							+ nodeName + ")");
+					expr += " * s+(" + nodeName + ",t" + value + "_" + nodeName
+							+ ")";
 				}
 				if (end < variables[i].nbval) {
-					out.write(" * s-(" + nodeName + ",t" + end + "_" + nodeName
-							+ ")");
+					expr += " * s-(" + nodeName + ",t" + end + "_" + nodeName
+							+ ")";
 				}
+			}
+			if (!mapEq.containsKey(leaf)) {
+				mapEq.put(leaf, new HashSet<String>());
+			}
+			mapEq.get(leaf).add(expr);
+		}
+
+		// *README*
+		// This reordering of expressions within the state-equation is due to
+		// a GNA feature in which the synthesis parameters are presented
+		// in the inequalities expressions in the order for which they appear
+		// in the state equation.
+		// If we don't respect that, GNA's parser is lost :(
+		boolean first = true;
+		for (int leaf : mapEq.keySet()) {
+			for (String expr : mapEq.get(leaf)) {
+				if (first) {
+					first = false;
+				} else {
+					out.write("\n        + ");
+				}
+				out.write(expr);
 			}
 		}
 	}
