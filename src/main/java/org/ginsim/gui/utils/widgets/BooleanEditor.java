@@ -31,6 +31,7 @@ public class BooleanEditor extends JCheckBox implements ObjectPropertyEditorUI, 
 		if (force) {
 			setSelected(pinfo.getRawValue() == Boolean.TRUE);
 		}
+		setEnabled(pinfo.isEditable);
 	}
 
 	public void setEditedProperty(GenericPropertyInfo pinfo, GenericPropertyHolder panel) {
@@ -50,6 +51,7 @@ public class BooleanEditor extends JCheckBox implements ObjectPropertyEditorUI, 
 
     public void stateChanged(ChangeEvent change) {
         pinfo.setValue(isSelected() ? 1 : 0);
+        setSelected((Boolean)pinfo.getRawValue());
     }
 
 	@Override

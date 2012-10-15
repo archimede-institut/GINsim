@@ -12,6 +12,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.graph.AddEdgeAction;
 import org.ginsim.gui.graph.AddNodeAction;
 import org.ginsim.gui.graph.DeleteAction;
@@ -149,6 +150,10 @@ class AddRegulatoryEdgeAction extends AddEdgeAction<RegulatoryNode, RegulatoryMu
 
 	@Override
 	protected RegulatoryMultiEdge getNewEdge(RegulatoryNode source, RegulatoryNode target) {
+		if (target.isInput()) {
+    		NotificationManager.getManager().publishWarning(graph, "Can not add a regulator to an input node");
+			return null;
+		}
 		return graph.addEdge(source, target, sign);
 	}
 }
