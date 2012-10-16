@@ -45,7 +45,7 @@ public class MaBoSSExportServiceGUI extends AbstractServiceGUI {
 }
 
 /**
- * Export to GNA file Action
+ * Export to MaBoSS file Action
  * 
  * @author Aurelien Naldi
  * 
