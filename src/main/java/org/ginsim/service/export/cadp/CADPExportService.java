@@ -41,7 +41,7 @@ public void run(RegulatoryGraph graph, Topology topology, IntegrationFunctionMap
 
 }
 
-public void export()  {
+public void export(RegulatoryGraph graph, CADPExportConfig config)  {
 	
 	
 }
