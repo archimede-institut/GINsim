@@ -241,8 +241,6 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	protected void run() {
 		if (isColorized  ) {
 			undoColorize();
-		} else {
-			doColorize();
 		}
 		progressionPanel.setVisible(true);
 		setProgressionText("searching...");
@@ -284,6 +282,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		pathList.setListData(path);
 		resultsPanel.setVisible(true);
 		progressionPanel.setVisible(false);
+		doColorize();
 	}
 
 	public void actionPerformed(ActionEvent e) {

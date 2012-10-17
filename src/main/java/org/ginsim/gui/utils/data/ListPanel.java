@@ -327,18 +327,13 @@ public class ListPanel<T> extends JPanel
     }
     
     private void doRemove() {
-        if (list == null) {
+        if (list == null || !helper.canRemove) {
             return;
         }
         int[] sel = jl.getSelectedRows();
         
-        // FIXME: remove entries
-//        if (sel.length > 0 && removeData(sel)) {
-//            int i = sel[0];
-//            i = i>=list.size() ? list.size()-1 : i;
-//            refresh();
-//            jl.getSelectionModel().setSelectionInterval(i,i);
-//        }
+        helper.remove(sel);
+        refresh();
     }
 
     /**

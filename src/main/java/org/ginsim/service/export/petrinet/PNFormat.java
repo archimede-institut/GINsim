@@ -1,14 +1,30 @@
 package org.ginsim.service.export.petrinet;
 
-import java.util.ArrayList;
-import java.util.List;
+import org.colomoto.logicalmodel.LogicalModel;
+import org.ginsim.common.utils.FileFormatDescription;
 
-public class PNFormat {
+abstract public class PNFormat {
 
-	public static final List<PNFormat> FORMATS = new ArrayList<PNFormat>();
+	private final String name, filterDescr, extension;
 	
-	static {
-		FORMATS.add(new PNFormat());
+	public PNFormat(String name, String extension) {
+		this(name, name, extension);
+	}
+	
+	public PNFormat(String name, String filterDescr, String extension) {
+		this.name = name;
+		this.filterDescr = filterDescr;
+		this.extension = extension;
+	}
+	
+	abstract public BasePetriNetExport getWriter( LogicalModel model);
+	
+	public FileFormatDescription getFormatDescription() {
+		return new FileFormatDescription(filterDescr, extension);
+	}
+
+	public String getName() {
+		return name;
 	}
 	
 }

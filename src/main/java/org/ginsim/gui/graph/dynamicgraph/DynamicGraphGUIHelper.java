@@ -17,15 +17,18 @@ import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
+import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.annotation.AnnotationPanel;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.gui.utils.data.GenericPropertyEditorPanel;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.Frame;
 import org.ginsim.servicegui.tool.stablestates.StableTableModel;
@@ -35,6 +38,10 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor( GraphGUIHelper.class)
 public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, DynamicNode, Edge<DynamicNode>> {
 
+	static {
+		GenericPropertyEditorPanel.addSupportedClass(Annotation.class, AnnotationPanel.class);
+	}
+	
 	/**
 	 * Provide the file filter to apply to a file chooser
 	 * 
@@ -130,6 +137,11 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
 	@Override
 	public List<EditAction> getEditActions(DynamicGraph graph) {
 		return null;
+	}
+
+	@Override
+	public boolean canCopyPaste(DynamicGraph graph) {
+		return false;
 	}
 }
 

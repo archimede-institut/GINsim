@@ -93,7 +93,10 @@ public class MainFrameActionManager implements FrameActionManager {
 		EditActionManager editManager = gui.getEditActionManager();
 		editManager.addEditButtons( toolbar);
 		
-		menubar.add( EditCallBack.getEditMenu(graph));
+		JMenu editMenu = EditCallBack.getEditMenu(gui);
+		if (editMenu != null) {
+			menubar.add( editMenu);
+		}
 		
 		menubar.add( gui.getViewMenu( layoutMenu));
 		

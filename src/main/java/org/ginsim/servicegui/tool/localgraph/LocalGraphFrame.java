@@ -13,7 +13,6 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ListSelectionEvent;
@@ -54,7 +53,6 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 	private boolean isColorized = false;
 	private PerturbationSelectionPanel mutantSelectionPanel;
 	private PerturbationHolder mutantStore;
-	private Perturbation mutant;
 	private StateSelectorTable sst;
 	private JCheckBox autoUpdateCheckbox;
 	
@@ -119,7 +117,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 			mainPanel.add(autoUpdateCheckbox, c);
 			
 			c.gridy++;
-			colorizeButton = new JButton(Translator.getString("STR_do_colorize"));
+			colorizeButton = new JButton(Translator.getString("STR_colorize_local"));
 		    colorizeButton.setEnabled(false);
 		    colorizeButton.addActionListener(this);
 		    mainPanel.add(colorizeButton, c);
@@ -141,12 +139,15 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 	protected void run() {
 		if (isColorized) {
 			lg.undoColorize();
-			colorizeButton.setText(Translator.getString("STR_do_colorize"));
+			colorizeButton.setText(Translator.getString("STR_colorize_local"));
 			isColorized = false;
 		}
 
 		Perturbation modifier = mutantStore.getPerturbation();
-		LogicalModel model = modifier.apply(regGraph.getModel());
+		LogicalModel model = regGraph.getModel();
+		if (modifier != null) {
+			model = modifier.apply(model);
+		}
 		lg.setUpdater(new SynchronousSimulationUpdater(model));
 		List states = sst.getStates();
 		if (states == null) return;
@@ -222,22 +223,14 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 	private void undoColorize() {
 		if (lg != null) {
 			lg.undoColorize();
-			colorizeButton.setText(Translator.getString("STR_do_colorize"));
+			colorizeButton.setText(Translator.getString("STR_colorize_local"));
 			isColorized = false;
 		}
 	}
 
 	public void cancel() {
 		if (isColorized) {
-			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_sure_close_undo_colorize"));
-			if (res == JOptionPane.NO_OPTION) {
-				super.cancel();
-			} else if (res == JOptionPane.CANCEL_OPTION) {
-				return;
-			} else if (res == JOptionPane.YES_OPTION) {
-				undoColorize();
-				super.cancel();
-			}
+			undoColorize();
 		}
 		super.cancel();
 	}

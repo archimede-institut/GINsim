@@ -3,6 +3,7 @@ package org.ginsim.core.graph.regulatorygraph.perturbation;
 import java.io.IOException;
 import java.util.List;
 
+import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.perturbation.MultiplePerturbation;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -35,5 +36,15 @@ public class PerturbationMultiple extends MultiplePerturbation<Perturbation> imp
             p.toXML(out);
         }
         out.closeTag();
+	}
+
+	@Override
+	public boolean affectsNode(NodeInfo node) {
+		for (Perturbation p: perturbations) {
+			if (p.affectsNode(node)) {
+				return true;
+			}
+		}
+		return false;
 	}
 }

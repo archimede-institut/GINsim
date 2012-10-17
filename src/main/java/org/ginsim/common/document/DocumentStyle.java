@@ -21,7 +21,7 @@ public class DocumentStyle {
 	public static final String FONT_SIZE = "font-size";
 	public static final String TABLE_BORDER = "table-border";
 	
-	private Map styles;
+	private Map<String, Map> styles;
 	private String curStyle;
 	
 	public DocumentStyle() {
@@ -45,7 +45,7 @@ public class DocumentStyle {
 	 * @param value
 	 */
 	public void addProperty(String property, Object value) {
-		((Map)styles.get(curStyle)).put(property, value);
+		styles.get(curStyle).put(property, value);
 	}
 	
 	/**
@@ -55,7 +55,7 @@ public class DocumentStyle {
 	 * @param value
 	 */
 	public void addProperty(String style, String property, Object value) {
-		((Map)styles.get(style)).put(property, value);
+		styles.get(style).put(property, value);
 	}
 	
 	/**
@@ -63,7 +63,7 @@ public class DocumentStyle {
 	 * @param properties the array, must looks like [property, value, property, value, ...]
 	 */
 	public void addProperties(Object[] properties) throws ArrayIndexOutOfBoundsException {
-		Map style = (Map)styles.get(curStyle);
+		Map style = styles.get(curStyle);
 		if (properties.length%2 == 1) {
 			throw new ArrayIndexOutOfBoundsException();
 		}
@@ -84,7 +84,7 @@ public class DocumentStyle {
 	 * Return an iterator over the styles identifiers.
 	 * @return an iterator over the styles identifiers.
 	 */
-	public Iterator getStyleIterator() {
+	public Iterator<String> getStyleIterator() {
 		return styles.keySet().iterator();
 	}
 	
@@ -94,7 +94,7 @@ public class DocumentStyle {
 	 * @return the properties
 	 */
 	public Map getPropertiesForStyle(String style) {
-		return (Map)styles.get(style);
+		return styles.get(style);
 	}
 	
 	/**
@@ -102,7 +102,7 @@ public class DocumentStyle {
 	 * @param style the style's identifier
 	 * @return an iterator over the properties
 	 */
-	public Iterator getPropertiesIteratorForStyle(String style) {
-		return ((Map)styles.get(style)).keySet().iterator();
+	public Iterator<String> getPropertiesIteratorForStyle(String style) {
+		return styles.get(style).keySet().iterator();
 	}
 }

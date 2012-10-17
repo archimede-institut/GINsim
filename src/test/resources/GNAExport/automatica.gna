@@ -1,0 +1,24 @@
+state-variable: Ga
+  zero-parameter: zero_Ga
+  box-parameter: max_Ga
+  threshold-parameters: t1_Ga, t2_Ga
+  synthesis-parameters: k1_Ga, k2_Ga
+  degradation-parameters: g_Ga
+  state-equation:
+    d/dt Ga = k1_Ga * s+(Ga,t2_Ga) * s-(Gb,t1_Gb)
+        + k2_Ga * s-(Ga,t1_Ga) * s-(Gb,t1_Gb)
+        + k2_Ga * s+(Ga,t1_Ga) * s-(Ga,t2_Ga) * s-(Gb,t1_Gb)
+        - g_Ga * Ga
+  parameter-inequalities:
+    zero_Ga < t1_Ga < k1_Ga / g_Ga < t2_Ga < k2_Ga / g_Ga < ( k1_Ga + k2_Ga ) / g_Ga < max_Ga
+state-variable: Gb
+  zero-parameter: zero_Gb
+  box-parameter: max_Gb
+  threshold-parameters: t1_Gb
+  synthesis-parameters: k1_Gb
+  degradation-parameters: g_Gb
+  state-equation:
+    d/dt Gb = k1_Gb * s-(Ga,t1_Ga)
+        - g_Gb * Gb
+  parameter-inequalities:
+    zero_Gb < t1_Gb < k1_Gb / g_Gb < max_Gb

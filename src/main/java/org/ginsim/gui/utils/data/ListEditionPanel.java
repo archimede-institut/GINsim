@@ -22,7 +22,7 @@ public class ListEditionPanel<T> extends SplitPane {
 		setLeftComponent( listPanel);
 	}
 
-	protected void init() {
+	public void init() {
 		helper.setEditPanel(this);
 		setRightComponent(mainPanel);
 	}

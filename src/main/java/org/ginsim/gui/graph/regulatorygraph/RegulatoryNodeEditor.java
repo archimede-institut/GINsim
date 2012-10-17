@@ -9,6 +9,8 @@ import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.notification.Notification;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.annotation.AnnotationPanel;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.LogicalFunctionPanel;
 import org.ginsim.gui.graph.regulatorygraph.models.NodeMaxValueSpinModel;
@@ -27,7 +29,7 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
     public static final int PROP_INPUT = 3;
 	public static final int PROP_ANNOTATION = 5;
 	public static final int PROP_RAW = 10;
-	private List l_prop = new ArrayList();
+	private List<GenericPropertyInfo> l_prop = new ArrayList();
 	
 	RegulatoryGraph graph;
 
@@ -147,7 +149,13 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
 				return o.getMaxValue() == value;
             case PROP_INPUT:
                 boolean nv = value != 0;
-                o.setInput(nv, graph);
+                if (nv) {
+                	if (graph.getIncomingEdges(o).size() > 0) {
+                		NotificationManager.getManager().publishWarning(graph, "Can not set regulated node as input");
+                		return false;
+                	}
+                }
+               	o.setInput(nv, graph);
                 return o.isInput() == nv;
 		}
 		return false;

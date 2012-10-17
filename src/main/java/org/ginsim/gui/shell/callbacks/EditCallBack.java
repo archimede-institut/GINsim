@@ -20,6 +20,7 @@ import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.shell.FrameActionManager;
 import org.ginsim.gui.shell.SearchFrame;
@@ -34,24 +35,19 @@ public class EditCallBack {
 	/**
 	 * Create and populate an Edit menu
 	 * 
-	 * @param graph a graph
+	 * @param gui a graph
 	 * @return
 	 */
-	public static JMenu getEditMenu(Graph<?, ?> graph) {
-		JMenu menu = new JMenu( Translator.getString( "STR_Edit"));
-		
-		menu.add(new CopyAction(graph));
-		menu.add(new PasteAction(graph));
-
-//		menu.add(new JSeparator());
-//
-//		menu.add(new UndoAction(graph));
-//		menu.add(new RedoAction(graph));
-//
-//		menu.add(new JSeparator());
-		
-		
-		return menu;
+	public static JMenu getEditMenu(GraphGUI<?, ?, ?> gui) {
+		if (gui.canCopyPaste()) {
+			JMenu menu = new JMenu( Translator.getString( "STR_Edit"));
+			Graph<?, ?> g = gui.getGraph();
+			menu.add(new CopyAction(g));
+			menu.add(new PasteAction(g));
+	
+			return menu;
+		}
+		return null;
 	}
 }
 

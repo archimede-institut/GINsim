@@ -1,15 +1,18 @@
 package org.ginsim.service.export.petrinet;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDVariable;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.utils.FileFormatDescription;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStatesIterator;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 
@@ -44,15 +47,24 @@ import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
  */
 public abstract class BasePetriNetExport {
 
-	// TODO: make extension data available
+	public final List<NodeInfo> nodeOrder;
+	public final MDDManager ddmanager;
+	public final int[] functions;
+	public final int len;
 	
-	private final String extension;
-	private final String filterDescr;
 	
-	public BasePetriNetExport(String extension, String filterDescr) {
-		this.extension = extension;
-		this.filterDescr = filterDescr;
+	public BasePetriNetExport( LogicalModel model) {
+		
+		this.nodeOrder = model.getNodeOrder();
+		this.ddmanager = model.getMDDManager();
+		this.functions = model.getLogicalFunctions();
+		
+		this.len = nodeOrder.size();
+		
+		// TODO: support output nodes
 	}
+	
+	// TODO: make extension data available
 	
     /**
      * extract transitions from a tree view of logical parameters.
@@ -63,10 +75,10 @@ public abstract class BasePetriNetExport {
      * @param v_node all nodes
      * @param len number of nodes in the original graph
      */
-    protected void browse(List v_result, OMDDNode node, int[][] t_priorities, int nodeIndex, List<NodeInfo> v_node, int len) {
-        if (node.next == null) {
+    private void browse(List v_result, MDDManager ddmanager, int f, int[][] t_priorities, int nodeIndex, List<NodeInfo> v_node, int len) {
+        if (ddmanager.isleaf(f)) {
             TransitionData td = new TransitionData();
-            td.value = node.value;
+            td.value = f;
             td.maxValue = v_node.get(nodeIndex).getMax();
             td.nodeIndex = nodeIndex;
             td.t_cst = null;
@@ -80,14 +92,14 @@ public abstract class BasePetriNetExport {
             for (int i=0 ; i<t_cst.length ; i++) {
                 t_cst[i][0] = -1;
             }
-            browse(v_result, t_cst, 0, node, t_priorities, nodeIndex, v_node);
+            browse(v_result, t_cst, 0, ddmanager, f, t_priorities, nodeIndex, v_node);
         }
     }
 
-    private void browse(List v_result, int[][] t_cst, int level, OMDDNode node, int[][] t_priorities, int nodeIndex, List<NodeInfo> v_node) {
-        if (node.next == null) {
+    private void browse(List v_result, int[][] t_cst, int level, MDDManager ddmanager, int f, int[][] t_priorities, int nodeIndex, List<NodeInfo> v_node) {
+        if (ddmanager.isleaf(f)) {
             TransitionData td = new TransitionData();
-            td.value = node.value;
+            td.value = f;
             td.maxValue = v_node.get(nodeIndex).getMax();
             td.nodeIndex = nodeIndex;
             if (t_priorities != null) {
@@ -123,12 +135,13 @@ public abstract class BasePetriNetExport {
         }
 
         // specify on which node constraints are added
-        t_cst[level][0] = node.level;
-        for (int i=0 ; i<node.next.length ; i++) {
-            OMDDNode next = node.next[i];
+        MDDVariable var = ddmanager.getNodeVariable(f);
+        t_cst[level][0] = ddmanager.getVariableIndex( var);
+        for (int i=0 ; i<var.nbval; i++) {
+            int next = ddmanager.getChild(f, i);
             int j=i+1;
-            while(j<node.next.length) {
-                if (node.next[j] == next) {
+            while(j<var.nbval) {
+                if (ddmanager.getChild(f, j) == next) {
                     j++;
                 } else {
                     break;
@@ -137,13 +150,14 @@ public abstract class BasePetriNetExport {
             j--;
             t_cst[level][1] = i;
             t_cst[level][2] = j;
-            browse(v_result, t_cst, level+1, next, t_priorities, nodeIndex, v_node);
+            browse(v_result, t_cst, level+1, ddmanager, next, t_priorities, nodeIndex, v_node);
             i = j;
         }
         // "forget" added constraints
         t_cst[level][0] = -1;
     }
 
+    
 	/**
 	 * prepare the PN export:
 	 *   - read/set initial markup
@@ -154,24 +168,16 @@ public abstract class BasePetriNetExport {
 	 * @param t_tree
 	 * @return the initial markup
 	 */
-    protected byte[][] prepareExport( PNConfig config, List[] t_transition, OMDDNode[] t_tree) {
-    	List<NodeInfo> nodeOrder = config.graph.getNodeInfos();
-		int len = nodeOrder.size();
+    private byte[][] prepareExport( PNConfig config, List[] t_transition) {
 		// get the selected initial state
 		Iterator it_state = new InitialStatesIterator(nodeOrder, config);
 		byte[] t_state = (byte[])it_state.next();
 
-		// apply mutant
-		Perturbation mutant = (Perturbation)config.store.getObject(0);
-		if (mutant != null) {
-			mutant.apply(t_tree, config.graph);
-		}
 		// use priority classes
-		PriorityClassDefinition priorities = (PriorityClassDefinition)config.store.getObject(1);
 		int[][] t_priorities = null;
-		if (priorities != null) {
+		if (config.priorities != null) {
 			t_priorities = new int[len][2];
-			int[][] t_pclass = priorities.getPclass(nodeOrder);
+			int[][] t_pclass = config.priorities.getPclass(nodeOrder);
 			for (int i=0 ; i<t_pclass.length ; i++) {
 				int[] t_class = t_pclass[i];
 				int priority = t_class[0];
@@ -195,7 +201,7 @@ public abstract class BasePetriNetExport {
 		
 		byte[][] t_markup = new byte[len][2];
         for (int i=0 ; i<len ; i++) {
-            OMDDNode node = t_tree[i];
+            int f = functions[i];
             NodeInfo vertex = nodeOrder.get(i);
 
 //            if (manager.getIncomingEdges(vertex).size() == 0) {
@@ -208,22 +214,26 @@ public abstract class BasePetriNetExport {
                 t_markup[i][1] = (byte)(vertex.getMax()-t_state[i]);
                 Vector v_transition = new Vector();
                 t_transition[i] = v_transition;
-                browse(v_transition, node, t_priorities, i, nodeOrder, len);
+                browse(v_transition, ddmanager, f, t_priorities, i, nodeOrder, len);
 //            }
         }
 		return t_markup;
     }
     
-    abstract protected void doExport( PNConfig config, String filename) throws IOException;
+    abstract protected void doExport( String netName, List<NodeInfo> nodes, List[] t_transition, byte[][] t_markup, FileWriter out) throws IOException;
     
-    public void export(PNConfig config, String filename) throws IOException {
-    	// TODO: share outputstream creation here
-    	doExport(config, filename);
-    }
+    public void export( PNConfig config, String filename) throws IOException {
+    	
+    	// start with the common parts
+        List[] t_transition = new List[len];
+        byte[][] t_markup = prepareExport(config, t_transition);
 
-	public FileFormatDescription getFormatDescription() {
-		return new FileFormatDescription(filterDescr, extension);
-	}
+        // TODO: add support for output nodes?
+        
+        FileWriter out = new FileWriter(filename);
+    	
+    	doExport( "defaultName", nodeOrder, t_transition, t_markup, out);
+    }
 }
 
 class TransitionData {
@@ -252,13 +262,4 @@ class TransitionData {
      */
     public int[][] t_cst;
     
-    public Perturbation mutant;
-    public Perturbation getMutant() {
-        return mutant;
-    }
-	public void setMutant(Perturbation mutant) {
-		this.mutant = mutant;
-	}
-	
 }
-

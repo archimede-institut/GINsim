@@ -14,6 +14,7 @@ import org.ginsim.common.application.OptionStore;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
+import org.ginsim.core.graph.view.SimpleStroke;
 
 
 /**
@@ -77,6 +78,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
     private Object vertex;
     private boolean selected;
     
+    private SimpleStroke stroke = new SimpleStroke();
 
     /**
      * @param map
@@ -448,9 +450,12 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 	private void doRender(String text, Graphics2D g, boolean moving) {
 		int w = getWidth();
 		int h = getHeight();
+		int sw = 1;
 		
-		Shape s = getShape().getShape( 0, 0, w,h);
+		Shape s = getShape().getShape( sw, sw, w-2*sw,h-2*sw);
 		g.setColor(getBackgroundColor());
+		stroke.setWidth(sw);
+		g.setStroke(stroke);
 		g.fill(s);
 
 		if (moving) {
@@ -464,7 +469,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 		
 		// shorten the text if needed
 		int textwidth = fm.stringWidth(text);
-		int targetWidth = w - 2;
+		int targetWidth = w - 4*sw;
 		int i = text.length()-3;
 		while ( textwidth > targetWidth && i > 0 ) {
 			text = text.substring(0, i) + ELLIPSIS;

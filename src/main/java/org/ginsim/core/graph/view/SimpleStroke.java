@@ -12,15 +12,12 @@ import java.awt.Stroke;
  */
 public class SimpleStroke implements Stroke {
 
-	private final float[] DASHPATTERN = {4, 2};
-	
 	float width = 1;
-	float[] dash = null;
 	
 	int cap = BasicStroke.CAP_SQUARE;
 	int join = BasicStroke.JOIN_MITER;
 	int miterlimit = 10;
-	int dash_phase = 0;
+	EdgePattern pattern = EdgePattern.SIMPLE;
 	
 	BasicStroke cachedStroke = null;
 	BasicStroke cachedSimpleStroke = null;
@@ -37,16 +34,18 @@ public class SimpleStroke implements Stroke {
 		}
 	}
 
-	public void setDashed(boolean dashed) {
-		if (dashed && this.dash != null) {
-			// no change
+	public void setDashPattern(EdgePattern pattern) {
+		if (pattern == this.pattern) {
 			return;
 		}
 		
-		if (dashed) {
-			this.dash = DASHPATTERN;
+		if (pattern == null) {
+			if (this.pattern == EdgePattern.SIMPLE) {
+				return;
+			}
+			this.pattern = EdgePattern.SIMPLE;
 		} else {
-			this.dash = null;
+			this.pattern = pattern;
 		}
 		cachedStroke = null;
 	}
@@ -54,7 +53,7 @@ public class SimpleStroke implements Stroke {
 	@Override
 	public Shape createStrokedShape(Shape s) {
         if (cachedStroke == null) {
-        	cachedStroke = new BasicStroke(width, cap, join, miterlimit, dash, dash_phase);
+        	cachedStroke = new BasicStroke(width, cap, join, miterlimit, pattern.getPattern(), 0);
         }
         return cachedStroke.createStrokedShape(s);
 	}

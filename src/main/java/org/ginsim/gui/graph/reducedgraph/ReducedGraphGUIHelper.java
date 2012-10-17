@@ -9,6 +9,7 @@ import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
+import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
@@ -90,4 +91,10 @@ public class ReducedGraphGUIHelper implements GraphGUIHelper<ReducedGraph<?,?,?>
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public boolean canCopyPaste(ReducedGraph graph) {
+		return false;
+	}
+
 }

@@ -2,8 +2,12 @@ package org.ginsim.service.export.petrinet;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ServiceConfigurationError;
+import java.util.ServiceLoader;
 
+import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
@@ -13,16 +17,29 @@ import org.mangosdk.spi.ProviderFor;
 @Alias("PN")
 public class PetrinetExportService implements Service {
 
-	public static final List<BasePetriNetExport> FORMATS = new ArrayList<BasePetriNetExport>();
+	public static final List<PNFormat> FORMATS = new ArrayList<PNFormat>();
 	
 	static {
-		FORMATS.add(new PetriNetExportINA());
-		FORMATS.add(new PetriNetExportPNML());
-		FORMATS.add(new PetriNetExportAPNN());
+		// load available PN formats
+        Iterator<PNFormat> formats = ServiceLoader.load( PNFormat.class).iterator(); 
+        while (formats.hasNext()) {
+            try {
+            	PNFormat fmt = formats.next();
+            	if( fmt != null) {
+            		FORMATS.add(fmt);
+            	}
+            }
+            catch (ServiceConfigurationError e){
+            }
+        }
 	}
 	
-	public void export(RegulatoryGraph graph, PNConfig config, String filename) throws IOException {
-		config.format.export(config, filename);
+	public List<PNFormat> getAvailableFormats() {
+		return FORMATS;
+	}
+	
+	public void export(LogicalModel model, PNFormat format, PNConfig config, String filename) throws IOException {
+		format.getWriter( model).export( config, filename);
 	}
 	
 }

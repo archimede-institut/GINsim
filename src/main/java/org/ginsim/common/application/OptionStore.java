@@ -125,6 +125,14 @@ public class OptionStore extends DefaultHandler {
 	 * @return the list of recent files
 	 */
 	public static List<String> getRecentFiles() {
+		List<String> filteredRecentFiles = new ArrayList<String>();
+		for (String filename: recentFiles) {
+			File f = new File(filename);
+			if (f.exists()) {
+				filteredRecentFiles.add(filename);
+			}
+		}
+		recentFiles = filteredRecentFiles;
 		return recentFiles;
 	}
     

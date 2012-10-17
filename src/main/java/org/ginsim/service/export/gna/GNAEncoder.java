@@ -2,13 +2,18 @@ package org.ginsim.service.export.gna;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDVariable;
+import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalFunctionBrowser;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
 /**
  * Exports a GINsim Regulatory graph into an old (non xml) GNA model
@@ -20,17 +25,26 @@ public class GNAEncoder {
 
 	public void write(RegulatoryGraph graph, Writer out) throws IOException {
 
-		GNAFunctionBrowser f_browser = new GNAFunctionBrowser(
-				graph.getNodeOrder(), out);
+		LogicalModel model = graph.getModel();
+		MDDManager ddmanager = model.getMDDManager();
+		PathSearcher searcher = new PathSearcher(ddmanager);
+		List<NodeInfo> nodeOrder = model.getNodeOrder();
+		int[] functions = model.getLogicalFunctions();
+		MDDVariable[] variables = ddmanager.getAllVariables();
 
-		for (RegulatoryNode node : graph.getNodeOrder()) {
-			int thresholdLevels = node.getMaxValue();
-			String id = node.getId();
+		for (int p = 0; p < functions.length; p++) {
+			MDDVariable var = variables[p];
+			int mdd = functions[p];
+			String id = var.toString();
 
-			out.write((node.isInput() ? "input" : "state") + "-variable: " + id
-					+ "\n" + "  zero-parameter: zero_" + id + "\n"
+			boolean input = nodeOrder.get(p).isInput();
+			out.write((input ? "input" : "state") + "-variable: " + id + "\n"
+					+ "  zero-parameter: zero_" + id + "\n"
 					+ "  box-parameter: max_" + id
 					+ "\n  threshold-parameters: ");
+
+			// add parameters for its threshold levels
+			int thresholdLevels = var.nbval - 1;
 			for (int i = 1; i <= thresholdLevels; i++) {
 				out.write("t" + i + "_" + id);
 				if (i < thresholdLevels) {
@@ -39,10 +53,9 @@ public class GNAEncoder {
 			}
 			out.write("\n");
 
-			OMDDNode mdd = node.getTreeParameters(graph).reduce();
-			if (!node.isInput()) {
+			if (!input) {
 				out.write("  synthesis-parameters: ");
-				if (mdd.next == null && mdd.value == 0) {
+				if (mdd == 0) {
 					out.write("k_" + id + ", ");
 				}
 				for (int i = 1; i <= thresholdLevels; i++) {
@@ -54,101 +67,96 @@ public class GNAEncoder {
 				// Note that, in GNA, there it is possible to also regulate the
 				// degradation parameters
 				out.write("\n  degradation-parameters: g_" + id + "\n");
+
 				out.write("  state-equation:\n    d/dt " + id + " = ");
-				if (mdd.next == null && mdd.value == 0) {
+				if (mdd == 0) {
 					out.write("k_" + id);
-					out.write(" - g_" + id + " * " + id + "\n");
 				} else {
-					f_browser.browse(mdd, node.getId());
-					out.write("\n        - g_" + id + " * " + id + "\n");
+					// iterate over paths
+					browse(searcher, mdd, variables, id, out);
 				}
+				out.write("\n        - g_" + id + " * " + id + "\n");
 
 			} // end !input
 
 			out.write("  parameter-inequalities:\n    zero_");
-			if (!node.isInput() && mdd.next == null && mdd.value == 0) {
+			if (!input && mdd == 0) {
 				out.write(id + " < k_" + id + " / g_" + id + " < ");
 			} else {
 				out.write(id + " < ");
 			}
-			// TODO: Bug: missing Sum combinations of all Ks
+
 			for (int i = 1; i <= thresholdLevels; i++) {
 				out.write("t" + i + "_" + id + " < ");
-				if (node.isInput())
+				if (input) {
 					continue;
-				// out.write("k" + i + "_" + id + " / g_" + id + " < ");
-				// if (i == 1)
-				// continue;
-				ArrayList<String> al = kappaComb(id, i);
-				for (String term : al) {
-					out.write("(" + term + ") / g_" + id + " < ");
+				}
+
+				String last = "k" + i + "_" + id;
+				for (int j = i; j > 0; j--) {
+					if (j == i) {
+						out.write(last + " / g_" + id + " < ");
+					} else {
+						last = "k" + j + "_" + id + " + " + last;
+						out.write("( " + last + " ) / g_" + id + " < ");
+					}
 				}
 			}
-			out.write("max_" + id + "\n\n");
+			out.write("max_" + id + "\n");
 
 		} // end for each node
 	}
 
-	private ArrayList<String> kappaComb(String id, int n) {
-		ArrayList<String> alRes = new ArrayList<String>();
-		alRes.add("k" + n + "_" + id);
-		if (n > 1) {
-			for (int i = 1; i < n; i++) {
-				ArrayList<String> alFn = kappaComb(id, i);
-				for (String term : alFn) {
-					alRes.add(term + " + k" + n + "_" + id);
-				}
+	private void browse(PathSearcher searcher, int mdd,
+			MDDVariable[] variables, String nodeID, Writer out)
+			throws IOException {
+		int[] path = searcher.setNode(mdd);
+		Map<Integer, Set<String>> mapEq = new HashMap<Integer, Set<String>>();
+
+		for (int leaf : searcher) {
+			if (leaf == 0) {
+				continue;
 			}
-		}
-		return alRes;
-	}
-}
 
-class GNAFunctionBrowser extends LogicalFunctionBrowser {
-	Writer out;
-	boolean first = true;
-	String nodeID;
-
-	public GNAFunctionBrowser(List<RegulatoryNode> nodeOrder, Writer out) {
-		super(nodeOrder);
-		this.out = out;
-	}
-
-	public void browse(OMDDNode node, String name) {
-		this.nodeID = name;
-		first = true;
-		browse(node);
-	}
-
-	protected void leafReached(OMDDNode leaf) {
-		if (leaf.value == 0) {
-			return;
-		}
-		try {
-			if (first) {
-				first = false;
-			} else {
-				out.write("\n        + ");
-			}
-			out.write("k" + leaf.value + "_" + nodeID);
+			String expr = "k" + leaf + "_" + nodeID;
 			for (int i = 0; i < path.length; i++) {
-				if (path[i][0] != -1) {
-					String nodeName = ((RegulatoryNode) nodeOrder.get(i))
-							.getId();
-					int begin = path[i][0];
-					int end = path[i][1] + 1;
-					if (begin > 0) {
-						out.write(" * s+(" + nodeName + ",t" + begin + "_"
-								+ nodeName + ")");
-					}
-					if (end != -1 && end <= path[i][2]) {
-						out.write(" * s-(" + nodeName + ",t" + end + "_"
-								+ nodeName + ")");
-					}
+				int value = path[i];
+				if (value == -1) {
+					continue;
+				}
+				int end = value + 1;
+				String nodeName = variables[i].toString();
+				if (value > 0) {
+					expr += " * s+(" + nodeName + ",t" + value + "_" + nodeName
+							+ ")";
+				}
+				if (end < variables[i].nbval) {
+					expr += " * s-(" + nodeName + ",t" + end + "_" + nodeName
+							+ ")";
 				}
 			}
-		} catch (IOException e) {
-			// TODO: error!
+			if (!mapEq.containsKey(leaf)) {
+				mapEq.put(leaf, new HashSet<String>());
+			}
+			mapEq.get(leaf).add(expr);
+		}
+
+		// *README*
+		// This reordering of expressions within the state-equation is due to
+		// a GNA feature in which the synthesis parameters are presented
+		// in the inequalities expressions in the order for which they appear
+		// in the state equation.
+		// If we don't respect that, GNA's parser is lost :(
+		boolean first = true;
+		for (int leaf : mapEq.keySet()) {
+			for (String expr : mapEq.get(leaf)) {
+				if (first) {
+					first = false;
+				} else {
+					out.write("\n        + ");
+				}
+				out.write(expr);
+			}
 		}
 	}
 }

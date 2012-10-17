@@ -42,13 +42,8 @@ import org.ginsim.gui.utils.widgets.SplitPane;
  * It provides the general layout with menu, toolbar,
  * notifications and reserved space for the view and edit panels.
  * 
- * Main frames are counted, an event is emitted when the last one is closed.
- * 
- * FIXME: refactor in progress...
+ * Main frames are counted, the startup dialog will be shown when the last one is closed.
  */
-
-
-
 public class MainFrame extends Frame implements NotificationSource, NotificationListener, GraphGUIListener {
 	private static final long serialVersionUID = 3002680535567580439L;
 	
@@ -73,8 +68,6 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 
 	private final GraphGUI graphGUI;
 	
-	private static final boolean alwaysForceClose = false;
-
 	public MainFrame(GraphGUI graph_gui) {
 		
 		super("MainFrame", 800, 700);

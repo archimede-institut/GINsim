@@ -2,6 +2,7 @@ package org.ginsim.gui.graph.canvas;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -14,7 +15,6 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.awt.image.BufferedImage;
-import java.util.Date;
 
 import javax.swing.JComponent;
 import javax.swing.event.MouseInputListener;
@@ -24,19 +24,23 @@ import javax.swing.event.MouseInputListener;
  * This component has a zoom level and translation and lets a separate renderer
  * draw the content (without having to know about coordinate transformations)
  * Mouse events that are not caught for zooming and dragging are also passed
- * to the renderer (which can use them for example to select and move items) 
+ * to the renderer (which can use them for example to select and move items).
+ * 
+ * The Base canvas is also in charge for the scroll bars.
+ * Scroll bars appear when the renderer declared area is not entirely visible.
+ * The canvas allows scrolling further than the declared area, by a margin depending
+ * on the window size and zoom level.
+ * Note: scroll bars are not interactive yet.
  * 
  * @author Aurelien Naldi
  */
-public class SimpleCanvas extends JComponent {
+public class SimpleCanvas extends JComponent implements VirtualScrollable {
 
 	private final static double MAXZOOM = 10;
 	private final static double MINZOOM = 0.1;
 	
-	private final static int SCROLLMARGIN = 10;
-	
 	private final static RenderingHints RENDER_HINTS;
-			
+	
 	static {
 		RENDER_HINTS = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		RENDER_HINTS.put(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
@@ -44,6 +48,7 @@ public class SimpleCanvas extends JComponent {
 	
 	private CanvasRenderer renderer = null;
 	private final CanvasEventListener mouseListener;
+	private VirtualScrollPane scrollPane = null;
 	
 	/** zoom factor */
 	private double zoom = 1;
@@ -56,9 +61,11 @@ public class SimpleCanvas extends JComponent {
 
 	/** part of the canvas that was changed and should be repainted */
     private Rectangle damagedRegion = null;
+    private final Rectangle visibleArea = new Rectangle();
+    private final Dimension virtualDimension = new Dimension();
     
-	private Point lastPoint;
-
+    private boolean visibleAreaUpdated = true, virtualDimensionUpdated = true;
+    
 	private Color backgroundColor = Color.white;
 	
 	private boolean showHelp = false;
@@ -73,29 +80,36 @@ public class SimpleCanvas extends JComponent {
 		mouseListener.setEventManager(renderer);
 	}
 
+	public void setScrollPane(VirtualScrollPane scrollPane) {
+		this.scrollPane = scrollPane;
+	}
+
 	public BufferedImage getNewBufferedImage() {
-    	return new BufferedImage(getWidth()-SCROLLMARGIN, getHeight()-SCROLLMARGIN, BufferedImage.TYPE_INT_RGB);
+    	return new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 	}
 	
 	private void paintBuffer() {
     	BufferedImage img = getNewBufferedImage();
-		Rectangle area = new Rectangle(0, 0, getWidth()-SCROLLMARGIN, getHeight()-SCROLLMARGIN);
-    	paintAreaInBuffer(img, area);
+    	paintAreaInBuffer(img, null);
 	}
 	
 	private void paintAreaInBuffer(BufferedImage img, Rectangle area) {
-		
+		if (area == null) {
+			area = getVisibleArea();
+		} else {
+			area = getVisibleArea().intersection(area);
+		}
     	Graphics2D g = img.createGraphics();
     	g.setRenderingHints(RENDER_HINTS);
-    	g.clip(area);
 		// erase the whole area
 		g.setColor(backgroundColor);
-		g.fill(area);
 		
 		if (renderer != null) {
-			g.translate(tr_x, tr_y);
-			g.scale(zoom, zoom);
-			renderer.render(g,getCanvasRectangle(area));
+			transform(g);
+	    	g.clip(area);
+			g.fill(area);
+			renderer.render(g,area);
+			virtualDimensionUpdated = true;
 		}
 
 		this.img = img;
@@ -116,200 +130,180 @@ public class SimpleCanvas extends JComponent {
 			return;
 		}
 		
-		// draw size indicators (pseudo scroll bars)
-		Dimension bounds = renderer.getBounds();
-		// canvas and scroll area size
-		int cw = getWidth()-SCROLLMARGIN;
-		int ch = getHeight()-SCROLLMARGIN;
-		int sw = SCROLLMARGIN-1;
-
-		// renderer size
-		int rw = bounds.width;
-		int rh = bounds.height;
-		
-		// visible area
-		int vx = (-tr_x * 100) / rw;
-		double vmaxx = ((-tr_x+(cw/zoom))*100) / rw;
-		
-		int vy = (-tr_y * 100) / rh;
-		double vmaxy = ((-tr_y+(ch/zoom))*100) / rh;
-		int cmaxy = tr_y+ch;
-		
-		// make sure to stay in the 0-100 range
-		if (vx > 90) {
-			vx = 90;
-		}
-		if (vy > 90) {
-			vy = 90;
-		}
-		if (vmaxx > 100) {
-			vmaxx = 100;
-		}
-		if (vmaxy > 100) {
-			vmaxy = 100;
+		if (scrollPane != null) {
+			scrollPane.fireViewUpdated();
 		}
 
-		// do we need scroll bars?
-		if (vx > 0 || vmaxx < 100 || vy > 0 || vmaxy < 100) {
-			// extract width and height
-			int vw = (int)vmaxx - vx;
-			int vh = (int)vmaxy - vy;
-	
-			// translate into screen coordinates
-			vx = vx *cw / 100;
-			vw = vw * cw / 100;
-			vy = vy * ch / 100;
-			vh = vh * ch / 100;
-		
-			// scroll information background
-			g.setColor(Color.LIGHT_GRAY);
-			g.fillRect(0, ch+1, cw, sw);
-			g.fillRect(cw+1, 0, sw, ch);
-			
-			// actual scroll information
-			g.setColor(Color.DARK_GRAY);
-			g.fillRect(vx, ch+1, vw, sw);
-			g.fillRect(cw+1, vy, sw, vh);
-		}
-		
 		// add overlay layer to the image, by the renderer
 		Graphics2D g2 = (Graphics2D)g;
-		g2.translate(tr_x, tr_y);
-		g2.scale(zoom, zoom);
+		transform(g2);
 
+		Rectangle overlayRect = new Rectangle(0,0, (int)(getWidth()/zoom), (int)(getHeight()/zoom));
 		if (showHelp) {
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER,0.9f));
-			renderer.helpOverlay(g2, getCanvasRectangle(new Rectangle(0,0, getWidth(), getHeight())));
+			renderer.helpOverlay(g2, overlayRect);
 			showHelp = false;
 		} else {
-			renderer.overlay(g2, getCanvasRectangle(new Rectangle(0,0, getWidth(), getHeight())));
+			renderer.overlay(g2, overlayRect);
 		}
-	}
-	
-	private Rectangle getCanvasRectangle(Rectangle area) {
-		Rectangle canvasArea = area;
-		if (zoom != 1) {
-			canvasArea = new Rectangle((int)((area.x-tr_x)/zoom), (int)((area.y-tr_y)/zoom), (int)(area.width/zoom), (int)(area.height/zoom));
-		} else if (tr_x != 0 || tr_y != 0) {
-			canvasArea = new Rectangle(area.x-tr_x, area.y-tr_y, area.width, area.height);
-		}
-		return canvasArea;
 	}
 
+	private void transform(Graphics2D g) {
+		g.translate(-tr_x*zoom, -tr_y*zoom);
+		g.scale(zoom, zoom);
+	}
+	
+	@Override
+	public Component getComponent() {
+		return this;
+	}
+	
+	@Override
+	public Dimension getVirtualDimension() {
+		if (virtualDimensionUpdated) {
+			getVisibleArea();
+			virtualDimension.setSize(renderer.getBounds());
+			// minimum: visible area
+			int min = 1 + visibleArea.width / 2;
+			if (virtualDimension.width <= min) {
+				virtualDimension.width = visibleArea.width;
+			} else {
+				virtualDimension.width += min;
+			}
+			
+			min = 1 + visibleArea.height / 2;
+			if (virtualDimension.height < min) {
+				virtualDimension.height = visibleArea.height;
+			} else {
+				virtualDimension.height += min;
+			}
+			virtualDimensionUpdated = false;
+		}
+		return virtualDimension;
+	}
+
+	@Override
+	public Rectangle getVisibleArea() {
+		if (visibleAreaUpdated) {
+			visibleArea.x = tr_x;
+			visibleArea.y = tr_y;
+			visibleArea.width = (int)(getWidth()/zoom);
+			visibleArea.height = (int)(getHeight()/zoom);
+			visibleAreaUpdated = false;
+		}
+		return visibleArea;
+	}
+	
 	public void zoom(int n) {
-		if (n < 0) {
+		if (n > 0) {
 			if (zoom >= MAXZOOM) {
 				return;
 			}
-			zoom = zoom * 1.1;
-		} else if (n > 0) {
+			zoom += .1;
+		} else if (n < 0) {
 			if (zoom <= MINZOOM) {
 				return;
 			}
-			zoom = zoom / 1.1;
+			zoom -= .1;
 		} else if (zoom == 1) {
 			return;
 		} else {
 			zoom = 1;
 		}
 		img = null;
+		visibleAreaUpdated = true;
 		repaint();
 	}
 	
-	/**
-	 * Translate the canvas.
-	 *   dx > 0 will reveal what is to the right of the current view (horizontal scroll)
-	 *   dy > 0 will reveal what is below the current view (scroll down)
-	 * Note: the zoom level affects this.
-	 *   
-	 * @param dx
-	 * @param dy
-	 */
-	public void translate(double dx, double dy) {
-		moveImage((int)(dx/zoom), (int)(dy/zoom));
-	}
-	
-	public void setLastPoint(Point p) {
-		this.lastPoint = p;
-	}
 
-	/**
-	 * Drag to scroll the view.
-	 * Note: only the main event listener should call this method, the renderer should use "translate".
-	 * 
-	 * @param p
-	 */
-	public void drag(Point p) {
-		moveImage(lastPoint.x - p.x, lastPoint.y - p.y);
-		this.lastPoint = p;
-	}
-
-	private void moveImage(int dx, int dy) {
-		Dimension dim = renderer.getBounds();
-		int maxdx = -(int)dim.getWidth() + 35 - this.tr_x;
-		int maxdy = -(int)dim.getHeight() + 35 - this.tr_y;
-		// prevent going to negative coordinates
-		if (dx > 0 && dx > -this.tr_x) {
-			dx = -this.tr_x;
-		} else if (dx < 0 && dx < maxdx) {
-			dx = maxdx;
-		}
-		
-		if (dy > 0 && dy > -this.tr_y) {
-			dy = -this.tr_y;
-		} else if (dy < 0 && dy < maxdy) {
-			dy = maxdy;
-		}
-		
-		// moving coordinates
-		this.tr_x += dx;
-		this.tr_y += dy;
-		
-		if (img == null || (dx == 0 && dy == 0)) {
+	@Override
+	public void setScrollPosition(int x, int y) {
+		if (x == tr_x && y == tr_y) {
 			return;
 		}
 		
-    	BufferedImage img = getNewBufferedImage();
-    	Graphics2D g = img.createGraphics();
-    	
-    	g.drawImage(this.img, dx, dy, null);
-    	
-		// redraw only the sides
-    	// Note: the corner is re-painted twice
-    	if (dx > 0) {
-    		Rectangle area = new Rectangle(0, 0, dx, getHeight()-SCROLLMARGIN);
-        	paintAreaInBuffer(img, area);
-    	} else if (dx < 0) {
-    		Rectangle area = new Rectangle(getWidth()+dx-SCROLLMARGIN, 0, -dx, getHeight()-SCROLLMARGIN);
-        	paintAreaInBuffer(img, area);
-    	}
+		Rectangle visible = getVisibleArea();
+		Dimension dim = getVirtualDimension();
 
-    	if (dy > 0) {
-    		Rectangle area = new Rectangle(0, 0, getWidth()-SCROLLMARGIN, dy);
-        	paintAreaInBuffer(img, area);
-    	} else if (dy < 0) {
-    		Rectangle area = new Rectangle(0, getHeight()+dy-SCROLLMARGIN, getWidth()-SCROLLMARGIN, -dy);
-        	paintAreaInBuffer(img, area);
-    	}
-
-    	this.img = img;
-    	repaint();
-	}
-	
-	protected Point window2canvas(Point p) {
-		if (zoom == 1) {
-			return new Point(p.x-tr_x, p.y-tr_y);
+		int maxx = dim.width - visible.width;
+		int maxy = dim.height - visible.height;
+		
+		if (x < 0) {
+			x = 0;
+		} else if (x > maxx) {
+			x = maxx;
 		}
-		return new Point((int)((p.x-tr_x)/zoom), (int)((p.y-tr_y)/zoom));
+		
+		if (y < 0) {
+			y = 0;
+		} else if (y > maxy) {
+			y = maxy;
+		}
+		
+		int dx = x - this.tr_x;
+		int dy = y - this.tr_y;
+		
+		if (dx == 0 && dy == 0) {
+			return;
+		}
+		
+		this.tr_x = x;
+		this.tr_y = y;
+		visibleAreaUpdated = true;
+
+		if (img == null) {
+			return;
+		}
+		
+		dim = getVirtualDimension();
+		
+		// FIXME: move image and redraw only the revealed parts
+		paintAreaInBuffer(img, null);
+		
+//    	BufferedImage img = getNewBufferedImage();
+//    	Graphics2D g = img.createGraphics();
+//    	
+//    	dx *= zoom;
+//    	dy *= zoom;
+//    	
+//    	g.drawImage(this.img, dx, dy, null);
+//    	
+//		// redraw only the sides
+//    	// Note: the corner is re-painted twice
+//    	if (dx > 0) {
+//    		Rectangle area = new Rectangle(0, 0, dx, getHeight());
+//        	paintAreaInBuffer(img, area);
+//    	} else if (dx < 0) {
+//    		Rectangle area = new Rectangle(getWidth()+dx, 0, -dx, getHeight());
+//        	paintAreaInBuffer(img, area);
+//    	}
+//
+//    	if (dy > 0) {
+//    		Rectangle area = new Rectangle(0, 0, getWidth(), dy);
+//        	paintAreaInBuffer(img, area);
+//    	} else if (dy < 0) {
+//    		Rectangle area = new Rectangle(0, getHeight()+dy, getWidth(), -dy);
+//        	paintAreaInBuffer(img, area);
+//    	}
+//
+//    	this.img = img;
+		
+		
+		repaint();
+	}
+
+	protected Point window2canvas(Point p) {
+		Point ret = new Point(tr_x + (int)(p.x/zoom), tr_y + (int)(p.y/zoom));
+		return ret;
 	}
 
 	public void scroll(int wheelRotation, boolean alternate) {
-		Dimension dim = renderer.getBounds();
-		int tr = -10*wheelRotation;
+		int tr = (int)(10*wheelRotation*zoom);
+		Rectangle visible = getVisibleArea();
 		if (alternate) {
-			moveImage(tr, 0);
+			setScrollPosition(visible.x+tr, visible.y);
 		} else {
-			moveImage(0, tr);
+			setScrollPosition(visible.x, visible.y + tr);
 		}
 	}
 	
@@ -321,41 +315,13 @@ public class SimpleCanvas extends JComponent {
 	 * @param area the canvas area to mark as damaged
 	 */
 	public void damageCanvas(Rectangle area) {
-		int x = (int)(area.x * zoom) + tr_x - 1;
-		int y = (int)(area.y * zoom) + tr_y - 1;
-		
-		int width = (int)(area.width*zoom) +2;
-		int height = (int)(area.height*zoom) +2;
-
-		// only take into account visible parts
-		if (x < 0) {
-			width -= x;
-			x = 0;
-		}
-		if (y < 0) {
-			height -= y;
-			y = 0;
-		}
-		
-		if (width > 0 && height > 0) {
-			damageScreen(new Rectangle(x,y, width, height));
-		}
-	}
-	
-	/**
-	 * Mark a part of the screen as needing to be redrawn.
-	 * Note: this does NOT call repaint to let several calls happen before the actual redraw.
-	 * 
-	 * @param area
-	 */
-	public void damageScreen(Rectangle area) {
 		if (damagedRegion == null) {
-			damagedRegion = area;
+			damagedRegion = new Rectangle(area);
 		} else {
 			damagedRegion = damagedRegion.union(area);
 		}
 	}
-
+	
 	/**
 	 * Throw away the cached image.
 	 * The next repaint will have to build the image from scratch.
@@ -379,6 +345,7 @@ public class SimpleCanvas extends JComponent {
 		if (img != null) {
 			img = null;
 		}
+		visibleAreaUpdated = true;
 		super.reshape(x, y, w, h);
 	}
 }
@@ -388,8 +355,6 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 	
 	private final SimpleCanvas canvas;
 	private CanvasEventManager evtManager;
-	
-	private int mouseButton = -1;
 	
 	CanvasEventListener(SimpleCanvas canvas) {
 		this.canvas = canvas;
@@ -409,8 +374,10 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
+		Point p = e.getPoint();
+		
 		if (evtManager != null) {
-			evtManager.click(canvas.window2canvas(e.getPoint()), alternate(e));
+			evtManager.click(canvas.window2canvas(p), alternate(e));
 		}
 	}
 
@@ -418,8 +385,7 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 	public void mousePressed(MouseEvent e) {
 		canvas.requestFocusInWindow();
 		Point p = e.getPoint();
-		canvas.setLastPoint(p);
-		mouseButton = e.getButton();
+
 		if (evtManager != null) {
 			evtManager.pressed(canvas.window2canvas(p), alternate(e));
 		}
@@ -427,7 +393,7 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		mouseButton = -1;
+		
 		if (evtManager != null) {
 			evtManager.released(canvas.window2canvas(e.getPoint()));
 		}
@@ -443,10 +409,6 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		if (mouseButton == MouseEvent.BUTTON2) {
-			canvas.drag(e.getPoint());
-			return;
-		}
 		
 		if (evtManager != null) {
 			evtManager.dragged(canvas.window2canvas(e.getPoint()));
@@ -468,7 +430,7 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 			return;
 		}
 		
-		canvas.zoom(e.getWheelRotation());
+		canvas.zoom(-e.getWheelRotation());
 	}
 
 	@Override

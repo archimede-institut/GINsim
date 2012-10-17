@@ -72,11 +72,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     
 	@Override
 	public List<NodeInfo> getNodeInfos() {
-		List<NodeInfo> nodeInfos = new ArrayList<NodeInfo>(nodeOrder.size());
-		for (RegulatoryNode node: nodeOrder) {
-			nodeInfos.add(node.getNodeInfo());
-		}
-		return nodeInfos;
+		return getNodeInfos(nodeOrder);
 	}
 
     /**
@@ -758,11 +754,10 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 	}
 
 	private List<NodeInfo> getNodeInfos(List<RegulatoryNode> order) {
-		List<NodeInfo> n_info = new ArrayList<NodeInfo>();
+		List<NodeInfo> n_info = new ArrayList<NodeInfo>(order.size());
 		for (RegulatoryNode node: order) {
 			n_info.add(node.getNodeInfo());
 		}
 		return n_info;
 	}
-
 }

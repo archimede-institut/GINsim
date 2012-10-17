@@ -310,6 +310,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
 	private void dorender(Graphics2D g, List<Point> points) {
 		stroke.setWidth(getLineWidth());
+		stroke.setDashPattern(getDash());
 		g.setStroke(stroke);
 		if (selected) {
 			// TODO: better selection markup
@@ -325,7 +326,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 		} else {
 			s = createPath(points, isCurve());
 		}
-		g.draw(s);
+		g.fill(stroke.createStrokedShape(s));
 
 		// get the angle for the edge end
 		int n = points.size()-1;
@@ -358,7 +359,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 		}
 		
 		if (getBounds().contains(p)) {
-			Shape path = getPath();
+			Shape path = stroke.createSimpleStrokedShape(getPath());
 			return path.intersects(p.x-2, p.y-2, 5, 5);
 		}
 		
@@ -405,7 +406,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 			}
 		}
 		
-		return stroke.createStrokedShape(path);
+		return path;
 	}
 
 	

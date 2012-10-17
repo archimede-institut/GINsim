@@ -33,7 +33,7 @@ public interface GraphGUIHelper<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 * @param graph the graph requiring the panel
 	 * @return
 	 */
-	public GUIEditor<G> getMainEditionPanel(G graph);
+	GUIEditor<G> getMainEditionPanel(G graph);
 	
 	/**
 	 * Retrieve the Title used for the selection edition tab
@@ -41,7 +41,7 @@ public interface GraphGUIHelper<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 * @param graph the graph requiring the panel
 	 * @return
 	 */
-	public String getEditingTabLabel(G graph);
+	String getEditingTabLabel(G graph);
 	
 	/**
 	 * Create an edition panel for nodes.
@@ -49,7 +49,7 @@ public interface GraphGUIHelper<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 * @param graph the graph requiring the panel
 	 * @return
 	 */
-	public GUIEditor<V> getNodeEditionPanel(G graph);
+	GUIEditor<V> getNodeEditionPanel(G graph);
 	
 	/**
 	 * Create an edition panel for edges.
@@ -57,7 +57,7 @@ public interface GraphGUIHelper<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 * @param graph the graph requiring the panel
 	 * @return 
 	 */
-	public GUIEditor<E> getEdgeEditionPanel(G graph);
+	GUIEditor<E> getEdgeEditionPanel(G graph);
 	
 	/**
 	 * Create an Information Panel
@@ -65,33 +65,40 @@ public interface GraphGUIHelper<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 * @param graph the graph requiring the panel
 	 * @return an Information Panel
 	 */
-	public JPanel getInfoPanel( G graph);
+	JPanel getInfoPanel( G graph);
 	
 	/**
 	 * Get the graph class the helper helps to manage
 	 * 
 	 * @return the graph class the helper helps to manage
 	 */
-	public Class<G> getGraphClass();
+	Class<G> getGraphClass();
 	
 	/**
 	 * @param graph the edited graph
 	 * @return the list of actions or null if none are available
 	 */
-	public List<EditAction> getEditActions(G graph);
+	List<EditAction> getEditActions(G graph);
 	
 	/**
 	 * Provide the file filter to apply to a file chooser
 	 * 
 	 * @return the file filter to apply to a file chooser
 	 */
-	public FileFilter getFileFilter();
+	FileFilter getFileFilter();
 	
 	/**
 	 * Create a panel containing the option for graph saving 
 	 * 
 	 * @param graph the edited graph
 	 */
-	public JPanel getSaveOptionPanel( G graph);
+	JPanel getSaveOptionPanel( G graph);
 	
+	/**
+	 * Does this graph type support copy/paste actions?
+	 * 
+	 * @param graph
+	 * @return true if copy/paste is supported, false otherwise.
+	 */
+	boolean canCopyPaste(G graph);
 }

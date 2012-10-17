@@ -27,7 +27,6 @@ public class LogicalModel2RegulatoryGraph {
 	private final RegulatoryGraph lrg;
 
 	private final List<NodeInfo> coreNodes;
-	private final MDDVariable[] variables;
 	private final Map<NodeInfo, RegulatoryNode> node2node;
 	
 	/**
@@ -43,7 +42,6 @@ public class LogicalModel2RegulatoryGraph {
 	
 	private LogicalModel2RegulatoryGraph( LogicalModel model) {
 		this.ddmanager = model.getMDDManager();
-		this.variables = ddmanager.getAllVariables();
 		this.lrg = RegulatoryGraphFactory.getInstance().create();
 		this.matrix = new ConnectivityMatrix(model);
 		
@@ -101,6 +99,10 @@ public class LogicalModel2RegulatoryGraph {
 					idxTh++;
 				}
 				
+				if (me == null) {
+					throw new RuntimeException("No effect found for " + regulator + " on " + target);
+				}
+				
 				t_values[regIdx][0] = reg;
 				t_me[regIdx] = me;
 				
@@ -125,7 +127,6 @@ public class LogicalModel2RegulatoryGraph {
 	 */
 	private void browse(RegulatoryNode targetNode, RegulatoryMultiEdge[] t_me, int[][] t_values, PathSearcher searcher) {
 		
-		Collection<RegulatoryMultiEdge> edges = lrg.getIncomingEdges(targetNode);
 		List<LogicalParameter> paramList = new ArrayList<LogicalParameter>();
 		
 		int[] path = searcher.getPath();
@@ -138,7 +139,6 @@ public class LogicalModel2RegulatoryGraph {
 			for (int i=0 ; i<t_values.length ; i++) {
 				int nb = t_values[i][0];
 				int begin = path[nb];
-				int end = begin+1;
 				RegulatoryMultiEdge me = t_me[i];
 				nb = me.getEdgeCount();
 				
@@ -149,30 +149,23 @@ public class LogicalModel2RegulatoryGraph {
 				} else {
 					// find the first edge
 					if (begin == 0) {
-						// start before the first edge
+						// only the first edge
 						t_values[i][1] = -1;
+						t_values[i][2] = -1;
 					} else {
 						// lookup the start
+						boolean found = false;
 						for (int j=0 ; j<nb ; j++) {
-							if (me.getMin(j) >= begin) {
+							if (me.getMin(j) == begin) {
 								t_values[i][1] = j;
+								t_values[i][2] = j;
+								found = true;
 								break;
 							}
 						}
-					}
-					// find the last edge
-					for (int j=t_values[i][1] ; j<nb ; j++) {
-						if (j == -1) {
-							if (end < me.getMin(0)) {
-								t_values[i][2] = -1;
-								break;
-							}
+						
+						if (!found) {
 							continue;
-						}
-						int max = me.getMax(j);
-						if (max == -1 || end <= max) {
-							t_values[i][2] = j;
-							break;
 						}
 					}
 				}

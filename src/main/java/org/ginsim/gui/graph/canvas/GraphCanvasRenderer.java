@@ -1,18 +1,13 @@
 package org.ginsim.gui.graph.canvas;
 
-import java.awt.AlphaComposite;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.geom.Dimension2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.ginsim.core.graph.GraphManager;
@@ -23,9 +18,7 @@ import org.ginsim.core.graph.common.GraphEventCascade;
 import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.core.graph.common.GraphModel;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.MovingEdgeType;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.graph.view.ViewHelper;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.graph.canvas.events.AddEdgeInGraphCanvasEventManager;
@@ -42,7 +35,6 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 	private final GraphSelection selection;
 	
 	private final CanvasEventManager selectEventManager, addNodeEventManager, addEdgeEventManager;
-	private CanvasEventManager currentEventManager;
 
 	public final Graph graph;
 	public final EditActionManager amanager;

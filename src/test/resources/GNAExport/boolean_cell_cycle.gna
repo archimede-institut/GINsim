@@ -1,0 +1,127 @@
+state-variable: CycD
+  zero-parameter: zero_CycD
+  box-parameter: max_CycD
+  threshold-parameters: t1_CycD
+  synthesis-parameters: k1_CycD
+  degradation-parameters: g_CycD
+  state-equation:
+    d/dt CycD = k1_CycD * s+(CycD,t1_CycD)
+        - g_CycD * CycD
+  parameter-inequalities:
+    zero_CycD < t1_CycD < k1_CycD / g_CycD < max_CycD
+state-variable: Rb
+  zero-parameter: zero_Rb
+  box-parameter: max_Rb
+  threshold-parameters: t1_Rb
+  synthesis-parameters: k1_Rb
+  degradation-parameters: g_Rb
+  state-equation:
+    d/dt Rb = k1_Rb * s-(CycD,t1_CycD) * s-(CycE,t1_CycE) * s-(CycA,t1_CycA) * s-(CycB,t1_CycB)
+        + k1_Rb * s-(CycD,t1_CycD) * s+(CycE,t1_CycE) * s+(p27,t1_p27) * s-(CycB,t1_CycB)
+        + k1_Rb * s-(CycD,t1_CycD) * s-(CycE,t1_CycE) * s+(CycA,t1_CycA) * s+(p27,t1_p27) * s-(CycB,t1_CycB)
+        - g_Rb * Rb
+  parameter-inequalities:
+    zero_Rb < t1_Rb < k1_Rb / g_Rb < max_Rb
+state-variable: E2F
+  zero-parameter: zero_E2F
+  box-parameter: max_E2F
+  threshold-parameters: t1_E2F
+  synthesis-parameters: k1_E2F
+  degradation-parameters: g_E2F
+  state-equation:
+    d/dt E2F = k1_E2F * s-(Rb,t1_Rb) * s-(CycA,t1_CycA) * s-(CycB,t1_CycB)
+        + k1_E2F * s-(Rb,t1_Rb) * s+(CycA,t1_CycA) * s+(p27,t1_p27) * s-(CycB,t1_CycB)
+        - g_E2F * E2F
+  parameter-inequalities:
+    zero_E2F < t1_E2F < k1_E2F / g_E2F < max_E2F
+state-variable: CycE
+  zero-parameter: zero_CycE
+  box-parameter: max_CycE
+  threshold-parameters: t1_CycE
+  synthesis-parameters: k1_CycE
+  degradation-parameters: g_CycE
+  state-equation:
+    d/dt CycE = k1_CycE * s-(Rb,t1_Rb) * s+(E2F,t1_E2F)
+        - g_CycE * CycE
+  parameter-inequalities:
+    zero_CycE < t1_CycE < k1_CycE / g_CycE < max_CycE
+state-variable: CycA
+  zero-parameter: zero_CycA
+  box-parameter: max_CycA
+  threshold-parameters: t1_CycA
+  synthesis-parameters: k1_CycA
+  degradation-parameters: g_CycA
+  state-equation:
+    d/dt CycA = k1_CycA * s-(Rb,t1_Rb) * s-(E2F,t1_E2F) * s+(CycA,t1_CycA) * s-(Cdc20,t1_Cdc20) * s-(cdh1,t1_cdh1)
+        + k1_CycA * s-(Rb,t1_Rb) * s+(E2F,t1_E2F) * s-(Cdc20,t1_Cdc20) * s-(cdh1,t1_cdh1)
+        + k1_CycA * s-(Rb,t1_Rb) * s+(E2F,t1_E2F) * s-(Cdc20,t1_Cdc20) * s+(cdh1,t1_cdh1) * s-(UbcH10,t1_UbcH10)
+        + k1_CycA * s-(Rb,t1_Rb) * s-(E2F,t1_E2F) * s+(CycA,t1_CycA) * s-(Cdc20,t1_Cdc20) * s+(cdh1,t1_cdh1) * s-(UbcH10,t1_UbcH10)
+        - g_CycA * CycA
+  parameter-inequalities:
+    zero_CycA < t1_CycA < k1_CycA / g_CycA < max_CycA
+state-variable: p27
+  zero-parameter: zero_p27
+  box-parameter: max_p27
+  threshold-parameters: t1_p27
+  synthesis-parameters: k1_p27
+  degradation-parameters: g_p27
+  state-equation:
+    d/dt p27 = k1_p27 * s-(CycD,t1_CycD) * s-(CycE,t1_CycE) * s-(CycA,t1_CycA) * s-(CycB,t1_CycB)
+        + k1_p27 * s-(CycD,t1_CycD) * s+(CycE,t1_CycE) * s-(CycA,t1_CycA) * s+(p27,t1_p27) * s-(CycB,t1_CycB)
+        + k1_p27 * s-(CycD,t1_CycD) * s-(CycE,t1_CycE) * s+(CycA,t1_CycA) * s+(p27,t1_p27) * s-(CycB,t1_CycB)
+        - g_p27 * p27
+  parameter-inequalities:
+    zero_p27 < t1_p27 < k1_p27 / g_p27 < max_p27
+state-variable: Cdc20
+  zero-parameter: zero_Cdc20
+  box-parameter: max_Cdc20
+  threshold-parameters: t1_Cdc20
+  synthesis-parameters: k1_Cdc20
+  degradation-parameters: g_Cdc20
+  state-equation:
+    d/dt Cdc20 = k1_Cdc20 * s+(CycB,t1_CycB)
+        - g_Cdc20 * Cdc20
+  parameter-inequalities:
+    zero_Cdc20 < t1_Cdc20 < k1_Cdc20 / g_Cdc20 < max_Cdc20
+state-variable: cdh1
+  zero-parameter: zero_cdh1
+  box-parameter: max_cdh1
+  threshold-parameters: t1_cdh1
+  synthesis-parameters: k1_cdh1
+  degradation-parameters: g_cdh1
+  state-equation:
+    d/dt cdh1 = k1_cdh1 * s+(CycA,t1_CycA) * s+(p27,t1_p27) * s-(Cdc20,t1_Cdc20) * s-(CycB,t1_CycB)
+        + k1_cdh1 * s-(CycA,t1_CycA) * s-(Cdc20,t1_Cdc20) * s-(CycB,t1_CycB)
+        + k1_cdh1 * s+(CycA,t1_CycA) * s+(p27,t1_p27) * s+(Cdc20,t1_Cdc20)
+        + k1_cdh1 * s+(CycA,t1_CycA) * s-(p27,t1_p27) * s+(Cdc20,t1_Cdc20)
+        + k1_cdh1 * s-(CycA,t1_CycA) * s+(Cdc20,t1_Cdc20)
+        - g_cdh1 * cdh1
+  parameter-inequalities:
+    zero_cdh1 < t1_cdh1 < k1_cdh1 / g_cdh1 < max_cdh1
+state-variable: UbcH10
+  zero-parameter: zero_UbcH10
+  box-parameter: max_UbcH10
+  threshold-parameters: t1_UbcH10
+  synthesis-parameters: k1_UbcH10
+  degradation-parameters: g_UbcH10
+  state-equation:
+    d/dt UbcH10 = k1_UbcH10 * s+(CycA,t1_CycA) * s-(cdh1,t1_cdh1)
+        + k1_UbcH10 * s-(CycA,t1_CycA) * s+(Cdc20,t1_Cdc20) * s-(cdh1,t1_cdh1)
+        + k1_UbcH10 * s-(CycA,t1_CycA) * s-(Cdc20,t1_Cdc20) * s+(cdh1,t1_cdh1) * s+(UbcH10,t1_UbcH10) * s+(CycB,t1_CycB)
+        + k1_UbcH10 * s-(CycA,t1_CycA) * s+(Cdc20,t1_Cdc20) * s+(cdh1,t1_cdh1) * s+(UbcH10,t1_UbcH10)
+        + k1_UbcH10 * s+(CycA,t1_CycA) * s+(cdh1,t1_cdh1) * s+(UbcH10,t1_UbcH10)
+        + k1_UbcH10 * s-(CycA,t1_CycA) * s-(Cdc20,t1_Cdc20) * s-(cdh1,t1_cdh1)
+        - g_UbcH10 * UbcH10
+  parameter-inequalities:
+    zero_UbcH10 < t1_UbcH10 < k1_UbcH10 / g_UbcH10 < max_UbcH10
+state-variable: CycB
+  zero-parameter: zero_CycB
+  box-parameter: max_CycB
+  threshold-parameters: t1_CycB
+  synthesis-parameters: k1_CycB
+  degradation-parameters: g_CycB
+  state-equation:
+    d/dt CycB = k1_CycB * s-(Cdc20,t1_Cdc20) * s-(cdh1,t1_cdh1)
+        - g_CycB * CycB
+  parameter-inequalities:
+    zero_CycB < t1_CycB < k1_CycB / g_CycB < max_CycB

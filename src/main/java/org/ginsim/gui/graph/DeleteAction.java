@@ -31,6 +31,10 @@ public class DeleteAction extends EditAction {
 			return;
 		}
 		
+		// extend selection for deletion (helps to mark them as damaged)
+		selection.extendSelectionToIncomingEdges();
+		selection.extendSelectionToOutgoingEdges();
+		
 		if (selection.getSelectedEdges() != null) {
 			for (Edge<?> e: selection.getSelectedEdges()) {
 				graph.removeEdge(e);
@@ -42,6 +46,8 @@ public class DeleteAction extends EditAction {
 				graph.removeNode(n);
 			}
 		}
+		
+		selection.unselectAll();
 	}
 
 }

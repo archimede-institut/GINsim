@@ -23,7 +23,6 @@ public class MainEditTab extends JPanel implements EditTab {
 		cards = new CardLayout();
 		setLayout(cards);
 		
-		Graph graph = gui.getGraph();
 		this.title = gui.getEditingTabLabel();
 		GUIEditor editor = gui.getMainEditionPanel();
 		this.mainPanel = editor == null ? new DefaultGUIEditor("Empty panel editor") : editor;

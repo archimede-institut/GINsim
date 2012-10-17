@@ -258,14 +258,13 @@ public class LaTeXDocumentWriter extends DocumentWriter {
 
 	    if (documentStyles != null) {
 
-		    Iterator styleIterator = documentStyles.getStyleIterator();
+		    Iterator<String> styleIterator = documentStyles.getStyleIterator();
 			while (styleIterator.hasNext()) {
-				String style = (String) styleIterator.next();
-				Map properties = documentStyles.getPropertiesForStyle(style);
-				Iterator propertiesIterator = documentStyles.getPropertiesIteratorForStyle(style);
+				String style = styleIterator.next();
+				Iterator<String> propertiesIterator = documentStyles.getPropertiesIteratorForStyle(style);
 				while (propertiesIterator.hasNext()) {
-					String property = (String) propertiesIterator.next();
-					// TODO
+					String property = propertiesIterator.next();
+					// TODO: write LaTeX style
 				}
 			}
 		}

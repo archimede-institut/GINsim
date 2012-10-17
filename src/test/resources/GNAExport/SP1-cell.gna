@@ -1,0 +1,157 @@
+state-variable: Wg1
+  zero-parameter: zero_Wg1
+  box-parameter: max_Wg1
+  threshold-parameters: t1_Wg1, t2_Wg1
+  synthesis-parameters: k1_Wg1, k2_Wg1
+  degradation-parameters: g_Wg1
+  state-equation:
+    d/dt Wg1 = k1_Wg1 * s+(Slp1,t1_Slp1) * s+(Nkd1,t1_Nkd1) * s-(Nkd1,t2_Nkd1) * s-(En1,t1_En1) * s+(Ciact1,t1_Ciact1) * s-(Ciact1,t2_Ciact1)
+        + k1_Wg1 * s+(Slp1,t1_Slp1) * s-(Nkd1,t1_Nkd1) * s-(En1,t1_En1) * s+(Ciact1,t1_Ciact1) * s-(Ciact1,t2_Ciact1)
+        + k2_Wg1 * s+(Slp1,t1_Slp1) * s+(Nkd1,t1_Nkd1) * s-(Nkd1,t2_Nkd1) * s-(En1,t1_En1) * s+(Ciact1,t2_Ciact1)
+        + k2_Wg1 * s+(Slp1,t1_Slp1) * s-(Nkd1,t1_Nkd1) * s-(En1,t1_En1) * s+(Ciact1,t2_Ciact1)
+        + k2_Wg1 * s+(Slp1,t1_Slp1) * s+(Nkd1,t2_Nkd1) * s-(En1,t1_En1) * s+(Ciact1,t2_Ciact1)
+        - g_Wg1 * Wg1
+  parameter-inequalities:
+    zero_Wg1 < t1_Wg1 < k1_Wg1 / g_Wg1 < t2_Wg1 < k2_Wg1 / g_Wg1 < ( k1_Wg1 + k2_Wg1 ) / g_Wg1 < max_Wg1
+state-variable: Fz1
+  zero-parameter: zero_Fz1
+  box-parameter: max_Fz1
+  threshold-parameters: t1_Fz1
+  synthesis-parameters: k1_Fz1
+  degradation-parameters: g_Fz1
+  state-equation:
+    d/dt Fz1 = k1_Fz1 * s+(Wg1,t2_Wg1)
+        + k1_Fz1 * s+(Wg1,t1_Wg1) * s-(Wg1,t2_Wg1)
+        + k1_Fz1 * s-(Wg1,t1_Wg1) * s+(Wg_external,t2_Wg_external)
+        - g_Fz1 * Fz1
+  parameter-inequalities:
+    zero_Fz1 < t1_Fz1 < k1_Fz1 / g_Fz1 < max_Fz1
+state-variable: Dsh1
+  zero-parameter: zero_Dsh1
+  box-parameter: max_Dsh1
+  threshold-parameters: t1_Dsh1
+  synthesis-parameters: k1_Dsh1
+  degradation-parameters: g_Dsh1
+  state-equation:
+    d/dt Dsh1 = k1_Dsh1 * s+(Fz1,t1_Fz1)
+        - g_Dsh1 * Dsh1
+  parameter-inequalities:
+    zero_Dsh1 < t1_Dsh1 < k1_Dsh1 / g_Dsh1 < max_Dsh1
+state-variable: Slp1
+  zero-parameter: zero_Slp1
+  box-parameter: max_Slp1
+  threshold-parameters: t1_Slp1
+  synthesis-parameters: k1_Slp1
+  degradation-parameters: g_Slp1
+  state-equation:
+    d/dt Slp1 = k1_Slp1 * s+(Dsh1,t1_Dsh1) * s-(En1,t1_En1)
+        - g_Slp1 * Slp1
+  parameter-inequalities:
+    zero_Slp1 < t1_Slp1 < k1_Slp1 / g_Slp1 < max_Slp1
+state-variable: Nkd1
+  zero-parameter: zero_Nkd1
+  box-parameter: max_Nkd1
+  threshold-parameters: t1_Nkd1, t2_Nkd1
+  synthesis-parameters: k1_Nkd1, k2_Nkd1
+  degradation-parameters: g_Nkd1
+  state-equation:
+    d/dt Nkd1 = k1_Nkd1 * s-(Dsh1,t1_Dsh1) * s-(En1,t1_En1)
+        + k2_Nkd1 * s+(Dsh1,t1_Dsh1) * s-(En1,t1_En1)
+        - g_Nkd1 * Nkd1
+  parameter-inequalities:
+    zero_Nkd1 < t1_Nkd1 < k1_Nkd1 / g_Nkd1 < t2_Nkd1 < k2_Nkd1 / g_Nkd1 < ( k1_Nkd1 + k2_Nkd1 ) / g_Nkd1 < max_Nkd1
+state-variable: En1
+  zero-parameter: zero_En1
+  box-parameter: max_En1
+  threshold-parameters: t1_En1
+  synthesis-parameters: k1_En1
+  degradation-parameters: g_En1
+  state-equation:
+    d/dt En1 = k1_En1 * s+(Dsh1,t1_Dsh1) * s-(Slp1,t1_Slp1)
+        - g_En1 * En1
+  parameter-inequalities:
+    zero_En1 < t1_En1 < k1_En1 / g_En1 < max_En1
+state-variable: Hh1
+  zero-parameter: zero_Hh1
+  box-parameter: max_Hh1
+  threshold-parameters: t1_Hh1
+  synthesis-parameters: k1_Hh1
+  degradation-parameters: g_Hh1
+  state-equation:
+    d/dt Hh1 = k1_Hh1 * s+(En1,t1_En1) * s-(Cirep1,t1_Cirep1)
+        - g_Hh1 * Hh1
+  parameter-inequalities:
+    zero_Hh1 < t1_Hh1 < k1_Hh1 / g_Hh1 < max_Hh1
+state-variable: Ci1
+  zero-parameter: zero_Ci1
+  box-parameter: max_Ci1
+  threshold-parameters: t1_Ci1
+  synthesis-parameters: k1_Ci1
+  degradation-parameters: g_Ci1
+  state-equation:
+    d/dt Ci1 = k1_Ci1 * s-(En1,t1_En1)
+        - g_Ci1 * Ci1
+  parameter-inequalities:
+    zero_Ci1 < t1_Ci1 < k1_Ci1 / g_Ci1 < max_Ci1
+state-variable: Ciact1
+  zero-parameter: zero_Ciact1
+  box-parameter: max_Ciact1
+  threshold-parameters: t1_Ciact1, t2_Ciact1
+  synthesis-parameters: k1_Ciact1, k2_Ciact1
+  degradation-parameters: g_Ciact1
+  state-equation:
+    d/dt Ciact1 = k1_Ciact1 * s+(Dsh1,t1_Dsh1) * s+(Ci1,t1_Ci1) * s+(Pka1,t2_Pka1)
+        + k1_Ciact1 * s-(Dsh1,t1_Dsh1) * s+(Ci1,t1_Ci1) * s-(Pka1,t1_Pka1)
+        + k1_Ciact1 * s+(Dsh1,t1_Dsh1) * s+(Ci1,t1_Ci1) * s+(Pka1,t1_Pka1) * s-(Pka1,t2_Pka1)
+        + k2_Ciact1 * s+(Dsh1,t1_Dsh1) * s+(Ci1,t1_Ci1) * s-(Pka1,t1_Pka1)
+        - g_Ciact1 * Ciact1
+  parameter-inequalities:
+    zero_Ciact1 < t1_Ciact1 < k1_Ciact1 / g_Ciact1 < t2_Ciact1 < k2_Ciact1 / g_Ciact1 < ( k1_Ciact1 + k2_Ciact1 ) / g_Ciact1 < max_Ciact1
+state-variable: Cirep1
+  zero-parameter: zero_Cirep1
+  box-parameter: max_Cirep1
+  threshold-parameters: t1_Cirep1
+  synthesis-parameters: k1_Cirep1
+  degradation-parameters: g_Cirep1
+  state-equation:
+    d/dt Cirep1 = k1_Cirep1 * s-(Dsh1,t1_Dsh1) * s+(Ci1,t1_Ci1) * s+(Pka1,t2_Pka1)
+        - g_Cirep1 * Cirep1
+  parameter-inequalities:
+    zero_Cirep1 < t1_Cirep1 < k1_Cirep1 / g_Cirep1 < max_Cirep1
+state-variable: Pka1
+  zero-parameter: zero_Pka1
+  box-parameter: max_Pka1
+  threshold-parameters: t1_Pka1, t2_Pka1
+  synthesis-parameters: k1_Pka1, k2_Pka1
+  degradation-parameters: g_Pka1
+  state-equation:
+    d/dt Pka1 = k2_Pka1 * s+(Ptc1,t1_Ptc1) * s-(Ptc1,t2_Ptc1)
+        + k2_Pka1 * s+(Ptc1,t2_Ptc1)
+        - g_Pka1 * Pka1
+  parameter-inequalities:
+    zero_Pka1 < t1_Pka1 < k1_Pka1 / g_Pka1 < t2_Pka1 < k2_Pka1 / g_Pka1 < ( k1_Pka1 + k2_Pka1 ) / g_Pka1 < max_Pka1
+state-variable: Ptc1
+  zero-parameter: zero_Ptc1
+  box-parameter: max_Ptc1
+  threshold-parameters: t1_Ptc1, t2_Ptc1
+  synthesis-parameters: k1_Ptc1, k2_Ptc1
+  degradation-parameters: g_Ptc1
+  state-equation:
+    d/dt Ptc1 = k1_Ptc1 * s-(En1,t1_En1) * s-(Ciact1,t1_Ciact1) * s-(Hh_external,t1_Hh_external)
+        + k2_Ptc1 * s-(En1,t1_En1) * s+(Ciact1,t1_Ciact1) * s-(Ciact1,t2_Ciact1) * s-(Hh_external,t1_Hh_external)
+        + k2_Ptc1 * s-(En1,t1_En1) * s+(Ciact1,t2_Ciact1) * s-(Hh_external,t1_Hh_external)
+        - g_Ptc1 * Ptc1
+  parameter-inequalities:
+    zero_Ptc1 < t1_Ptc1 < k1_Ptc1 / g_Ptc1 < t2_Ptc1 < k2_Ptc1 / g_Ptc1 < ( k1_Ptc1 + k2_Ptc1 ) / g_Ptc1 < max_Ptc1
+input-variable: Wg_external
+  zero-parameter: zero_Wg_external
+  box-parameter: max_Wg_external
+  threshold-parameters: t1_Wg_external, t2_Wg_external
+  parameter-inequalities:
+    zero_Wg_external < t1_Wg_external < t2_Wg_external < max_Wg_external
+input-variable: Hh_external
+  zero-parameter: zero_Hh_external
+  box-parameter: max_Hh_external
+  threshold-parameters: t1_Hh_external
+  parameter-inequalities:
+    zero_Hh_external < t1_Hh_external < max_Hh_external

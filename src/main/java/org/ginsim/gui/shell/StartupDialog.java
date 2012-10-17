@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.util.List;
@@ -34,7 +35,7 @@ public class StartupDialog extends JFrame {
 	
 	public StartupDialog(boolean startup) {
 		super("GINsim");
-		setSize(500, 500);
+		setSize(600, 500);
 		setMinimumSize(getSize());
 		setResizable(false);
 		setIconImage(ImageLoader.getImage("gs1.gif"));
@@ -63,6 +64,7 @@ public class StartupDialog extends JFrame {
 		cst.weightx = 1;
 		content.add(header, cst);
 		
+		Insets insets = new Insets(5, 10, 5, 10);
 		cst = new GridBagConstraints();
 		cst.fill = GridBagConstraints.HORIZONTAL;
 		cst.anchor = GridBagConstraints.NORTH;
@@ -83,11 +85,13 @@ public class StartupDialog extends JFrame {
 		cst = new GridBagConstraints();
 		cst.gridx = 0;
 		cst.gridy = 0;
+		cst.insets = insets;
 		panel.add(new JButton( FileCallBack.getActionNew()), cst);
 		
 		cst = new GridBagConstraints();
 		cst.gridx = 1;
 		cst.gridy = 0;
+		cst.insets = insets;
 		panel.add(new JButton( FileCallBack.getActionOpen()), cst);
 		
 		
@@ -95,6 +99,7 @@ public class StartupDialog extends JFrame {
 		cst = new GridBagConstraints();
 		cst.gridx = 2;
 		cst.gridy = 0;
+		cst.insets = insets;
 		panel.add(new JButton(new ActionImport(this)), cst);
 		
 		panel = new JPanel( new GridBagLayout());
@@ -109,16 +114,20 @@ public class StartupDialog extends JFrame {
 		
 		int gridx = 0;
 		int gridy = 0;
+		Insets smallInset = new Insets(2, 2, 2, 2);
 		for (Action action: FileCallBack.getActionsRecent()) {
 			cst = new GridBagConstraints();
 			cst.gridx = gridx++;
 			cst.gridy = gridy;
+			cst.insets = smallInset;
 			cst.fill = GridBagConstraints.HORIZONTAL;
 			if (gridx > 1) {
 				gridy++;
 				gridx = 0;
 			}
-			panel.add(new JButton(action), cst);
+			JButton bt = new JButton(action);
+			bt.setToolTipText(action.getValue(Action.LONG_DESCRIPTION).toString());
+			panel.add(bt, cst);
 		}
 		
 		panel = new JPanel( new GridBagLayout());

@@ -8,8 +8,13 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.perturbation.MultiplePerturbation;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.common.GraphEventCascade;
+import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
@@ -22,7 +27,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
  * 
  * @author Aurelien Naldi
  */
-public class ListOfPerturbations implements Iterable<Perturbation> {
+public class ListOfPerturbations implements Iterable<Perturbation>, GraphListener<RegulatoryGraph> {
 
 	private final List<Perturbation> simplePerturbations = new ArrayList<Perturbation>();
 	private final List<Perturbation> multiplePerturbations = new ArrayList<Perturbation>();
@@ -31,6 +36,7 @@ public class ListOfPerturbations implements Iterable<Perturbation> {
 	
 	public ListOfPerturbations(RegulatoryGraph lrg) {
 		this.lrg = lrg;
+		GraphManager.getInstance().addGraphListener(lrg, this);
 	}
 	
 	/**
@@ -68,6 +74,7 @@ public class ListOfPerturbations implements Iterable<Perturbation> {
 		}
 		Perturbation p = new PerturbationMultiple(perturbations);
 		multiplePerturbations.add(p);
+		lrg.fireGraphChange(GraphChangeType.ASSOCIATEDUPDATED, this);
 		return p;
 	}
 	
@@ -92,6 +99,7 @@ public class ListOfPerturbations implements Iterable<Perturbation> {
 		
 		// no equivalent perturbation way found: add it
 		simplePerturbations.add(p);
+		lrg.fireGraphChange(GraphChangeType.ASSOCIATEDUPDATED, this);
 		return p;
 	}
 	
@@ -180,6 +188,52 @@ public class ListOfPerturbations implements Iterable<Perturbation> {
 		return ret;
 	}
 
+	@Override
+	public GraphEventCascade graphChanged(RegulatoryGraph g, GraphChangeType type, Object data) {
+		switch (type) {
+		case NODEREMOVED:
+			NodeInfo ni = ((RegulatoryNode)data).getNodeInfo();
+			boolean b = cleanup(ni, multiplePerturbations);
+			b = b || cleanup(ni, simplePerturbations);
+			if (b) {
+				lrg.fireGraphChange(GraphChangeType.ASSOCIATEDUPDATED, this);
+			}
+		}
+		return null;
+	}
+
+	private boolean cleanup(NodeInfo ni, List<Perturbation> perturbations) {
+		List<Perturbation> removed = new ArrayList<Perturbation>();
+		for (Perturbation p: perturbations) {
+			if (p.affectsNode(ni)) {
+				removed.add(p);
+			}
+		}
+		if (removed != null && removed.size() > 0) {
+			perturbations.removeAll(removed);
+			return true;
+		}
+		return false;
+	}
+	
+	public void removePerturbation(List<Perturbation> removed) {
+		List<Perturbation> extraRemoved = new ArrayList<Perturbation>();
+		for (Perturbation p: multiplePerturbations) {
+			if (p instanceof PerturbationMultiple) {
+				PerturbationMultiple pm = (PerturbationMultiple)p;
+				for (Perturbation pi: removed) {
+					if (pm.perturbations.contains(pi)) {
+						extraRemoved.add(p);
+						break;
+					}
+				}
+			}
+		}
+		multiplePerturbations.removeAll(removed);
+		multiplePerturbations.removeAll(extraRemoved);
+		simplePerturbations.removeAll(removed);
+		lrg.fireGraphChange(GraphChangeType.ASSOCIATEDUPDATED, this);
+	}
 }
 
 

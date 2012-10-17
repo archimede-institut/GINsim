@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.common.utils.ColorPalette;
-import org.ginsim.common.utils.MaskUtils;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -95,12 +94,13 @@ public class GinmlHelper {
     				String[] ts = s.split(" ");
     			    try {
     					List l = new ArrayList();
-    					for (int j=1 ; j<ts.length-1 ; j++) {
+    					for (int j=0 ; j<ts.length ; j++) {
     					    String[] t_point = ts[j].split(",");
     				        l.add(new Point(Integer.parseInt(t_point[0]),Integer.parseInt(t_point[1])));
     					}
+    					
+    					ViewHelper.trimPoints(edge, l, nreader, ereader);
     					ereader.setPoints(l);
-    					ViewHelper.trimPoints(edge, nreader, ereader);
     			    } catch (Exception e) {
     			        GUIMessageUtils.openErrorDialog("invalid points");
     			    }
