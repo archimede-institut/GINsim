@@ -28,12 +28,12 @@ public class CADPExportService implements Service {
 
 // TODO: More than one file is generated, so the String only specifies the HEAD name	
 	
-public void run(RegulatoryGraph graph, Topology topology, IntegrationFunctionMapping mapping, String fileheadname) throws IOException, GsException {
-	File common = new File(fileheadname + "_common.lnt");
-	File modules = new File(fileheadname + "_modules.lnt");
-	File integration = new File(fileheadname + "_integration.lnt");
-	File exp = new File(fileheadname + ".exp");
-	File svl = new File(fileheadname + ".svl");
+public void run(CADPExportConfig config, String fileheadname) throws IOException, GsException {
+//	File common = new File(fileheadname + "_common.lnt");
+//	File modules = new File(fileheadname + "_modules.lnt");
+//	File integration = new File(fileheadname + "_integration.lnt");
+//	File exp = new File(fileheadname + ".exp");
+//	File svl = new File(fileheadname + ".svl");
 
 	
 	
