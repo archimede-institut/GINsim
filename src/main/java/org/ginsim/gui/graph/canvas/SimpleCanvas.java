@@ -421,7 +421,7 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent e) {
-		if (!e.isControlDown()) {
+		if (!e.isControlDown() && !e.isMetaDown()) {
 			int n = e.getWheelRotation();
 			if (e.isShiftDown()) {
 				n *= 5;
