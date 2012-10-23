@@ -1,4 +1,4 @@
-package org.ginsim.service.export.boolsim;
+package org.ginsim.service.format;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -6,6 +6,7 @@ import java.io.IOException;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.io.boolsim.BoolSimFormat;
 import org.ginsim.core.service.Alias;
+import org.ginsim.core.service.FormatSupportService;
 import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 
@@ -16,14 +17,9 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(Service.class)
 @Alias("boolsim")
-public class BoolsimExportService implements Service {
+public class BoolsimFormatService extends FormatSupportService<BoolSimFormat> {
 
-	private final BoolSimFormat support = new BoolSimFormat();
-	
-	public void export(LogicalModel model, String filename) throws IOException {
-
-		FileOutputStream out = new FileOutputStream(filename);
-		support.export(model, out);
-		out.close();
+	public BoolsimFormatService() {
+		super(new BoolSimFormat());
 	}
 }
