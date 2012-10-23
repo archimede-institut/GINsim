@@ -41,7 +41,17 @@ public void run(CADPExportConfig config, String fileheadname) throws IOException
 
 }
 
-public void export(RegulatoryGraph graph, CADPExportConfig config)  {
+public void export(CADPExportConfig config)  {
+	
+	
+	CADPCommonWriter common = new CADPCommonWriter(config);
+	
+	// common
+	// modules
+	// integration
+	// exp
+	// svl
+	// mcl
 	
 	
 }
