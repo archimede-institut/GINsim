@@ -1,4 +1,4 @@
--- August 27, 2012 12:00:39 PM WEST
+-- October 24, 2012 6:55:14 PM WEST
 -- GINsim implicit representation for NuSMV
 -- Requires NuSMV v2.1+ for CTL properties
 -- Requires NuSMV-ARCTL for ARCTL properties
@@ -276,13 +276,19 @@ DEFINE
 Wg_p_focal :=
   case
     (Slp_p = 1) & (Nkd_p = 0) & (En_p = 0) & (Ciact_p = 1) : 1;
+    (Slp_p = 1) & (Nkd_p = 0) & (En_p = 0) & (Ciact_p = 2) : 2;
     (Slp_p = 1) & (Nkd_p = 1) & (En_p = 0) & (Ciact_p = 1) : 1;
+    (Slp_p = 1) & (Nkd_p = 1) & (En_p = 0) & (Ciact_p = 2) : 2;
+    (Slp_p = 1) & (Nkd_p = 2) & (En_p = 0) & (Ciact_p = 2) : 2;
     TRUE : 0;
   esac;
 Wg_a_focal :=
   case
     (Slp_a = 1) & (Nkd_a = 0) & (En_a = 0) & (Ciact_a = 1) : 1;
+    (Slp_a = 1) & (Nkd_a = 0) & (En_a = 0) & (Ciact_a = 2) : 2;
     (Slp_a = 1) & (Nkd_a = 1) & (En_a = 0) & (Ciact_a = 1) : 1;
+    (Slp_a = 1) & (Nkd_a = 1) & (En_a = 0) & (Ciact_a = 2) : 2;
+    (Slp_a = 1) & (Nkd_a = 2) & (En_a = 0) & (Ciact_a = 2) : 2;
     TRUE : 0;
   esac;
 Fz_p_focal :=
@@ -324,11 +330,13 @@ Slp_a_focal :=
 Nkd_p_focal :=
   case
     (Dsh_p = 0) & (En_p = 0) : 1;
+    (Dsh_p = 1) & (En_p = 0) : 2;
     TRUE : 0;
   esac;
 Nkd_a_focal :=
   case
     (Dsh_a = 0) & (En_a = 0) : 1;
+    (Dsh_a = 1) & (En_a = 0) : 2;
     TRUE : 0;
   esac;
 Zw3_p_focal :=
@@ -365,12 +373,18 @@ Hh_p_focal :=
   case
     (En_p = 0) & (Hh_a = 1) & (Cirep_p = 0) & (Ptc_a = 0) : 1;
     (En_p = 0) & (Hh_a = 1) & (Cirep_p = 0) & (Ptc_a = 1) : 1;
+    (En_p = 0) & (Hh_a = 2) & (Cirep_p = 0) & (Ptc_a = 0) : 2;
+    (En_p = 0) & (Hh_a = 2) & (Cirep_p = 0) & (Ptc_a = 1) : 2;
     (En_p = 0) & (Hh_a = 2) & (Cirep_p = 0) & (Ptc_a = 2) : 1;
+    (En_p = 1) & (Cirep_p = 0) : 2;
     TRUE : 0;
   esac;
 Hh_a_focal :=
   case
     (En_a = 0) & (Hh_p = 1) & (Cirep_a = 0) : 1;
+    (En_a = 0) & (Hh_p = 2) & (Cirep_a = 0) & (Ptc_p = 0) : 2;
+    (En_a = 0) & (Hh_p = 2) & (Cirep_a = 0) & (Ptc_p = 1) : 2;
+    (En_a = 1) & (Cirep_a = 0) : 2;
     TRUE : 0;
   esac;
 Ci_p_focal :=
@@ -386,6 +400,7 @@ Ci_a_focal :=
 Ciact_p_focal :=
   case
     (Dsh_p = 0) & (Ci_p = 1) & (Pka_p = 0) & (SuFu_p = 0) : 1;
+    (Dsh_p = 1) & (Ci_p = 1) & (Pka_p = 0) & (SuFu_p = 0) : 2;
     (Dsh_p = 1) & (Ci_p = 1) & (Pka_p = 0) & (SuFu_p = 1) : 1;
     (Dsh_p = 1) & (Ci_p = 1) & (Pka_p = 1) : 1;
     (Dsh_p = 1) & (Ci_p = 1) & (Pka_p = 2) : 1;
@@ -394,6 +409,7 @@ Ciact_p_focal :=
 Ciact_a_focal :=
   case
     (Dsh_a = 0) & (Ci_a = 1) & (Pka_a = 0) & (SuFu_a = 0) : 1;
+    (Dsh_a = 1) & (Ci_a = 1) & (Pka_a = 0) & (SuFu_a = 0) : 2;
     (Dsh_a = 1) & (Ci_a = 1) & (Pka_a = 0) & (SuFu_a = 1) : 1;
     (Dsh_a = 1) & (Ci_a = 1) & (Pka_a = 1) : 1;
     (Dsh_a = 1) & (Ci_a = 1) & (Pka_a = 2) : 1;
@@ -412,29 +428,43 @@ Cirep_a_focal :=
 Ptc_p_focal :=
   case
     (En_p = 0) & (Ciact_p = 0) : 1;
+    (En_p = 0) & (Ciact_p = 1) : 2;
+    (En_p = 0) & (Ciact_p = 2) : 2;
     TRUE : 0;
   esac;
 Ptc_a_focal :=
   case
     (En_a = 0) & (Ciact_a = 0) : 1;
+    (En_a = 0) & (Ciact_a = 1) : 2;
+    (En_a = 0) & (Ciact_a = 2) : 2;
     TRUE : 0;
   esac;
 Smo_p_focal :=
   case
+    (Hh_p = 0) & (Ptc_p = 0) : 2;
+    (Hh_p = 1) & (Ptc_p = 0) : 2;
+    (Hh_p = 1) & (Ptc_p = 1) : 2;
     (Hh_p = 1) & (Ptc_p = 2) : 1;
+    (Hh_p = 2) : 2;
     TRUE : 0;
   esac;
 Smo_a_focal :=
   case
+    (Hh_a = 0) & (Ptc_a = 0) : 2;
+    (Hh_a = 1) & (Ptc_a = 0) : 2;
+    (Hh_a = 1) & (Ptc_a = 1) : 2;
     (Hh_a = 1) & (Ptc_a = 2) : 1;
+    (Hh_a = 2) : 2;
     TRUE : 0;
   esac;
 Pka_p_focal :=
   case
+    (Smo_p = 0) : 2;
     TRUE : 0;
   esac;
 Pka_a_focal :=
   case
+    (Smo_a = 0) : 2;
     TRUE : 0;
   esac;
 Fu_p_focal :=
