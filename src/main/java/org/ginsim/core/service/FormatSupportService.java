@@ -5,7 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.HashSet;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.io.LogicalModelFormat;
@@ -20,7 +20,7 @@ import org.colomoto.logicalmodel.services.ServiceManager;
  */
 public class FormatSupportService<F extends LogicalModelFormat> implements Service {
 
-	private static final Set<LogicalModelFormat> knownFormats = new TreeSet<LogicalModelFormat>();
+	private static final Set<LogicalModelFormat> knownFormats = new HashSet<LogicalModelFormat>();
 
 	/**
 	 * register a format when creating an instance of this class.
