@@ -11,7 +11,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.io.parser.GinmlParser;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.service.export.cytoscape.CytoscapeEncoder;
-import org.ginsim.service.export.gna.GNAExportService;
 import org.ginsim.service.export.snakes.SnakesEncoder;
 import org.junit.Assert;
 import org.junit.Test;
@@ -24,13 +23,6 @@ public class TestExport {
 		File file = new File(TestFileUtils.getTestFileDir(), "graph.ginml");
 		GinmlParser parser = new GinmlParser();
 		this.graph = (RegulatoryGraph)parser.parse(new FileInputStream(file), null);
-	}
-	
-	@Test
-	public void testGNAML() throws IOException {
-		GNAExportService export = ServiceManager.getManager().getService(GNAExportService.class);
-		String filename = tmpDir.getAbsolutePath()+File.separator+"graph.gnaml";
-		export.export(graph, filename);
 	}
 	
 	@Test
