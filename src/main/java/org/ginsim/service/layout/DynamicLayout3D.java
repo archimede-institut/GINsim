@@ -23,6 +23,7 @@ public class DynamicLayout3D {
     private int stateWidth = 0;
 
     private static int MARGIN = 10;
+    private int maxPossibleY = MARGIN;
 	
     public static void runLayout(DynamicGraph graph) throws GsException {
     	DynamicLayout3D algo = new DynamicLayout3D();
@@ -36,12 +37,14 @@ public class DynamicLayout3D {
 	    	LogManager.error( "Wrong type of graph for this layout");
 	    	return;
 	    }
+	    
 		vreader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
-		List nodeOrder = graph.getAssociatedGraph().getNodeOrder();
+		List<RegulatoryNode> nodeOrder = graph.getAssociatedGraph().getNodeOrder();
 	    byte[] maxValues = getMaxValues(nodeOrder);
         initColorPalette(maxValues.length);
-	    //move the nodes
+        
+	    // move the nodes
 	    DynamicNode vertex = (DynamicNode)v;
 	    vreader.setNode(vertex);
 	    stateWidth = vreader.getWidth()+MARGIN;
@@ -53,8 +56,8 @@ public class DynamicLayout3D {
 		} while (it.hasNext());
     	moveNode(vertex, maxValues);
     	
-    	//move the edges
-    	for (Edge edge: graph.getEdges()) {
+    	// move the edges
+    	for (Edge<DynamicNode> edge: graph.getEdges()) {
     		moveEdge(edge, maxValues);
     	}
     }
@@ -66,27 +69,30 @@ public class DynamicLayout3D {
 	 * @param maxValues
 	 */
 	private void moveNode(DynamicNode node, byte[] maxValues) {
-	    vreader.setNode(node);
-    	byte[] state = node.state;
-  	
-    	double left = MARGIN;
-    	double top = MARGIN;
-    	
-    	for (int i = 0; i < state.length; i++) {
-    		left += state[i]*decalx[i];
-    		top += state[i]*decaly[i];
+		vreader.setNode(node);
+		byte[] state = node.state;
+
+		double left = MARGIN;
+//		double top = MARGIN;
+		double bottom = maxPossibleY;
+
+		for (int i = 0; i < state.length; i++) {
+			left += state[i]*decalx[i];
+//			top += state[i]*decaly[i];
+			bottom -= state[i]*decaly[i];
 		}
-    	    	
-    	vreader.setPos((int)left, (int)top);
-        vreader.refresh();		
+
+//		vreader.setPos((int)left, (int)top);
+		vreader.setPos((int)left, (int)bottom);
+		vreader.refresh();
 	}
 
-	private void moveEdge(Edge edge, byte[] maxValues) {
+	private void moveEdge(Edge<DynamicNode> edge, byte[] maxValues) {
 		ereader.setEdge(edge);		
 		ereader.setPoints(null);
 		
 		byte[] diffstate = getDiffStates((DynamicNode)edge.getSource(), (DynamicNode)edge.getTarget());
-		int change = get_change(diffstate);
+		int change = getChange(diffstate);
 	
 		ereader.setLineColor(colorPalette[change]);
 		ereader.setLineWidth(1.5f);
@@ -110,7 +116,7 @@ public class DynamicLayout3D {
     * @param diffstate
     * @return
     */
-	private int get_change(byte[] diffstate) {
+	private int getChange(byte[] diffstate) {
 	   	for (int i = 0; i < diffstate.length; i++) {
 	   		if (diffstate[i] != 0) {
 	   			return i;
@@ -140,18 +146,16 @@ public class DynamicLayout3D {
     /**
      * Get the maxvalues (the level max - 1 of each node) and return it. 
      */
-	public byte[] getMaxValues(List nodeOrder) {
+	public byte[] getMaxValues(List<RegulatoryNode> nodeOrder) {
     	byte[] maxValues = new byte[nodeOrder.size()];
-    	int i = 0;
-    	for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
-    		RegulatoryNode v = (RegulatoryNode) it.next();
-    		maxValues[i++] = (byte) (v.getMaxValue());
-    	}			
+    	for (int i = 0; i < nodeOrder.size(); i++) {
+    		maxValues[i] = (byte) (nodeOrder.get(i).getMaxValue());
+    	}
     	return maxValues;
     }
 
 	/**
-	 * Create a color palette by variing the hue.
+	 * Create a color palette by varying the hue.
 	 * @param n the count of color in the palette
 	 */
     public void initColorPalette(int n) {
@@ -192,6 +196,9 @@ public class DynamicLayout3D {
 			decaly[i] = 2*decaly[i-2]+(i%2==1?stateWidth*(maxValues[i-2]):0);
 		}
     	
+    	for (int i=0; i < maxValues.length; i++) {
+    		maxPossibleY += decaly[i] * maxValues[i];
+    	}
 	}
     
 }
