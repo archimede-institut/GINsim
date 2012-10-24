@@ -2,6 +2,7 @@ package org.ginsim.service.export.cadp;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -11,7 +12,7 @@ import org.ginsim.service.tool.composition.Topology;
 public class CADPExportConfig {
 	private Topology topology = null;
 	private IntegrationFunctionMapping mapping = null;
-	private byte[] initialState = null;
+	private List<byte[]> initialStates = null;
 	private Collection<RegulatoryNode> listVisible = null;
 	private RegulatoryGraph graph = null;
 
@@ -49,12 +50,26 @@ public class CADPExportConfig {
 		listVisible.add(node);
 	}
 
-	public byte[] getInitialState() {
-		return initialState;
+	public List<byte[]> getInitialStates() {
+		return initialStates;
 	}
 
-	public void setInitialState(byte[] initialState) {
-		this.initialState = initialState;
+	public void setInitialStates(List<byte[]> initialStates) {
+		this.initialStates = initialStates;
+	}
+	
+	public void addInitialState(int index, byte[] initialState){
+		if (this.initialStates == null)
+			this.initialStates = new ArrayList<byte[]>();
+		
+		this.initialStates.add(index, initialState);
+	}
+	
+	public void addInitialState(byte[] initialState){
+		if (this.initialStates == null)
+			this.initialStates = new ArrayList<byte[]>();
+			
+		this.initialStates.add(initialState);
 	}
 
 	public RegulatoryGraph getGraph() {
