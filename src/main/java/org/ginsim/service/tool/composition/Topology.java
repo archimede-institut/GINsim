@@ -61,21 +61,37 @@ public class Topology {
 	 * 
 	 * @return True if the module has neighbours, false otherwise
 	 */
-	public boolean hasNeighbours(int index) throws GsException {
+	public boolean hasNeighbours(int index) {
 		boolean result = false;
 		if (index >= _numberInstances)
-			throw new GsException(GsException.GRAVITY_NORMAL,
-					"Invalid neighbor index value : (" + index + ")");
+			return false;
 
 		for (int i = 0; i < neighbourhoodRelation.length; i++) {
 			if (neighbourhoodRelation[index][i] == true) {
 				result = true;
-				continue;
+				break;
 			}
 		}
 		return result;
 	}
 
+	/*
+	 * @param index A module index
+	 * 
+	 * @return the number of neighbours of the given module
+	 */
+	
+	public int getNumberNeighbours(int index){
+		int count = 0;
+		if (index >= _numberInstances)
+			return 0;
+		for (int i = 0; i < neighbourhoodRelation.length; i++)
+			if (neighbourhoodRelation[index][i] == true)
+				count++;
+		
+		return count;
+		
+	}
 	
 	/*
 	 * @param numberInstances the new number of module instances

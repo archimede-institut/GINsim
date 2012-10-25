@@ -34,6 +34,7 @@ public class CADPModuleWriter {
 
 		String output = "";
 
+		// TODO modelName cannot contain "." make sure this does not happen
 		output += "module " + modelName + "(common) is\n\n";
 
 		for (int moduleId = 1; moduleId <= numberInstances; moduleId++) {
@@ -209,18 +210,18 @@ public class CADPModuleWriter {
 			out += "\n";
 
 			LogicalModel model = config.getGraph().getModel();
-			PathSearcher searcher = new PathSearcher(model.getMDDManager(),1);
-			int path[] = searcher.getPath();
-			int kMDDs[] = model.getLogicalFunctions();
-			
 
 			String stableCondition = "";
-			int nodeIndex= 0;
+			int nodeIndex = 0;
 			for (RegulatoryNode node : listNodes) {
+				PathSearcher searcher = new PathSearcher(model.getMDDManager(),
+						1, node.getMaxValue());
+				int path[] = searcher.getPath();
+				int kMDDs[] = model.getLogicalFunctions();
 				searcher.setNode(kMDDs[nodeIndex]);
-				
+
 				String modifier = node.getMaxValue() > 1 ? "M" : "B";
-					
+
 				// TODO: complete when NuSMVEncoder is finally working
 				if (!node.isInput()) {
 					out += "function focal_"
@@ -228,26 +229,60 @@ public class CADPModuleWriter {
 							+ "(" + stateVarWriter.typedList() + ") :"
 							+ (node.getMaxValue() > 1 ? "Multi" : "Binary")
 							+ " is\n";
-					if (searcher.countPaths() == 0){
-						out += "\treturn (0" + modifier +")\n";
-					} else {
-						String ifCondition = "";
-						int numberConjunctiveTerms = 0;
-						for (@SuppressWarnings("unused") int dummy : searcher){
-							int numberComponents = 0;
-							String conjunctiveTerm = "";
-							for (int i = 0; i < path.length; i++)
-								if (path[i] != -1){
-									if (!conjunctiveTerm.isEmpty())
-										conjunctiveTerm += " and ";
-									conjunctiveTerm += "(" + listNodes.get(i).getNodeInfo().getNodeID().toLowerCase() + " == " + path[i] + (listNodes.get(i).getMaxValue() > 1 ? "M" : "B") + ")";
-									numberComponents++;
-								}
-							numberConjunctiveTerms++;
-						}
+
+					int returnValue = 0;
+
+					// There are some paths
+					String[] conditionArray = new String[node.getMaxValue()];
+
+					for (int value : searcher) {
+
+						String conjunctiveTerm = "";
+						for (int i = 0; i < path.length; i++)
+							if (path[i] != -1) {
+								if (!conjunctiveTerm.isEmpty())
+									conjunctiveTerm += " and ";
+								conjunctiveTerm += "("
+										+ listNodes.get(i).getNodeInfo()
+												.getNodeID().toLowerCase()
+										+ " == "
+										+ path[i]
+										+ (listNodes.get(i).getMaxValue() > 1 ? "M"
+												: "B") + ")";
+
+							}
+						if (!conditionArray[value].isEmpty())
+							conditionArray[value] += " or ";
+						conditionArray[value] += "(" + conjunctiveTerm + ")";
+						
 					}
 					
+					boolean failSafe = true;
+					for (int v = 1; v < conditionArray.length; v++){
+						if (conditionArray[v].isEmpty()){
+							out += "\t return (" + v + modifier +")\n";
+							failSafe = false;
+							break;
+						} else {
+							String construct = "if";
+							if (v > 1)
+								construct = "elsif";
+							out += "\t" + construct + "(" + conditionArray[v] + ") then\n";
+							out += "\t\treturn (" + v + modifier + ")\n";
+						}
+					
+					}
+					
+					if (failSafe){
+						out += "\telse\n";
+						out += "\t\t return (0" + modifier +")\n";
+					}
+					
+					out += "\tend if\n";
 					out += "end function\n\n";
+					
+					
+					// Builds stable condition for is_Stable
 					if (!stableCondition.isEmpty())
 						stableCondition += " and ";
 
@@ -258,7 +293,7 @@ public class CADPModuleWriter {
 							+ ")";
 				}
 				nodeIndex++;
-				
+
 			}
 
 			out += "function is_Stable(" + stateVarWriter.typedList()
