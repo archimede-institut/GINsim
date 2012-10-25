@@ -1,4 +1,4 @@
--- August 27, 2012 12:05:05 PM WEST
+-- October 24, 2012 6:54:38 PM WEST
 -- GINsim implicit representation for NuSMV
 -- Requires NuSMV v2.1+ for CTL properties
 -- Requires NuSMV-ARCTL for ARCTL properties
@@ -162,22 +162,30 @@ E2F1_focal :=
   case
     (HRAS = 0) & (E2F3 = 1) & (RB1 = 0) & (RBL2 = 0) & (ATM = 0) : 1;
     (HRAS = 0) & (E2F3 = 1) & (RB1 = 0) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 0) : 1;
+    (HRAS = 0) & (E2F3 = 1) & (RB1 = 0) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 1) : 2;
     (HRAS = 0) & (E2F3 = 1) & (RB1 = 1) & (RBL2 = 0) & (ATM = 0) : 1;
     (HRAS = 0) & (E2F3 = 1) & (RB1 = 1) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 0) : 1;
+    (HRAS = 0) & (E2F3 = 1) & (RB1 = 1) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 1) : 2;
     (HRAS = 0) & (E2F3 = 2) & (RB1 = 0) & (RBL2 = 0) & (ATM = 0) : 1;
     (HRAS = 0) & (E2F3 = 2) & (RB1 = 0) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 0) : 1;
+    (HRAS = 0) & (E2F3 = 2) & (RB1 = 0) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 1) : 2;
     (HRAS = 0) & (E2F3 = 2) & (RB1 = 1) & (RBL2 = 0) & (ATM = 0) : 1;
     (HRAS = 0) & (E2F3 = 2) & (RB1 = 1) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 0) : 1;
+    (HRAS = 0) & (E2F3 = 2) & (RB1 = 1) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 1) : 2;
     (HRAS = 1) & (RB1 = 0) & (RBL2 = 0) & (ATM = 0) : 1;
     (HRAS = 1) & (RB1 = 0) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 0) : 1;
+    (HRAS = 1) & (RB1 = 0) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 1) : 2;
     (HRAS = 1) & (RB1 = 1) & (RBL2 = 0) & (ATM = 0) : 1;
     (HRAS = 1) & (RB1 = 1) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 0) : 1;
+    (HRAS = 1) & (RB1 = 1) & (RBL2 = 0) & (ATM = 1) & (CHEK1 = 1) : 2;
     TRUE : 0;
   esac;
 E2F3_focal :=
   case
     (HRAS = 1) & (RB1 = 0) & (CHEK1 = 0) : 1;
+    (HRAS = 1) & (RB1 = 0) & (CHEK1 = 1) : 2;
     (HRAS = 1) & (RB1 = 1) & (CHEK1 = 0) : 1;
+    (HRAS = 1) & (RB1 = 1) & (CHEK1 = 1) : 2;
     TRUE : 0;
   esac;
 CyclinD1_focal :=
@@ -216,6 +224,7 @@ p16INK4a_focal :=
   esac;
 RB1_focal :=
   case
+    (CyclinD1 = 0) & (CyclinE1 = 0) & (CyclinA = 0) & (p16INK4a = 0) : 2;
     (CyclinD1 = 1) & (CyclinE1 = 0) & (CyclinA = 0) & (p16INK4a = 0) : 1;
     TRUE : 0;
   esac;

@@ -57,7 +57,11 @@ public class NuSMVEncoder {
 
 		LogicalModel model = config.getGraph().getModel();
 		List<NodeInfo> nodeOrder = model.getNodeOrder();
-
+		if (nodeOrder.isEmpty()) {
+			throw new GsException(GsException.GRAVITY_ERROR,
+					"NuSMV does not support empty graphs");
+		}
+		
 		// Check all the names.lenght > 1
 		NodeInfo[] aNodeOrder = new NodeInfo[nodeOrder.size()];
 		boolean hasInputVars = false;
@@ -81,6 +85,10 @@ public class NuSMVEncoder {
 		reducer.removePseudoOutputs();
 		model = reducer.getModel();
 		List<NodeInfo> coreNodes = model.getNodeOrder();
+		if (coreNodes.isEmpty()) {
+			throw new GsException(GsException.GRAVITY_ERROR,
+					"NuSMV needs at least one core (non-input/non-output) node");
+		}
 		List<NodeInfo> outputNodes = model.getExtraComponents();
 
 		// TODO: correct PCs
@@ -347,11 +355,12 @@ public class NuSMVEncoder {
 		out.write("-- Variable next level regulation\n");
 		int[] kMDDs = model.getLogicalFunctions();
 		for (int i = 0; i < coreNodes.size(); i++) {
-			if (coreNodes.get(i).isInput())
+			NodeInfo node = coreNodes.get(i);
+			if (node.isInput())
 				continue;
-			out.write(coreNodes.get(i).getNodeID() + "_focal :=\n");
+			out.write(node.getNodeID() + "_focal :=\n");
 			out.write("  case\n");
-			nodeRules2NuSMV(out, model, kMDDs[i], coreNodes);
+			nodeRules2NuSMV(out, model, kMDDs[i], coreNodes, node);
 			out.write("  esac;\n");
 		}
 		out.write("\n");
@@ -416,9 +425,10 @@ public class NuSMVEncoder {
 		if (outputNodes.size() > 0) {
 			kMDDs = model.getExtraLogicalFunctions();
 			for (int i = 0; i < outputNodes.size(); i++) {
-				out.write(outputNodes.get(i).getNodeID() + " :=\n");
+				NodeInfo node = outputNodes.get(i);
+				out.write(node.getNodeID() + " :=\n");
 				out.write("  case\n");
-				nodeRules2NuSMV(out, model, kMDDs[i], coreNodes);
+				nodeRules2NuSMV(out, model, kMDDs[i], coreNodes, node);
 				out.write("  esac;\n");
 			}
 		} else {
@@ -488,19 +498,15 @@ public class NuSMVEncoder {
 	}
 
 	private void nodeRules2NuSMV(Writer out, LogicalModel model, int nodeMDD,
-			List<NodeInfo> coreNodeOrder) throws IOException {
-		PathSearcher searcher = new PathSearcher(model.getMDDManager(), 1);
+			List<NodeInfo> coreNodeOrder, NodeInfo node) throws IOException {
+		PathSearcher searcher = new PathSearcher(model.getMDDManager(),
+				1, node.getMax());
 		int[] path = searcher.getPath();
-
 		searcher.setNode(nodeMDD);
-		if (searcher.countPaths() == 0) {
-			out.write("    TRUE : 0;\n");
-			return;
-		}
 
+		int leafValue = 0;
 		String s = "";
-		for (@SuppressWarnings("unused")
-		int l : searcher) {
+		for (int l : searcher) {
 			boolean bWrite = false;
 			for (int i = 0; i < path.length; i++) {
 				if (path[i] != -1) {
@@ -514,15 +520,13 @@ public class NuSMVEncoder {
 				}
 			}
 			if (!s.isEmpty()) {
-				s += " : 1;\n";
+				s += " : " + l + ";\n";
+			} else {
+				leafValue = l;
 			}
 		}
-		if (s.isEmpty()) {
-			out.write("    TRUE : 1;\n");
-		} else {
-			out.write(s);
-			out.write("    TRUE : 0;\n");
-		}
+		out.write(s);
+		out.write("    TRUE : " + leafValue + ";\n");
 	}
 
 	private String writeStateList(NodeInfo[] t_vertex,
