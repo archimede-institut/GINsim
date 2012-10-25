@@ -22,10 +22,6 @@ public class CADPModuleWriter {
 
 	public String toString() {
 
-		// Print initial states
-		// Print core processes
-		// (header and footer and whatnot)
-
 		int numberInstances = config.getTopology().getNumberInstances();
 		String modelName = config.getGraph().getGraphName();
 		InitialStateWriter initialStateWriter = new InitialStateWriter(
