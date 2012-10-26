@@ -27,11 +27,13 @@ import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
 
-/*
- * @author Nuno D. Mendes
- */
+
 @ProviderFor(Service.class)
 @Alias("composition")
+/**
+ * Module composition service
+ * @author Nuno D. Mendes
+ */
 public class CompositionService implements Service {
 
 	/**
@@ -51,20 +53,20 @@ public class CompositionService implements Service {
 	 * @throws GsException
 	 */
 
-	public RegulatoryGraph run(RegulatoryGraph graph, CompositionConfig config) throws GsException {
+	public RegulatoryGraph run(RegulatoryGraph graph, CompositionConfig config)
+			throws GsException {
 
 		return computeComposedGraph(graph, config);
 
 	}
-	
+
 	public RegulatoryGraph computeComposedGraph(RegulatoryGraph graph,
-			CompositionConfig config)
-			throws GsException {
-		
+			CompositionConfig config) throws GsException {
+
 		Topology topology = config.getTopology();
 		IntegrationFunctionMapping mapping = config.getMapping();
 		boolean reduce = config.isReduce();
-		
+
 		RegulatoryGraph composedGraph = GraphManager.getInstance().getNewGraph(
 				RegulatoryGraph.class);
 
@@ -201,7 +203,7 @@ public class CompositionService implements Service {
 						// For the time being only one edge is being added per
 						// interaction. because only one functional level is
 						// being considered
-						
+
 						// TODO: Add edges for different thresholds
 
 						RegulatoryMultiEdge newInteraction = new RegulatoryMultiEdge(
@@ -235,16 +237,18 @@ public class CompositionService implements Service {
 					switch (integrationFunction) {
 					case OR:
 						int bitmask = 0x00;
-						while (++bitmask < Math.pow(2,(listEdges.size()))){
+						while (++bitmask < Math.pow(2, (listEdges.size()))) {
 							List<RegulatoryEdge> edgeList = new ArrayList<RegulatoryEdge>();
-							for (int pos = 0; pos < listEdges.size(); pos++){
+							for (int pos = 0; pos < listEdges.size(); pos++) {
 								int curmask = (int) Math.pow(2, pos);
 								if ((bitmask & curmask) != 0)
 									edgeList.add(listEdges.get(pos));
 							}
-							// System.out.println("bitmask is " + bitmask + " and edgeList is" + edgeList.size());
-							newMapped.addLogicalParameter(new LogicalParameter(edgeList,1),true);
-							
+							// System.out.println("bitmask is " + bitmask +
+							// " and edgeList is" + edgeList.size());
+							newMapped.addLogicalParameter(new LogicalParameter(
+									edgeList, 1), true);
+
 						}
 						continue;
 					case AND:
@@ -270,28 +274,30 @@ public class CompositionService implements Service {
 
 		// Reduce the graph
 
-		if (reduce){
-		// Build a ModelSimplifierConfig object
-		ModelSimplifierConfig simplifierConfig = new ModelSimplifierConfig();
-		for (RegulatoryNode input : newMappedInputs)
-			simplifierConfig.remove(input);
+		if (reduce) {
+			// Build a ModelSimplifierConfig object
+			ModelSimplifierConfig simplifierConfig = new ModelSimplifierConfig();
+			for (RegulatoryNode input : newMappedInputs)
+				simplifierConfig.remove(input);
 
-		// Mimmick a ReductionLauncher object
-		ReductionStub launcher = new ReductionStub(composedGraph);
-		
-		ModelSimplifier simplifier = new ModelSimplifier(composedGraph,simplifierConfig,launcher,false);
-		simplifier.run();
-		
-		RegulatoryGraph finalComposedGraph = launcher.getReducedGraph();
-		
+			// Mimmick a ReductionLauncher object
+			ReductionStub launcher = new ReductionStub(composedGraph);
+
+			ModelSimplifier simplifier = new ModelSimplifier(composedGraph,
+					simplifierConfig, launcher, false);
+			simplifier.run();
+
+			RegulatoryGraph finalComposedGraph = launcher.getReducedGraph();
+
 			return finalComposedGraph;
 		}
-		
+
 		return composedGraph;
 	}
 
-	/*
+	/**
 	 * @param original The original name of the component
+	 * 
 	 * @param moduleId The index of the module if belongs to
 	 * 
 	 * @return The new name of the component

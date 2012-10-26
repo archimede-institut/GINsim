@@ -10,22 +10,28 @@ import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
+/**
+ * Widget to specify the number of model instances
+ * 
+ * @author Nuno D. Mendes
+ */
+
 public class InstanceSelectorWidget extends JPanel {
 
 	private static final long serialVersionUID = 4722616808096433759L;
 	private JSpinner numberInstances = null;
 
-	public InstanceSelectorWidget(final CompositionSpecificationDialog dialog){
-		this(dialog,2,1);
+	public InstanceSelectorWidget(final CompositionSpecificationDialog dialog) {
+		this(dialog, 2, 1);
 	}
-	
-	public InstanceSelectorWidget(final CompositionSpecificationDialog dialog, int minimum, int step){
+
+	public InstanceSelectorWidget(final CompositionSpecificationDialog dialog,
+			int minimum, int step) {
 		super();
 		setLayout(new GridBagLayout());
 
 		// TODO: replace with STR_comp_nrInstances
-		setBorder(BorderFactory
-				.createTitledBorder("Number of Instances"));
+		setBorder(BorderFactory.createTitledBorder("Number of Instances"));
 
 		JSpinner input = null;
 		if (this.numberInstances == null) {
@@ -56,5 +62,5 @@ public class InstanceSelectorWidget extends JPanel {
 		add(update);
 		setSize(getPreferredSize());
 	}
-	
+
 }

@@ -26,6 +26,12 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.service.tool.composition.IntegrationFunction;
 import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
 
+/**
+ * Widget to specify the Integration Function
+ * 
+ * @author Nuno D. Mendes
+ */
+
 public class IntegrationFunctionWidget extends JPanel {
 
 	private static final long serialVersionUID = 2423386096996654728L;

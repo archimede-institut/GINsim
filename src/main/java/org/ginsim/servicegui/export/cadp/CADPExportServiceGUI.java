@@ -1,6 +1,7 @@
 package org.ginsim.servicegui.export.cadp;
 
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +21,12 @@ import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 import org.ginsim.service.export.cadp.CADPExportConfig;
 import org.ginsim.service.export.cadp.CADPExportService;
 import org.mangosdk.spi.ProviderFor;
+
+/**
+ * CADP Export Service
+ * 
+ * @author Nuno D. Mendes
+ */
 
 @ProviderFor(ServiceGUI.class)
 @StandaloneGUI
@@ -44,17 +51,18 @@ public class CADPExportServiceGUI extends AbstractServiceGUI {
 
 class CADPExportAction extends ExportAction<RegulatoryGraph> {
 	private static final long serialVersionUID = -8586197112178912230L;
-	private static final FileFormatDescription FORMAT = new FileFormatDescription("CADP", "bundle");
-	
+	private static final FileFormatDescription FORMAT = new FileFormatDescription(
+			"CADP", "bundle");
+
 	private CADPExportConfig config;
-	
+
 	public CADPExportAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
 		super(graph, "STR_CADP", "STR_CADP_descr", serviceGUI);
 	}
 
 	@Override
 	protected FileFormatDescription getFileFilter() {
-		return FORMAT; 
+		return FORMAT;
 	}
 
 	@Override
@@ -70,7 +78,8 @@ class CADPExportAction extends ExportAction<RegulatoryGraph> {
 			throw new GsException(GsException.GRAVITY_ERROR,
 					"Nothing to export: CADPConfig must be specified");
 		}
-		if (config.getGraph() == null || config.getGraph().getNodes().size() == 0) {
+		if (config.getGraph() == null
+				|| config.getGraph().getNodes().size() == 0) {
 			throw new GsException(GsException.GRAVITY_ERROR,
 					"Nothing to export: The graph is empty");
 		}

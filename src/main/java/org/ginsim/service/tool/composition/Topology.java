@@ -1,8 +1,7 @@
 package org.ginsim.service.tool.composition;
 
-import org.ginsim.common.application.GsException;
 
-/*
+/**
  * Represents the topological relationships between Logical Regulatory Modules
  * being composed.
  * 
@@ -14,7 +13,7 @@ public class Topology {
 	private int _numberInstances = 0;
 	private boolean neighbourhoodRelation[][];
 
-	/*
+	/**
 	 * The topology
 	 * 
 	 * @param numberInstances the number of identical modules
@@ -24,30 +23,26 @@ public class Topology {
 		initNeighbours();
 	}
 
-	/*
+	/**
 	 * @return Number of module instances in the Topology.
 	 */
 	public int getNumberInstances() {
 		return _numberInstances;
 	}
 
-	/*
+	/**
 	 * @param neighindex1 indicates the index of the first module
 	 * 
 	 * @param neighindex2 indicates the index of the second module
 	 */
-	public void addNeighbour(int neighindex1, int neighindex2)
-			throws GsException {
-		if (neighindex1 >= _numberInstances || neighindex2 >= _numberInstances) {
-			throw new GsException(GsException.GRAVITY_NORMAL,
-					"Invalid neighbor index values: (" + neighindex1 + ","
-							+ neighindex2 + ")");
-		}
-		neighbourhoodRelation[neighindex1][neighindex2] = true;
+	public void addNeighbour(int neighindex1, int neighindex2) {
+		if (neighindex1 < _numberInstances && neighindex2 < _numberInstances)
+			neighbourhoodRelation[neighindex1][neighindex2] = true;
 	}
 
-	/*
+	/**
 	 * @param neighindex1 Index of first module
+	 * 
 	 * @param neighindex2 Index of second module
 	 * 
 	 * @return True if the two modules are neighbours, false otherwise
@@ -56,7 +51,7 @@ public class Topology {
 		return neighbourhoodRelation[neighindex1][neighindex2];
 	}
 
-	/*
+	/**
 	 * @param index A module index
 	 * 
 	 * @return True if the module has neighbours, false otherwise
@@ -75,34 +70,34 @@ public class Topology {
 		return result;
 	}
 
-	/*
+	/**
 	 * @param index A module index
 	 * 
 	 * @return the number of neighbours of the given module
 	 */
-	
-	public int getNumberNeighbours(int index){
+
+	public int getNumberNeighbours(int index) {
 		int count = 0;
 		if (index >= _numberInstances)
 			return 0;
 		for (int i = 0; i < neighbourhoodRelation.length; i++)
 			if (neighbourhoodRelation[index][i] == true)
 				count++;
-		
+
 		return count;
-		
+
 	}
-	
-	/*
+
+	/**
 	 * @param numberInstances the new number of module instances
-	 * 
 	 */
 	private void set_numberInstances(int numberInstances) {
 		this._numberInstances = numberInstances;
 	}
 
-	/*
-	 * Sets up the adjacency matrix representing the neighbourhood relation between Module instances
+	/**
+	 * Sets up the adjacency matrix representing the neighbourhood relation
+	 * between Module instances
 	 */
 	private void initNeighbours() {
 		int i, j;

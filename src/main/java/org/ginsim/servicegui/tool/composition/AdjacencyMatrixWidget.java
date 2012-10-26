@@ -12,9 +12,13 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import org.ginsim.common.application.GsException;
 import org.ginsim.service.tool.composition.Topology;
 
+/**
+ * Widget to specify module topology
+ * 
+ * @author Nuno D. Mendes
+ */
 public class AdjacencyMatrixWidget extends JPanel {
 
 	private static final long serialVersionUID = -7735335091138597285L;
@@ -194,7 +198,7 @@ public class AdjacencyMatrixWidget extends JPanel {
 		setSize(getPreferredSize());
 
 	}
-	
+
 	private void forceSymmetry(boolean selection) {
 		for (int x = 0; x < matrix.length; x++)
 			for (int y = 0; y < matrix.length; y++)
@@ -208,13 +212,13 @@ public class AdjacencyMatrixWidget extends JPanel {
 
 	}
 
-	public boolean isSelected(int x, int y){
+	public boolean isSelected(int x, int y) {
 		if (x < matrix.length && y < matrix.length)
 			return matrix[x][y].isSelected();
 		return false;
 	}
-	
-	public Topology getTopology() throws GsException{
+
+	public Topology getTopology() {
 		int instances = dialog.getNumberInstances();
 		Topology topology = new Topology(instances);
 
@@ -226,5 +230,5 @@ public class AdjacencyMatrixWidget extends JPanel {
 		}
 		return topology;
 	}
-	
+
 }

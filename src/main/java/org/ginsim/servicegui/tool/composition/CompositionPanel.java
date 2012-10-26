@@ -1,19 +1,22 @@
 package org.ginsim.servicegui.tool.composition;
 
-
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.service.tool.composition.CompositionConfig;
+
+/**
+ * Main panel for composition dialog
+ * 
+ * @author Nuno D. Mendes
+ */
 
 public class CompositionPanel extends JPanel implements
 		CompositionSpecificationDialog {
@@ -21,12 +24,12 @@ public class CompositionPanel extends JPanel implements
 	private static final long serialVersionUID = 1139543816020490397L;
 
 	private RegulatoryGraph graph = null;
-	
+
 	private JPanel mainPanel = null;
 	private InstanceSelectorWidget instanceSelectorPanel = null;
 	private AdjacencyMatrixWidget adjacencyMatrixPanel = null;
 	private IntegrationFunctionWidget integrationPanel = null;
-	
+
 	private JPanel reducePanel = null;
 	private JCheckBox toReduce = null;
 
@@ -126,7 +129,7 @@ public class CompositionPanel extends JPanel implements
 	}
 
 	private JPanel getIntegrationPanel() {
-		if (integrationPanel == null) 
+		if (integrationPanel == null)
 			integrationPanel = new IntegrationFunctionWidget(this);
 		return integrationPanel;
 	}
@@ -163,8 +166,8 @@ public class CompositionPanel extends JPanel implements
 		this.instances = instances;
 		refreshMainPanel();
 	}
-	
-	public RegulatoryGraph getGraph(){
+
+	public RegulatoryGraph getGraph() {
 		return graph;
 	}
 }

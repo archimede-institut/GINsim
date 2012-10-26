@@ -5,7 +5,7 @@ import java.util.Collection;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
-/*
+/**
  * The enumeration of all prototypical Integration functions
  * 
  *  @author Nuno D. Mendes
@@ -14,8 +14,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 public enum IntegrationFunction {
 	MAX, MIN, AND, OR, THRESHOLD2, MAX_LEFT, MAX_RIGHT;
 
-	/*
-	 * @param integrationFunction An integration function
+	/**
+	 * @param integrationFunction an integration function
 	 * 
 	 * @result True if the given integration function is implemented, false
 	 * otherwise.
@@ -27,12 +27,12 @@ public enum IntegrationFunction {
 		return false;
 	}
 
-	/*
-	 * @param input An input component
+	/**
+	 * @param input an input component
 	 * 
-	 * @param properComponent A list of proper components
+	 * @param properComponents a list of proper components
 	 * 
-	 * @result a list of integration functions that can be applied to the type
+	 * @return a list of integration functions that can be applied to the type
 	 * of input/proper components given
 	 */
 	public static Collection<IntegrationFunction> whichCanApply(
@@ -93,13 +93,18 @@ public enum IntegrationFunction {
 		}
 
 		Collection<IntegrationFunction> implementedCanApply = new ArrayList<IntegrationFunction>();
-		for(IntegrationFunction integrationFunction : canApply)
+		for (IntegrationFunction integrationFunction : canApply)
 			if (IntegrationFunction.isImplemented(integrationFunction))
 				implementedCanApply.add(integrationFunction);
 		return implementedCanApply;
 
 	}
 
+	/**
+	 * 
+	 * @param input an input component
+	 * @return a list of integration functions that can be applied to this input components, assuming adequate proper components
+	 */
 	public static Collection<IntegrationFunction> whichCanApply(
 			RegulatoryNode input) {
 		return whichCanApply(input, null);

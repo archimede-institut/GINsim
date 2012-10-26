@@ -14,46 +14,47 @@ import org.ginsim.servicegui.tool.composition.CompositionSpecificationDialog;
 import org.ginsim.servicegui.tool.composition.InstanceSelectorWidget;
 import org.ginsim.servicegui.tool.composition.IntegrationFunctionWidget;
 
-public class CADPExportConfigPanel extends AbstractStackDialogHandler implements CompositionSpecificationDialog {
+/**
+ * Main dialog for CADP export
+ * 
+ * @author Nuno D. Mendes
+ */
+
+public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
+		CompositionSpecificationDialog {
 
 	private static final long serialVersionUID = 7274577689017747224L;
-	
+
 	private final CADPExportConfig config;
 	private final CADPExportAction action;
-	
+
 	private InstanceSelectorWidget instanceSelectorPanel = null;
 	private AdjacencyMatrixWidget adjacencyMatrixPanel = null;
 	private IntegrationFunctionWidget integrationPanel = null;
-	
+
 	private int instances = 2;
 
-	public CADPExportConfigPanel(CADPExportConfig config, CADPExportAction action) {
+	public CADPExportConfigPanel(CADPExportConfig config,
+			CADPExportAction action) {
 		this.config = config;
 		this.action = action;
 	}
 
-
 	@Override
 	public boolean run() {
+		
+		
+		// This should not be done here
+		// The config setup should be done elsewhere
 		// TODO set initial state
-		try {
-			config.setTopology(adjacencyMatrixPanel.getTopology());
-		} catch (GsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		try {
-			config.setMapping(integrationPanel.getMapping());
-		} catch (GsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		config.setTopology(adjacencyMatrixPanel.getTopology());
+	//	config.setMapping(integrationPanel.getMapping());
+
 		// TODO set list visible
 
 		action.selectFile();
 		return true;
 	}
-
 
 	@Override
 	protected void init() {
@@ -83,10 +84,9 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 
 		// add panel for initial state
 		// add panel to select visible components
-		
-		
+
 		setSize(getPreferredSize());
-		
+
 	}
 
 	private JPanel getInstanceSelectorPanel() {
@@ -104,7 +104,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 	}
 
 	private JPanel getIntegrationPanel() {
-		if (integrationPanel == null) 
+		if (integrationPanel == null)
 			integrationPanel = new IntegrationFunctionWidget(this);
 		return integrationPanel;
 	}
@@ -116,7 +116,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 
 	@Override
 	public void updateNumberInstances(int instances) {
-		this.instances = instances;	
+		this.instances = instances;
 		adjacencyMatrixPanel = null;
 		this.removeAll();
 		init();

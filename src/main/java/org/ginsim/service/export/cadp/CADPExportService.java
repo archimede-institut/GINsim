@@ -12,8 +12,7 @@ import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
 import org.ginsim.service.tool.composition.Topology;
 import org.mangosdk.spi.ProviderFor;
 
-
-/*
+/**
  * GINsim export service for CADP including:
  * 
  * 	LOTOS NT specifications (common, module and integration)
@@ -26,45 +25,44 @@ import org.mangosdk.spi.ProviderFor;
 @Alias("CADP")
 public class CADPExportService implements Service {
 
-// TODO: More than one file is generated, so the String only specifies the HEAD name	
-	
-public void run(CADPExportConfig config, String fileheadname) throws IOException, GsException {
-//	File common = new File(fileheadname + "_common.lnt");
-//	File modules = new File(fileheadname + "_modules.lnt");
-//	File integration = new File(fileheadname + "_integration.lnt");
-//	File exp = new File(fileheadname + ".exp");
-//	File svl = new File(fileheadname + ".svl");
+	// TODO: More than one file is generated, so the String only specifies the
+	// HEAD name
 
-	
-	
-	// TODO: Create directory with all these files and a README file with instructions
+	public void run(CADPExportConfig config, String fileheadname)
+			throws IOException, GsException {
+		// File common = new File(fileheadname + "_common.lnt");
+		// File modules = new File(fileheadname + "_modules.lnt");
+		// File integration = new File(fileheadname + "_integration.lnt");
+		// File exp = new File(fileheadname + ".exp");
+		// File svl = new File(fileheadname + ".svl");
 
-}
+		// TODO: Create directory with all these files and a README file with
+		// instructions
 
-public void export(CADPExportConfig config)  {
-	
-	
-	CADPCommonWriter common = new CADPCommonWriter(config);
-	
-	// common
-	// modules
-	// integration
-	// exp
-	// svl
-	// mcl
-	
-	
-}
+	}
 
-/*
-	public void export(NuSMVConfig config, File file) throws IOException, GsException {
+	public void export(CADPExportConfig config) {
 
-		FileWriter writer = new FileWriter(file);
+		CADPCommonWriter common = new CADPCommonWriter(config);
 
-		NuSMVEncoder encoder = new NuSMVEncoder();
-		encoder.write(config, writer);
+		// common
+		// modules
+		// integration
+		// exp
+		// svl
+		// mcl
 
-		writer.close();
-	}*/
-	
+	}
+
+	/*
+	 * public void export(NuSMVConfig config, File file) throws IOException,
+	 * GsException {
+	 * 
+	 * FileWriter writer = new FileWriter(file);
+	 * 
+	 * NuSMVEncoder encoder = new NuSMVEncoder(); encoder.write(config, writer);
+	 * 
+	 * writer.close(); }
+	 */
+
 }
