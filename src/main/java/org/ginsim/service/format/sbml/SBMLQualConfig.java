@@ -1,4 +1,4 @@
-package org.ginsim.service.export.sbml;
+package org.ginsim.service.format.sbml;
 
 import java.util.HashMap;
 import java.util.Map;

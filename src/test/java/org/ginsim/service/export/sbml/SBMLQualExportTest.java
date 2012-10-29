@@ -21,7 +21,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.service.imports.sbml.SBMLImportService;
+import org.ginsim.service.format.sbml.SBMLqualService;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -146,7 +146,7 @@ public class SBMLQualExportTest {
 		try{
 			File file = new File( TestFileUtils.getTempTestFileDirectory( module), graph.getGraphName());
 			
-			SBMLQualExportService srv = new SBMLQualExportService();
+			SBMLqualService srv = new SBMLqualService();
 			srv.export( graph, file.getPath());
 			if( !file.exists()){
 				fail( "Export graph : the graph file was not created.");
@@ -168,8 +168,8 @@ public class SBMLQualExportTest {
 		// import the graph
 		File file = new File( TestFileUtils.getTempTestFileDirectory( module), graph.getGraphName());
 
-		SBMLImportService srv = new SBMLImportService();
-		RegulatoryGraph new_graph = srv.run(file.getPath());
+		SBMLqualService srv = new SBMLqualService();
+		RegulatoryGraph new_graph = srv.importLRG(file.getPath());
 		
 		return new_graph;
 	}

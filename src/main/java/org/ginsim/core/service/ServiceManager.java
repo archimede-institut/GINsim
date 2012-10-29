@@ -79,7 +79,7 @@ public class ServiceManager{
             	}
             }
             catch (ServiceConfigurationError e){
-
+            	LogManager.debug(e);
             }
         }
 	}

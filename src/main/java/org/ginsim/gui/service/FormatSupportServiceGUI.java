@@ -6,16 +6,15 @@ import java.util.List;
 
 import javax.swing.Action;
 
-import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.FormatSupportService;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.ImportAction;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 
 /**
  * Generic GUI integration service for formats providers.
@@ -54,17 +53,20 @@ public class FormatSupportServiceGUI<S extends FormatSupportService> extends Abs
 
 	@Override
 	public int getInitialWeight() {
-		return 5;
+		return 1;
 	}
 	
+	public StackDialogHandler getConfigPanel(ExportAction action, RegulatoryGraph graph) {
+		return null;
+	}
+
 	public void doImport(String filename) {
 		if (filename == null) {
 			return;
 		}
 
 		try {
-			LogicalModel model = service.importFile(filename);
-			RegulatoryGraph newGraph = LogicalModel2RegulatoryGraph.importModel(model);
+			RegulatoryGraph newGraph = service.importLRG(filename);
 			GUIManager.getInstance().whatToDoWithGraph(newGraph, true);
 		} catch (IOException e) {
 			LogManager.error("Error in "+format_name+" import");
@@ -77,7 +79,7 @@ public class FormatSupportServiceGUI<S extends FormatSupportService> extends Abs
 		}
 
 		try {
-			service.export(graph.getModel(), filename);
+			service.export(graph, filename);
 		} catch (IOException e) {
 			LogManager.error("Error in "+format_name+" export");
 		}
@@ -129,5 +131,9 @@ class FormatExportAction extends ExportAction<RegulatoryGraph> {
 	@Override
 	protected void doExport(String filename) throws IOException {
 		serviceGUI.doExport(graph, filename);
+	}
+	
+	public StackDialogHandler getConfigPanel() {
+		return serviceGUI.getConfigPanel(this, graph);
 	}
 }

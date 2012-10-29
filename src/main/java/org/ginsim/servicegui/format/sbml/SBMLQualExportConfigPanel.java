@@ -1,20 +1,22 @@
-package org.ginsim.servicegui.export.sbml;
+package org.ginsim.servicegui.format.sbml;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
+import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
-import org.ginsim.service.export.sbml.SBMLQualConfig;
+import org.ginsim.service.format.sbml.SBMLQualConfig;
 
 public class SBMLQualExportConfigPanel extends AbstractStackDialogHandler {
 	
 	private static final long serialVersionUID = 9043565812912568136L;
 	
 	private final SBMLQualConfig config;
-	private final SBMLQualExportAction action;
+	private final ExportAction<RegulatoryGraph> action;
 	
-	protected SBMLQualExportConfigPanel( SBMLQualConfig config, SBMLQualExportAction action) {
+	public SBMLQualExportConfigPanel( SBMLQualConfig config, ExportAction<RegulatoryGraph> action) {
 		
 		super();
 		setLayout(new GridBagLayout());
