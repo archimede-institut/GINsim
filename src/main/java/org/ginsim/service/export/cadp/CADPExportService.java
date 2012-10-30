@@ -16,7 +16,7 @@ import org.mangosdk.spi.ProviderFor;
  * GINsim export service for CADP including:
  * 
  * 	LOTOS NT specifications (common, module and integration)
- *  EXP specifications (synchronisation vectors)
+ *  EXP specifications (synchronization vectors)
  *  SVL script
  *  
  *  @author Nuno D. Mendes
@@ -41,9 +41,13 @@ public class CADPExportService implements Service {
 
 	}
 
-	public void export(CADPExportConfig config) {
+	public void export(CADPExportConfig config) throws GsException {
 
 		CADPCommonWriter common = new CADPCommonWriter(config);
+		CADPModuleWriter module = new CADPModuleWriter(config);
+		CADPIntegrationWriter integration = new CADPIntegrationWriter(config);
+		CADPExpWriter exp = new CADPExpWriter(config);
+		CADPSvlWriter svl = new CADPSvlWriter(config);
 
 		// common
 		// modules
