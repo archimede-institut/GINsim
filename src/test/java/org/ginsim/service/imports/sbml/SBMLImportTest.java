@@ -15,6 +15,7 @@ import org.ginsim.core.graph.regulatorygraph.BasicRegulatoryGraphTest;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
+import org.ginsim.service.format.sbml.SBMLqualService;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -54,7 +55,7 @@ public class SBMLImportTest {
 		
 		File file = new File( TestFileUtils.getTestFileDirectory( module), "importGraphTest.sbml");
 		
-		SBMLImportService srv = new SBMLImportService();
+		SBMLqualService srv = new SBMLqualService();
 		// FIXME: old test disabled: need some changes in the new SBML import
 /*		
 		RegulatoryGraph graph = srv.run(file.getPath());

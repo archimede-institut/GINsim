@@ -106,9 +106,25 @@ class ExtractFromSCCGraphAction extends GenericGraphAction {
 		String s_ag = null;
 		try {
 			s_ag = g.getAssociatedGraphID();
-		} catch (Exception e) {
 			
+		} catch (Exception e) {
 		}
+		
+		if (s_ag == null) {
+			try {
+				Graph ag = g.getAssociatedGraph();
+				if (ag != null) {
+					boolean save = GUIMessageUtils.openConfirmationDialog("This requires to save the original graph. Save it now?", "Save associated graph?");
+					if (save) {
+						GraphGUI graph_gui = GUIManager.getInstance().getGraphGUI( ag);
+						graph_gui.saveAs();
+						s_ag = g.getAssociatedGraphID();
+					}
+				}
+			} catch (GsException e1) {
+			}
+		}
+		
 		if (s_ag == null) {
 			LogManager.debug("Missing associated Graph");
 			GUIMessageUtils.openErrorDialog( "STR_unableToOpen_SeeLogs");

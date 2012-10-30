@@ -1,0 +1,32 @@
+package org.ginsim.servicegui.format.sbml;
+
+import org.ginsim.common.utils.FileFormatDescription;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.service.ServiceManager;
+import org.ginsim.gui.service.FormatSupportServiceGUI;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.common.ServiceStatus;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
+import org.ginsim.service.format.sbml.SBMLQualConfig;
+import org.ginsim.service.format.sbml.SBMLqualService;
+import org.mangosdk.spi.ProviderFor;
+
+@ProviderFor(ServiceGUI.class)
+@GUIFor(SBMLqualService.class)
+@ServiceStatus( ServiceStatus.RELEASED)
+public class SBMLqualServiceGUI extends FormatSupportServiceGUI<SBMLqualService> {
+
+	private static SBMLqualService SERVICE = ServiceManager.getManager().getService(SBMLqualService.class);
+	public static final FileFormatDescription FORMAT = new FileFormatDescription("SBML", "sbml");
+
+	public SBMLqualServiceGUI() {
+		super("SBML-qual", SERVICE, FORMAT);
+	}
+	
+	public StackDialogHandler getConfigPanel(ExportAction action, RegulatoryGraph graph) {
+		SBMLQualConfig config = new SBMLQualConfig(graph);
+		return new SBMLQualExportConfigPanel(config, action);
+	}
+}

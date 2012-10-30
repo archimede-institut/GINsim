@@ -4,12 +4,14 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.io.LogicalModelFormat;
 import org.colomoto.logicalmodel.services.ServiceManager;
+import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 
 /**
  * Generic service to support format implemented in LogicalModel.
@@ -53,13 +55,17 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 		}
 	}
 	
-	private final F format;
+	protected final F format;
 	
 	public FormatSupportService(F format) {
 		this.format = format;
 		registerFormat(format);
 	}
-	
+
+	public void export(RegulatoryGraph graph, String filename) throws IOException {
+		export(graph.getModel(), filename);
+	}
+
 	public void export(LogicalModel model, String filename) throws IOException {
 		OutputStream out = new FileOutputStream(filename);
 		export(model, out);
@@ -75,6 +81,11 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 	
 	public LogicalModel importFile(String filename) throws IOException {
 		return format.importFile(new File(filename));
+	}
+	
+	public RegulatoryGraph importLRG(String filename) throws IOException {
+		LogicalModel model = importFile(filename);
+		return LogicalModel2RegulatoryGraph.importModel(model);
 	}
 	
 	public boolean canExport() {

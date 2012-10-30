@@ -1,31 +1,92 @@
-package org.ginsim.service.export.sbml;
+package org.ginsim.service.format.sbml;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
 import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.io.sbml.SBMLFormat;
 import org.colomoto.logicalmodel.io.sbml.SBMLQualBundle;
 import org.colomoto.logicalmodel.io.sbml.SBMLqualExport;
+import org.colomoto.logicalmodel.io.sbml.SBMLqualImport;
+import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.service.Alias;
+import org.ginsim.core.service.FormatSupportService;
 import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
+import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.ext.layout.BoundingBox;
 import org.sbml.jsbml.ext.layout.Dimensions;
 import org.sbml.jsbml.ext.layout.Layout;
+import org.sbml.jsbml.ext.layout.Point;
 import org.sbml.jsbml.ext.layout.Position;
 import org.sbml.jsbml.ext.layout.SpeciesGlyph;
 
 @ProviderFor( Service.class)
-@Alias("SBMLe")
-public class SBMLQualExportService implements Service {
+@Alias("SBML")
+public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 
+	public SBMLqualService() {
+		super(new SBMLFormat());
+	}
+
+	/**
+	 * Return the graph built from the SBML file at the given path
+	 * 
+	 * @param filename the path of the SBML file describing the graph
+	 * @return the graph built from the SBML file at the given path
+	 */
+	public RegulatoryGraph importLRG( String filename) {
+
+		try {
+			SBMLqualImport simport = new SBMLqualImport(new File(filename));
+			LogicalModel model = simport.getModel();
+			RegulatoryGraph lrg = LogicalModel2RegulatoryGraph.importModel(model);
+			
+			SBMLQualBundle qbundle = simport.getQualBundle();
+			
+			// TODO: add unused interactions and consistency checks
+			
+			// add layout information
+			if (qbundle.lmodel != null) {
+				ListOf<Layout> layouts = qbundle.lmodel.getListOfLayouts();
+				if (layouts != null && layouts.size() > 0) {
+					Layout layout = layouts.get(0);
+					NodeAttributesReader nreader = lrg.getNodeAttributeReader();
+					List<RegulatoryNode> nodes = lrg.getNodeOrder();
+					for (SpeciesGlyph glyph: layout.getListOfSpeciesGlyphs()) {
+						String sid = glyph.getSpecies();
+						try {
+							nreader.setNode( nodes.get( simport.getIndexForName(sid)));
+							BoundingBox bb = glyph.getBoundingBox();
+							Point pos = bb.getPosition();
+							if (pos != null) {
+								nreader.setPos((int)pos.getX(), (int)pos.getY());
+							}
+							Dimensions dim = bb.getDimensions();
+							if (dim != null) {
+								nreader.setSize((int)dim.getWidth(), (int)dim.getHeight());
+							}
+						} catch (Exception e) {
+							
+						}
+					}
+				}
+			}
+			
+			return lrg;
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+	}
+	
 	/**
 	 * Convenience method to export without having to configure anything.
 	 * 
@@ -37,6 +98,7 @@ public class SBMLQualExportService implements Service {
 		export(graph, new SBMLQualConfig(graph), filename);
 	}
 
+	
 	/**
 	 * Perform the SBML export, using the JSBML-based encoder from LogicalModel.
 	 * 
@@ -78,4 +140,5 @@ public class SBMLQualExportService implements Service {
 			throw new IOException(e);
 		}
 	}
+
 }

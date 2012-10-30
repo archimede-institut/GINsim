@@ -1,9 +1,5 @@
 package org.ginsim.service.format;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.io.boolsim.BoolSimFormat;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.FormatSupportService;

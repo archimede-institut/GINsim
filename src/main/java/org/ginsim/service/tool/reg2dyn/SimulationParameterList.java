@@ -13,9 +13,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
-import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
-import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
-import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.SimpleGenericList;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
@@ -68,13 +65,7 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
 			nodeAdded(data);
 			break;
 		case NODEREMOVED:
-	        // remove it from priority classes
-	        for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
-	        	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
-	    		if (pcdef.m_elt != null) {
-	    			pcdef.m_elt.remove(data);
-	    		}
-	        }
+			nodeRemoved(data);
 			break;
 		case GRAPHMERGED:
 			Collection<?> nodes = (Collection<?>)data;
@@ -83,16 +74,40 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
 			}
 			break;
 
+		case NODEUPDATED:
+			RegulatoryNode node = (RegulatoryNode)data;
+			if (node.isInput()) {
+				nodeRemoved(node);
+			} else {
+				nodeAdded(node);
+			}
+			break;
 		}
 		return null;
 	}
 	
-	private void nodeAdded(Object data) {
-        // if needed, add it to the default priority class!
+    private void nodeRemoved(Object data) {
+        // remove it from priority classes
+    	pcmanager.nodeOrder.remove(data);
         for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
         	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
     		if (pcdef.m_elt != null) {
-    			pcdef.m_elt.put((RegulatoryNode)data, pcdef.getElement(null, 0));
+    			pcdef.m_elt.remove(data);
+    		}
+        }
+    }
+    
+	private void nodeAdded(Object data) {
+        // if needed, add it to the default priority class!
+		RegulatoryNode node = (RegulatoryNode)data;
+		if (pcmanager.nodeOrder.contains(node)) {
+			return;
+		}
+		pcmanager.nodeOrder.add(node);
+        for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
+        	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
+    		if (pcdef.m_elt != null) {
+    			pcdef.m_elt.put(node, pcdef.getElement(null, 0));
     		}
         }
 	}
