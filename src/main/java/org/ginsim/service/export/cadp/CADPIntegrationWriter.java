@@ -149,8 +149,7 @@ public class CADPIntegrationWriter {
 			this.gateType = input.getMaxValue() > 1 ? "MultiIntegration"
 					: "BinaryIntegration";
 
-			this.concreteProcessName = "Integration"
-					+ input.getNodeInfo().getNodeID() + "_" + inputModuleIndex;
+			this.concreteProcessName = concreteProcessName(input,inputModuleIndex);
 
 			this.formalProcessName = "Integration"
 					+ (input.getMaxValue() > 1 ? "M" : "B") + numberArguments
@@ -187,6 +186,11 @@ public class CADPIntegrationWriter {
 
 		}
 
+		public String concreteProcessName(RegulatoryNode input, int inputModuleindex){
+			return "Integration"
+					+ input.getNodeInfo().getNodeID() + "_" + inputModuleIndex;
+		}
+		
 		public String concreteIntegrationProcess() {
 			List<String> concreteGateList = new ArrayList<String>();
 			for (int i = 0; i < externalModuleIndices.length; i++)

@@ -1,6 +1,8 @@
 package org.ginsim.service.export.cadp;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.mddlib.PathSearcher;
@@ -26,6 +28,8 @@ public class CADPModuleWriter {
 
 	public String toString() {
 
+		Set<String> concreteProcessSignature = new HashSet<String>();
+		
 		int numberInstances = config.getTopology().getNumberInstances();
 		String modelName = config.getModelName();
 		InitialStateWriter initialStateWriter = new InitialStateWriter(
@@ -39,10 +43,14 @@ public class CADPModuleWriter {
 		String output = "";
 		output += "module " + modelName + "(common) is\n\n";
 
+		
 		for (int moduleId = 1; moduleId <= numberInstances; moduleId++) {
-			String processName = "openLRG_"
-					+ initialStateWriter.typedStateConcat(moduleId);
-
+			String processName = concreteProcessName(initialStateWriter.typedStateConcat(moduleId));
+			if (concreteProcessSignature.contains(processName))
+				continue;
+			else
+				concreteProcessSignature.add(processName);
+			
 			output += "process " + processName + "[" + gateWriter.typedList()
 					+ "] is\n";
 			output += "\tLogicModule" + index + "[" + gateWriter.simpleList()
@@ -62,8 +70,12 @@ public class CADPModuleWriter {
 
 		return output;
 	}
+	
+	public static String concreteProcessName(String descInitialState){
+		return "openLRG_" + descInitialState;
+ 	}
 
-	public class InitialStateWriter {
+	public static class InitialStateWriter {
 		// TODO: compute correct initial state for mapped input variables
 		List<byte[]> initialStates = null;
 		List<RegulatoryNode> listNodes = null;
@@ -101,7 +113,7 @@ public class CADPModuleWriter {
 		}
 	}
 
-	public class GateWriter {
+	public static class GateWriter {
 		List<RegulatoryNode> listNodes = null;
 
 		public GateWriter(List<RegulatoryNode> listNodes) {
@@ -115,6 +127,15 @@ public class CADPModuleWriter {
 				out += "," + node.getNodeInfo().getNodeID().toUpperCase();
 			}
 
+			return out;
+		}
+		
+		public String simpleDecoratedList(String decoration){
+			String out = "STABLE";
+			for (RegulatoryNode node : listNodes){
+				out = "," + node.getNodeInfo().getNodeID().toUpperCase() + decoration;
+			}
+			
 			return out;
 		}
 
@@ -132,7 +153,7 @@ public class CADPModuleWriter {
 		}
 	}
 
-	public class StateVarWriter {
+	public static class StateVarWriter {
 		List<RegulatoryNode> listNodes = null;
 
 		public StateVarWriter(List<RegulatoryNode> listNodes) {
@@ -231,8 +252,6 @@ public class CADPModuleWriter {
 							+ "(" + stateVarWriter.typedList() + ") :"
 							+ (node.getMaxValue() > 1 ? "Multi" : "Binary")
 							+ " is\n";
-
-					int returnValue = 0;
 
 					// There are some paths
 					String[] conditionArray = new String[node.getMaxValue()];

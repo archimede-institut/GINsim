@@ -28,6 +28,9 @@ public class CADPExportService implements Service {
 	// TODO: More than one file is generated, so the String only specifies the
 	// HEAD name
 
+	// TODO: Make EncoderUtils package to make the naming of gates, commaLists, decoratedLists
+	// processNames, etc for all the exporters. also the naming of files etc
+	
 	public void run(CADPExportConfig config, String fileheadname)
 			throws IOException, GsException {
 		// File common = new File(fileheadname + "_common.lnt");
@@ -35,6 +38,7 @@ public class CADPExportService implements Service {
 		// File integration = new File(fileheadname + "_integration.lnt");
 		// File exp = new File(fileheadname + ".exp");
 		// File svl = new File(fileheadname + ".svl");
+		// mcl?
 
 		// TODO: Create directory with all these files and a README file with
 		// instructions

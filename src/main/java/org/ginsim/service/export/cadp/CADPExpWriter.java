@@ -14,7 +14,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
  * Class generating the EXP file which specifies the synchronization vectors
  * 
  * @author Nuno D. Mendes
- *
+ * 
  */
 public class CADPExpWriter {
 
@@ -124,13 +124,12 @@ public class CADPExpWriter {
 
 		List<String> processNames = new ArrayList<String>();
 		for (int i = 0; i < regularProcesses; i++)
-			processNames.add(config.getModelName() + "_" + i + ".bcg");
+			processNames.add(config.getBCGModelFilename(i));
 
 		for (Map.Entry<RegulatoryNode, Integer> entry : orderMapped.keySet()) {
-			processNames.add(orderMapped.get(entry).intValue(), "integration"
-					+ "_"
-					+ entry.getKey().getNodeInfo().getNodeID().toUpperCase()
-					+ "_" + entry.getValue().intValue() + ".bcg");
+			processNames.add(orderMapped.get(entry).intValue(), config
+					.getBCGIntegrationFilename(entry.getKey(), entry.getValue()
+							.intValue()));
 		}
 
 		index = 0;
@@ -149,7 +148,7 @@ public class CADPExpWriter {
 	 * 
 	 * Gets a line of a given size, with an extra slot for the resulting actions
 	 * 
-	 * @param size 
+	 * @param size
 	 * @return a array of Strings representing the line columns
 	 */
 	private String[] getNewLine(int size) {
@@ -179,7 +178,8 @@ public class CADPExpWriter {
 	 * 
 	 * Takes a line a produces the synchronization vector
 	 * 
-	 * @param line a array of columns
+	 * @param line
+	 *            a array of columns
 	 * @return a String with the corresponding synchronization vector
 	 */
 	private String syncVec(String[] line) {
@@ -199,10 +199,14 @@ public class CADPExpWriter {
 	 * 
 	 * Generates the name of an action in a regular process
 	 * 
-	 * @param node a regulatory node
-	 * @param index the corresponding module index
-	 * @param value the value associated with the action (the offer)
-	 * @return a String representation of the update action of the regulatory node at the given module
+	 * @param node
+	 *            a regulatory node
+	 * @param index
+	 *            the corresponding module index
+	 * @param value
+	 *            the value associated with the action (the offer)
+	 * @return a String representation of the update action of the regulatory
+	 *         node at the given module
 	 */
 	private String node2GateWithOffer(RegulatoryNode node, int index, int value) {
 		return node.getNodeInfo().getNodeID().toUpperCase() + "_" + index
@@ -213,13 +217,21 @@ public class CADPExpWriter {
 	 * 
 	 * Generates the name of the action of an integration process
 	 * 
-	 * @param input the mapped input component
-	 * @param proper a proper component influencing the value of the integration function
-	 * @param indexInput the index of the module of the input component
-	 * @param indexProper the index of the module of the proper component 
-	 * @param valueProper the value to which the proper component updates to
-	 * @param valueIntegration the value to which the integration functions updates to
-	 * @return a String representation of the update action of the integration process
+	 * @param input
+	 *            the mapped input component
+	 * @param proper
+	 *            a proper component influencing the value of the integration
+	 *            function
+	 * @param indexInput
+	 *            the index of the module of the input component
+	 * @param indexProper
+	 *            the index of the module of the proper component
+	 * @param valueProper
+	 *            the value to which the proper component updates to
+	 * @param valueIntegration
+	 *            the value to which the integration functions updates to
+	 * @return a String representation of the update action of the integration
+	 *         process
 	 */
 	private String integrationWithOffer(RegulatoryNode input,
 			RegulatoryNode proper, int indexInput, int indexProper,
@@ -234,12 +246,19 @@ public class CADPExpWriter {
 	 * 
 	 * Generates the name of the action of an integration process
 	 * 
-	 * @param input the mapped input component
-	 * @param proper a proper component influencing the value of the integration function
-	 * @param indexInput the index of the module of the input component
-	 * @param indexProper the index of the module of the proper component
-	 * @param valueProper the value to which the proper component updates to
-	 * @return a String representation of the update action of the integration process
+	 * @param input
+	 *            the mapped input component
+	 * @param proper
+	 *            a proper component influencing the value of the integration
+	 *            function
+	 * @param indexInput
+	 *            the index of the module of the input component
+	 * @param indexProper
+	 *            the index of the module of the proper component
+	 * @param valueProper
+	 *            the value to which the proper component updates to
+	 * @return a String representation of the update action of the integration
+	 *         process
 	 */
 	private String integrationWithOffer(RegulatoryNode input,
 			RegulatoryNode proper, int indexInput, int indexProper,
@@ -253,16 +272,24 @@ public class CADPExpWriter {
 
 	/**
 	 * 
-	 * Generates as many sync vector lines as necessary to reflect the synchronization between the several processes
+	 * Generates as many sync vector lines as necessary to reflect the
+	 * synchronization between the several processes
 	 * 
-	 * @param lines an initial list of lines that need to be populate with synchronizations
-	 * @param mainGate the original gate with which all other require synchronization
-	 * @param value the update value for the main gate
-	 * @param influences the input component our main gate influences
-	 * @param orderMapped the position in the sync vector of the integration processes for each mapped input
+	 * @param lines
+	 *            an initial list of lines that need to be populate with
+	 *            synchronizations
+	 * @param mainGate
+	 *            the original gate with which all other require synchronization
+	 * @param value
+	 *            the update value for the main gate
+	 * @param influences
+	 *            the input component our main gate influences
+	 * @param orderMapped
+	 *            the position in the sync vector of the integration processes
+	 *            for each mapped input
 	 * @return a list of lines
 	 */
-	
+
 	private List<String[]> multiPlex(List<String[]> lines,
 			Map.Entry<RegulatoryNode, Integer> mainGate, int value,
 			List<Map.Entry<RegulatoryNode, Integer>> influences,

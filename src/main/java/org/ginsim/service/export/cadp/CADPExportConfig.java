@@ -97,4 +97,24 @@ public class CADPExportConfig {
 		return graph;
 	}
 
+	public String getLNTModelFilename(){
+		return this.getModelName() + ".lnt";
+	}
+	
+	public String getBCGModelFilename(int moduleId){
+		return this.getModelName() + "_" + moduleId + ".bcg";
+	}
+	
+	public String getLNTIntegrationFilename(){
+		return "integration_" + this.getModelName() + "_" + this.getTopology().getNumberInstances() + ".lnt";
+	}
+	
+	public String getBCGIntegrationFilename(RegulatoryNode node, int moduleId){
+		return "integration_" + node.getNodeInfo().getNodeID().toUpperCase() + "_" + moduleId + ".bcg";
+	}
+	
+	public String getExpFilename(){
+		return "composition_" + this.getModelName() + "_" + this.getTopology().getNumberInstances() + ".exp";
+	}
+	
 }
