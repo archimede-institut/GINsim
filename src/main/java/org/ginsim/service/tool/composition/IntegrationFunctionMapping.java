@@ -1,5 +1,6 @@
 package org.ginsim.service.tool.composition;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -87,6 +88,49 @@ public class IntegrationFunctionMapping {
 		return mapping.containsKey(input);
 	}
 
+	/**
+	 *  Indicates whether a proper components influence an integration functions
+	 *  
+	 * @param proper the proper component
+	 * @return TRUE if the proper components does influence an integration function, FALSE otherwise
+	 */
+	public boolean isMappedTo(RegulatoryNode proper){
+		if (proper.isInput())
+			return false;
+	
+		for (RegulatoryIntegration regulation : mapping.values())
+			if (regulation.getProperComponents().contains(proper))
+				return true;
+		
+		return false;
+		
+	
+	}
+	
+	/**
+	 * Returns the list of input components whose value is influenced by the given proper component
+	 * 
+	 * @param proper the proper components
+	 * @return a collection of input components 
+	 */
+			
+	public Collection<RegulatoryNode> getInfluencedInputs(RegulatoryNode proper){
+		ArrayList<RegulatoryNode> listInputs = new ArrayList<RegulatoryNode>();
+		
+		if (proper.isInput())
+			return listInputs;
+		
+		for (RegulatoryNode input : mapping.keySet()){
+			RegulatoryIntegration regulation = mapping.get(input);
+			if (regulation.getProperComponents().contains(proper))
+				listInputs.add(input);
+		}
+		
+		return listInputs;
+	}
+	
+	
+	
 	/**
 	 * @return A collection of all input components that are mapped
 	 */

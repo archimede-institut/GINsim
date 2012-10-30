@@ -5,7 +5,11 @@ import java.util.List;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-
+/**
+ * Class that produces the LOTOS NT specification of a single Logical Regulatory Module
+ * @author Nuno D. Mendes
+ *
+ */
 public class CADPModuleWriter {
 
 	private CADPExportConfig config;
@@ -23,7 +27,7 @@ public class CADPModuleWriter {
 	public String toString() {
 
 		int numberInstances = config.getTopology().getNumberInstances();
-		String modelName = config.getGraph().getGraphName();
+		String modelName = config.getModelName();
 		InitialStateWriter initialStateWriter = new InitialStateWriter(
 				config.getInitialStates(), config.getGraph().getNodeOrder());
 		GateWriter gateWriter = new GateWriter(config.getGraph().getNodeOrder());
@@ -33,8 +37,6 @@ public class CADPModuleWriter {
 				config.getGraph().getNodeOrder(), stateVarWriter);
 
 		String output = "";
-
-		// TODO modelName cannot contain "." make sure this does not happen
 		output += "module " + modelName + "(common) is\n\n";
 
 		for (int moduleId = 1; moduleId <= numberInstances; moduleId++) {

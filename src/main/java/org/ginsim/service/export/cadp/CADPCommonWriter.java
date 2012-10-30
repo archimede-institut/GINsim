@@ -4,6 +4,17 @@ import java.util.List;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
+
+/**
+ * 
+ * Writer class for common.lnt including general functions
+ * and type definitions, based on the maximum value of
+ * the multi-valued components, if any are referred to in the
+ * model specification
+ * 
+ * @author Nuno D. Mendes
+ *
+ */
 public class CADPCommonWriter {
 	private CADPExportConfig config;
 	

@@ -1,10 +1,13 @@
 package org.ginsim.service.export.cadp;
 
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -12,21 +15,21 @@ import org.ginsim.service.tool.composition.IntegrationFunction;
 
 public class CADPIntegrationWriter {
 	private CADPExportConfig config = null;
+	private Map<Map.Entry<Integer, RegulatoryNode>, IntegrationProcessWriter> association = new HashMap<Map.Entry<Integer, RegulatoryNode>, IntegrationProcessWriter>();
+	private Collection<String> integrationProcessSignature = new HashSet<String>();
+	private Collection<String> integrationFunctionSignature = new HashSet<String>();
 
-	public CADPIntegrationWriter(CADPExportConfig config) {
+	public CADPIntegrationWriter(CADPExportConfig config) throws GsException {
 		this.config = config;
+		init();
 	}
 
-	public String integrationLotosNTFile() throws GsException {
-		String out = "";
+	public void init() throws GsException {
 
 		int numberInstances = config.getTopology().getNumberInstances();
 		Collection<RegulatoryNode> mappedInputs = config.getMapping()
 				.getMappedInputs();
 		List<byte[]> initialStates = config.getInitialStates();
-
-		Collection<String> integrationProcessSignature = new HashSet<String>();
-		Collection<String> integrationFunctionSignature = new HashSet<String>();
 
 		for (RegulatoryNode input : mappedInputs) {
 			Collection<RegulatoryNode> properComponents = config.getMapping()
@@ -62,26 +65,43 @@ public class CADPIntegrationWriter {
 						instance, externalModuleIndices, initialStates,
 						integrationFunction);
 
-				out += integrationProcessWriter.concreteIntegrationProcess();
-				String formalIntegrationProcess = integrationProcessWriter.formalIntegrationProcess();
-				String formalIntegrationFunction = integrationProcessWriter.formalIntegrationFunction();
+				association.put(new AbstractMap.SimpleEntry<Integer,RegulatoryNode>(new Integer(instance),input),integrationProcessWriter);
 				
-				if (!integrationProcessSignature.contains(formalIntegrationProcess)){
-					integrationProcessSignature.add(formalIntegrationProcess);
-					out += formalIntegrationProcess;
-				}
-				
-				if (!integrationFunctionSignature.contains(formalIntegrationFunction)){
-					integrationFunctionSignature.add(formalIntegrationFunction);
-					out += formalIntegrationFunction;
-				}
-
 			}
 
 		}
 
-		return out;
+
 	}
+
+	public String toString() {
+		String out = "";
+		for (Map.Entry<Integer, RegulatoryNode> key : association.keySet()) {
+			IntegrationProcessWriter integrationProcessWriter = association
+					.get(key);
+
+			out += integrationProcessWriter.concreteIntegrationProcess();
+			String formalIntegrationProcess = integrationProcessWriter
+					.formalIntegrationProcess();
+			String formalIntegrationFunction = integrationProcessWriter
+					.formalIntegrationFunction();
+
+			if (!integrationProcessSignature.contains(formalIntegrationProcess)) {
+				integrationProcessSignature.add(formalIntegrationProcess);
+				out += formalIntegrationProcess;
+			}
+
+			if (!integrationFunctionSignature
+					.contains(formalIntegrationFunction)) {
+				integrationFunctionSignature.add(formalIntegrationFunction);
+				out += formalIntegrationFunction;
+			}
+		}
+
+		return out;
+
+	}
+		
 
 	public class IntegrationProcessWriter {
 		private RegulatoryNode input = null;
@@ -394,17 +414,6 @@ public class CADPIntegrationWriter {
 			return out;
 		}
 
-		public String EXPspecification() {
-			String out = "";
-
-			return out;
-		}
-
-		public String synchronizationVectors() {
-			String out = "";
-
-			return out;
-		}
 
 		private String makeCommaList(List<String> list) {
 			return makeCommaList(list, ",");
