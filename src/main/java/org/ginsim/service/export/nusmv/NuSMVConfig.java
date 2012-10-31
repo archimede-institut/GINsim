@@ -60,6 +60,10 @@ public class NuSMVConfig implements InitialStateStore {
 	public PriorityClassDefinition getPriorityClasses() {
 		return (PriorityClassDefinition) store.getObject(0);
 	}
+	
+	public void setPriorityClasses(PriorityClassDefinition pcdef) {
+		store.setObject(0, pcdef);
+	}
 
 	public PerturbationHolder getPerturbation() {
 		return perturbationstore;

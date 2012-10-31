@@ -1,11 +1,10 @@
 package org.ginsim.service.export.nusmv;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-import static org.junit.Assert.assertEquals;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.io.IOException;
 
 import org.ginsim.TestFileUtils;
@@ -31,13 +30,9 @@ public class NuSMVExportTest {
 		// TODO: this should not be here...
 		// Should be either unnecessary or done Once before All tests
 		Translator.pushBundle("org.ginsim.messages");
-		dir = TestFileUtils.getTestFileDirectory(module);
-		FilenameFilter filter = new FilenameFilter() {
-			public boolean accept(File dir, String name) {
-				return name.endsWith("ginml");
-			}
-		};
-		saModel = dir.list(filter);
+		dir = TestFileUtils.getTestFileDirectory("models");
+		saModel = new String[] { "E2F.ginml", "toymodel4d.ginml",
+				"SP-2x18vars.ginml" };
 
 		saGraph = new RegulatoryGraph[saModel.length];
 
