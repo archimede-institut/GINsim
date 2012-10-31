@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gxl SYSTEM "http://gin.univ-mrs.fr/GINsim/GINML_2_1.dtd">
+<gxl xmlns:xlink="http://www.w3.org/1999/xlink">
+	<graph id="toy_complex_attractor" class="regulatory" nodeorder="gA gB gC gD">
+<node id="gA" maxvalue="1">
+  <parameter idActiveInteractions=" gA:gA" val="1"/>
+  <parameter idActiveInteractions=" gC:gA gA:gA" val="1"/>
+  <parameter idActiveInteractions=" gB:gA" val="1"/>
+  <parameter idActiveInteractions=" gB:gA gA:gA" val="1"/>
+
+			<nodevisualsetting>
+				<rect x="304" y="132" width="50" height="25" backgroundColor="#ff9900" foregroundColor="#ffffff" textColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="gD" maxvalue="1">
+  <parameter val="1"/>
+  <parameter idActiveInteractions=" gD:gD" val="1"/>
+  <parameter idActiveInteractions=" gB:gD gD:gD" val="1"/>
+  <parameter idActiveInteractions=" gC:gD gD:gD" val="1"/>
+  <parameter idActiveInteractions=" gA:gD gD:gD" val="1"/>
+  <parameter idActiveInteractions=" gB:gD gC:gD gD:gD" val="1"/>
+  <parameter idActiveInteractions=" gB:gD gA:gD gD:gD" val="1"/>
+  <parameter idActiveInteractions=" gC:gD gA:gD gD:gD" val="1"/>
+  <parameter idActiveInteractions=" gB:gD gC:gD gA:gD gD:gD" val="1"/>
+
+			<nodevisualsetting>
+				<rect x="441" y="330" width="50" height="25" backgroundColor="#ff9900" foregroundColor="#ffffff" textColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="gC" maxvalue="1">
+  <parameter idActiveInteractions=" gA:gC" val="1"/>
+  <parameter idActiveInteractions=" gA:gC gC:gC" val="1"/>
+  <parameter idActiveInteractions=" gB:gC gA:gC gC:gC" val="1"/>
+
+			<nodevisualsetting>
+				<rect x="557" y="132" width="50" height="25" backgroundColor="#ff9900" foregroundColor="#ffffff" textColor="#000000"/>
+			</nodevisualsetting>
+</node>
+<node id="gB" maxvalue="1">
+  <parameter idActiveInteractions=" gC:gB gA:gB" val="1"/>
+  <parameter idActiveInteractions=" gC:gB gA:gB gB:gB" val="1"/>
+  <parameter idActiveInteractions=" gC:gB gB:gB" val="1"/>
+  <parameter idActiveInteractions=" gB:gB" val="1"/>
+
+			<nodevisualsetting>
+				<rect x="431" y="93" width="50" height="25" backgroundColor="#ff9900" foregroundColor="#ffffff" textColor="#000000"/>
+			</nodevisualsetting>
+</node>
+		<edge id="gA:gD" from="gA" to="gD" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="337,159 457,327" line_style="straight" line_color="#3399ff" line_width="1" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="gA:gC" from="gA" to="gC" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="356,144 554,144" line_style="straight" line_color="#3399ff" line_width="1" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="gA:gB" from="gA" to="gB" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="356,136 428,113" line_style="straight" line_color="#3399ff" line_width="1" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="gA:gA" from="gA" to="gA" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="319,132 326,112 332,112 339,132" line_style="straight" line_color="#3399ff" line_width="1" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="gD:gC" from="gD" to="gC" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="473,327 574,159" line_style="straight" line_color="#3399ff" line_width="1" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="gD:gB" from="gD" to="gB" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="465,327 456,120" line_style="straight" line_color="#3399ff" line_width="1" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="gD:gA" from="gD" to="gA" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="457,327 337,159" line_style="straight" line_color="#3399ff" line_width="1" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="gD:gD" from="gD" to="gD" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="456,330 463,310 469,310 476,330" line_style="straight" line_color="#3399ff" line_width="1" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="gC:gD" from="gC" to="gD" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="574,159 473,327" line_style="straight" line_color="#3399ff" line_width="1" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="gC:gB" from="gC" to="gB" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="554,136 483,113" line_style="straight" line_color="#3399ff" line_width="1" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="gC:gA" from="gC" to="gA" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="554,144 356,144" line_style="straight" line_color="#3399ff" line_width="1" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="gC:gC" from="gC" to="gC" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="572,132 579,112 585,112 592,132" line_style="straight" line_color="#3399ff" line_width="1" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="gB:gD" from="gB" to="gD" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="456,120 465,327" line_style="straight" line_color="#3399ff" line_width="1" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="gB:gC" from="gB" to="gC" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="483,113 554,136" line_style="straight" line_color="#3399ff" line_width="1" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="gB:gA" from="gB" to="gA" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="428,113 356,136" line_style="straight" line_color="#3399ff" line_width="1" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="gB:gB" from="gB" to="gB" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="446,93 453,73 459,73 466,93" line_style="straight" line_color="#3399ff" line_width="1" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+	</graph>
+</gxl>
