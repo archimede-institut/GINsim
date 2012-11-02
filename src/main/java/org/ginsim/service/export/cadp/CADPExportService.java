@@ -5,11 +5,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
-import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
-import org.ginsim.service.tool.composition.Topology;
+
 import org.mangosdk.spi.ProviderFor;
 
 /**
@@ -63,8 +61,7 @@ public class CADPExportService implements Service {
 	}
 
 	/*
-	 * public void export(NuSMVConfig config, File file) throws IOException,
-	 * GsException {
+	 * public void export(NuSMVConfig config, File file) {
 	 * 
 	 * FileWriter writer = new FileWriter(file);
 	 * 

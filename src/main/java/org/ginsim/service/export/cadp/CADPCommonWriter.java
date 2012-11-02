@@ -15,15 +15,14 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
  * @author Nuno D. Mendes
  *
  */
-public class CADPCommonWriter {
-	private CADPExportConfig config;
+public class CADPCommonWriter extends CADPWriter {
 	
 	public CADPCommonWriter(CADPExportConfig config){
-		this.config = config;
+		super(config);
 	}
 	
 	public String toString(){
-		List<RegulatoryNode> listNodes = config.getGraph().getNodeOrder();
+		List<RegulatoryNode> listNodes = this.getAllComponents();
 		int maxValue = 0;
 		for(RegulatoryNode node : listNodes)
 			if (node.getMaxValue() > maxValue)
@@ -165,8 +164,8 @@ public class CADPCommonWriter {
 			output += "\n";
 		}
 
-		output += "process Stable_State [STABLE:None] (b:Bool) is\n";
-		output += "\tif b then STABLE end if\n";
+		output += "process Stable_State [" + CADPWriter.getStableActionName() + ":None] (b:Bool) is\n";
+		output += "\tif b then " + CADPWriter.getStableActionName() + " end if\n";
 		output += "end process\n";
 		
 		output += "\nend module\n";

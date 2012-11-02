@@ -13,70 +13,55 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.service.tool.composition.IntegrationFunction;
 
-public class CADPIntegrationWriter {
-	private CADPExportConfig config = null;
-	private Map<Map.Entry<Integer, RegulatoryNode>, IntegrationProcessWriter> association = new HashMap<Map.Entry<Integer, RegulatoryNode>, IntegrationProcessWriter>();
+public class CADPIntegrationWriter extends CADPWriter {
+	private Map<Map.Entry<RegulatoryNode, Integer>, IntegrationProcessWriter> association = new HashMap<Map.Entry<RegulatoryNode, Integer>, IntegrationProcessWriter>();
 	private Collection<String> integrationProcessSignature = new HashSet<String>();
 	private Collection<String> integrationFunctionSignature = new HashSet<String>();
 
 	public CADPIntegrationWriter(CADPExportConfig config) throws GsException {
-		this.config = config;
+		super(config);
 		init();
 	}
 
 	public void init() throws GsException {
 
-		int numberInstances = config.getTopology().getNumberInstances();
-		Collection<RegulatoryNode> mappedInputs = config.getMapping()
-				.getMappedInputs();
-		List<byte[]> initialStates = config.getInitialStates();
+		int numberInstances = this.getNumberInstances();
+		Collection<RegulatoryNode> mappedInputs = this.getMappedInputs();
 
 		for (RegulatoryNode input : mappedInputs) {
-			Collection<RegulatoryNode> properComponents = config.getMapping()
+			List<Map.Entry<RegulatoryNode, Integer>> listExternal = new ArrayList<Map.Entry<RegulatoryNode, Integer>>();
+			Collection<RegulatoryNode> properComponents = this
 					.getProperComponentsForInput(input);
-			IntegrationFunction integrationFunction = config.getMapping()
+			IntegrationFunction integrationFunction = this
 					.getIntegrationFunctionForInput(input);
 
+
 			for (int instance = 0; instance < numberInstances; instance++) {
-				List<RegulatoryNode> externalComponents = new ArrayList<RegulatoryNode>();
-				List<Integer> externalComponentIndices = new ArrayList<Integer>();
-
+				Map.Entry<RegulatoryNode, Integer> inputFromModule = new AbstractMap.SimpleEntry<RegulatoryNode, Integer>(
+						input, new Integer(instance));
 				for (int neighbour = 0; neighbour < numberInstances; neighbour++) {
-
-					if (!config.getTopology()
-							.areNeighbours(instance, neighbour))
+					if (!this.areNeighbours(instance, neighbour))
 						continue;
-
-					for (RegulatoryNode proper : properComponents) {
-
-						externalComponents.add(proper);
-						externalComponentIndices.add(new Integer(neighbour));
-
-					}
+					for (RegulatoryNode proper : properComponents)
+						listExternal
+								.add(new AbstractMap.SimpleEntry<RegulatoryNode, Integer>(
+										proper, new Integer(neighbour)));
 				}
-				int[] externalModuleIndices = new int[externalComponentIndices
-						.size()];
-				int i = 0;
-				for (Integer index : externalComponentIndices)
-					externalModuleIndices[i++] = index.intValue();
 
 				IntegrationProcessWriter integrationProcessWriter = new IntegrationProcessWriter(
-						input, (RegulatoryNode[]) externalComponents.toArray(),
-						instance, externalModuleIndices, initialStates,
-						integrationFunction);
+						inputFromModule, listExternal, integrationFunction);
 
-				association.put(new AbstractMap.SimpleEntry<Integer,RegulatoryNode>(new Integer(instance),input),integrationProcessWriter);
-				
+				association.put(inputFromModule,integrationProcessWriter);
+
 			}
 
 		}
-
 
 	}
 
 	public String toString() {
 		String out = "";
-		for (Map.Entry<Integer, RegulatoryNode> key : association.keySet()) {
+		for (Map.Entry<RegulatoryNode, Integer> key : association.keySet()) {
 			IntegrationProcessWriter integrationProcessWriter = association
 					.get(key);
 
@@ -101,14 +86,11 @@ public class CADPIntegrationWriter {
 		return out;
 
 	}
-		
 
 	public class IntegrationProcessWriter {
 		private RegulatoryNode input = null;
-		private RegulatoryNode[] properComponents = null;
 		private int inputModuleIndex;
-		private int[] externalModuleIndices;
-		private List<byte[]> initialStates = null;
+		private List<Map.Entry<RegulatoryNode, Integer>> listExternal = null;
 		private IntegrationFunction integrationFunction;
 		private int localMaxValue = 0; // simplifies, assuming that all Multi
 										// variables have the same maxValue
@@ -129,52 +111,39 @@ public class CADPIntegrationWriter {
 		private List<String> formalUpdateVars = new ArrayList<String>();
 		private String formalParameterBaseName = "g";
 
-		public IntegrationProcessWriter(RegulatoryNode input,
-				RegulatoryNode[] properComponents, int inputModuleIndex,
-				int[] externalModuleIndices, List<byte[]> initialStates,
+		public IntegrationProcessWriter(Map.Entry<RegulatoryNode, Integer> inputFromModule, List<Map.Entry<RegulatoryNode, Integer>> listExternal,
 				IntegrationFunction integrationFunction) throws GsException {
-			this.input = input;
-			this.properComponents = properComponents;
-			this.inputModuleIndex = inputModuleIndex;
-			this.externalModuleIndices = externalModuleIndices;
-			this.initialStates = initialStates;
-			this.integrationFunction = integrationFunction;
-			this.localMaxValue = 0;
+			this.listExternal = listExternal;
+			this.input = inputFromModule.getKey();
+			this.inputModuleIndex = inputFromModule.getValue().intValue();
 
-			for (int i = 0; i < properComponents.length; i++)
-				if (properComponents[i].getMaxValue() > this.localMaxValue)
-					this.localMaxValue = properComponents[i].getMaxValue();
-
-			this.numberArguments = properComponents.length;
-			this.gateType = input.getMaxValue() > 1 ? "MultiIntegration"
-					: "BinaryIntegration";
-
-			this.concreteProcessName = concreteProcessName(input,inputModuleIndex);
-
-			this.formalProcessName = "Integration"
-					+ (input.getMaxValue() > 1 ? "M" : "B") + numberArguments
-					+ integrationFunction.name();
-
-			this.formalFunctionName = "lif"
-					+ (input.getMaxValue() > 1 ? "M" : "B") + numberArguments
-					+ integrationFunction.name();
 
 			boolean consistent = true;
-			for (int i = 0; i < properComponents.length; i++) {
-				String componentType = properComponents[i].getMaxValue() > 1 ? "Multi"
-						: "Binary";
+			for (Map.Entry<RegulatoryNode,Integer> entry : listExternal){
+				if (entry.getKey().getMaxValue() > this.localMaxValue)
+					this.localMaxValue = entry.getKey().getMaxValue();
+				
+				String componentType = entry.getKey().getMaxValue() > 1 ? "Multi" : "Binary";
 				if (this.formalParametersType.isEmpty())
 					this.formalParametersType = componentType;
 				else if (this.formalParametersType != componentType)
 					consistent = false;
 			}
+			
 			if (!consistent)
 				throw new GsException(GsException.GRAVITY_ERROR,
 						"Formal parameters cannot be of different types");
 
-			this.formalStateVarModifier = this.formalParametersType
-					.equals("Multi") ? "M" : "B";
+			this.numberArguments = listExternal.size();
+			this.gateType = input.getMaxValue() > 1 ? "MultiIntegration"
+					: "BinaryIntegration";
+			
+			this.concreteProcessName = concreteIntegrationProcessName(input, inputModuleIndex);
+			this.formalProcessName = formalIntegrationProcessName(input, numberArguments, integrationFunction);
+			this.formalFunctionName = formalIntegrationFunctionName(input, numberArguments, integrationFunction);
 
+			this.formalStateVarModifier = this.formalParametersType.equals("Multi") ? "M" : "B";
+			
 			for (int i = 0; i < this.numberArguments; i++) {
 				this.formalGates.add(this.formalParameterBaseName.toUpperCase()
 						+ i);
@@ -186,38 +155,19 @@ public class CADPIntegrationWriter {
 
 		}
 
-		public String concreteProcessName(RegulatoryNode input, int inputModuleindex){
-			return "Integration"
-					+ input.getNodeInfo().getNodeID() + "_" + inputModuleIndex;
-		}
-		
+
 		public String concreteIntegrationProcess() {
 			List<String> concreteGateList = new ArrayList<String>();
-			for (int i = 0; i < externalModuleIndices.length; i++)
+			for (Map.Entry<RegulatoryNode, Integer> entry : listExternal)
 				concreteGateList
-						.add("I_"
-								+ input.getNodeInfo().getNodeID().toUpperCase()
-								+ "_"
-								+ inputModuleIndex
-								+ "_"
-								+ properComponents[i].getNodeInfo().getNodeID()
-										.toUpperCase() + "_"
-								+ externalModuleIndices[i]);
+						.add(CADPWriter.node2SyncAction(this.input, this.inputModuleIndex, entry.getKey(), entry.getValue().intValue()));
 
 			String concreteGateCommaList = makeCommaList(concreteGateList);
 			String concreteGateSignature = concreteGateCommaList + " : "
 					+ gateType;
 
-			List<String> initialStateExternalComponents = new ArrayList<String>();
-			for (int i = 0; i < properComponents.length; i++) {
-				int moduleIndex = externalModuleIndices[i];
-				byte initialComponentValue = initialStates.get(moduleIndex)[config
-						.getGraph().getNodeOrder().indexOf(properComponents[i])];
-				initialStateExternalComponents.add(initialComponentValue
-						+ (properComponents[i].getMaxValue() > 1 ? "M" : "B"));
-			}
-
-			String initialExternalState = makeCommaList(initialStateExternalComponents);
+			InitialStateWriter initialStateWriter = getIntegrationInitialStateWriter(listExternal);
+			String initialExternalState = initialStateWriter.typedMixedList();
 
 			String out = "";
 			out += "process " + concreteProcessName + "["
@@ -416,34 +366,6 @@ public class CADPIntegrationWriter {
 			out += "end function\n\n";
 
 			return out;
-		}
-
-
-		private String makeCommaList(List<String> list) {
-			return makeCommaList(list, ",");
-		}
-
-		private String makeCommaList(List<String> list, String connective) {
-			String out = "";
-			for (String name : list) {
-				if (!out.isEmpty())
-					out += connective;
-				out += name;
-			}
-			return out;
-		}
-
-		private String makeUpdatedCommaList(List<String> original,
-				List<String> updated, String toUpdate) {
-			List<String> modified = new ArrayList<String>();
-			for (String name : original) {
-				if (!name.equals(toUpdate))
-					modified.add(name);
-				else
-					modified.add(updated.get(original.indexOf(toUpdate)));
-
-			}
-			return makeCommaList(modified);
 		}
 
 	}

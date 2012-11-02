@@ -7,60 +7,62 @@ import java.util.Set;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-/**
- * Class that produces the LOTOS NT specification of a single Logical Regulatory Module
- * @author Nuno D. Mendes
- *
- */
-public class CADPModuleWriter {
 
-	private CADPExportConfig config;
-	String index = "";
+/**
+ * Class that produces the LOTOS NT specification of a single Logical Regulatory
+ * Module
+ * 
+ * @author Nuno D. Mendes
+ * 
+ */
+public class CADPModuleWriter extends CADPWriter {
+
+	private String index = ""; // to be used when different models are mixed
+	private Set<String> concreteProcessSignature = new HashSet<String>();
+	private int numberInstances = this.getNumberInstances();
+	private String modelName = this.getModelName();
+	private CADPWriter.InitialStateWriter initialStateWriter = this
+			.getInitialStateWriter();
+	private CADPWriter.GateWriter gateWriter = this.getGateWriter();
+	private CADPWriter.StateVarWriter stateVarWriter = this.getStateVarWriter();
 
 	public CADPModuleWriter(CADPExportConfig config, String index) {
-		this.config = config;
+		super(config);
 		this.index = index;
 	}
 
 	public CADPModuleWriter(CADPExportConfig config) {
-		this.config = config;
+		super(config);
 	}
 
 	public String toString() {
 
-		Set<String> concreteProcessSignature = new HashSet<String>();
-		
-		int numberInstances = config.getTopology().getNumberInstances();
-		String modelName = config.getModelName();
-		InitialStateWriter initialStateWriter = new InitialStateWriter(
-				config.getInitialStates(), config.getGraph().getNodeOrder());
-		GateWriter gateWriter = new GateWriter(config.getGraph().getNodeOrder());
-		StateVarWriter stateVarWriter = new StateVarWriter(config.getGraph()
-				.getNodeOrder());
-		RuleWriter ruleWriter = new RuleWriter(
-				config.getGraph().getNodeOrder(), stateVarWriter);
+		RuleWriter ruleWriter = new RuleWriter(this.getAllComponents(),
+				stateVarWriter);
+		FunctionWriter functionWriter = new FunctionWriter(this.getAllComponents(), stateVarWriter);
 
 		String output = "";
 		output += "module " + modelName + "(common) is\n\n";
 
-		
 		for (int moduleId = 1; moduleId <= numberInstances; moduleId++) {
-			String processName = concreteProcessName(initialStateWriter.typedStateConcat(moduleId));
+			String processName = this.concreteProcessName(moduleId);
 			if (concreteProcessSignature.contains(processName))
 				continue;
 			else
 				concreteProcessSignature.add(processName);
-			
+
 			output += "process " + processName + "[" + gateWriter.typedList()
 					+ "] is\n";
-			output += "\tLogicModule" + index + "[" + gateWriter.simpleList()
-					+ "](" + initialStateWriter.simpleList(moduleId) + ")\n";
+			output += "\t" + this.formalProcessName(index) + "["
+					+ gateWriter.simpleList() + "]("
+					+ initialStateWriter.typedSimpleList(moduleId) + ")\n";
 			output += "end process\n\n";
 
 		}
 
-		output += "process LogicModule" + index + "[" + gateWriter.typedList()
-				+ "](" + stateVarWriter.typedList() + ") is\n";
+		output += "process " + this.formalProcessName(index) + "["
+				+ gateWriter.typedList() + "](" + stateVarWriter.typedList()
+				+ ") is\n";
 		output += "\tloop\n";
 		output += "\t\tselect\n";
 		output += "\t\t\t" + ruleWriter + "\n";
@@ -68,131 +70,13 @@ public class CADPModuleWriter {
 		output += "\tend loop\n";
 		output += "end process\n\n";
 
-		return output;
-	}
-	
-	public static String concreteProcessName(String descInitialState){
-		return "openLRG_" + descInitialState;
- 	}
-
-	public static class InitialStateWriter {
-		// TODO: compute correct initial state for mapped input variables
-		List<byte[]> initialStates = null;
-		List<RegulatoryNode> listNodes = null;
-
-		public InitialStateWriter(List<byte[]> initialStates,
-				List<RegulatoryNode> listNodes) {
-			this.initialStates = initialStates;
-			this.listNodes = listNodes;
-		}
-
-		public String simpleList(int moduleId) {
-			byte[] initialState = initialStates.get(moduleId);
-			String out = "";
-			for (int i = 0; i < initialState.length; i++) {
-				if (i > 0)
-					out += ",";
-
-				out += initialState[i];
-			}
-
-			return out;
-		}
-
-		public String typedStateConcat(int moduleId) {
-			byte[] initialState = initialStates.get(moduleId);
-			String out = "";
-			for (int i = 0; i < initialState.length; i++) {
-				RegulatoryNode node = listNodes.get(i);
-				String modifier = node.getMaxValue() > 1 ? "M" : "B";
-				out += initialState[i] + modifier;
-			}
-
-			return out;
-
-		}
-	}
-
-	public static class GateWriter {
-		List<RegulatoryNode> listNodes = null;
-
-		public GateWriter(List<RegulatoryNode> listNodes) {
-			this.listNodes = listNodes;
-
-		}
-
-		public String simpleList() {
-			String out = "STABLE";
-			for (RegulatoryNode node : listNodes) {
-				out += "," + node.getNodeInfo().getNodeID().toUpperCase();
-			}
-
-			return out;
-		}
+		output += functionWriter;
 		
-		public String simpleDecoratedList(String decoration){
-			String out = "STABLE";
-			for (RegulatoryNode node : listNodes){
-				out = "," + node.getNodeInfo().getNodeID().toUpperCase() + decoration;
-			}
-			
-			return out;
-		}
-
-		public String typedList() {
-			String out = "STABLE:None";
-			for (RegulatoryNode node : listNodes) {
-				String type = node.getMaxValue() > 1 ? "Multi" : "Binary";
-				out += "," + node.getNodeInfo().getNodeID().toUpperCase() + ":"
-						+ type;
-
-			}
-
-			return out;
-
-		}
-	}
-
-	public static class StateVarWriter {
-		List<RegulatoryNode> listNodes = null;
-
-		public StateVarWriter(List<RegulatoryNode> listNodes) {
-			this.listNodes = listNodes;
-		}
-
-		public String simpleList() {
-			String out = "";
-			for (RegulatoryNode node : listNodes) {
-
-				if (!out.isEmpty())
-					out += ",";
-
-				out += node.getNodeInfo().getNodeID().toLowerCase();
-			}
-
-			return out;
-		}
-
-		public String typedList() {
-			String out = "";
-			for (RegulatoryNode node : listNodes) {
-
-				if (!out.isEmpty())
-					out += ",";
-
-				out += node.getNodeInfo().getNodeID().toLowerCase() + ":"
-						+ (node.getMaxValue() > 1 ? "Multi" : "Binary");
-
-			}
-
-			return out;
-		}
-
+		return output;
 	}
 
 	public class RuleWriter {
 
-		// TODO: create all the rules
 		List<RegulatoryNode> listNodes = null;
 		StateVarWriter stateVarWriter = null;
 
@@ -206,13 +90,13 @@ public class CADPModuleWriter {
 		public String toString() {
 			String out = "";
 
-			out += "\t\t\t" + "Stable_State[STABLE](is_Stable("
+			out += "\t\t\t" + "Stable_State[" + CADPWriter.getStableActionName() + "](is_Stable("
 					+ stateVarWriter.simpleList() + "))\n";
 
 			for (RegulatoryNode node : listNodes) {
 				String modifier = node.getMaxValue() > 1 ? "M" : "B";
-				String gate = node.getNodeInfo().getNodeID().toUpperCase();
-				String stateVar = node.getNodeInfo().getNodeID().toLowerCase();
+				String gate = CADPWriter.node2Gate(node);
+				String stateVar = CADPWriter.node2StateVar(node);
 
 				if (node.isInput()) {
 					out += "\t\t[]\n";
@@ -231,8 +115,28 @@ public class CADPModuleWriter {
 			}
 
 			out += "\n";
+			
+			return out;
+		}
+	}
 
-			LogicalModel model = config.getGraph().getModel();
+	public class FunctionWriter {
+
+		List<RegulatoryNode> listNodes = null;
+		StateVarWriter stateVarWriter = null;
+
+		public FunctionWriter(List<RegulatoryNode> listNodes,
+				StateVarWriter stateVarWriter) {
+			this.listNodes = listNodes;
+			this.stateVarWriter = stateVarWriter;
+
+		}
+
+		public String toString() {
+
+			String out = "";
+			
+			LogicalModel model = getModel();
 
 			String stableCondition = "";
 			int nodeIndex = 0;
@@ -245,11 +149,9 @@ public class CADPModuleWriter {
 
 				String modifier = node.getMaxValue() > 1 ? "M" : "B";
 
-				// TODO: complete when NuSMVEncoder is finally working
 				if (!node.isInput()) {
-					out += "function focal_"
-							+ node.getNodeInfo().getNodeID().toUpperCase()
-							+ "(" + stateVarWriter.typedList() + ") :"
+					out += "function focal_" + CADPWriter.node2Gate(node) + "("
+							+ stateVarWriter.typedList() + ") :"
 							+ (node.getMaxValue() > 1 ? "Multi" : "Binary")
 							+ " is\n";
 
@@ -264,8 +166,8 @@ public class CADPModuleWriter {
 								if (!conjunctiveTerm.isEmpty())
 									conjunctiveTerm += " and ";
 								conjunctiveTerm += "("
-										+ listNodes.get(i).getNodeInfo()
-												.getNodeID().toLowerCase()
+										+ CADPWriter.node2StateVar(listNodes
+												.get(i))
 										+ " == "
 										+ path[i]
 										+ (listNodes.get(i).getMaxValue() > 1 ? "M"
@@ -275,43 +177,41 @@ public class CADPModuleWriter {
 						if (!conditionArray[value].isEmpty())
 							conditionArray[value] += " or ";
 						conditionArray[value] += "(" + conjunctiveTerm + ")";
-						
+
 					}
-					
+
 					boolean failSafe = true;
-					for (int v = 1; v < conditionArray.length; v++){
-						if (conditionArray[v].isEmpty()){
-							out += "\t return (" + v + modifier +")\n";
+					for (int v = 1; v < conditionArray.length; v++) {
+						if (conditionArray[v].isEmpty()) {
+							out += "\t return (" + v + modifier + ")\n";
 							failSafe = false;
 							break;
 						} else {
 							String construct = "if";
 							if (v > 1)
 								construct = "elsif";
-							out += "\t" + construct + "(" + conditionArray[v] + ") then\n";
+							out += "\t" + construct + "(" + conditionArray[v]
+									+ ") then\n";
 							out += "\t\treturn (" + v + modifier + ")\n";
 						}
-					
+
 					}
-					
-					if (failSafe){
+
+					if (failSafe) {
 						out += "\telse\n";
-						out += "\t\t return (0" + modifier +")\n";
+						out += "\t\t return (0" + modifier + ")\n";
 					}
-					
+
 					out += "\tend if\n";
 					out += "end function\n\n";
-					
-					
+
 					// Builds stable condition for is_Stable
 					if (!stableCondition.isEmpty())
 						stableCondition += " and ";
 
-					stableCondition += "(focal_"
-							+ node.getNodeInfo().getNodeID().toUpperCase()
+					stableCondition += "(focal_" + CADPWriter.node2Gate(node)
 							+ "(" + stateVarWriter.simpleList() + ") == "
-							+ node.getNodeInfo().getNodeID().toLowerCase()
-							+ ")";
+							+ CADPWriter.node2StateVar(node) + ")";
 				}
 				nodeIndex++;
 
