@@ -35,8 +35,8 @@ import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
 public class IntegrationFunctionWidget extends JPanel {
 
 	private static final long serialVersionUID = 2423386096996654728L;
-	List<RegulatoryNode> inputNodes = null;
-	List<RegulatoryNode> properNodes = null;
+	private List<RegulatoryNode> inputNodes = null;
+	private List<RegulatoryNode> properNodes = null;
 	private Map<RegulatoryNode, JCheckBox> mappedInputSelection = new HashMap<RegulatoryNode, JCheckBox>();
 	private Map<RegulatoryNode, JComboBox> mappedFunctionSelection = new HashMap<RegulatoryNode, JComboBox>();
 	private Map<RegulatoryNode, JList> mappedProperSelection = new HashMap<RegulatoryNode, JList>();
@@ -82,11 +82,13 @@ public class IntegrationFunctionWidget extends JPanel {
 						if (checkBox.isSelected()) {
 							comboBox.setEnabled(true);
 							scroll.setEnabled(true);
+							dialog.setAsMapped(node);
 
 						} else {
 							comboBox.setSelectedIndex(0);
 							comboBox.setEnabled(false);
 							scroll.setEnabled(false);
+							dialog.unsetAsMapped(node);
 						}
 
 					}

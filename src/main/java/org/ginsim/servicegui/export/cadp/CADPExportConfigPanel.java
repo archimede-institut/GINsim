@@ -2,11 +2,14 @@ package org.ginsim.servicegui.export.cadp;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JPanel;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.service.export.cadp.CADPExportConfig;
 import org.ginsim.servicegui.tool.composition.AdjacencyMatrixWidget;
@@ -31,8 +34,10 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 	private InstanceSelectorWidget instanceSelectorPanel = null;
 	private AdjacencyMatrixWidget adjacencyMatrixPanel = null;
 	private IntegrationFunctionWidget integrationPanel = null;
+	private VisibleComponentsWidget visibleComponentsPanel = null;
 
 	private int instances = 2;
+	private List<RegulatoryNode> mappedNodes = new ArrayList<RegulatoryNode>();
 
 	public CADPExportConfigPanel(CADPExportConfig config,
 			CADPExportAction action) {
@@ -48,7 +53,13 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 		// The config setup should be done elsewhere
 		// TODO set initial state
 		config.setTopology(adjacencyMatrixPanel.getTopology());
-	//	config.setMapping(integrationPanel.getMapping());
+	    try {
+			config.setMapping(integrationPanel.getMapping());
+		} catch (GsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			// THIS CANNOT HAPPEN
+		}
 
 		// TODO set list visible
 
@@ -79,12 +90,15 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 		constraints.gridx = 5;
 		constraints.gridy = 2;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		constraints.gridheight = GridBagConstraints.REMAINDER;
 		add(getIntegrationPanel(), constraints);
 
-		// add panel for initial state
-		// add panel to select visible components
+		constraints.gridx = 0;
+		constraints.gridy = 7;
+		constraints.gridwidth = GridBagConstraints.REMAINDER;
+		constraints.gridheight = GridBagConstraints.REMAINDER;
+		add(getVisibleComponentsPanel(), constraints);
 
+		// add panel for initial state
 		setSize(getPreferredSize());
 
 	}
@@ -109,6 +123,12 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 		return integrationPanel;
 	}
 
+	private JPanel getVisibleComponentsPanel(){
+		if (visibleComponentsPanel == null)
+			visibleComponentsPanel = new VisibleComponentsWidget(this);
+		return visibleComponentsPanel;
+	}
+	
 	@Override
 	public int getNumberInstances() {
 		return instances;
@@ -123,6 +143,26 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 		this.revalidate();
 	}
 
+	public void setAsMapped(RegulatoryNode node){
+		this.mappedNodes.add(node);
+		visibleComponentsPanel = null;
+		this.removeAll();
+		init();
+		this.revalidate();
+	}
+	
+	public void unsetAsMapped(RegulatoryNode node){
+		this.mappedNodes.remove(node);
+		visibleComponentsPanel = null;
+		this.removeAll();
+		init();
+		this.revalidate();
+	}
+	
+	public List<RegulatoryNode> getMappedNodes(){
+		return this.mappedNodes;
+	}
+	
 	@Override
 	public RegulatoryGraph getGraph() {
 		return config.getGraph();

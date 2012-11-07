@@ -2,6 +2,8 @@ package org.ginsim.servicegui.tool.composition;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -10,6 +12,7 @@ import javax.swing.JPanel;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.service.tool.composition.CompositionConfig;
 
 /**
@@ -24,6 +27,8 @@ public class CompositionPanel extends JPanel implements
 	private static final long serialVersionUID = 1139543816020490397L;
 
 	private RegulatoryGraph graph = null;
+	private List<RegulatoryNode> mappedNodes = new ArrayList<RegulatoryNode>();
+	
 
 	private JPanel mainPanel = null;
 	private InstanceSelectorWidget instanceSelectorPanel = null;
@@ -165,6 +170,20 @@ public class CompositionPanel extends JPanel implements
 	public void updateNumberInstances(int instances) {
 		this.instances = instances;
 		refreshMainPanel();
+	}
+	
+	public void setAsMapped(RegulatoryNode node){
+		this.mappedNodes.add(node);
+		//refreshMainPanel();
+	}
+	
+	public void unsetAsMapped(RegulatoryNode node){
+		this.mappedNodes.remove(node);
+		//refreshMainPanel();
+	}
+	
+	public List<RegulatoryNode> getMappedNodes(){
+		return this.mappedNodes;
 	}
 
 	public RegulatoryGraph getGraph() {
