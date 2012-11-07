@@ -50,7 +50,7 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 
 		JPanel jpTmp = new JPanel(new GridBagLayout());
 		mutantPanel = new PerturbationSelectionPanel(stack, config.getGraph(),
-				config.perturbationstore);
+				config.getPerturbation());
 		GridBagConstraints cst = new GridBagConstraints();
 		cst.gridx = 0;
 		cst.gridy = 0;
@@ -62,7 +62,7 @@ public class NuSMVExportConfigPanel extends AbstractStackDialogHandler {
 				.getInstance().getObject(config.getGraph(),
 						SimulationParametersManager.KEY, true);
 		priorityPanel = new PrioritySelectionPanel(stack, paramList.pcmanager);
-		priorityPanel.setStore(config.store, 1);
+		priorityPanel.setStore(config.getStore(), 0);
 		cst = new GridBagConstraints();
 		cst.gridx = 1;
 		cst.gridy = 0;

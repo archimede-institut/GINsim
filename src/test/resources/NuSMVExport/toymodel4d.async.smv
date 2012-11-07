@@ -1,0 +1,166 @@
+-- October 30, 2012 3:42:50 PM WET
+-- GINsim implicit representation for NuSMV
+-- Requires NuSMV v2.1+ for CTL properties
+-- Requires NuSMV-ARCTL for ARCTL properties
+-- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE
+
+
+MODULE main
+
+IVAR
+-- Simulation mode declaration --
+-- Asynchronous
+  PCs : { PC_c1, PC_c2, PC_c3, PC_c4 };
+  PC_c1_vars : { PC_c1_gA };
+  PC_c2_vars : { PC_c2_gB };
+  PC_c3_vars : { PC_c3_gC };
+  PC_c4_vars : { PC_c4_gD };
+
+VAR
+-- State variables declaration
+  gA : {0, 1};
+  gB : {0, 1};
+  gC : {0, 1};
+  gD : {0, 1};
+
+ASSIGN
+-- Variable update if conditions are met
+next(gA) := 
+  case
+    update_gA_OK & (gA_inc) : 1;
+    update_gA_OK & (gA_dec) : 0;
+    TRUE : gA;
+  esac;
+next(gB) := 
+  case
+    update_gB_OK & (gB_inc) : 1;
+    update_gB_OK & (gB_dec) : 0;
+    TRUE : gB;
+  esac;
+next(gC) := 
+  case
+    update_gC_OK & (gC_inc) : 1;
+    update_gC_OK & (gC_dec) : 0;
+    TRUE : gC;
+  esac;
+next(gD) := 
+  case
+    update_gD_OK & (gD_inc) : 1;
+    update_gD_OK & (gD_dec) : 0;
+    TRUE : gD;
+  esac;
+
+DEFINE
+-- Variable next level regulation
+gA_focal :=
+  case
+    (gA = 0) & (gB = 1) & (gC = 0) & (gD = 0) : 1;
+    (gA = 1) & (gB = 0) & (gD = 0) : 1;
+    (gA = 1) & (gB = 1) & (gC = 0) & (gD = 0) : 1;
+    TRUE : 0;
+  esac;
+gB_focal :=
+  case
+    (gA = 0) & (gB = 1) & (gD = 0) : 1;
+    (gA = 1) & (gC = 1) & (gD = 0) : 1;
+    TRUE : 0;
+  esac;
+gC_focal :=
+  case
+    (gA = 1) & (gB = 0) & (gD = 0) : 1;
+    (gA = 1) & (gB = 1) & (gC = 1) & (gD = 0) : 1;
+    TRUE : 0;
+  esac;
+gD_focal :=
+  case
+    (gA = 0) & (gB = 0) & (gC = 0) : 1;
+    (gA = 0) & (gB = 0) & (gC = 1) & (gD = 1) : 1;
+    (gA = 0) & (gB = 1) & (gD = 1) : 1;
+    (gA = 1) & (gD = 1) : 1;
+    TRUE : 0;
+  esac;
+
+gA_inc := gA_focal > gA;
+gA_dec := gA_focal < gA;
+gA_std := gA_focal = gA;
+
+gB_inc := gB_focal > gB;
+gB_dec := gB_focal < gB;
+gB_std := gB_focal = gB;
+
+gC_inc := gC_focal > gC;
+gC_dec := gC_focal < gC;
+gC_std := gC_focal = gC;
+
+gD_inc := gD_focal > gD;
+gD_dec := gD_focal < gD;
+gD_std := gD_focal = gD;
+
+update_gA_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_gA);
+update_gB_OK := (PCs = PC_c2) & (PC_c2_vars = PC_c2_gB);
+update_gC_OK := (PCs = PC_c3) & (PC_c3_vars = PC_c3_gC);
+update_gD_OK := (PCs = PC_c4) & (PC_c4_vars = PC_c4_gD);
+
+-- DISCLAIMER: There are no INput nor OUTput variables in the weak/strong stable states description
+stableStates := weakSS | strongSS;
+
+-- Weak stable states differing only on input variables will not be distinguished !!
+weakSS := FALSE;
+
+-- Strong stable states - for every valuation of input variables
+strongSS := strongSS1;
+strongSS1 := gA=0 & gB=0 & gC=0 & gD=1;
+
+-- Declaration of output variables
+-- Empty !
+
+-- Authorized NuSMV transitions
+TRANS
+next(gA) != gA |
+next(gB) != gB |
+next(gC) != gC |
+next(gD) != gD |
+stableStates;
+
+DEFINE
+-- Declaration of core variables restriction list
+-- Empty !
+
+-- Declaration of input variables restriction list
+-- Empty !
+
+--------------------------------------------------
+-- Reachability Properties using VARYING INPUTS --
+-- i.e. there is NO CONTROL on the input change at each transition
+--
+-- EXAMPLES --
+-- 1. Between an initial state (pattern) and a stable state (pattern)
+--   a. Existence of at least one path connecting two state patterns
+-- INIT initState;
+-- SPEC EF ( stableState );
+--   b. Existence of all the paths connecting two state patterns
+-- INIT initState;
+-- SPEC AF ( stableState );
+--
+-- 2. Between all the weak/strong stable states
+-- INIT weakSS1;
+--  SPEC EF ( weakSS2 );
+--  ...
+--  SPEC EF ( weakSSn );
+--------------------------------------------------
+-- Reachability Properties using FIXED INPUTS --
+-- i.e. a VALUE RESTRICTION can be forced at each transition
+-- 
+-- 1. Between an initial state (pattern) and a stable state (pattern)
+--   a. Existence of at least one path connecting two state patterns
+-- INIT initState; SPEC EAF ( inpVar1=0 & inpVar3=1 )( stableState );
+--   b. Existence of all the paths
+-- INIT initState; SPEC AAF ( inpVar1=0 & inpVar3=1 )( stableState );
+--
+-- 2. Testing input combinations
+-- INIT weakSS1;
+--  SPEC EAF ( inpVar1=0 & inpVar2=0 )( weakSS2 );
+--  SPEC EAF ( inpVar1=0 & inpVar2=1 )( weakSS2 );
+--  SPEC EAF ( inpVar1=1 & inpVar2=0 )( weakSS2 );
+--  SPEC EAF ( inpVar1=1 & inpVar2=1 )( weakSS2 );
+--  ...

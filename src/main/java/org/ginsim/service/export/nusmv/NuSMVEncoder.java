@@ -19,7 +19,7 @@ import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
-import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
@@ -76,10 +76,10 @@ public class NuSMVEncoder {
 		}
 
 		// Apply perturbation
-		Perturbation mutant = (Perturbation) config.store.getObject(0);
-		if (mutant != null) {
+		PerturbationHolder mutant = config.getPerturbation();
+		if (mutant.getPerturbation() != null) {
 			// Application of the user-defined Perturbation
-			model = mutant.apply(model);
+			model = mutant.getPerturbation().apply(model);
 		}
 		ModelReducer reducer = new ModelReducer(model);
 		reducer.removePseudoOutputs();
@@ -96,8 +96,7 @@ public class NuSMVEncoder {
 
 		String sTmp;
 		int[][] iaTmp = null;
-		PriorityClassDefinition priorities = (PriorityClassDefinition) config.store
-				.getObject(1);
+		PriorityClassDefinition priorities = config.getPriorityClasses();
 		// classNum -> className
 		TreeMap<Integer, String> tmPcNum2Name = new TreeMap<Integer, String>();
 		// classNum -> RankNum
