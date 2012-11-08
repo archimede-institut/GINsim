@@ -35,6 +35,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 	private AdjacencyMatrixWidget adjacencyMatrixPanel = null;
 	private IntegrationFunctionWidget integrationPanel = null;
 	private VisibleComponentsWidget visibleComponentsPanel = null;
+	private InitialStatesWidget initialStatesPanel = null;
 
 	private int instances = 2;
 	private List<RegulatoryNode> mappedNodes = new ArrayList<RegulatoryNode>();
@@ -61,7 +62,8 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 			// THIS CANNOT HAPPEN
 		}
 
-		// TODO set list visible
+	    config.setListVisible(visibleComponentsPanel.getSelectedNodes());
+
 
 		action.selectFile();
 		return true;
@@ -95,10 +97,14 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 		constraints.gridx = 0;
 		constraints.gridy = 7;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		constraints.gridheight = GridBagConstraints.REMAINDER;
 		add(getVisibleComponentsPanel(), constraints);
 
-		// add panel for initial state
+		constraints.gridx = 0;
+		constraints.gridy = 9;
+		constraints.gridwidth = GridBagConstraints.REMAINDER;
+		constraints.gridheight = GridBagConstraints.REMAINDER;
+		add(getInitialStatesPanel(), constraints);
+		
 		setSize(getPreferredSize());
 
 	}
@@ -127,6 +133,12 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 		if (visibleComponentsPanel == null)
 			visibleComponentsPanel = new VisibleComponentsWidget(this);
 		return visibleComponentsPanel;
+	}
+	
+	private JPanel getInitialStatesPanel(){
+		if (initialStatesPanel == null)
+			initialStatesPanel = new InitialStatesWidget(this);
+		return initialStatesPanel;
 	}
 	
 	@Override
