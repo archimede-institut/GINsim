@@ -2,6 +2,8 @@ package org.ginsim.gui.graph.regulatorygraph.perturbation;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -39,7 +41,7 @@ public class PerturbationPanel extends JPanel {
 		cst.gridheight = 2;
 		add(spanel, cst);
 
-		mhelper = new MultipleListHelper();
+		mhelper = new MultipleListHelper(perturbations);
 		mpanel = new ListPanel<Perturbation>(mhelper, "Perturbations");
 		mpanel.setList(perturbations.getMultiplePerturbations());
 		cst = new GridBagConstraints();
@@ -60,7 +62,23 @@ public class PerturbationPanel extends JPanel {
 }
 
 class MultipleListHelper extends ListPanelHelper<Perturbation> {
-	public MultipleListHelper() {
+	
+	ListOfPerturbations perturbations;
+	
+	public MultipleListHelper(ListOfPerturbations perturbations) {
+		this.perturbations = perturbations;
 		this.canAdd = false;
 	}
+	
+	public boolean doRemove(int[] sel) {
+		List<Perturbation> removed = new ArrayList<Perturbation>();
+		List<Perturbation> multiples = perturbations.getMultiplePerturbations();
+		for (int i=0 ; i< sel.length ; i++) {
+			removed.add(perturbations.getMultiplePerturbations().get(sel[i]));
+		}
+		
+		perturbations.removePerturbation(removed);
+        return true;
+	}
+
 }
