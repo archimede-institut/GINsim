@@ -7,14 +7,13 @@ import java.util.Vector;
 import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
-import tbrowser.ihm.widget.TBToggleButton;
-
 public class TreeElementNodeNote extends TreeElementDeco {
   private TBToggleButton b;
   private String proto, value;
   
   public TreeElementNodeNote(AbstractTreeElement e) {
     super(e);
+    System.out.println("Create TBToggleButton now...");
     b = new TBToggleButton(ImageLoader.getImageIcon("annotation_off.png"));
     b.setSelectedIcon(ImageLoader.getImageIcon("annotation.png"));
     b.setInsets(2, 3, 2, 3);
