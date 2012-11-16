@@ -153,7 +153,7 @@ public class SVGEncoder {
         String marker = addMarker(out, markers, ereader.getLineEnd(), color, true);
         out.write("    <path " +
                 " stroke=\""+color+"\""+
-                " stroke-width=\""+w*2+"\""+
+                " stroke-width=\""+w+"\""+
                 " fill=\"none\""+
         		" marker-end=\"url(#"+marker+")\"");
         
