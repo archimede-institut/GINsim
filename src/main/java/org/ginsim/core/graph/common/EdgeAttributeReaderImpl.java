@@ -83,6 +83,10 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
         	Shape path = getPath();
         	Rectangle b = path.getBounds();
         	int arrowmargin = 5;
+        	float w = getLineWidth();
+        	if (w > 2) {
+        		arrowmargin = (int) ((1 + arrowmargin*w) / 2);
+        	}
         	cachedBounds = new Rectangle(b.x-arrowmargin, b.y-arrowmargin, b.width+2*arrowmargin, b.height+2*arrowmargin);
         }
         return cachedBounds;
@@ -309,7 +313,8 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
 
 	private void dorender(Graphics2D g, List<Point> points) {
-		stroke.setWidth(getLineWidth());
+		float width = getLineWidth();
+		stroke.setWidth(width);
 		stroke.setDashPattern(getDash());
 		g.setStroke(stroke);
 		if (selected) {
@@ -338,7 +343,16 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 		g.translate(pt1.x, pt1.y);
 		g.rotate(theta);
 
-		g.fill(getLineEnd().getShape());
+		Shape lineEnd = getLineEnd().getShape();
+		if (width > 2) {
+			float scale = width / 2;
+			g.scale(scale, scale);
+			g.fill(lineEnd);
+			scale = 1/scale;
+			g.scale(scale, scale);
+		} else {
+			g.fill(lineEnd);
+		}
 
 		g.rotate(-theta);
 		g.translate(-pt1.x, -pt1.y);
