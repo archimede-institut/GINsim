@@ -379,7 +379,6 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * @param o
 	 */
 	public void refresh(Object o) {
-		// TODO: fire graph change?
 		if (listener != null) {
 			listener.refresh(o);
 		} else if (o instanceof Edge) {
@@ -387,6 +386,10 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		} else {
 			fireGraphChange(GraphChangeType.NODEUPDATED, o);
 		}
+	}
+
+	public void damage(Object o) {
+		refresh(o);
 	}
 
 	

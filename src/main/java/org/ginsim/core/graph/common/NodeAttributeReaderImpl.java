@@ -205,6 +205,12 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
     		backend.refresh(vertex);
     	}
     }
+    @Override
+    public void damage() {
+    	if (vertex != null) {
+    		backend.damage(vertex);
+    	}
+    }
 
     @Override
     public void setPos(int x, int y) {

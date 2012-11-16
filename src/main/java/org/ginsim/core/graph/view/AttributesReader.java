@@ -5,7 +5,16 @@ import java.awt.Rectangle;
 
 public interface AttributesReader {
 
+	/**
+	 * Let listeners know that the item has been updated
+	 */
 	void refresh();
+	
+	/**
+	 * The current item will be changed: mark its current area as damaged if needed.
+	 */
+	void damage();
+
 	
 	/**
 	 * get the boundary rectangle for the selected item.

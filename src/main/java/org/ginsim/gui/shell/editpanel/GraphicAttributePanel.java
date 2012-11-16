@@ -987,6 +987,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 		try {
 			int w = Integer.parseInt(jTF_width.getText());
 			int h = Integer.parseInt(jTF_height.getText());
+			vReader.damage();
 			vReader.setSize(w,h);
 			vReader.refresh();
 		} catch (NumberFormatException e) {}
