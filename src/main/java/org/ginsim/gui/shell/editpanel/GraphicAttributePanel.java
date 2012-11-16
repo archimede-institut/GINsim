@@ -549,6 +549,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	 * apply the current line style
 	 */
 	protected void applyLineStyle() {
+		eReader.damage();
 		eReader.setCurve(jCB_lineStyle.isSelected());
 		eReader.refresh();
 	}
@@ -1001,6 +1002,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 
 	protected void applyLineWidth() {
 		int w = ((Integer)jSpinner_linewidth.getValue()).intValue();
+		eReader.damage();
 		eReader.setLineWidth(w);
 		eReader.refresh();
 	}
