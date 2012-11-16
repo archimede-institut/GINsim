@@ -265,6 +265,7 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 			canvas.damageCanvas(nreader.getBounds());
 			break;
 		case GRAPHVIEWCHANGED:
+			canvas.clearOffscreen();
 		default:
 			break;
 		}
