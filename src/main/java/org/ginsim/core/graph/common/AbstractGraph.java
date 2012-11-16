@@ -389,7 +389,13 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	}
 
 	public void damage(Object o) {
-		refresh(o);
+		if (listener != null) {
+			listener.refresh(o);
+		} else if (o instanceof Edge) {
+			fireGraphChange(GraphChangeType.EDGEDAMAGED, o);
+		} else {
+			fireGraphChange(GraphChangeType.NODEDAMAGED, o);
+		}
 	}
 
 	
