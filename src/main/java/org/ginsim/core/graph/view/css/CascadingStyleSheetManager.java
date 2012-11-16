@@ -135,6 +135,7 @@ public class CascadingStyleSheetManager {
 			}
 			((EdgeStyle)sel.getStyleForEdge(edge)).apply(ereader);		//  apply the style to the edge.
 		}
+		ereader.refresh();
 	}
 
 	/**
@@ -155,6 +156,7 @@ public class CascadingStyleSheetManager {
 			}
 			((NodeStyle)sel.getStyleForNode(node)).apply(vreader);	//  apply the style to the node.
 		}
+		vreader.refresh();
 	}
 
 	/**
@@ -164,6 +166,7 @@ public class CascadingStyleSheetManager {
 	 */
 	public void restoreEdge(Object edge, EdgeAttributesReader areader) {
 		((Style)old_edges.get(edge)).apply(areader);
+		areader.refresh();
 	}
 
 	/**
@@ -173,6 +176,7 @@ public class CascadingStyleSheetManager {
 	 */
 	public void restoreNode(Object node, NodeAttributesReader areader) {
 		((Style)old_nodes.get(node)).apply(areader);
+		areader.refresh();
 	}
 
 	/**
@@ -185,6 +189,7 @@ public class CascadingStyleSheetManager {
 			areader.setEdge((Edge)edge);
 			((Style)old_edges.get(edge)).apply(areader);
 		}
+		areader.refresh();
 	}
 
 	/**
@@ -197,6 +202,7 @@ public class CascadingStyleSheetManager {
 			areader.setNode(node);
 			((Style)old_nodes.get(node)).apply(areader);
 		}
+		areader.refresh();
 	}
 
 	/**
@@ -211,6 +217,7 @@ public class CascadingStyleSheetManager {
 			Style style = (Style)old_edges.get(edge);
 			if (style != null) style.apply(areader);
 		}
+		areader.refresh();
 	}
 
 	/**
@@ -225,6 +232,7 @@ public class CascadingStyleSheetManager {
 			Style style = (Style)old_nodes.get(node);
 			if (style != null) style.apply(areader);
 		}
+		areader.refresh();
 	}
 
 	/**

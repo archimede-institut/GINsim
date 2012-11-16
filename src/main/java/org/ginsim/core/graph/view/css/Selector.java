@@ -160,6 +160,7 @@ public abstract class Selector {
 		Style s = (Style) m.get(category);
 		if (s != null) {
             s.apply(areader);
+            areader.refresh();
         } else {
             return missingCategory(category, areader);
         }
