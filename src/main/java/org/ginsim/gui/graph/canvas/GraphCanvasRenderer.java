@@ -264,6 +264,7 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 			nreader.setNode(data);
 			canvas.damageCanvas(nreader.getBounds());
 			break;
+		case GRAPHVIEWCHANGED:
 		default:
 			break;
 		}
