@@ -2,6 +2,7 @@ package org.ginsim.core.graph.view;
 
 import java.awt.Polygon;
 import java.awt.Shape;
+import java.awt.geom.Ellipse2D;
 
 public enum EdgeEnd {
 
@@ -40,18 +41,24 @@ public enum EdgeEnd {
     }
 
     private static Shape getUnknown() {
-    	// TODO: real unknown shape
-    	return getArrow();
+    	return new Ellipse2D.Double(-5, -4, 8, 8);
     }
 
     
     private static Shape getDual() {
-    	Shape a = getArrow();
-    	Shape b = getT();
-
-    	// TODO: merge shapes?
-    	
-    	return a;
+    	Polygon poly = new Polygon();
+    	poly.addPoint(-6,-5);
+    	poly.addPoint(-6, 5);
+    	poly.addPoint(-5, 5);
+    	poly.addPoint(-5, 0);
+    	poly.addPoint(-2, 0);
+    	poly.addPoint(-4, 5);
+    	poly.addPoint( 2, 0);
+    	poly.addPoint(-4,-5);
+    	poly.addPoint(-2, 0);
+    	poly.addPoint(-5, 0);
+    	poly.addPoint(-5,-5);
+    	return poly;
     }
 
 }
