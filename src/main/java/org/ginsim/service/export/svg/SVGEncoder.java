@@ -171,10 +171,12 @@ public class SVGEncoder {
             out.write(s);
         }
         
-        List<Point> l_point = ereader.getPoints();
-        if (l_point == null) {
-            l_point = new ArrayList<Point>();
+        List<Point> l_point = new ArrayList<Point>();
+        List<Point> graph_point = ereader.getPoints();
+        if (graph_point != null) {
+            l_point.addAll(graph_point);
         }
+        
         // add the first and last points
         l_point.add(0, new Point((int)box1.getCenterX(), (int)box1.getCenterY()));
         l_point.add(new Point((int)box2.getCenterX(), (int)box2.getCenterY()));
