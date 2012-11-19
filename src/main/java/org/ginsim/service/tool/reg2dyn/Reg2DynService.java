@@ -16,6 +16,8 @@ import org.mangosdk.spi.ProviderFor;
 @Alias("simulation")
 public class Reg2DynService implements Service {
 
+	public static final String KEY = "simulation";
+	
     static {
     	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( RegulatoryGraph.class, PerturbationManager.KEY)){
     		ObjectAssociationManager.getInstance().registerObjectManager(RegulatoryGraph.class, new PerturbationManager());

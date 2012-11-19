@@ -12,6 +12,7 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
@@ -231,6 +232,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
 
     @Override
 	public void setName(String name) {
+		ObjectAssociationManager.getInstance().fireUserUpdate(param_list.graph, Reg2DynService.KEY, this.name, name);
 		this.name = name;
 	}
 

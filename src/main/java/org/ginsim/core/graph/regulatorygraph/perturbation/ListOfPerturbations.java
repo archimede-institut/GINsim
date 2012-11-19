@@ -17,6 +17,7 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphEventCascade;
 import org.ginsim.core.graph.common.GraphListener;
+import org.ginsim.core.graph.objectassociation.UserSupporter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
@@ -29,7 +30,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
  * 
  * @author Aurelien Naldi
  */
-public class ListOfPerturbations implements Iterable<Perturbation>, GraphListener<RegulatoryGraph> {
+public class ListOfPerturbations implements Iterable<Perturbation>, GraphListener<RegulatoryGraph>, UserSupporter {
 
 	private final List<Perturbation> simplePerturbations = new ArrayList<Perturbation>();
 	private final List<Perturbation> multiplePerturbations = new ArrayList<Perturbation>();
@@ -282,6 +283,14 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
 		}
 		
 		lrg.fireGraphChange(GraphChangeType.ASSOCIATEDUPDATED, this);
+	}
+
+	@Override
+	public void update(String oldID, String newID) {
+		Perturbation p = perturbationUsers.get(oldID);
+		if (p != null && newID != null) {
+			perturbationUsers.put(newID, p);
+		}
 	}
 }
 

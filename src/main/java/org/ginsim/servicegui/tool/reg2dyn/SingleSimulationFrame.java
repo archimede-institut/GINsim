@@ -480,7 +480,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 			textMaxNodes.setText(currentParameter.maxnodes > 0 ? ""+currentParameter.maxnodes : "");
 			textMaxDepth.setEnabled(true);
 			textMaxNodes.setEnabled(true);
-			setUserID("reg2dyn::"+currentParameter.getName());
+			setUserID(Reg2DynService.KEY+"::"+currentParameter.getName());
 		}
 		refreshing = false;
 	}

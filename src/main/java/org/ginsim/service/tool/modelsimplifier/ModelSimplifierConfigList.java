@@ -9,6 +9,7 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphEventCascade;
 import org.ginsim.core.graph.common.GraphListener;
+import org.ginsim.core.graph.objectassociation.UserSupporter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -20,7 +21,7 @@ import org.ginsim.core.utils.data.SimpleGenericList;
  * Also deals with updating them when the graph is changed
  */
 public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifierConfig>
-	implements GraphListener<RegulatoryGraph> {
+	implements GraphListener<RegulatoryGraph>, UserSupporter {
 
     private String s_current;
     private RegulatoryGraph graph;
@@ -65,5 +66,12 @@ public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifier
 	
 	public boolean isStrippingOutput(String key) {
 		return outputStrippers.contains(key);
+	}
+
+	@Override
+	public void update(String oldID, String newID) {
+		if (outputStrippers.remove(oldID) && newID != null) {
+			outputStrippers.add(newID);
+		}
 	}
 }

@@ -38,6 +38,43 @@ public class ObjectAssociationManager {
 		return instance;
 	}
 	
+	/**
+	 * Signal that a data user has been updated (removed or renamed)
+	 * 
+	 * @param graph graph to which the user was associated
+	 * @param prefix prefix to add before the IDs, can be null
+	 * @param oldKey old ID under which the user was known
+	 * @param newKey new ID, or null if it was removed
+	 */
+	public void fireUserUpdate(Graph<?,?> graph, String prefix, String oldKey, String newKey) {
+		if (prefix == null) {
+			fireUserUpdate(graph, oldKey, newKey);
+		} else if (newKey == null) {
+			fireUserUpdate(graph, prefix+"::"+oldKey, null);
+		} else {
+			fireUserUpdate(graph, prefix+"::"+oldKey, prefix+"::"+newKey);
+		}
+	}
+	
+	/**
+	 * Signal that a data user has been updated (removed or renamed)
+	 * 
+	 * @param graph graph to which the user was associated
+	 * @param oldKey old ID under which the user was known
+	 * @param newKey new ID, or null if it was removed
+	 */
+	public void fireUserUpdate(Graph<?,?> graph, String oldKey, String newKey) {
+		Map<Object,Object> m_objects = objectsOfGraph.get(graph);
+		if (m_objects == null) {
+			return;
+		}
+		
+		for (Object o: m_objects.values()) {
+			if (o instanceof UserSupporter) {
+				((UserSupporter)o).update(oldKey, newKey);
+			}
+		}
+	}
 	
 	/**
      * Register an object manager not associated with a graph class
