@@ -42,6 +42,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationUser;
 import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromCircuit;
@@ -100,8 +101,8 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
     private JTextArea jta = null;
     private CircuitSearchStoreConfig config = null;
     private JCheckBox cb_cleanup = null;
-    PerturbationHolder mutantstore = new PerturbationStore();
-    PerturbationSelectionPanel mutantPanel;
+    private PerturbationHolder mutantstore;
+    private PerturbationSelectionPanel mutantPanel;
 
 	private JButton	but_pyexport;
 
@@ -123,6 +124,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 			GUIMessageUtils.openErrorDialog("no graph", frame);
 		}
         this.graph = (RegulatoryGraph) graph;
+        mutantstore = new PerturbationUser(this.graph, "circuits_frame");
         initialize();
         updateStatus(STATUS_NONE);
     }

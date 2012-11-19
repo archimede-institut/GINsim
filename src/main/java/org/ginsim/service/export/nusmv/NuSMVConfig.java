@@ -8,6 +8,7 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationUser;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 
@@ -23,7 +24,7 @@ public class NuSMVConfig implements InitialStateStore {
 
 	// Store has one object: 0- PriorityClass
 	private ObjectStore store = new ObjectStore(1);
-	private PerturbationHolder perturbationstore = new PerturbationStore();
+	private PerturbationHolder perturbationstore;
 	private int updatePolicy;
 
 	/**
@@ -33,6 +34,10 @@ public class NuSMVConfig implements InitialStateStore {
 		m_initStates = new HashMap<InitialState, Object>();
 		m_input = new HashMap<InitialState, Object>();
 		this.graph = graph;
+		perturbationstore = new PerturbationStore();
+		// FIXME: use this to remember the selected perturbation
+		//        (when the same is ready for the updating mode)
+		// perturbationstore = new PerturbationUser(graph, "NuSMV");
 		updatePolicy = CFG_ASYNC; // Default update policy
 	}
 
