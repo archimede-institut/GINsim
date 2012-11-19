@@ -3,9 +3,11 @@ package org.ginsim.core.graph.regulatorygraph.perturbation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.perturbation.MultiplePerturbation;
@@ -32,6 +34,8 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
 	private final List<Perturbation> simplePerturbations = new ArrayList<Perturbation>();
 	private final List<Perturbation> multiplePerturbations = new ArrayList<Perturbation>();
 
+	private final Map<String, Perturbation> perturbationUsers = new HashMap<String, Perturbation>();
+	
 	private final RegulatoryGraph lrg;
 	
 	public ListOfPerturbations(RegulatoryGraph lrg) {
@@ -151,7 +155,39 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
 		return multiplePerturbations.get(index-nbsimple);
 	}
 
+	/**
+	 * Announce the use of a perturbation.
+	 * 
+	 * @param key identify the user
+	 * @param perturbation the used perturbation (must be in the list of perturbations)
+	 */
+	public void usePerturbation(String key, Perturbation perturbation) {
+		if (key == null) {
+			return;
+		}
+		
+		if (perturbation == null) {
+			perturbationUsers.remove(key);
+			return;
+		}
+		
+		if (!simplePerturbations.contains(perturbation) && !multiplePerturbations.contains(perturbation)) {
+			throw new RuntimeException("Can only use existing perturbations");
+		}
+		
+		perturbationUsers.put(key, perturbation);
+	}
 
+	/**
+	 * Retrieve the perturbation used by a specific user.
+	 * 
+	 * @param key identify the user
+	 * @return the used perturbation or null if none was found
+	 */
+	public Perturbation getUsedPerturbation(String key) {
+		return perturbationUsers.get(key);
+	}
+	
 	@Override
 	public Iterator<Perturbation> iterator() {
 		if (multiplePerturbations.size() == 0) {
@@ -232,6 +268,19 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
 		multiplePerturbations.removeAll(removed);
 		multiplePerturbations.removeAll(extraRemoved);
 		simplePerturbations.removeAll(removed);
+
+		// also remove references to the removed perturbations 
+		List<String> userRemoved = new ArrayList<String>();
+		for (String key: perturbationUsers.keySet()) {
+			Perturbation p = perturbationUsers.get(key);
+			if (p == null || removed.contains(p) || extraRemoved.contains(p)) {
+				userRemoved.add(key);
+			}
+		}
+		for (String key: userRemoved) {
+			perturbationUsers.remove(key);
+		}
+		
 		lrg.fireGraphChange(GraphChangeType.ASSOCIATEDUPDATED, this);
 	}
 }
