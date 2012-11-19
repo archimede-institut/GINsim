@@ -56,9 +56,6 @@ class DecisionAnalysisAction extends ToolAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-        // TODO : REFACTORING ACTION		
-		// TODO : what is ref? Is this test useful? Ref was set to 0 in the GsPluggableActionDescriptor definition in the getT_action
-		//if (ref == 0) {
 		try{
 			new DecisionAnalysisFrame( GUIManager.getInstance().getFrame( graph), graph);
 		}
@@ -67,7 +64,6 @@ class DecisionAnalysisAction extends ToolAction {
     		LogManager.error( "Unable to execute the service");
     		LogManager.error( ge);
 		}
-		//}
 	}
 	
 }
