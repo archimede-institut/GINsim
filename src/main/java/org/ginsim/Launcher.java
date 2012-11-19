@@ -113,7 +113,7 @@ public class Launcher {
 		}
 		
 		try{
-			LogManager.init( basedir, 2, true);
+			LogManager.init( basedir, 2, false);
 		}
 		catch( IOException io){
 			System.out.println("TestRefactor.main() : Unable to initialize the debugger");

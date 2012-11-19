@@ -11,7 +11,7 @@ public class StateInRegGraphColorizerPanel extends ColorizerPanel {
 
 	
 	public StateInRegGraphColorizerPanel(String storeUserChoicePrefix, Graph<?, ?> graph) {
-		super(false, storeUserChoicePrefix, graph);
+		super(storeUserChoicePrefix, graph);
 	}
 
 	@Override

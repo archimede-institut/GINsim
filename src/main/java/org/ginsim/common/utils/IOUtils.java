@@ -8,11 +8,14 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.Reader;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.biojava.bio.seq.io.StreamReader;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
@@ -79,8 +82,18 @@ public class IOUtils {
 	 * @throws IOException
 	 */
 	public static void readFromFile(String file_path, StringBuffer sb) throws IOException {
-		
-		BufferedReader reader = new BufferedReader(new FileReader(file_path));
+		read(new FileReader(file_path), sb);
+	}
+	
+	public static StringBuffer readFromResource(InputStream istream) throws IOException {
+		StringBuffer sb = new StringBuffer(1024);
+		read(new InputStreamReader(istream), sb);
+		return sb;
+	}
+
+	public static void read(Reader rd, StringBuffer sb) throws IOException {
+		BufferedReader reader = new BufferedReader(rd);
+		//BufferedReader reader = new BufferedReader();
 		char[] buf = new char[1024];
 		int numRead = 0;
 		while ((numRead = reader.read(buf)) != -1) {
@@ -88,6 +101,7 @@ public class IOUtils {
 		}
 		reader.close();
 	}
+
 	
 	/**
 	 * Verify if the file at the given path can be opened in write mode
