@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.LogicalModelModifier;
@@ -22,13 +24,16 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigManager;
 
-abstract public class LogicalModelActionDialog extends StackDialog implements ProgressListener, PerturbationHolder {
+abstract public class LogicalModelActionDialog extends StackDialog implements ProgressListener, PerturbationHolder, ChangeListener {
 
 	private static final ObjectAssociationManager OManager = ObjectAssociationManager.getInstance();
 	
 	protected final RegulatoryGraph lrg;
 	private final ListOfPerturbations perturbations;
+	private final ModelSimplifierConfigList simplifierConfig;
 	private final PerturbationSelectionPanel perturbationPanel;
 	
 	private Perturbation perturbation = null;
@@ -41,8 +46,11 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         super(parent, id, w, h);
         this.lrg = lrg;
         this.perturbations = (ListOfPerturbations)OManager.getObject(lrg, PerturbationManager.KEY, true);
+        this.simplifierConfig = (ModelSimplifierConfigList)OManager.getObject(lrg, ModelSimplifierConfigManager.KEY, true);
         perturbationPanel = new PerturbationSelectionPanel(this, lrg, this);
         super.setMainPanel(getMainPanel());
+
+        cb_simplify.addChangeListener(this);
         
 		this.addWindowListener(new java.awt.event.WindowAdapter() { 
 			public void windowClosing(java.awt.event.WindowEvent e) {
@@ -58,6 +66,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
     protected void setUserID(String userID) {
     	this.userID = userID;
     	perturbationPanel.refresh();
+    	cb_simplify.setSelected( simplifierConfig.isStrippingOutput(userID) );
     }
     
     private JPanel getMainPanel() {
@@ -105,6 +114,13 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 		}
 	}
 
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		if (userID != null) {
+			simplifierConfig.setStrippingOutput(userID, cb_simplify.isSelected());
+		}
+	}
+	
 	@Override
 	public void setResult(Object result) {
 		// empty implement implementation: not all derived classes will want to do something

@@ -1,6 +1,8 @@
 package org.ginsim.service.tool.modelsimplifier;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
@@ -20,9 +22,10 @@ import org.ginsim.core.utils.data.SimpleGenericList;
 public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifierConfig>
 	implements GraphListener<RegulatoryGraph> {
 
-    String s_current;
-    RegulatoryGraph graph;
-
+    private String s_current;
+    private RegulatoryGraph graph;
+    private Set<String> outputStrippers = new HashSet<String>();
+    
     public ModelSimplifierConfigList( Graph<RegulatoryNode, RegulatoryMultiEdge> graph) {
     	
         this.graph = (RegulatoryGraph) graph;
@@ -50,5 +53,17 @@ public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifier
 	    	}
 		}
         return null;
+	}
+	
+	public void setStrippingOutput(String key, boolean use) {
+		if (!use) {
+			outputStrippers.remove(key);
+		} else {
+			outputStrippers.add(key);
+		}
+	}
+	
+	public boolean isStrippingOutput(String key) {
+		return outputStrippers.contains(key);
 	}
 }
