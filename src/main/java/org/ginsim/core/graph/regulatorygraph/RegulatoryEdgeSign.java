@@ -4,7 +4,7 @@ public enum RegulatoryEdgeSign {
 	POSITIVE("positive", "+", 0),
 	NEGATIVE("negative", "-", 1),
 	UNKNOWN("unknown", "?", 2),
-	DUAL("dual", "\u0177", 3);
+	DUAL("dual", "\u00B1", 3);
 
 	private final String longDesc;
 	private final String shortDesc;
@@ -29,7 +29,7 @@ public enum RegulatoryEdgeSign {
 	}
 	
 	public static String[] getShortDescForGUI() {
-		String[] saShort = { POSITIVE.shortDesc, NEGATIVE.shortDesc, UNKNOWN.shortDesc };
+		String[] saShort = { POSITIVE.shortDesc, NEGATIVE.shortDesc, UNKNOWN.shortDesc, DUAL.shortDesc };
 		return saShort;
 	}
 
