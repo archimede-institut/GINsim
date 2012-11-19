@@ -55,7 +55,7 @@ copyright by
 <!ENTITY % graph-attr-extension "class (regulatory|dynamical|cellular|reduced) 'regulatory'
                                                               nodeorder NMTOKENS #IMPLIED">
 <!ENTITY % node-attr-extension "name CDATA #IMPLIED basevalue CDATA '0' maxvalue CDATA '1'">
-<!ENTITY % edge-attr-extension "sign (positive|negative|unknown) 'positive' minvalue CDATA '1' maxvalue CDATA #IMPLIED">
+<!ENTITY % edge-attr-extension "sign (positive|negative|unknown|dual) 'positive' minvalue CDATA '1' maxvalue CDATA #IMPLIED">
 <!ENTITY % rel-attr-extension "">
 <!ENTITY % relend-attr-extension "">
 
