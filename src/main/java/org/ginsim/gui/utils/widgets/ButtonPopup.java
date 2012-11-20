@@ -78,10 +78,7 @@ public class ButtonPopup extends JPanel implements ActionListener {
 		menu.setVisible(false);
 		Object src = e.getSource();
 		if (src == dropdown) {
-			Point p = dropdown.getLocationOnScreen();
-			menu.setLocation(p.x, p.y+dropdown.getHeight());
-			menu.setVisible(!menu.isVisible());
-			menu.requestFocus();
+			menu.show(dropdown, 0, dropdown.getHeight());
 			return;
 		}
 		int ref = -1;
