@@ -61,15 +61,16 @@ public class NuSMVEncoder {
 			throw new GsException(GsException.GRAVITY_ERROR,
 					"NuSMV does not support empty graphs");
 		}
-		
-		// Check all the names.lenght > 1
+
+		// Check all the names.length > 1
 		NodeInfo[] aNodeOrder = new NodeInfo[nodeOrder.size()];
 		boolean hasInputVars = false;
 		for (int i = 0; i < aNodeOrder.length; i++) {
 			NodeInfo node = model.getNodeOrder().get(i);
 			if (node.getNodeID().length() == 1)
 				throw new GsException(GsException.GRAVITY_ERROR,
-						"NuSMV does not support single-letter component names");
+						"NuSMV does not support single-letter component name: "
+								+ node.getNodeID());
 			aNodeOrder[i] = node;
 			if (node.isInput())
 				hasInputVars = true;
@@ -85,7 +86,8 @@ public class NuSMVEncoder {
 		reducer.removePseudoOutputs();
 		model = reducer.getModel();
 		List<NodeInfo> coreNodes = model.getNodeOrder();
-		if (coreNodes.isEmpty()) {
+
+		if (!hasNonInputNodes(coreNodes)) {
 			throw new GsException(GsException.GRAVITY_ERROR,
 					"NuSMV needs at least one core (non-input/non-output) node");
 		}
@@ -498,8 +500,8 @@ public class NuSMVEncoder {
 
 	private void nodeRules2NuSMV(Writer out, LogicalModel model, int nodeMDD,
 			List<NodeInfo> coreNodeOrder, NodeInfo node) throws IOException {
-		PathSearcher searcher = new PathSearcher(model.getMDDManager(),
-				1, node.getMax());
+		PathSearcher searcher = new PathSearcher(model.getMDDManager(), 1,
+				node.getMax());
 		int[] path = searcher.getPath();
 		searcher.setNode(nodeMDD);
 
@@ -646,5 +648,18 @@ public class NuSMVEncoder {
 				sRet += ";\nstrongSS" + (++i) + " := " + ss;
 		}
 		return sRet;
+	}
+
+	private boolean hasNonInputNodes(List<NodeInfo> coreNodes) {
+		boolean core = false;
+		if (coreNodes == null)
+			return core;
+		for (NodeInfo node : coreNodes) {
+			if (!node.isInput()) {
+				core = true;
+				break;
+			}
+		}
+		return core;
 	}
 }
