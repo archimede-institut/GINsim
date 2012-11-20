@@ -504,7 +504,7 @@ public final class RegulatoryParser extends GsXMLHelper {
         	data[1] = vertex;
         	data[2] = exp;
         	
-        	NotificationManager.publishResolvableWarning( this, "Invalid formula : " + exp, graph, data, new InvalidFunctionResolution());
+        	NotificationManager.publishResolvableWarning( this, "Invalid formula in node "+vertex+": " + exp, graph, data, new InvalidFunctionResolution());
         }
         else {
           interactionList.addExpression(val, vertex, tbp);
