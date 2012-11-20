@@ -38,11 +38,22 @@ public class ModelSimplifierConfigManager extends BasicGraphAssociatedManager {
         ModelSimplifierConfigList paramList = (ModelSimplifierConfigList) getObject(graph);
         try {
             XMLWriter out = new XMLWriter(os, null);
+            out.openTag("modelModifierConfig");
             out.openTag("modelSimplifications");
             // add the available configurations
             for (int i=0 ; i<paramList.getNbElements(null) ; i++) {
                 ((ModelSimplifierConfig)paramList.getElement(null, i)).toXML(out, null, 0);
             }
+            out.closeTag();
+            
+            out.openTag("listOfUsers");
+            for (String key: paramList.getOutputStrippingUsers()) {
+            	out.openTag("stripOutput");
+            	out.addAttr("key", key);
+            	out.closeTag();
+            }
+            out.closeTag();
+            
             out.closeTag();
         } catch (IOException e) {
             new GsException( "STR_unableToSave", e);
@@ -89,6 +100,9 @@ class ModelSimplifierConfigParser extends XMLHelper {
         			}
         		}
         	}
+        } else if (qName.equals("stripOutput")) {
+        	String key = attributes.getValue("key");
+        	paramList.setStrippingOutput(key, true);
         }
     }
     
