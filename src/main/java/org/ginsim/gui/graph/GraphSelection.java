@@ -299,6 +299,23 @@ public class GraphSelection<V, E extends Edge<V>> {
 	}
 
 	/**
+	 * Add all the edges between the selected nodes to the list of selected edges
+	 */
+	public void extendSelectionToInternalEdges() {
+		if (nodes == null) {
+			return;
+		}
+		for (V node : nodes) {
+			for (E edge: gui.getGraph().getIncomingEdges(node)) {
+				if (nodes.contains( edge.getSource())) {
+					addEdgeToSelection(edge);
+				}
+			}
+		}
+		updateType(false);
+	}
+
+	/**
 	 * Add all the outgoing nodes of the selected nodes to the list of selected nodes
 	 */
 	public void extendSelectionToOutgoingNodes() {

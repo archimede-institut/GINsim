@@ -33,6 +33,7 @@ public class SelectionCallBack {
 		smenu.add(new ExtendSelectionToOutgoingEdgesAction(graph));
 		smenu.add(new ExtendSelectionToIncomingNodesAction(graph));
 		smenu.add(new ExtendSelectionToIncomingEdgesAction(graph));
+		smenu.add(new ExtendSelectionToInternalEdgesAction(graph));
 		menu.add(smenu);
 
 		menu.add(new SearchNodeAction(graph));
@@ -236,5 +237,22 @@ class ExtendSelectionToIncomingEdgesAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		GUIManager.getInstance().getGraphGUI(graph).getSelection().extendSelectionToIncomingEdges();
+	}
+}
+
+class ExtendSelectionToInternalEdgesAction extends AbstractAction {
+	
+	private final Graph<?,?> graph;
+	
+	public ExtendSelectionToInternalEdgesAction(Graph<?,?> graph) {
+		super( Translator.getString( "STR_ExtendSelectionToInternalEdges"));
+		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_ExtendSelectionToInternalEdges_descr"));
+		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, FrameActionManager.MASK | KeyEvent.SHIFT_MASK));
+		this.graph = graph;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		GUIManager.getInstance().getGraphGUI(graph).getSelection().extendSelectionToInternalEdges();
 	}
 }
