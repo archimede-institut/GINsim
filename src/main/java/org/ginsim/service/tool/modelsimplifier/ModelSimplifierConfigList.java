@@ -67,6 +67,10 @@ public class ModelSimplifierConfigList extends SimpleGenericList<ModelSimplifier
 	public boolean isStrippingOutput(String key) {
 		return outputStrippers.contains(key);
 	}
+	
+	protected Collection<String> getOutputStrippingUsers() {
+		return outputStrippers;
+	}
 
 	@Override
 	public void update(String oldID, String newID) {

@@ -199,7 +199,9 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
 
 	public void toXML(XMLWriter out) throws IOException {
 		
-        out.openTag("mutantList");
+        out.openTag("perturbationConfig");
+        
+        out.openTag("listOfPerturbations");
         for (Perturbation p: simplePerturbations) {
         	// wrap them
             out.openTag("mutant");
@@ -211,8 +213,20 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
             p.toXML(out);
         }
         out.closeTag();
+        
+        
+        out.openTag("listOfUsers");
+        for (String key: perturbationUsers.keySet()) {
+        	out.openTag("user");
+        	out.addAttr("key", key);
+        	out.addAttr("value", perturbationUsers.get(key).toString());
+        	out.closeTag();
+        }
+        out.closeTag();
+        
+        
+        out.closeTag();
 
-		
 	}
 
 	public NodeInfo[] getNodes() {
@@ -291,6 +305,20 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
 		if (p != null && newID != null) {
 			perturbationUsers.put(newID, p);
 		}
+	}
+
+	
+	public void usePerturbation(String key, String value) {
+		if (key == null || value == null) {
+			return;
+		}
+		for (Perturbation p: getAllPerturbations()) {
+			if (value.equals(p.toString())) {
+				usePerturbation(key, p);
+				return;
+			}
+		}
+		LogManager.error("Perturbation not found for "+value);
 	}
 }
 

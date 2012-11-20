@@ -28,6 +28,8 @@ public class PerturbationParser extends XMLHelper {
 	private static final int PERTURBATION = 21;
 	private static final int MULTIPLE = 22;
 
+	private static final int USER = 30;
+
 	static {
 		addCall("mutant", MUTANT, CALLMAP, BOTH, false);
 		addCall("change", CHANGE, CALLMAP, STARTONLY, false);
@@ -37,6 +39,7 @@ public class PerturbationParser extends XMLHelper {
 		addCall("perturbation", PERTURBATION, CALLMAP, STARTONLY, false);
 		addCall("multiple", MULTIPLE, CALLMAP, STARTONLY, false);
 
+		addCall("user", USER, CALLMAP, STARTONLY, false);
 	}
 	
     ListOfPerturbations mutantList = null;
@@ -113,6 +116,12 @@ public class PerturbationParser extends XMLHelper {
 				// FIXME
 //	      		mutant.annotation.addLink(lnk, graph);
 			}
+			break;
+		case USER:
+			String key = attributes.getValue("key");
+			String value = attributes.getValue("value");
+			Perturbation p = null;
+			mutantList.usePerturbation(key, value);
 			break;
 		}
 	}
