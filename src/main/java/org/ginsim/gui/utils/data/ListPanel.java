@@ -190,6 +190,10 @@ public class ListPanel<T> extends JPanel
 		l_title.setVisible(true);
     }
     
+    public int[] getSelection() {
+    	return jl.getSelectedRows();
+    }
+    
     /**
      * add a selection listener for this list
      * @param listener

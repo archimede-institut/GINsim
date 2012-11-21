@@ -28,6 +28,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 	private PerturbationType type = null;
 	
 	private final JComboBox selectNode;
+	private final JComboBox selectType;
 	private NodeInfo selected = null;
 	
 	// setup value slider
@@ -44,9 +45,22 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		this.helper = helper;
 		
 		GridBagConstraints cst = new GridBagConstraints();
+		add(new JLabel("Type of perturbation"), cst);
+
+		cst = new GridBagConstraints();
+		cst.gridy = 1;
+		cst.weightx = 1;
+		cst.fill = GridBagConstraints.HORIZONTAL;
+		selectType = new JComboBox(PerturbationType.values());
+		selectType.addActionListener(this);
+		add(selectType, cst);
+
+		cst = new GridBagConstraints();
+		cst.gridx = 1;
 		add(new JLabel("Component"), cst);
 		
 		cst = new GridBagConstraints();
+		cst.gridy = 1;
 		cst.gridx = 1;
 		cst.weightx = 1;
 		cst.fill = GridBagConstraints.HORIZONTAL;
@@ -57,8 +71,10 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		// reserved space for the specialised settings
 		cst = new GridBagConstraints();
 		cst.gridx = 0;
-		cst.gridy = 1;
+		cst.gridy = 2;
 		cst.gridwidth = 2;
+		cst.weightx = 1;
+		cst.weighty = 1;
 		cst.fill = GridBagConstraints.BOTH;
 		setupPanel.setMinimumSize(new Dimension(100, 100));
 		add(setupPanel, cst);
@@ -78,14 +94,22 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		setupPanel.add(fixSlider, cst);
 		setupPanel.add(rangeSlider, cst);
 
-		// create button
+		// cancel button
 		cst = new GridBagConstraints();
 		cst.gridx = 0;
-		cst.gridy = 2;
+		cst.gridy = 3;
+		add(new JButton( new CancelAction(this) ), cst);
+		
+		// create button
+		cst = new GridBagConstraints();
+		cst.gridx = 1;
+		cst.gridy = 3;
 		add(new JButton( acCreate ), cst);
+		
+		setType((PerturbationType)selectType.getSelectedItem());
 	}
 	
-	public void setType(PerturbationType type) {
+	private void setType(PerturbationType type) {
 		this.type = type;
 		fixSlider.setVisible(false);
 		rangeSlider.setVisible(false);
@@ -164,6 +188,10 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+		PerturbationType selectedType = (PerturbationType)selectType.getSelectedItem();
+		if (type != selectedType) {
+			setType(selectedType);
+		}
 		if (type == null) {
 			acCreate.setEnabled(false);
 			setupPanel.setBorder(null);
@@ -218,5 +246,19 @@ class CreateAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		panel.create();
+	}
+}
+
+class CancelAction extends AbstractAction {
+	private final PerturbationCreatePanel panel;
+
+	public CancelAction(PerturbationCreatePanel panel) {
+		super("Cancel");
+		this.panel = panel;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		panel.cancel();
 	}
 }

@@ -36,6 +36,8 @@ public class ListPanelHelper<T> {
 	public ListEditionPanel<T> editPanel = null;
 	public ListPanel<T> listPanel = null;
 	
+	private int[] currentSelection = null;
+	
 	public Object getColumn(T o, int column) {
 		return o;
 	}
@@ -65,7 +67,12 @@ public class ListPanelHelper<T> {
 	
 	public void selectionChanged(int[] selection) {
 		if (editPanel == null) {
+			currentSelection = selection;
 			return;
+		}
+		currentSelection = null;
+		if (selection == null) {
+			selection = listPanel.getSelection();
 		}
 		
 		if (selection == null || selection.length < 1) {
@@ -102,10 +109,13 @@ public class ListPanelHelper<T> {
 	}
 
 	public void setEditPanel(ListEditionPanel<T> editPanel) {
-		this.editPanel = editPanel;
 		editPanel.addPanel(getEmptyPanel(), SEL_EMPTY);
 		editPanel.addPanel(getSingleSelectionPanel(), SEL_SINGLE);
 		editPanel.addPanel(getMultipleSelectionPanel(), SEL_MULTIPLE);
+		this.editPanel = editPanel;
+		if (currentSelection != null) {
+			selectionChanged(currentSelection);
+		}
 	}
 	
 	public Component getEmptyPanel() {

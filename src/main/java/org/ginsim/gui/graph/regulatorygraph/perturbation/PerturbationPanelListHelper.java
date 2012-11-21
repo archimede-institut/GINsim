@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JPanel;
 
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
@@ -19,8 +21,7 @@ public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation> {
 	
 	private final ListOfPerturbations perturbations;
 	
-	private JLabel selectedLabel = null;
-	private JButton multipleLabel = null;
+	private MultipleSelectionPanel selectionPanel = null;
 	
 	private PerturbationCreatePanel createPanel = null;
 	private final PerturbationPanel perturbationPanel;
@@ -30,45 +31,45 @@ public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation> {
 		this.perturbationPanel = perturbationPanel;
 	}
 	
-	public Object[] getCreateTypes() {
-		
-		return PerturbationType.values();
-	}
-
+	@Override
 	public int create(Object arg) {
-		if (arg instanceof PerturbationType) {
-			PerturbationType type = (PerturbationType)arg;
-			
-			if (createPanel == null) {
-				createPanel = new PerturbationCreatePanel(this, perturbations);
-				editPanel.addPanel(createPanel, CREATE);
-			}
-			createPanel.setType(type);
-			editPanel.showPanel(CREATE);
+		if (createPanel == null) {
+			createPanel = new PerturbationCreatePanel(this, perturbations);
+			editPanel.addPanel(createPanel, CREATE);
 		}
-		
+		editPanel.showPanel(CREATE);
 		return -1;
 	}
-	
-	public Component getSingleSelectionPanel() {
-		if (selectedLabel == null) {
-			selectedLabel = new JLabel();
-		}
-		return selectedLabel;
+
+	@Override
+	public Component getEmptyPanel() {
+		return getMultipleSelectionPanel();
 	}
 	
-	public Component getMultipleSelectionPanel() {
-		if (multipleLabel == null) {
-			multipleLabel = new JButton("TODO: multiple");
-		}
-		return multipleLabel;
+	@Override
+	public Component getSingleSelectionPanel() {
+		return getMultipleSelectionPanel();
 	}
 
-	public void updateSelectionPanel(int index) {
-		selectedLabel.setText("selected: "+index);
+	@Override
+	public Component getMultipleSelectionPanel() {
+		if (selectionPanel == null) {
+			selectionPanel = new MultipleSelectionPanel(this);
+		}
+		return selectionPanel;
 	}
+
+	@Override
+	public void updateEmptyPanel() {
+		selectionPanel.select(-1);
+	}
+	@Override
+	public void updateSelectionPanel(int index) {
+		selectionPanel.select(index);
+	}
+	@Override
 	public void updateMultipleSelectionPanel(int[] indices) {
-		multipleLabel.setAction(new AddMultiplePerturbationAction(perturbationPanel, perturbations, indices));
+		selectionPanel.select(perturbationPanel, perturbations, indices);
 	}
 
 	@Override
@@ -83,6 +84,39 @@ public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation> {
 	}
 
 }
+
+class MultipleSelectionPanel extends JPanel {
+
+	private final PerturbationPanelListHelper helper;
+	JButton btn = new JButton();
+	JLabel label = new JLabel();
+	
+	public MultipleSelectionPanel(PerturbationPanelListHelper helper) {
+		this.helper = helper;
+		add(label);
+		add(btn);
+		select(-1);
+	}
+
+	public void select(int index) {
+		btn.setEnabled(false);
+		btn.setVisible(false);
+		if (index < 0) {
+			label.setText("No selection");
+		} else {
+			label.setText("Selected: "+index + ". TODO: show info");
+		}
+	}
+
+	public void select(PerturbationPanel perturbationPanel, ListOfPerturbations perturbations, int[] indices) {
+		label.setText("Selected: "+indices.length + " perturbations. TODO: show info");
+		Action createAction = new AddMultiplePerturbationAction(perturbationPanel, perturbations, indices);
+		btn.setAction(createAction);
+		btn.setEnabled(true);
+		btn.setVisible(true);
+	}
+}
+
 
 class AddMultiplePerturbationAction extends AbstractAction {
 	
@@ -108,4 +142,3 @@ class AddMultiplePerturbationAction extends AbstractAction {
 	}
 
 }
-

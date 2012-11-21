@@ -45,7 +45,7 @@ public class PerturbationPanel extends JPanel {
 		mpanel.setList(perturbations.getMultiplePerturbations());
 		cst = new GridBagConstraints();
 		cst.gridy = 1;
-		add(new JLabel("Combined perturbations)"), cst);
+		add(new JLabel("Combined perturbations"), cst);
 		cst = new GridBagConstraints();
 		cst.gridy = 2;
 		cst.weightx = 1;
