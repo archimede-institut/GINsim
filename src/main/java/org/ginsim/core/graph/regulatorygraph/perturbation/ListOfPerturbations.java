@@ -36,6 +36,7 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
 	private final List<Perturbation> multiplePerturbations = new ArrayList<Perturbation>();
 
 	private final Map<String, Perturbation> perturbationUsers = new HashMap<String, Perturbation>();
+	private final Map<String, Perturbation> aliases = new HashMap<String, Perturbation>();
 	
 	private final RegulatoryGraph lrg;
 	
@@ -154,6 +155,40 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
 		}
 		
 		return multiplePerturbations.get(index-nbsimple);
+	}
+
+	/**
+	 * Set an alias for a perturbation.
+	 * This is used to retrieve named perturbations from the old zginml files.
+	 * 
+	 * @param name
+	 * @param perturbation
+	 */
+	@Deprecated
+	public void setAliases(String name, Perturbation perturbation) {
+		if (name == null || perturbation == null) {
+			return;
+		}
+		if (name.equals(perturbation.toString())) {
+			return;
+		}
+		if (aliases.containsKey(name)) {
+			LogManager.debug("Duplicated perturbation name: "+name);
+			return;
+		}
+		aliases.put(name, perturbation);
+	}
+	
+	/**
+	 * Get a perturbation by its (old) name.
+	 * This should only be used for compatibility with the old zginml files where perturbations are named. 
+	 * 
+	 * @param name the name of the perturbation
+	 * @return the corresponding perturbation
+	 */
+	@Deprecated
+	public Perturbation get(String name) {
+		return aliases.get(name);
 	}
 
 	/**
@@ -307,19 +342,6 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
 		}
 	}
 
-	
-	public void usePerturbation(String key, String value) {
-		if (key == null || value == null) {
-			return;
-		}
-		for (Perturbation p: getAllPerturbations()) {
-			if (value.equals(p.toString())) {
-				usePerturbation(key, p);
-				return;
-			}
-		}
-		LogManager.error("Perturbation not found for "+value);
-	}
 }
 
 
