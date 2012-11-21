@@ -69,7 +69,7 @@ public class FormatSupportServiceGUI<S extends FormatSupportService> extends Abs
 			RegulatoryGraph newGraph = service.importLRG(filename);
 			GUIManager.getInstance().whatToDoWithGraph(newGraph, true);
 		} catch (IOException e) {
-			LogManager.error("Error in "+format_name+" import");
+			LogManager.error("Error in "+format_name+" import:\n "+e);
 		}
 	}
 	
@@ -81,7 +81,7 @@ public class FormatSupportServiceGUI<S extends FormatSupportService> extends Abs
 		try {
 			service.export(graph, filename);
 		} catch (IOException e) {
-			LogManager.error("Error in "+format_name+" export");
+			LogManager.error("Error in "+format_name+" export:\n"+e);
 		}
 
 	}

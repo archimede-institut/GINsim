@@ -78,8 +78,7 @@ public abstract class ImportAction extends BaseAction {
 		} catch (Exception e) {
 			LogManager.error("Error in export " + getID());
 			LogManager.error(e);
-			GUIMessageUtils
-					.openErrorDialog("Import failed. See logs for details");
+			GUIMessageUtils.openErrorDialog("Import failed:\n"+e.getMessage());
 		}
 	}
 
