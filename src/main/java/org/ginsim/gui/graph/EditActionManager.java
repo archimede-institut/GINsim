@@ -31,9 +31,8 @@ import org.ginsim.common.application.Translator;
 public class EditActionManager {
 
 	private static final EditAction EDIT_MODE = new EditAction(EditMode.EDIT, Translator.getString( "STR_edit_select_move"), "editmode.gif");
-	private static final EditAction EDGEPOINT_MODE = new EditAction(EditMode.EDGEPOINT, Translator.getString( "STR_editEdgeIntermediatePoints_descr"), "customizeedgerouting.gif");
 	
-	private EditAction selectedAction = EDGEPOINT_MODE;
+	private EditAction selectedAction = EDIT_MODE;
 	private final List<EditAction> actions;
 	private boolean locked = false;
 	
@@ -124,8 +123,6 @@ public class EditActionManager {
 				}
 			}
 		}
-
-		toolbar.add(getButton(EDGEPOINT_MODE));
 		
 		// set the initial status
 		setSelectedAction(EDIT_MODE);
