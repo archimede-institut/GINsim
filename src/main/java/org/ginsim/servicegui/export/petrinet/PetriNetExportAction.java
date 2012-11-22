@@ -1,38 +1,45 @@
 package org.ginsim.servicegui.export.petrinet;
 
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
+import java.io.FileOutputStream;
 import java.io.IOException;
 
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.io.petrinet.PNConfig;
+import org.colomoto.logicalmodel.io.petrinet.PetriNetSubformats;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
+import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
-import org.ginsim.service.export.petrinet.PNConfig;
+import org.ginsim.service.format.PetriNetFormatService;
 import org.ginsim.servicegui.tool.reg2dyn.PrioritySelectionPanel;
 
 public class PetriNetExportAction extends ExportAction<RegulatoryGraph> {
 
 	static final String PNFORMAT = "export.petriNet.defaultFormat";
 
-	private final PNConfig config = new PNConfig();
-	LogicalModel model = null;
+	private LogicalModel model = null;
+	PetriNetSubformats format = null;
+	PNConfig config = null;
 	
 	public PetriNetExportAction(RegulatoryGraph graph) {
 		super(graph, "STR_PetriNet", "STR_PetriNet_descr", null);
 	}
 
 	protected void doExport( String filename) {
+		if (format == null) {
+			throw new RuntimeException("No selected format");
+		}
 		// call the selected export method to do the job
 		try {
-			config.format.getWriter( model).export(config, filename);
+			format.getEncoder( model).export(config, new FileOutputStream(filename));
 		} catch (IOException e) {
 			LogManager.error(e);
 		}
@@ -40,66 +47,52 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> {
 
 	@Override
 	protected FileFormatDescription getFileFilter() {
-		return config.format.getFormatDescription();
+		if (format == null) {
+			return null;
+		}
+		return new FileFormatDescription(format.name(), format.name());
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		new PetriNetExportFrame(null, graph, this);
 	}
-	
 
-	public void selectFile(LogicalModel model) {
+	public void selectFile(LogicalModel model, PetriNetSubformats format, PNConfig config) {
 		this.model = model;
+		this.format = format;
+		this.config = config;
 		selectFile();
 	}
 }
 
 class PetriNetExportFrame extends LogicalModelActionDialog {
 
+	private PetriNetFormatService service = ServiceManager.getManager().getService(PetriNetFormatService.class);
 	private final PetriNetExportAction action;
-	private final PNConfig config;
 	private PrioritySelectionPanel priorityPanel = null;
+	private final JComboBox formatCombo;
 
+	PNConfig config = new PNConfig();
+	
 	public PetriNetExportFrame(JFrame f, RegulatoryGraph lrg, PetriNetExportAction action) {
 		super(lrg, f, "PNGUI", 600, 400);
 		this.action = action;
-		this.config = new PNConfig();
 		
-    	InitialStatePanel initPanel = new InitialStatePanel(lrg, false);
-    	initPanel.setParam(config);
-    	
     	JPanel mainPanel = new JPanel();
     	mainPanel.setLayout(new GridBagLayout());
 
-    	// TODO: restore settings (priority and initial states)
-/*    	
-		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject(graph, SimulationParametersManager.KEY, true);
-        priorityPanel = new PrioritySelectionPanel(stack, paramList.pcmanager);
-        priorityPanel.setStore(config.store, 1);
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 1;
-		c.gridy = 1;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		mainPanel.add(priorityPanel, c);
-		priorityPanel.setFilter(PriorityClassManager.FILTER_NO_SYNCHRONOUS);
-		
-		c = new GridBagConstraints();
-    	c.gridx = 0;
-    	c.gridy = 2;
-    	c.gridwidth = 2;
-    	c.weightx = 1;
-    	c.weighty = 1;
-    	c.fill = GridBagConstraints.BOTH;
-    	mainPanel.add(initPanel, c);
-*/		
-
+    	PetriNetSubformats[] formats = service.format.getSubformats();
+    	formatCombo = new JComboBox(formats);
+    	mainPanel.add(formatCombo);
+    	
     	setMainPanel(mainPanel);
 	}
 
 	@Override
 	public void run(LogicalModel model) {
-		action.selectFile(model);
+		PetriNetSubformats format = (PetriNetSubformats)formatCombo.getSelectedItem();
+		action.selectFile(model, format, config);
 		cancel();
 	}
 
