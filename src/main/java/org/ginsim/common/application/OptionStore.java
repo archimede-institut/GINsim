@@ -5,10 +5,10 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -30,7 +30,7 @@ import org.xml.sax.helpers.DefaultHandler;
 public class OptionStore extends DefaultHandler {
 	
     // some static stuff
-    private static Map m_option = new HashMap();
+    private static Map<String, Object> m_option = new TreeMap();
     private static String optionFile = null;
 	private static List<String> recentFiles = new ArrayList<String>();
     
@@ -194,15 +194,14 @@ public class OptionStore extends DefaultHandler {
         try {
             OutputStreamWriter fos = new OutputStreamWriter(new FileOutputStream(optionFile), "UTF-8");
             XMLWriter out = new XMLWriter(fos, null); 
-            out.write("<gsconfig>\n");
+            out.openTag("gsconfig");
             for (String recent: recents) {
                 out.openTag("recent");
                 out.addAttr("filename", recent);
                 out.closeTag();
             }
             Iterator it = m_option.keySet().iterator();
-            while (it.hasNext()) {
-                Object k = it.next();
+            for (String k: m_option.keySet()) {
                 Object v = m_option.get(k);
                 String t;
                 if (v instanceof Boolean) {
@@ -212,9 +211,13 @@ public class OptionStore extends DefaultHandler {
 				} else {
 					t = "string";
 				}
-                out.write("   <option key=\""+k+"\" type=\""+t+"\" value=\""+v+"\"/>\n");
+                out.openTag("option");
+                out.addAttr("key", k.toString());
+                out.addAttr("type", t);
+                out.addAttr("value", v.toString());
+                out.closeTag();
             }
-            out.write("</gsconfig>\n");
+            out.closeTag();
             fos.close();
         } catch (Exception e) {}
     }
