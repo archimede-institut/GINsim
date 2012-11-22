@@ -14,7 +14,7 @@ import javax.swing.JLabel;
  * @author Aurelien Naldi
  * @param <T> the type of objects in the list
  */
-public class ListPanelHelper<T> {
+abstract public class ListPanelHelper<T> {
 	
 	public static final String SEL_EMPTY="SEL_EMPTY", SEL_SINGLE="SEL_SINGLE", SEL_MULTIPLE="SEL_MULTIPLE";
 	
@@ -35,8 +35,6 @@ public class ListPanelHelper<T> {
 
 	public ListEditionPanel<T> editPanel = null;
 	public ListPanel<T> listPanel = null;
-	
-	private int[] currentSelection = null;
 	
 	public Object getColumn(T o, int column) {
 		return o;
@@ -67,36 +65,15 @@ public class ListPanelHelper<T> {
 	
 	public void selectionChanged(int[] selection) {
 		if (editPanel == null) {
-			currentSelection = selection;
 			return;
 		}
-		currentSelection = null;
 		if (selection == null) {
 			selection = listPanel.getSelection();
 		}
-		
-		if (selection == null || selection.length < 1) {
-			updateEmptyPanel();
-			editPanel.showPanel(SEL_EMPTY);
-			return;
-		}
-		
-		if (selection.length == 1) {
-			updateSelectionPanel(selection[0]);
-			editPanel.showPanel(SEL_SINGLE);
-			return;
-		}
-
-		updateMultipleSelectionPanel(selection);
-		editPanel.showPanel(SEL_MULTIPLE);
+		selectionUpdated(selection);
 	}
 	
-	public void updateEmptyPanel() {
-	}
-	public void updateSelectionPanel(int index) {
-	}
-	public void updateMultipleSelectionPanel(int[] indices) {
-	}
+	abstract public void selectionUpdated(int[] selection);
 
 	public void refresh() {
 		if (listPanel != null) {
@@ -107,29 +84,15 @@ public class ListPanelHelper<T> {
 	public void setListPanel(ListPanel<T> listPanel) {
 		this.listPanel = listPanel;
 	}
-
+	
 	public void setEditPanel(ListEditionPanel<T> editPanel) {
-		editPanel.addPanel(getEmptyPanel(), SEL_EMPTY);
-		editPanel.addPanel(getSingleSelectionPanel(), SEL_SINGLE);
-		editPanel.addPanel(getMultipleSelectionPanel(), SEL_MULTIPLE);
 		this.editPanel = editPanel;
-		if (currentSelection != null) {
-			selectionChanged(currentSelection);
-		}
+		fillEditPanel();
+		selectionChanged(null);
 	}
 	
-	public Component getEmptyPanel() {
-		return new JLabel("no selection");
-	}
-	
-	public Component getSingleSelectionPanel() {
-		return new JLabel("single selection");
-	}
-	
-	public Component getMultipleSelectionPanel() {
-		return new JLabel("Multiple selection");
-	}
-
+	public abstract void fillEditPanel();
+		
 	public boolean doRemove(int[] sel) {
         return false;
 	}

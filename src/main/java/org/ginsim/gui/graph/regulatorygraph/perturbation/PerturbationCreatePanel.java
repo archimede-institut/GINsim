@@ -27,6 +27,8 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 	private final PerturbationPanelListHelper helper;
 	private PerturbationType type = null;
 	
+	private static final boolean SHOWTYPECOMBO = PerturbationType.values().length > 1 ? true : false;
+	
 	private final JComboBox selectNode;
 	private final JComboBox selectType;
 	private NodeInfo selected = null;
@@ -45,18 +47,25 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		this.helper = helper;
 		
 		GridBagConstraints cst = new GridBagConstraints();
-		add(new JLabel("Type of perturbation"), cst);
 
-		cst = new GridBagConstraints();
-		cst.gridy = 1;
-		cst.weightx = 1;
-		cst.fill = GridBagConstraints.HORIZONTAL;
-		selectType = new JComboBox(PerturbationType.values());
-		selectType.addActionListener(this);
-		add(selectType, cst);
+		if (SHOWTYPECOMBO) {
+			add(new JLabel("Type of perturbation"), cst);
+			
+			cst = new GridBagConstraints();
+			cst.gridy = 1;
+			cst.weightx = 1;
+			cst.fill = GridBagConstraints.HORIZONTAL;
+			selectType = new JComboBox(PerturbationType.values());
+			selectType.addActionListener(this);
+			add(selectType, cst);
 
-		cst = new GridBagConstraints();
-		cst.gridx = 1;
+			cst = new GridBagConstraints();
+			cst.gridx = 1;
+		} else {
+			selectType = null;
+			cst.gridy = 1;
+		}
+
 		add(new JLabel("Component"), cst);
 		
 		cst = new GridBagConstraints();
@@ -94,19 +103,25 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		setupPanel.add(fixSlider, cst);
 		setupPanel.add(rangeSlider, cst);
 
-		// cancel button
-		cst = new GridBagConstraints();
-		cst.gridx = 0;
-		cst.gridy = 3;
-		add(new JButton( new CancelAction(this) ), cst);
-		
 		// create button
 		cst = new GridBagConstraints();
 		cst.gridx = 1;
 		cst.gridy = 3;
 		add(new JButton( acCreate ), cst);
+
+		// create button
+		cst = new GridBagConstraints();
+		cst.gridx = 0;
+		cst.gridy = 4;
+		cst.gridwidth = 3;
+		cst.fill = GridBagConstraints.HORIZONTAL;
+		add(new JLabel("You can also select multiple perturbations to combine them"), cst);
 		
-		setType((PerturbationType)selectType.getSelectedItem());
+		if (SHOWTYPECOMBO) {
+			setType((PerturbationType)selectType.getSelectedItem());
+		} else {
+			setType(PerturbationType.RANGE);
+		}
 	}
 	
 	private void setType(PerturbationType type) {
@@ -135,18 +150,21 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		}
 		
 		switch (type) {
-		case FIXED:
-			int fixedValue = fixSlider.getValue();
-			if (fixedValue < 0) {
-				fixedValue = 0;
-			} else if (fixedValue > selected.getMax()) {
-				fixedValue = selected.getMax();
-			}
-			perturbations.addFixedPerturbation(selected, fixedValue);
-			helper.refresh();
-			break;
 			
 		case RANGE:
+			
+			if (selected.getMax() < 2) {
+				int fixedValue = fixSlider.getValue();
+				if (fixedValue < 0) {
+					fixedValue = 0;
+				} else if (fixedValue > selected.getMax()) {
+					fixedValue = selected.getMax();
+				}
+				perturbations.addFixedPerturbation(selected, fixedValue);
+				helper.refresh();
+				break;
+			}
+			
 			int min = rangeSlider.getValue();
 			int max = rangeSlider.getUpperValue();
 			if (min < 0) {
@@ -171,24 +189,24 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		setType(type);
 	}
 	
-	protected void cancel() {
-		helper.selectionChanged(null);
-	}
-
     public void stateChanged(ChangeEvent e) {
     	switch (type) {
-		case FIXED:
-			valueLabel.setText(""+fixSlider.getValue());
-			break;
 		case RANGE:
-			valueLabel.setText("["+rangeSlider.getValue() + ","+rangeSlider.getUpperValue()+"]");
+			if (selected.getMax() < 2) {
+				valueLabel.setText(""+fixSlider.getValue());
+			} else {
+				valueLabel.setText("["+rangeSlider.getValue() + ","+rangeSlider.getUpperValue()+"]");
+			}
 			break;
 		}
     }
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		PerturbationType selectedType = (PerturbationType)selectType.getSelectedItem();
+		PerturbationType selectedType =PerturbationType.RANGE;
+		if (SHOWTYPECOMBO) {
+			selectedType = (PerturbationType)selectType.getSelectedItem();
+		}
 		if (type != selectedType) {
 			setType(selectedType);
 		}
@@ -209,19 +227,21 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		selected = (NodeInfo)sel;
 		
 		switch (type) {
-		case FIXED:
-			setupPanel.setBorder(BorderFactory.createTitledBorder("Fix component value"));
-			fixSlider.setMaximum(selected.getMax());
-			fixSlider.setValue(0);
-			fixSlider.setVisible(true);
-			break;
-
 		case RANGE:
-			setupPanel.setBorder(BorderFactory.createTitledBorder("Lock component value in range"));
-			rangeSlider.setMaximum(selected.getMax());
-			rangeSlider.setValue(0);
-			rangeSlider.setUpperValue(selected.getMax());
-			rangeSlider.setVisible(true);
+			if (selected.getMax() < 2) {
+				setupPanel.setBorder(BorderFactory.createTitledBorder("Fix component value"));
+				fixSlider.setMaximum(selected.getMax());
+				fixSlider.setValue(0);
+				rangeSlider.setVisible(false);
+				fixSlider.setVisible(true);
+			} else {
+				setupPanel.setBorder(BorderFactory.createTitledBorder("Lock component value in range"));
+				rangeSlider.setMaximum(selected.getMax());
+				rangeSlider.setValue(0);
+				rangeSlider.setUpperValue(selected.getMax());
+				fixSlider.setVisible(false);
+				rangeSlider.setVisible(true);
+			}
 			break;
 			
 		default:
@@ -246,19 +266,5 @@ class CreateAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		panel.create();
-	}
-}
-
-class CancelAction extends AbstractAction {
-	private final PerturbationCreatePanel panel;
-
-	public CancelAction(PerturbationCreatePanel panel) {
-		super("Cancel");
-		this.panel = panel;
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		panel.cancel();
 	}
 }

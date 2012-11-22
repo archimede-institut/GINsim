@@ -80,4 +80,12 @@ class MultipleListHelper extends ListPanelHelper<Perturbation> {
         return true;
 	}
 
+	@Override
+	public void selectionUpdated(int[] selection) {
+	}
+
+	@Override
+	public void fillEditPanel() {
+	}
+
 }

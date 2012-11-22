@@ -13,11 +13,13 @@ import javax.swing.JPanel;
 
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+import org.ginsim.gui.utils.data.ListEditionPanel;
 import org.ginsim.gui.utils.data.ListPanelHelper;
 
 public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation> {
 
 	private static final String CREATE = "CREATE";
+	private static final String SELECTION = "SELECTION";
 	
 	private final ListOfPerturbations perturbations;
 	
@@ -33,6 +35,9 @@ public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation> {
 	
 	@Override
 	public int create(Object arg) {
+		if (editPanel == null) {
+			return -1;
+		}
 		if (createPanel == null) {
 			createPanel = new PerturbationCreatePanel(this, perturbations);
 			editPanel.addPanel(createPanel, CREATE);
@@ -42,35 +47,33 @@ public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation> {
 	}
 
 	@Override
-	public Component getEmptyPanel() {
-		return getMultipleSelectionPanel();
-	}
-	
-	@Override
-	public Component getSingleSelectionPanel() {
-		return getMultipleSelectionPanel();
-	}
-
-	@Override
-	public Component getMultipleSelectionPanel() {
+	public void fillEditPanel() {
+		if (editPanel == null) {
+			return;
+		}
 		if (selectionPanel == null) {
 			selectionPanel = new MultipleSelectionPanel(this);
+			editPanel.addPanel(selectionPanel, SELECTION);
 		}
-		return selectionPanel;
+	}
+	
+	public void selectionUpdated(int[] selection) {
+		if (selectionPanel == null) {
+			return;
+		}
+		if (selection == null || selection.length < 1) {
+			create(null);
+			return;
+		}
+		
+		if (selection.length == 1) {
+			selectionPanel.select(selection[0]);
+		} else {
+			selectionPanel.select(perturbationPanel, perturbations, selection);
+		}
+		editPanel.showPanel(SELECTION);
 	}
 
-	@Override
-	public void updateEmptyPanel() {
-		selectionPanel.select(-1);
-	}
-	@Override
-	public void updateSelectionPanel(int index) {
-		selectionPanel.select(index);
-	}
-	@Override
-	public void updateMultipleSelectionPanel(int[] indices) {
-		selectionPanel.select(perturbationPanel, perturbations, indices);
-	}
 
 	@Override
 	public boolean doRemove(int[] sel) {
