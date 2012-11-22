@@ -7,6 +7,7 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 
+import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
 import org.ginsim.TestFileUtils;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.Translator;
@@ -69,7 +70,36 @@ public class NuSMVExportTest {
 	}
 
 	@Test
-	public void testExportAsync() {
+	public void testExportAsyncWithOutputs() {
+		File tmpDir = TestFileUtils.getTempTestFileDirectory(module);
+
+		for (int i = 0; i < saModel.length; i++) {
+			File tmpFile = new File(tmpDir, saModel[i]);
+
+			NuSMVConfig config = new NuSMVConfig(saGraph[i]);
+			config.setUpdatePolicy(NuSMVConfig.CFG_ASYNC);
+
+			ModelReducer reducer = new ModelReducer(config.getModel());
+			reducer.removePseudoOutputs();
+			config.updateModel(reducer.getModel());
+
+			runService(config, tmpFile);
+
+			StringBuffer sbtmp = readFile(tmpFile);
+
+			File origFile = new File(
+					TestFileUtils.getTestFileDirectory(module), saModel[i]
+							+ ".async.outputs.smv");
+			StringBuffer sbOrig = readFile(origFile);
+
+			// Discard first line, containing the generation date
+			assertEquals(sbtmp.substring(sbtmp.indexOf("\n")),
+					sbOrig.substring(sbOrig.indexOf("\n")));
+		}
+	}
+
+	@Test
+	public void testExportAsyncNoOutputs() {
 		File tmpDir = TestFileUtils.getTempTestFileDirectory(module);
 
 		for (int i = 0; i < saModel.length; i++) {
@@ -84,7 +114,7 @@ public class NuSMVExportTest {
 
 			File origFile = new File(
 					TestFileUtils.getTestFileDirectory(module), saModel[i]
-							+ ".async.smv");
+							+ ".async.nooutputs.smv");
 			StringBuffer sbOrig = readFile(origFile);
 
 			// Discard first line, containing the generation date
@@ -94,7 +124,36 @@ public class NuSMVExportTest {
 	}
 
 	@Test
-	public void testExportSync() {
+	public void testExportSyncWithOutputs() {
+		File tmpDir = TestFileUtils.getTempTestFileDirectory(module);
+
+		for (int i = 0; i < saModel.length; i++) {
+			File tmpFile = new File(tmpDir, saModel[i]);
+
+			NuSMVConfig config = new NuSMVConfig(saGraph[i]);
+			config.setUpdatePolicy(NuSMVConfig.CFG_SYNC);
+
+			ModelReducer reducer = new ModelReducer(config.getModel());
+			reducer.removePseudoOutputs();
+			config.updateModel(reducer.getModel());
+
+			runService(config, tmpFile);
+
+			StringBuffer sbtmp = readFile(tmpFile);
+
+			File origFile = new File(
+					TestFileUtils.getTestFileDirectory(module), saModel[i]
+							+ ".sync.outputs.smv");
+			StringBuffer sbOrig = readFile(origFile);
+
+			// Discard first line, containing the generation date
+			assertEquals(sbtmp.substring(sbtmp.indexOf("\n")),
+					sbOrig.substring(sbOrig.indexOf("\n")));
+		}
+	}
+
+	@Test
+	public void testExportSyncNoOutputs() {
 		File tmpDir = TestFileUtils.getTempTestFileDirectory(module);
 
 		for (int i = 0; i < saModel.length; i++) {
@@ -109,7 +168,7 @@ public class NuSMVExportTest {
 
 			File origFile = new File(
 					TestFileUtils.getTestFileDirectory(module), saModel[i]
-							+ ".sync.smv");
+							+ ".sync.nooutputs.smv");
 			StringBuffer sbOrig = readFile(origFile);
 
 			// Discard first line, containing the generation date

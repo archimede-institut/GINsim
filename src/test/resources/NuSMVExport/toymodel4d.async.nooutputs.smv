@@ -1,4 +1,4 @@
--- October 30, 2012 3:43:09 PM WET
+-- November 22, 2012 11:54:23 AM WET
 -- GINsim implicit representation for NuSMV
 -- Requires NuSMV v2.1+ for CTL properties
 -- Requires NuSMV-ARCTL for ARCTL properties
@@ -9,9 +9,12 @@ MODULE main
 
 IVAR
 -- Simulation mode declaration --
--- Synchronous
-  PCs : { PC_c1 };
-  PC_c1_vars : { PC_c1_gA_gB_gC_gD };
+-- Asynchronous
+  PCs : { PC_c1, PC_c2, PC_c3, PC_c4 };
+  PC_c1_vars : { PC_c1_gA };
+  PC_c2_vars : { PC_c2_gB };
+  PC_c3_vars : { PC_c3_gC };
+  PC_c4_vars : { PC_c4_gD };
 
 VAR
 -- State variables declaration
@@ -93,10 +96,10 @@ gD_inc := gD_focal > gD;
 gD_dec := gD_focal < gD;
 gD_std := gD_focal = gD;
 
-update_gA_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_gA_gB_gC_gD);
-update_gB_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_gA_gB_gC_gD);
-update_gC_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_gA_gB_gC_gD);
-update_gD_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_gA_gB_gC_gD);
+update_gA_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_gA);
+update_gB_OK := (PCs = PC_c2) & (PC_c2_vars = PC_c2_gB);
+update_gC_OK := (PCs = PC_c3) & (PC_c3_vars = PC_c3_gC);
+update_gD_OK := (PCs = PC_c4) & (PC_c4_vars = PC_c4_gD);
 
 -- DISCLAIMER: There are no INput nor OUTput variables in the weak/strong stable states description
 stableStates := weakSS | strongSS;

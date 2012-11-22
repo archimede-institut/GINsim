@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
 import org.ginsim.TestFileUtils;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.Translator;
@@ -76,7 +77,7 @@ public class NuSMVExportMutantPriorityTest {
 		File tmpFile = new File(tmpDir, sModel + ".smv");
 
 		NuSMVConfig config = new NuSMVConfig(graph);
-		LogicalModel model = config.getGraph().getModel();
+		LogicalModel model = config.getModel();
 		List<RegulatoryNode> nodeOrder = graph.getNodeOrder();
 
 		// Priorities
@@ -102,7 +103,11 @@ public class NuSMVExportMutantPriorityTest {
 		lst.add(new PerturbationFixed(model.getNodeOrder().get(0), 0));
 		lst.add(new PerturbationFixed(model.getNodeOrder().get(1), 1));
 		Perturbation perturbation = new PerturbationMultiple(lst);
-		config.getPerturbation().setPerturbation(perturbation);
+
+		model = perturbation.apply(model);
+		ModelReducer reducer = new ModelReducer(model);
+		reducer.removePseudoOutputs();
+		config.updateModel(reducer.getModel());
 
 		// Run test
 		runService(config, tmpFile);
