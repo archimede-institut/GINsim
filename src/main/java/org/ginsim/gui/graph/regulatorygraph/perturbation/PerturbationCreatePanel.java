@@ -8,10 +8,12 @@ import java.awt.event.ActionListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -36,7 +38,9 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 	// setup value slider
 	private JPanel setupPanel = new JPanel(new GridBagLayout());
 	private JLabel valueLabel = new JLabel();
-	private JSlider fixSlider = new JSlider(0,1);
+	
+	private JRadioButton radioKO = new JRadioButton("0 - Knockout");
+	private JRadioButton radioEct = new JRadioButton("1 - Ectopic activity");
 	private RangeSlider rangeSlider = new RangeSlider(0,1);
 	
 	private final CreateAction acCreate = new CreateAction(this);
@@ -92,16 +96,23 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		cst = new GridBagConstraints();
 		setupPanel.add(valueLabel, cst);
 		
-		fixSlider.setMinorTickSpacing(1);
-		fixSlider.setPaintTicks(true);
-		fixSlider.addChangeListener(this);
 		rangeSlider.setMinorTickSpacing(1);
 		rangeSlider.setPaintTicks(true);
 		rangeSlider.addChangeListener(this);
+		ButtonGroup group = new ButtonGroup();
+		group.add(radioKO);
+		group.add(radioEct);
+		radioKO.setSelected(true);
 		cst = new GridBagConstraints();
+		cst.anchor = GridBagConstraints.WEST;
 		cst.gridx = 1;
-		setupPanel.add(fixSlider, cst);
+		setupPanel.add(radioKO, cst);
 		setupPanel.add(rangeSlider, cst);
+		cst = new GridBagConstraints();
+		cst.anchor = GridBagConstraints.WEST;
+		cst.gridx = 1;
+		cst.gridy = 1;
+		setupPanel.add(radioEct, cst);
 
 		// create button
 		cst = new GridBagConstraints();
@@ -126,7 +137,8 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 	
 	private void setType(PerturbationType type) {
 		this.type = type;
-		fixSlider.setVisible(false);
+		radioKO.setVisible(false);
+		radioEct.setVisible(false);
 		rangeSlider.setVisible(false);
 		valueLabel.setText("");
 
@@ -154,11 +166,9 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		case RANGE:
 			
 			if (selected.getMax() < 2) {
-				int fixedValue = fixSlider.getValue();
-				if (fixedValue < 0) {
-					fixedValue = 0;
-				} else if (fixedValue > selected.getMax()) {
-					fixedValue = selected.getMax();
+				int fixedValue = 0;
+				if (radioEct.isSelected()) {
+					fixedValue = 1;
 				}
 				perturbations.addFixedPerturbation(selected, fixedValue);
 				helper.refresh();
@@ -192,9 +202,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
     public void stateChanged(ChangeEvent e) {
     	switch (type) {
 		case RANGE:
-			if (selected.getMax() < 2) {
-				valueLabel.setText(""+fixSlider.getValue());
-			} else {
+			if (selected.getMax() > 1) {
 				valueLabel.setText("["+rangeSlider.getValue() + ","+rangeSlider.getUpperValue()+"]");
 			}
 			break;
@@ -230,17 +238,19 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		case RANGE:
 			if (selected.getMax() < 2) {
 				setupPanel.setBorder(BorderFactory.createTitledBorder("Fix component value"));
-				fixSlider.setMaximum(selected.getMax());
-				fixSlider.setValue(0);
 				rangeSlider.setVisible(false);
-				fixSlider.setVisible(true);
+				valueLabel.setVisible(false);
+				radioKO.setVisible(true);
+				radioEct.setVisible(true);
 			} else {
 				setupPanel.setBorder(BorderFactory.createTitledBorder("Lock component value in range"));
 				rangeSlider.setMaximum(selected.getMax());
 				rangeSlider.setValue(0);
 				rangeSlider.setUpperValue(selected.getMax());
-				fixSlider.setVisible(false);
+				radioKO.setVisible(false);
+				radioEct.setVisible(false);
 				rangeSlider.setVisible(true);
+				valueLabel.setVisible(true);
 			}
 			break;
 			
