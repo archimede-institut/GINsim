@@ -39,7 +39,8 @@ public class CADPModuleWriter extends CADPWriter {
 
 		RuleWriter ruleWriter = new RuleWriter(this.getAllComponents(),
 				stateVarWriter);
-		FunctionWriter functionWriter = new FunctionWriter(this.getAllComponents(), stateVarWriter);
+		FunctionWriter functionWriter = new FunctionWriter(
+				this.getAllComponents(), stateVarWriter);
 
 		String output = "";
 		output += "module " + modelName + "(common) is\n\n";
@@ -71,7 +72,7 @@ public class CADPModuleWriter extends CADPWriter {
 		output += "end process\n\n";
 
 		output += functionWriter;
-		
+
 		return output;
 	}
 
@@ -90,7 +91,8 @@ public class CADPModuleWriter extends CADPWriter {
 		public String toString() {
 			String out = "";
 
-			out += "\t\t\t" + "Stable_State[" + CADPWriter.getStableActionName() + "](is_Stable("
+			out += "\t\t\t" + "Stable_State["
+					+ CADPWriter.getStableActionName() + "](is_Stable("
 					+ stateVarWriter.simpleList() + "))\n";
 
 			for (RegulatoryNode node : listNodes) {
@@ -115,7 +117,7 @@ public class CADPModuleWriter extends CADPWriter {
 			}
 
 			out += "\n";
-			
+
 			return out;
 		}
 	}
@@ -135,7 +137,7 @@ public class CADPModuleWriter extends CADPWriter {
 		public String toString() {
 
 			String out = "";
-			
+
 			LogicalModel model = getModel();
 
 			String stableCondition = "";
@@ -155,8 +157,9 @@ public class CADPModuleWriter extends CADPWriter {
 							+ (node.getMaxValue() > 1 ? "Multi" : "Binary")
 							+ " is\n";
 
-					// There are some paths
-					String[] conditionArray = new String[node.getMaxValue()];
+					String[] conditionArray = new String[node.getMaxValue() + 1];
+					// we make space for the unused v=0 condition to simplify
+					// syntax in subsequent code
 
 					for (int value : searcher) {
 

@@ -26,6 +26,7 @@ public class VisibleComponentsWidget extends JPanel {
 	private static final long serialVersionUID = 6900573600550522830L;
 	private CompositionSpecificationDialog dialog = null;
 	private List<RegulatoryNode> listNodes = null;
+	private List<RegulatoryNode> eligible = new ArrayList<RegulatoryNode>();
 	private JList nodeList = null;
 
 	public VisibleComponentsWidget(final CompositionSpecificationDialog dialog) {
@@ -40,7 +41,7 @@ public class VisibleComponentsWidget extends JPanel {
 				.createTitledBorder("Specify Visible Components"));
 		
 		listNodes = this.dialog.getGraph().getNodeOrder();
-		List<RegulatoryNode> eligible = new ArrayList<RegulatoryNode>();
+		
 		for (RegulatoryNode node : listNodes){
 			if (!this.dialog.getMappedNodes().contains(node))
 				eligible.add(node);
@@ -63,9 +64,9 @@ public class VisibleComponentsWidget extends JPanel {
 	
 	public List<RegulatoryNode> getSelectedNodes(){
 		List<RegulatoryNode> selectedList = new ArrayList<RegulatoryNode>();
-		RegulatoryNode selected[] = (RegulatoryNode []) nodeList.getSelectedValues();
+		int selected[] = nodeList.getSelectedIndices();
 		for (int i = 0; i < selected.length; i++)
-			selectedList.add(selected[i]);
+			selectedList.add(eligible.get(selected[i]));
 		
 		return selectedList;
 	}

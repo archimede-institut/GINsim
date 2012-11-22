@@ -102,7 +102,7 @@ public class CADPCommonWriter extends CADPWriter {
 		output += "process Set_regulatorB [G : Binary] (inout g : Binary, in new_g : Binary) is\n";
 		output += "\tif g != new_g then\n";
 		output += "\t\tG (new_g);\n";
-		output += "\t\tg := new_g";
+		output += "\t\tg := new_g\n";
 		output += "\tend if\n";
 		output += "end process\n\n";
 		

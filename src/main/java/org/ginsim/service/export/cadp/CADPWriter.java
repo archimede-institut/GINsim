@@ -37,10 +37,12 @@ public abstract class CADPWriter {
 		return node.getNodeInfo().getNodeID().toLowerCase();
 	}
 
-	public static String node2SyncAction(RegulatoryNode input, int inputModuleIndex, RegulatoryNode proper, int properModuleIndex){
-		return "I_" + node2Gate(input,inputModuleIndex) + "_" + node2Gate(proper,properModuleIndex);
+	public static String node2SyncAction(RegulatoryNode input,
+			int inputModuleIndex, RegulatoryNode proper, int properModuleIndex) {
+		return "I_" + node2Gate(input, inputModuleIndex) + "_"
+				+ node2Gate(proper, properModuleIndex);
 	}
-	
+
 	public int getNumberInstances() {
 		return this.config.getTopology().getNumberInstances();
 	}
@@ -63,10 +65,10 @@ public abstract class CADPWriter {
 		return this.config.getMapping().getIntegrationFunctionForInput(input);
 	}
 
-	public Collection<RegulatoryNode> getListVisible(){
+	public Collection<RegulatoryNode> getListVisible() {
 		return this.config.getListVisible();
 	}
-	
+
 	public boolean areNeighbours(int i, int j) {
 		return this.config.getTopology().areNeighbours(i, j);
 	}
@@ -120,27 +122,28 @@ public abstract class CADPWriter {
 	public LogicalModel getModel() {
 		return this.config.getGraph().getModel();
 	}
-	
-	public String getBCGModelFileName(int moduleId){
+
+	public String getBCGModelFileName(int moduleId) {
 		return config.getBCGModelFilename(moduleId);
 	}
-	
-	public String getLNTModelFileName(){
+
+	public String getLNTModelFileName() {
 		return config.getLNTModelFilename();
 	}
 
-	public String getBCGIntegrationFileName(RegulatoryNode input, int moduleIndex){
+	public String getBCGIntegrationFileName(RegulatoryNode input,
+			int moduleIndex) {
 		return config.getBCGIntegrationFilename(input, moduleIndex);
 	}
-	
-	public String getLNTIntegrationFileName(){
+
+	public String getLNTIntegrationFileName() {
 		return config.getLNTIntegrationFilename();
 	}
-	
-	public String getExpFileName(){
+
+	public String getExpFileName() {
 		return config.getExpFilename();
 	}
-	
+
 	protected static String makeCommaList(List<String> list) {
 		return makeCommaList(list, ",");
 	}
@@ -179,6 +182,7 @@ public abstract class CADPWriter {
 				List<RegulatoryNode> listNodes) {
 			this.initialStates = initialStates;
 			this.listNodes = listNodes;
+			sanityCheck();
 		}
 
 		public InitialStateWriter(List<byte[]> initialStates,
@@ -187,13 +191,44 @@ public abstract class CADPWriter {
 			this.initialStates = initialStates;
 			this.listExternal = listExternal;
 			this.isMixed = true;
+			sanityCheck();
+		}
+
+		/**
+		 * Makes sure that initial states have been specified. If this is not
+		 * the case if falls back to defining an initial state with all
+		 * components at 0
+		 */
+		private void sanityCheck() {
+			if (this.initialStates == null) {
+				this.initialStates = new ArrayList<byte[]>();
+				if (this.isMixed == true) {
+
+					byte[] mixedState = new byte[listExternal.size()];
+					for (int p = 0; p < mixedState.length; p++)
+						mixedState[p] = 0;
+					this.initialStates.add(mixedState);
+
+				} else {
+					for (int i = 1; i <= config.getTopology()
+							.getNumberInstances(); i++) {
+						byte[] initialState = new byte[listNodes.size()];
+						for (int p = 0; p < initialState.length; p++)
+							initialState[p] = 0;
+						this.initialStates.add(initialState);
+
+					}
+				}
+			} else {
+				// Do nothing
+			}
 		}
 
 		public String typedSimpleList(int moduleId) {
 			if (this.isMixed == true)
 				return "";
 
-			byte[] initialState = initialStates.get(moduleId);
+			byte[] initialState = initialStates.get(moduleId - 1);
 			List<String> listStates = new ArrayList<String>();
 
 			for (int i = 0; i < initialState.length; i++) {
@@ -209,7 +244,7 @@ public abstract class CADPWriter {
 			if (this.isMixed == true)
 				return "";
 
-			byte[] initialState = initialStates.get(moduleId);
+			byte[] initialState = initialStates.get(moduleId - 1);
 			List<String> listStates = new ArrayList<String>();
 
 			for (int i = 0; i < initialState.length; i++) {
@@ -232,7 +267,7 @@ public abstract class CADPWriter {
 				RegulatoryNode node = entry.getKey();
 				int moduleId = entry.getValue().intValue();
 				String modifier = node.getMaxValue() > 1 ? "M" : "B";
-				listStates.add(initialStates.get(moduleId)[getAllComponents()
+				listStates.add(initialStates.get(moduleId - 1)[getAllComponents()
 						.indexOf(node)] + modifier);
 			}
 

@@ -71,6 +71,10 @@ public class CADPExpWriter {
 
 		for (RegulatoryNode node : config.getGraph().getNodeOrder()) {
 
+			
+			// TODO: Needs to treat inputs
+			// TODO: Needs to treat proper components which, even not having influences
+			// still need to have their own synchronisation vectors (special case where influences are inexistant)
 			if (!node.isInput()
 					&& !config.getMapping().getInfluencedInputs(node).isEmpty()) {
 
@@ -107,6 +111,10 @@ public class CADPExpWriter {
 					}
 
 				}
+			} else {				
+				// in case it is a (visible) unmapped input or a proper components which does not influence any inputs
+				// TODO
+				
 			}
 
 		}
@@ -301,6 +309,7 @@ public class CADPExpWriter {
 			return lines;
 
 		for (String[] line : lines) {
+			
 			Map.Entry<RegulatoryNode, Integer> entry = influences.remove(0);
 			RegulatoryNode currentInfluence = entry.getKey();
 			int currentTargetModule = entry.getValue().intValue();
