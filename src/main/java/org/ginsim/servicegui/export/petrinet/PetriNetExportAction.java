@@ -50,7 +50,7 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> {
 		if (format == null) {
 			return null;
 		}
-		return new FileFormatDescription(format.name(), format.name());
+		return new FileFormatDescription(format.name(), format.getExtension());
 	}
 
 	@Override
