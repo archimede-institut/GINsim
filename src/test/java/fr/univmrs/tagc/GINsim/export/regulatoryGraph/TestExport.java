@@ -9,9 +9,7 @@ import org.ginsim.TestFileUtils;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.io.parser.GinmlParser;
-import org.ginsim.core.service.ServiceManager;
 import org.ginsim.service.export.cytoscape.CytoscapeEncoder;
-import org.ginsim.service.export.snakes.SnakesEncoder;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -23,19 +21,6 @@ public class TestExport {
 		File file = new File(TestFileUtils.getTestFileDir(), "graph.ginml");
 		GinmlParser parser = new GinmlParser();
 		this.graph = (RegulatoryGraph)parser.parse(new FileInputStream(file), null);
-	}
-	
-	@Test
-	public void testSNAKES() throws IOException {
-		
-		String filename = tmpDir.getAbsolutePath()+File.separator+"graph.py";
-		SnakesEncoder export =  new SnakesEncoder();
-		try{
-			export.encode( graph, filename);
-		}
-		catch( GsException exception){
-			Assert.fail( "Exception occured during testSnakes : " + exception);
-		}
 	}
 	
 	@Test

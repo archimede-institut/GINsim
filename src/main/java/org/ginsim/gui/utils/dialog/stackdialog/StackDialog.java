@@ -241,10 +241,10 @@ abstract public class StackDialog extends SimpleDialog {
     }
     
     public void doClose() {
-    	cancel();
+    	dispose();
     }
     protected void cancel() {
-    	dispose();
+    	closeEvent();
     }
     
     protected void setRunning(boolean b) {

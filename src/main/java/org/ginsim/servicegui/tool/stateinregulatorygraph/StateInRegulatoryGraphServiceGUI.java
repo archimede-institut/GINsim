@@ -14,12 +14,12 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.ServiceStatus;
-import org.ginsim.service.tool.stateinregulatorygraph.StateInRegulatoryGraphService;
+import org.ginsim.gui.service.common.StandaloneGUI;
 import org.mangosdk.spi.ProviderFor;
 
 
+@StandaloneGUI
 @ProviderFor( ServiceGUI.class)
-@GUIFor( StateInRegulatoryGraphService.class)
 @ServiceStatus( ServiceStatus.RELEASED)
 public class StateInRegulatoryGraphServiceGUI extends AbstractServiceGUI {
 

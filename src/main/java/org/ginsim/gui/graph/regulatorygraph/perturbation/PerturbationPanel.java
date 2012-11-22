@@ -2,6 +2,8 @@ package org.ginsim.gui.graph.regulatorygraph.perturbation;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -34,20 +36,19 @@ public class PerturbationPanel extends JPanel {
 		spanel.init();
 		cst = new GridBagConstraints();
 		cst.weightx = 1;
-		cst.weighty = 1;
+		cst.weighty = 0.5;
 		cst.fill = GridBagConstraints.BOTH;
-		cst.gridheight = 2;
 		add(spanel, cst);
 
-		mhelper = new MultipleListHelper();
+		mhelper = new MultipleListHelper(perturbations);
 		mpanel = new ListPanel<Perturbation>(mhelper, "Perturbations");
 		mpanel.setList(perturbations.getMultiplePerturbations());
 		cst = new GridBagConstraints();
-		cst.gridx = 1;
-		add(new JLabel("Combined perturbations)"), cst);
+		cst.gridy = 1;
+		add(new JLabel("Combined perturbations"), cst);
 		cst = new GridBagConstraints();
-		cst.gridx = 1;
-		cst.weightx = 0.5;
+		cst.gridy = 2;
+		cst.weightx = 1;
 		cst.weighty = 1;
 		cst.fill = GridBagConstraints.BOTH;
 		add(mpanel, cst);
@@ -60,7 +61,31 @@ public class PerturbationPanel extends JPanel {
 }
 
 class MultipleListHelper extends ListPanelHelper<Perturbation> {
-	public MultipleListHelper() {
+	
+	ListOfPerturbations perturbations;
+	
+	public MultipleListHelper(ListOfPerturbations perturbations) {
+		this.perturbations = perturbations;
 		this.canAdd = false;
 	}
+	
+	public boolean doRemove(int[] sel) {
+		List<Perturbation> removed = new ArrayList<Perturbation>();
+		List<Perturbation> multiples = perturbations.getMultiplePerturbations();
+		for (int i=0 ; i< sel.length ; i++) {
+			removed.add(perturbations.getMultiplePerturbations().get(sel[i]));
+		}
+		
+		perturbations.removePerturbation(removed);
+        return true;
+	}
+
+	@Override
+	public void selectionUpdated(int[] selection) {
+	}
+
+	@Override
+	public void fillEditPanel() {
+	}
+
 }

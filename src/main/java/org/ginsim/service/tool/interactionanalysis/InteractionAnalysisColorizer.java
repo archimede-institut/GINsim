@@ -40,10 +40,4 @@ public class InteractionAnalysisColorizer extends Colorizer {
 		}
 	}
 
-	@Override
-	public void undoColorize(Graph<?, ?> graph) {
-		if (cs != null) 
-			cs.restoreAllEdges(functionalityMap.keySet(), graph.getEdgeAttributeReader()); //Only restore the affected edges
-	}
-
 }

@@ -35,7 +35,7 @@ public class HTGSimulationHelper  implements SimulationHelper {
 		this.htg = GraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, nodes, mode);
 		
 		// FIXME: associated graph based on LogicalModel
-		// htg.setAssociatedGraph(model);
+		htg.setAssociatedGraph(params.param_list.graph);
 		
 		NodeAttributesReader vreader = htg.getNodeAttributeReader();
 		vreader.setDefaultNodeSize(5+10*nodes.size(), 25);

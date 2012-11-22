@@ -1,6 +1,7 @@
 package org.ginsim.core.graph.regulatorygraph.perturbation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -28,6 +29,8 @@ public class PerturbationParser extends XMLHelper {
 	private static final int PERTURBATION = 21;
 	private static final int MULTIPLE = 22;
 
+	private static final int USER = 30;
+
 	static {
 		addCall("mutant", MUTANT, CALLMAP, BOTH, false);
 		addCall("change", CHANGE, CALLMAP, STARTONLY, false);
@@ -37,16 +40,18 @@ public class PerturbationParser extends XMLHelper {
 		addCall("perturbation", PERTURBATION, CALLMAP, STARTONLY, false);
 		addCall("multiple", MULTIPLE, CALLMAP, STARTONLY, false);
 
+		addCall("user", USER, CALLMAP, STARTONLY, false);
 	}
 	
-    ListOfPerturbations mutantList = null;
-    RegulatoryGraph graph;
-    List nodeOrder;
-    String[] t_order;
+    private ListOfPerturbations mutantList = null;
+    private RegulatoryGraph graph;
+    private List nodeOrder;
+    private String[] t_order;
     
+    private List<Perturbation> perturbations;
+    private String curname;
     
-    List<Perturbation> perturbations;
-    String curname;
+    private Map<String, Perturbation> m_names = new HashMap<String, Perturbation>();
 
     /**
      * @param graph
@@ -63,10 +68,13 @@ public class PerturbationParser extends XMLHelper {
     		// FIXME
 //            mutant.annotation.setComment(curval);
     	} else if (id == MUTANT) {
-    		// add multiple mutants if needed
+    		// add multiple mutants if needed and set aliases
+			Perturbation p = perturbations.get(0);
     		if (perturbations.size() > 1) {
-    			mutantList.addMultiplePerturbation(perturbations);
+    			p = mutantList.addMultiplePerturbation(perturbations);
     		}
+			m_names.put(curname, p);
+			mutantList.setAliases(curname, p);
     	}
 	}
 
@@ -113,6 +121,11 @@ public class PerturbationParser extends XMLHelper {
 				// FIXME
 //	      		mutant.annotation.addLink(lnk, graph);
 			}
+			break;
+		case USER:
+			String key = attributes.getValue("key");
+			String value = attributes.getValue("value");
+			mutantList.usePerturbation(key, m_names.get(value));
 			break;
 		}
 	}

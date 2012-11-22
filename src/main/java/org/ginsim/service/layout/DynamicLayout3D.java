@@ -22,8 +22,9 @@ public class DynamicLayout3D {
     private int[] decalx, decaly;
     private int stateWidth = 0;
 
-    private static int MARGIN = 10;
+    private final int MARGIN = 10;
     private int maxPossibleY = MARGIN;
+    private final int DIMENSIONSTEP = 30;
 	
     public static void runLayout(DynamicGraph graph) throws GsException {
     	DynamicLayout3D algo = new DynamicLayout3D();
@@ -74,7 +75,7 @@ public class DynamicLayout3D {
 
 		double left = MARGIN;
 //		double top = MARGIN;
-		double bottom = maxPossibleY;
+		double bottom = maxPossibleY + DIMENSIONSTEP;
 
 		for (int i = 0; i < state.length; i++) {
 			left += state[i]*decalx[i];
@@ -184,9 +185,9 @@ public class DynamicLayout3D {
 
       	if (maxValues.length > 3) {
            	decalx[3] = stateWidth*(maxValues[0]+2)+stateWidth+MARGIN;
-           	decaly[3] = 30;
+           	decaly[3] = - DIMENSIONSTEP;
           	if (maxValues.length > 4) {
-               	decalx[4] = 30;
+               	decalx[4] = DIMENSIONSTEP;
                	decaly[4] = stateWidth*(maxValues[1]+2)+stateWidth+MARGIN;
            	}
        	}

@@ -55,7 +55,7 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 		}
 	}
 	
-	protected final F format;
+	public final F format;
 	
 	public FormatSupportService(F format) {
 		this.format = format;

@@ -43,10 +43,8 @@ public class ColorizerPanel extends JPanel {
 	
 	protected Colorizer colorizer;
 	private String storeUserChoicePrefix;
-	private boolean addInitialColorizationCheckbox;
 
-	private JCheckBox initialColorizationCheckbox;
-	private JButton colorizeButton;
+	private JCheckBox cb_colorize;
 
 
 	/**
@@ -61,8 +59,7 @@ public class ColorizerPanel extends JPanel {
 	 * @param storeUserChoicePrefix define the prefix to store the user preference on the initial checkbox state (default false)
 	 * @param addInitialColorizationCheckbox indicates if the initialColorizationCheckbox should be added to the panel
 	 */
-	public ColorizerPanel(boolean addInitialColorizationCheckbox, String storeUserChoicePrefix, Graph<?, ?> graph) {
-		this.addInitialColorizationCheckbox = addInitialColorizationCheckbox;
+	public ColorizerPanel(String storeUserChoicePrefix, Graph<?, ?> graph) {
 		this.storeUserChoicePrefix = storeUserChoicePrefix;
 		this.graph = graph;
         initialize();
@@ -73,7 +70,7 @@ public class ColorizerPanel extends JPanel {
 	 * If addInitialColorizationCheckbox is true, also add the initialColorizationCheckbox.
 	 */
 	public ColorizerPanel(Graph<?, ?> graph) {
-		this(false, "", graph);
+		this("", graph);
 	}
 
 	/**
@@ -84,7 +81,6 @@ public class ColorizerPanel extends JPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = c.gridy = 0;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		init_colorizeButton(c);
 		c.gridy++;
 		c.insets = new Insets(0, 20, 0, 0);
 		init_initialColorizationCheckbox(c);
@@ -96,57 +92,39 @@ public class ColorizerPanel extends JPanel {
 	 * @param c GridBagConstraints to place the element
 	 */
 	private void init_initialColorizationCheckbox(GridBagConstraints c) {
-		if (addInitialColorizationCheckbox && initialColorizationCheckbox == null) {
-			initialColorizationCheckbox = new JCheckBox(Translator.getString("STR_colorizer_initialColorizarionCheckbox"));
-			initialColorizationCheckbox.setSelected(((Boolean)OptionStore.getOption(storeUserChoicePrefix+OPTION_STORE_INITIAL_COLORIZATION, Boolean.FALSE)).booleanValue());
-			initialColorizationCheckbox.addChangeListener(new ChangeListener() {
+		if (cb_colorize == null) {
+			cb_colorize = new JCheckBox(Translator.getString("STR_colorize"));
+			cb_colorize.setSelected(((Boolean)OptionStore.getOption(storeUserChoicePrefix+OPTION_STORE_INITIAL_COLORIZATION, Boolean.FALSE)).booleanValue());
+			cb_colorize.addChangeListener(new ChangeListener() {
 				@Override
 				public void stateChanged(ChangeEvent e) {
-					boolean b = initialColorizationCheckbox.isSelected();
+					boolean b = cb_colorize.isSelected();
+					if (colorizer != null && colorizer.isColored() != b) {
+						colorizer.toggleColorize(graph);
+					}
 					OptionStore.setOption(storeUserChoicePrefix+OPTION_STORE_INITIAL_COLORIZATION, Boolean.valueOf(b));
 				}
 		    });
-			this.add(initialColorizationCheckbox, c);
+			this.add(cb_colorize, c);
 		}
 	}
 	
-	/**
-	 * Create the colorizeButton and add it to the panel
-	 * 
-	 * @param c GridBagConstraints to place the element
-	 */
-	private void init_colorizeButton(GridBagConstraints c) {
-		if (colorizeButton == null) {
-		    colorizeButton = new JButton(Translator.getString("STR_colorizer_do_colorize"));
-		    colorizeButton.setEnabled(false);
-		    colorizeButton.addActionListener(new ActionListener() {			
-				@Override
-				public void actionPerformed(ActionEvent arg0) {
-					if (colorizer.isColored()) {
-						undoColorize();
-					} else {
-						doColorize();
-					}
-				}
-			});
-		    this.add(colorizeButton, c);			
-		}
-	}
-
 	/**
 	 * Perform the colorization of the graph, update the button name accordingly
 	 */
 	public void doColorize() {
 		colorizer.doColorize(graph);
-		colorizeButton.setText(Translator.getString("STR_colorizer_undo_colorize"));
+		cb_colorize.setSelected(true);
 	}
 
 	/**
 	 * Cancel the colorization of the graph, update the button name accordingly
 	 */
-	protected void undoColorize() {
-		colorizer.undoColorize(graph);
-		colorizeButton.setText(Translator.getString("STR_colorizer_do_colorize"));
+	public void undoColorize() {
+		if (colorizer != null && colorizer.isColored()) {
+			colorizer.undoColorize(graph);
+			cb_colorize.setSelected(false);
+		}
 	}
 	
 	/**
@@ -154,7 +132,7 @@ public class ColorizerPanel extends JPanel {
 	 * @return the state of the initialColorizationCheckbox
 	 */
 	protected boolean shouldColorizeInitially() {
-		return addInitialColorizationCheckbox && initialColorizationCheckbox.isSelected();
+		return cb_colorize.isSelected();
 	}
 
 	/**
@@ -175,8 +153,9 @@ public class ColorizerPanel extends JPanel {
 	 * used and checked, then the colorization is launched.
 	 */
 	public void runIsFinished() {
-		colorizeButton.setEnabled(true);
-		if (shouldColorizeInitially()) doColorize();
+		if (shouldColorizeInitially()) {
+			doColorize();
+		}
 	}
 	
 	
@@ -200,5 +179,4 @@ public class ColorizerPanel extends JPanel {
 		return true;
 	}
 
-	
 }

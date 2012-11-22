@@ -13,13 +13,11 @@ import java.util.TreeMap;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
 import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
-import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
@@ -55,41 +53,31 @@ public class NuSMVEncoder {
 		out.write("-- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE\n");
 		out.write("\n\nMODULE main\n");
 
-		LogicalModel model = config.getGraph().getModel();
-		List<NodeInfo> nodeOrder = model.getNodeOrder();
-		if (nodeOrder.isEmpty()) {
+		LogicalModel model = config.getModel();
+		List<NodeInfo> coreNodes = model.getNodeOrder();
+		List<NodeInfo> outputNodes = model.getExtraComponents();
+		if (coreNodes.isEmpty() && outputNodes.isEmpty()) {
 			throw new GsException(GsException.GRAVITY_ERROR,
 					"NuSMV does not support empty graphs");
 		}
-		
-		// Check all the names.lenght > 1
-		NodeInfo[] aNodeOrder = new NodeInfo[nodeOrder.size()];
+		if (!hasCoreNodes(coreNodes)) {
+			throw new GsException(GsException.GRAVITY_ERROR,
+					"NuSMV needs at least one core (non-input/non-output) node");
+		}
+
+		// Check all the names.length > 1
+		NodeInfo[] aNodeOrder = new NodeInfo[coreNodes.size()];
 		boolean hasInputVars = false;
 		for (int i = 0; i < aNodeOrder.length; i++) {
 			NodeInfo node = model.getNodeOrder().get(i);
 			if (node.getNodeID().length() == 1)
 				throw new GsException(GsException.GRAVITY_ERROR,
-						"NuSMV does not support single-letter component names");
+						"NuSMV does not support single-letter component name: "
+								+ node.getNodeID());
 			aNodeOrder[i] = node;
 			if (node.isInput())
 				hasInputVars = true;
 		}
-
-		// Apply perturbation
-		PerturbationHolder mutant = config.getPerturbation();
-		if (mutant.getPerturbation() != null) {
-			// Application of the user-defined Perturbation
-			model = mutant.getPerturbation().apply(model);
-		}
-		ModelReducer reducer = new ModelReducer(model);
-		reducer.removePseudoOutputs();
-		model = reducer.getModel();
-		List<NodeInfo> coreNodes = model.getNodeOrder();
-		if (coreNodes.isEmpty()) {
-			throw new GsException(GsException.GRAVITY_ERROR,
-					"NuSMV needs at least one core (non-input/non-output) node");
-		}
-		List<NodeInfo> outputNodes = model.getExtraComponents();
 
 		// TODO: correct PCs
 		// when a subset has the same rank distinct from the rest
@@ -498,8 +486,8 @@ public class NuSMVEncoder {
 
 	private void nodeRules2NuSMV(Writer out, LogicalModel model, int nodeMDD,
 			List<NodeInfo> coreNodeOrder, NodeInfo node) throws IOException {
-		PathSearcher searcher = new PathSearcher(model.getMDDManager(),
-				1, node.getMax());
+		PathSearcher searcher = new PathSearcher(model.getMDDManager(), 1,
+				node.getMax());
 		int[] path = searcher.getPath();
 		searcher.setNode(nodeMDD);
 
@@ -646,5 +634,18 @@ public class NuSMVEncoder {
 				sRet += ";\nstrongSS" + (++i) + " := " + ss;
 		}
 		return sRet;
+	}
+
+	private boolean hasCoreNodes(List<NodeInfo> nodes) {
+		boolean hasCore = false;
+		if (nodes == null)
+			return hasCore;
+		for (NodeInfo node : nodes) {
+			if (!node.isInput()) {
+				hasCore = true;
+				break;
+			}
+		}
+		return hasCore;
 	}
 }

@@ -71,15 +71,11 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	private JPanel jP_node = null;
 	private JPanel jP_empty = null;
 
-	private JCheckBox jCB_selectLineColor = null;
-	private JCheckBox jCB_selectLineStyle = null;
-	private JCheckBox jCB_selectLinePattern = null;
-
+	private JCheckBox jCB_selectColor = null;
 	private JCheckBox jCB_selectShape = null;
-	private JCheckBox jCB_selectBackground = null;
-	private JCheckBox jCB_selectForeground = null;
-	private JCheckBox jCB_selectText = null;
 	private JCheckBox jCB_selectSize = null;
+	private JCheckBox jCB_selectPattern = null;
+
 
 	private final NodeAttributesReader vReader;
 	private final EdgeAttributesReader eReader;
@@ -90,8 +86,6 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	private int whatIsSelected;
 	private Object selected;
 	private List<?> v_selection;
-
-	private JCheckBox jCB_selectLinewidth;
 
 	private JSpinner jSpinner_linewidth;
 
@@ -358,20 +352,30 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	 */
 	private JPanel getJP_bttn() {
 		if(jP_bttn == null) {
-			jP_bttn = new javax.swing.JPanel();
+			jP_bttn = new JPanel();
 			jP_bttn.setLayout(new GridBagLayout());
+			jP_bttn.setBorder(BorderFactory.createTitledBorder("Propagate"));
 
-			GridBagConstraints c_def = new GridBagConstraints();
-			c_def.gridx = 0;
-			c_def.gridy = 0;
-			c_def.fill = GridBagConstraints.HORIZONTAL;
-			GridBagConstraints c_all = new GridBagConstraints();
-			c_all.gridx = 0;
-			c_all.gridy = 1;
-			c_all.fill = GridBagConstraints.HORIZONTAL;
-			jP_bttn.add(getJBttn_setDefault(), c_def);
-			jP_bttn.add(getJB_appToAll(), c_all);
-			jP_bttn.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+			GridBagConstraints cst = new GridBagConstraints();
+			cst.anchor = GridBagConstraints.WEST;
+			cst.gridx = 0;
+			cst.gridy = 0;
+			jP_bttn.add(getJCB_selectShape(), cst);
+			cst.gridx++;
+			jP_bttn.add(getJCB_selectColor(), cst);
+			cst.gridx = 0;
+			cst.gridy++;
+			jP_bttn.add(getJCB_selectSize(), cst);
+			cst.gridx++;
+			jP_bttn.add(getJCB_selectPattern(), cst);
+			
+			cst.gridx = 0;
+			cst.gridy++;
+			cst.fill = GridBagConstraints.HORIZONTAL;
+			jP_bttn.add(getJB_appToAll(), cst);
+
+			cst.gridx = 1;
+			jP_bttn.add(getJBttn_setDefault(), cst);
 		}
 		return jP_bttn;
 	}
@@ -549,6 +553,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	 * apply the current line style
 	 */
 	protected void applyLineStyle() {
+		eReader.damage();
 		eReader.setCurve(jCB_lineStyle.isSelected());
 		eReader.refresh();
 	}
@@ -586,11 +591,6 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			jP_edge.add(getJButton_linecolor(), c);
 
 			c = new GridBagConstraints();
-			c.gridx = 2;
-			c.gridy = 0;
-			jP_edge.add(getJCB_selectLineColor(), c);
-
-			c = new GridBagConstraints();
 			c.gridx = 0;
 			c.gridy = 1;
 			c.fill = java.awt.GridBagConstraints.BOTH;
@@ -607,11 +607,6 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			jP_edge.add(getJSpinner_linewidth(), c);
 
 			c = new GridBagConstraints();
-			c.gridx = 2;
-			c.gridy = 1;
-			jP_edge.add(getJCB_selectLinewidth(), c);
-
-			c = new GridBagConstraints();
 			c.fill = java.awt.GridBagConstraints.BOTH;
 			c.weightx = 0;
 			c.gridx = 3;
@@ -626,11 +621,6 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			jP_edge.add(getJCB_lineStyle(), c);
 
 			c = new GridBagConstraints();
-			c.gridx = 5;
-			c.gridy = 0;
-			jP_edge.add(getJCB_selectLineStyle(), c);
-
-			c = new GridBagConstraints();
 			c.gridx = 3;
 			c.gridy = 1;
 			jP_edge.add(new JLabel(Translator.getString("STR_linePattern")), c);
@@ -640,10 +630,6 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			c.weightx = 0;
 			c.fill = java.awt.GridBagConstraints.BOTH;
 			jP_edge.add(getJCB_linePattern(), c);
-			c = new GridBagConstraints();
-			c.gridx = 5;
-			c.gridy = 1;
-			jP_edge.add(getJCB_selectLinePattern(), c);
 		}
 		return jP_edge;
 	}
@@ -733,11 +719,9 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			jP_node.add(new JLabel(Translator.getString("STR_shape")),
 					consGridBagConstraints111);
 			jP_node.add(getJComboBox_shape(), consGridBagConstraints5);
-			jP_node.add(getJCB_selectShape(), consGridBagConstraints20);
 			jP_node.add(new JLabel(Translator.getString("STR_bg_color")),
 					consGridBagConstraints12);
 			jP_node.add(getJButton_bgcolor(), consGridBagConstraints13);
-			jP_node.add(getJCB_selectBackground(), consGridBagConstraints21);
 			jP_node.add(new JLabel(Translator.getString("STR_fg_color")),
 					consGridBagConstraints14);
 			jP_node.add(getJButton_fgcolor(), consGridBagConstraints101);
@@ -747,13 +731,9 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			jP_node.add(getJButton_textcolor(), consGridBagConstraints17);
 			
 			
-			jP_node.add(getJCB_selectForeground(), consGridBagConstraints22);
-			jP_node.add(getJCB_selectText(), consGridBagConstraints24);
-
 			jP_node.add(new JLabel(Translator.getString("STR_height")),
 					consGridBagConstraints141);
 			jP_node.add(getJTF_height(), consGridBagConstraints3);
-			jP_node.add(getJCB_selectSize(), consGridBagConstraints23);
 			jP_node.add(new JLabel(Translator.getString("STR_width")),
 					consGridBagConstraints15);
 			jP_node.add(getJTF_width(), consGridBagConstraints4);
@@ -773,65 +753,30 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 		return jP_empty;
 	}
 
-	private JCheckBox getJCB_selectLineColor() {
-		if (jCB_selectLineColor == null) {
-			jCB_selectLineColor = new JCheckBox();
-			jCB_selectLineColor.setSelected(true);
+	private JCheckBox getJCB_selectColor() {
+		if (jCB_selectColor == null) {
+			jCB_selectColor = new JCheckBox("Color");
+			jCB_selectColor.setSelected(true);
 		}
-		return jCB_selectLineColor;
+		return jCB_selectColor;
 	}
-	private JCheckBox getJCB_selectLinewidth() {
-		if (jCB_selectLinewidth == null) {
-			jCB_selectLinewidth = new JCheckBox();
-			jCB_selectLinewidth.setSelected(true);
+	private JCheckBox getJCB_selectPattern() {
+		if (jCB_selectPattern == null) {
+			jCB_selectPattern = new JCheckBox("Pattern");
+			jCB_selectPattern.setSelected(true);
 		}
-		return jCB_selectLinewidth;
-	}
-	private JCheckBox getJCB_selectLineStyle() {
-		if (jCB_selectLineStyle == null) {
-			jCB_selectLineStyle = new JCheckBox();
-			jCB_selectLineStyle.setSelected(true);
-		}
-		return jCB_selectLineStyle;
-	}
-	private JCheckBox getJCB_selectLinePattern() {
-		if (jCB_selectLinePattern == null) {
-			jCB_selectLinePattern = new JCheckBox();
-			jCB_selectLinePattern.setSelected(true);
-		}
-		return jCB_selectLinePattern;
-	}
-	protected JCheckBox getJCB_selectBackground() {
-		if (jCB_selectBackground == null) {
-			jCB_selectBackground = new JCheckBox();
-			jCB_selectBackground.setSelected(true);
-		}
-		return jCB_selectBackground;
-	}
-	protected JCheckBox getJCB_selectForeground() {
-		if (jCB_selectForeground == null) {
-			jCB_selectForeground = new JCheckBox();
-			jCB_selectForeground.setSelected(true);
-		}
-		return jCB_selectForeground;
-	}
-	protected JCheckBox getJCB_selectText() {
-		if (jCB_selectText == null) {
-			jCB_selectText = new JCheckBox();
-			jCB_selectText.setSelected(true);
-		}
-		return jCB_selectText;
+		return jCB_selectPattern;
 	}
 	protected JCheckBox getJCB_selectShape() {
 		if (jCB_selectShape == null) {
-			jCB_selectShape = new JCheckBox();
+			jCB_selectShape = new JCheckBox("Shape");
 			jCB_selectShape.setSelected(true);
 		}
 		return jCB_selectShape;
 	}
 	protected JCheckBox getJCB_selectSize() {
 		if (jCB_selectSize == null) {
-			jCB_selectSize = new JCheckBox();
+			jCB_selectSize = new JCheckBox("Size");
 			jCB_selectSize.setSelected(true);
 		}
 		return jCB_selectSize;
@@ -890,16 +835,16 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			}
 			for (Object edge: edges) {
 				eReader.setEdge((Edge)edge);
-				if (jCB_selectLineColor.isSelected()) {
+				if (jCB_selectColor.isSelected()) {
 					eReader.setLineColor(jButton_linecolor.getBackground());
 				}
-				if (jCB_selectLineStyle.isSelected()) {
+				if (jCB_selectShape.isSelected()) {
 					eReader.setCurve( jCB_lineStyle.isSelected());
 				}
-				if (jCB_selectLinePattern.isSelected()) {
+				if (jCB_selectPattern.isSelected()) {
 					eReader.setDash((EdgePattern)jCB_linePattern.getSelectedItem());
 				}
-				if (jCB_selectLinewidth.isSelected()) {
+				if (jCB_selectSize.isSelected()) {
 					eReader.setLineWidth( ((Integer)jSpinner_linewidth.getValue()).intValue() );
 				}
 				eReader.refresh();
@@ -917,13 +862,9 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 				if (jCB_selectShape.isSelected()) {
 					vReader.setShape(NodeShape.values()[jComboBox_shape.getSelectedIndex()]);
 				}
-				if (jCB_selectForeground.isSelected()) {
+				if (jCB_selectColor.isSelected()) {
 					vReader.setForegroundColor(jButton_fgcolor.getBackground());
-				}
-				if (jCB_selectBackground.isSelected()) {
 					vReader.setBackgroundColor(jButton_bgcolor.getBackground());
-				}
-				if (jCB_selectText.isSelected()) {
 					vReader.setTextColor(jButton_textcolor.getBackground());
 				}
 				if (jCB_selectSize.isSelected()) {
@@ -945,16 +886,16 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	protected void applyDefault() {
 		switch(whatIsSelected) {
 		case EDGESELECTED:
-			if (jCB_selectLineColor.isSelected()) {
+			if (jCB_selectColor.isSelected()) {
 				eReader.setDefaultEdgeColor(jButton_linecolor.getBackground());
 			}
-			if (jCB_selectLineStyle.isSelected()) {
+			if (jCB_selectShape.isSelected()) {
 				eReader.setDefaultCurve( jCB_lineStyle.isSelected());
 			}
-			if (jCB_selectLinePattern.isSelected()) {
+			if (jCB_selectPattern.isSelected()) {
 				// TODO: make it work
 			}
-			if (jCB_selectLinewidth.isSelected()) {
+			if (jCB_selectSize.isSelected()) {
 				eReader.setDefaultEdgeSize(((Integer)jSpinner_linewidth.getValue()).intValue());
 			}
 			break;
@@ -963,10 +904,8 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			if (jCB_selectShape.isSelected()) {
 				vReader.setDefaultNodeShape(NodeShape.values()[jComboBox_shape.getSelectedIndex()]);
 			}
-			if (jCB_selectForeground.isSelected()) {
+			if (jCB_selectColor.isSelected()) {
 				vReader.setDefaultNodeForeground(jButton_fgcolor.getBackground());
-			}
-			if (jCB_selectBackground.isSelected()) {
 				vReader.setDefaultNodeBackground(jButton_bgcolor.getBackground());
 			}
 			if (jCB_selectSize.isSelected()) {
@@ -987,6 +926,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 		try {
 			int w = Integer.parseInt(jTF_width.getText());
 			int h = Integer.parseInt(jTF_height.getText());
+			vReader.damage();
 			vReader.setSize(w,h);
 			vReader.refresh();
 		} catch (NumberFormatException e) {}
@@ -1000,6 +940,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 
 	protected void applyLineWidth() {
 		int w = ((Integer)jSpinner_linewidth.getValue()).intValue();
+		eReader.damage();
 		eReader.setLineWidth(w);
 		eReader.refresh();
 	}

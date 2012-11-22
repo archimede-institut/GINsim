@@ -1,5 +1,6 @@
 package org.ginsim.servicegui.export.nusmv;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,11 +17,9 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.ExportAction;
 import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.service.common.StandaloneGUI;
-import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 import org.ginsim.service.export.nusmv.NuSMVConfig;
 import org.ginsim.service.export.nusmv.NuSMVExportService;
 import org.mangosdk.spi.ProviderFor;
-
 
 /**
  * GUI Action to export a NuSMV model description
@@ -29,7 +28,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @StandaloneGUI
-@ServiceStatus( ServiceStatus.RELEASED)
+@ServiceStatus(ServiceStatus.RELEASED)
 public class NuSMVExportServiceGUI extends AbstractServiceGUI {
 
 	@Override
@@ -44,7 +43,7 @@ public class NuSMVExportServiceGUI extends AbstractServiceGUI {
 
 	@Override
 	public int getInitialWeight() {
-		return W_EXPORT_SPECIFIC+30;
+		return W_EXPORT_SPECIFIC + 30;
 	}
 }
 
@@ -56,8 +55,9 @@ public class NuSMVExportServiceGUI extends AbstractServiceGUI {
 class NuSMVExportAction extends ExportAction<RegulatoryGraph> {
 
 	private static final long serialVersionUID = -3615904375655037276L;
-	private static final FileFormatDescription FORMAT = new FileFormatDescription("NuSMV", "smv");
-	
+	private static final FileFormatDescription FORMAT = new FileFormatDescription(
+			"NuSMV", "smv");
+
 	private NuSMVConfig config;
 
 	public NuSMVExportAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
@@ -70,9 +70,9 @@ class NuSMVExportAction extends ExportAction<RegulatoryGraph> {
 	}
 
 	@Override
-	public StackDialogHandler getConfigPanel() {
+	public void actionPerformed(ActionEvent arg0) {
 		config = new NuSMVConfig(graph);
-		return new NuSMVExportConfigPanel(config, this);
+		new NuSMVExportConfigPanel(config, this);
 	}
 
 	@Override
@@ -81,7 +81,8 @@ class NuSMVExportAction extends ExportAction<RegulatoryGraph> {
 			throw new GsException(GsException.GRAVITY_ERROR,
 					"Nothing to export: NuSMVConfig must be specified");
 		}
-		if (config.getGraph() == null || config.getGraph().getNodes().size() == 0) {
+		if (config.getGraph() == null
+				|| config.getGraph().getNodes().size() == 0) {
 			throw new GsException(GsException.GRAVITY_ERROR,
 					"Nothing to export: The graph is empty");
 		}

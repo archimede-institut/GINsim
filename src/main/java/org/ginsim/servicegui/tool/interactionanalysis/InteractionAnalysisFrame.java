@@ -77,8 +77,8 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 			
 			c.gridy++;
 			c.gridx = 0;
-			c.ipadx = 0;
-			c.ipady = 0;
+			c.weightx = 1;
+			c.fill = GridBagConstraints.HORIZONTAL;
 		    mutantStore = new PerturbationStore();
 			mutantSelectionPanel = new PerturbationSelectionPanel(this, regGraph, mutantStore);
 			mainPanel.add(mutantSelectionPanel, c);
@@ -90,14 +90,13 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 		    c.gridy++;
 			c.weightx = 0;
 			c.weighty = 0;
-			c.ipady = 0;
 		    saveReportButton = new JButton(Translator.getString("STR_interactionAnalysis_saveReport"));
 		    saveReportButton.setEnabled(false);
 		    mainPanel.add(saveReportButton, c);
 		    saveReportButton.addActionListener(this);
 		
 		    c.gridy++;
-			colorizerPanel = new ColorizerPanel(true, "interactionAnalysis.", regGraph);
+			colorizerPanel = new ColorizerPanel("interactionAnalysis.", regGraph);
 		    mainPanel.add(colorizerPanel, c);
 		}
 		return mainPanel;
@@ -128,7 +127,6 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 				GenericDocumentFormat format = GenericDocumentFormat.XHTMLDocumentFormat;
 				String dest = FileSelectionHelper.selectSaveFilename(frame, new FileFormatFilter(format));
 				
-				//Object[] fileAndFormat = GenericDocumentFileChooser.saveDialog(OPT_REPORTDIRECTORY, this, format);
 				if (dest != null) {
 					DocumentWriter doc = format.factory.getDocumentWriter();
 					doc.setOutput(new File(dest));
@@ -142,9 +140,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 	}
 
 	public void cancel() {
-		if (!colorizerPanel.frameIsClosing()) {
-				return;
-		}
+		colorizerPanel.undoColorize();
 		super.cancel();
 	}
 }

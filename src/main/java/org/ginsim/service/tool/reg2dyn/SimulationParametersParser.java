@@ -13,6 +13,7 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
+import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
@@ -130,17 +131,18 @@ public class SimulationParametersParser extends XMLHelper {
                     param.m_input = new HashMap();
                 } else if (qName.equals("mutant")) {
                 	
-                	// FIXME: what should we do with perturbation stored in old parameters?
-//                    String s = attributes.getValue("value");
-//                    if (!s.trim().equals("")) {
-//                    	RegulatoryMutants mutantList = (RegulatoryMutants)  ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, true);
-//                    	Object mutant = mutantList.get(s);
-//                        param.store.setObject(SimulationParameters.MUTANT, mutantList.get(s));
-//                        if (mutant == null) {
-//                            // TODO: report mutant not found
-//                        	LogManager.error( "Mutant not found "+s+" ("+mutantList.getNbElements(null)+")");
-//                        }
-//                    }
+                	// compatibility code to restore the old perturbations
+                  String s = attributes.getValue("value");
+                  if (!s.trim().equals("")) {
+                  	ListOfPerturbations perturbations = (ListOfPerturbations)  ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, true);
+                  	Perturbation perturbation = perturbations.get(s);
+                    if (perturbation == null) {
+                    	LogManager.error( "Perturbation not found "+s+" ("+perturbations.size()+")");
+                    } else {
+                    	perturbations.usePerturbation("simulation::"+param.name, perturbation);
+                    }
+                  }
+                	
                 } else if (qName.equals("priorityClassList")) {
                 	int index = paramLists.pcmanager.add();
                 	pcdef = (PriorityClassDefinition)paramLists.pcmanager.getElement(null, index);

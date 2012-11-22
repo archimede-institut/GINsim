@@ -122,7 +122,7 @@ public class NodeStyle implements Style {
 		if (textcolor != null)  nreader.setTextColor(textcolor);
 		if (border != null)     nreader.setBorder(border);
 		if (shape != null)      nreader.setShape(shape);
-		areader.refresh();
+		areader.damage();
 	}
 	
 	@Override

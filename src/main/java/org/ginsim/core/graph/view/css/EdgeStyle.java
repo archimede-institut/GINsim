@@ -107,7 +107,7 @@ public class EdgeStyle implements Style {
 		if (curve != NULL_CURVE) ((EdgeAttributesReader) areader).setCurve(curve==1);
 		if (lineEnd != null) 		((EdgeAttributesReader) areader).setLineEnd(lineEnd);
 		if (border != NULL_BORDER) 			((EdgeAttributesReader) areader).setLineWidth(border);
-		areader.refresh();
+		areader.damage();
 	}
 
 	@Override

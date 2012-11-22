@@ -11,19 +11,17 @@ import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
-import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.ServiceStatus;
-import org.ginsim.gui.service.common.ToolAction;
-import org.ginsim.service.tool.dynamicanalyser.DynamicAnalyserService;
+import org.ginsim.gui.service.common.StandaloneGUI;
 import org.mangosdk.spi.ProviderFor;
 
 /**
  * offer some facilities to analyse the state transition graph.
  */
+@StandaloneGUI
 @ProviderFor( ServiceGUI.class)
-@GUIFor( DynamicAnalyserService.class)
-@ServiceStatus( ServiceStatus.RELEASED)
+@ServiceStatus( ServiceStatus.TOOLKIT)
 public class DynamicAnalyserServiceGUI extends AbstractServiceGUI {
     
 	@Override

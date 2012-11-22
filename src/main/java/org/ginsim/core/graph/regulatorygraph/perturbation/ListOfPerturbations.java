@@ -3,9 +3,11 @@ package org.ginsim.core.graph.regulatorygraph.perturbation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.perturbation.MultiplePerturbation;
@@ -15,6 +17,7 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphEventCascade;
 import org.ginsim.core.graph.common.GraphListener;
+import org.ginsim.core.graph.objectassociation.UserSupporter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
@@ -27,11 +30,14 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
  * 
  * @author Aurelien Naldi
  */
-public class ListOfPerturbations implements Iterable<Perturbation>, GraphListener<RegulatoryGraph> {
+public class ListOfPerturbations implements Iterable<Perturbation>, GraphListener<RegulatoryGraph>, UserSupporter {
 
 	private final List<Perturbation> simplePerturbations = new ArrayList<Perturbation>();
 	private final List<Perturbation> multiplePerturbations = new ArrayList<Perturbation>();
 
+	private final Map<String, Perturbation> perturbationUsers = new HashMap<String, Perturbation>();
+	private final Map<String, Perturbation> aliases = new HashMap<String, Perturbation>();
+	
 	private final RegulatoryGraph lrg;
 	
 	public ListOfPerturbations(RegulatoryGraph lrg) {
@@ -151,7 +157,73 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
 		return multiplePerturbations.get(index-nbsimple);
 	}
 
+	/**
+	 * Set an alias for a perturbation.
+	 * This is used to retrieve named perturbations from the old zginml files.
+	 * 
+	 * @param name
+	 * @param perturbation
+	 */
+	@Deprecated
+	public void setAliases(String name, Perturbation perturbation) {
+		if (name == null || perturbation == null) {
+			return;
+		}
+		if (name.equals(perturbation.toString())) {
+			return;
+		}
+		if (aliases.containsKey(name)) {
+			LogManager.debug("Duplicated perturbation name: "+name);
+			return;
+		}
+		aliases.put(name, perturbation);
+	}
+	
+	/**
+	 * Get a perturbation by its (old) name.
+	 * This should only be used for compatibility with the old zginml files where perturbations are named. 
+	 * 
+	 * @param name the name of the perturbation
+	 * @return the corresponding perturbation
+	 */
+	@Deprecated
+	public Perturbation get(String name) {
+		return aliases.get(name);
+	}
 
+	/**
+	 * Announce the use of a perturbation.
+	 * 
+	 * @param key identify the user
+	 * @param perturbation the used perturbation (must be in the list of perturbations)
+	 */
+	public void usePerturbation(String key, Perturbation perturbation) {
+		if (key == null) {
+			return;
+		}
+		
+		if (perturbation == null) {
+			perturbationUsers.remove(key);
+			return;
+		}
+		
+		if (!simplePerturbations.contains(perturbation) && !multiplePerturbations.contains(perturbation)) {
+			throw new RuntimeException("Can only use existing perturbations");
+		}
+		
+		perturbationUsers.put(key, perturbation);
+	}
+
+	/**
+	 * Retrieve the perturbation used by a specific user.
+	 * 
+	 * @param key identify the user
+	 * @return the used perturbation or null if none was found
+	 */
+	public Perturbation getUsedPerturbation(String key) {
+		return perturbationUsers.get(key);
+	}
+	
 	@Override
 	public Iterator<Perturbation> iterator() {
 		if (multiplePerturbations.size() == 0) {
@@ -162,7 +234,9 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
 
 	public void toXML(XMLWriter out) throws IOException {
 		
-        out.openTag("mutantList");
+        out.openTag("perturbationConfig");
+        
+        out.openTag("listOfPerturbations");
         for (Perturbation p: simplePerturbations) {
         	// wrap them
             out.openTag("mutant");
@@ -174,8 +248,20 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
             p.toXML(out);
         }
         out.closeTag();
+        
+        
+        out.openTag("listOfUsers");
+        for (String key: perturbationUsers.keySet()) {
+        	out.openTag("user");
+        	out.addAttr("key", key);
+        	out.addAttr("value", perturbationUsers.get(key).toString());
+        	out.closeTag();
+        }
+        out.closeTag();
+        
+        
+        out.closeTag();
 
-		
 	}
 
 	public NodeInfo[] getNodes() {
@@ -232,8 +318,30 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
 		multiplePerturbations.removeAll(removed);
 		multiplePerturbations.removeAll(extraRemoved);
 		simplePerturbations.removeAll(removed);
+
+		// also remove references to the removed perturbations 
+		List<String> userRemoved = new ArrayList<String>();
+		for (String key: perturbationUsers.keySet()) {
+			Perturbation p = perturbationUsers.get(key);
+			if (p == null || removed.contains(p) || extraRemoved.contains(p)) {
+				userRemoved.add(key);
+			}
+		}
+		for (String key: userRemoved) {
+			perturbationUsers.remove(key);
+		}
+		
 		lrg.fireGraphChange(GraphChangeType.ASSOCIATEDUPDATED, this);
 	}
+
+	@Override
+	public void update(String oldID, String newID) {
+		Perturbation p = perturbationUsers.get(oldID);
+		if (p != null && newID != null) {
+			perturbationUsers.put(newID, p);
+		}
+	}
+
 }
 
 

@@ -2,6 +2,7 @@ package org.ginsim.service.tool.interactionanalysis;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -111,7 +112,8 @@ public class InteractionAnalysisReport {
 		
 		StringBuffer javascript = dw.getDocumentExtra("javascript");
 		if (javascript != null) {
-			javascript.append(IOUtils.readFromFile("src/org/ginsim/service/tool/interactionanalysis/interactionAnalysis.js"));
+			InputStream istream = IOUtils.getStreamForPath(this.getClass().getPackage(), "interactionAnalysis.js");
+			javascript.append(IOUtils.readFromResource(istream));
 		}
 		
 		dw.startDocument();

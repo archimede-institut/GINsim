@@ -116,7 +116,7 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 	}
 	
 	@Override
-	protected void paintComponent(Graphics g) {
+	protected synchronized void paintComponent(Graphics g) {
 		if (img == null) {
 			paintBuffer();
 		} else if (damagedRegion != null){
@@ -314,7 +314,7 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 	 * 
 	 * @param area the canvas area to mark as damaged
 	 */
-	public void damageCanvas(Rectangle area) {
+	public synchronized void damageCanvas(Rectangle area) {
 		if (damagedRegion == null) {
 			damagedRegion = new Rectangle(area);
 		} else {
@@ -327,7 +327,7 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 	 * The next repaint will have to build the image from scratch.
 	 * Should be called when changing the zoom level or after a general layout change.
 	 */
-	public void clearOffscreen() {
+	public synchronized void clearOffscreen() {
 		img = null;
 	}
 

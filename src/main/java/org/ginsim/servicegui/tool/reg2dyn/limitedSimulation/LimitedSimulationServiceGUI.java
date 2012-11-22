@@ -12,17 +12,14 @@ import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGr
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
-import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ServiceStatus;
+import org.ginsim.gui.service.common.StandaloneGUI;
 import org.ginsim.gui.service.common.ToolAction;
-import org.ginsim.service.tool.decisionanalysis.DecisionAnalysisService;
 import org.mangosdk.spi.ProviderFor;
 
 
-
-
+@StandaloneGUI
 @ProviderFor( ServiceGUI.class)
-@GUIFor( DecisionAnalysisService.class)
 @ServiceStatus( ServiceStatus.RELEASED)
 public class LimitedSimulationServiceGUI extends AbstractServiceGUI {
 	

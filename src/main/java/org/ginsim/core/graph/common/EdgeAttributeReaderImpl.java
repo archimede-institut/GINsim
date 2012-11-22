@@ -83,12 +83,17 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
         	Shape path = getPath();
         	Rectangle b = path.getBounds();
         	int arrowmargin = 5;
+        	float w = getLineWidth();
+        	if (w > 2) {
+        		arrowmargin = (int) ((1 + arrowmargin*w) / 2);
+        	}
         	cachedBounds = new Rectangle(b.x-arrowmargin, b.y-arrowmargin, b.width+2*arrowmargin, b.height+2*arrowmargin);
         }
         return cachedBounds;
     }
 
     
+    @Override
     public void setDefaultEdgeSize(float s) {
         if (s > MAX_EDGE_SIZE) {
         	s = MAX_EDGE_SIZE;
@@ -98,10 +103,12 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
         defaultsize = s;
     }
 
+    @Override
     public void setDefaultEdgeEndFill(boolean b) {
         defaultfill = b;
     }
 
+    @Override
     public float getLineWidth() {
         if (evsd == null) {
             return 0;
@@ -109,6 +116,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
         return evsd.size;
     }
 
+    @Override
     public void setLineWidth(float w) {
         if (evsd == null) {
             return;
@@ -121,9 +129,11 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
         evsd.size = w;
     }
 
+    @Override
     public void setEdge(Edge obj) {
     	setEdge(obj, false);
     }
+    @Override
     public void setEdge(Edge obj, boolean selected) {
     	this.selected = selected;
     	if (obj == this.edge) {
@@ -148,12 +158,14 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
         }
     }
 
+    @Override
     public void setLineColor(Color color) {
         if (evsd != null) {
             evsd.color = color;
         }
     }
 
+    @Override
     public Color getLineColor() {
         if (evsd == null) {
             return null;
@@ -161,12 +173,20 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
         return evsd.color;
     }
 
+    @Override
     public void refresh() {
     	if (edge != null) {
     		graph.refresh(edge);
     	}
     }
+    @Override
+    public void damage() {
+    	if (edge != null) {
+    		graph.damage(edge);
+    	}
+    }
 
+    @Override
     public void setLineEnd(EdgeEnd index) {
         if (evsd == null) {
             return;
@@ -174,6 +194,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
         evsd.end = index;
     }
 
+    @Override
     public EdgeEnd getLineEnd() {
         if (evsd == null || evsd.end == null) {
             return EdgeEnd.POSITIVE;
@@ -181,6 +202,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
         return evsd.end;
     }
 
+    @Override
     public List<Point> getPoints() {
         if ( evsd == null ) {
             return null;
@@ -188,6 +210,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
         return evsd.points;
     }
 
+    @Override
     public void setPoints(List l) {
         if (evsd == null) {
             return;
@@ -309,7 +332,8 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
 
 	private void dorender(Graphics2D g, List<Point> points) {
-		stroke.setWidth(getLineWidth());
+		float width = getLineWidth();
+		stroke.setWidth(width);
 		stroke.setDashPattern(getDash());
 		g.setStroke(stroke);
 		if (selected) {
@@ -338,7 +362,16 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 		g.translate(pt1.x, pt1.y);
 		g.rotate(theta);
 
-		g.fill(getLineEnd().getShape());
+		Shape lineEnd = getLineEnd().getShape();
+		if (width > 2) {
+			float scale = width / 2;
+			g.scale(scale, scale);
+			g.fill(lineEnd);
+			scale = 1/scale;
+			g.scale(scale, scale);
+		} else {
+			g.fill(lineEnd);
+		}
 
 		g.rotate(-theta);
 		g.translate(-pt1.x, -pt1.y);

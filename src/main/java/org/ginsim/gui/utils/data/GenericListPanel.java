@@ -306,10 +306,18 @@ public class GenericListPanel<T> extends JPanel
         }
     }
     protected void doRemove() {
-        if (list == null) {
+        if (list == null || list.getNbElements(null,model.startIndex) == 0) {
             return;
         }
         int[] sel = jl.getSelectedRows();
+        int maxSel = 0;
+        for (int i = 0; i < sel.length; i++) {
+        	if (sel[i] > maxSel)
+        		maxSel = sel[i];
+        }
+        if (maxSel > list.getNbElements(null,model.startIndex)) {
+        	return;
+        }
         if (sel.length > 0 && list.remove(null, model.startIndex, sel)) {
             int i = sel[0];
             i = i>=list.getNbElements(null,model.startIndex) ? list.getNbElements(null,0)-1 : i;

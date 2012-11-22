@@ -7,6 +7,8 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.LogicalModelModifier;
@@ -14,27 +16,41 @@ import org.colomoto.logicalmodel.perturbation.LogicalModelPerturbation;
 import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.callable.ProgressListener;
+import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigManager;
 
-abstract public class LogicalModelActionDialog extends StackDialog implements ProgressListener, PerturbationHolder {
+abstract public class LogicalModelActionDialog extends StackDialog implements ProgressListener, PerturbationHolder, ChangeListener {
 
+	private static final ObjectAssociationManager OManager = ObjectAssociationManager.getInstance();
 	
 	protected final RegulatoryGraph lrg;
-	private Perturbation perturbation;
+	private final ListOfPerturbations perturbations;
+	private final ModelSimplifierConfigList simplifierConfig;
+	private final PerturbationSelectionPanel perturbationPanel;
 	
+	private Perturbation perturbation = null;
+	private String userID = null;
+
 	private JPanel mainPanel = new JPanel(new GridBagLayout());
 	private JCheckBox cb_simplify = new JCheckBox("Strip outputs");
 	
     public LogicalModelActionDialog(RegulatoryGraph lrg, Frame parent, String id, int w, int h) {
         super(parent, id, w, h);
         this.lrg = lrg;
-        
+        this.perturbations = (ListOfPerturbations)OManager.getObject(lrg, PerturbationManager.KEY, true);
+        this.simplifierConfig = (ModelSimplifierConfigList)OManager.getObject(lrg, ModelSimplifierConfigManager.KEY, true);
+        perturbationPanel = new PerturbationSelectionPanel(this, lrg, this);
         super.setMainPanel(getMainPanel());
-        
+
+        cb_simplify.addChangeListener(this);
         
 		this.addWindowListener(new java.awt.event.WindowAdapter() { 
 			public void windowClosing(java.awt.event.WindowEvent e) {
@@ -43,6 +59,16 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 		});
     }
 
+    /**
+     * Change the ID used to remember the selected perturbation (and other settings)
+     * @param userID
+     */
+    protected void setUserID(String userID) {
+    	this.userID = userID;
+    	perturbationPanel.refresh();
+    	cb_simplify.setSelected( simplifierConfig.isStrippingOutput(userID) );
+    }
+    
     private JPanel getMainPanel() {
 
 		// simplification checkbox
@@ -50,12 +76,11 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 		mainPanel.add(cb_simplify, c);
 
 		// mutant panel
-		Component mutantPanel = new PerturbationSelectionPanel(this, lrg, this);
 		c = new GridBagConstraints();
 		c.gridx = 1;
 		c.weightx = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		mainPanel.add(mutantPanel, c);
+		mainPanel.add(perturbationPanel, c);
 
 		return mainPanel;
     }
@@ -74,14 +99,28 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 
 	@Override
 	public Perturbation getPerturbation() {
+		if (userID != null) {
+			return perturbations.getUsedPerturbation(userID);
+		}
 		return perturbation;
 	}
 	
 	@Override
 	public void setPerturbation(Perturbation perturbation) {
-		this.perturbation = perturbation;
+		if (userID != null) {
+			perturbations.usePerturbation(userID, perturbation);
+		} else {
+			this.perturbation = perturbation;
+		}
 	}
 
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		if (userID != null) {
+			simplifierConfig.setStrippingOutput(userID, cb_simplify.isSelected());
+		}
+	}
+	
 	@Override
 	public void setResult(Object result) {
 		// empty implement implementation: not all derived classes will want to do something

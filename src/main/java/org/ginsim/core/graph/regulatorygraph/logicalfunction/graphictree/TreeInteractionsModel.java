@@ -228,9 +228,9 @@ public class TreeInteractionsModel implements TreeModel {
 	}
 	public void addExpression(JTree tree, byte val, RegulatoryNode currentNode, String expression) throws Exception {
 		BooleanParser tbp = new BooleanParser(graph.getIncomingEdges(currentNode), isAutoAddEnabled());
-		if (!tbp.compile(expression, graph, currentNode))
-			NotificationManager.publishWarning( graph, "invalid formula");
-		else {
+		if (!tbp.compile(expression, graph, currentNode)) {
+			NotificationManager.publishWarning( graph, "invalid formula in "+currentNode);
+		} else {
 			addExpression(val, currentNode, tbp);
 			fireTreeStructureChanged(root);
 			if (tree != null) tree.expandPath(getPath(val, tbp.getRoot().toString(false)));
@@ -288,7 +288,7 @@ public class TreeInteractionsModel implements TreeModel {
 			}
 			BooleanParser parser = new BooleanParser(graph.getIncomingEdges(node), isAutoAddEnabled());
 			if (!parser.compile(newExp.trim(), graph, node)) {
-				NotificationManager.publishWarning( graph, "invalid formula : " + newExp);
+				NotificationManager.publishWarning( graph, "invalid formula in "+node+": " + newExp);
 				exp.clearChilds();
 				exp.setProperty("invalid", new Boolean(true));
 				return false;

@@ -90,6 +90,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 	
 	public SingleSimulationFrame(Frame regGraphFrame, SimulationParameterList paramList) {
 		super(paramList.graph, regGraphFrame, "display.simulation", 800, 400);
+		setUserID("reg2dyn");
 		this.regGraphFrame = regGraphFrame;
 		this.paramList = paramList;
 		GUIManager.getInstance().addBlockEdit( paramList.graph, this);
@@ -473,11 +474,13 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 			textMaxDepth.setEnabled(false);
 			textMaxNodes.setEnabled(false);
 			initStatePanel.setEnabled(false);
+			setUserID(null);
 		} else {
 			textMaxDepth.setText(currentParameter.maxdepth > 0 ? ""+currentParameter.maxdepth : "");
 			textMaxNodes.setText(currentParameter.maxnodes > 0 ? ""+currentParameter.maxnodes : "");
 			textMaxDepth.setEnabled(true);
 			textMaxNodes.setEnabled(true);
+			setUserID(Reg2DynService.KEY+"::"+currentParameter.getName());
 		}
 		refreshing = false;
 	}

@@ -241,6 +241,17 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 	public GraphEventCascade graphChanged(GraphModel g, GraphChangeType type, Object data) {
 		
 		switch (type) {
+		case EDGEDAMAGED:
+			ereader.setEdge((Edge)data);
+			canvas.damageCanvas(ereader.getBounds());
+			ereader.setEdge(null);
+			return null;
+		case NODEDAMAGED:
+			nreader.setNode(data);
+			canvas.damageCanvas(nreader.getBounds());
+			nreader.setNode(null);
+			return null;
+		
 		case EDGEADDED:
 		case EDGEUPDATED:
 		case EDGEREMOVED:
@@ -253,6 +264,8 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 			nreader.setNode(data);
 			canvas.damageCanvas(nreader.getBounds());
 			break;
+		case GRAPHVIEWCHANGED:
+			canvas.clearOffscreen();
 		default:
 			break;
 		}

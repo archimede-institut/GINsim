@@ -14,17 +14,16 @@ import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGr
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
-import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ServiceStatus;
+import org.ginsim.gui.service.common.StandaloneGUI;
 import org.ginsim.gui.service.common.ToolAction;
-import org.ginsim.service.tool.decisionanalysis.DecisionAnalysisService;
 import org.mangosdk.spi.ProviderFor;
 
 
 
 
+@StandaloneGUI
 @ProviderFor( ServiceGUI.class)
-@GUIFor( DecisionAnalysisService.class)
 @ServiceStatus( ServiceStatus.RELEASED)
 public class DecisionAnalysisServiceGUI extends AbstractServiceGUI {
 	
@@ -57,9 +56,6 @@ class DecisionAnalysisAction extends ToolAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-        // TODO : REFACTORING ACTION		
-		// TODO : what is ref? Is this test useful? Ref was set to 0 in the GsPluggableActionDescriptor definition in the getT_action
-		//if (ref == 0) {
 		try{
 			new DecisionAnalysisFrame( GUIManager.getInstance().getFrame( graph), graph);
 		}
@@ -68,7 +64,6 @@ class DecisionAnalysisAction extends ToolAction {
     		LogManager.error( "Unable to execute the service");
     		LogManager.error( ge);
 		}
-		//}
 	}
 	
 }

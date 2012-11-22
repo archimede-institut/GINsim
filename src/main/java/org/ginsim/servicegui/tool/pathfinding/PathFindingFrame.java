@@ -29,6 +29,7 @@ import org.ginsim.common.application.Translator;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.css.CascadingStyleSheetManager;
 import org.ginsim.gui.GUIManager;
@@ -372,6 +373,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		
 			cs.applySelectorOnEdges(selector, graph.getEdges(), graph.getEdgeAttributeReader());
 			cs.applySelectorOnNodes(selector, graph.getNodes(), graph.getNodeAttributeReader());
+			graph.fireGraphChange(GraphChangeType.GRAPHVIEWCHANGED, null);
 			colorizeButton.setText(Translator.getString("STR_undo_colorize"));
 			isColorized = true;
 		}
@@ -381,6 +383,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		if (cs != null) {
 			cs.restoreAllEdges(graph.getEdgeAttributeReader());
 			cs.restoreAllNodes(graph.getNodeAttributeReader());
+			graph.fireGraphChange(GraphChangeType.GRAPHVIEWCHANGED, null);
 			colorizeButton.setText(Translator.getString("STR_do_colorize"));
 			isColorized = false;
 		}
