@@ -13,6 +13,7 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -169,6 +170,9 @@ public class TreeInteractionsModel implements TreeModel {
 			if (value.getValue() == v) {
 				expression = new TreeExpression(value, boolRoot, new FunctionsCreator(graph, null, node));
 				expression = (TreeExpression)value.addChild(expression, -1);
+				if (boolRoot != null) {
+					graph.fireGraphChange(GraphChangeType.NODEUPDATED, node);
+				}
 				return expression;
 			}
 		}
@@ -269,6 +273,9 @@ public class TreeInteractionsModel implements TreeModel {
 			}
 		}
 		refreshNode();
+		if (newVal != oldVal) {
+			graph.fireGraphChange(GraphChangeType.NODEUPDATED, node);
+		}
 	}
 
 	private boolean isAutoAddEnabled() {
@@ -284,6 +291,7 @@ public class TreeInteractionsModel implements TreeModel {
 				exp.clearChilds();
 				fireTreeStructureChanged(this.root);
 				refreshView();
+				graph.fireGraphChange(GraphChangeType.NODEUPDATED, node);
 				return true;
 			}
 			BooleanParser parser = new BooleanParser(graph.getIncomingEdges(node), isAutoAddEnabled());
@@ -322,6 +330,7 @@ public class TreeInteractionsModel implements TreeModel {
 		catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		graph.fireGraphChange(GraphChangeType.NODEUPDATED, node);
 		return true;
 	}
 
