@@ -33,6 +33,7 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterLis
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.graph.regulatorygraph.models.IncomingEdgeListModel;
 import org.ginsim.gui.graph.regulatorygraph.models.TableInteractionsModel;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
@@ -456,6 +457,10 @@ public class InteractionPanel extends AbstractParameterPanel
 	protected void insertRight2Left() {
 	    if (!gui.isEditAllowed()) {
 	        return;
+	    }
+	    if (currentNode.isInput()) {
+	    	NotificationManager.getManager().publishWarning(graph, "Cannot add parameters to input nodes");
+	    	return;
 	    }
 		if (jTable.getSelectedRowCount()<=1) {
 			int selectedrow = jTable.getSelectedRow();

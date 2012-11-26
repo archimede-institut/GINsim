@@ -154,6 +154,10 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
                 		NotificationManager.getManager().publishWarning(graph, "Can not set regulated node as input");
                 		return false;
                 	}
+                	if (o.getV_logicalParameters().size() > 0) {
+                		NotificationManager.getManager().publishWarning(graph, "Can not set node as input having parameters");
+                		return false;
+                	}
                 }
                	o.setInput(nv, graph);
                 return o.isInput() == nv;
