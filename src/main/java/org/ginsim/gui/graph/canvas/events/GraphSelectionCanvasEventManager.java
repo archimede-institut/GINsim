@@ -139,6 +139,7 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 		dragstatus = DragStatus.NODRAG;
 		movingEdges.clear();
 		renderer.repaintCanvas();
+		graph.fireGraphChange(GraphChangeType.GRAPHVIEWCHANGED, null);
 	}
 	
 	private void applyMovedPoint() {
