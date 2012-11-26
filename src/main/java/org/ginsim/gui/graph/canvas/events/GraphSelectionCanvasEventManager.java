@@ -23,6 +23,8 @@ import org.ginsim.gui.shell.editpanel.SelectionType;
 
 public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventManager {
 
+	private static final boolean AUTOADDPOINTS = true;
+	
 	private final GraphSelection selection;
 	private final Graph graph;
 	private final NodeAttributesReader nreader;
@@ -34,6 +36,7 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 	private Object selectedObject = null;
 	private boolean isAlternate = false;
 
+	private long lastclicktimestamp = 0;
 	
 	private Point startPoint=null;
 	int movex=0, movey=0;
@@ -78,6 +81,13 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 	}
 	
 	private void simpleClick(Point p, boolean alternate) {
+		boolean doubleClick = false;
+		long timestamp = System.currentTimeMillis();
+		if (timestamp - lastclicktimestamp < 500) {
+			doubleClick = true;
+		}
+		lastclicktimestamp = timestamp;
+		
 		Object o = selectedObject;
 		if (alternate) {
 			if (o == null) {
@@ -97,6 +107,20 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 					selection.addNodeToSelection(o);
 				}
 			}
+		} else if (movingPoint != null && doubleClick) {
+			// FIXME
+			ereader.setEdge(movingPoint.edge);
+			List<Point> points = ereader.getPoints();
+			if (points == null || points.size() <= movingPoint.pointIdx) {
+				return;
+			}
+			ereader.damage();
+			if (points.size() == 1) {
+				ereader.setPoints(null);
+			} else {
+				points.remove(movingPoint.pointIdx);
+			}
+			ereader.refresh();
 		} else {
 			// reset the selection
 			selection.unselectAll();
@@ -224,10 +248,16 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 			if (renderer.selectionCache.size() > 0) {
 				dragstatus = DragStatus.MOVE;
 				
-				if (movingPoint != null) {
-					dragstatus = DragStatus.MOVEPOINT;
+				if (movingPoint == null) {
+					if (AUTOADDPOINTS && selectedObject instanceof Edge) {
+						switchEdgePoint((Edge)selectedObject, p);
+						dragstatus = DragStatus.MOVEPOINT;
+						// TODO: add new point
+					} else {
+						detectMovingEdges();
+					}
 				} else {
-					detectMovingEdges();
+					dragstatus = DragStatus.MOVEPOINT;
 				}
 			} else {
 				dragstatus = DragStatus.SELECT;
@@ -308,7 +338,7 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 		
 		int i=0;
 		for (Point pt: points) {
-			if (Math.abs(pt.x-p.x) < 3 && Math.abs(pt.y-p.y) < 3) {
+			if (Math.abs(pt.x-p.x) < 5 && Math.abs(pt.y-p.y) < 5) {
 				renderer.damageItem(e);
 				points.remove(i);
 				return true;
