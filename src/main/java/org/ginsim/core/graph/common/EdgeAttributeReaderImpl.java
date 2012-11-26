@@ -48,6 +48,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     private Edge<?> edge;
     private EdgeVSdata evsd = null;
     private boolean selected = false;
+    private boolean hasChanged = false;
     
     private boolean defaultcurve;
     
@@ -126,7 +127,10 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
         } else if (w < 1) {
         	w = 1;
         }
-        evsd.size = w;
+        if (evsd.size != w) {
+        	evsd.size = w;
+        	hasChanged = true;
+        }
     }
 
     @Override
@@ -156,12 +160,14 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
             
             dataMap.put(obj, evsd);
         }
+    	hasChanged = false;
     }
 
     @Override
     public void setLineColor(Color color) {
-        if (evsd != null) {
+        if (evsd != null && evsd.color != color) {
             evsd.color = color;
+            hasChanged = true;
         }
     }
 
@@ -175,7 +181,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
     @Override
     public void refresh() {
-    	if (edge != null) {
+    	if (edge != null && hasChanged) {
     		graph.refresh(edge);
     	}
     }
@@ -188,10 +194,10 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
     @Override
     public void setLineEnd(EdgeEnd index) {
-        if (evsd == null) {
-            return;
+        if (evsd != null && evsd.end != index) {
+        	evsd.end = index;
+        	hasChanged = true;
         }
-        evsd.end = index;
     }
 
     @Override
@@ -216,6 +222,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
             return;
         }
         evsd.points = l;
+        hasChanged = true;
     }
 
     class EdgeVSdata {
@@ -238,10 +245,10 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
     @Override
 	public void setDash(EdgePattern pattern) {
-		if (evsd == null) {
-			return;
+		if (evsd != null && evsd.dash != pattern) {
+			evsd.dash = pattern;
+			hasChanged = true;
 		}
-		evsd.dash = pattern;
 	}
 
     @Override
@@ -299,10 +306,10 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
 	@Override
 	public void setCurve(boolean curve) {
-		if (evsd == null) {
-			return;
+		if (evsd != null && evsd.curve != curve) {
+			evsd.curve = curve;
+			hasChanged = true;
 		}
-		evsd.curve = curve;
 	}
 
 	@Override
