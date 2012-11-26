@@ -17,6 +17,7 @@ import javax.swing.border.EtchedBorder;
 
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
+import org.ginsim.core.graph.common.Edge;
 
 
 /**
@@ -34,6 +35,7 @@ public class EditActionManager {
 	
 	private EditAction selectedAction = EDIT_MODE;
 	private final List<EditAction> actions;
+	private final GraphSelection selection;
 	private boolean locked = false;
 	
 	// hack: remember the edit buttons to make sure to update them
@@ -44,8 +46,9 @@ public class EditActionManager {
 	 * 
 	 * @param actions available actions or null
 	 */
-	public EditActionManager(List<EditAction> actions) {
+	public EditActionManager(GraphGUI gui, List<EditAction> actions) {
 		this.actions = actions;
+		selection = gui.getSelection();
 	}
 	
 	/**
@@ -101,6 +104,14 @@ public class EditActionManager {
 		}
 		if (!locked) {
 			setSelectedAction(EDIT_MODE);
+		}
+	}
+	
+	public void select(Object o) {
+		if (o instanceof Edge) {
+			selection.selectEdge((Edge)o);
+		} else {
+			selection.selectNode(o);
 		}
 	}
 

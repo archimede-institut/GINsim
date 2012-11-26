@@ -59,7 +59,7 @@ public abstract class BaseGraphGUI<G extends Graph<V,E>, V, E extends Edge<V>>
 		this.canBeSaved = can_be_saved;
 		this.helper = helper;
 		
-		editActionManager = new EditActionManager(helper.getEditActions(graph));
+		editActionManager = new EditActionManager(this, helper.getEditActions(graph));
 		GraphManager.getInstance().addGraphListener(g, this);
 	}
 
