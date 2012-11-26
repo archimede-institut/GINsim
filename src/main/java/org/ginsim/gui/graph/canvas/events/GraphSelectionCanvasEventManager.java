@@ -325,22 +325,23 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 		}
 		
 		ereader.setEdge(e);
-		
-		renderer.damageItem(e);
+		ereader.damage();
 		List<Point> points = ereader.getPoints();
 		if (points == null) {
 			points = new ArrayList<Point>();
 			points.add(p);
 			ereader.setPoints(points);
 			movingPoint = new MovingPoint(e, 0);
+			ereader.refresh();
 			return true;
 		}
 		
 		int i=0;
 		for (Point pt: points) {
 			if (Math.abs(pt.x-p.x) < 5 && Math.abs(pt.y-p.y) < 5) {
-				renderer.damageItem(e);
 				points.remove(i);
+				ereader.setPoints(points);
+				ereader.refresh();
 				return true;
 			}
 			i++;
@@ -363,6 +364,8 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 		}
 		
 		points.add(idx, p);
+		ereader.setPoints(points);
+		ereader.refresh();
 		movingPoint = new MovingPoint(e, idx);
 		return true;
 	}
