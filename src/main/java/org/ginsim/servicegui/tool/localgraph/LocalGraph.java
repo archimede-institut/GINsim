@@ -38,7 +38,7 @@ public class LocalGraph {
 		this.regGraph = regGraph;
 		for (RegulatoryNode node : regGraph.getNodes()) {
 			if (node.getMaxValue() > 1) {
-				throw new GsException(GsException.GRAVITY_ERROR, "The local graph can only be computed on boolean models");
+				throw new GsException(GsException.GRAVITY_ERROR, "STR_localGraph_errorMultivaluedModel");
 			}
 		}
 	}
