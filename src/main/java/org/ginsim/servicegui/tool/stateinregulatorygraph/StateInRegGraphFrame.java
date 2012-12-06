@@ -105,9 +105,7 @@ public class StateInRegGraphFrame extends StackDialog {
 	}
 
 	public void cancel() {
-		if (!colorizerPanel.frameIsClosing()) {
-				return;
-		}
+		colorizerPanel.undoColorize();
 		super.cancel();
 	}
 }
