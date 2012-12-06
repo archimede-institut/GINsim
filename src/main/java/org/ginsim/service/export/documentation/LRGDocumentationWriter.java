@@ -471,7 +471,9 @@ public class LRGDocumentationWriter {
 		for (int i = 0; i < t.length-1; i++) {
 			doc.writeTextln(t[i]);
 		}
-		doc.writeText(t[t.length-1]);
+		if (t.length > 0) {
+			doc.writeText(t[t.length-1]);
+		}
 		doc.closeParagraph();
 	}
 
