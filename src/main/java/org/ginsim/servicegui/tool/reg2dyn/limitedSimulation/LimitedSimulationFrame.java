@@ -6,6 +6,7 @@ import java.awt.GridBagLayout;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.Action;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -25,10 +26,11 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.service.ServiceManager;
-import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
+import org.ginsim.gui.service.ServiceGUIManager;
+import org.ginsim.gui.service.common.LayoutAction;
 import org.ginsim.gui.shell.MainFrame;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.Frame;
@@ -135,6 +137,14 @@ public class LimitedSimulationFrame extends StackDialog {
 
 		LimitedSimulationService service = ServiceManager.getManager().getService(LimitedSimulationService.class);
 		DynamicGraph dynGraph = service.run(htg, constraint, getMutant());
+
+		// force a layout on the STG: not perfect but better than the current weird situation
+		for (Action action: ServiceGUIManager.getManager().getAvailableActions( dynGraph)) {
+			if (action instanceof LayoutAction) {
+				action.actionPerformed(null);
+				break;
+			}
+		}
 		Frame frame = GUIManager.getInstance().newFrame(dynGraph);
 		if (frame != null && frame instanceof MainFrame) {
 			((MainFrame)frame).addTabToEditPanel(new StatesToHierarchicalEditTab(dynGraph, htg));
