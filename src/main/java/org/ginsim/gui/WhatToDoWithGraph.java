@@ -37,6 +37,7 @@ import org.ginsim.gui.service.common.LayoutAction;
 import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.GsFileFilter;
+import org.ginsim.gui.utils.widgets.Frame;
 
 /**
  * This class define a frame that is opened when a graph is computed from an other one.
@@ -55,8 +56,7 @@ import org.ginsim.gui.shell.GsFileFilter;
  * @author spinelli
  *
  */
-
-public class WhatToDoWithGraph extends JFrame {
+public class WhatToDoWithGraph extends Frame {
 
 	public static final int LITMIT_ASK_QUESTION = 50;
 	private static final int LIMIT_WARNING = 500;
@@ -84,12 +84,10 @@ public class WhatToDoWithGraph extends JFrame {
 	 * Create the frame.
 	 */
 	public WhatToDoWithGraph( Graph graph) {
-
+		super("whattodo", 400, 450);
 		this.graph = graph;
 		// Retrieve the list of available actions for the graph type
 		List<Action> available_actions = ServiceGUIManager.getManager().getAvailableActions( graph);
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 450, 450);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -200,7 +198,7 @@ public class WhatToDoWithGraph extends JFrame {
 			public void mouseClicked(MouseEvent e) {
 				boolean result = excecuteSelectedAction();
 				if( result){
-					closeWindow();
+					close();
 				}
 			}
 		});
@@ -212,7 +210,7 @@ public class WhatToDoWithGraph extends JFrame {
 		btn_Cancel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				closeWindow();
+				close();
 			}
 		});
 		btn_Cancel.setBounds(244, 380, 117, 25);
@@ -402,12 +400,9 @@ public class WhatToDoWithGraph extends JFrame {
 		}
 		return false;
 	}
-	
-	/**
-	 * Close the frame
-	 * 
-	 */
-	private void closeWindow(){
+
+	@Override
+	public void close(){
 		
 		this.setVisible( false);
 		this.dispose();
