@@ -102,6 +102,11 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 		return mainPanel;
 	}
 
+	public void doClose() {
+		colorizerPanel.undoColorize();
+		super.doClose();
+	}
+	
 	protected void run() {
 		List<RegulatoryNode> selectedNodes = null;
 		GraphSelection<RegulatoryNode, RegulatoryMultiEdge> selection = GUIManager.getInstance().getGraphGUI(regGraph).getSelection();
