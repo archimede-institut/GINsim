@@ -55,6 +55,7 @@ public class TarjanSimulation {
 	private long queueSearchCount = 0;
 	protected Map<SimpleState, HTGSimulationQueueState> inQueue; 
 	
+	private SimpleState s_e = null; // for explore
 
 	public TarjanSimulation(HTGSimulation htgSimulation, ProgressListener<Graph> frame) {
 		this.htgSimulation = htgSimulation;
@@ -88,69 +89,69 @@ public class TarjanSimulation {
 		index = 0;
 		max_depth_reached = -1;
 		Iterator<byte[]> initStatesIterator = htgSimulation.getInitStatesIterator();
-		while(initStatesIterator.hasNext()) { 																				//For each initial states
-			byte[] state = initStatesIterator.next();																//  __state__ is the current initial state.
+		while(initStatesIterator.hasNext()) { 					//For each initial states
+			byte[] state = initStatesIterator.next();			//  __state__ is the current initial state.
 			nbinitialstates++;
 			                                                                                        						
 			
-			if (indexesMap.get(new SimpleState(state)) == null) { 																				//  If the new state was not in the nodeSet, that is has not been processed
-				SimulationUpdater updater = htgSimulation.getUpdaterForState(state);														//    Get the updater of the state
-				if (!updater.hasNext()) {                                                                                   //    If it has no successor
-					processStableState(state);                                                                           	//      Process it as a stable state
+			if (indexesMap.get(new SimpleState(state)) == null) {
+									//  If the new state was not in the nodeSet, that is has not been processed
+				SimulationUpdater updater = htgSimulation.getUpdaterForState(state);//    Get the updater of the state
+				if (!updater.hasNext()) {                                           //    If it has no successor
+					processStableState(state);                                  //      Process it as a stable state
 					continue;                                                                                                     
 				}                                                                                                                 
-				HTGSimulationQueueState e = new HTGSimulationQueueState(state, index, index);					//    Create __e__ a queue item with the state, index and updater
-				depth = -1;                                                                                                 //    Set the depth to -1, (as it will be incremented immediatly to 0)
-				explore(e, updater);                                                                                                 //    Call the recursive dunction explore() on __e__.
-			} else {
+				HTGSimulationQueueState e = new HTGSimulationQueueState(state, index, index);
+							//    Create __e__ a queue item with the state, index and updater
+				depth = -1;             //    Set the depth to -1, (as it will be incremented immediatly to 0)
+				explore(e, updater);    //    Call the recursive function explore() on __e__.
 			}
 		}
 		htgSimulation.setMaxDepth(max_depth_reached);
 		htgSimulation.setQueueSearchCount(queueSearchCount);
-
 	}
 
+
+
+	
 	/**
 	 * The recursive function of the algorithm.
 	 *
 	 */
-	private HierarchicalNode explore(HTGSimulationQueueState e, SimulationUpdater e_updater) throws Exception {
+	private void explore(HTGSimulationQueueState e, SimulationUpdater e_updater) throws Exception {
 		checkStopConditions();
-		
-		HTGSimulationQueueItem n = null;
 		index++;
 		depth++;
-		SimpleState s_e = new SimpleState(e.getState());
+		s_e = new SimpleState(e.getState());
 		indexesMap.put(s_e, new Integer(index));
-		queue.add(e);																										//Queueing the current state
+		queue.add(e);										//Queueing the current state
 		inQueue.put(s_e, e);
 		
-		while (e_updater.hasNext()) {																						//For each successors
-			byte[] n_state= ((SimulationQueuedState)e_updater.next()).state;												// n_state is the state of the successor
+		while (e_updater.hasNext()) {								//For each successors
+			byte[] n_state= ((SimulationQueuedState)e_updater.next()).state;		// n_state is the state of the successor
 			SimulationUpdater n_updater = htgSimulation.getUpdaterForState(n_state);                          							
-			if (!n_updater.hasNext()) {																						// n_state has no child No child => stable state
+			if (!n_updater.hasNext()) {							// n_state has no child No child => stable state
 				processStableState(n_state);
 			} else {
-				n = getTripletInQueueForState(n_state);															   			//Search the state in the queue
-				if (n != null) {																				   			//If found
-					e.setLow_index(Math.min(e.getLow_index(), n.getLow_index()));											//  update the index
-				} else {																						   			//Else the state is not in the queue
+				HTGSimulationQueueItem n = getTripletInQueueForState(n_state);		//Search the state in the queue
+				if (n != null) {							//If found
+					e.setLow_index(Math.min(e.getLow_index(), n.getLow_index()));	//  update the index
+				} else {								//Else the state is not in the queue
 					if (indexesMap.get(new SimpleState(n_state)) == null) {
-						n = new HTGSimulationQueueState(n_state, index, index);						   						//     explore it
-						explore((HTGSimulationQueueState) n, n_updater);													//     update the index
+						n = new HTGSimulationQueueState(n_state, index, index);	//     explore it
+						explore((HTGSimulationQueueState) n, n_updater);	//     update the index
 						e.setLow_index(Math.min(e.getLow_index(), n.getLow_index()));
 					}
 				}
 			}
-
 		}
 		if (e.getIndex() == e.getLow_index()) {
-			HierarchicalNode hnode = buildSCC(e);
+			buildSCC(e);
 			nbnode++;
-			return hnode;
 		}
-		return null;
 	}
+	
+	
 	
 	/**
 	 * A back edge in the queue has been found, and it points to __stopItemInQueue__.
@@ -220,7 +221,7 @@ public class TarjanSimulation {
 	 * @return the HierarchicalNode (newly created or already processed) of the stable state
 	 */
 	private HierarchicalNode processStableState(byte[] state) {
-		HierarchicalNode hnode = state2sccMap.get(new SimpleState(state));									//  If it already processed (in the nodeSet)	
+		HierarchicalNode hnode = state2sccMap.get(new SimpleState(state));								//  If it already processed (in the nodeSet)	
 		if (hnode != null) {
 			return hnode;
 		}
@@ -254,9 +255,9 @@ public class TarjanSimulation {
 	 * if max depth reached
 	 * if the Interrupt button has been pushed.
 	 * 
-	 * @throws Exception
+	 * @throws GsException
 	 */
-	private void checkStopConditions() throws Exception { 
+	private void checkStopConditions() throws GsException { 
 		if (htgSimulation.getMaxNodes() != 0 && nbnode >= htgSimulation.getMaxNodes()){
 			LogManager.error("Simulation of the HTG : maxnodes reached @" + nbnode);
 		    throw new GsException(GsException.GRAVITY_NORMAL, "Reached the maximum count of node");
@@ -314,3 +315,4 @@ class SimpleState {
 	}
 
 }
+
