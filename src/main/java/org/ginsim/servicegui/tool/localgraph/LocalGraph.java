@@ -29,12 +29,6 @@ public class LocalGraph {
 
 	public LocalGraph(RegulatoryGraph regGraph) throws GsException {
 		this.regGraph = regGraph;
-		// for (RegulatoryNode node : regGraph.getNodes()) {
-		// if (node.getMaxValue() > 1) {
-		// throw new GsException(GsException.GRAVITY_ERROR,
-		// "STR_localGraph_errorMultivaluedModel");
-		// }
-		// }
 	}
 
 	public LocalGraph(RegulatoryGraph regGraph, List<byte[]> states)
@@ -62,13 +56,12 @@ public class LocalGraph {
 		selector.setCache(functionalityMap);
 
 		for (byte[] state : states) {
+			byte[] fstate = f(state);
 			for (RegulatoryMultiEdge edge : regGraph.getEdges()) {
 				RegulatoryNode source = edge.getSource();
 				RegulatoryNode target = edge.getTarget();
 				int i = regGraph.getNodeOrder().indexOf(source);
 				int j = regGraph.getNodeOrder().indexOf(target);
-				byte[] fstate = f(state);
-
 				// Independently of being Boolean of multi-valued
 				if (state[i] < source.getMaxValue()) {
 					updateEdge(edge, state, fstate, i, j, 1);
@@ -79,23 +72,32 @@ public class LocalGraph {
 			}
 		}
 	}
-
+	
+	public String print(byte[] x) {
+		String s = "";
+		for (int i = 0 ; i < x.length ; i++) s+= x[i];
+		return s;
+	}
 	private void updateEdge(RegulatoryMultiEdge edge, byte[] state,
 			byte[] fstate, int i, int j, int diff) {
-		byte[] fstateDiff = f(getStateDiff(state, i, diff));
-		if (fstate[j] != fstateDiff[j]) {
-			String func = functionalityMap.get(edge);
-			if (state[i] == fstate[j]) {
-				if (func == null || func == LocalGraphSelector.CAT_POSITIVE)
-					functionalityMap.put(edge, LocalGraphSelector.CAT_POSITIVE);
-				else
-					functionalityMap.put(edge, LocalGraphSelector.CAT_DUAL);
-			} else {
-				if (func == null || func == LocalGraphSelector.CAT_NEGATIVE)
-					functionalityMap.put(edge, LocalGraphSelector.CAT_NEGATIVE);
-				else
-					functionalityMap.put(edge, LocalGraphSelector.CAT_DUAL);
-			}
+		byte[] stateDiff = getStateDiff(state, i, diff);
+		byte[] fstateDiff = f(stateDiff);
+		if (fstateDiff[j] == fstate[j]) {
+			return; // No effect
+		}
+		String func = functionalityMap.get(edge);
+
+		if ((diff > 0 && fstateDiff[j] > fstate[j])
+			|| (diff < 0 && fstateDiff[j] < fstate[j])) {
+			if (func == null || func == LocalGraphSelector.CAT_POSITIVE)
+				functionalityMap.put(edge, LocalGraphSelector.CAT_POSITIVE);
+			else
+				functionalityMap.put(edge, LocalGraphSelector.CAT_DUAL);
+		} else {
+			if (func == null || func == LocalGraphSelector.CAT_NEGATIVE)
+				functionalityMap.put(edge, LocalGraphSelector.CAT_NEGATIVE);
+			else
+				functionalityMap.put(edge, LocalGraphSelector.CAT_DUAL);
 		}
 	}
 
