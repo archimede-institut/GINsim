@@ -54,6 +54,7 @@ public class LRGDocumentationWriter {
 	private final RegulatoryGraph graph;
 	private List nodeOrder;
 	private int len;
+	private final StableStatesService sss = ServiceManager.get(StableStatesService.class);
 
 	private DocumentExportConfig config;
 	
@@ -105,178 +106,95 @@ public class LRGDocumentationWriter {
 		// mutant description
 		if (config.exportMutants) {
 			doc.openHeader(2, "Mutants and Dynamical Behaviour", null);
-			writeMutants();
+			writePerturbations();
 		}
 
 		doc.close();//close the document		
 	}
 
-	private void writeMutants() throws Exception {
+	private void writePerturbations() throws Exception {
 		ListOfPerturbations mutantList = (ListOfPerturbations) ObjectAssociationManager.getInstance().getObject(graph, PerturbationManager.KEY, true);
-		StableStatesService sss = ServiceManager.get(StableStatesService.class);
-		int stable;
 		
 		String[] cols;
-		if (config.searchStableStates && config.putComment) {
-			cols = new String[] {"", "", "", "", "", "", ""};
-		} else if (config.searchStableStates || config.putComment){
-			cols = new String[] {"", "", "", "", "", ""};
+		if (config.searchStableStates){
+			cols = new String[] {"", ""};
 		} else {
-			cols = new String[] {"", "", "", "", ""};
+			cols = new String[] {""};
 		}
-		int nbcol = cols.length-1;
-		doc.openTable("mutants", "table", cols);
+
+		doc.openTable("perturbations", "table", cols);
 		doc.openTableRow(null);
-		doc.openTableCell("Mutants", true);
-		doc.openTableCell("Gene", true);
-		doc.openTableCell("Min", true);
-        doc.openTableCell("Max", true);
-        doc.openTableCell("Condition", true);
-		if (config.putComment) {
-			doc.openTableCell("Comment", true);
-		}
+		doc.openTableCell("Perturbation", true);
 		if (config.searchStableStates) {
 			doc.openTableCell("Stable States", true);
 		}
-		
+
 		StableTableModel model = new StableTableModel();
+		LogicalModel lmodel = null;
+		if (config.searchStableStates) {
+			lmodel = graph.getModel();
+		}
+
+		doc.openTableRow(null);
+		doc.openTableCell(1, (model.getRowCount() > 0?2:1), "Wild Type", true);
+        
+        if (config.searchStableStates) {
+			findStableStates(lmodel, model);
+		}
+
 		for (Perturbation mutant: mutantList) {
 			
-			if (config.searchStableStates) {
-				// FIXME: also do it for WT
-				LogicalModel lmodel = graph.getModel();
-				mutant.update(lmodel);
-				StableStateSearcher stableSearcher = sss.getStableStateSearcher(lmodel);
-				stable = stableSearcher.getResult();
-				model.setResult(stableSearcher.getMDDManager(), stable);
-			}
-			int nbrow = 1;
-			Iterator it_multicellularChanges = null;
-			if (mutant == null) { // wild type
-				nbrow = 1;
-				doc.openTableRow(null);
-				doc.openTableCell(1, (model.getRowCount() > 0?2:1), "Wild Type", true);
-				doc.openTableCell("-");
-				doc.openTableCell("-");
-                doc.openTableCell("-");
-                doc.openTableCell("");
-				if (config.putComment) {
-					doc.openTableCell("");
-				}
-			} else {
-				
-				// perturbation information disabled for now!
-				
-//				nbrow = mutant.getNbChanges();
-//				if (config.multicellular) {
-//					Map m_multicellularChanges = new HashMap();
-//					for (int c=0 ; c<nbrow ; c++) {
-//						String s = mutant.getName(c);
-//						// TODO: check that the mutant is indeed the same everywhere before doing so ?
-//						if (s.endsWith("1")) {
-//							m_multicellularChanges.put(s.substring(0, s.length()-1), 
-//									new int[] {mutant.getMin(c), mutant.getMax(c)});
-//						}
-//					}
-//					nbrow = m_multicellularChanges.size();
-//					it_multicellularChanges = m_multicellularChanges.entrySet().iterator();
-//				}
-//				if (nbrow < 1) {
-//					nbrow = 1;
-//				}
-//				doc.openTableRow(null);
-//				doc.openTableCell(1, (nbrow+(model.getRowCount() > 0?1:0)), mutant.getName(), true);
-//				if (mutant.getNbChanges() == 0) {
-//					doc.openTableCell("-");
-//					doc.openTableCell("-");
-//                    doc.openTableCell("-");
-//				} else if (it_multicellularChanges == null){
-//					doc.openTableCell(mutant.getName(0));
-//					doc.openTableCell(""+mutant.getMin(0));
-//					doc.openTableCell(""+mutant.getMax(0));
-//				} else {
-//					Entry e = (Entry)it_multicellularChanges.next();
-//					doc.openTableCell(e.getKey().toString());
-//					int[] t_changes = (int[])e.getValue();
-//					doc.openTableCell(""+t_changes[0]);
-//					doc.openTableCell(""+t_changes[1]);
-//				}
-//				if (mutant.getNbChanges() > 0) {
-//				    doc.openTableCell(mutant.getCondition(0));
-//				} else {
-//				    doc.openTableCell("");
-//				}
-//				if (config.putComment) {
-//					doc.openTableCell(1, nbrow, "", false);
-//					writeAnnotation(mutant.getAnnotation());//BUG?
-//				}
-			}
+			doc.openTableRow(null);
+			doc.openTableCell(1, (model.getRowCount() > 0?2:1), ""+mutant, true);
 			
 			if (config.searchStableStates) {
-				// the common part: stable states
-				if (model.getRowCount() > 0) {
-					doc.openTableCell(1, nbrow, model.getRowCount()+" Stable states", false);
-				} else {
-					doc.openTableCell(1, nbrow, "", false);
-				}
-			}
-
-			// more data on mutants:
-			if (mutant != null) {
-
-				// FIXME: perturbation info disabled for now
-				
-//				for (int j=1 ; j<nbrow ; j++) {
-//					if (it_multicellularChanges == null) {
-//						doc.openTableRow(null);
-//						doc.openTableCell(mutant.getName(j));
-//						doc.openTableCell(""+mutant.getMin(j));
-//						doc.openTableCell(""+mutant.getMax(j));
-//					} else {
-//						Entry e = (Entry)it_multicellularChanges.next();
-//						doc.openTableRow(null);
-//						doc.openTableCell(e.getKey().toString());
-//						int[] t_changes = (int[])e.getValue();
-//						doc.openTableCell(""+t_changes[0]);
-//						doc.openTableCell(""+t_changes[1]);
-//					}
-//                    doc.openTableCell(""+mutant.getCondition(j));
-//				}
-			}
-			
-			// more data on stable states:
-			if (config.searchStableStates && model.getRowCount() > 0) {
-				doc.openTableRow(null);
-				doc.openTableCell(nbcol,1, null, false);
-				
-				doc.openList("L1");
-				for (int k=0 ; k<model.getRowCount() ; k++) {
-					doc.openListItem(null);
-					boolean needPrev=false;
-					String name = (String)model.getValueAt(k,0);
-					if (name != null) {
-						doc.writeText(name+": ");
-					}
-					for (int j=1 ; j<=len ; j++) {
-						Object val = model.getValueAt(k,j);
-						if (!val.toString().equals("0")) {
-							String s = needPrev ? " ; " : "";
-							needPrev = true;
-							if (val.toString().equals("1")) {
-								doc.writeText(s+nodeOrder.get(j-1));
-							} else {
-								doc.writeText(s+nodeOrder.get(j-1)+"="+val);
-							}
-						}
-					}
-					doc.closeListItem();
-				}
-				doc.closeList();
+				findStableStates(mutant.apply(lmodel), model);
 			}
 		}
 		doc.closeTable();
 	}
+
+	private int findStableStates(LogicalModel lmodel, StableTableModel model) throws Exception {
+		int stable = sss.getStableStateSearcher(lmodel).getResult();
+		model.setResult(lmodel.getMDDManager(), stable);
+		int nbrow = model.getRowCount();
+		if (nbrow > 0) {
+			doc.openTableCell(1, 1, model.getRowCount()+" Stable states", false);
+			writeStableStates( model);
+		} else {
+			doc.openTableCell(1, nbrow, "", false);
+		}
+		return nbrow;
+	}
 	
+	
+
+	
+	private void writeStableStates( StableTableModel model) throws Exception {
+		doc.openList("L1");
+		for (int k=0 ; k<model.getRowCount() ; k++) {
+			doc.openListItem(null);
+			boolean needPrev=false;
+			String name = (String)model.getValueAt(k,0);
+			if (name != null) {
+				doc.writeText(name+": ");
+			}
+			for (int j=1 ; j<=len ; j++) {
+				Object val = model.getValueAt(k,j);
+				if (!val.toString().equals("0")) {
+					String s = needPrev ? " ; " : "";
+					needPrev = true;
+					if (val.toString().equals("1")) {
+						doc.writeText(s+nodeOrder.get(j-1));
+					} else {
+						doc.writeText(s+nodeOrder.get(j-1)+"="+val);
+					}
+				}
+			}
+			doc.closeListItem();
+		}
+		doc.closeList();
+	}
 	
 	private void writeInitialStates() throws IOException {
 		InitialStateList initStates = ((GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, 
