@@ -49,27 +49,27 @@ public class AdjacencyMatrixWidget extends JPanel {
 			JPanel top = new JPanel();
 			top.setLayout(new GridBagLayout());
 
-			int x = 0;
-			int y = 0;
-			while (x <= instances && y <= instances) {
-				topConstraints.gridx = x;
-				topConstraints.gridy = y;
+			int col = 0;
+			int row = 0;
+			while (col <= instances && row <= instances) {
+				topConstraints.gridx = col;
+				topConstraints.gridy = row;
 				topConstraints.weighty = 0;
 				topConstraints.weightx = 0;
 
-				if (x == 0 && y == 0)
+				if (col == 0 && row == 0)
 					top.add(new JLabel(), topConstraints);
 
-				if (y == 0 && x > 0)
-					top.add(new JLabel("M" + x), topConstraints);
-				if (x == 0 && y > 0) {
-					top.add(new JLabel("M" + y), topConstraints);
+				if (row == 0 && col > 0)
+					top.add(new JLabel("M" + col), topConstraints);
+				if (col == 0 && row > 0) {
+					top.add(new JLabel("M" + row), topConstraints);
 				}
-				if (x > 0 && y > 0) {
+				if (col > 0 && row > 0) {
 					JCheckBox checkBox = new JCheckBox();
 
 					// Modules cannot be their own neighbours
-					if (x == y)
+					if (col == row)
 						checkBox.setEnabled(false);
 					else
 						checkBox.setEnabled(true);
@@ -85,22 +85,22 @@ public class AdjacencyMatrixWidget extends JPanel {
 						}
 
 					});
-					matrix[x - 1][y - 1] = checkBox;
+					matrix[row - 1][col - 1] = checkBox;
 					top.add(checkBox, topConstraints);
 
 				}
 
-				if (x == instances) {
-					topConstraints.gridx = x + 1;
-					topConstraints.gridy = y;
+				if (col == instances) {
+					topConstraints.gridx = col + 1;
+					topConstraints.gridy = row;
 					topConstraints.weightx = 1;
 					top.add(new JLabel(), topConstraints);
 				}
 
-				x++;
-				if (x > instances && y <= instances) {
-					y++;
-					x = 0;
+				col++;
+				if (col > instances && row <= instances) {
+					row++;
+					col = 0;
 				}
 			}
 

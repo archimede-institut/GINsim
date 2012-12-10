@@ -60,9 +60,10 @@ public class CADPExportService implements Service {
 		String common = commonWriter.toString();
 		ze.setSize((long) common.getBytes().length);
 		zos.setLevel(9);
-		zos.putNextEntry(ze);
-		zos.write(common.getBytes());
+		zos.putNextEntry(ze); 
+		zos.write(common.getBytes(),0,common.getBytes().length);
 		zos.closeEntry();
+		//System.err.print(common);
 		
 		ze = new ZipEntry(config.getLNTModelFilename());
 		CADPModuleWriter moduleWriter = new CADPModuleWriter(config);
@@ -70,8 +71,9 @@ public class CADPExportService implements Service {
 		ze.setSize((long) modules.getBytes().length);
 		zos.setLevel(9);
 		zos.putNextEntry(ze);
-		zos.write(modules.getBytes());
+		zos.write(modules.getBytes(),0,modules.getBytes().length);
 		zos.closeEntry();
+		//System.err.print(modules);
 		
 		ze = new ZipEntry(config.getLNTIntegrationFilename());
 		CADPIntegrationWriter integrationWriter = new CADPIntegrationWriter(config);
@@ -81,6 +83,7 @@ public class CADPExportService implements Service {
 		zos.putNextEntry(ze);
 		zos.write(integration.getBytes());
 		zos.closeEntry();
+		System.err.print(integration);
 		
 		ze = new ZipEntry(config.getExpFilename());
 		CADPExpWriter expWriter = new CADPExpWriter(config);
@@ -90,6 +93,7 @@ public class CADPExportService implements Service {
 		zos.putNextEntry(ze);
 		zos.write(exp.getBytes());
 		zos.closeEntry();
+		System.err.print(exp);
 		
 		ze = new ZipEntry("file.svl");
 		CADPSvlWriter svlWriter = new CADPSvlWriter(config);
@@ -99,6 +103,7 @@ public class CADPExportService implements Service {
 		zos.putNextEntry(ze);
 		zos.write(svl.getBytes());
 		zos.closeEntry();
+		System.err.print(svl);
 
 
 		zos.finish();

@@ -66,7 +66,7 @@ public class CADPModuleWriter extends CADPWriter {
 				+ ") is\n";
 		output += "\tloop\n";
 		output += "\t\tselect\n";
-		output += "\t\t\t" + ruleWriter + "\n";
+		output += ruleWriter + "\n";
 		output += "\t\tend select\n";
 		output += "\tend loop\n";
 		output += "end process\n\n";
@@ -102,12 +102,12 @@ public class CADPModuleWriter extends CADPWriter {
 
 				if (node.isInput()) {
 					out += "\t\t[]\n";
-					out += "\t\t\tInput_Regulator" + modifier + "[" + gate
+					out += "\t\t\tInput_regulator" + modifier + "[" + gate
 							+ "] (!?" + stateVar + ")\n";
 				} else {
 					for (int v = 0; v <= node.getMaxValue(); v++) {
 						out += "\t\t[]\n";
-						out += "\t\t\tProperRegulator" + modifier + "[" + gate
+						out += "\t\t\tProper_regulator" + modifier + "[" + gate
 								+ "]" + "(focal_" + gate + "("
 								+ stateVarWriter.simpleList() + ") ==" + v
 								+ modifier + "), !?" + stateVar + "," + v
@@ -153,11 +153,13 @@ public class CADPModuleWriter extends CADPWriter {
 
 				if (!node.isInput()) {
 					out += "function focal_" + CADPWriter.node2Gate(node) + "("
-							+ stateVarWriter.typedList() + ") :"
+							+ stateVarWriter.typedList() + ") : "
 							+ (node.getMaxValue() > 1 ? "Multi" : "Binary")
 							+ " is\n";
 
 					String[] conditionArray = new String[node.getMaxValue() + 1];
+					for (int i=0; i<conditionArray.length; i++)
+						conditionArray[i] = "";
 					// we make space for the unused v=0 condition to simplify
 					// syntax in subsequent code
 

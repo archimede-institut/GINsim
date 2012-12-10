@@ -29,17 +29,17 @@ public class CADPIntegrationWriter extends CADPWriter {
 		Collection<RegulatoryNode> mappedInputs = this.getMappedInputs();
 
 		for (RegulatoryNode input : mappedInputs) {
-			List<Map.Entry<RegulatoryNode, Integer>> listExternal = new ArrayList<Map.Entry<RegulatoryNode, Integer>>();
+
 			Collection<RegulatoryNode> properComponents = this
 					.getProperComponentsForInput(input);
 			IntegrationFunction integrationFunction = this
 					.getIntegrationFunctionForInput(input);
 
-
-			for (int instance = 0; instance < numberInstances; instance++) {
+			for (int instance = 1; instance <= numberInstances; instance++) {
+				List<Map.Entry<RegulatoryNode, Integer>> listExternal = new ArrayList<Map.Entry<RegulatoryNode, Integer>>();
 				Map.Entry<RegulatoryNode, Integer> inputFromModule = new AbstractMap.SimpleEntry<RegulatoryNode, Integer>(
 						input, new Integer(instance));
-				for (int neighbour = 0; neighbour < numberInstances; neighbour++) {
+				for (int neighbour = 1; neighbour <= numberInstances; neighbour++) {
 					if (!this.areNeighbours(instance, neighbour))
 						continue;
 					for (RegulatoryNode proper : properComponents)
@@ -47,11 +47,11 @@ public class CADPIntegrationWriter extends CADPWriter {
 								.add(new AbstractMap.SimpleEntry<RegulatoryNode, Integer>(
 										proper, new Integer(neighbour)));
 				}
-
+				
 				IntegrationProcessWriter integrationProcessWriter = new IntegrationProcessWriter(
 						inputFromModule, listExternal, integrationFunction);
 
-				association.put(inputFromModule,integrationProcessWriter);
+				association.put(inputFromModule, integrationProcessWriter);
 
 			}
 
@@ -110,40 +110,53 @@ public class CADPIntegrationWriter extends CADPWriter {
 		private List<String> formalStateVars = new ArrayList<String>();
 		private List<String> formalUpdateVars = new ArrayList<String>();
 		private String formalParameterBaseName = "g";
+		private boolean toWrite = true;
 
-		public IntegrationProcessWriter(Map.Entry<RegulatoryNode, Integer> inputFromModule, List<Map.Entry<RegulatoryNode, Integer>> listExternal,
+		public IntegrationProcessWriter(
+				Map.Entry<RegulatoryNode, Integer> inputFromModule,
+				List<Map.Entry<RegulatoryNode, Integer>> listExternal,
 				IntegrationFunction integrationFunction) throws GsException {
 			this.listExternal = listExternal;
 			this.input = inputFromModule.getKey();
 			this.inputModuleIndex = inputFromModule.getValue().intValue();
-
+			this.integrationFunction = integrationFunction;
 
 			boolean consistent = true;
-			for (Map.Entry<RegulatoryNode,Integer> entry : listExternal){
+			for (Map.Entry<RegulatoryNode, Integer> entry : listExternal) {
 				if (entry.getKey().getMaxValue() > this.localMaxValue)
 					this.localMaxValue = entry.getKey().getMaxValue();
-				
-				String componentType = entry.getKey().getMaxValue() > 1 ? "Multi" : "Binary";
+
+				String componentType = entry.getKey().getMaxValue() > 1 ? "Multi"
+						: "Binary";
 				if (this.formalParametersType.isEmpty())
 					this.formalParametersType = componentType;
 				else if (this.formalParametersType != componentType)
 					consistent = false;
 			}
-			
+
 			if (!consistent)
 				throw new GsException(GsException.GRAVITY_ERROR,
 						"Formal parameters cannot be of different types");
 
 			this.numberArguments = listExternal.size();
+			if (this.numberArguments == 0) {
+				this.toWrite = false;
+				return;
+			}
+
 			this.gateType = input.getMaxValue() > 1 ? "MultiIntegration"
 					: "BinaryIntegration";
-			
-			this.concreteProcessName = concreteIntegrationProcessName(input, inputModuleIndex);
-			this.formalProcessName = formalIntegrationProcessName(input, numberArguments, integrationFunction);
-			this.formalFunctionName = formalIntegrationFunctionName(input, numberArguments, integrationFunction);
 
-			this.formalStateVarModifier = this.formalParametersType.equals("Multi") ? "M" : "B";
-			
+			this.concreteProcessName = concreteIntegrationProcessName(input,
+					inputModuleIndex);
+			this.formalProcessName = formalIntegrationProcessName(input,
+					numberArguments, integrationFunction);
+			this.formalFunctionName = formalIntegrationFunctionName(input,
+					numberArguments, integrationFunction);
+
+			this.formalStateVarModifier = this.formalParametersType
+					.equals("Multi") ? "M" : "B";
+
 			for (int i = 0; i < this.numberArguments; i++) {
 				this.formalGates.add(this.formalParameterBaseName.toUpperCase()
 						+ i);
@@ -152,15 +165,17 @@ public class CADPIntegrationWriter extends CADPWriter {
 				this.formalUpdateVars.add("new_"
 						+ this.formalParameterBaseName.toLowerCase() + i);
 			}
-
 		}
 
-
 		public String concreteIntegrationProcess() {
+			if (!this.toWrite)
+				return "";
+
 			List<String> concreteGateList = new ArrayList<String>();
 			for (Map.Entry<RegulatoryNode, Integer> entry : listExternal)
-				concreteGateList
-						.add(CADPWriter.node2SyncAction(this.input, this.inputModuleIndex, entry.getKey(), entry.getValue().intValue()));
+				concreteGateList.add(CADPWriter.node2SyncAction(this.input,
+						this.inputModuleIndex, entry.getKey(), entry.getValue()
+								.intValue()));
 
 			String concreteGateCommaList = makeCommaList(concreteGateList);
 			String concreteGateSignature = concreteGateCommaList + " : "
@@ -180,6 +195,8 @@ public class CADPIntegrationWriter extends CADPWriter {
 		}
 
 		public String formalIntegrationProcess() {
+			if (!this.toWrite)
+				return "";
 
 			String formalGateCommaList = makeCommaList(this.formalGates);
 			String formalGateSignature = formalGateCommaList + " : "
@@ -244,7 +261,7 @@ public class CADPIntegrationWriter extends CADPWriter {
 				out += "\t\t\t\telse\n";
 				out += "\t\t\t\t\t" + gateName + "(" + updateVar + ")\n";
 				out += "\t\t\t\tend if;\n";
-				out += stateVar + " := " + updateVar + "\n";
+				out += "\t\t\t\t" + stateVar + " := " + updateVar + "\n";
 
 			}
 			out += "\t\t\tend select\n";
@@ -256,6 +273,9 @@ public class CADPIntegrationWriter extends CADPWriter {
 		}
 
 		public String formalIntegrationFunction() {
+			if (!this.toWrite)
+				return "";
+
 			String out = "";
 
 			out += "function " + this.formalFunctionName + "("
@@ -313,7 +333,7 @@ public class CADPIntegrationWriter extends CADPWriter {
 				List<String> terms = new ArrayList<String>();
 
 				for (String stateVar : this.formalStateVars) {
-					terms.add(stateVar + operator + value);
+					terms.add("(" + stateVar + operator + value + ")");
 				}
 
 				String ifCondition = makeCommaList(terms, connective);

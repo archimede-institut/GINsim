@@ -41,20 +41,23 @@ public class Topology {
 	}
 
 	/**
-	 * @param neighindex1 Index of first module
 	 * 
-	 * @param neighindex2 Index of second module
+	 * Method determining whether one module in neighbour of another in the defined Topology
 	 * 
-	 * @return True if the two modules are neighbours, false otherwise
+	 * @param neighindex1 Index of first module (starting in 0)
+	 * @param neighindex2 Index of second module (starting in 0)
+	 * @return TRUE if the first module is a neighbour of the second module, FALSE otherwise
 	 */
 	public boolean areNeighbours(int neighindex1, int neighindex2) {
+		int maxIndex = neighbourhoodRelation.length -1;
+		if (neighindex1 > maxIndex || neighindex2 > maxIndex)
+			return false;
 		return neighbourhoodRelation[neighindex1][neighindex2];
 	}
 
 	/**
 	 * @param index A module index
-	 * 
-	 * @return True if the module has neighbours, false otherwise
+	 * @return TRUE if the module has neighbours, FALSE otherwise
 	 */
 	public boolean hasNeighbours(int index) {
 		boolean result = false;

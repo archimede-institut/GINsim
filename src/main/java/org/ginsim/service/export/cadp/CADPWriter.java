@@ -69,8 +69,17 @@ public abstract class CADPWriter {
 		return this.config.getListVisible();
 	}
 
+	/** 
+	 *  Method determines whether modules Mi and Mj are neighbours
+	 *  (this relation is not necessarily symmetrical
+	 *  
+	 * @param i the index of Module i (starting in 1)
+	 * @param j the index of Module j (starting in 1)
+	 * @return TRUE if they are neighbours, FALSE otherwise
+	 */
 	public boolean areNeighbours(int i, int j) {
-		return this.config.getTopology().areNeighbours(i, j);
+		// Topology used indices starting in 0, here we start in 1
+		return this.config.getTopology().areNeighbours(i-1, j-1);
 	}
 
 	public InitialStateWriter getInitialStateWriter() {
