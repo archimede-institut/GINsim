@@ -76,8 +76,9 @@ public class StateInRegGraphSelector extends Selector {
 		this.state = state;
 	}
 	public void setState(String state) {
-		if (state.length() != size) {
+		if (state == null || state.length() != size) {
 			this.state = null;
+			return;
 		}
 		this.state = new byte[size];
 

@@ -43,6 +43,7 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph,
 		actions.add(new AddRegulatoryNodeAction(graph, "Add components", reader));
 		actions.add(new AddRegulatoryEdgeAction(graph, "Add positive regulations", RegulatoryEdgeSign.POSITIVE));
 		actions.add(new AddRegulatoryEdgeAction(graph, "Add negative regulations", RegulatoryEdgeSign.NEGATIVE));
+		actions.add(new AddRegulatoryEdgeAction(graph, "Add dual regulations", RegulatoryEdgeSign.DUAL));
 		actions.add(new AddRegulatoryEdgeAction(graph, "Add unknown regulations", RegulatoryEdgeSign.UNKNOWN));
 		actions.add( null); // Add a separator
 		actions.add(new DeleteAction(graph));
@@ -136,6 +137,8 @@ class AddRegulatoryEdgeAction extends AddEdgeAction<RegulatoryNode, RegulatoryMu
 			sRet = "insertpositiveedge.gif"; break;
 		case NEGATIVE:
 			sRet = "insertnegativeedge.gif"; break;
+		case DUAL:
+			sRet = "insertdualedge.gif"; break;
 		default:
 			sRet = "insertunknownedge.gif";
 		}

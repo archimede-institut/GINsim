@@ -149,8 +149,8 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	protected void run() throws GsException {
 		LogicalModel model = lrg.getModel();
 		
-		if (perturbation != null) {
-			model = perturbation.apply(model);
+		if (getPerturbation() != null) {
+			model = getPerturbation().apply(model);
 		}
 		
 		if (cb_simplify.isSelected()) {

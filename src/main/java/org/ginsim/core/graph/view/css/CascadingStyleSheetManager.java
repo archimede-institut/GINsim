@@ -133,7 +133,10 @@ public class CascadingStyleSheetManager {
 			if (shouldStoreOldStyle) {
 				old_edges.put(edge, new EdgeStyle(ereader));					//  save a copy if needed
 			}
-			((EdgeStyle)sel.getStyleForEdge(edge)).apply(ereader);		//  apply the style to the edge.
+			EdgeStyle style = (EdgeStyle)sel.getStyleForEdge(edge);
+			if (style != null) {
+				style.apply(ereader);		//  apply the style to the edge.
+			}
 		}
 		ereader.refresh();
 	}
@@ -154,7 +157,10 @@ public class CascadingStyleSheetManager {
 			if (shouldStoreOldStyle) {
 				old_nodes.put(node, new NodeStyle(vreader));					//  save a copy if needed
 			}
-			((NodeStyle)sel.getStyleForNode(node)).apply(vreader);	//  apply the style to the node.
+			NodeStyle style = (NodeStyle)sel.getStyleForNode(node);
+			if (style != null) {
+				style.apply(vreader);	//  apply the style to the node.
+			}
 		}
 		vreader.refresh();
 	}

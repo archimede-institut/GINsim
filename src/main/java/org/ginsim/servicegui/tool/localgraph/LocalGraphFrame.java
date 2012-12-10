@@ -5,6 +5,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,7 +26,6 @@ import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -62,20 +63,20 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 		super(parent, "STR_localGraph", 420, 260);
 	}
 
-	public LocalGraphFrame(JFrame frame, Graph regGraph) throws GsException {
+	public LocalGraphFrame(JFrame frame, RegulatoryGraph regGraph) throws GsException {
 		
 		this(frame);
-		this.regGraph = (RegulatoryGraph) regGraph;
+		this.regGraph = regGraph;
 		this.dynGraph = null;
 		lg = new LocalGraph((RegulatoryGraph) regGraph);
         initialize();
     }
 
-	public LocalGraphFrame(JFrame frame, Graph regulatoryGraph, Graph dynamicGraph) throws GsException {
+	public LocalGraphFrame(JFrame frame, RegulatoryGraph regulatoryGraph, DynamicGraph dynamicGraph) throws GsException {
 		
 		this(frame);
-		this.regGraph = (RegulatoryGraph) regulatoryGraph;
-		this.dynGraph = (DynamicGraph) dynamicGraph;
+		this.regGraph = regulatoryGraph;
+		this.dynGraph = dynamicGraph;
 		lg = new LocalGraph(regGraph);
         initialize();
 	}
@@ -131,11 +132,18 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 			    replaceStatesButton = new JButton(Translator.getString("STR_localGraph_getStates"));
 			    replaceStatesButton.addActionListener(this);
 			    mainPanel.add(replaceStatesButton, c);
-		    }		
+			}
 		}
 		return mainPanel;
 	}
 
+	public void doClose() {
+		if (isColorized) {
+			lg.undoColorize();
+		}
+		super.doClose();
+	}
+	
 	protected void run() {
 		if (isColorized) {
 			lg.undoColorize();
@@ -149,7 +157,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 			model = modifier.apply(model);
 		}
 		lg.setUpdater(new SynchronousSimulationUpdater(model));
-		List states = sst.getStates();
+		List<byte[]> states = sst.getStates();
 		if (states == null) return;
 		
 		
@@ -177,7 +185,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 			if (e.getSource() == addStatesButton) {
 				List<DynamicNode> selected = selection.getSelectedNodes();
 				if (selected != null) {
-					List states = new ArrayList();
+					List<byte[]> states = new ArrayList<byte[]>();
 					for (DynamicNode state: selected) {
 						states.add(state.state);
 					}
@@ -188,7 +196,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 				List<DynamicNode> selected = selection.getSelectedNodes();
 				if (selected != null) {
 					sst.ssl.data.clear();
-					List states = new ArrayList();
+					List<byte[]> states = new ArrayList<byte[]>();
 					for (DynamicNode state: selected) {
 						states.add(state.state);
 					}
@@ -244,16 +252,15 @@ class StateSelectorTable extends JPanel {
 	public byte[] getState() {
 		return ssl.getState(0);
 	}
-	public void setStates(List states) {
-		for (Iterator it = states.iterator(); it.hasNext();) {
-			byte[] state = (byte[]) it.next();
-			ssl.addState(state);
+	public void setStates(List<byte[]> states) {
+		for (Iterator<byte[]> it = states.iterator(); it.hasNext();) {
+			ssl.addState(it.next());
 		}
 	}
-	public List getStates() {
+	public List<byte[]> getStates() {
 		int selectedRowCount = table.getSelectedRowCount();
 		int rowCount = table.getRowCount();
-		List states = new ArrayList();
+		List<byte[]> states = new ArrayList<byte[]>();
 
 		if (rowCount <= 1 || (selectedRowCount == 1 && table.getSelectedRow() >= rowCount-1)) return null;
 

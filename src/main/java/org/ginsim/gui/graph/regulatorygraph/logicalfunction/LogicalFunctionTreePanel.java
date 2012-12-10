@@ -34,6 +34,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 import org.ginsim.commongui.dialog.GUIMessageUtils;
+import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
@@ -245,6 +246,11 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
           if (treeElement.toString().equals("")) treeElement.getParent().setProperty("null function", new Boolean(false));
         }
       }
+      
+      // TODO: this is not the proper way to signal changes
+      graph.fireGraphChange(GraphChangeType.OTHERCHANGE, null);
+      
+      
       TreeInteractionsModel interactionsModel = (TreeInteractionsModel)tree.getModel();
       interactionsModel.refreshNode();
       interactionsModel.setRootInfos();

@@ -77,6 +77,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
     private NodeVSdata vvsd;
     private Object vertex;
     private boolean selected;
+    private boolean hasChanged = false;
     
     private SimpleStroke stroke = new SimpleStroke();
 
@@ -108,6 +109,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
             vvsd.shape = shape;
             dataMap.put(vertex, vvsd);
         }
+    	hasChanged = false;
     }
 
     @Override
@@ -164,7 +166,10 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
         if (vvsd == null) {
             return;
         }
-        vvsd.fgcolor = color;
+        if (vvsd.fgcolor != color) {
+        	hasChanged = true;
+            vvsd.fgcolor = color;
+        }
     }
 
     @Override
@@ -180,7 +185,10 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
         if (vvsd == null) {
             return;
         }
-        vvsd.textcolor = color;
+        if (vvsd.textcolor != color) {
+        	hasChanged = true;
+            vvsd.textcolor = color;
+        }
     }
 
     @Override
@@ -196,12 +204,15 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
         if (vvsd == null) {
             return;
         }
-        vvsd.bgcolor = color;
+        if (vvsd.bgcolor != color) {
+        	hasChanged = true;
+            vvsd.bgcolor = color;
+        }
     }
 
     @Override
     public void refresh() {
-    	if (vertex != null) {
+    	if (vertex != null && hasChanged) {
     		backend.refresh(vertex);
     	}
     }
@@ -227,6 +238,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
         }
         
         vvsd.bounds.setFrame(x,y, vvsd.bounds.getWidth(), vvsd.bounds.getHeight());
+        hasChanged = true;
     }
     
     @Override
@@ -256,14 +268,15 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
         	h = MIN_SIZE;
         }
         vvsd.bounds.setFrame(vvsd.bounds.getX(), vvsd.bounds.getY(), w, h);
+        hasChanged = true;
     }
 
     @Override
     public void setBorder(NodeBorder border) {
-        if (vvsd == null) {
-            return;
+        if (vvsd != null && vvsd.border != border) {
+        	vvsd.border = border;
+        	hasChanged = true;
         }
-        vvsd.border = border;
     }
 
     @Override
@@ -284,10 +297,10 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 
     @Override
     public void setShape(NodeShape shape) {
-        if (vvsd == null) {
-            return;
+        if (vvsd != null && vvsd.shape != shape) {
+        	vvsd.shape = shape;
+        	hasChanged = true;
         }
-        vvsd.shape = shape;
     }
 
     

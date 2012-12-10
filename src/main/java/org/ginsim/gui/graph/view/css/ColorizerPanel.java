@@ -158,25 +158,4 @@ public class ColorizerPanel extends JPanel {
 		}
 	}
 	
-	
-	/**
-	 * If the graph is still colored, ask the user if he wants to restore the original 
-	 * color before closing. If the user click on YES, the color is restored. Then 
-	 * return true if he clicks on YES or NO. false if he click on CANCEL, meaning the
-	 * windows should not be closed.
-	 * 
-	 * @return true if the frame can be closed, false if the CANCEL button has been pressed
-	 */
-	public boolean frameIsClosing() {
-		if (colorizer != null && colorizer.isColored()) {
-			int res = JOptionPane.showConfirmDialog(this, Translator.getString("STR_colorizer_sure_close_undo_colorize"));
-			if (res == JOptionPane.CANCEL_OPTION) {
-				return false;
-			} else if (res == JOptionPane.YES_OPTION) {
-				undoColorize();
-			}
-		}
-		return true;
-	}
-
 }

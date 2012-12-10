@@ -110,6 +110,7 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 */
 	public void selectNode(V node) {
 		nodes = new ArrayList<V>();
+		edges = null;
 		nodes.add(node);
 		updateType(false);
 	}
@@ -119,6 +120,7 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 * @param edge
 	 */
 	public void selectEdge(E edge) {
+		nodes = null;
 		edges = new ArrayList<E>();
 		edges.add(edge);
 		updateType(false);

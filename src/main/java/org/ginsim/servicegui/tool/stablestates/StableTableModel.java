@@ -35,6 +35,9 @@ public class StableTableModel extends AbstractTableModel {
 	}
 
 	public byte[] getState(int sel) {
+		if (sel < 0) {
+			return null;
+		}
 		return result.get(sel);
 	}
 
@@ -61,14 +64,15 @@ public class StableTableModel extends AbstractTableModel {
 	public void setResult(List<byte[]> stables, List<?> variables) {
 		result.clear();
 		this.factory = null;
-		for (byte[] path: stables) {
-			byte[] r = new byte[path.length];
-			for (int i=0 ; i<path.length ; i++) {
-				r[i] = path[i];
+		if (stables != null) {
+			for (byte[] path: stables) {
+				byte[] r = new byte[path.length];
+				for (int i=0 ; i<path.length ; i++) {
+					r[i] = path[i];
+				}
+				result.add(r);
 			}
-			result.add(r);
-		}
-		
+		}		
 		this.variables = variables.toArray();
 		this.nbcol = this.variables.length;
 		fireTableStructureChanged();

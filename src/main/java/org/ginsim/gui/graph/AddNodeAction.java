@@ -18,7 +18,7 @@ public abstract class AddNodeAction<V> extends EditAction {
 		V vertex = getNewNode();
 		reader.setNode(vertex);
 		reader.setPos(x, y);
-		reader.refresh();
+		manager.select(vertex);
 		manager.actionPerformed(this);
 	}
 	
