@@ -19,6 +19,7 @@ import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.io.petrinet.PNConfig;
 import org.colomoto.logicalmodel.io.petrinet.PetriNetSubformats;
 import org.ginsim.common.application.LogManager;
+import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
@@ -128,6 +129,8 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implemen
 
 class PetriNetExportFrame extends LogicalModelActionDialog {
 
+	private static final String FORMATOPTIONKEY = "PNformat";
+	
 	private PetriNetFormatService service = ServiceManager.getManager().getService(PetriNetFormatService.class);
 	private final PetriNetExportAction action;
 	private PrioritySelectionPanel priorityPanel = null;
@@ -166,6 +169,13 @@ class PetriNetExportFrame extends LogicalModelActionDialog {
     	cst.weightx = 1;
     	PetriNetSubformats[] formats = service.format.getSubformats();
     	formatCombo = new JComboBox(formats);
+    	String defaultFormatName = PetriNetSubformats.INA.name();
+    	defaultFormatName = OptionStore.getOption(FORMATOPTIONKEY, defaultFormatName);
+    	PetriNetSubformats format = PetriNetSubformats.valueOf(defaultFormatName);
+    	if (format == null) {
+    		format = PetriNetSubformats.INA;
+    	}
+    	formatCombo.setSelectedItem(format);
     	mainPanel.add(formatCombo, cst);
     	
     	setMainPanel(mainPanel);
@@ -174,6 +184,7 @@ class PetriNetExportFrame extends LogicalModelActionDialog {
 	@Override
 	public void run(LogicalModel model) {
 		PetriNetSubformats format = (PetriNetSubformats)formatCombo.getSelectedItem();
+		OptionStore.setOption(FORMATOPTIONKEY, format.name());
 		// initStatePanel
 		action.selectFile(model, format, config);
 		cancel();
