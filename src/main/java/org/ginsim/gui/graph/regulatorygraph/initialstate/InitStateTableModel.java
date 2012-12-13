@@ -83,10 +83,10 @@ public class InitStateTableModel extends AbstractTableModel {
 			return ((InitialState)imanager.getElement(null, rowIndex)).getName();
 		}
 		if (m_initState != null && columnIndex == 1) {
-			if (m_initState == null || rowIndex >= imanager.getNbElements(null)) {
+			if ( rowIndex >= imanager.getNbElements(null)) {
 				return Boolean.FALSE;
 			}
-			if (m_initState.containsKey(imanager.getElement(null, rowIndex))) {
+			if ( m_initState.containsKey(imanager.getElement(null, rowIndex))) {
 				return Boolean.TRUE;
 			}
 			return Boolean.FALSE;
