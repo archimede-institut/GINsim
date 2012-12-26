@@ -4,6 +4,6 @@ import java.util.Map;
 
 public interface InitialStateStore {
 
-    public Map getInitialState();
-    public Map getInputState();
+    Map getInitialState();
+    Map getInputState();
 }
