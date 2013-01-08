@@ -5,15 +5,13 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -22,16 +20,19 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 
-import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
+import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.css.CascadingStyleSheetManager;
+import org.ginsim.core.notification.NotificationManager;
+import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
@@ -39,157 +40,150 @@ import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPa
 import org.ginsim.gui.utils.data.SimpleStateListTableModel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
-import org.ginsim.service.tool.reg2dyn.updater.SynchronousSimulationUpdater;
+import org.ginsim.service.tool.localgraph.LocalGraphConfig;
+import org.ginsim.service.tool.localgraph.LocalGraphService;
 
+public class LocalGraphFrame extends StackDialog implements ActionListener,
+		TableModelListener, ListSelectionListener {
+	private static final long serialVersionUID = -9126723853606423085L;
 
-public class LocalGraphFrame extends StackDialog implements ActionListener, TableModelListener, ListSelectionListener {
-	
 	private final int THRESHOLD_AUTO_REFRESH = 15;
-	private RegulatoryGraph regGraph;
-	private DynamicGraph dynGraph;
 	private Container mainPanel;
 	private JButton colorizeButton, addStatesButton, replaceStatesButton;
-	
-	private LocalGraph lg;
+
+	private LocalGraphConfig config;
+	private CascadingStyleSheetManager cs;
+	private LocalGraphSelector selector;
+	private Map<RegulatoryMultiEdge, String> functionalityMap;
+
 	private boolean isColorized = false;
 	private PerturbationSelectionPanel mutantSelectionPanel;
 	private PerturbationHolder mutantStore;
 	private StateSelectorTable sst;
 	private JCheckBox autoUpdateCheckbox;
-	
-	private static final long serialVersionUID = -9126723853606423085L;
 
-	public LocalGraphFrame(JFrame parent) {
-		super(parent, "STR_localGraph", 420, 260);
-	}
-
-	public LocalGraphFrame(JFrame frame, RegulatoryGraph regGraph) throws GsException {
-		
-		this(frame);
-		this.regGraph = regGraph;
-		this.dynGraph = null;
-		lg = new LocalGraph((RegulatoryGraph) regGraph);
-        initialize();
-    }
-
-	public LocalGraphFrame(JFrame frame, RegulatoryGraph regulatoryGraph, DynamicGraph dynamicGraph) throws GsException {
-		
-		this(frame);
-		this.regGraph = regulatoryGraph;
-		this.dynGraph = dynamicGraph;
-		lg = new LocalGraph(regGraph);
-        initialize();
+	public LocalGraphFrame(LocalGraphConfig config) {
+		super(config.getGraph(), "STR_localGraph", 420, 260);
+		this.config = config;
+		initialize();
 	}
 
 	public void initialize() {
-		setMainPanel(getMainPanel());
-	}
-	
-	private Container getMainPanel() {
 		if (mainPanel == null) {
 			mainPanel = new javax.swing.JPanel();
 			mainPanel.setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints();
-		
+
 			c.fill = GridBagConstraints.BOTH;
 			c.weightx = 2;
 			c.weighty = 2;
 			c.gridx = 0;
 			c.gridy = 0;
 			sst = new StateSelectorTable();
-			sst.initPanel(regGraph, "STR_localGraph_descr", true);
-			sst.setState(new byte[regGraph.getNodeOrderSize()]);
+			sst.initPanel(config.getGraph(), "STR_localGraph_descr", true);
+			sst.setState(new byte[config.getGraph().getNodeOrderSize()]);
 			sst.table.getModel().addTableModelListener(this);
-		    sst.table.getSelectionModel().addListSelectionListener(this);
-		    mainPanel.add(sst, c);
-			
+			sst.table.getSelectionModel().addListSelectionListener(this);
+			mainPanel.add(sst, c);
+
 			c.gridy++;
 			c.gridx = 0;
-		    mutantStore = new PerturbationStore();
-			mutantSelectionPanel = new PerturbationSelectionPanel(this, regGraph, mutantStore);
+			mutantStore = new PerturbationStore();
+			mutantSelectionPanel = new PerturbationSelectionPanel(this,
+					config.getGraph(), mutantStore);
 			mainPanel.add(mutantSelectionPanel, c);
-		    
+
 			c.gridy++;
 			c.weightx = 0;
 			c.weighty = 0;
 			c.fill = GridBagConstraints.EAST;
-			autoUpdateCheckbox = new JCheckBox(Translator.getString("STR_localGraph_autoUpdate"));
-			autoUpdateCheckbox.setSelected(regGraph.getNodeOrderSize() < THRESHOLD_AUTO_REFRESH);
+			autoUpdateCheckbox = new JCheckBox(
+					Translator.getString("STR_localGraph_autoUpdate"));
+			autoUpdateCheckbox
+					.setSelected(config.getGraph().getNodeOrderSize() < THRESHOLD_AUTO_REFRESH);
 			mainPanel.add(autoUpdateCheckbox, c);
-			
+
 			c.gridy++;
-			colorizeButton = new JButton(Translator.getString("STR_colorize_local"));
-		    colorizeButton.setEnabled(false);
-		    colorizeButton.addActionListener(this);
-		    mainPanel.add(colorizeButton, c);
-		    
-		    if (dynGraph != null) {
+			colorizeButton = new JButton(
+					Translator.getString("STR_colorize_local"));
+			colorizeButton.setEnabled(false);
+			colorizeButton.addActionListener(this);
+			mainPanel.add(colorizeButton, c);
+
+			if (config.getDynamic() != null) {
 				c.gridy++;
-			    addStatesButton = new JButton(Translator.getString("STR_localGraph_addStates"));
-			    addStatesButton.addActionListener(this);
-			    mainPanel.add(addStatesButton, c);
+				addStatesButton = new JButton(
+						Translator.getString("STR_localGraph_addStates"));
+				addStatesButton.addActionListener(this);
+				mainPanel.add(addStatesButton, c);
 				c.gridy++;
-			    replaceStatesButton = new JButton(Translator.getString("STR_localGraph_getStates"));
-			    replaceStatesButton.addActionListener(this);
-			    mainPanel.add(replaceStatesButton, c);
+				replaceStatesButton = new JButton(
+						Translator.getString("STR_localGraph_getStates"));
+				replaceStatesButton.addActionListener(this);
+				mainPanel.add(replaceStatesButton, c);
 			}
 		}
-		return mainPanel;
+		setMainPanel(mainPanel);
+	}
+
+	private void undoColorize() {
+		cs.restoreAllEdges(config.getGraph().getEdges(), config.getGraph()
+				.getEdgeAttributeReader());
+		colorizeButton.setText(Translator.getString("STR_colorize_local"));
+		isColorized = false;
 	}
 
 	public void doClose() {
 		if (isColorized) {
-			lg.undoColorize();
+			this.undoColorize();
 		}
 		super.doClose();
 	}
-	
+
 	protected void run() {
 		if (isColorized) {
-			lg.undoColorize();
-			colorizeButton.setText(Translator.getString("STR_colorize_local"));
-			isColorized = false;
+			this.undoColorize();
 		}
 
-		Perturbation modifier = mutantStore.getPerturbation();
-		LogicalModel model = regGraph.getModel();
-		if (modifier != null) {
-			model = modifier.apply(model);
+		LocalGraphService service = ServiceManager.getManager().getService(
+				LocalGraphService.class);
+
+		try {
+			functionalityMap = service.run(config.getGraph(), sst.getStates(),
+					mutantStore.getPerturbation());
+			doColorize();
+			colorizeButton.setEnabled(true);
+		} catch (GsException e) {
+			LogManager.error(e);
+			NotificationManager.publishError(config.getGraph(), "Local Graph: "
+					+ e.getLocalizedMessage());
 		}
-		lg.setUpdater(new SynchronousSimulationUpdater(model));
-		List<byte[]> states = sst.getStates();
-		if (states == null) return;
-		
-		
-		lg.setStates(states);
-		lg.run();
-		doColorize();
-		colorizeButton.setEnabled(true);
 	}
-	
+
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == colorizeButton) {
-			if (lg.getFunctionality() != null) {	
+			if (functionalityMap != null) {
 				if (isColorized) {
-					undoColorize();
+					this.undoColorize();
 				} else {
-					doColorize();
+					this.doColorize();
 				}
 			}
 			return;
 		}
-		
-		GraphGUI graphGUI = GUIManager.getInstance().getGraphGUI(dynGraph);
+
+		GraphGUI graphGUI = GUIManager.getInstance().getGraphGUI(
+				config.getDynamic());
 		if (graphGUI != null) {
-			GraphSelection<DynamicNode, Edge<DynamicNode>> selection = graphGUI.getSelection();
+			GraphSelection<DynamicNode, Edge<DynamicNode>> selection = graphGUI
+					.getSelection();
 			if (e.getSource() == addStatesButton) {
 				List<DynamicNode> selected = selection.getSelectedNodes();
 				if (selected != null) {
 					List<byte[]> states = new ArrayList<byte[]>();
-					for (DynamicNode state: selected) {
+					for (DynamicNode state : selected) {
 						states.add(state.state);
 					}
-					lg.setStates(states);
 					sst.setStates(states);
 				}
 			} else if (e.getSource() == replaceStatesButton) {
@@ -197,17 +191,16 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 				if (selected != null) {
 					sst.ssl.data.clear();
 					List<byte[]> states = new ArrayList<byte[]>();
-					for (DynamicNode state: selected) {
+					for (DynamicNode state : selected) {
 						states.add(state.state);
 					}
-					lg.setStates(states);
 					sst.setStates(states);
 				}
 			}
 		}
 
 	}
-	
+
 	public void tableChanged(TableModelEvent e) {
 		if (autoUpdateCheckbox.isSelected()) {
 			run();
@@ -217,28 +210,35 @@ public class LocalGraphFrame extends StackDialog implements ActionListener, Tabl
 	public void valueChanged(ListSelectionEvent e) {
 		if (autoUpdateCheckbox.isSelected()) {
 			run();
-		}		
+		}
 	}
 
 	private void doColorize() {
-		if (lg != null) {
-			lg.doColorize();
-			colorizeButton.setText(Translator.getString("STR_undo_colorize"));
-			isColorized = true;
+		if (functionalityMap == null) {
+			return;
 		}
-	}
-	
-	private void undoColorize() {
-		if (lg != null) {
-			lg.undoColorize();
-			colorizeButton.setText(Translator.getString("STR_colorize_local"));
-			isColorized = false;
+		if (cs == null) {
+			cs = new CascadingStyleSheetManager(true);
+		} else {
+			cs.shouldStoreOldStyle = false;
 		}
+		selector = new LocalGraphSelector();
+		selector.setCache(functionalityMap);
+
+		EdgeAttributesReader ereader = config.getGraph()
+				.getEdgeAttributeReader();
+		for (RegulatoryMultiEdge me : config.getGraph().getEdges()) {
+			ereader.setEdge(me);
+			cs.applyOnEdge(selector, me, ereader);
+		}
+
+		colorizeButton.setText(Translator.getString("STR_undo_colorize"));
+		isColorized = true;
 	}
 
 	public void cancel() {
 		if (isColorized) {
-			undoColorize();
+			this.undoColorize();
 		}
 		super.cancel();
 	}
@@ -252,26 +252,31 @@ class StateSelectorTable extends JPanel {
 	public byte[] getState() {
 		return ssl.getState(0);
 	}
+
 	public void setStates(List<byte[]> states) {
 		for (Iterator<byte[]> it = states.iterator(); it.hasNext();) {
 			ssl.addState(it.next());
 		}
 	}
+
 	public List<byte[]> getStates() {
 		int selectedRowCount = table.getSelectedRowCount();
 		int rowCount = table.getRowCount();
 		List<byte[]> states = new ArrayList<byte[]>();
 
-		if (rowCount <= 1 || (selectedRowCount == 1 && table.getSelectedRow() >= rowCount-1)) return null;
+		if (rowCount <= 1
+				|| (selectedRowCount == 1 && table.getSelectedRow() >= rowCount - 1))
+			return null;
 
 		if (selectedRowCount > 0) {
 			int[] selectedRows = table.getSelectedRows();
 			for (int i = 0; i < selectedRows.length; i++) {
-				if (selectedRows[i] != rowCount-1) states.add(ssl.getState(selectedRows[i]));
+				if (selectedRows[i] != rowCount - 1)
+					states.add(ssl.getState(selectedRows[i]));
 			}
 			return states;
 		} else if (rowCount > 0) {
-			for (int i = 0; i < rowCount-1; i++) {
+			for (int i = 0; i < rowCount - 1; i++) {
 				states.add(ssl.getState(i));
 			}
 			return states;
@@ -279,13 +284,15 @@ class StateSelectorTable extends JPanel {
 		states.add(new byte[table.getColumnCount()]);
 		return states;
 	}
-	
+
 	public void setState(byte[] state) {
-		if (ssl.data.size() > 0) ssl.data.remove(0);
+		if (ssl.data.size() > 0)
+			ssl.data.remove(0);
 		ssl.addState(state);
 	}
 
-	protected GridBagConstraints initPanel(RegulatoryGraph g, String desckey, boolean isEditable) {
+	protected GridBagConstraints initPanel(RegulatoryGraph g, String desckey,
+			boolean isEditable) {
 		setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 
@@ -293,7 +300,7 @@ class StateSelectorTable extends JPanel {
 		c.gridy = 0;
 		c.ipady = 8;
 		c.fill = GridBagConstraints.BOTH;
-		add(new JLabel(Translator.getString(desckey)), c);	
+		add(new JLabel(Translator.getString(desckey)), c);
 
 		c.gridy++;
 		c.fill = GridBagConstraints.BOTH;
@@ -302,8 +309,8 @@ class StateSelectorTable extends JPanel {
 		c.ipady = 0;
 		ssl = new SimpleStateListTableModel(g, isEditable);
 		table = new EnhancedJTable(ssl);
-        table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-		add(new JScrollPane(table), c);	
+		table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+		add(new JScrollPane(table), c);
 		return c;
 	}
 

@@ -1,17 +1,15 @@
-package org.ginsim.servicegui.tool.localgraph;
+package org.ginsim.service.tool.localgraph;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.css.CascadingStyleSheetManager;
 import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
+import org.ginsim.servicegui.tool.localgraph.LocalGraphSelector;
 
 /**
  * 
@@ -21,19 +19,15 @@ import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
  */
 public class LocalGraph {
 	private RegulatoryGraph regGraph;
-	private CascadingStyleSheetManager cs = null;
-	private LocalGraphSelector selector = null;
 	private List<byte[]> states;
-	private HashMap<RegulatoryMultiEdge, String> functionalityMap;
 	private SimulationUpdater updater;
 
-	public LocalGraph(RegulatoryGraph regGraph) throws GsException {
-		this.regGraph = regGraph;
+	public LocalGraph(RegulatoryGraph regGraph) {
+		this(regGraph, new ArrayList<byte[]>());
 	}
 
-	public LocalGraph(RegulatoryGraph regGraph, List<byte[]> states)
-			throws GsException {
-		this(regGraph);
+	public LocalGraph(RegulatoryGraph regGraph, List<byte[]> states) {
+		this.regGraph = regGraph;
 		this.states = states;
 	}
 
@@ -41,19 +35,12 @@ public class LocalGraph {
 		this.updater = updater;
 	}
 
-	public void setState(byte[] state) {
-		this.states = new ArrayList<byte[]>(1);
-		this.states.add(state);
-	}
-
 	public void setStates(List<byte[]> states) {
 		this.states = states;
 	}
 
-	public void run() {
-		functionalityMap = new HashMap<RegulatoryMultiEdge, String>();
-		selector = new LocalGraphSelector();
-		selector.setCache(functionalityMap);
+	public Map<RegulatoryMultiEdge, String> run() {
+		Map<RegulatoryMultiEdge, String> functionalityMap = new HashMap<RegulatoryMultiEdge, String>();
 
 		for (byte[] state : states) {
 			byte[] fstate = f(state);
@@ -64,21 +51,18 @@ public class LocalGraph {
 				int j = regGraph.getNodeOrder().indexOf(target);
 				// Independently of being Boolean of multi-valued
 				if (state[i] < source.getMaxValue()) {
-					updateEdge(edge, state, fstate, i, j, 1);
+					updateEdge(functionalityMap, edge, state, fstate, i, j, 1);
 				}
 				if (state[i] > 0) {
-					updateEdge(edge, state, fstate, i, j, -1);
+					updateEdge(functionalityMap, edge, state, fstate, i, j, -1);
 				}
 			}
 		}
+		return functionalityMap;
 	}
-	
-	public String print(byte[] x) {
-		String s = "";
-		for (int i = 0 ; i < x.length ; i++) s+= x[i];
-		return s;
-	}
-	private void updateEdge(RegulatoryMultiEdge edge, byte[] state,
+
+	private void updateEdge(Map<RegulatoryMultiEdge, String> functionalityMap, 
+			RegulatoryMultiEdge edge, byte[] state,
 			byte[] fstate, int i, int j, int diff) {
 		byte[] stateDiff = getStateDiff(state, i, diff);
 		byte[] fstateDiff = f(stateDiff);
@@ -88,7 +72,7 @@ public class LocalGraph {
 		String func = functionalityMap.get(edge);
 
 		if ((diff > 0 && fstateDiff[j] > fstate[j])
-			|| (diff < 0 && fstateDiff[j] < fstate[j])) {
+				|| (diff < 0 && fstateDiff[j] < fstate[j])) {
 			if (func == null || func == LocalGraphSelector.CAT_POSITIVE)
 				functionalityMap.put(edge, LocalGraphSelector.CAT_POSITIVE);
 			else
@@ -128,44 +112,4 @@ public class LocalGraph {
 		x_b[i] = (byte) (x_b[i] + diff);
 		return x_b;
 	}
-
-	/**
-	 * Colorize the edges in the Set nonFunctionalInteractions.
-	 */
-	public void doColorize() {
-		if (functionalityMap == null) {
-			return;
-		}
-		if (cs == null) {
-			cs = new CascadingStyleSheetManager(true);
-		} else {
-			cs.shouldStoreOldStyle = false;
-		}
-
-		EdgeAttributesReader ereader = regGraph.getEdgeAttributeReader();
-		for (RegulatoryMultiEdge me : regGraph.getEdges()) {
-			ereader.setEdge(me);
-			cs.applyOnEdge(selector, me, ereader);
-		}
-
-	}
-
-	public void undoColorize() {
-		cs.restoreAllEdges(regGraph.getEdges(),
-				regGraph.getEdgeAttributeReader());
-	}
-
-	protected void finalize() {
-		if (functionalityMap != null) {
-			if (selector != null) {
-				selector.flush(); // remove nonFunctionalInteractions from the
-									// cache.
-			}
-		}
-	}
-
-	public Map<RegulatoryMultiEdge, String> getFunctionality() {
-		return functionalityMap;
-	}
-
 }
