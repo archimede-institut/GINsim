@@ -1,5 +1,7 @@
 package org.ginsim.servicegui.export.cadp;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -7,10 +9,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableModel;
 
 import org.ginsim.servicegui.tool.composition.CompositionSpecificationDialog;
+import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
+import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
+import org.ginsim.gui.utils.widgets.EnhancedJTable;
 
 /**
  * Widget to specify the initial states of each module
@@ -19,33 +30,91 @@ import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
  */
 public class InitialStatesWidget extends JPanel {
 
-
+	private static final long serialVersionUID = -2054629059623751148L;
 	private CompositionSpecificationDialog dialog = null;
-
+	private JScrollPane scrollPane = null;
+	private EnhancedJTable tableInitStates = null;
+	private JLabel messageLabel = new JLabel();
 
 	public InitialStatesWidget(final CompositionSpecificationDialog dialog) {
 		super();
 		this.dialog = dialog;
-		setLayout(new GridBagLayout());
-		GridBagConstraints constraints = new GridBagConstraints();
-
+		setLayout(new BorderLayout());
 
 		// TODO: replace with STR_s
-		setBorder(BorderFactory
-				.createTitledBorder("Specify Initial States"));
-		
-		InitialStatePanel panel = new InitialStatePanel(dialog.getGraph(),true);
-		panel.setSize(new Dimension(200,200));
-		
-		add(panel,constraints);
+		setBorder(BorderFactory.createTitledBorder("Specify Initial States"));
+
+		add(messageLabel, BorderLayout.NORTH);
+		messageLabel.setForeground(Color.RED);
+		add(getScrollPane(), BorderLayout.CENTER);
 		setSize(getPreferredSize());
 
 	}
-	
-	public List<byte[]> getInitialStates(){
-		List<byte[]> initialStates = new ArrayList<byte[]>();
-		
-		return initialStates;
+
+	public void setMessage(String message) {
+		this.messageLabel.setText(message);
+
 	}
-	
+
+	private EnhancedJTable getTableInitialStates() {
+		if (tableInitStates == null) {
+			LRMInitialStateModel model = new LRMInitialStateModel(this, dialog);
+			tableInitStates = new EnhancedJTable();
+			tableInitStates
+					.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			tableInitStates.setModel(model);
+			tableInitStates.getTableHeader().setReorderingAllowed(false);
+			tableInitStates.setRowSelectionAllowed(true);
+			tableInitStates.setColumnSelectionAllowed(true);
+
+			model.setTable(tableInitStates);
+		}
+
+		return tableInitStates;
+	}
+
+	private JScrollPane getScrollPane() {
+		if (scrollPane == null) {
+			scrollPane = new JScrollPane();
+			scrollPane.setViewportView(getTableInitialStates());
+
+			DefaultTableModel rowHeaderTableModel = new DefaultTableModel(0, 1) {
+				private static final long serialVersionUID = 6486499169039037077L;
+
+				@Override
+				public boolean isCellEditable(int rowIndex, int colIndex) {
+					return false;
+				}
+				
+				@Override
+				public String getColumnName(int columnIndex){
+					return "";
+				}
+			};
+			for (int i = 0; i < this.dialog.getNumberInstances(); i++)
+				rowHeaderTableModel.addRow(new Object[] { "Module " + (i+1) });
+
+			EnhancedJTable dispTableRowHeader = new EnhancedJTable();
+			dispTableRowHeader.setModel(rowHeaderTableModel);
+			dispTableRowHeader.setDefaultRenderer(Object.class,
+					getTableInitialStates().getTableHeader()
+							.getDefaultRenderer());
+
+			//dispTableRowHeader.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			scrollPane.setRowHeaderView(dispTableRowHeader);
+			JTableHeader corner = dispTableRowHeader.getTableHeader();
+			corner.setReorderingAllowed(false);
+			corner.setResizingAllowed(false);
+			scrollPane.setCorner(JScrollPane.UPPER_LEFT_CORNER, corner);
+
+		}
+
+		return scrollPane;
+	}
+
+	public List<byte[]> getInitialStates() {
+		return ((LRMInitialStateModel) getTableInitialStates().getModel())
+				.getInitialStates();
+	}
+
 }

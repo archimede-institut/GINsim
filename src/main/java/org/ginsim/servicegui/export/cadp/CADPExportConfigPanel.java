@@ -150,6 +150,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 	public void updateNumberInstances(int instances) {
 		this.instances = instances;
 		adjacencyMatrixPanel = null;
+		initialStatesPanel = null;
 		this.removeAll();
 		init();
 		this.revalidate();

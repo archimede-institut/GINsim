@@ -149,7 +149,8 @@ class StateListPanel extends JPanel {
      */
     private javax.swing.JTable getTableInitStates() {
         if(tableInitStates == null) {
-            tableInitStates = new EnhancedJTable();
+        	tableInitStates = new EnhancedJTable();
+        	
             model = new InitStateTableModel(panel, stateList, several);
             tableInitStates.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
             tableInitStates.setModel(model);

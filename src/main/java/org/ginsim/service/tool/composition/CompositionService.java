@@ -27,7 +27,6 @@ import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
 
-
 @ProviderFor(Service.class)
 @Alias("composition")
 /**
@@ -60,7 +59,7 @@ public class CompositionService implements Service {
 
 	}
 
-	public RegulatoryGraph computeComposedGraph(RegulatoryGraph graph,
+	protected RegulatoryGraph computeComposedGraph(RegulatoryGraph graph,
 			CompositionConfig config) throws GsException {
 
 		Topology topology = config.getTopology();
@@ -152,6 +151,7 @@ public class CompositionService implements Service {
 				LogicalParameterList logicalParameterList = node
 						.getV_logicalParameters();
 				for (LogicalParameter logicalParameter : logicalParameterList) {
+					@SuppressWarnings("unchecked")
 					List<RegulatoryEdge> edgeList = (List<RegulatoryEdge>) logicalParameter
 							.getEdges();
 					List<RegulatoryEdge> newEdgeIndex = new ArrayList<RegulatoryEdge>();
@@ -296,9 +296,11 @@ public class CompositionService implements Service {
 	}
 
 	/**
-	 * @param original The original name of the component
+	 * @param original
+	 *            The original name of the component
 	 * 
-	 * @param moduleId The index of the module if belongs to
+	 * @param moduleId
+	 *            The index of the module if belongs to
 	 * 
 	 * @return The new name of the component
 	 */
