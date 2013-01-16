@@ -4,6 +4,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.AbstractMap;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -12,7 +15,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-import org.ginsim.service.tool.composition.Topology;
 
 /**
  * Widget to specify module topology
@@ -24,13 +26,16 @@ public class AdjacencyMatrixWidget extends JPanel {
 	private static final long serialVersionUID = -7735335091138597285L;
 	private boolean symmetricTopology = false; // default is asymmetric
 	private JCheckBox[][] matrix = null;
+	private Map<JCheckBox, AbstractMap.Entry<Integer, Integer>> reverseMatrix = null;
 	private CompositionSpecificationDialog dialog = null;
 
 	public AdjacencyMatrixWidget(final CompositionSpecificationDialog dialog) {
 		super();
 		this.dialog = dialog;
-		int instances = dialog.getNumberInstances();
+		int instances = this.dialog.getNumberInstances();
 		matrix = new JCheckBox[instances][instances];
+		reverseMatrix = new HashMap<JCheckBox,AbstractMap.Entry<Integer,Integer>>();
+		
 		setLayout(new GridBagLayout());
 		GridBagConstraints constraints = new GridBagConstraints();
 		GridBagConstraints topConstraints = new GridBagConstraints();
@@ -78,14 +83,35 @@ public class AdjacencyMatrixWidget extends JPanel {
 
 						@Override
 						public void actionPerformed(ActionEvent e) {
-							boolean selection = ((JCheckBox) e.getSource())
-									.isSelected();
-							if (symmetricTopology)
-								forceSymmetry(selection);
+							JCheckBox current = (JCheckBox) e.getSource();
+							boolean selection = current.isSelected();
+
+							AbstractMap.Entry<Integer, Integer> entry = reverseMatrix
+									.get(current);
+							int x = entry.getKey().intValue();
+							int y = entry.getValue().intValue();
+
+							if (selection) {
+								dialog.addNeighbour(x, y);
+								if (symmetricTopology) {
+									matrix[y][x].setSelected(true);
+									dialog.addNeighbour(y, x);
+								}
+							} else {
+								dialog.removeNeighbour(x, y);
+								if (symmetricTopology) {
+									matrix[y][x].setSelected(false);
+									dialog.removeNeighbour(y, x);
+								}
+							}
+
 						}
 
 					});
 					matrix[row - 1][col - 1] = checkBox;
+					reverseMatrix.put(checkBox,
+							new AbstractMap.SimpleEntry<Integer, Integer>(
+									row - 1, col - 1));
 					top.add(checkBox, topConstraints);
 
 				}
@@ -216,19 +242,6 @@ public class AdjacencyMatrixWidget extends JPanel {
 		if (x < matrix.length && y < matrix.length)
 			return matrix[x][y].isSelected();
 		return false;
-	}
-
-	public Topology getTopology() {
-		int instances = dialog.getNumberInstances();
-		Topology topology = new Topology(instances);
-
-		for (int x = 0; x < instances; x++) {
-			for (int y = 0; y < instances; y++) {
-				if (isSelected(x, y))
-					topology.addNeighbour(x, y);
-			}
-		}
-		return topology;
 	}
 
 }

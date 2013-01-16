@@ -3,7 +3,9 @@ package org.ginsim.servicegui.tool.composition;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
@@ -14,6 +16,8 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.service.tool.composition.CompositionConfig;
+import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
+import org.ginsim.service.tool.composition.Topology;
 
 /**
  * Main panel for composition dialog
@@ -28,7 +32,8 @@ public class CompositionPanel extends JPanel implements
 
 	private RegulatoryGraph graph = null;
 	private List<RegulatoryNode> mappedNodes = new ArrayList<RegulatoryNode>();
-	
+	private int instances = 2;
+	private Topology topology = new Topology(instances);
 
 	private JPanel mainPanel = null;
 	private InstanceSelectorWidget instanceSelectorPanel = null;
@@ -38,15 +43,13 @@ public class CompositionPanel extends JPanel implements
 	private JPanel reducePanel = null;
 	private JCheckBox toReduce = null;
 
-	private int instances = 2;
-
 	CompositionPanel(RegulatoryGraph graph) {
 		this.graph = graph;
 	}
 
 	public CompositionConfig getConfig() throws GsException {
 		CompositionConfig config = new CompositionConfig();
-		config.setTopology(adjacencyMatrixPanel.getTopology());
+		config.setTopology(topology);
 		config.setMapping(integrationPanel.getMapping());
 		config.setReduce(toReduce.isSelected());
 		return config;
@@ -169,24 +172,55 @@ public class CompositionPanel extends JPanel implements
 
 	public void updateNumberInstances(int instances) {
 		this.instances = instances;
+		this.topology = new Topology(instances);
 		refreshMainPanel();
 	}
-	
-	public void setAsMapped(RegulatoryNode node){
+
+	public void setAsMapped(RegulatoryNode node) {
 		this.mappedNodes.add(node);
-		//refreshMainPanel();
+		// refreshMainPanel();
 	}
-	
-	public void unsetAsMapped(RegulatoryNode node){
+
+	public void unsetAsMapped(RegulatoryNode node) {
 		this.mappedNodes.remove(node);
-		//refreshMainPanel();
+		// refreshMainPanel();
 	}
-	
-	public List<RegulatoryNode> getMappedNodes(){
+
+	public List<RegulatoryNode> getMappedNodes() {
 		return this.mappedNodes;
+	}
+
+	public void addNeighbour(int m, int n) {
+		this.topology.addNeighbour(m, n);
+	}
+
+	public void removeNeighbour(int m, int n) {
+		this.topology.removeNeighbour(m, n);
 	}
 
 	public RegulatoryGraph getGraph() {
 		return graph;
+	}
+
+	@Override
+	public boolean hasNeihgbours(int m) {
+		return this.topology.hasNeighbours(m);
+	}
+
+	@Override
+	public IntegrationFunctionMapping getMapping() {
+		return this.integrationPanel.getMapping();
+	}
+
+	@Override
+	public boolean isTrulyMapped(RegulatoryNode node, int m) {
+		return (this.integrationPanel.getMapping().isMapped(node) && this.topology.hasNeighbours(m));
+	}
+
+	@Override
+	public Collection<Entry<RegulatoryNode, Integer>> getInfluencedModuleInputs(
+			RegulatoryNode node) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

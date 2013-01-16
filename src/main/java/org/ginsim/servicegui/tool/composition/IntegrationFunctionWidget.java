@@ -133,7 +133,7 @@ public class IntegrationFunctionWidget extends JPanel {
 		}
 	}
 
-	public IntegrationFunctionMapping getMapping() throws GsException {
+	public IntegrationFunctionMapping getMapping()  {
 		IntegrationFunctionMapping mapping = new IntegrationFunctionMapping();
 		for (RegulatoryNode node : inputNodes) {
 			JCheckBox checkBox = mappedInputSelection.get(node);
@@ -149,16 +149,14 @@ public class IntegrationFunctionWidget extends JPanel {
 						listProper.add(properNodes.get(indices[i]));
 					}
 
-					if (!IntegrationFunction.whichCanApply(node, listProper)
-							.contains(selectedFunction))
-						throw new GsException(
-								GsException.GRAVITY_NORMAL,
-								"Cannot apply integration function "
-										+ (IntegrationFunction) selectedFunction
-										+ " to the given input/proper components");
-
-					mapping.addMapping(node, listProper,
-							(IntegrationFunction) selectedFunction);
+					try {
+						mapping.addMapping(node, listProper,
+								(IntegrationFunction) selectedFunction);
+					} catch (GsException e) {
+						// TODO Put to log but do nothing
+						// TODO Maybe change the warning label in the panel
+						e.printStackTrace();
+					}
 
 				}
 

@@ -71,10 +71,11 @@ public class CADPExpWriter {
 
 		for (RegulatoryNode node : config.getGraph().getNodeOrder()) {
 
-			
 			// TODO: Needs to treat inputs
-			// TODO: Needs to treat proper components which, even not having influences
-			// still need to have their own synchronisation vectors (special case where influences are inexistant)
+			// TODO: Needs to treat proper components which, even not having
+			// influences
+			// still need to have their own synchronisation vectors (special
+			// case where influences are inexistant)
 			if (!node.isInput()
 					&& !config.getMapping().getInfluencedInputs(node).isEmpty()) {
 
@@ -111,10 +112,11 @@ public class CADPExpWriter {
 					}
 
 				}
-			} else {				
-				// in case it is a (visible) unmapped input or a proper components which does not influence any inputs
+			} else {
+				// in case it is a (visible) unmapped input or a proper
+				// components which does not influence any inputs
 				// TODO
-				
+
 			}
 
 		}
@@ -131,11 +133,14 @@ public class CADPExpWriter {
 		out += "\tin\n";
 
 		List<String> processNames = new ArrayList<String>();
+		for (int i = 0; i < totalProcesses; i++)
+			processNames.add("");
+
 		for (int i = 0; i < regularProcesses; i++)
-			processNames.add(config.getBCGModelFilename(i));
+			processNames.set(i, config.getBCGModelFilename(i));
 
 		for (Map.Entry<RegulatoryNode, Integer> entry : orderMapped.keySet()) {
-			processNames.add(orderMapped.get(entry).intValue(), config
+			processNames.set(orderMapped.get(entry).intValue(), config
 					.getBCGIntegrationFilename(entry.getKey(), entry.getValue()
 							.intValue()));
 		}
@@ -308,11 +313,11 @@ public class CADPExpWriter {
 		if (influences.isEmpty())
 			return lines;
 
+		Map.Entry<RegulatoryNode, Integer> entry = influences.remove(0);
+		RegulatoryNode currentInfluence = entry.getKey();
+		int currentTargetModule = entry.getValue().intValue();
+
 		for (String[] line : lines) {
-			
-			Map.Entry<RegulatoryNode, Integer> entry = influences.remove(0);
-			RegulatoryNode currentInfluence = entry.getKey();
-			int currentTargetModule = entry.getValue().intValue();
 
 			// no change in the integration function
 			{

@@ -53,12 +53,7 @@ public class LRMInitialStateModel extends AbstractTableModel {
 		if (rowIndex < 0 || columnIndex < 0)
 			return false;
 
-		// TODO: Consult with Composition Specification Config to determine
-		// whether
-		// a particular input component is mapped (it could be a mapped input
-		// but have no neighbours)
-		if (this.dialog.getMappedNodes().contains(
-				this.nodeOrder.get(columnIndex)))
+		if (this.dialog.isTrulyMapped(this.nodeOrder.get(columnIndex),rowIndex))
 			return false;
 		else
 			return true;
@@ -109,7 +104,7 @@ public class LRMInitialStateModel extends AbstractTableModel {
 	}
 
 	public void doSetValueAt(Object value, int rowIndex, int columnIndex) {
-		if (columnIndex < 0)
+		if (columnIndex < 0 || !isCellEditable(rowIndex, columnIndex))
 			return;
 
 		// TODO: implement automatic computation of value for mapped input
@@ -137,9 +132,21 @@ public class LRMInitialStateModel extends AbstractTableModel {
 		} else {
 			this.initialStates.get(rowIndex)[columnIndex] = (byte) intValue
 					.intValue();
+			
+			fireTableCellUpdated(rowIndex, columnIndex);
+			
+			RegulatoryNode node = this.nodeOrder.get(columnIndex);
+			
+			if (!node.isInput()){
+				// determine influenced inputs
+				// compute value for influenced inputs using reification
+				
+				// fireTableCellUpdated(eachrow, eachcolmn)
+			}
+						
 		}
 
-		fireTableCellUpdated(rowIndex, columnIndex);
+		
 
 	}
 

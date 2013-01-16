@@ -41,6 +41,17 @@ public class Topology {
 	}
 
 	/**
+	 * @param neighindex1 indicates the index of the first module
+	 * 
+	 * @param neighindex2 indicates the index of the second module
+	 */
+	public void removeNeighbour(int neighindex1, int neighindex2) {
+		if (neighindex1 < _numberInstances && neighindex2 < _numberInstances)
+			neighbourhoodRelation[neighindex1][neighindex2] = false;
+	}
+	
+	
+	/**
 	 * 
 	 * Method determining whether one module in neighbour of another in the defined Topology
 	 * 

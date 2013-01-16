@@ -45,6 +45,15 @@ public class IntegrationFunctionMapping {
 			}
 		}
 
+		if (!IntegrationFunction.whichCanApply(input, properList)
+				.contains(integrationFunction))
+			throw new GsException(
+					GsException.GRAVITY_NORMAL,
+					"Cannot apply integration function "
+							+ integrationFunction
+							+ " to the given input/proper components");
+
+		
 		RegulatoryIntegration regulatoryIntegration = new RegulatoryIntegration(
 				integrationFunction, properList);
 		mapping.put(input, regulatoryIntegration);

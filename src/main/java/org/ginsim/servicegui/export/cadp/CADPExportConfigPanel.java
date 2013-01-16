@@ -3,7 +3,9 @@ package org.ginsim.servicegui.export.cadp;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map.Entry;
 
 import javax.swing.JPanel;
 
@@ -16,6 +18,8 @@ import org.ginsim.servicegui.tool.composition.AdjacencyMatrixWidget;
 import org.ginsim.servicegui.tool.composition.CompositionSpecificationDialog;
 import org.ginsim.servicegui.tool.composition.InstanceSelectorWidget;
 import org.ginsim.servicegui.tool.composition.IntegrationFunctionWidget;
+import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
+import org.ginsim.service.tool.composition.Topology;
 
 /**
  * Main dialog for CADP export
@@ -38,6 +42,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 	private InitialStatesWidget initialStatesPanel = null;
 
 	private int instances = 2;
+	private Topology topology = new Topology(this.instances);
 	private List<RegulatoryNode> mappedNodes = new ArrayList<RegulatoryNode>();
 
 	public CADPExportConfigPanel(CADPExportConfig config,
@@ -48,22 +53,14 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 
 	@Override
 	public boolean run() {
-		
-		
+
 		// This should not be done here
 		// The config setup should be done elsewhere
-		// TODO set initial state
-		config.setTopology(adjacencyMatrixPanel.getTopology());
-	    try {
-			config.setMapping(integrationPanel.getMapping());
-		} catch (GsException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			// THIS CANNOT HAPPEN
-		}
 
-	    config.setListVisible(visibleComponentsPanel.getSelectedNodes());
-
+		config.setTopology(this.topology);
+		config.setMapping(integrationPanel.getMapping());
+		config.setListVisible(visibleComponentsPanel.getSelectedNodes());
+		config.setInitialStates(initialStatesPanel.getInitialStates());
 
 		action.selectFile();
 		return true;
@@ -104,7 +101,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		constraints.gridheight = GridBagConstraints.REMAINDER;
 		add(getInitialStatesPanel(), constraints);
-		
+
 		setSize(getPreferredSize());
 
 	}
@@ -129,18 +126,18 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 		return integrationPanel;
 	}
 
-	private JPanel getVisibleComponentsPanel(){
+	private JPanel getVisibleComponentsPanel() {
 		if (visibleComponentsPanel == null)
 			visibleComponentsPanel = new VisibleComponentsWidget(this);
 		return visibleComponentsPanel;
 	}
-	
-	private JPanel getInitialStatesPanel(){
+
+	private JPanel getInitialStatesPanel() {
 		if (initialStatesPanel == null)
 			initialStatesPanel = new InitialStatesWidget(this);
 		return initialStatesPanel;
 	}
-	
+
 	@Override
 	public int getNumberInstances() {
 		return instances;
@@ -149,6 +146,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 	@Override
 	public void updateNumberInstances(int instances) {
 		this.instances = instances;
+		this.topology = new Topology(instances);
 		adjacencyMatrixPanel = null;
 		initialStatesPanel = null;
 		this.removeAll();
@@ -156,29 +154,64 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 		this.revalidate();
 	}
 
-	public void setAsMapped(RegulatoryNode node){
+	public void setAsMapped(RegulatoryNode node) {
 		this.mappedNodes.add(node);
 		visibleComponentsPanel = null;
 		this.removeAll();
 		init();
 		this.revalidate();
 	}
-	
-	public void unsetAsMapped(RegulatoryNode node){
+
+	public void unsetAsMapped(RegulatoryNode node) {
 		this.mappedNodes.remove(node);
 		visibleComponentsPanel = null;
 		this.removeAll();
 		init();
 		this.revalidate();
 	}
-	
-	public List<RegulatoryNode> getMappedNodes(){
+
+	public List<RegulatoryNode> getMappedNodes() {
 		return this.mappedNodes;
 	}
-	
+
 	@Override
 	public RegulatoryGraph getGraph() {
 		return config.getGraph();
 
+	}
+
+	@Override
+	public void addNeighbour(int m, int n) {
+		this.topology.addNeighbour(m, n);
+
+	}
+
+	@Override
+	public void removeNeighbour(int m, int n) {
+		this.topology.removeNeighbour(m, n);
+	}
+
+	@Override
+	public boolean hasNeihgbours(int m) {
+		return this.topology.hasNeighbours(m);
+	}
+
+	@Override
+	public IntegrationFunctionMapping getMapping()  {
+		return this.integrationPanel.getMapping();
+	}
+
+	@Override
+	public boolean isTrulyMapped(RegulatoryNode node, int m)  {
+		return (this.integrationPanel.getMapping().isMapped(node) && this.topology
+				.hasNeighbours(m));
+
+	}
+
+	@Override
+	public Collection<Entry<RegulatoryNode, Integer>> getInfluencedModuleInputs(
+			RegulatoryNode node) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

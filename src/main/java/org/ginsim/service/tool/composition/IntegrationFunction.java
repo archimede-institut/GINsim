@@ -2,23 +2,25 @@ package org.ginsim.service.tool.composition;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
 /**
  * The enumeration of all prototypical Integration functions
  * 
- *  @author Nuno D. Mendes
+ * @author Nuno D. Mendes
  */
 
 public enum IntegrationFunction {
 	MAX, MIN, AND, OR, THRESHOLD2, MAX_LEFT, MAX_RIGHT;
 
 	/**
-	 * @param integrationFunction an integration function
+	 * @param integrationFunction
+	 *            an integration function
 	 * 
 	 * @result True if the given integration function is implemented, false
-	 * otherwise.
+	 *         otherwise.
 	 */
 	public static boolean isImplemented(IntegrationFunction integrationFunction) {
 		if (integrationFunction.equals(AND) || integrationFunction.equals(OR)) {
@@ -28,12 +30,14 @@ public enum IntegrationFunction {
 	}
 
 	/**
-	 * @param input an input component
+	 * @param input
+	 *            an input component
 	 * 
-	 * @param properComponents a list of proper components
+	 * @param properComponents
+	 *            a list of proper components
 	 * 
 	 * @return a list of integration functions that can be applied to the type
-	 * of input/proper components given
+	 *         of input/proper components given
 	 */
 	public static Collection<IntegrationFunction> whichCanApply(
 			RegulatoryNode input, Collection<RegulatoryNode> properComponents) {
@@ -102,11 +106,80 @@ public enum IntegrationFunction {
 
 	/**
 	 * 
-	 * @param input an input component
-	 * @return a list of integration functions that can be applied to this input components, assuming adequate proper components
+	 * @param input
+	 *            an input component
+	 * @return a list of integration functions that can be applied to this input
+	 *         components, assuming adequate proper components
 	 */
 	public static Collection<IntegrationFunction> whichCanApply(
 			RegulatoryNode input) {
 		return whichCanApply(input, null);
 	}
+	
+	
+/**
+ * 
+ * @param integrationFunction
+ * @return an instance of IntegrationFunctionReification able to implement the specified integrationFunction
+ */
+	public static IntegrationFunctionReification getIntegrationFunctionComputer(IntegrationFunction integrationFunction){
+		return new IntegrationFunctionReification(integrationFunction);
+	}
+	
+	public static class IntegrationFunctionReification {
+		IntegrationFunction integrationFunction = null;
+
+		public IntegrationFunctionReification(
+				IntegrationFunction integrationFunction) {
+			this.integrationFunction = integrationFunction;
+		}
+
+		public Integer compute(Collection<Integer> arguments) {
+			int result = -1;
+
+			switch (this.integrationFunction) {
+			case MAX:
+				for (Integer argument : arguments)
+					if (argument > result)
+						result = argument.intValue();
+				break;
+			case MIN:
+				for (Integer argument : arguments)
+					if (result < 0 || result > argument.intValue())
+						result = argument.intValue();
+				break;
+			case AND:
+				result = 1;
+				for (Integer argument : arguments)
+					result *= argument.intValue();
+				break;
+
+			case OR:
+				result = 0;
+				for (Integer argument : arguments)
+					result += argument.intValue();
+
+				if (result > 0)
+					result = 1;
+				break;
+				
+			case THRESHOLD2:
+				result = 1;
+				for (Integer argument : arguments)
+					result *= (argument >= 2 ? 1 : 0);
+				break;
+			default:
+				break;
+
+			}
+			
+			if (result < 0)
+				return null;
+			
+			return new Integer(result);
+
+		}
+
+	}
+
 }

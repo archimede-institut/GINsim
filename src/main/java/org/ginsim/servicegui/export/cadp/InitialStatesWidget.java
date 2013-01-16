@@ -13,6 +13,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableModel;
@@ -60,12 +61,14 @@ public class InitialStatesWidget extends JPanel {
 		if (tableInitStates == null) {
 			LRMInitialStateModel model = new LRMInitialStateModel(this, dialog);
 			tableInitStates = new EnhancedJTable();
-			tableInitStates
-					.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			tableInitStates.addCellRenderer(String.class,ShowNonEditableStringCellRenderer.class);
+			tableInitStates.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 			tableInitStates.setModel(model);
 			tableInitStates.getTableHeader().setReorderingAllowed(false);
 			tableInitStates.setRowSelectionAllowed(true);
 			tableInitStates.setColumnSelectionAllowed(true);
+
+			
 
 			model.setTable(tableInitStates);
 		}
@@ -85,14 +88,15 @@ public class InitialStatesWidget extends JPanel {
 				public boolean isCellEditable(int rowIndex, int colIndex) {
 					return false;
 				}
-				
+
 				@Override
-				public String getColumnName(int columnIndex){
+				public String getColumnName(int columnIndex) {
 					return "";
 				}
 			};
 			for (int i = 0; i < this.dialog.getNumberInstances(); i++)
-				rowHeaderTableModel.addRow(new Object[] { "Module " + (i+1) });
+				rowHeaderTableModel
+						.addRow(new Object[] { "Module " + (i + 1) });
 
 			EnhancedJTable dispTableRowHeader = new EnhancedJTable();
 			dispTableRowHeader.setModel(rowHeaderTableModel);
@@ -100,7 +104,7 @@ public class InitialStatesWidget extends JPanel {
 					getTableInitialStates().getTableHeader()
 							.getDefaultRenderer());
 
-			//dispTableRowHeader.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			// dispTableRowHeader.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 			scrollPane.setRowHeaderView(dispTableRowHeader);
 			JTableHeader corner = dispTableRowHeader.getTableHeader();
 			corner.setReorderingAllowed(false);
