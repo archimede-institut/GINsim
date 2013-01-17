@@ -185,7 +185,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                         pos = POS_FILTERED;
                     }
                 } else if (qName.equals("graph")) {
-            			if (!"hierarchicalTransitionGraph".equals(attributes.getValue("class"))) {
+            			if (!HierarchicalTransitionGraphFactory.KEY.equals(attributes.getValue("class"))) {
             				throw new SAXException( new GsException( GsException.GRAVITY_ERROR, "STR_HTG_NotHierarchicalTransitionGraph"));
             			}
             			try {

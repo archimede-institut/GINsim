@@ -160,7 +160,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
             XMLWriter out = new XMLWriter(os, dtdFile);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 			out.write("\t<graph id=\"" + graphName + "\"");
-			out.write(" class=\"hierarchicalTransitionGraph\"");
+			out.write(" class=\""+HierarchicalTransitionGraphFactory.KEY+"\"");
 			out.write(" iscompact=\""+this.transientCompactionMode+"\"");
 			out.write(" nodeorder=\"" + stringNodeOrder() +"\">\n");
 			saveNode(out, mode, nodes);
