@@ -24,7 +24,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 
 	private static char ELLIPSIS = '\u2026';
 	
-	private static final int MAX_SIZE = 200;
+	private static final int MAX_SIZE = 500;
 	private static final int MIN_SIZE = 15;
 	
 	public static final int SW = 6;      // width of the selection mark
