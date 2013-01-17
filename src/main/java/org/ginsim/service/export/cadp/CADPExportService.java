@@ -16,11 +16,10 @@ import org.mangosdk.spi.ProviderFor;
 /**
  * GINsim export service for CADP including:
  * 
- * 	LOTOS NT specifications (common, module and integration)
- *  EXP specifications (synchronization vectors)
- *  SVL script
- *  
- *  @author Nuno D. Mendes
+ * LOTOS NT specifications (common, module and integration) EXP specifications
+ * (synchronization vectors) SVL script
+ * 
+ * @author Nuno D. Mendes
  */
 @ProviderFor(Service.class)
 @Alias("CADP")
@@ -29,54 +28,57 @@ public class CADPExportService implements Service {
 	// TODO: More than one file is generated, so the String only specifies the
 	// HEAD name
 
-	// TODO: Make EncoderUtils package to make the naming of gates, commaLists, decoratedLists
+	// TODO: Make EncoderUtils package to make the naming of gates, commaLists,
+	// decoratedLists
 	// processNames, etc for all the exporters. also the naming of files etc
-	
+
 	public void run(CADPExportConfig config, String fileheadname)
 			throws IOException, GsException {
-	//	File common = new File(fileheadname + "_common.lnt");
-		//File modules = new File(fileheadname + "_modules.lnt");
-	//	File integration = new File(fileheadname + "_integration.lnt");
-	//	File exp = new File(fileheadname + ".exp");
-	//	File svl = new File(fileheadname + ".svl");
-		export(config,fileheadname);
-		
+		// File common = new File(fileheadname + "_common.lnt");
+		// File modules = new File(fileheadname + "_modules.lnt");
+		// File integration = new File(fileheadname + "_integration.lnt");
+		// File exp = new File(fileheadname + ".exp");
+		// File svl = new File(fileheadname + ".svl");
+		export(config, fileheadname);
+
 		// mcl?
-		
+
 		// TODO: Create directory with all these files and a README file with
 		// instructions
 
 	}
 
-	public void export(CADPExportConfig config, String fileheadname) throws GsException, IOException {
+	public void export(CADPExportConfig config, String fileheadname)
+			throws GsException, IOException {
 
 		File bundle = new File(fileheadname);
 		FileOutputStream stream = new FileOutputStream(bundle);
 		ZipOutputStream zos = new ZipOutputStream(stream);
 		ZipEntry ze = null;
-		
+
 		ze = new ZipEntry("common.lnt");
 		CADPCommonWriter commonWriter = new CADPCommonWriter(config);
 		String common = commonWriter.toString();
 		ze.setSize((long) common.getBytes().length);
 		zos.setLevel(9);
-		zos.putNextEntry(ze); 
-		zos.write(common.getBytes(),0,common.getBytes().length);
+		zos.putNextEntry(ze);
+		zos.write(common.getBytes(), 0, common.getBytes().length);
 		zos.closeEntry();
-		//System.err.print(common);
-		
+		// System.err.print(common);
+
 		ze = new ZipEntry(config.getLNTModelFilename());
 		CADPModuleWriter moduleWriter = new CADPModuleWriter(config);
 		String modules = moduleWriter.toString();
 		ze.setSize((long) modules.getBytes().length);
 		zos.setLevel(9);
 		zos.putNextEntry(ze);
-		zos.write(modules.getBytes(),0,modules.getBytes().length);
+		zos.write(modules.getBytes(), 0, modules.getBytes().length);
 		zos.closeEntry();
-		//System.err.print(modules);
-		
+		// System.err.print(modules);
+
 		ze = new ZipEntry(config.getLNTIntegrationFilename());
-		CADPIntegrationWriter integrationWriter = new CADPIntegrationWriter(config);
+		CADPIntegrationWriter integrationWriter = new CADPIntegrationWriter(
+				config);
 		String integration = integrationWriter.toString();
 		ze.setSize((long) integration.getBytes().length);
 		zos.setLevel(9);
@@ -84,7 +86,7 @@ public class CADPExportService implements Service {
 		zos.write(integration.getBytes());
 		zos.closeEntry();
 		System.err.print(integration);
-		
+
 		ze = new ZipEntry(config.getExpFilename());
 		CADPExpWriter expWriter = new CADPExpWriter(config);
 		String exp = expWriter.toString();
@@ -94,7 +96,7 @@ public class CADPExportService implements Service {
 		zos.write(exp.getBytes());
 		zos.closeEntry();
 		System.err.print(exp);
-		
+
 		ze = new ZipEntry("file.svl");
 		CADPSvlWriter svlWriter = new CADPSvlWriter(config);
 		String svl = svlWriter.toString();
@@ -104,7 +106,6 @@ public class CADPExportService implements Service {
 		zos.write(svl.getBytes());
 		zos.closeEntry();
 		System.err.print(svl);
-
 
 		zos.finish();
 		zos.close();

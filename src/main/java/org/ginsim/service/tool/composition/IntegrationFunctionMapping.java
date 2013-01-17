@@ -21,14 +21,16 @@ public class IntegrationFunctionMapping {
 	}
 
 	/**
-	 * @param input An input component being mapped
+	 * @param input
+	 *            An input component being mapped
 	 * 
-	 * @param properList A list of proper components the input is being mapped
-	 * to
+	 * @param properList
+	 *            A list of proper components the input is being mapped to
 	 * 
-	 * @param integrationFunction A representation of the logical function that
-	 * determines the value of the input based on the value of the mapped proper
-	 * components
+	 * @param integrationFunction
+	 *            A representation of the logical function that determines the
+	 *            value of the input based on the value of the mapped proper
+	 *            components
 	 */
 	public void addMapping(RegulatoryNode input,
 			List<RegulatoryNode> properList,
@@ -45,15 +47,12 @@ public class IntegrationFunctionMapping {
 			}
 		}
 
-		if (!IntegrationFunction.whichCanApply(input, properList)
-				.contains(integrationFunction))
-			throw new GsException(
-					GsException.GRAVITY_NORMAL,
-					"Cannot apply integration function "
-							+ integrationFunction
+		if (!IntegrationFunction.whichCanApply(input, properList).contains(
+				integrationFunction))
+			throw new GsException(GsException.GRAVITY_NORMAL,
+					"Cannot apply integration function " + integrationFunction
 							+ " to the given input/proper components");
 
-		
 		RegulatoryIntegration regulatoryIntegration = new RegulatoryIntegration(
 				integrationFunction, properList);
 		mapping.put(input, regulatoryIntegration);
@@ -61,10 +60,11 @@ public class IntegrationFunctionMapping {
 	}
 
 	/**
-	 * @param input An input components
+	 * @param input
+	 *            An input components
 	 * 
 	 * @return The integration function that is used to compute the value of the
-	 * input based on the value of the mapped proper components
+	 *         input based on the value of the mapped proper components
 	 */
 	public IntegrationFunction getIntegrationFunctionForInput(
 			RegulatoryNode input) {
@@ -76,7 +76,8 @@ public class IntegrationFunctionMapping {
 	}
 
 	/**
-	 * @param input An input components
+	 * @param input
+	 *            An input components
 	 * 
 	 * @return The list of proper components the input is mapped to
 	 */
@@ -89,7 +90,8 @@ public class IntegrationFunctionMapping {
 	}
 
 	/**
-	 * @param input An input components
+	 * @param input
+	 *            An input components
 	 * 
 	 * @return True if the input is mapped, false otherwise
 	 */
@@ -98,48 +100,49 @@ public class IntegrationFunctionMapping {
 	}
 
 	/**
-	 *  Indicates whether a proper components influence an integration functions
-	 *  
-	 * @param proper the proper component
-	 * @return TRUE if the proper components does influence an integration function, FALSE otherwise
+	 * Indicates whether a proper components influence an integration functions
+	 * 
+	 * @param proper
+	 *            the proper component
+	 * @return TRUE if the proper components does influence an integration
+	 *         function, FALSE otherwise
 	 */
-	public boolean isMappedTo(RegulatoryNode proper){
+	public boolean isMappedTo(RegulatoryNode proper) {
 		if (proper.isInput())
 			return false;
-	
+
 		for (RegulatoryIntegration regulation : mapping.values())
 			if (regulation.getProperComponents().contains(proper))
 				return true;
-		
+
 		return false;
-		
-	
+
 	}
-	
+
 	/**
-	 * Returns the list of input components whose value is influenced by the given proper component
+	 * Returns the list of input components whose value is influenced by the
+	 * given proper component
 	 * 
-	 * @param proper the proper components
-	 * @return a collection of input components 
+	 * @param proper
+	 *            the proper components
+	 * @return a collection of input components
 	 */
-			
-	public Collection<RegulatoryNode> getInfluencedInputs(RegulatoryNode proper){
+
+	public Collection<RegulatoryNode> getInfluencedInputs(RegulatoryNode proper) {
 		ArrayList<RegulatoryNode> listInputs = new ArrayList<RegulatoryNode>();
-		
+
 		if (proper.isInput())
 			return listInputs;
-		
-		for (RegulatoryNode input : mapping.keySet()){
+
+		for (RegulatoryNode input : mapping.keySet()) {
 			RegulatoryIntegration regulation = mapping.get(input);
 			if (regulation.getProperComponents().contains(proper))
 				listInputs.add(input);
 		}
-		
+
 		return listInputs;
 	}
-	
-	
-	
+
 	/**
 	 * @return A collection of all input components that are mapped
 	 */

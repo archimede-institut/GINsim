@@ -15,7 +15,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 
-
 /**
  * Widget to specify module topology
  * 
@@ -34,8 +33,8 @@ public class AdjacencyMatrixWidget extends JPanel {
 		this.dialog = dialog;
 		int instances = this.dialog.getNumberInstances();
 		matrix = new JCheckBox[instances][instances];
-		reverseMatrix = new HashMap<JCheckBox,AbstractMap.Entry<Integer,Integer>>();
-		
+		reverseMatrix = new HashMap<JCheckBox, AbstractMap.Entry<Integer, Integer>>();
+
 		setLayout(new GridBagLayout());
 		GridBagConstraints constraints = new GridBagConstraints();
 		GridBagConstraints topConstraints = new GridBagConstraints();

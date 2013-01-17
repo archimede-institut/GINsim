@@ -48,7 +48,7 @@ public class IntegrationFunctionWidget extends JPanel {
 		RegulatoryGraph graph = dialog.getGraph();
 		setLayout(new GridBagLayout());
 		setBorder(BorderFactory
-				.createTitledBorder("Specify Integration function for inputs"));
+				.createTitledBorder("Specify Integration Function for Inputs"));
 		GridBagConstraints constraints = new GridBagConstraints();
 
 		constraints.gridx = 0;
@@ -66,6 +66,8 @@ public class IntegrationFunctionWidget extends JPanel {
 				properNodes.add(node);
 
 		}
+
+		// TODO: Add JLabel for error messages
 
 		for (RegulatoryNode node : inputNodes) {
 
@@ -110,14 +112,17 @@ public class IntegrationFunctionWidget extends JPanel {
 			JComboBox nodeCombo = new JComboBox(listChoices);
 			nodeCombo.setEditable(false);
 			nodeCombo.setEnabled(false);
+
 			mappedFunctionSelection.put(node, nodeCombo);
 
 			JList nodeList = new JList(properNodes.toArray());
 			nodeList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 			nodeList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
 			JScrollPane nodeScroll = new JScrollPane(nodeList);
 			nodeScroll.setPreferredSize(new Dimension(50, 60));
 			nodeScroll.setEnabled(false);
+
 			mappedProperSelection.put(node, nodeList);
 			mappedPane.put(node, nodeScroll);
 
@@ -133,7 +138,13 @@ public class IntegrationFunctionWidget extends JPanel {
 		}
 	}
 
-	public IntegrationFunctionMapping getMapping()  {
+	/**
+	 * 
+	 * Builds the integration function mapping object from current selections
+	 * 
+	 * @return IntegrationFunctionMapping
+	 */
+	public IntegrationFunctionMapping getMapping() {
 		IntegrationFunctionMapping mapping = new IntegrationFunctionMapping();
 		for (RegulatoryNode node : inputNodes) {
 			JCheckBox checkBox = mappedInputSelection.get(node);
@@ -153,6 +164,7 @@ public class IntegrationFunctionWidget extends JPanel {
 						mapping.addMapping(node, listProper,
 								(IntegrationFunction) selectedFunction);
 					} catch (GsException e) {
+						
 						// TODO Put to log but do nothing
 						// TODO Maybe change the warning label in the panel
 						e.printStackTrace();

@@ -8,7 +8,8 @@ import org.ginsim.service.tool.modelsimplifier.ReductionLauncher;
 import org.ginsim.service.tool.modelsimplifier.RemovedInfo;
 
 /**
- * Implements a ReductionLauncher interface to recover the results of invoking ModuleSimplifier
+ * Implements a ReductionLauncher interface to recover the results of invoking
+ * ModuleSimplifier
  * 
  * @author Nuno D. Mendes
  */
@@ -21,17 +22,17 @@ public class ReductionStub implements ReductionLauncher {
 		this.graph = graph; // This is not really used
 	}
 
-	
 	/**
-	 * @param graph a Graph object (which needs to be a RegulatoryGraph)
+	 * @param graph
+	 *            a Graph object (which needs to be a RegulatoryGraph)
 	 * 
-	 * @param e an Exception which might have occured during reduction
+	 * @param e
+	 *            an Exception which might have occured during reduction
 	 * 
-	 * (non-Javadoc)
+	 *            (non-Javadoc)
 	 * 
-	 * @see
-	 * org.ginsim.service.tool.modelsimplifier.ReductionLauncher#endSimu(org
-	 * .ginsim.core.graph.common.Graph, java.lang.Exception)
+	 * @see org.ginsim.service.tool.modelsimplifier.ReductionLauncher#endSimu(org
+	 *      .ginsim.core.graph.common.Graph, java.lang.Exception)
 	 */
 	@Override
 	public void endSimu(Graph graph, Exception e) {
@@ -41,14 +42,13 @@ public class ReductionStub implements ReductionLauncher {
 
 	}
 
-	
 	/**
 	 * Stub method ignoring GUI options
 	 * 
 	 * (non-Javadoc)
 	 * 
 	 * @see org.ginsim.service.tool.modelsimplifier.ReductionLauncher#
-	 * showPartialReduction(java.util.List)
+	 *      showPartialReduction(java.util.List)
 	 */
 	@Override
 	public boolean showPartialReduction(List<RemovedInfo> l_todo) {

@@ -2,9 +2,11 @@ package org.ginsim.servicegui.export.cadp;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.JPanel;
@@ -197,21 +199,66 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 	}
 
 	@Override
-	public IntegrationFunctionMapping getMapping()  {
+	public IntegrationFunctionMapping getMapping() {
 		return this.integrationPanel.getMapping();
 	}
 
 	@Override
-	public boolean isTrulyMapped(RegulatoryNode node, int m)  {
-		return (this.integrationPanel.getMapping().isMapped(node) && this.topology
+	public boolean isTrulyMapped(RegulatoryNode node, int m) {
+		return (this.getMapping().isMapped(node) && this.topology
 				.hasNeighbours(m));
 
 	}
 
 	@Override
 	public Collection<Entry<RegulatoryNode, Integer>> getInfluencedModuleInputs(
-			RegulatoryNode node) {
-		// TODO Auto-generated method stub
-		return null;
+			RegulatoryNode proper, int moduleIndex) {
+
+		List<Map.Entry<RegulatoryNode, Integer>> influences = new ArrayList<Map.Entry<RegulatoryNode, Integer>>();
+
+		if (proper.isInput()
+				|| this.getMapping().getInfluencedInputs(proper).isEmpty())
+			return influences;
+
+		for (int i = 0; i < this.getNumberInstances(); i++)
+			if (this.areNeighbours(i, moduleIndex))
+				for (RegulatoryNode input : this.getMapping()
+						.getInfluencedInputs(proper))
+					influences
+							.add(new AbstractMap.SimpleEntry<RegulatoryNode, Integer>(
+									input, new Integer(i)));
+
+		return influences;
 	}
+
+	@Override
+	public Collection<Entry<RegulatoryNode, Integer>> getMappedToModuleArguments(
+			RegulatoryNode input, int moduleIndex) {
+
+		List<Map.Entry<RegulatoryNode, Integer>> arguments = new ArrayList<Map.Entry<RegulatoryNode, Integer>>();
+
+		if (!input.isInput() || !this.getMapping().isMapped(input))
+			return arguments;
+
+		for (int i = 0; i < this.getNumberInstances(); i++)
+			if (this.areNeighbours(moduleIndex, i))
+				for (RegulatoryNode proper : this.getMapping()
+						.getProperComponentsForInput(input))
+					arguments
+							.add(new AbstractMap.SimpleEntry<RegulatoryNode, Integer>(
+									proper, new Integer(i)));
+
+		return arguments;
+
+	}
+
+	@Override
+	public boolean areNeighbours(int m, int n) {
+		return this.topology.areNeighbours(m, n);
+	}
+
+	public void fireIntegrationFunctionsChanged() {
+		this.initialStatesPanel.fireInitialStatesUpdate();
+	}
+
 }

@@ -35,40 +35,39 @@ public class VisibleComponentsWidget extends JPanel {
 		setLayout(new GridBagLayout());
 		GridBagConstraints constraints = new GridBagConstraints();
 
-
 		// TODO: replace with STR_s
 		setBorder(BorderFactory
 				.createTitledBorder("Specify Visible Components"));
-		
+
 		listNodes = this.dialog.getGraph().getNodeOrder();
-		
-		for (RegulatoryNode node : listNodes){
+
+		for (RegulatoryNode node : listNodes) {
 			if (!this.dialog.getMappedNodes().contains(node))
 				eligible.add(node);
 		}
-		
+
 		nodeList = new JList(eligible.toArray());
 		nodeList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		nodeList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		JScrollPane nodeScroll = new JScrollPane(nodeList);
 		nodeScroll.setPreferredSize(new Dimension(50, 60));
 		nodeScroll.setEnabled(true);
-		
+
 		constraints.gridheight = GridBagConstraints.REMAINDER;
 		constraints.gridwidth = GridBagConstraints.REMAINDER;
-		
-		add(nodeScroll,constraints);
+
+		add(nodeScroll, constraints);
 		setSize(getPreferredSize());
 
 	}
-	
-	public List<RegulatoryNode> getSelectedNodes(){
+
+	public List<RegulatoryNode> getSelectedNodes() {
 		List<RegulatoryNode> selectedList = new ArrayList<RegulatoryNode>();
 		int selected[] = nodeList.getSelectedIndices();
 		for (int i = 0; i < selected.length; i++)
 			selectedList.add(eligible.get(selected[i]));
-		
+
 		return selectedList;
 	}
-	
+
 }

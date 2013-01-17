@@ -10,11 +10,11 @@ import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
 import org.ginsim.service.tool.composition.Topology;
 
 /**
- * Class containing all the information required for the specification
- * of the composition to be provided via LTS abstraction and minimisation using CADP
+ * Class containing all the information required for the specification of the
+ * composition to be provided via LTS abstraction and minimisation using CADP
  * 
  * @author Nuno D. Mendes
- *
+ * 
  */
 public class CADPExportConfig {
 	private Topology topology = null;
@@ -31,16 +31,16 @@ public class CADPExportConfig {
 			this.modelName.replace(".", "_");
 	}
 
-	public String getModelName(){
+	public String getModelName() {
 		return modelName;
 	}
-	
-	public void setModelName (String modelName){
+
+	public void setModelName(String modelName) {
 		this.modelName = modelName;
 		if (this.modelName.contains("."))
 			this.modelName.replace(".", "_");
 	}
-	
+
 	public Topology getTopology() {
 		return topology;
 	}
@@ -78,18 +78,18 @@ public class CADPExportConfig {
 	public void setInitialStates(List<byte[]> initialStates) {
 		this.initialStates = initialStates;
 	}
-	
-	public void addInitialState(int index, byte[] initialState){
+
+	public void addInitialState(int index, byte[] initialState) {
 		if (this.initialStates == null)
 			this.initialStates = new ArrayList<byte[]>();
-		
+
 		this.initialStates.add(index, initialState);
 	}
-	
-	public void addInitialState(byte[] initialState){
+
+	public void addInitialState(byte[] initialState) {
 		if (this.initialStates == null)
 			this.initialStates = new ArrayList<byte[]>();
-			
+
 		this.initialStates.add(initialState);
 	}
 
@@ -97,24 +97,27 @@ public class CADPExportConfig {
 		return graph;
 	}
 
-	public String getLNTModelFilename(){
+	public String getLNTModelFilename() {
 		return this.getModelName() + ".lnt";
 	}
-	
-	public String getBCGModelFilename(int moduleId){
+
+	public String getBCGModelFilename(int moduleId) {
 		return this.getModelName() + "_" + moduleId + ".bcg";
 	}
-	
-	public String getLNTIntegrationFilename(){
-		return "integration_" + this.getModelName() + "_" + this.getTopology().getNumberInstances() + ".lnt";
+
+	public String getLNTIntegrationFilename() {
+		return "integration_" + this.getModelName() + "_"
+				+ this.getTopology().getNumberInstances() + ".lnt";
 	}
-	
-	public String getBCGIntegrationFilename(RegulatoryNode node, int moduleId){
-		return "integration_" + node.getNodeInfo().getNodeID().toUpperCase() + "_" + moduleId + ".bcg";
+
+	public String getBCGIntegrationFilename(RegulatoryNode node, int moduleId) {
+		return "integration_" + node.getNodeInfo().getNodeID().toUpperCase()
+				+ "_" + moduleId + ".bcg";
 	}
-	
-	public String getExpFilename(){
-		return "composition_" + this.getModelName() + "_" + this.getTopology().getNumberInstances() + ".exp";
+
+	public String getExpFilename() {
+		return "composition_" + this.getModelName() + "_"
+				+ this.getTopology().getNumberInstances() + ".exp";
 	}
-	
+
 }

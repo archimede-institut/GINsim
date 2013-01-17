@@ -158,7 +158,7 @@ public class CADPModuleWriter extends CADPWriter {
 							+ " is\n";
 
 					String[] conditionArray = new String[node.getMaxValue() + 1];
-					for (int i=0; i<conditionArray.length; i++)
+					for (int i = 0; i < conditionArray.length; i++)
 						conditionArray[i] = "";
 					// we make space for the unused v=0 condition to simplify
 					// syntax in subsequent code

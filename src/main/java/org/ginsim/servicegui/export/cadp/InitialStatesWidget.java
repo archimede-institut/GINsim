@@ -61,14 +61,13 @@ public class InitialStatesWidget extends JPanel {
 		if (tableInitStates == null) {
 			LRMInitialStateModel model = new LRMInitialStateModel(this, dialog);
 			tableInitStates = new EnhancedJTable();
-			tableInitStates.addCellRenderer(String.class,ShowNonEditableStringCellRenderer.class);
+			tableInitStates.addCellRenderer(String.class,
+					ShowNonEditableStringCellRenderer.class);
 			tableInitStates.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 			tableInitStates.setModel(model);
 			tableInitStates.getTableHeader().setReorderingAllowed(false);
 			tableInitStates.setRowSelectionAllowed(true);
 			tableInitStates.setColumnSelectionAllowed(true);
-
-			
 
 			model.setTable(tableInitStates);
 		}
@@ -119,6 +118,11 @@ public class InitialStatesWidget extends JPanel {
 	public List<byte[]> getInitialStates() {
 		return ((LRMInitialStateModel) getTableInitialStates().getModel())
 				.getInitialStates();
+	}
+
+	public void fireInitialStatesUpdate() {
+		((LRMInitialStateModel) this.getTableInitialStates().getModel())
+				.fireTableDataChanged();
 	}
 
 }

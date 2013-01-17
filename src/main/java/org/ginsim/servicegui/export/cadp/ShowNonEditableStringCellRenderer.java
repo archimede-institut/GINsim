@@ -10,6 +10,14 @@ import javax.swing.JTable.DropLocation;
 import javax.swing.border.LineBorder;
 import javax.swing.table.TableCellRenderer;
 
+/**
+ * 
+ * Class changing the TableCellRenderer in order to place visually identify
+ * non-editable cells
+ * 
+ * @author nuno
+ * 
+ */
 public class ShowNonEditableStringCellRenderer implements TableCellRenderer {
 
 	private TableCellRenderer _defaultRenderer;
@@ -29,7 +37,6 @@ public class ShowNonEditableStringCellRenderer implements TableCellRenderer {
 		JComponent c = (JComponent) _defaultRenderer
 				.getTableCellRendererComponent(table, value, isSelected,
 						hasFocus, row, column);
-		System.out.println(c.hashCode());
 
 		if (table.getModel().isCellEditable(row, column)) {
 			c.setBorder(null);

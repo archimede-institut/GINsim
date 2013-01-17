@@ -4,7 +4,8 @@ import java.util.List;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
 /**
- * The integration function and proper components associated to an input components
+ * The integration function and proper components associated to an input
+ * components
  * 
  * @author Nuno D. Mendes
  */

@@ -1,7 +1,8 @@
 package org.ginsim.service.tool.composition;
 
 /**
- * Class representing the specification of parameters for the Composition service
+ * Class representing the specification of parameters for the Composition
+ * service
  * 
  * @author Nuno D. Mendes
  */
@@ -16,7 +17,10 @@ public class CompositionConfig {
 		return topology;
 	}
 
-	/** @param topology the topology */
+	/**
+	 * @param topology
+	 *            the topology
+	 */
 	public void setTopology(Topology topology) {
 		this.topology = topology;
 	}
@@ -26,7 +30,10 @@ public class CompositionConfig {
 		return mapping;
 	}
 
-	/** @param mapping the mapping */
+	/**
+	 * @param mapping
+	 *            the mapping
+	 */
 	public void setMapping(IntegrationFunctionMapping mapping) {
 		this.mapping = mapping;
 	}
@@ -36,7 +43,10 @@ public class CompositionConfig {
 		return reduce;
 	}
 
-	/** @param reduce specifies whether to perform reduction of the composed graph */
+	/**
+	 * @param reduce
+	 *            specifies whether to perform reduction of the composed graph
+	 */
 	public void setReduce(boolean reduce) {
 		this.reduce = reduce;
 	}

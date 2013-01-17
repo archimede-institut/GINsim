@@ -1,13 +1,17 @@
 package org.ginsim.servicegui.export.cadp;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
+import org.ginsim.service.tool.composition.IntegrationFunction;
+import org.ginsim.service.tool.composition.IntegrationFunction.IntegrationFunctionReification;
 import org.ginsim.servicegui.tool.composition.CompositionSpecificationDialog;
 
 /**
@@ -53,7 +57,8 @@ public class LRMInitialStateModel extends AbstractTableModel {
 		if (rowIndex < 0 || columnIndex < 0)
 			return false;
 
-		if (this.dialog.isTrulyMapped(this.nodeOrder.get(columnIndex),rowIndex))
+		if (this.dialog
+				.isTrulyMapped(this.nodeOrder.get(columnIndex), rowIndex))
 			return false;
 		else
 			return true;
@@ -132,21 +137,12 @@ public class LRMInitialStateModel extends AbstractTableModel {
 		} else {
 			this.initialStates.get(rowIndex)[columnIndex] = (byte) intValue
 					.intValue();
-			
-			fireTableCellUpdated(rowIndex, columnIndex);
-			
-			RegulatoryNode node = this.nodeOrder.get(columnIndex);
-			
-			if (!node.isInput()){
-				// determine influenced inputs
-				// compute value for influenced inputs using reification
-				
-				// fireTableCellUpdated(eachrow, eachcolmn)
-			}
-						
-		}
 
-		
+			fireTableCellUpdated(rowIndex, columnIndex);
+
+			updateInitialStates();
+
+		}
 
 	}
 
@@ -171,8 +167,7 @@ public class LRMInitialStateModel extends AbstractTableModel {
 	public String getColumnName(int columnIndex) {
 		if (columnIndex < 0 || columnIndex >= getColumnCount())
 			return "";
-		return this.nodeOrder.get(columnIndex).getNodeInfo()
-				.getNodeID();
+		return this.nodeOrder.get(columnIndex).getNodeInfo().getNodeID();
 	}
 
 	@Override
@@ -180,10 +175,53 @@ public class LRMInitialStateModel extends AbstractTableModel {
 		if (rowIndex >= getRowCount() || columnIndex >= getColumnCount())
 			return "";
 
+		updateInitialStates();
+
 		Integer value = new Integer(
 				(int) this.initialStates.get(rowIndex)[columnIndex]);
 		int maxvalue = this.nodeOrder.get(columnIndex).getMaxValue();
 		return showValue(value, maxvalue);
+	}
+
+	private void updateInitialStates() {
+
+		for (int rowIndex = 0; rowIndex < dialog.getNumberInstances(); rowIndex++) {
+			for (int columnIndex = 0; columnIndex < dialog.getNumberInstances(); columnIndex++) {
+
+				RegulatoryNode node = this.nodeOrder.get(columnIndex);
+
+				if (node.isInput() && !isCellEditable(rowIndex, columnIndex)) {
+
+					IntegrationFunction integrationFunction = dialog
+							.getMapping().getIntegrationFunctionForInput(node);
+					Collection<Map.Entry<RegulatoryNode, Integer>> arguments = dialog
+							.getMappedToModuleArguments(node, rowIndex);
+
+					IntegrationFunctionReification computer = IntegrationFunction
+							.getIntegrationFunctionComputer(integrationFunction);
+
+					Collection<Integer> argumentValues = new ArrayList<Integer>();
+
+					for (Map.Entry<RegulatoryNode, Integer> argument : arguments)
+						argumentValues.add(new Integer(this.initialStates
+								.get(argument.getValue())[this.nodeOrder
+								.indexOf(argument.getKey())]));
+
+					if (!argumentValues.isEmpty()) {
+
+						Integer result = computer.compute(argumentValues);
+
+						this.initialStates.get(rowIndex)[this.nodeOrder
+								.indexOf(node)] = (byte) result.intValue();
+						fireTableCellUpdated(rowIndex,
+								this.nodeOrder.indexOf(node));
+					}
+
+				}
+
+			}
+		}
+
 	}
 
 	public List<byte[]> getInitialStates() {

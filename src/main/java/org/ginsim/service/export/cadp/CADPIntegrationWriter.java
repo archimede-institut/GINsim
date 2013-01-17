@@ -47,7 +47,7 @@ public class CADPIntegrationWriter extends CADPWriter {
 								.add(new AbstractMap.SimpleEntry<RegulatoryNode, Integer>(
 										proper, new Integer(neighbour)));
 				}
-				
+
 				IntegrationProcessWriter integrationProcessWriter = new IntegrationProcessWriter(
 						inputFromModule, listExternal, integrationFunction);
 

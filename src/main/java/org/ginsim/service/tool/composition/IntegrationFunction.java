@@ -115,17 +115,18 @@ public enum IntegrationFunction {
 			RegulatoryNode input) {
 		return whichCanApply(input, null);
 	}
-	
-	
-/**
- * 
- * @param integrationFunction
- * @return an instance of IntegrationFunctionReification able to implement the specified integrationFunction
- */
-	public static IntegrationFunctionReification getIntegrationFunctionComputer(IntegrationFunction integrationFunction){
+
+	/**
+	 * 
+	 * @param integrationFunction
+	 * @return an instance of IntegrationFunctionReification able to implement
+	 *         the specified integrationFunction
+	 */
+	public static IntegrationFunctionReification getIntegrationFunctionComputer(
+			IntegrationFunction integrationFunction) {
 		return new IntegrationFunctionReification(integrationFunction);
 	}
-	
+
 	public static class IntegrationFunctionReification {
 		IntegrationFunction integrationFunction = null;
 
@@ -162,7 +163,7 @@ public enum IntegrationFunction {
 				if (result > 0)
 					result = 1;
 				break;
-				
+
 			case THRESHOLD2:
 				result = 1;
 				for (Integer argument : arguments)
@@ -172,10 +173,10 @@ public enum IntegrationFunction {
 				break;
 
 			}
-			
+
 			if (result < 0)
 				return null;
-			
+
 			return new Integer(result);
 
 		}
