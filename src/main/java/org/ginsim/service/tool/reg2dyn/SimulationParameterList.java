@@ -143,4 +143,10 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
 	}
 	public void structureChanged() {
 	}
+
+	@Override
+	public void list_item_removed( SimulationParameters param) {
+		ObjectAssociationManager.getInstance().fireUserUpdate(graph, Reg2DynService.KEY, param.name, null);
+	}
+
 }

@@ -249,7 +249,8 @@ public class SimpleGenericList<T> extends GenericList<T> implements Iterable<T> 
 		}
 		for (int i = t_index.length - 1 ; i > -1 ; i--) {
 			int index = getRealIndex(filter, startIndex, t_index[i]);
-			Object item = v_data.remove(index);
+			T item = v_data.remove(index);
+			list_item_removed(item);
 			if (v_listeners != null) {
 				for (GenericListListener l: v_listeners) {
 					l.itemRemoved(item, t_index[i]);
@@ -259,6 +260,13 @@ public class SimpleGenericList<T> extends GenericList<T> implements Iterable<T> 
 		return true;
 	}
 
+	/**
+	 * Handler for removed items from the current list
+	 * @param item
+	 */
+	public void list_item_removed(T item) {
+	}
+	
 	public boolean match(String filter, Object o) {
 		return o.toString().toLowerCase().indexOf(filter.toLowerCase()) != -1;
 		//return o.toString().toLowerCase().contains(filter.toLowerCase());
