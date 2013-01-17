@@ -8,6 +8,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.management.RuntimeErrorException;
+
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
@@ -113,9 +115,12 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 	}
 
 	@Override
-	public boolean remove(String filter, int[] t_index) {
+	public boolean remove(String filter, int startindex, int[] t_index) {
 		if (locked || t_index.length >= v_data.size()) {
 			return false;
+		}
+		if (startindex > 0) {
+			throw new RuntimeException("Startindex not handled here");
 		}
 		for (int i = t_index.length - 1 ; i > -1 ; i--) {
 			int index = getRealIndex(filter, t_index[i]);
@@ -153,6 +158,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 				}
 			}
 		}
+		
 		return true;
 	}
 
