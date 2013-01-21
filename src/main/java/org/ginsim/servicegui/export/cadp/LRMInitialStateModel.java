@@ -112,11 +112,6 @@ public class LRMInitialStateModel extends AbstractTableModel {
 		if (columnIndex < 0 || !isCellEditable(rowIndex, columnIndex))
 			return;
 
-		// TODO: implement automatic computation of value for mapped input
-		// components
-		// Determine whether update is an argument for a mapped input component
-		// Make impact automatic
-
 		int maxvalue = this.nodeOrder.get(columnIndex).getMaxValue();
 
 		String stringValue = (String) value;

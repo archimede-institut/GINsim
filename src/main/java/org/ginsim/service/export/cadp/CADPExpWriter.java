@@ -30,7 +30,13 @@ public class CADPExpWriter {
 
 		int regularProcesses = config.getTopology().getNumberInstances();
 		int mappedInputs = config.getMapping().getMappedInputs().size();
-		int integrationProcesses = mappedInputs * regularProcesses;
+		int integrationProcesses = 0;
+
+		for (int i = 0; i < config.getTopology().getNumberInstances(); i++) {
+			if (config.getTopology().hasNeighbours(i))
+				integrationProcesses += mappedInputs;
+		}
+
 		int totalProcesses = regularProcesses + integrationProcesses;
 
 		Collection<RegulatoryNode> visibleList = config.getListVisible();
@@ -39,7 +45,7 @@ public class CADPExpWriter {
 		for (RegulatoryNode node : visibleList)
 			for (int i = 0; i < regularProcesses; i++)
 				visibleGates.add(node.getNodeInfo().getNodeID().toUpperCase()
-						+ "_" + i);
+						+ "_" + (i + 1));
 
 		visibleGates.add("STABLE");
 
@@ -64,58 +70,61 @@ public class CADPExpWriter {
 		Map<Map.Entry<RegulatoryNode, Integer>, Integer> orderMapped = new HashMap<Map.Entry<RegulatoryNode, Integer>, Integer>();
 		for (RegulatoryNode input : config.getMapping().getMappedInputs())
 			for (int i = 0; i < config.getTopology().getNumberInstances(); i++)
-				orderMapped.put(
-						new AbstractMap.SimpleEntry<RegulatoryNode, Integer>(
-								input, new Integer(i)), new Integer(
-								regularProcesses + p++));
+				if (config.getTopology().hasNeighbours(i))
+					orderMapped
+							.put(new AbstractMap.SimpleEntry<RegulatoryNode, Integer>(
+									input, new Integer(i + 1)), new Integer(
+									regularProcesses + p++));
 
 		for (RegulatoryNode node : config.getGraph().getNodeOrder()) {
+			if (!node.isInput()) {
 
-			// TODO: Needs to treat inputs
-			// TODO: Needs to treat proper components which, even not having
-			// influences
-			// still need to have their own synchronisation vectors (special
-			// case where influences are inexistant)
-			if (!node.isInput()
-					&& !config.getMapping().getInfluencedInputs(node).isEmpty()) {
+				for (int j = 0; j < config.getTopology().getNumberInstances(); j++) {
 
-				List<Map.Entry<RegulatoryNode, Integer>> influences = new ArrayList<Map.Entry<RegulatoryNode, Integer>>();
+					List<Map.Entry<RegulatoryNode, Integer>> influences = new ArrayList<Map.Entry<RegulatoryNode, Integer>>();
 
-				for (int i = 0; i < config.getTopology().getNumberInstances(); i++) {
+					for (int i = 0; i < config.getTopology()
+							.getNumberInstances(); i++) {
 
-					for (int j = 0; j < config.getTopology()
-							.getNumberInstances(); j++) {
-						if (!config.getTopology().areNeighbours(i, j))
-							continue;
-						for (RegulatoryNode input : config.getMapping()
-								.getInfluencedInputs(node))
-							influences
-									.add(new AbstractMap.SimpleEntry<RegulatoryNode, Integer>(
-											input, new Integer(j)));
-
+						if (config.getTopology().areNeighbours(i, j))
+							for (RegulatoryNode input : config.getMapping()
+									.getInfluencedInputs(node))
+								influences
+										.add(new AbstractMap.SimpleEntry<RegulatoryNode, Integer>(
+												input, new Integer(i + 1)));
 					}
 
 					for (int v = 0; v <= node.getMaxValue(); v++) {
 
 						List<String[]> mlines = new ArrayList<String[]>();
 						String line[] = getNewLine(totalProcesses);
-						line[line.length - 1] = node2GateWithOffer(node, i, v);
+						line[j] = node2GateWithOffer(node, j + 1, v);
+						line[line.length - 1] = node2GateWithOffer(node, j + 1,
+								v);
 
 						mlines.add(line);
 						for (String[] localLine : multiPlex(
 								mlines,
 								new AbstractMap.SimpleEntry<RegulatoryNode, Integer>(
-										node, new Integer(i)), v, influences,
-								orderMapped))
+										node, new Integer(j + 1)), v,
+								influences, orderMapped)) {
 							lines.add(syncVec(localLine));
+						}
 
 					}
 
 				}
-			} else {
-				// in case it is a (visible) unmapped input or a proper
-				// components which does not influence any inputs
-				// TODO
+			} else { // node is input
+
+				for (int i = 0; i < config.getTopology().getNumberInstances(); i++)
+					if (!config.getTopology().hasNeighbours(i))
+						for (int v = 0; v <= node.getMaxValue(); v++) {
+							String line[] = getNewLine(totalProcesses);
+							line[i] = node2GateWithOffer(node, i + 1, v);
+							line[line.length - 1] = node2GateWithOffer(node,
+									i + 1, v);
+							lines.add(syncVec(line));
+						}
 
 			}
 
@@ -137,7 +146,7 @@ public class CADPExpWriter {
 			processNames.add("");
 
 		for (int i = 0; i < regularProcesses; i++)
-			processNames.set(i, config.getBCGModelFilename(i));
+			processNames.set(i, config.getBCGModelFilename(i + 1));
 
 		for (Map.Entry<RegulatoryNode, Integer> entry : orderMapped.keySet()) {
 			processNames.set(orderMapped.get(entry).intValue(), config
@@ -152,7 +161,7 @@ public class CADPExpWriter {
 			out += "\"" + processName + "\"";
 		}
 
-		out += "\tend par\nend hide\n\n";
+		out += "\n\tend par\nend hide\n\n";
 
 		return out;
 	}
@@ -309,11 +318,14 @@ public class CADPExpWriter {
 			Map<Map.Entry<RegulatoryNode, Integer>, Integer> orderMapped) {
 
 		List<String[]> multiLines = new ArrayList<String[]>();
+		List<Map.Entry<RegulatoryNode, Integer>> localInfluences = new ArrayList<Map.Entry<RegulatoryNode, Integer>>();
+		for (Map.Entry<RegulatoryNode, Integer> influence : influences)
+			localInfluences.add(influence);
 
-		if (influences.isEmpty())
+		if (localInfluences.isEmpty())
 			return lines;
 
-		Map.Entry<RegulatoryNode, Integer> entry = influences.remove(0);
+		Map.Entry<RegulatoryNode, Integer> entry = localInfluences.remove(0);
 		RegulatoryNode currentInfluence = entry.getKey();
 		int currentTargetModule = entry.getValue().intValue();
 
@@ -323,9 +335,9 @@ public class CADPExpWriter {
 			{
 				String[] newLine = cloneLine(line);
 				newLine[orderMapped.get(entry).intValue()] = integrationWithOffer(
-						mainGate.getKey(), currentInfluence, mainGate
-								.getValue().intValue(), currentTargetModule,
-						value);
+						currentInfluence, mainGate.getKey(),
+						currentTargetModule, mainGate.getValue(), value);
+
 				multiLines.add(newLine);
 			}
 
@@ -333,15 +345,17 @@ public class CADPExpWriter {
 			for (int v = 0; v <= currentInfluence.getMaxValue(); v++) {
 				String[] newLine = cloneLine(line);
 				newLine[orderMapped.get(entry).intValue()] = integrationWithOffer(
-						mainGate.getKey(), currentInfluence, mainGate
-								.getValue().intValue(), currentTargetModule,
-						value, v);
+						currentInfluence, mainGate.getKey(),
+						currentTargetModule, mainGate.getValue(), value, v);
+				newLine[currentTargetModule - 1] = node2GateWithOffer(
+						currentInfluence, currentTargetModule, v);
 				multiLines.add(newLine);
 			}
 
 		}
 
-		return multiPlex(multiLines, mainGate, value, influences, orderMapped);
+		return multiPlex(multiLines, mainGate, value, localInfluences,
+				orderMapped);
 
 	}
 }

@@ -2,10 +2,6 @@ package org.ginsim.servicegui.export.cadp;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -13,16 +9,11 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableModel;
 
-import org.ginsim.servicegui.tool.composition.CompositionSpecificationDialog;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
-import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
-import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
+import org.ginsim.servicegui.tool.composition.CompositionSpecificationDialog;
 
 /**
  * Widget to specify the initial states of each module

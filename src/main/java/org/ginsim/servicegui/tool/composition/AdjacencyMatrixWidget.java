@@ -136,7 +136,7 @@ public class AdjacencyMatrixWidget extends JPanel {
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					symmetricTopology = true;
-					forceSymmetry(true); // not sure we should do this
+					forceSymmetry(true); 
 				}
 
 			});

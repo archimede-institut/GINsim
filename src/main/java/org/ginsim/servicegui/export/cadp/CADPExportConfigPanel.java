@@ -11,17 +11,16 @@ import java.util.Map.Entry;
 
 import javax.swing.JPanel;
 
-import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.service.export.cadp.CADPExportConfig;
+import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
+import org.ginsim.service.tool.composition.Topology;
 import org.ginsim.servicegui.tool.composition.AdjacencyMatrixWidget;
 import org.ginsim.servicegui.tool.composition.CompositionSpecificationDialog;
 import org.ginsim.servicegui.tool.composition.InstanceSelectorWidget;
 import org.ginsim.servicegui.tool.composition.IntegrationFunctionWidget;
-import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
-import org.ginsim.service.tool.composition.Topology;
 
 /**
  * Main dialog for CADP export
@@ -55,9 +54,6 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 
 	@Override
 	public boolean run() {
-
-		// This should not be done here
-		// The config setup should be done elsewhere
 
 		config.setTopology(this.topology);
 		config.setMapping(integrationPanel.getMapping());

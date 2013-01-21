@@ -23,6 +23,7 @@ import javax.swing.ListSelectionModel;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.service.tool.composition.IntegrationFunction;
 import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
 
@@ -164,10 +165,9 @@ public class IntegrationFunctionWidget extends JPanel {
 						mapping.addMapping(node, listProper,
 								(IntegrationFunction) selectedFunction);
 					} catch (GsException e) {
-						
-						// TODO Put to log but do nothing
-						// TODO Maybe change the warning label in the panel
-						e.printStackTrace();
+						NotificationManager.publishException(
+								"Composition specification error",
+								"Refusing to add unauthorised mapping", e);
 					}
 
 				}

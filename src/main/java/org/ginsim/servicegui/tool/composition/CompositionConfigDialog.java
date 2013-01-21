@@ -47,9 +47,6 @@ public class CompositionConfigDialog extends StackDialog {
 		CompositionService service = ServiceManager.getManager().getService(
 				CompositionService.class);
 
-		// TODO: Deal here with invalid integration functions w.r.t. to given
-		// input
-		// and proper components using NotificationManager
 		RegulatoryGraph composedGraph = service.run(graph, dialog.getConfig());
 		GUIManager.getInstance().whatToDoWithGraph(composedGraph, true);
 

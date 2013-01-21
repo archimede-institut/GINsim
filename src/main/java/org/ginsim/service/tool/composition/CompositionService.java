@@ -8,7 +8,6 @@ import java.util.List;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -23,9 +22,6 @@ import org.ginsim.core.service.Service;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifier;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
 import org.mangosdk.spi.ProviderFor;
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
 
 @ProviderFor(Service.class)
 @Alias("composition")
