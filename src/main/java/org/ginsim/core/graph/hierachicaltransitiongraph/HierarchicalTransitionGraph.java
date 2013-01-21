@@ -20,7 +20,7 @@ public interface HierarchicalTransitionGraph extends Graph<HierarchicalNode, Dec
 	 * @param target a HierarchicalNode
 	 * @return the new edge
 	 */
-	public Object addEdge(HierarchicalNode source, HierarchicalNode target);
+	public DecisionOnEdge addEdge(HierarchicalNode source, HierarchicalNode target);
 	
 	/**
 	 * 

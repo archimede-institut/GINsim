@@ -343,12 +343,6 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 		stroke.setWidth(width);
 		stroke.setDashPattern(getDash());
 		g.setStroke(stroke);
-		if (selected) {
-			// TODO: better selection markup
-			g.setColor(Color.PINK);
-		} else {
-			g.setColor(getLineColor());
-		}
 		
 		Shape s;
 		if (points == null) {
@@ -357,7 +351,14 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 		} else {
 			s = createPath(points, isCurve());
 		}
+		if (selected) {
+			g.setColor(Color.PINK);
+			g.draw(stroke.createStrokedShape(s));
+		}
+		g.setColor(getLineColor());
 		g.fill(stroke.createStrokedShape(s));
+		
+
 
 		// get the angle for the edge end
 		int n = points.size()-1;
@@ -385,9 +386,16 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
 		if (selected) {
 			// draw points
-			g.setColor(Color.RED);
-			for (Point pt: points) {
-				g.fillRect(pt.x-2, pt.y-2, 4, 4);
+			int maxpoint = points.size()-1;
+			for (int i=0 ; i<= maxpoint ; i++) {
+				Point pt = points.get(i);
+				if (i==0 || i==maxpoint) {
+					g.setColor(Color.GRAY);
+					g.fillRect(pt.x-2, pt.y-2, 4, 4);
+				} else {
+					g.setColor(Color.RED);
+					g.fillRect(pt.x-3, pt.y-3, 6, 6);
+				}
 			}
 		}
 	}

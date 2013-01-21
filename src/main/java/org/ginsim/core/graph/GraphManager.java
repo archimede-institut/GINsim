@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
@@ -189,6 +188,11 @@ public class GraphManager {
      * @return the class of the parser used to read the given graph type
      */
     public Class getParserClass( String graph_type){
+    	
+    	// workaround for the updated HTG key
+    	if ("hierarchicalTransitionGraph".equals(graph_type)) {
+    		graph_type = "hirarchical";
+    	}
     	
     	for (GraphFactory<?> factory: graphFactories.values()) {
     		if( factory.getGraphType().equals( graph_type)){

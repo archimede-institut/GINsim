@@ -16,6 +16,7 @@ public class DynamicItemCellRenderer extends DefaultTableCellRenderer {
             										int row , int column ) {
         Component cmp = super.getTableCellRendererComponent( table , value , isSelected , hasFocus , row , column );
         cmp.setBackground(Color.WHITE);
+        cmp.setForeground(Color.BLACK);
         if( table != null && row >= 1) {
         	DynamicItemModel model = (DynamicItemModel)table.getModel();
             String s1 = model.getValueAt(0, column).toString(); 

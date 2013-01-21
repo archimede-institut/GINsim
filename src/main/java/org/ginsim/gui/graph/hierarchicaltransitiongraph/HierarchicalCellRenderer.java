@@ -15,6 +15,7 @@ public class HierarchicalCellRenderer extends DefaultTableCellRenderer implement
             										int row , int column ) {
         Component cmp = super.getTableCellRendererComponent( table , value , isSelected , hasFocus , row , column );
         cmp.setBackground(Color.WHITE);
+        cmp.setForeground(Color.BLACK);
         if(table != null) {
             String state = (String)table.getModel().getValueAt(row, column); 
             if (state.equals("*")) {

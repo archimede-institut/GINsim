@@ -2,8 +2,6 @@ package org.ginsim.servicegui.tool.decisionanalysis;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -24,14 +22,13 @@ import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
 import org.ginsim.servicegui.tool.reg2dyn.PrioritySelectionPanel;
 
 
-public class DecisionAnalysisFrame extends StackDialog implements ActionListener {
+public class DecisionAnalysisFrame extends StackDialog  {
 	private static final long serialVersionUID = -7619253564236142617L;
 	private HierarchicalTransitionGraph htg;
 	private JPanel mainPanel;
 	private GenericListSelectionPanel selectPriorityClass;
 	private RegulatoryGraph regGraph;
 	private SimulationParameters currentParameter;
-	
 	
 	
 	public DecisionAnalysisFrame(JFrame frame, Graph graph) throws GsException{
@@ -86,10 +83,6 @@ public class DecisionAnalysisFrame extends StackDialog implements ActionListener
 		decisionAnalysis.run( GUIManager.getInstance().getGraphGUI( htg).getSelection().getSelectedNodes());
 		this.brun.setEnabled(true);
 		cancel();
-	}
-	
-	public void actionPerformed(ActionEvent e) {
-//		if (e.getSource() == leftOperandCB) {
 	}
 	
 }

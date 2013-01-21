@@ -13,6 +13,7 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor( GraphFactory.class)
 public class HierarchicalTransitionGraphFactory implements GraphFactory<HierarchicalTransitionGraph> {
 	
+	public static final String KEY = "hierarchical";
     private static HierarchicalTransitionGraphFactory instance = null;
     
     public HierarchicalTransitionGraphFactory(){
@@ -42,7 +43,7 @@ public class HierarchicalTransitionGraphFactory implements GraphFactory<Hierarch
     @Override
 	public String getGraphType() {
 		
-		return "hierarchicalTransitionGraph";
+		return KEY;
 	}
 	
     @Override

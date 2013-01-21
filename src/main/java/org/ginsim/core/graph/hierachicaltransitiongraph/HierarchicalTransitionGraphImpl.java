@@ -124,13 +124,19 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	 * @return the new edge
 	 */
 	@Override
-	public Object addEdge(HierarchicalNode source, HierarchicalNode target) {
+	public DecisionOnEdge addEdge(HierarchicalNode source, HierarchicalNode target) {
 		
-		Object e = getEdge(source, target);
-		if (e != null) return e;
+		DecisionOnEdge e = getEdge(source, target);
+		if (e != null) {
+			return e;
+		}
+		
 		// FIXME: creating an empty DecisionOnEdge object: is it even possible?
 		DecisionOnEdge edge = new DecisionOnEdge( this, source, target, nodeOrder);
-		return addEdge(edge);
+		if (addEdge(edge)) {
+			return edge;
+		}
+		return null;
 	}
 
 		
@@ -154,7 +160,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
             XMLWriter out = new XMLWriter(os, dtdFile);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 			out.write("\t<graph id=\"" + graphName + "\"");
-			out.write(" class=\"hierarchicalTransitionGraph\"");
+			out.write(" class=\""+HierarchicalTransitionGraphFactory.KEY+"\"");
 			out.write(" iscompact=\""+this.transientCompactionMode+"\"");
 			out.write(" nodeorder=\"" + stringNodeOrder() +"\">\n");
 			saveNode(out, mode, nodes);
@@ -238,9 +244,10 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	
 	@Override
 	public HierarchicalNode getNodeForState(byte[] state) {
-		for (Iterator<HierarchicalNode> it = this.getNodes().iterator(); it.hasNext();) {
-			HierarchicalNode v = it.next();
-			if (v.contains(state)) return v;
+		for (HierarchicalNode v: this.getNodes()) {
+			if (v.contains(state)) {
+				return v;
+			}
 		}
 		return null;
 	}

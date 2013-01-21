@@ -134,7 +134,7 @@ class GsGraphOrderList extends SimpleGenericList {
 		super(graph.getNodeOrder());
 		if (graph instanceof RegulatoryGraph) {
 			canOrder = true;
-			canEdit = true;
+			canEdit = false;
 			nbAction = 1;
 			this.graph = (RegulatoryGraph) graph;
 		}

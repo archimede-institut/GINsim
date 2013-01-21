@@ -286,14 +286,16 @@ public class Reg2dynPriorityClassConfig extends GenericListPanel implements List
         int[] ti = getSelection();
         int[][] selExtended = pcdef.getMovingRows(NONE, ti);
         if (selExtended.length > 1) {
-            but_group.setVisible(true);
+            but_group.setEnabled(true);
             but_group.setStockIcon("group.png");
             but_group.setToolTipText(Translator.getString("STR_group_descr"));
         } else {
             if (selExtended.length == 0 || selExtended[0][0] == selExtended[0][1]) {
-                but_group.setVisible(false);
+                but_group.setEnabled(false);
+                but_group.setStockIcon("group.png");
+                but_group.setToolTipText(Translator.getString("STR_group_select_descr"));
             } else {
-                but_group.setVisible(true);
+                but_group.setEnabled(true);
                 but_group.setStockIcon("ungroup.png");
                 but_group.setToolTipText(Translator.getString("STR_ungroup_descr"));
             }
