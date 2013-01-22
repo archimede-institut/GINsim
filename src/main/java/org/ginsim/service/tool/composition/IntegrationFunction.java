@@ -22,7 +22,10 @@ public enum IntegrationFunction {
 	 *         otherwise.
 	 */
 	public static boolean isImplemented(IntegrationFunction integrationFunction) {
-		if (integrationFunction.equals(AND) || integrationFunction.equals(OR)) {
+		if (integrationFunction.equals(AND) || integrationFunction.equals(OR)
+				|| integrationFunction.equals(MIN)
+				|| integrationFunction.equals(MAX)
+				|| integrationFunction.equals(THRESHOLD2)) {
 			return true;
 		}
 		return false;
