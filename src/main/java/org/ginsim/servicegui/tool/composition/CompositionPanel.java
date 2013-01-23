@@ -104,10 +104,7 @@ public class CompositionPanel extends JPanel implements
 			return;
 		mainPanel.removeAll();
 		// redraw both Panels
-		instanceSelectorPanel.removeAll();
-		instanceSelectorPanel = null;
-		adjacencyMatrixPanel = null;
-		reducePanel = null;
+		adjacencyMatrixPanel = adjacencyMatrixPanel.reBuild();
 
 		setupMainPanel(mainPanel);
 		mainPanel.revalidate();

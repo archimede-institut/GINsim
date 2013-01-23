@@ -26,6 +26,10 @@ public class AdjacencyMatrixWidget extends JPanel {
 	private boolean symmetricTopology = false; // default is asymmetric
 	private JCheckBox[][] matrix = null;
 	private Map<JCheckBox, AbstractMap.Entry<Integer, Integer>> reverseMatrix = null;
+	ButtonGroup symmetryGroup = new ButtonGroup();
+	JRadioButton buttonSym = new JRadioButton("Symmetric topology");
+	JRadioButton buttonAsy = new JRadioButton("Non-symmetric topology");
+
 	private CompositionSpecificationDialog dialog = null;
 
 	public AdjacencyMatrixWidget(final CompositionSpecificationDialog dialog) {
@@ -129,18 +133,16 @@ public class AdjacencyMatrixWidget extends JPanel {
 				}
 			}
 
-			ButtonGroup symmetry = new ButtonGroup();
-			JRadioButton buttonSym = new JRadioButton("Symmetric topology");
 			buttonSym.addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent e) {
 					symmetricTopology = true;
-					forceSymmetry(true); 
+					forceSymmetry(true);
 				}
 
 			});
-			JRadioButton buttonAsy = new JRadioButton("Non-symmetric topology");
+
 			buttonAsy.addActionListener(new ActionListener() {
 
 				@Override
@@ -151,13 +153,10 @@ public class AdjacencyMatrixWidget extends JPanel {
 
 			});
 
-			if (symmetricTopology)
-				buttonSym.setSelected(true);
-			else
-				buttonAsy.setSelected(true);
+			symmetryGroup.add(buttonSym);
+			symmetryGroup.add(buttonAsy);
 
-			symmetry.add(buttonSym);
-			symmetry.add(buttonAsy);
+			updateSymmetryGroupSelection();
 
 			constraints.gridx = 0;
 			constraints.gridy = GridBagConstraints.RELATIVE;
@@ -224,6 +223,19 @@ public class AdjacencyMatrixWidget extends JPanel {
 
 	}
 
+	private void updateSymmetryGroupSelection() {
+		if (symmetricTopology) {
+			symmetryGroup.clearSelection();
+			buttonSym.setSelected(true);
+			buttonAsy.setSelected(false);
+		} else {
+			symmetryGroup.clearSelection();
+			buttonAsy.setSelected(true);
+			buttonSym.setSelected(false);
+		}
+
+	}
+
 	private void forceSymmetry(boolean selection) {
 		for (int x = 0; x < matrix.length; x++)
 			for (int y = 0; y < matrix.length; y++)
@@ -241,6 +253,33 @@ public class AdjacencyMatrixWidget extends JPanel {
 		if (x < matrix.length && y < matrix.length)
 			return matrix[x][y].isSelected();
 		return false;
+	}
+
+	public void setSelected(int x, int y) {
+		if (x < matrix.length && y < matrix.length)
+			matrix[x][y].setSelected(true);
+
+	}
+
+	public boolean isSymmetric() {
+		return this.symmetricTopology;
+	}
+
+	public void setSymmetry(boolean symmetry) {
+		this.symmetricTopology = symmetry;
+		updateSymmetryGroupSelection();
+	}
+
+	public AdjacencyMatrixWidget reBuild() {
+		AdjacencyMatrixWidget widget = new AdjacencyMatrixWidget(dialog);
+		for (int x = 0; x < matrix.length; x++)
+			for (int y = 0; y < matrix.length; y++)
+				if (matrix[x][y].isSelected())
+					widget.setSelected(x, y);
+
+		widget.setSymmetry(isSymmetric());
+		return widget;
+
 	}
 
 }
