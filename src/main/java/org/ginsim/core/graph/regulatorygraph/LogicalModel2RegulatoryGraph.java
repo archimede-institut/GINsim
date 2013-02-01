@@ -77,6 +77,11 @@ public class LogicalModel2RegulatoryGraph {
 			NodeInfo target = nodes.get(idx);
 			RegulatoryNode regNode = node2node.get(target);
 			
+			if (target.isInput()) {
+				regNode.setInput(true, lrg);
+				continue;
+			}
+			
 			int[] regulators = matrix.getRegulators(idx, extra);
 			VariableEffect allEffects[][] = matrix.getRegulatorEffects(idx, extra);
 			int[][] t_values = new int[regulators.length][4];
