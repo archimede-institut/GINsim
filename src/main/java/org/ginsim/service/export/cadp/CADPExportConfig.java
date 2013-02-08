@@ -2,12 +2,19 @@ package org.ginsim.service.export.cadp;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
+import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.service.ServiceManager;
+import org.ginsim.service.tool.composition.IntegrationFunction;
 import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
 import org.ginsim.service.tool.composition.Topology;
+import org.ginsim.service.tool.stablestates.StableStatesService;
 
 /**
  * Class containing all the information required for the specification of the
@@ -20,7 +27,8 @@ public class CADPExportConfig {
 	private Topology topology = null;
 	private IntegrationFunctionMapping mapping = null;
 	private List<byte[]> initialStates = null;
-	private Collection<RegulatoryNode> listVisible = null;
+	private List<List<byte[]>> compatibleStableStates = null;
+	private List<RegulatoryNode> listVisible = null;
 	private RegulatoryGraph graph = null;
 	private String modelName = "";
 
@@ -57,11 +65,11 @@ public class CADPExportConfig {
 		this.mapping = mapping;
 	}
 
-	public Collection<RegulatoryNode> getListVisible() {
+	public List<RegulatoryNode> getListVisible() {
 		return listVisible;
 	}
 
-	public void setListVisible(Collection<RegulatoryNode> listVisible) {
+	public void setListVisible(List<RegulatoryNode> listVisible) {
 		this.listVisible = listVisible;
 	}
 
@@ -119,5 +127,14 @@ public class CADPExportConfig {
 		return "composition_" + this.getModelName() + "_"
 				+ this.getTopology().getNumberInstances() + ".exp";
 	}
+
+	public void setCompatibleStableStates(List<List<byte[]>> compatibleStableStates){
+		this.compatibleStableStates = compatibleStableStates;
+	}
+	
+	public List<List<byte[]>> getCompatibleStableStates(){
+		return this.compatibleStableStates;
+	}
+
 
 }

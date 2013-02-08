@@ -46,7 +46,7 @@ public class AdjacencyMatrixWidget extends JPanel {
 
 		// TODO: replace with STR_s
 		setBorder(BorderFactory
-				.createTitledBorder("Specify Neighbouring modules"));
+				.createTitledBorder("Specify Neighbouring Modules"));
 
 		constraints.fill = GridBagConstraints.NONE;
 		topConstraints.fill = GridBagConstraints.NONE;

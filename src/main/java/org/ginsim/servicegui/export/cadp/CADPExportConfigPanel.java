@@ -5,18 +5,25 @@ import java.awt.GridBagLayout;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.swing.JPanel;
 
+import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
+import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.service.export.cadp.CADPExportConfig;
+import org.ginsim.service.tool.composition.IntegrationFunction;
 import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
 import org.ginsim.service.tool.composition.Topology;
+import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.ginsim.servicegui.tool.composition.AdjacencyMatrixWidget;
 import org.ginsim.servicegui.tool.composition.CompositionSpecificationDialog;
 import org.ginsim.servicegui.tool.composition.InstanceSelectorWidget;
@@ -45,6 +52,8 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 	private int instances = 2;
 	private Topology topology = new Topology(this.instances);
 	private List<RegulatoryNode> mappedNodes = new ArrayList<RegulatoryNode>();
+	private List<byte[]> stableStates = null;
+	private List<List<byte[]>> compatibleStableStates = null;
 
 	public CADPExportConfigPanel(CADPExportConfig config,
 			CADPExportAction action) {
@@ -59,6 +68,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 		config.setMapping(integrationPanel.getMapping());
 		config.setListVisible(visibleComponentsPanel.getSelectedNodes());
 		config.setInitialStates(initialStatesPanel.getInitialStates());
+		config.setCompatibleStableStates(getCompatibleStableStates());
 
 		action.selectFile();
 		return true;
@@ -245,6 +255,212 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 									proper, new Integer(i)));
 
 		return arguments;
+
+	}
+
+	public List<byte[]> getStableStates() {
+		if (stableStates != null)
+			return stableStates;
+
+		stableStates = new ArrayList<byte[]>();
+		/*
+		 * So we need to know the stable states of the model as well as the
+		 * initial states specified for each instance as well as the list of
+		 * visible states
+		 * 
+		 * (it would be helpful to also have a function determining whether the
+		 * visible components specified are sufficient to distinguish the stable
+		 * states from one another.. so maybe the stable states ought to appear
+		 * before in the gui)
+		 * 
+		 * Each property specification has to take into account the initial
+		 * value of each visible component, as well as the target value of each
+		 * visible component with respect to the combination of stable states at
+		 * hand (all combinations need to be tested but only compatible
+		 * combinations are preservable).
+		 */
+
+		// Determining the Stable States
+		// Needs to determine stable states of the individual model
+
+		StableStateSearcher ssSearcher = ServiceManager.getManager()
+				.getService(StableStatesService.class)
+				.getStableStateSearcher(getGraph().getModel());
+
+		PathSearcher pathSearcher = ssSearcher.getPaths();
+
+		int path[] = pathSearcher.getPath();
+
+		for (@SuppressWarnings("unused")
+		int value : pathSearcher) {
+			// in this case, value will necessarily be 1
+			byte[] stableState = new byte[path.length];
+			for (int i = 0; i < path.length; i++) {
+				stableState[i] = (byte) path[i];
+				// undefined positions are -1
+			}
+
+			List<byte[]> multiplexedStableStates = multiplexStableState(stableState);
+
+			for (byte[] fullySpecifiedStableState : multiplexedStableStates)
+				stableStates.add(fullySpecifiedStableState);
+		}
+
+		return stableStates;
+
+	}
+
+	private List<byte[]> multiplexStableState(byte[] stableState) {
+		List<byte[]> multiplexed = new ArrayList<byte[]>();
+		boolean needsMultiplex = true;
+
+		multiplexed.add(stableState);
+
+		while (needsMultiplex) {
+			List<byte[]> toRemove = new ArrayList<byte[]>();
+			List<byte[]> toAdd = new ArrayList<byte[]>();
+			MAINLOOP: for (byte[] state : multiplexed)
+				for (int i = 0; i < state.length; i++)
+					if (state[i] == -1) {
+						toRemove.add(state);
+						byte max = getGraph().getModel().getNodeOrder().get(i)
+								.getMax();
+						for (byte j = 0; j <= max; j++) {
+							byte[] newState = state.clone();
+							newState[i] = j;
+							toAdd.add(newState);
+						}
+
+						continue MAINLOOP;
+					}
+
+			if (toAdd.size() == 0)
+				needsMultiplex = false;
+
+			for (byte[] state : toRemove)
+				multiplexed.remove(state);
+
+			for (byte[] state : toAdd)
+				multiplexed.add(state);
+
+		}
+
+		return multiplexed;
+	}
+
+	public List<List<byte[]>> getCompatibleStableStates() {
+		if (compatibleStableStates != null)
+			return compatibleStableStates;
+
+		compatibleStableStates = new ArrayList<List<byte[]>>();
+		List<byte[]> stableStates = getStableStates();
+
+		for (byte[] stableState : stableStates) {
+			List<byte[]> frozen = new ArrayList<byte[]>();
+			frozen.add(stableState);
+			List<List<byte[]>> globalList = generateCompatibleStableStates(frozen);
+			if (globalList != null)
+				for (List<byte[]> global : globalList)
+					compatibleStableStates.add(global);
+		}
+
+		return compatibleStableStates;
+
+	}
+
+	private List<List<byte[]>> generateCompatibleStableStates(
+			List<byte[]> frozen) {
+		List<byte[]> stableStates = getStableStates();
+		List<List<byte[]>> globalStableStates = new ArrayList<List<byte[]>>();
+
+		int populated = frozen.size();
+		int total = this.getNumberInstances();
+
+		if (populated != total) // not all instances have had a stableState
+								// attributed
+			for (byte[] stableState : stableStates) {
+				List<byte[]> newFrozen = new ArrayList<byte[]>();
+				for (byte[] frozenStableState : frozen)
+					newFrozen.add(frozenStableState);
+				newFrozen.add(stableState);
+				List<List<byte[]>> globalList = generateCompatibleStableStates(newFrozen);
+				for (List<byte[]> globalState : globalList)
+					globalStableStates.add(globalState);
+			}
+		else { // all instances have their tentative stableState
+
+			Collection<RegulatoryNode> mappedInputs = getMapping()
+					.getMappedInputs();
+			boolean isCompatible = true;
+
+			for (int instance = 0; instance < total && isCompatible; instance++) {
+
+				byte[] stableState = frozen.get(instance);
+				for (RegulatoryNode input : mappedInputs) {
+					if (!isCompatible)
+						break;
+
+					IntegrationFunction integrationFunction = getMapping()
+							.getIntegrationFunctionForInput(input);
+					List<RegulatoryNode> arguments = getMapping()
+							.getProperComponentsForInput(input);
+					List<Integer> argumentValues = new ArrayList<Integer>();
+
+					for (int neighbour = 0; neighbour < total; neighbour++) {
+						if (!this.areNeighbours(instance, neighbour))
+							break;
+
+						byte[] foreignStableState = frozen.get(neighbour);
+						for (RegulatoryNode argument : arguments)
+							argumentValues
+									.add(new Integer(
+											foreignStableState[getGraph()
+													.getModel().getNodeOrder()
+													.indexOf(argument)]));
+
+					}
+
+					byte actualValue = stableState[getGraph().getModel()
+							.getNodeOrder().indexOf(input)];
+					byte computedValue = (byte) IntegrationFunction
+							.getIntegrationFunctionComputer(integrationFunction)
+							.compute(argumentValues).intValue();
+
+					if (actualValue != computedValue)
+						isCompatible = false;
+
+				}
+
+			}
+
+			if (isCompatible)
+				globalStableStates.add(frozen);
+
+		}
+
+		return globalStableStates;
+
+	}
+
+	public boolean areCompatibleStableStatesDiscernible() {
+		List<List<byte[]>> globalStableStates = getCompatibleStableStates();
+		List<RegulatoryNode> listVisible = this.visibleComponentsPanel
+				.getSelectedNodes();
+		Set<List<byte[]>> globalReducedStableStates = new HashSet<List<byte[]>>();
+
+		for (List<byte[]> globalState : globalStableStates) {
+			List<byte[]> reducedGlobalState = new ArrayList<byte[]>();
+			for (byte[] localState : globalState) {
+				byte[] reducedLocalState = new byte[listVisible.size()];
+				for (RegulatoryNode visible : listVisible)
+					reducedLocalState[listVisible.indexOf(visible)] = localState[getGraph()
+							.getModel().getNodeOrder().indexOf(visible)];
+				reducedGlobalState.add(reducedLocalState);
+			}
+			globalReducedStableStates.add(reducedGlobalState);
+		}
+
+		return globalReducedStableStates.size() == globalStableStates.size();
 
 	}
 

@@ -1,8 +1,6 @@
 package org.ginsim.servicegui.tool.composition;
 
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -127,7 +125,7 @@ public class IntegrationFunctionWidget extends JPanel {
 			// TODO: by generating the list and repainting the Combo, keep the
 			// same IF selected unless it does not
 			// exist anymore
-			
+
 			Object[] listChoices = new Object[listIF.size() + 1];
 			int i = 0;
 			listChoices[i] = "unmapped";

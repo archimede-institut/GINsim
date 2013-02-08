@@ -1,5 +1,6 @@
 package org.ginsim.servicegui.export.cadp;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -8,10 +9,13 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.servicegui.tool.composition.CompositionSpecificationDialog;
@@ -28,6 +32,7 @@ public class VisibleComponentsWidget extends JPanel {
 	private List<RegulatoryNode> listNodes = null;
 	private List<RegulatoryNode> eligible = new ArrayList<RegulatoryNode>();
 	private JList nodeList = null;
+	private JLabel message = null;
 
 	public VisibleComponentsWidget(final CompositionSpecificationDialog dialog) {
 		super();
@@ -39,6 +44,10 @@ public class VisibleComponentsWidget extends JPanel {
 		setBorder(BorderFactory
 				.createTitledBorder("Specify Visible Components"));
 
+		message = new JLabel();
+		message.setText("");
+		message.setForeground(Color.RED);
+
 		listNodes = this.dialog.getGraph().getNodeOrder();
 
 		for (RegulatoryNode node : listNodes) {
@@ -49,6 +58,18 @@ public class VisibleComponentsWidget extends JPanel {
 		nodeList = new JList(eligible.toArray());
 		nodeList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 		nodeList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+
+		nodeList.addListSelectionListener(new ListSelectionListener() {
+
+			@Override
+			public void valueChanged(ListSelectionEvent arg0) {
+				updateMessage();
+			}
+
+		});
+
+		add(message, constraints);
+
 		JScrollPane nodeScroll = new JScrollPane(nodeList);
 		nodeScroll.setPreferredSize(new Dimension(50, 60));
 		nodeScroll.setEnabled(true);
@@ -68,6 +89,19 @@ public class VisibleComponentsWidget extends JPanel {
 			selectedList.add(eligible.get(selected[i]));
 
 		return selectedList;
+	}
+
+	private void updateMessage() {
+		boolean isDiscernible = ((CADPExportConfigPanel) dialog)
+				.areCompatibleStableStatesDiscernible();
+
+		if (message != null) {
+			if (isDiscernible) {
+				message.setText("");
+			} else {
+				message.setText("Selected components are insufficient to distinguish between potential stable states");
+			}
+		}
 	}
 
 }

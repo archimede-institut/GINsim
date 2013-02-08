@@ -31,6 +31,10 @@ public class Topology {
 	}
 
 	/**
+	 * 
+	 * Specifies that module neighindex2 is a neighbour of module neighindex1,
+	 * but not the other way around.
+	 * 
 	 * @param neighindex1
 	 *            indicates the index of the first module
 	 * 
