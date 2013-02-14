@@ -16,30 +16,28 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
  * @author Nuno D. Mendes
  * 
  */
-public class CADPExpWriter {
-
-	private CADPExportConfig config = null;
+public class CADPExpWriter extends CADPWriter {
 
 	public CADPExpWriter(CADPExportConfig config) {
-		this.config = config;
+		super(config);
 	}
 
 	public String toString() {
 		String out = "";
 		List<String> lines = new ArrayList<String>();
 
-		int regularProcesses = config.getTopology().getNumberInstances();
-		int mappedInputs = config.getMapping().getMappedInputs().size();
+		int regularProcesses = getNumberInstances();
+		int mappedInputs = getMappedInputs().size();
 		int integrationProcesses = 0;
 
-		for (int i = 0; i < config.getTopology().getNumberInstances(); i++) {
-			if (config.getTopology().hasNeighbours(i))
+		for (int i = 1; i <= getNumberInstances(); i++) {
+			if (hasNeighbours(i))
 				integrationProcesses += mappedInputs;
 		}
 
 		int totalProcesses = regularProcesses + integrationProcesses;
 
-		Collection<RegulatoryNode> visibleList = config.getListVisible();
+		Collection<RegulatoryNode> visibleList = getListVisible();
 		List<String> visibleGates = new ArrayList<String>();
 
 		for (RegulatoryNode node : visibleList)
@@ -47,7 +45,7 @@ public class CADPExpWriter {
 				visibleGates.add(node.getNodeInfo().getNodeID().toUpperCase()
 						+ "_" + (i + 1));
 
-		visibleGates.add("STABLE");
+		visibleGates.add(getStableActionName());
 
 		out += "hide all but ";
 		int index = 0;
@@ -68,46 +66,43 @@ public class CADPExpWriter {
 
 		int p = 0;
 		Map<Map.Entry<RegulatoryNode, Integer>, Integer> orderMapped = new HashMap<Map.Entry<RegulatoryNode, Integer>, Integer>();
-		for (RegulatoryNode input : config.getMapping().getMappedInputs())
-			for (int i = 0; i < config.getTopology().getNumberInstances(); i++)
-				if (config.getTopology().hasNeighbours(i))
+		for (RegulatoryNode input : getMappedInputs())
+			for (int i = 1; i <= getNumberInstances(); i++)
+				if (hasNeighbours(i))
 					orderMapped
 							.put(new AbstractMap.SimpleEntry<RegulatoryNode, Integer>(
-									input, new Integer(i + 1)), new Integer(
+									input, new Integer(i)), new Integer(
 									regularProcesses + p++));
 
-		for (RegulatoryNode node : config.getGraph().getNodeOrder()) {
+		for (RegulatoryNode node : getAllComponents()) {
 			if (!node.isInput()) {
 
-				for (int j = 0; j < config.getTopology().getNumberInstances(); j++) {
+				for (int j = 1; j <= getNumberInstances(); j++) {
 
 					List<Map.Entry<RegulatoryNode, Integer>> influences = new ArrayList<Map.Entry<RegulatoryNode, Integer>>();
 
-					for (int i = 0; i < config.getTopology()
-							.getNumberInstances(); i++) {
+					for (int i = 1; i <= getNumberInstances(); i++) {
 
-						if (config.getTopology().areNeighbours(i, j))
-							for (RegulatoryNode input : config.getMapping()
-									.getInfluencedInputs(node))
+						if (areNeighbours(i, j))
+							for (RegulatoryNode input : getInfluencedInputs(node))
 								influences
 										.add(new AbstractMap.SimpleEntry<RegulatoryNode, Integer>(
-												input, new Integer(i + 1)));
+												input, new Integer(i)));
 					}
 
 					for (int v = 0; v <= node.getMaxValue(); v++) {
 
 						List<String[]> mlines = new ArrayList<String[]>();
 						String line[] = getNewLine(totalProcesses);
-						line[j] = node2GateWithOffer(node, j + 1, v);
-						line[line.length - 1] = node2GateWithOffer(node, j + 1,
-								v);
+						line[j] = node2GateWithOffer(node, j, v);
+						line[line.length - 1] = node2GateWithOffer(node, j, v);
 
 						mlines.add(line);
 						for (String[] localLine : multiPlex(
 								mlines,
 								new AbstractMap.SimpleEntry<RegulatoryNode, Integer>(
-										node, new Integer(j + 1)), v,
-								influences, orderMapped)) {
+										node, new Integer(j)), v, influences,
+								orderMapped)) {
 							lines.add(syncVec(localLine));
 						}
 
@@ -116,13 +111,13 @@ public class CADPExpWriter {
 				}
 			} else { // node is input
 
-				for (int i = 0; i < config.getTopology().getNumberInstances(); i++)
-					if (!config.getTopology().hasNeighbours(i))
+				for (int i = 1; i <= getNumberInstances(); i++)
+					if (!hasNeighbours(i))
 						for (int v = 0; v <= node.getMaxValue(); v++) {
 							String line[] = getNewLine(totalProcesses);
-							line[i] = node2GateWithOffer(node, i + 1, v);
-							line[line.length - 1] = node2GateWithOffer(node,
-									i + 1, v);
+							line[i] = node2GateWithOffer(node, i, v);
+							line[line.length - 1] = node2GateWithOffer(node, i,
+									v);
 							lines.add(syncVec(line));
 						}
 
@@ -146,11 +141,12 @@ public class CADPExpWriter {
 			processNames.add("");
 
 		for (int i = 0; i < regularProcesses; i++)
-			processNames.set(i, config.getBCGModelFilename(i + 1));
+			processNames.set(i, getBCGModelFileName(i + 1));
 
 		for (Map.Entry<RegulatoryNode, Integer> entry : orderMapped.keySet()) {
-			processNames.set(orderMapped.get(entry).intValue(), config
-					.getBCGIntegrationFilename(entry.getKey(), entry.getValue()
+			processNames.set(
+					orderMapped.get(entry).intValue(),
+					getBCGIntegrationFileName(entry.getKey(), entry.getValue()
 							.intValue()));
 		}
 
@@ -217,6 +213,7 @@ public class CADPExpWriter {
 		return out;
 	}
 
+	// TODO: Relocate this to CADPWriter
 	/**
 	 * 
 	 * Generates the name of an action in a regular process
@@ -235,6 +232,7 @@ public class CADPExpWriter {
 				+ " !" + value;
 	}
 
+	// TODO: Relocate this to CADPWriter
 	/**
 	 * 
 	 * Generates the name of the action of an integration process
@@ -264,6 +262,7 @@ public class CADPExpWriter {
 				+ indexProper + " !" + valueProper + " !" + valueIntegration;
 	}
 
+	// TODO: Relocate this to CADPWriter
 	/**
 	 * 
 	 * Generates the name of the action of an integration process

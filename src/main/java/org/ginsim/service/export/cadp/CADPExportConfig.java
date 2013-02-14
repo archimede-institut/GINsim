@@ -2,19 +2,12 @@ package org.ginsim.service.export.cadp;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
-import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.service.ServiceManager;
-import org.ginsim.service.tool.composition.IntegrationFunction;
 import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
 import org.ginsim.service.tool.composition.Topology;
-import org.ginsim.service.tool.stablestates.StableStatesService;
 
 /**
  * Class containing all the information required for the specification of the
@@ -127,14 +120,30 @@ public class CADPExportConfig {
 		return "composition_" + this.getModelName() + "_"
 				+ this.getTopology().getNumberInstances() + ".exp";
 	}
+	
+	public String getMCLPropertyFileName(List<byte[]> globalStableState) {
+		Collection<RegulatoryNode> listVisible = getListVisible();
+		List<RegulatoryNode> allComponents = getGraph().getNodeOrder();
+		
 
-	public void setCompatibleStableStates(List<List<byte[]>> compatibleStableStates){
+		String name = "property_reachable_";
+		
+		for (int i = 0; i < getTopology().getNumberInstances(); i++){
+			for (RegulatoryNode visible : listVisible)
+				name += globalStableState.get(i)[allComponents.indexOf(visible)];
+		}
+
+		
+		return name + ".mcl";
+	}
+
+	public void setCompatibleStableStates(
+			List<List<byte[]>> compatibleStableStates) {
 		this.compatibleStableStates = compatibleStableStates;
 	}
-	
-	public List<List<byte[]>> getCompatibleStableStates(){
+
+	public List<List<byte[]>> getCompatibleStableStates() {
 		return this.compatibleStableStates;
 	}
-
 
 }

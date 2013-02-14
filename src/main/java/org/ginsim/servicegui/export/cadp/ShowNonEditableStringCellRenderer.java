@@ -13,7 +13,7 @@ import javax.swing.table.TableCellRenderer;
  * Class changing the TableCellRenderer in order to place visually identify
  * non-editable cells
  * 
- * @author nuno
+ * @author Nuno D. Mendes
  * 
  */
 public class ShowNonEditableStringCellRenderer implements TableCellRenderer {

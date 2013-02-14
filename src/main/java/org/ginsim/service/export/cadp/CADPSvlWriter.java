@@ -6,6 +6,13 @@ import java.util.List;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
+/**
+ * 
+ * Class generating the SVL for the CADP export bundle
+ * 
+ * @author Nuno D. Mendes
+ * 
+ */
 public class CADPSvlWriter extends CADPWriter {
 
 	public CADPSvlWriter(CADPExportConfig config) {
@@ -34,39 +41,39 @@ public class CADPSvlWriter extends CADPWriter {
 			GateWriter gateWriter = this.getGateWriter();
 
 			out += CADPWriter.getStableActionName() + " in ";
-			out += "\"" + this.getLNTModelFileName() + "\":"
-					+ this.concreteProcessName(i) + "["
+			out += "\"" + getLNTModelFileName() + "\":"
+					+ concreteProcessName(i) + "["
 					+ gateWriter.simpleListWithModuleId(i) + "]" + ";\n";
 		}
 
 		// Generate all integration processes
-		for (int i = 1; i <= this.getNumberInstances(); i++) {
+		for (int i = 1; i <= getNumberInstances(); i++) {
 			for (RegulatoryNode input : this.getMappedInputs()) {
 				out += "\""
-						+ this.getBCGIntegrationFileName(input, i)
+						+ getBCGIntegrationFileName(input, i)
 						+ "\""
 						+ " = safety reduction of tau*.a reduction of branching reduction of generation of ";
 
 				List<String> gateList = new ArrayList<String>();
 				Collection<RegulatoryNode> listProper = this
 						.getProperComponentsForInput(input);
-				for (int j = 1; j <= this.getNumberInstances(); j++)
-					if (this.areNeighbours(i, j))
+				for (int j = 1; j <= getNumberInstances(); j++)
+					if (areNeighbours(i, j))
 						for (RegulatoryNode proper : listProper)
 							gateList.add(CADPWriter.node2SyncAction(input, i,
 									proper, j));
 
-				out += "\"" + this.getLNTIntegrationFileName() + "\":"
-						+ this.concreteIntegrationProcessName(input, i) + "["
+				out += "\"" + getLNTIntegrationFileName() + "\":"
+						+ concreteIntegrationProcessName(input, i) + "["
 						+ CADPWriter.makeCommaList(gateList) + "]" + ";\n";
 
 			}
 		}
 
-		out += "\"" + "composition_" + this.getModelName() + "_"
-				+ this.getNumberInstances() + ".bcg" + "\"";
+		out += "\"" + "composition_" + getModelName() + "_"
+				+ getNumberInstances() + ".bcg" + "\"";
 		out += " = safety reduction of tau*.a reduction of smart branching reduction of \""
-				+ this.getExpFileName() + "\";\n";
+				+ getExpFileName() + "\";\n";
 
 		return out;
 	}

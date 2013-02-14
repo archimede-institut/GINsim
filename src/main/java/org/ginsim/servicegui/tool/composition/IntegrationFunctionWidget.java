@@ -47,6 +47,8 @@ public class IntegrationFunctionWidget extends JPanel {
 	public IntegrationFunctionWidget(final CompositionSpecificationDialog dialog) {
 		super();
 
+		// TODO: replace with STR
+		
 		RegulatoryGraph graph = dialog.getGraph();
 		GroupLayout layout = new GroupLayout(this);
 		setLayout(layout);
@@ -116,21 +118,20 @@ public class IntegrationFunctionWidget extends JPanel {
 
 			JLabel nodeLabel = new JLabel(node.getId());
 
-			// TODO: See if there is already a selection of arguments to refresh
-			// this list
-			Collection<IntegrationFunction> listIF = IntegrationFunction
-					.whichCanApply(node);
+			Collection<IntegrationFunction> listIF = null;
+			List<RegulatoryNode> properComponents = getMapping()
+					.getProperComponentsForInput(node);
 
-			// TODO: Obtain this list from a function
-			// TODO: by generating the list and repainting the Combo, keep the
-			// same IF selected unless it does not
-			// exist anymore
+			if (properComponents.isEmpty())
+				listIF = IntegrationFunction.whichCanApply(node);
+			else
+				listIF = IntegrationFunction.whichCanApply(node,
+						properComponents);
 
 			Object[] listChoices = new Object[listIF.size() + 1];
 			int i = 0;
-			listChoices[i] = "unmapped";
 			for (IntegrationFunction intFun : listIF)
-				listChoices[++i] = intFun;
+				listChoices[i++] = intFun;
 
 			JComboBox nodeCombo = new JComboBox(listChoices);
 			nodeCombo.setEditable(false);

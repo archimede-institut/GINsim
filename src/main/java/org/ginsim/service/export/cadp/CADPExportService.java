@@ -3,6 +3,7 @@ package org.ginsim.service.export.cadp;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -98,8 +99,20 @@ public class CADPExportService implements Service {
 		zos.closeEntry();
 		System.err.print(svl);
 
-		// TODO add .mcl file and readme file
-
+		for (List<byte[]> globalStableState : config.getCompatibleStableStates()){
+			ze = new ZipEntry(config.getMCLPropertyFileName(globalStableState));
+			CADPMclWriter mclWriter = new CADPMclWriter(config,globalStableState);
+			String mcl = mclWriter.toString();
+			ze.setSize(mcl.getBytes().length);
+			zos.setLevel(9);
+			zos.putNextEntry(ze);
+			zos.write(svl.getBytes());
+			zos.closeEntry();
+			System.err.println(mcl);
+		}		
+					
+		// TODO add readme file
+		
 		zos.finish();
 		zos.close();
 

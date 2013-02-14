@@ -9,6 +9,13 @@ import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.service.tool.composition.IntegrationFunction;
 
+/**
+ * 
+ * Class providing methods supporting all writers of CADP specifications
+ * 
+ * @author Nuno D. Mendes
+ * 
+ */
 public abstract class CADPWriter {
 
 	private CADPExportConfig config = null;
@@ -17,54 +24,126 @@ public abstract class CADPWriter {
 		this.config = config;
 	}
 
+	/**
+	 * @return ordered list of components of the original LRM
+	 */
 	public List<RegulatoryNode> getAllComponents() {
 		return this.config.getGraph().getNodeOrder();
 	}
 
+	/**
+	 * @return name of stable action tau
+	 */
 	public static String getStableActionName() {
 		return "STABLE";
 	}
 
+	/**
+	 * 
+	 * @param node
+	 *            the regulatory node
+	 * @param moduleId
+	 *            the identification of the instance
+	 * @return the name of the corresponding gate
+	 */
 	public static String node2Gate(RegulatoryNode node, int moduleId) {
 		return node.getNodeInfo().getNodeID().toUpperCase() + "_" + moduleId;
 	}
 
+	/**
+	 * 
+	 * @param node
+	 *            the regulatory node
+	 * @return the name of the corresponding gate
+	 */
 	public static String node2Gate(RegulatoryNode node) {
 		return node.getNodeInfo().getNodeID().toUpperCase();
 	}
 
+	/**
+	 * 
+	 * @param node
+	 *            the regulatory node
+	 * @return the name of the corresponding state variable
+	 */
 	public static String node2StateVar(RegulatoryNode node) {
 		return node.getNodeInfo().getNodeID().toLowerCase();
 	}
 
+	/**
+	 * 
+	 * @param input
+	 *            the regulatory input node
+	 * @param inputModuleIndex
+	 *            the identification of the instance where the input node is
+	 * @param proper
+	 *            the regulatory proper node
+	 * @param properModuleIndex
+	 *            the identification of the instance where the proper node is
+	 * @return the name of the action updating the value of the proper component
+	 *         and the mapped input node influenced by the proper componentn
+	 */
 	public static String node2SyncAction(RegulatoryNode input,
 			int inputModuleIndex, RegulatoryNode proper, int properModuleIndex) {
 		return "I_" + node2Gate(input, inputModuleIndex) + "_"
 				+ node2Gate(proper, properModuleIndex);
 	}
 
+	/**
+	 * 
+	 * @return the number of instances of the composition
+	 */
 	public int getNumberInstances() {
 		return this.config.getTopology().getNumberInstances();
 	}
 
+	/**
+	 * 
+	 * @return the name of the original LRM
+	 */
 	public String getModelName() {
 		return this.config.getModelName();
 	}
 
+	/**
+	 * 
+	 * @return a collection of mapped input nodes in the original LRM
+	 */
 	public Collection<RegulatoryNode> getMappedInputs() {
 		return this.config.getMapping().getMappedInputs();
 	}
 
+	/**
+	 * 
+	 * @param input
+	 *            a regulatory input node
+	 * @return a collection of proper components influencing the value of the
+	 *         input
+	 */
 	public Collection<RegulatoryNode> getProperComponentsForInput(
 			RegulatoryNode input) {
 		return this.config.getMapping().getProperComponentsForInput(input);
 	}
 
+	public Collection<RegulatoryNode> getInfluencedInputs(RegulatoryNode proper) {
+		return this.config.getMapping().getInfluencedInputs(proper);
+	}
+
+	/**
+	 * 
+	 * @param input
+	 *            a regulatory input node
+	 * @return the integration function associated to the input node
+	 */
 	public IntegrationFunction getIntegrationFunctionForInput(
 			RegulatoryNode input) {
 		return this.config.getMapping().getIntegrationFunctionForInput(input);
 	}
 
+	/**
+	 * 
+	 * @return the collection of visible components
+	 */
 	public Collection<RegulatoryNode> getListVisible() {
 		return this.config.getListVisible();
 	}
@@ -82,6 +161,11 @@ public abstract class CADPWriter {
 	public boolean areNeighbours(int i, int j) {
 		// Topology used indices starting in 0, here we start in 1
 		return this.config.getTopology().areNeighbours(i - 1, j - 1);
+	}
+
+	public boolean hasNeighbours(int i) {
+		// Topology used indices starting in 0, here we start in 1
+		return this.config.getTopology().hasNeighbours(i - 1);
 	}
 
 	public InitialStateWriter getInitialStateWriter() {
@@ -155,6 +239,14 @@ public abstract class CADPWriter {
 		return config.getExpFilename();
 	}
 
+	public String getMCLPropertyFileName(List<byte[]> globalStableState) {
+		return config.getMCLPropertyFileName(globalStableState);
+	}
+
+	protected List<byte[]> getInitialState(){
+		return config.getInitialStates();
+	}
+	
 	protected static String makeCommaList(List<String> list) {
 		return makeCommaList(list, ",");
 	}
@@ -183,7 +275,6 @@ public abstract class CADPWriter {
 	}
 
 	public class InitialStateWriter {
-		// TODO: compute correct initial state for mapped input variables
 		private List<byte[]> initialStates = null;
 		private List<RegulatoryNode> listNodes = null;
 		private List<Map.Entry<RegulatoryNode, Integer>> listExternal = null;
