@@ -8,8 +8,8 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.swing.JPanel;
 
@@ -69,6 +69,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 		config.setListVisible(visibleComponentsPanel.getSelectedNodes());
 		config.setInitialStates(initialStatesPanel.getInitialStates());
 		config.setCompatibleStableStates(getCompatibleStableStates());
+		config.setReducedCompatibleStableStates(getReducedCompatibleStableStates());
 
 		action.selectFile();
 		return true;
@@ -408,7 +409,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 
 					for (int neighbour = 0; neighbour < total; neighbour++) {
 						if (!this.areNeighbours(instance, neighbour))
-							break;
+							continue;
 
 						byte[] foreignStableState = frozen.get(neighbour);
 						for (RegulatoryNode argument : arguments)
@@ -420,14 +421,18 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 
 					}
 
-					byte actualValue = stableState[getGraph().getModel()
-							.getNodeOrder().indexOf(input)];
-					byte computedValue = (byte) IntegrationFunction
-							.getIntegrationFunctionComputer(integrationFunction)
-							.compute(argumentValues).intValue();
+					if (!argumentValues.isEmpty()) {
 
-					if (actualValue != computedValue)
-						isCompatible = false;
+						byte actualValue = stableState[getGraph().getModel()
+								.getNodeOrder().indexOf(input)];
+						byte computedValue = (byte) IntegrationFunction
+								.getIntegrationFunctionComputer(
+										integrationFunction)
+								.compute(argumentValues).intValue();
+
+						if (actualValue != computedValue)
+							isCompatible = false;
+					}
 
 				}
 
@@ -443,25 +448,50 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 	}
 
 	public boolean areCompatibleStableStatesDiscernible() {
+		return getReducedCompatibleStableStates().size() == getReducedSetCompatibleStableStates(
+				getUnmappedComponents()).size();
+
+	}
+
+	public List<List<byte[]>> getReducedCompatibleStableStates() {
+
+		return getReducedSetCompatibleStableStates(this.visibleComponentsPanel
+				.getSelectedNodes());
+
+	}
+
+	private List<List<byte[]>> getReducedSetCompatibleStableStates(
+			List<RegulatoryNode> subSet) {
 		List<List<byte[]>> globalStableStates = getCompatibleStableStates();
-		List<RegulatoryNode> listVisible = this.visibleComponentsPanel
-				.getSelectedNodes();
-		Set<List<byte[]>> globalReducedStableStates = new HashSet<List<byte[]>>();
+		List<List<byte[]>> globalReducedStableStates = new ArrayList<List<byte[]>>();
+		Set<State> uniqueSet = new HashSet<State>();
 
 		for (List<byte[]> globalState : globalStableStates) {
 			List<byte[]> reducedGlobalState = new ArrayList<byte[]>();
 			for (byte[] localState : globalState) {
-				byte[] reducedLocalState = new byte[listVisible.size()];
-				for (RegulatoryNode visible : listVisible)
-					reducedLocalState[listVisible.indexOf(visible)] = localState[getGraph()
-							.getModel().getNodeOrder().indexOf(visible)];
+				byte[] reducedLocalState = computeReducedState(localState,
+						subSet);
 				reducedGlobalState.add(reducedLocalState);
 			}
-			globalReducedStableStates.add(reducedGlobalState);
+
+			State stateRepresentation = new State(reducedGlobalState);
+			if (!uniqueSet.contains(stateRepresentation)) {
+				globalReducedStableStates.add(reducedGlobalState);
+				uniqueSet.add(stateRepresentation);
+			}
 		}
 
-		return globalReducedStableStates.size() == globalStableStates.size();
+		return globalReducedStableStates;
 
+	}
+
+	private byte[] computeReducedState(byte[] state, List<RegulatoryNode> subSet) {
+		byte[] reducedState = new byte[subSet.size()];
+		for (RegulatoryNode sub : subSet)
+			reducedState[subSet.indexOf(sub)] = state[getGraph().getModel()
+					.getNodeOrder().indexOf(sub)];
+
+		return reducedState;
 	}
 
 	@Override
@@ -471,6 +501,81 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 
 	public void fireIntegrationFunctionsChanged() {
 		this.initialStatesPanel.fireInitialStatesUpdate();
+	}
+
+	private List<RegulatoryNode> getUnmappedComponents() {
+		List<RegulatoryNode> unMappedComponents = new ArrayList<RegulatoryNode>();
+		for (RegulatoryNode node : getGraph().getNodeOrder())
+			if (!this.mappedNodes.contains(node))
+				unMappedComponents.add(node);
+
+		return unMappedComponents;
+	}
+
+	private class State {
+		private byte[] values;
+
+		public State(byte[] stateByte) {
+			values = new byte[stateByte.length];
+			for (int i = 0; i < stateByte.length; i++)
+				values[i] = stateByte[i];
+		}
+
+		public State(List<byte[]> stateList) {
+			int size = 0;
+			for (byte[] stateByte : stateList) {
+				size += stateByte.length;
+			}
+
+			values = new byte[size];
+
+			int i = 0;
+			for (byte[] stateByte : stateList)
+				for (int j = 0; j < stateByte.length; j++)
+					values[i++] = stateByte[j];
+		}
+
+		public byte get(int i) {
+			if (i < values.length)
+				return values[i];
+			else
+				return 0;
+		}
+
+		public int size() {
+			return values.length;
+		}
+
+		@Override
+		public boolean equals(Object object) {
+
+			if (!(object instanceof State) || (object == null))
+				return false;
+
+			State state = (State) object;
+
+			if (size() != state.size())
+				return false;
+			else {
+				boolean identical = true;
+				for (int i = 0; i < size(); i++)
+					if (get(i) != state.get(i))
+						identical = false;
+
+				return identical;
+			}
+
+		}
+
+		@Override
+		public int hashCode() {
+			String stringRepresentation = "";
+			for (int i = 0; i < size(); i++)
+				stringRepresentation += get(i);
+
+			return stringRepresentation.hashCode();
+		}
+
 	}
 
 }

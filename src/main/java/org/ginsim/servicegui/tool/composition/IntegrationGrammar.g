@@ -6,7 +6,9 @@ import org.ginsim.servicegui.tool.composition.integrationgrammar.IntegrationFunc
 }
 
 
-start	:	expression;
+eval	returns [IntegrationFunctionSpecification.IntegrationExpression value]	
+	: exp=expression { $value = $exp.value; }
+	;
 
 expression  	returns [IntegrationFunctionSpecification.IntegrationExpression value]
 	:	 or=disjunction { $value = $or.value; } 
@@ -31,8 +33,7 @@ atom	 returns [ IntegrationFunctionSpecification.IntegrationExpression value]
 	
 	
 
-ENUMBER	:	NUMBER | '_';
-NUMBER 	:	('0'..'9')+;
+ENUMBER	:	('0' .. '9')+ | '_';
 ID	:	('a'..'z'|'A'..'Z'|'0'..'9'|'_'|'-')+;
 OR	:	'|';
 AND	:	'&';

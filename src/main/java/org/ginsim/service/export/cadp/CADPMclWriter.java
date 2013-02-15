@@ -1,7 +1,6 @@
 package org.ginsim.service.export.cadp;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -16,18 +15,18 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
 public class CADPMclWriter extends CADPWriter {
 
-	private List<byte[]> globalStableState = null;
+	private List<byte[]> globalReducedStableState = null;
 
-	public CADPMclWriter(CADPExportConfig config, List<byte[]> globalStableState) {
+	public CADPMclWriter(CADPExportConfig config,
+			List<byte[]> globalReducedStableState) {
 		super(config);
-		this.globalStableState = globalStableState;
+		this.globalReducedStableState = globalReducedStableState;
 	}
 
 	public String toString() {
 
 		List<byte[]> globalInitialState = getInitialState();
-		Collection<RegulatoryNode> listVisible = getListVisible();
-		List<RegulatoryNode> allComponents = getAllComponents();
+		List<RegulatoryNode> listVisible = getListVisible();
 
 		List<String> booleanVars = new ArrayList<String>();
 		List<String[]> declarations = new ArrayList<String[]>();
@@ -43,10 +42,10 @@ public class CADPMclWriter extends CADPWriter {
 
 				declaration[0] = booleanVar;
 				declaration[1] = ""
-						+ globalStableState.get(i - 1)[allComponents
+						+ globalReducedStableState.get(i - 1)[listVisible
 								.indexOf(visible)];
 				declaration[2] = ""
-						+ globalInitialState.get(i - 1)[allComponents
+						+ globalInitialState.get(i - 1)[listVisible
 								.indexOf(visible)];
 
 				declarations.add(declaration);
@@ -55,7 +54,7 @@ public class CADPMclWriter extends CADPWriter {
 				condition[0] = visible.getNodeInfo().getNodeID().toUpperCase()
 						+ "_" + i;
 				condition[1] = ""
-						+ globalStableState.get(i - 1)[allComponents
+						+ globalReducedStableState.get(i - 1)[listVisible
 								.indexOf(visible)];
 				condition[2] = "" + i;
 
@@ -79,13 +78,15 @@ public class CADPMclWriter extends CADPWriter {
 			List<String> vec = new ArrayList<String>();
 			for (String booleanVar : booleanVars)
 				vec.add(booleanVar);
-			
+
 			int position = Integer.parseInt(condition[2]) - 1;
-			vec.set(position, "V=" + condition[1]);			
-			
+			vec.set(position, "V=" + condition[1]);
+
 			String[] conditionLine = new String[2];
 			conditionLine[0] = condition[0];
 			conditionLine[1] = "(" + makeCommaList(vec) + ")";
+
+			conditionLines.add(conditionLine);
 		}
 
 		String allConditions = "";
@@ -103,7 +104,9 @@ public class CADPMclWriter extends CADPWriter {
 			finalCondition += "(" + booleanVar + " = true)";
 		}
 
-		allConditions += "\nor\n((<" + getStableActionName() + ">true) and ("
+		if (!allConditions.isEmpty())
+			allConditions += "\nor\n";
+		allConditions += "((<" + getStableActionName() + ">true) and ("
 				+ finalCondition + "))";
 
 		String property = "mu X (" + initialization + ").\n(" + allConditions

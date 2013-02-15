@@ -99,9 +99,9 @@ public class CADPExportService implements Service {
 		zos.closeEntry();
 		System.err.print(svl);
 
-		for (List<byte[]> globalStableState : config.getCompatibleStableStates()){
-			ze = new ZipEntry(config.getMCLPropertyFileName(globalStableState));
-			CADPMclWriter mclWriter = new CADPMclWriter(config,globalStableState);
+		for (List<byte[]> globalReducedStableState : config.getCompatibleReducedStableStates()){
+			ze = new ZipEntry(config.getMCLPropertyFileName(globalReducedStableState));
+			CADPMclWriter mclWriter = new CADPMclWriter(config,globalReducedStableState);
 			String mcl = mclWriter.toString();
 			ze.setSize(mcl.getBytes().length);
 			zos.setLevel(9);

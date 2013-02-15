@@ -1,7 +1,6 @@
 package org.ginsim.service.export.cadp;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -21,6 +20,7 @@ public class CADPExportConfig {
 	private IntegrationFunctionMapping mapping = null;
 	private List<byte[]> initialStates = null;
 	private List<List<byte[]>> compatibleStableStates = null;
+	private List<List<byte[]>> compatibleReducedStableStates = null;
 	private List<RegulatoryNode> listVisible = null;
 	private RegulatoryGraph graph = null;
 	private String modelName = "";
@@ -120,20 +120,18 @@ public class CADPExportConfig {
 		return "composition_" + this.getModelName() + "_"
 				+ this.getTopology().getNumberInstances() + ".exp";
 	}
-	
-	public String getMCLPropertyFileName(List<byte[]> globalStableState) {
-		Collection<RegulatoryNode> listVisible = getListVisible();
-		List<RegulatoryNode> allComponents = getGraph().getNodeOrder();
-		
+
+	public String getMCLPropertyFileName(List<byte[]> globalReducedStableState) {
+		List<RegulatoryNode> listVisible = getListVisible();
 
 		String name = "property_reachable_";
-		
-		for (int i = 0; i < getTopology().getNumberInstances(); i++){
+
+		for (int i = 0; i < getTopology().getNumberInstances(); i++) {
 			for (RegulatoryNode visible : listVisible)
-				name += globalStableState.get(i)[allComponents.indexOf(visible)];
+				name += globalReducedStableState.get(i)[listVisible
+						.indexOf(visible)];
 		}
 
-		
 		return name + ".mcl";
 	}
 
@@ -146,4 +144,12 @@ public class CADPExportConfig {
 		return this.compatibleStableStates;
 	}
 
+	public void setReducedCompatibleStableStates(
+			List<List<byte[]>> compatibleReducedStableStates) {
+		this.compatibleReducedStableStates = compatibleReducedStableStates;
+	}
+
+	public List<List<byte[]>> getCompatibleReducedStableStates() {
+		return this.compatibleReducedStableStates;
+	}
 }

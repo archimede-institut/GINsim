@@ -68,6 +68,7 @@ public class VisibleComponentsWidget extends JPanel {
 
 		});
 
+		constraints.gridwidth = GridBagConstraints.REMAINDER;
 		add(message, constraints);
 
 		JScrollPane nodeScroll = new JScrollPane(nodeList);
@@ -75,7 +76,6 @@ public class VisibleComponentsWidget extends JPanel {
 		nodeScroll.setEnabled(true);
 
 		constraints.gridheight = GridBagConstraints.REMAINDER;
-		constraints.gridwidth = GridBagConstraints.REMAINDER;
 
 		add(nodeScroll, constraints);
 		setSize(getPreferredSize());

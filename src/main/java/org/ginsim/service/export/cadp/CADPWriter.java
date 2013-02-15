@@ -144,7 +144,7 @@ public abstract class CADPWriter {
 	 * 
 	 * @return the collection of visible components
 	 */
-	public Collection<RegulatoryNode> getListVisible() {
+	public List<RegulatoryNode> getListVisible() {
 		return this.config.getListVisible();
 	}
 

@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.antlr.runtime.ANTLRStringStream;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.RecognitionException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.servicegui.tool.composition.CompositionSpecificationDialog;
 
@@ -298,6 +301,15 @@ public class IntegrationFunctionSpecification {
 		}
 
 		return result;
+	}
+
+	public IntegrationExpression parse(String specificationString)
+			throws RecognitionException {
+		ANTLRStringStream in = new ANTLRStringStream(specificationString);
+		IntegrationGrammarLexer lexer = new IntegrationGrammarLexer(in);
+		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		IntegrationGrammarParser parser = new IntegrationGrammarParser(tokens);
+		return parser.eval();
 	}
 
 }

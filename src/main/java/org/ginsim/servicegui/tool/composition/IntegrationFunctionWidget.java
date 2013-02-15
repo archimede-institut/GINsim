@@ -122,7 +122,9 @@ public class IntegrationFunctionWidget extends JPanel {
 			List<RegulatoryNode> properComponents = getMapping()
 					.getProperComponentsForInput(node);
 
-			if (properComponents.isEmpty())
+			
+			// TODO: this should be updated with actions on the list of arguments
+			if (properComponents == null || properComponents.isEmpty())
 				listIF = IntegrationFunction.whichCanApply(node);
 			else
 				listIF = IntegrationFunction.whichCanApply(node,
