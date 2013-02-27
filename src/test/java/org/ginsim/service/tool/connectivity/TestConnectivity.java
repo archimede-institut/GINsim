@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
 import java.awt.Color;
-import java.util.Set;
 import java.util.Vector;
 
 import org.ginsim.common.application.OptionStore;

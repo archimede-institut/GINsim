@@ -110,7 +110,23 @@ public class IntegrationFunctionSpecification {
 		}
 
 	}
+	
+	public static class IntegrationNegation implements IntegrationExpression {
+		private IntegrationExpression atom = null;
+		
+		public IntegrationNegation(IntegrationExpression atom){
+			this.atom = atom;
+		}
+		
+		public IntegrationExpression getNegatedExpression(){
+			return this.atom;
+		}
+	}
 
+	public static IntegrationExpression createNegation(IntegrationExpression atom){
+		return new IntegrationNegation(atom);
+	}
+	
 	public static IntegrationExpression createAtom(String componentName,
 			String thresholdString, String minString, String maxString) {
 

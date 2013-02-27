@@ -72,6 +72,7 @@ public class CADPModuleWriter extends CADPWriter {
 		output += "end process\n\n";
 
 		output += functionWriter;
+		output += "\nend module\n";
 
 		return output;
 	}
@@ -108,8 +109,8 @@ public class CADPModuleWriter extends CADPWriter {
 					for (int v = 0; v <= node.getMaxValue(); v++) {
 						out += "\t\t[]\n";
 						out += "\t\t\tProper_regulator" + modifier + "[" + gate
-								+ "]" + "(focal_" + gate + "("
-								+ stateVarWriter.simpleList() + ") ==" + v
+								+ "]" + "((focal_" + gate + "("
+								+ stateVarWriter.simpleList() + ") == " + v
 								+ modifier + "), !?" + stateVar + "," + v
 								+ modifier + ")\n";
 					}

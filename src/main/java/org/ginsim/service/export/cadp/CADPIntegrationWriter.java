@@ -61,6 +61,10 @@ public class CADPIntegrationWriter extends CADPWriter {
 
 	public String toString() {
 		String out = "";
+
+		// TODO: replace common by method in CADPWriter
+		out += "module integration_" + this.getModelName() + "(common) is\n";
+
 		for (Map.Entry<RegulatoryNode, Integer> key : association.keySet()) {
 			IntegrationProcessWriter integrationProcessWriter = association
 					.get(key);
@@ -82,6 +86,8 @@ public class CADPIntegrationWriter extends CADPWriter {
 				out += formalIntegrationFunction;
 			}
 		}
+
+		out += "\nend module\n";
 
 		return out;
 
