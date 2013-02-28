@@ -107,8 +107,7 @@ public class CADPExportConfig {
 	}
 
 	public String getLNTIntegrationFilename() {
-		return "integration_" + this.getModelName() + "_"
-				+ this.getTopology().getNumberInstances() + ".lnt";
+		return "integration_" + this.getModelName()  + ".lnt";
 	}
 
 	public String getBCGIntegrationFilename(RegulatoryNode node, int moduleId) {
@@ -120,6 +119,11 @@ public class CADPExportConfig {
 		return "composition_" + this.getModelName() + "_"
 				+ this.getTopology().getNumberInstances() + ".exp";
 	}
+	
+	public String getSvlFilename() {
+		return "process_" + this.getModelName() + ".svl";
+	}
+	
 
 	public String getMCLPropertyFileName(List<byte[]> globalReducedStableState) {
 		List<RegulatoryNode> listVisible = getListVisible();

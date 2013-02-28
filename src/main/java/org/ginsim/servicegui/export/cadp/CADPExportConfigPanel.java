@@ -20,6 +20,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.service.export.cadp.CADPExportConfig;
+import org.ginsim.service.tool.composition.GenericTopology;
 import org.ginsim.service.tool.composition.IntegrationFunction;
 import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
 import org.ginsim.service.tool.composition.Topology;
@@ -50,7 +51,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 	private InitialStatesWidget initialStatesPanel = null;
 
 	private int instances = 2;
-	private Topology topology = new Topology(this.instances);
+	private Topology topology = new GenericTopology(this.instances);
 	private List<RegulatoryNode> mappedNodes = new ArrayList<RegulatoryNode>();
 	private List<byte[]> stableStates = null;
 	private List<List<byte[]>> compatibleStableStates = null;
@@ -155,7 +156,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 	@Override
 	public void updateNumberInstances(int instances) {
 		this.instances = instances;
-		this.topology = new Topology(instances);
+		this.topology = new GenericTopology(instances);
 		adjacencyMatrixPanel = null;
 		initialStatesPanel = null;
 		this.removeAll();

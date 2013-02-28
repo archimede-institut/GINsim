@@ -38,6 +38,11 @@ public abstract class CADPWriter {
 		return "STABLE";
 	}
 
+	public static String getCommonModuleName () {
+		return "common";
+	}
+	
+	
 	/**
 	 * 
 	 * @param node

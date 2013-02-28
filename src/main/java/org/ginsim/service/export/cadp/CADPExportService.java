@@ -48,7 +48,7 @@ public class CADPExportService implements Service {
 		ZipOutputStream zos = new ZipOutputStream(stream);
 		ZipEntry ze = null;
 
-		ze = new ZipEntry("common.lnt"); // TODO: make this a config value
+		ze = new ZipEntry(CADPWriter.getCommonModuleName() + ".lnt");
 		CADPCommonWriter commonWriter = new CADPCommonWriter(config);
 		String common = commonWriter.toString();
 		ze.setSize((long) common.getBytes().length);
@@ -89,7 +89,7 @@ public class CADPExportService implements Service {
 		zos.closeEntry();
 		System.err.print(exp);
 
-		ze = new ZipEntry("file.svl"); // TODO: make it a config value
+		ze = new ZipEntry(config.getSvlFilename());
 		CADPSvlWriter svlWriter = new CADPSvlWriter(config);
 		String svl = svlWriter.toString();
 		ze.setSize(svl.getBytes().length);
@@ -99,9 +99,12 @@ public class CADPExportService implements Service {
 		zos.closeEntry();
 		System.err.print(svl);
 
-		for (List<byte[]> globalReducedStableState : config.getCompatibleReducedStableStates()){
-			ze = new ZipEntry(config.getMCLPropertyFileName(globalReducedStableState));
-			CADPMclWriter mclWriter = new CADPMclWriter(config,globalReducedStableState);
+		for (List<byte[]> globalReducedStableState : config
+				.getCompatibleReducedStableStates()) {
+			ze = new ZipEntry(
+					config.getMCLPropertyFileName(globalReducedStableState));
+			CADPMclWriter mclWriter = new CADPMclWriter(config,
+					globalReducedStableState);
 			String mcl = mclWriter.toString();
 			ze.setSize(mcl.getBytes().length);
 			zos.setLevel(9);
@@ -109,10 +112,10 @@ public class CADPExportService implements Service {
 			zos.write(svl.getBytes());
 			zos.closeEntry();
 			System.err.println(mcl);
-		}		
-					
+		}
+
 		// TODO add readme file
-		
+
 		zos.finish();
 		zos.close();
 

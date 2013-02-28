@@ -62,8 +62,8 @@ public class CADPIntegrationWriter extends CADPWriter {
 	public String toString() {
 		String out = "";
 
-		// TODO: replace common by method in CADPWriter
-		out += "module integration_" + this.getModelName() + "(common) is\n";
+		out += "module integration_" + this.getModelName() + "("
+				+ CADPWriter.getCommonModuleName() + ") is\n";
 
 		for (Map.Entry<RegulatoryNode, Integer> key : association.keySet()) {
 			IntegrationProcessWriter integrationProcessWriter = association
@@ -111,6 +111,7 @@ public class CADPIntegrationWriter extends CADPWriter {
 		private String formalProcessName = "";
 		private String formalFunctionName = "";
 		private String formalParametersType = "";
+		private String formalFunctionReturnType = "";
 		private String formalStateVarModifier = "";
 		private List<String> formalGates = new ArrayList<String>();
 		private List<String> formalStateVars = new ArrayList<String>();
@@ -150,8 +151,13 @@ public class CADPIntegrationWriter extends CADPWriter {
 				return;
 			}
 
-			this.gateType = input.getMaxValue() > 1 ? "MultiIntegration"
-					: "BinaryIntegration";
+			if (input.getMaxValue() > 1) {
+				this.gateType = "MultiIntegration";
+				this.formalFunctionReturnType = "Multi";
+			} else {
+				this.gateType = "BinaryIntegration";
+				this.formalFunctionReturnType = "Binary";
+			}
 
 			this.concreteProcessName = concreteIntegrationProcessName(input,
 					inputModuleIndex);
@@ -286,8 +292,8 @@ public class CADPIntegrationWriter extends CADPWriter {
 
 			out += "function " + this.formalFunctionName + "("
 					+ makeCommaList(this.formalStateVars) + " : "
-					+ this.formalParametersType + ") : " + this.gateType
-					+ " is\n";
+					+ this.formalParametersType + ") : "
+					+ this.formalFunctionReturnType + " is\n";
 
 			String value = "";
 			String connective = "";

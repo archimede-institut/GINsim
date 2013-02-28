@@ -32,7 +32,7 @@ public class CADPCommonWriter extends CADPWriter {
 
 		String output = "";
 
-		output += "module common is\n\n";
+		output += "module " + CADPWriter.getCommonModuleName() + " is\n\n";
 		output += "type Binary is range 0..1 of Nat with \"==\", \"!=\", \">\", \"<\", \"<=\",\">=\"  end type\n";
 		if (hasMulti)
 			output += "type Multi is range 0.."

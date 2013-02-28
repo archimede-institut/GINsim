@@ -47,9 +47,11 @@ public class CADPSvlWriter extends CADPWriter {
 		}
 
 		// Generate all integration processes
+		// TODO: Correct extemporaneous generations of effectively unmapped
+		// concrete components
 		for (int i = 1; i <= getNumberInstances(); i++) {
 			for (RegulatoryNode input : this.getMappedInputs()) {
-				out += "\""
+				String integrationHead = "\""
 						+ getBCGIntegrationFileName(input, i)
 						+ "\""
 						+ " = safety reduction of tau*.a reduction of branching reduction of generation of ";
@@ -63,9 +65,11 @@ public class CADPSvlWriter extends CADPWriter {
 							gateList.add(CADPWriter.node2SyncAction(input, i,
 									proper, j));
 
-				out += "\"" + getLNTIntegrationFileName() + "\":"
-						+ concreteIntegrationProcessName(input, i) + "["
-						+ CADPWriter.makeCommaList(gateList) + "]" + ";\n";
+				if (!gateList.isEmpty()) // only with neighbours
+					out += integrationHead + "\"" + getLNTIntegrationFileName()
+							+ "\":" + concreteIntegrationProcessName(input, i)
+							+ "[" + CADPWriter.makeCommaList(gateList) + "]"
+							+ ";\n";
 
 			}
 		}
@@ -77,5 +81,4 @@ public class CADPSvlWriter extends CADPWriter {
 
 		return out;
 	}
-
 }
