@@ -192,12 +192,14 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 
 	@Override
 	public void addNeighbour(int m, int n) {
+		System.err.println("Setting instance " + m + " as a neighbout of " + n);
 		this.topology.addNeighbour(m, n);
 
 	}
 
 	@Override
 	public void removeNeighbour(int m, int n) {
+		System.err.println("Removing instance " + m + " as a neighbout of " + n);
 		this.topology.removeNeighbour(m, n);
 	}
 

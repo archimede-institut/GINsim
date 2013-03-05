@@ -94,7 +94,7 @@ public class CADPExpWriter extends CADPWriter {
 
 						List<String[]> mlines = new ArrayList<String[]>();
 						String line[] = getNewLine(totalProcesses);
-						line[j] = node2GateWithOffer(node, j, v);
+						line[j - 1] = node2GateWithOffer(node, j, v);
 						line[line.length - 1] = node2GateWithOffer(node, j, v);
 
 						mlines.add(line);
@@ -115,7 +115,7 @@ public class CADPExpWriter extends CADPWriter {
 					if (!hasNeighbours(i))
 						for (int v = 0; v <= node.getMaxValue(); v++) {
 							String line[] = getNewLine(totalProcesses);
-							line[i] = node2GateWithOffer(node, i, v);
+							line[i - 1] = node2GateWithOffer(node, i, v);
 							line[line.length - 1] = node2GateWithOffer(node, i,
 									v);
 							lines.add(syncVec(line));

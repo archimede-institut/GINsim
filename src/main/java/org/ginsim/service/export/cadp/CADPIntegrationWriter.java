@@ -40,7 +40,7 @@ public class CADPIntegrationWriter extends CADPWriter {
 				Map.Entry<RegulatoryNode, Integer> inputFromModule = new AbstractMap.SimpleEntry<RegulatoryNode, Integer>(
 						input, new Integer(instance));
 				for (int neighbour = 1; neighbour <= numberInstances; neighbour++) {
-					if (!this.areNeighbours(instance, neighbour))
+					if (!areNeighbours(instance, neighbour))
 						continue;
 					for (RegulatoryNode proper : properComponents)
 						listExternal
@@ -128,6 +128,8 @@ public class CADPIntegrationWriter extends CADPWriter {
 			this.inputModuleIndex = inputFromModule.getValue().intValue();
 			this.integrationFunction = integrationFunction;
 
+			System.err.println("Creating IntegrationProcessWriter with " + listExternal.size() + " arguments and integrationFunction = " + integrationFunction);
+			
 			boolean consistent = true;
 			for (Map.Entry<RegulatoryNode, Integer> entry : listExternal) {
 				if (entry.getKey().getMaxValue() > this.localMaxValue)
