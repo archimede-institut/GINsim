@@ -45,7 +45,7 @@ public class CADPMclWriter extends CADPWriter {
 						+ globalReducedStableState.get(i - 1)[listVisible
 								.indexOf(visible)];
 				declaration[2] = ""
-						+ globalInitialState.get(i - 1)[listVisible
+						+ globalInitialState.get(i - 1)[getAllComponents()
 								.indexOf(visible)];
 
 				declarations.add(declaration);

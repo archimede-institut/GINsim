@@ -274,7 +274,6 @@ public class AdjacencyMatrixWidget extends JPanel {
 		updateSymmetryGroupSelection();
 	}
 
-	
 	// TODO: Verify impact of this
 	// TODO: Should verify if final specification is correct
 	// TODO: Should preserve selection with number of instances is changed
@@ -282,10 +281,10 @@ public class AdjacencyMatrixWidget extends JPanel {
 		AdjacencyMatrixWidget widget = new AdjacencyMatrixWidget(dialog);
 		for (int x = 0; x < matrix.length; x++)
 			for (int y = 0; y < matrix.length; y++)
-				if (matrix[x][y].isSelected()){
+				if (matrix[x][y].isSelected()) {
 					widget.setSelected(x, y);
 					if (widget.isSelected(x, y))
-					dialog.addNeighbour(x, y);
+						dialog.addNeighbour(x, y);
 				} else
 					dialog.removeNeighbour(x, y);
 
