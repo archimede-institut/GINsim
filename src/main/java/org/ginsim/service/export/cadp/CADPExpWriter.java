@@ -55,7 +55,7 @@ public class CADPExpWriter extends CADPWriter {
 			out += visibleGate;
 		}
 
-		out += " in \n\tlabel par in\n";
+		out += " in \n\tlabel par\n";
 
 		String stableLine[] = getNewLine(totalProcesses);
 		for (int i = 0; i < regularProcesses; i++)
@@ -207,7 +207,9 @@ public class CADPExpWriter extends CADPWriter {
 				out += " * ";
 			if (index == line.length - 1)
 				out += " -> ";
-			out += line[index];
+			out += line[index].equals("_") ? line[index] : "\"" + line[index]
+					+ "\""; // labels always need enclosing "" except _, which
+							// is not a label
 		}
 
 		return out;

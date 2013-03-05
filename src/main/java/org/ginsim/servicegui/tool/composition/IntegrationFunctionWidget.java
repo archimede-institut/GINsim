@@ -29,8 +29,6 @@ import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.service.tool.composition.IntegrationFunction;
 import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
 
-import tbrowser.settings.about.Translator;
-
 /**
  * Widget to specify the Integration Function
  * 
@@ -46,19 +44,19 @@ public class IntegrationFunctionWidget extends JPanel {
 	private Map<RegulatoryNode, JCheckBox> mappedInputSelection = new HashMap<RegulatoryNode, JCheckBox>();
 	private Map<RegulatoryNode, JComboBox> mappedFunctionSelection = new HashMap<RegulatoryNode, JComboBox>();
 	private Map<RegulatoryNode, JList> mappedProperSelection = new HashMap<RegulatoryNode, JList>();
-	private Map<JList, RegulatoryNode> reverseProperSelectionMap = new HashMap<JList,RegulatoryNode>();
+	private Map<JList, RegulatoryNode> reverseProperSelectionMap = new HashMap<JList, RegulatoryNode>();
 	private Map<RegulatoryNode, JScrollPane> mappedPane = new HashMap<RegulatoryNode, JScrollPane>();
 
 	public IntegrationFunctionWidget(final CompositionSpecificationDialog dialog) {
 		super();
 
 		// TODO: replace with STR
-		
+
 		RegulatoryGraph graph = dialog.getGraph();
 		GroupLayout layout = new GroupLayout(this);
 		setLayout(layout);
 		setBorder(BorderFactory
-				.createTitledBorder(Translator.getString("STR_integrationfunctionwidget_title")));
+				.createTitledBorder("Specify Integration Function for Inputs"));
 
 		List<RegulatoryNode> listNodes = graph.getNodeOrder();
 		inputNodes = new ArrayList<RegulatoryNode>();
@@ -126,9 +124,8 @@ public class IntegrationFunctionWidget extends JPanel {
 			List<RegulatoryNode> properComponents = getMapping()
 					.getProperComponentsForInput(node);
 
-			
-			
-			// TODO: this should be updated with actions on the list of arguments
+			// TODO: this should be updated with actions on the list of
+			// arguments
 			if (properComponents == null || properComponents.isEmpty())
 				listIF = IntegrationFunction.whichCanApply(node);
 			else
@@ -150,21 +147,25 @@ public class IntegrationFunctionWidget extends JPanel {
 			nodeList.setLayoutOrientation(JList.HORIZONTAL_WRAP);
 			nodeList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
-			nodeList.addListSelectionListener(new ListSelectionListener(){
+			nodeList.addListSelectionListener(new ListSelectionListener() {
 
 				@Override
 				public void valueChanged(ListSelectionEvent event) {
-					int[] selection = ((JList)event.getSource()).getSelectedIndices();
-					RegulatoryNode input = reverseProperSelectionMap.get((JList) event.getSource());
+					int[] selection = ((JList) event.getSource())
+							.getSelectedIndices();
+					RegulatoryNode input = reverseProperSelectionMap
+							.get((JList) event.getSource());
 					JComboBox nodeCombo = mappedFunctionSelection.get(input);
 					// TODO: nodeCombo.removeAllItems();
 					// TODO: nodeCombo.addItem() for each option
-					// TODO: keep selected item it if is still admissible and fireXXXchange if value is changed or reset
+					// TODO: keep selected item it if is still admissible and
+					// fireXXXchange if value is changed or reset
 				}
-				
+
 			});
-			
-			// Add ListSelectionListener (should take into account corresponding node to select new list of actions that can be applied)
+
+			// Add ListSelectionListener (should take into account corresponding
+			// node to select new list of actions that can be applied)
 
 			JScrollPane nodeScroll = new JScrollPane(nodeList);
 			nodeScroll.setPreferredSize(new Dimension(50, 60));

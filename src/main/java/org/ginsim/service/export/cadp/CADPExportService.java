@@ -109,7 +109,7 @@ public class CADPExportService implements Service {
 			ze.setSize(mcl.getBytes().length);
 			zos.setLevel(9);
 			zos.putNextEntry(ze);
-			zos.write(svl.getBytes());
+			zos.write(mcl.getBytes());
 			zos.closeEntry();
 			System.err.println(mcl);
 		}
