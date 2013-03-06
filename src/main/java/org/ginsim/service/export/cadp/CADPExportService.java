@@ -56,7 +56,6 @@ public class CADPExportService implements Service {
 		zos.putNextEntry(ze);
 		zos.write(common.getBytes(), 0, common.getBytes().length);
 		zos.closeEntry();
-		// System.err.print(common);
 
 		ze = new ZipEntry(config.getLNTModelFilename());
 		CADPModuleWriter moduleWriter = new CADPModuleWriter(config);
@@ -66,7 +65,6 @@ public class CADPExportService implements Service {
 		zos.putNextEntry(ze);
 		zos.write(modules.getBytes(), 0, modules.getBytes().length);
 		zos.closeEntry();
-		// System.err.print(modules);
 
 		ze = new ZipEntry(config.getLNTIntegrationFilename());
 		CADPIntegrationWriter integrationWriter = new CADPIntegrationWriter(
@@ -77,7 +75,6 @@ public class CADPExportService implements Service {
 		zos.putNextEntry(ze);
 		zos.write(integration.getBytes());
 		zos.closeEntry();
-		System.err.print(integration);
 
 		ze = new ZipEntry(config.getExpFilename());
 		CADPExpWriter expWriter = new CADPExpWriter(config);
@@ -87,7 +84,6 @@ public class CADPExportService implements Service {
 		zos.putNextEntry(ze);
 		zos.write(exp.getBytes());
 		zos.closeEntry();
-		System.err.print(exp);
 
 		ze = new ZipEntry(config.getSvlFilename());
 		CADPSvlWriter svlWriter = new CADPSvlWriter(config);
@@ -97,7 +93,6 @@ public class CADPExportService implements Service {
 		zos.putNextEntry(ze);
 		zos.write(svl.getBytes());
 		zos.closeEntry();
-		System.err.print(svl);
 
 		for (List<byte[]> globalReducedStableState : config
 				.getCompatibleReducedStableStates()) {
@@ -111,7 +106,7 @@ public class CADPExportService implements Service {
 			zos.putNextEntry(ze);
 			zos.write(mcl.getBytes());
 			zos.closeEntry();
-			System.err.println(mcl);
+
 		}
 
 		// TODO add readme file
