@@ -164,8 +164,8 @@ public class IntegrationFunctionWidget extends JPanel {
 
 			});
 
-			// Add ListSelectionListener (should take into account corresponding
-			// node to select new list of actions that can be applied)
+			// TODO: Add ListSelectionListener (should take into account corresponding
+			// TODO: node to select new list of actions that can be applied)
 
 			JScrollPane nodeScroll = new JScrollPane(nodeList);
 			nodeScroll.setPreferredSize(new Dimension(50, 60));
