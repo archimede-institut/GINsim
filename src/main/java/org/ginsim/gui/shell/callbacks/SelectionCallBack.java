@@ -52,13 +52,9 @@ class SearchNodeAction extends AbstractAction {
 		this.graph = graph;
 	}
 	
-	public void searchNode() {
-		new SearchFrame(GUIManager.getInstance().getGraphGUI(graph));
-	}
-	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		searchNode();
+		new SearchFrame(GUIManager.getInstance().getGraphGUI(graph));
 	}
 }
 

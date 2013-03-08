@@ -50,6 +50,7 @@ public class SearchFrame extends SimpleDialog implements ListSelectionListener {
 	private JTable table;
 	private MyTableModel tableModel;
 	private Timer autoFillTimer;
+	private String oldFilter = null;
 	
 	public SearchFrame(GraphGUI<?, ?, ?> gui) {
 		super(GUIManager.getInstance().getFrame(gui.getGraph()), Translator.getString("STR_searchNode_title"),300,400);
@@ -129,8 +130,13 @@ public class SearchFrame extends SimpleDialog implements ListSelectionListener {
 	}
 
 	public void search() {
+		String filter = searchTextField.getText();
+		if (filter.equals(oldFilter)) {
+			return;
+		}
+		oldFilter = filter;
 		tableModel.setData(new Vector());
-		List<?> foundNodes = g.searchNodes(searchTextField.getText());
+		List<?> foundNodes = g.searchNodes(filter);
 		if (foundNodes.size() > MAX_FOUND_NODES_DISPLAYED) {
 			foundNodes = (List<?>) foundNodes.subList(0, MAX_FOUND_NODES_DISPLAYED);
 		}
