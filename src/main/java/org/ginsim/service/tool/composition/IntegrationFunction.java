@@ -57,7 +57,7 @@ public enum IntegrationFunction {
 						if (proper.getMaxValue() > maxvalue)
 							maxvalue = proper.getMaxValue();
 					}
-					if (input.getMaxValue() >= maxvalue) {
+					if (input.getMaxValue() >= maxvalue && maxvalue > 1) {
 						canApply.add(integrationFunction);
 					}
 				} else {
@@ -74,7 +74,7 @@ public enum IntegrationFunction {
 						if (proper.getMaxValue() > maxvalue)
 							maxvalue = proper.getMaxValue();
 					}
-					if (input.getMaxValue() == maxvalue) {
+					if (input.getMaxValue() == maxvalue && maxvalue > 1) {
 						canApply.add(integrationFunction);
 					}
 				} else {
