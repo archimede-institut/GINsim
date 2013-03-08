@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -38,6 +40,7 @@ public class IntegrationFunctionWidget extends JPanel {
 	private static final long serialVersionUID = 2423386096996654728L;
 	private List<RegulatoryNode> inputNodes = null;
 	private List<RegulatoryNode> properNodes = null;
+	private JLabel messageLabel = new JLabel();
 	private Map<RegulatoryNode, JCheckBox> mappedInputSelection = new HashMap<RegulatoryNode, JCheckBox>();
 	private Map<RegulatoryNode, JComboBox> mappedFunctionSelection = new HashMap<RegulatoryNode, JComboBox>();
 	private Map<RegulatoryNode, JList> mappedProperSelection = new HashMap<RegulatoryNode, JList>();
@@ -47,14 +50,10 @@ public class IntegrationFunctionWidget extends JPanel {
 		super();
 
 		RegulatoryGraph graph = dialog.getGraph();
-		setLayout(new GridBagLayout());
+		GroupLayout layout = new GroupLayout(this);
+		setLayout(layout);
 		setBorder(BorderFactory
 				.createTitledBorder("Specify Integration Function for Inputs"));
-		GridBagConstraints constraints = new GridBagConstraints();
-
-		constraints.gridx = 0;
-		constraints.gridy = 0;
-		constraints.weightx = 1;
 
 		List<RegulatoryNode> listNodes = graph.getNodeOrder();
 		inputNodes = new ArrayList<RegulatoryNode>();
@@ -68,7 +67,25 @@ public class IntegrationFunctionWidget extends JPanel {
 
 		}
 
-		// TODO: Add JLabel for error messages
+		layout.setAutoCreateGaps(true);
+		layout.setAutoCreateContainerGaps(true);
+
+		GroupLayout.SequentialGroup hGroup = layout.createSequentialGroup();
+		hGroup.addComponent(messageLabel);
+
+		GroupLayout.SequentialGroup vGroup = layout.createSequentialGroup();
+		vGroup.addComponent(messageLabel);
+
+		GroupLayout.ParallelGroup nodeCheckGroup = layout.createParallelGroup();
+		GroupLayout.ParallelGroup nodeLabelGroup = layout.createParallelGroup();
+		GroupLayout.ParallelGroup nodeComboGroup = layout.createParallelGroup();
+		GroupLayout.ParallelGroup nodeScrollGroup = layout
+				.createParallelGroup();
+
+		hGroup.addGroup(nodeCheckGroup);
+		hGroup.addGroup(nodeLabelGroup);
+		hGroup.addGroup(nodeComboGroup);
+		hGroup.addGroup(nodeScrollGroup);
 
 		for (RegulatoryNode node : inputNodes) {
 
@@ -101,9 +118,16 @@ public class IntegrationFunctionWidget extends JPanel {
 
 			JLabel nodeLabel = new JLabel(node.getId());
 
+			// TODO: See if there is already a selection of arguments to refresh
+			// this list
 			Collection<IntegrationFunction> listIF = IntegrationFunction
 					.whichCanApply(node);
 
+			// TODO: Obtain this list from a function
+			// TODO: by generating the list and repainting the Combo, keep the
+			// same IF selected unless it does not
+			// exist anymore
+			
 			Object[] listChoices = new Object[listIF.size() + 1];
 			int i = 0;
 			listChoices[i] = "unmapped";
@@ -127,16 +151,18 @@ public class IntegrationFunctionWidget extends JPanel {
 			mappedProperSelection.put(node, nodeList);
 			mappedPane.put(node, nodeScroll);
 
-			add(nodeCheck, constraints);
-			constraints.gridx = 1;
-			add(nodeLabel, constraints);
-			constraints.gridx = 2;
-			add(nodeCombo, constraints);
-			constraints.gridx = 3;
-			constraints.gridwidth = GridBagConstraints.REMAINDER;
-			add(nodeScroll, constraints);
-			setSize(getPreferredSize());
+			vGroup.addGroup(layout.createParallelGroup(Alignment.BASELINE)
+					.addComponent(nodeCheck).addComponent(nodeLabel)
+					.addComponent(nodeCombo).addComponent(nodeScroll));
+			nodeCheckGroup.addComponent(nodeCheck);
+			nodeLabelGroup.addComponent(nodeLabel);
+			nodeComboGroup.addComponent(nodeCombo);
+			nodeScrollGroup.addComponent(nodeScroll);
+
 		}
+
+		layout.setHorizontalGroup(hGroup);
+		layout.setVerticalGroup(vGroup);
 	}
 
 	/**

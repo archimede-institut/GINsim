@@ -1,14 +1,13 @@
 package org.ginsim.servicegui.tool.composition;
 
 import java.awt.GridBagLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
-import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  * Widget to specify the number of model instances
@@ -48,18 +47,17 @@ public class InstanceSelectorWidget extends JPanel {
 		input.setEnabled(true);
 		this.numberInstances = input;
 
-		JButton update = new JButton("Update");
-		update.setEnabled(true);
-		update.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) {
+		input.addChangeListener(new ChangeListener() {
+
+			@Override
+			public void stateChanged(ChangeEvent arg0) {
 				Integer value = (Integer) numberInstances.getValue();
 				dialog.updateNumberInstances(value.intValue());
-			}
 
+			}
 		});
 
 		add(input);
-		add(update);
 		setSize(getPreferredSize());
 	}
 

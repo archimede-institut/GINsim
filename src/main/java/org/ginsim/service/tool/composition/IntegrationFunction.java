@@ -22,7 +22,10 @@ public enum IntegrationFunction {
 	 *         otherwise.
 	 */
 	public static boolean isImplemented(IntegrationFunction integrationFunction) {
-		if (integrationFunction.equals(AND) || integrationFunction.equals(OR)) {
+		if (integrationFunction.equals(AND) || integrationFunction.equals(OR)
+				|| integrationFunction.equals(MIN)
+				|| integrationFunction.equals(MAX)
+				|| integrationFunction.equals(THRESHOLD2)) {
 			return true;
 		}
 		return false;
@@ -46,7 +49,7 @@ public enum IntegrationFunction {
 				.values()) {
 
 			switch (integrationFunction) {
-			case MAX:
+			case MAX: {
 
 				int maxvalue = 0;
 				if (properComponents != null) {
@@ -61,10 +64,25 @@ public enum IntegrationFunction {
 					if (input.getMaxValue() > 1)
 						canApply.add(integrationFunction);
 				}
+			}
 
 				continue;
-			case MIN:
-				canApply.add(integrationFunction);
+			case MIN: {
+				int maxvalue = 0;
+				if (properComponents != null) {
+					for (RegulatoryNode proper : properComponents) {
+						if (proper.getMaxValue() > maxvalue)
+							maxvalue = proper.getMaxValue();
+					}
+					if (input.getMaxValue() == maxvalue) {
+						canApply.add(integrationFunction);
+					}
+				} else {
+					if (input.getMaxValue() > 1)
+						canApply.add(integrationFunction);
+				}
+			}
+
 				continue;
 
 			case AND:
@@ -84,9 +102,21 @@ public enum IntegrationFunction {
 					canApply.add(integrationFunction);
 				continue;
 			case THRESHOLD2:
-				if (input.getMaxValue() > 1)
-					continue;
-				canApply.add(integrationFunction);
+				{
+					if (properComponents != null) {
+						boolean multiValuedArguments = false;
+						for (RegulatoryNode proper : properComponents) {
+							if (proper.getMaxValue() > 1)
+								multiValuedArguments = true;
+						}
+						if (input.getMaxValue() == 1 && multiValuedArguments) {
+							canApply.add(integrationFunction);
+						}
+					} else {
+						if (input.getMaxValue() == 1)
+							canApply.add(integrationFunction);
+					}
+				}
 				continue;
 			case MAX_LEFT:
 			case MAX_RIGHT:
