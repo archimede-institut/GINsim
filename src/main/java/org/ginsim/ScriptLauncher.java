@@ -284,6 +284,8 @@ public class ScriptLauncher {
 	public void doc(String filename, String javadocbase) {
 		DocumentWriter doc = createReport(filename, null);
 		try {
+			doc.addLink(getJavadocLink(javadocbase, getClass()), "Script Manager");
+			
 			writeDoc(doc, javadocbase, "Services", ServiceManager.getManager().getAvailableServices());
 			// TODO: names for associated data managers
 			writeDoc(doc, javadocbase, "Associated data", getDataManagers());
@@ -330,12 +332,16 @@ public class ScriptLauncher {
 				name = alias.value();
 			}
 			
-			// TODO: javadoc link
-			String scl = cl.getCanonicalName().replace('.', '/');
+			// javadoc link
 			doc.openListItem("");
-			doc.addLink(javadocbase+"/"+scl+".html", name);
+			doc.addLink(getJavadocLink(javadocbase, cl), name);
 		}
 		doc.closeList();
+	}
+	
+	private String getJavadocLink(String javadocbase, Class<?> cl) {
+		String scl = cl.getCanonicalName().replace('.', '/');
+		return javadocbase+"/"+scl+".html";
 	}
 	
 	public BasicProgressListener progressListener() {

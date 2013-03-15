@@ -13,4 +13,10 @@ public class LRGDocumentationService implements Service {
 		LRGDocumentationWriter writer = new LRGDocumentationWriter(graph);
 		writer.export(config, filename);
 	}
+	
+	public void export(RegulatoryGraph graph, String filename) throws Exception {
+		JSONDocumentationWriter writer = new JSONDocumentationWriter(graph);
+		writer.exportDocumentation(filename);
+	}
+
 }
