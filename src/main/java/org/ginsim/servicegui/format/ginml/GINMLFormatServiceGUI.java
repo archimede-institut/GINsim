@@ -28,7 +28,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(GINMLFormatService.class)
-@ServiceStatus(ServiceStatus.UNDER_DEVELOPMENT)
+@ServiceStatus(ServiceStatus.RELEASED)
 public class GINMLFormatServiceGUI extends AbstractServiceGUI {
 
 	@Override
