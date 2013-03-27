@@ -11,7 +11,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
-import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.service.common.StandaloneGUI;
@@ -44,7 +43,8 @@ public class StateInRegulatoryGraphServiceGUI extends AbstractServiceGUI {
 
 class StateInRegulatoryGraphAction extends GenericGraphAction {
 
-	
+	private static final long serialVersionUID = -3180174464155997775L;
+
 	public StateInRegulatoryGraphAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
 		
 		super( graph, "STR_stateInRegGraph", null, "STR_stateInRegGraph_descr", null, serviceGUI);

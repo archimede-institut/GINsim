@@ -127,7 +127,7 @@ public class SimpleStateListTableModel extends AbstractTableModel {
 
 	public byte[] getState(int row) {
 		if (data.size() == 0) return new byte[statemax.length];
-		if (row >= data.size()) return null;
+		if (row >= data.size() || row < 0) return null;
 		return (byte[]) data.get(row);
 	}
 	/**
