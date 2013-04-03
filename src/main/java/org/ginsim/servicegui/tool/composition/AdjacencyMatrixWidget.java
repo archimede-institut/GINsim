@@ -107,6 +107,8 @@ public class AdjacencyMatrixWidget extends JPanel {
 									dialog.removeNeighbour(y, x);
 								}
 							}
+							
+							dialog.fireIntegrationMappingChange();
 
 						}
 

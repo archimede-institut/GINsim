@@ -404,8 +404,9 @@ public class CompositionService implements Service {
 		if (reduce) {
 			// Build a ModelSimplifierConfig object
 			ModelSimplifierConfig simplifierConfig = new ModelSimplifierConfig();
-			for (RegulatoryNode input : newMappedInputs)
+			for (RegulatoryNode input : newMappedInputs) 
 				simplifierConfig.remove(input);
+			
 
 			// Mimmick a ReductionLauncher object
 			ReductionStub launcher = new ReductionStub(composedGraph);

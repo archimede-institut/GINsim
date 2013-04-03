@@ -45,4 +45,6 @@ public interface CompositionSpecificationDialog {
 
 	public Collection<AbstractMap.Entry<RegulatoryNode, Integer>> getMappedToModuleArguments(
 			RegulatoryNode input, int moduleIndex);
+	
+	public void fireIntegrationMappingChange();
 }

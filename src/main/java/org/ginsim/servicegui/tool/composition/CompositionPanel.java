@@ -268,4 +268,9 @@ public class CompositionPanel extends JPanel implements
 
 	}
 
+	@Override
+	public void fireIntegrationMappingChange() {
+		// Does nothing in the composition
+	}
+
 }

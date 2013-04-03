@@ -449,13 +449,40 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 	}
 
 	public boolean areCompatibleStableStatesDiscernible() {
+		/*
+		 * List<List<byte[]>> reducedCompatibleStableStates =
+		 * getReducedCompatibleStableStates(); List<List<byte[]>>
+		 * globalReducedCompatibleStableStates =
+		 * getReducedSetCompatibleStableStates(getUnmappedComponents());
+		 * 
+		 * System.err.println("All compatible stable states\n"); for (int i = 0;
+		 * i < globalReducedCompatibleStableStates.size(); i++) {
+		 * System.err.println("\tStable configuration #" + (i + 1) + "\n"); for
+		 * (int j = 1; j <= getNumberInstances(); j++) for (RegulatoryNode node
+		 * : getUnmappedComponents()) { System.err.println("\t\t" +
+		 * node.getNodeInfo().getNodeID() + "_" + j + ": " +
+		 * globalReducedCompatibleStableStates
+		 * .get(i).get(j-1)[getUnmappedComponents().indexOf(node)]); } }
+		 * 
+		 * System.err.println("All compatible visible configurations\n");
+		 * System.
+		 * err.println(this.visibleComponentsPanel.getSelectedNodes().size() +
+		 * " components selected\n"); for (int i = 0; i <
+		 * reducedCompatibleStableStates.size(); i++) {
+		 * System.err.println("\tStable configuration #" + (i + 1) + "\n"); for
+		 * (int j = 1; j <= getNumberInstances(); j++) for (RegulatoryNode node
+		 * : this.visibleComponentsPanel.getSelectedNodes()) {
+		 * System.err.println("\t\t" + node.getNodeInfo().getNodeID() + "_" + j
+		 * + ": " +
+		 * reducedCompatibleStableStates.get(i).get(j-1)[this.visibleComponentsPanel
+		 * .getSelectedNodes().indexOf(node)]); } }
+		 */
 		return getReducedCompatibleStableStates().size() == getReducedSetCompatibleStableStates(
 				getUnmappedComponents()).size();
 
 	}
 
 	public List<List<byte[]>> getReducedCompatibleStableStates() {
-
 		return getReducedSetCompatibleStableStates(this.visibleComponentsPanel
 				.getSelectedNodes());
 
@@ -498,10 +525,6 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 	@Override
 	public boolean areNeighbours(int m, int n) {
 		return this.topology.areNeighbours(m, n);
-	}
-
-	public void fireIntegrationFunctionsChanged() {
-		this.initialStatesPanel.fireInitialStatesUpdate();
 	}
 
 	private List<RegulatoryNode> getUnmappedComponents() {
@@ -577,6 +600,19 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 			return stringRepresentation.hashCode();
 		}
 
+	}
+
+	public void fireIntegrationFunctionsChanged() {
+		initialStatesPanel.fireInitialStatesUpdate();
+	}
+
+	public void fireIntegrationMappingChange() {
+		visibleComponentsPanel = visibleComponentsPanel.reBuild();
+		initialStatesPanel.fireInitialStatesUpdate();
+		compatibleStableStates = null;
+		this.removeAll();
+		init();
+		this.revalidate();
 	}
 
 }
