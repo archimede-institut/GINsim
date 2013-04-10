@@ -106,9 +106,8 @@ public class IntegrationFunctionDNFFactory {
 
 						}
 
-						result.disjunctionWith(conjunction);
-
 					}
+					result.disjunctionWith(conjunction);
 				}
 
 			}
@@ -116,12 +115,7 @@ public class IntegrationFunctionDNFFactory {
 			return result;
 
 		} else {
-			// a null operand denotes an inexistent operand with
-			// an empty set of associated clauses
-			IntegrationFunctionClauseSet tautology = new IntegrationFunctionClauseSet();
-			tautology.setTautological();
-
-			return tautology;
+			return null; // the operand is null
 		}
 
 	}

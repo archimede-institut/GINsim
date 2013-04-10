@@ -33,7 +33,7 @@ atom	 returns [ IntegrationFunctionSpecification.IntegrationExpression value]
 	| id=ID '(' threshold=ENUMBER ',' min=ENUMBER ',' max=ENUMBER ',' dist=RANGE ')'
 	{ $value = IntegrationFunctionSpecification.createAtom($id.text,$threshold.text,$min.text,$max.text,$dist.text);}
 	|'(' exp=expression ')' { $value = IntegrationFunctionSpecification.createAtom($exp.value);}
-	| NOT a=atom { $value = IntegrationFunctionSpecification.createNegation($exp.value);}
+	| NOT a=atom { $value = IntegrationFunctionSpecification.createNegation($a.value);}
 	;	
 	
 	

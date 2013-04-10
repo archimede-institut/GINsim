@@ -1,6 +1,7 @@
 package org.ginsim.servicegui.tool.composition.integrationgrammar;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -15,10 +16,13 @@ public class IntegrationFunctionClause {
 	}
 
 	public void addConstraint(NodeInfo node, byte value) {
-		this.constraints.put(node, new Byte(value));
+		if (!this.isImpossible())
+			this.constraints.put(node, new Byte(value));
 	}
 
 	public boolean hasConstraint(NodeInfo node) {
+		if (this.constraints == null)
+			return false;
 		return this.constraints.containsKey(node);
 	}
 
@@ -26,34 +30,47 @@ public class IntegrationFunctionClause {
 		return this.constraints.get(node);
 	}
 
+	// public disjunctionWith()
+	// in general, this disjunction produces a set of clauses, or the
+	// tautological clause
+	// since the verification of this is too costly, we leave that to the MDD
+
 	public IntegrationFunctionClause conjunctionWith(
 			IntegrationFunctionClause clause) {
-		if (clause.isImpossible())
-			this.setImpossible();
-		else if (!clause.isTautological()) {
-			Set<NodeInfo> list = this.getKeySet();
-			list.addAll(clause.getKeySet());
 
-			Map<NodeInfo, Byte> novelConstraints = new HashMap<NodeInfo, Byte>();
+		IntegrationFunctionClause result = new IntegrationFunctionClause();
 
-			for (NodeInfo node : list) {
-				if (this.hasConstraint(node) && !clause.hasConstraint(node)) {
-					novelConstraints.put(node, this.getConstraintValue(node));
-				} else if (!this.hasConstraint(node)
-						&& clause.hasConstraint(node)) {
-					novelConstraints.put(node, clause.getConstraintValue(node));
-				} else if (this.hasConstraint(node)
+		if (this.isImpossible() || clause.isImpossible())
+			result.setImpossible();
+		else if (this.isTautological())
+			for (NodeInfo node : clause.getKeySet())
+				result.addConstraint(node, clause.getConstraintValue(node));
+		else if (clause.isTautological())
+			for (NodeInfo node : this.getKeySet())
+				result.addConstraint(node, this.getConstraintValue(node));
+		else {
+			Set<NodeInfo> jointList = new HashSet<NodeInfo>();
+			jointList.addAll(this.getKeySet());
+			jointList.addAll(clause.getKeySet());
+
+			for (NodeInfo node : jointList) {
+				if (this.hasConstraint(node) && !clause.hasConstraint(node))
+					result.addConstraint(node, this.getConstraintValue(node));
+				else if (!this.hasConstraint(node)
+						&& clause.hasConstraint(node))
+					result.addConstraint(node, clause.getConstraintValue(node));
+				else if (this.hasConstraint(node)
 						&& clause.hasConstraint(node)
-						&& this.getConstraintValue(node) == clause
-								.getConstraintValue(node)) {
-					novelConstraints.put(node, this.getConstraintValue(node));
-				} else {
-					this.setImpossible();
-				}
+						&& this.getConstraintValue(node).byteValue() == clause
+								.getConstraintValue(node).byteValue())
+					result.addConstraint(node, clause.getConstraintValue(node));
+				else
+					result.setImpossible();
 			}
+
 		}
 
-		return this;
+		return result;
 	}
 
 	protected Set<NodeInfo> getKeySet() {
@@ -102,7 +119,24 @@ public class IntegrationFunctionClause {
 
 	@Override
 	public int hashCode() {
-		return this.constraints.hashCode();
+		if (this.constraints != null)
+			return this.constraints.hashCode();
+		else
+			return 0;
+	}
+
+	public String asString() {
+		String out = "CLAUSE[" + this.hashCode() + ":[";
+		if (this.isImpossible())
+			out += "IMPOSSIBLE";
+		else if (this.isTautological())
+			out += "UNIVERSAL";
+		else
+			for (NodeInfo node : this.constraints.keySet())
+				out += node.getNodeID() + "="
+						+ this.constraints.get(node).byteValue() + ",";
+
+		return out + "]";
 	}
 
 }

@@ -187,6 +187,9 @@ public class IntegrationFunctionSpecification {
 
 	public IntegrationExpression parse(String specificationString)
 			throws RecognitionException {
+		
+		specificationString.replaceAll("\\s","");
+		
 		ANTLRStringStream in = new ANTLRStringStream(specificationString);
 		IntegrationGrammarLexer lexer = new IntegrationGrammarLexer(in);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
