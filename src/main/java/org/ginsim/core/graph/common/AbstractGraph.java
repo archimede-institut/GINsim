@@ -303,7 +303,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * @param regexp the regular expression node ID must match to be selected
 	 * @return a Vector of vertices
 	 */
-	public Vector<V> searchNodes( String regexp) {
+	public List<V> searchNodes( String regexp) {
 		
 		Vector<V> v = new Vector<V>();
 		

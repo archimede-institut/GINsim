@@ -11,6 +11,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Vector;
 
 import javax.swing.JButton;
@@ -338,7 +339,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	private Object getNode(JTextField textField) {
 		
 		String lookup = textField.getText();
-		Vector foundNodes = graph.searchNodes( lookup);
+		List foundNodes = graph.searchNodes( lookup);
 		if (foundNodes == null) {
 			GUIMessageUtils.openErrorDialog(Translator.getString("STR_pathFinding_no_node")+textField.getText(), this);
 			return null;
