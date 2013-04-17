@@ -7,24 +7,54 @@ import java.util.Set;
 
 import org.colomoto.logicalmodel.NodeInfo;
 
+/**
+ * 
+ * A clause for the Integration Function, representing a conjunction of
+ * conditions
+ * 
+ * @author Nudo D Mendes
+ * 
+ */
 public class IntegrationFunctionClause {
 
-	Map<NodeInfo, Byte> constraints = new HashMap<NodeInfo, Byte>();
+	protected Map<NodeInfo, Byte> constraints = new HashMap<NodeInfo, Byte>();
 
 	public IntegrationFunctionClause() {
 
 	}
+
+	/**
+	 * Add a constraint to a clause
+	 * 
+	 * @param node
+	 *            the component
+	 * @param value
+	 *            the value
+	 */
 
 	public void addConstraint(NodeInfo node, byte value) {
 		if (!this.isImpossible())
 			this.constraints.put(node, new Byte(value));
 	}
 
+	/**
+	 * 
+	 * @param node
+	 *            the component
+	 * @return whether there is a constraint on the given component
+	 */
 	public boolean hasConstraint(NodeInfo node) {
 		if (this.constraints == null)
 			return false;
 		return this.constraints.containsKey(node);
 	}
+
+	/**
+	 * 
+	 * @param node
+	 *            the component
+	 * @return the value the node is constrained to, if any
+	 */
 
 	public Byte getConstraintValue(NodeInfo node) {
 		return this.constraints.get(node);
@@ -35,6 +65,13 @@ public class IntegrationFunctionClause {
 	// tautological clause
 	// since the verification of this is too costly, we leave that to the MDD
 
+	/**
+	 * 
+	 * @param clause
+	 *            another clause
+	 * @return the clause resulting from performing the conjunction of the
+	 *         current clause with another
+	 */
 	public IntegrationFunctionClause conjunctionWith(
 			IntegrationFunctionClause clause) {
 
@@ -94,7 +131,7 @@ public class IntegrationFunctionClause {
 
 	}
 
-	public byte[] asByteArray(CompositionContext context) {
+	public byte[] toByteArray(CompositionContext context) {
 		int size = context.getLowLevelComponents().size();
 		byte[] clause = new byte[size];
 
@@ -125,7 +162,7 @@ public class IntegrationFunctionClause {
 			return 0;
 	}
 
-	public String asString() {
+	public String toString() {
 		String out = "CLAUSE[" + this.hashCode() + ":[";
 		if (this.isImpossible())
 			out += "IMPOSSIBLE";

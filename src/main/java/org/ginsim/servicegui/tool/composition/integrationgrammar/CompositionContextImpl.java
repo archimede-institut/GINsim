@@ -23,14 +23,20 @@ public class CompositionContextImpl implements CompositionContext {
 	}
 
 	@Override
-	public Set<Integer> getNeighbourIndices(int instance, int distance) {
+	public Set<Integer> getNeighbourIndices(int instance, int minDistance,
+			int maxDistance) {
 		Set<Integer> results = this.getAllNeighbourIndicesCloserThan(instance,
-				distance);
+				maxDistance);
 		Set<Integer> frontier = this.getAllNeighbourIndicesCloserThan(instance,
-				distance - 1);
+				minDistance - 1);
 
 		results.removeAll(frontier);
 		return results;
+	}
+
+	@Override
+	public Set<Integer> getNeighbourIndices(int instance, int distance) {
+		return getNeighbourIndices(instance, distance, distance);
 	}
 
 	private Set<Integer> getAllNeighbourIndicesCloserThan(int instance,

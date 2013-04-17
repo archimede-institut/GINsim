@@ -20,6 +20,10 @@ public class IntegrationFunctionDNFFactory {
 
 	public IntegrationFunctionClauseSet getClauseSet(
 			IntegrationExpression expression, int instance) {
+		return getClauseSet(expression,instance,true);
+	}
+	public IntegrationFunctionClauseSet getClauseSet(
+			IntegrationExpression expression, int instance, boolean optimize) {
 
 		if (expression instanceof IntegrationOperation) {
 			List<IntegrationExpression> listOperands = ((IntegrationOperation) expression)
@@ -33,16 +37,16 @@ public class IntegrationFunctionDNFFactory {
 				IntegrationFunctionClauseSet intermediate = new IntegrationFunctionClauseSet();
 				intermediate.setTautological();
 				for (IntegrationExpression operand : listOperands)
-					intermediate
-							.conjunctionWith(getClauseSet(operand, instance));
+					intermediate = intermediate.conjunctionWith(getClauseSet(
+							operand, instance));
 
 				return intermediate;
 			}
 			case OR: {
 				IntegrationFunctionClauseSet intermediate = new IntegrationFunctionClauseSet();
 				for (IntegrationExpression operand : listOperands)
-					intermediate
-							.disjunctionWith(getClauseSet(operand, instance));
+					intermediate = intermediate.disjunctionWith(getClauseSet(
+							operand, instance));
 
 				return intermediate;
 			}
@@ -53,7 +57,7 @@ public class IntegrationFunctionDNFFactory {
 		} else if (expression instanceof IntegrationNegation) {
 			IntegrationFunctionClauseSet toNegate = getClauseSet(
 					((IntegrationNegation) expression).getNegatedExpression(),
-					instance);
+					instance, false);
 
 			return toNegate.negate();
 
@@ -63,15 +67,16 @@ public class IntegrationFunctionDNFFactory {
 			byte threshold = atom.getThreshold();
 			int min = atom.getMinNeighbours();
 			int max = atom.getMaxNeighbours();
-			int distance = atom.getDistance();
+			int minDistance = atom.getMinDistance();
+			int maxDistance = atom.getMaxDistance();
 
 			Set<Integer> neighbours = context.getNeighbourIndices(instance,
-					distance);
+					minDistance, maxDistance);
 			List<Integer> nList = new ArrayList<Integer>();
 			for (Integer neighbour : neighbours)
 				nList.add(neighbour);
 
-			if (min == -1 || min > neighbours.size())
+			if (min == -1)
 				min = neighbours.size();
 
 			if (max == -1 || max > neighbours.size())
@@ -79,9 +84,27 @@ public class IntegrationFunctionDNFFactory {
 
 			IntegrationFunctionClauseSet result = new IntegrationFunctionClauseSet();
 
-			for (int v = min; v <= max; v++) {
-				List<boolean[]> masks = generateNeighboursMask(v, nList);
+			if (min > neighbours.size() || min > max) {
+				// condition is trivially impossible to satisfy
+				result.setImpossible();
+				return result;
+			} else if (threshold == 0 && max < neighbours.size()) {
+				// condition is trivially impossible to satisfy
+				result.setImpossible();
+				return result;
+			} else if (min == 0 && max == neighbours.size()) {
+				// condition is trivially tautological
+				result.setTautological();
+				return result;
+			} else if (threshold == 0 && max == neighbours.size()) {
+				// condition is trivially tautological
+				result.setTautological();
+				return result;
+			}
 
+			if (max == neighbours.size() && optimize) {
+				// need only guarantee the mininum number of neighbours
+				List<boolean[]> masks = generateNeighboursMask(min, nList);
 				for (boolean[] mask : masks) {
 					IntegrationFunctionClauseSet conjunction = new IntegrationFunctionClauseSet();
 					conjunction.setTautological();
@@ -89,6 +112,7 @@ public class IntegrationFunctionDNFFactory {
 					for (int i = 0; i < mask.length; i++) {
 
 						if (mask[i]) {
+
 							NodeInfo node = context
 									.getLowLevelComponentFromName(
 											atom.getComponentName(),
@@ -99,17 +123,67 @@ public class IntegrationFunctionDNFFactory {
 								IntegrationFunctionClause clause = new IntegrationFunctionClause();
 
 								clause.addConstraint(node, l);
-								disjunction.disjunctionWith(clause);
+								disjunction = disjunction
+										.disjunctionWith(clause);
 
 							}
-							conjunction.conjunctionWith(disjunction);
 
-						}
+							conjunction = conjunction
+									.conjunctionWith(disjunction);
+
+						} // else we don't care if more neighbours are
+							// habilitated
 
 					}
-					result.disjunctionWith(conjunction);
+					result = result.disjunctionWith(conjunction);
 				}
 
+			} else {
+				// needs to guarantee strict respect for the minimum and maximum
+				// number of habilitated neighbours
+				for (int v = min; v <= max; v++) {
+					List<boolean[]> masks = generateNeighboursMask(v, nList);
+
+					for (boolean[] mask : masks) {
+						IntegrationFunctionClauseSet conjunction = new IntegrationFunctionClauseSet();
+						conjunction.setTautological();
+
+						for (int i = 0; i < mask.length; i++) {
+
+							NodeInfo node = context
+									.getLowLevelComponentFromName(
+											atom.getComponentName(),
+											nList.get(i).intValue());
+							IntegrationFunctionClauseSet disjunction = new IntegrationFunctionClauseSet();
+
+							if (mask[i]) {
+								for (byte l = threshold; l <= node.getMax(); l++) {
+									IntegrationFunctionClause clause = new IntegrationFunctionClause();
+
+									clause.addConstraint(node, l);
+									disjunction = disjunction
+											.disjunctionWith(clause);
+
+								}
+							} else {
+								for (byte l = 0; l < threshold; l++) {
+									IntegrationFunctionClause clause = new IntegrationFunctionClause();
+
+									clause.addConstraint(node, l);
+									disjunction = disjunction
+											.disjunctionWith(clause);
+
+								}
+
+							}
+							conjunction = conjunction
+									.conjunctionWith(disjunction);
+
+						}
+						result = result.disjunctionWith(conjunction);
+					}
+
+				}
 			}
 
 			return result;
