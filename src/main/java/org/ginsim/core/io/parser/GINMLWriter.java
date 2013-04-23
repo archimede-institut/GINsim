@@ -14,14 +14,11 @@ import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphAssociation;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.graph.view.ViewHelper;
-
-import com.sun.xml.internal.bind.v2.runtime.AssociationMap;
 
 /**
  * Base GINMLWriter class: it provides the common parts of a GINML file and hooks
