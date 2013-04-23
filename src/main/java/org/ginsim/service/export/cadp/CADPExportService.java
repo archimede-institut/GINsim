@@ -3,6 +3,7 @@ package org.ginsim.service.export.cadp;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -47,7 +48,7 @@ public class CADPExportService implements Service {
 		ZipOutputStream zos = new ZipOutputStream(stream);
 		ZipEntry ze = null;
 
-		ze = new ZipEntry("common.lnt"); // TODO: make this a config value
+		ze = new ZipEntry(CADPWriter.getCommonModuleName() + ".lnt");
 		CADPCommonWriter commonWriter = new CADPCommonWriter(config);
 		String common = commonWriter.toString();
 		ze.setSize((long) common.getBytes().length);
@@ -55,7 +56,6 @@ public class CADPExportService implements Service {
 		zos.putNextEntry(ze);
 		zos.write(common.getBytes(), 0, common.getBytes().length);
 		zos.closeEntry();
-		// System.err.print(common);
 
 		ze = new ZipEntry(config.getLNTModelFilename());
 		CADPModuleWriter moduleWriter = new CADPModuleWriter(config);
@@ -65,7 +65,6 @@ public class CADPExportService implements Service {
 		zos.putNextEntry(ze);
 		zos.write(modules.getBytes(), 0, modules.getBytes().length);
 		zos.closeEntry();
-		// System.err.print(modules);
 
 		ze = new ZipEntry(config.getLNTIntegrationFilename());
 		CADPIntegrationWriter integrationWriter = new CADPIntegrationWriter(
@@ -76,7 +75,6 @@ public class CADPExportService implements Service {
 		zos.putNextEntry(ze);
 		zos.write(integration.getBytes());
 		zos.closeEntry();
-		System.err.print(integration);
 
 		ze = new ZipEntry(config.getExpFilename());
 		CADPExpWriter expWriter = new CADPExpWriter(config);
@@ -86,9 +84,8 @@ public class CADPExportService implements Service {
 		zos.putNextEntry(ze);
 		zos.write(exp.getBytes());
 		zos.closeEntry();
-		System.err.print(exp);
 
-		ze = new ZipEntry("file.svl"); // TODO: make it a config value
+		ze = new ZipEntry(config.getSvlFilename());
 		CADPSvlWriter svlWriter = new CADPSvlWriter(config);
 		String svl = svlWriter.toString();
 		ze.setSize(svl.getBytes().length);
@@ -96,9 +93,23 @@ public class CADPExportService implements Service {
 		zos.putNextEntry(ze);
 		zos.write(svl.getBytes());
 		zos.closeEntry();
-		System.err.print(svl);
 
-		// TODO add .mcl file and readme file
+		for (List<byte[]> globalReducedStableState : config
+				.getCompatibleReducedStableStates()) {
+			ze = new ZipEntry(
+					config.getMCLPropertyFileName(globalReducedStableState));
+			CADPMclWriter mclWriter = new CADPMclWriter(config,
+					globalReducedStableState);
+			String mcl = mclWriter.toString();
+			ze.setSize(mcl.getBytes().length);
+			zos.setLevel(9);
+			zos.putNextEntry(ze);
+			zos.write(mcl.getBytes());
+			zos.closeEntry();
+
+		}
+
+		// TODO add readme file
 
 		zos.finish();
 		zos.close();

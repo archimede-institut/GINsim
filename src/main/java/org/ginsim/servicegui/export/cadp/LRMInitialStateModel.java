@@ -18,6 +18,8 @@ import org.ginsim.servicegui.tool.composition.CompositionSpecificationDialog;
  * 
  * Model for the specification of the initial states of the LRMs being composed
  * 
+ * @author Nuno D. Mendes
+ * 
  */
 public class LRMInitialStateModel extends AbstractTableModel {
 
@@ -180,8 +182,8 @@ public class LRMInitialStateModel extends AbstractTableModel {
 
 	private void updateInitialStates() {
 
-		for (int rowIndex = 0; rowIndex < dialog.getNumberInstances(); rowIndex++) {
-			for (int columnIndex = 0; columnIndex < dialog.getNumberInstances(); columnIndex++) {
+		for (int rowIndex = 0; rowIndex < getRowCount(); rowIndex++) {
+			for (int columnIndex = 0; columnIndex < getColumnCount(); columnIndex++) {
 
 				RegulatoryNode node = this.nodeOrder.get(columnIndex);
 

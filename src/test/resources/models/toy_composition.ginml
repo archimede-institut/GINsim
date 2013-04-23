@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE gxl SYSTEM "http://gin.univ-mrs.fr/GINsim/GINML_2_1.dtd">
+<gxl xmlns:xlink="http://www.w3.org/1999/xlink">
+	<graph id="toy" class="regulatory" nodeorder="U0 G1 G2 G3">
+<node id="G2" name="G2" maxvalue="1">
+  <parameter idActiveInteractions=" G3:G2" val="1"/>
+
+			<nodevisualsetting>
+				<rect x="400" y="240" width="55" height="25" backgroundColor="#ff9900" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="U0" name="Bext" maxvalue="1" input="true">
+			<nodevisualsetting>
+				<rect x="595" y="239" width="55" height="25" backgroundColor="#ff9900" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="G1" maxvalue="1">
+  <parameter idActiveInteractions=" G2:G1" val="1"/>
+
+			<nodevisualsetting>
+				<rect x="400" y="122" width="55" height="25" backgroundColor="#ff9900" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+<node id="G3" maxvalue="1">
+  <parameter idActiveInteractions=" G1:G3" val="1"/>
+
+			<nodevisualsetting>
+				<rect x="593" y="123" width="55" height="25" backgroundColor="#ff9900" foregroundColor="#ffffff"/>
+			</nodevisualsetting>
+</node>
+		<edge id="G2:G1" from="G2" to="G1" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="427,237 427,150" line_style="curve" line_color="#3399ff" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="U0:G3" from="U0" to="G3" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="622,236 620,151" line_style="curve" line_color="#3399ff" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="G1:G3" from="G1" to="G3" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="458,134 590,135" line_style="curve" line_color="#3399ff" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+		<edge id="G3:G2" from="G3" to="G2" minvalue="1" sign="positive">
+			<edgevisualsetting>
+				<polyline points="599,151 448,237" line_style="curve" line_color="#3399ff" line_width="2" routage="auto"/>
+			</edgevisualsetting>
+		</edge>
+	</graph>
+</gxl>

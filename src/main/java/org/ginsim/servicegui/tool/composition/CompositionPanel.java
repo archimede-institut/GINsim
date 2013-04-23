@@ -17,6 +17,7 @@ import javax.swing.JPanel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.service.tool.composition.CompositionConfig;
+import org.ginsim.service.tool.composition.GenericTopology;
 import org.ginsim.service.tool.composition.IntegrationFunctionMapping;
 import org.ginsim.service.tool.composition.Topology;
 
@@ -36,7 +37,7 @@ public class CompositionPanel extends JPanel implements
 	private RegulatoryGraph graph = null;
 	private List<RegulatoryNode> mappedNodes = new ArrayList<RegulatoryNode>();
 	private int instances = 2;
-	private Topology topology = new Topology(instances);
+	private Topology topology = new GenericTopology(instances);
 
 	private JPanel mainPanel = null;
 	private InstanceSelectorWidget instanceSelectorPanel = null;
@@ -171,7 +172,7 @@ public class CompositionPanel extends JPanel implements
 
 	public void updateNumberInstances(int instances) {
 		this.instances = instances;
-		this.topology = new Topology(instances);
+		this.topology = new GenericTopology(instances);
 		refreshMainPanel();
 	}
 
@@ -265,6 +266,11 @@ public class CompositionPanel extends JPanel implements
 
 		return arguments;
 
+	}
+
+	@Override
+	public void fireIntegrationMappingChange() {
+		// Does nothing in the composition
 	}
 
 }

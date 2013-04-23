@@ -1,7 +1,6 @@
 package org.ginsim.service.export.cadp;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -20,7 +19,9 @@ public class CADPExportConfig {
 	private Topology topology = null;
 	private IntegrationFunctionMapping mapping = null;
 	private List<byte[]> initialStates = null;
-	private Collection<RegulatoryNode> listVisible = null;
+	private List<List<byte[]>> compatibleStableStates = null;
+	private List<List<byte[]>> compatibleReducedStableStates = null;
+	private List<RegulatoryNode> listVisible = null;
 	private RegulatoryGraph graph = null;
 	private String modelName = "";
 
@@ -57,11 +58,11 @@ public class CADPExportConfig {
 		this.mapping = mapping;
 	}
 
-	public Collection<RegulatoryNode> getListVisible() {
+	public List<RegulatoryNode> getListVisible() {
 		return listVisible;
 	}
 
-	public void setListVisible(Collection<RegulatoryNode> listVisible) {
+	public void setListVisible(List<RegulatoryNode> listVisible) {
 		this.listVisible = listVisible;
 	}
 
@@ -106,8 +107,7 @@ public class CADPExportConfig {
 	}
 
 	public String getLNTIntegrationFilename() {
-		return "integration_" + this.getModelName() + "_"
-				+ this.getTopology().getNumberInstances() + ".lnt";
+		return "integration_" + this.getModelName()  + ".lnt";
 	}
 
 	public String getBCGIntegrationFilename(RegulatoryNode node, int moduleId) {
@@ -119,5 +119,41 @@ public class CADPExportConfig {
 		return "composition_" + this.getModelName() + "_"
 				+ this.getTopology().getNumberInstances() + ".exp";
 	}
+	
+	public String getSvlFilename() {
+		return "process_" + this.getModelName() + ".svl";
+	}
+	
 
+	public String getMCLPropertyFileName(List<byte[]> globalReducedStableState) {
+		List<RegulatoryNode> listVisible = getListVisible();
+
+		String name = "property_reachable_";
+
+		for (int i = 0; i < getTopology().getNumberInstances(); i++) {
+			for (RegulatoryNode visible : listVisible)
+				name += globalReducedStableState.get(i)[listVisible
+						.indexOf(visible)];
+		}
+
+		return name + ".mcl";
+	}
+
+	public void setCompatibleStableStates(
+			List<List<byte[]>> compatibleStableStates) {
+		this.compatibleStableStates = compatibleStableStates;
+	}
+
+	public List<List<byte[]>> getCompatibleStableStates() {
+		return this.compatibleStableStates;
+	}
+
+	public void setReducedCompatibleStableStates(
+			List<List<byte[]>> compatibleReducedStableStates) {
+		this.compatibleReducedStableStates = compatibleReducedStableStates;
+	}
+
+	public List<List<byte[]>> getCompatibleReducedStableStates() {
+		return this.compatibleReducedStableStates;
+	}
 }

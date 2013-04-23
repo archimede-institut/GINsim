@@ -1,14 +1,11 @@
 package org.ginsim.servicegui.tool.composition;
 
 import org.ginsim.common.application.GsException;
-import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.ServiceManager;
-
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.service.tool.composition.CompositionService;
-import org.ginsim.servicegui.tool.composition.CompositionPanel;
 
 /**
  * The composition dialog

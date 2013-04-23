@@ -32,103 +32,122 @@ import org.junit.Test;
 public class TestStableStates {
 
 	@BeforeClass
-	public static void beforeAllTests(){
-		
+	public static void beforeAllTests() {
+
 		try {
-			OptionStore.init( BasicRegulatoryGraphTest.class.getPackage().getName());
-	    	OptionStore.getOption( EdgeAttributeReaderImpl.EDGE_COLOR, new Integer(-13395457));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_BG, new Integer(-26368));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_FG, new Integer(Color.WHITE.getRGB()));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_HEIGHT, new Integer(30));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_WIDTH, new Integer(55));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_SHAPE, NodeShape.RECTANGLE.name());
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_BORDER, NodeBorder.SIMPLE.name());
+			OptionStore.init(BasicRegulatoryGraphTest.class.getPackage()
+					.getName());
+			OptionStore.getOption(EdgeAttributeReaderImpl.EDGE_COLOR,
+					new Integer(-13395457));
+			OptionStore.getOption(NodeAttributeReaderImpl.VERTEX_BG,
+					new Integer(-26368));
+			OptionStore.getOption(NodeAttributeReaderImpl.VERTEX_FG,
+					new Integer(Color.WHITE.getRGB()));
+			OptionStore.getOption(NodeAttributeReaderImpl.VERTEX_HEIGHT,
+					new Integer(30));
+			OptionStore.getOption(NodeAttributeReaderImpl.VERTEX_WIDTH,
+					new Integer(55));
+			OptionStore.getOption(NodeAttributeReaderImpl.VERTEX_SHAPE,
+					NodeShape.RECTANGLE.name());
+			OptionStore.getOption(NodeAttributeReaderImpl.VERTEX_BORDER,
+					NodeBorder.SIMPLE.name());
 		} catch (Exception e) {
-			fail( "Initialisation of OptionStore failed : " + e);
+			fail("Initialisation of OptionStore failed : " + e);
 		}
 	}
-	
+
 	/**
-	 * Try to remove all the registered graphs from the GraphManager after each test
+	 * Try to remove all the registered graphs from the GraphManager after each
+	 * test
 	 * 
 	 */
 	@After
-	public void afterEachTest(){
-		
-		Vector<Graph> graph_list = new Vector( GraphManager.getInstance().getAllGraphs());
-		
-		if( graph_list != null && !graph_list.isEmpty()){
-			
-			for( Graph graph : graph_list){
-				GraphManager.getInstance().close( graph);
+	public void afterEachTest() {
+
+		Vector<Graph> graph_list = new Vector(GraphManager.getInstance()
+				.getAllGraphs());
+
+		if (graph_list != null && !graph_list.isEmpty()) {
+
+			for (Graph graph : graph_list) {
+				GraphManager.getInstance().close(graph);
 			}
 		}
 	}
-	
+
 	@Test
 	public void SimpleExampleTest() throws Exception {
 		// Create a new RegulatoryGraph
 		RegulatoryGraph regGraph = GraphManager.getInstance().getNewGraph();
-		assertNotNull( "Create graph : the graph is null.", regGraph);
+		assertNotNull("Create graph : the graph is null.", regGraph);
 
 		// Add a node
 		RegulatoryNode node_g0 = regGraph.addNode();
 		RegulatoryNode node_g1 = regGraph.addNode();
 		node_g1.setMaxValue((byte) 2, regGraph);
-		RegulatoryMultiEdge g0_g1 = regGraph.addEdge(node_g0, node_g1, RegulatoryEdgeSign.POSITIVE);
-		RegulatoryMultiEdge g0_g0 = regGraph.addEdge(node_g0, node_g0, RegulatoryEdgeSign.POSITIVE);
-		RegulatoryMultiEdge g1_g0 = regGraph.addEdge(node_g1, node_g0, RegulatoryEdgeSign.POSITIVE);
-		RegulatoryMultiEdge g1_g1 = regGraph.addEdge(node_g1, node_g1, RegulatoryEdgeSign.POSITIVE);
+		RegulatoryMultiEdge g0_g1 = regGraph.addEdge(node_g0, node_g1,
+				RegulatoryEdgeSign.POSITIVE);
+		RegulatoryMultiEdge g0_g0 = regGraph.addEdge(node_g0, node_g0,
+				RegulatoryEdgeSign.POSITIVE);
+		RegulatoryMultiEdge g1_g0 = regGraph.addEdge(node_g1, node_g0,
+				RegulatoryEdgeSign.POSITIVE);
+		RegulatoryMultiEdge g1_g1 = regGraph.addEdge(node_g1, node_g1,
+				RegulatoryEdgeSign.POSITIVE);
 		try {
-			regGraph.addNewEdge( "G1", "G0", (byte) 2, RegulatoryEdgeSign.POSITIVE);
-			regGraph.addNewEdge( "G1", "G1", (byte) 2, RegulatoryEdgeSign.POSITIVE);
+			regGraph.addNewEdge("G1", "G0", (byte) 2,
+					RegulatoryEdgeSign.POSITIVE);
+			regGraph.addNewEdge("G1", "G1", (byte) 2,
+					RegulatoryEdgeSign.POSITIVE);
 		} catch (GsException e) {
 			fail("Cannot add a multiedge");
 		}
-				
+
 		LogicalParameter lp;
-		//Create logical parameters for G0
-		lp = new LogicalParameter(1); //G1:2 G0
+		// Create logical parameters for G0
+		lp = new LogicalParameter(1); // G1:2 G0
 		lp.addEdge(g1_g0.getEdge(1));
 		lp.addEdge(g0_g0.getEdge(0));
 		node_g0.addLogicalParameter(lp, true);
-		lp = new LogicalParameter(1); //G1
+		lp = new LogicalParameter(1); // G1
 		lp.addEdge(g1_g0.getEdge(0));
 		node_g0.addLogicalParameter(lp, true);
-		
-		//Create logical parameters for G1
-		lp = new LogicalParameter(1); //G1:2 G0
+
+		// Create logical parameters for G1
+		lp = new LogicalParameter(1); // G1:2 G0
 		lp.addEdge(g0_g1.getEdge(0));
 		lp.addEdge(g1_g1.getEdge(0));
 		node_g1.addLogicalParameter(lp, true);
-		lp = new LogicalParameter(1); //G1
+		lp = new LogicalParameter(1); // G1
 		lp.addEdge(g0_g1.getEdge(0));
 		node_g1.addLogicalParameter(lp, true);
-		
-		//Get the stable states
-		StableStateSearcher stableStateSearcher = ServiceManager.get(StableStatesService.class).getSearcher(regGraph);
-        assertNotNull("The service didn't return any result", stableStateSearcher);
-        
-        //Get the OMDD containing the stable states
-        int root = stableStateSearcher.getResult();
-        assertEquals(false, (root < 0));
-        
-        //Check the states
-        PathSearcher ps = new PathSearcher(stableStateSearcher.getMDDManager(), 1);
-        int[] path = ps.setNode(root);
-        assertEquals(2, path.length);
-        System.out.println(root);
-        Iterator<Integer> it = ps.iterator();
-        
-        int v = it.next();
-        assertEquals(1, v);
-        assertEquals(0, path[0]);
-        assertEquals(0, path[0]);
-        
-        // no other path leads to 1
-        assertEquals(false, it.hasNext());
-         
-		GraphManager.getInstance().close( regGraph);
+
+		// Get the stable states
+		StableStateSearcher stableStateSearcher = ServiceManager.get(
+				StableStatesService.class).getSearcher(regGraph);
+		assertNotNull("The service didn't return any result",
+				stableStateSearcher);
+
+		// Get the OMDD containing the stable states
+		int root = stableStateSearcher.getResult();
+		assertEquals(false, (root < 0));
+
+		// Check the states
+		PathSearcher ps = new PathSearcher(stableStateSearcher.getMDDManager(),
+				1);
+		int[] path = ps.setNode(root);
+		assertEquals(2, path.length);
+		System.out.println(root);
+		Iterator<Integer> it = ps.iterator();
+
+		int v = it.next();
+		assertEquals(1, v);
+		assertEquals(0, path[0]);
+		assertEquals(0, path[0]);
+
+		// no other path leads to 1
+		assertEquals(false, it.hasNext());
+
+		GraphManager.getInstance().close(regGraph);
 	}
-	
+
 }

@@ -61,6 +61,8 @@ public class InitialStatesWidget extends JPanel {
 			tableInitStates.setColumnSelectionAllowed(true);
 
 			model.setTable(tableInitStates);
+
+			tableInitStates.setSize(tableInitStates.getPreferredSize());
 		}
 
 		return tableInitStates;
@@ -69,7 +71,8 @@ public class InitialStatesWidget extends JPanel {
 	private JScrollPane getScrollPane() {
 		if (scrollPane == null) {
 			scrollPane = new JScrollPane();
-			scrollPane.setViewportView(getTableInitialStates());
+
+			EnhancedJTable tableInitialStates = getTableInitialStates();
 
 			DefaultTableModel rowHeaderTableModel = new DefaultTableModel(0, 1) {
 				private static final long serialVersionUID = 6486499169039037077L;
@@ -91,11 +94,13 @@ public class InitialStatesWidget extends JPanel {
 			EnhancedJTable dispTableRowHeader = new EnhancedJTable();
 			dispTableRowHeader.setModel(rowHeaderTableModel);
 			dispTableRowHeader.setDefaultRenderer(Object.class,
-					getTableInitialStates().getTableHeader()
-							.getDefaultRenderer());
+					tableInitialStates.getTableHeader().getDefaultRenderer());
 
-			// dispTableRowHeader.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+			scrollPane.setViewportView(tableInitialStates);
 			scrollPane.setRowHeaderView(dispTableRowHeader);
+			scrollPane.getRowHeader().setPreferredSize(
+					dispTableRowHeader.getPreferredSize());
+
 			JTableHeader corner = dispTableRowHeader.getTableHeader();
 			corner.setReorderingAllowed(false);
 			corner.setResizingAllowed(false);

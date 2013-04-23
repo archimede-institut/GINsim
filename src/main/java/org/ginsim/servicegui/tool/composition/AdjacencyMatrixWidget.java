@@ -46,7 +46,7 @@ public class AdjacencyMatrixWidget extends JPanel {
 
 		// TODO: replace with STR_s
 		setBorder(BorderFactory
-				.createTitledBorder("Specify Neighbouring modules"));
+				.createTitledBorder("Specify Neighbouring Modules"));
 
 		constraints.fill = GridBagConstraints.NONE;
 		topConstraints.fill = GridBagConstraints.NONE;
@@ -107,6 +107,8 @@ public class AdjacencyMatrixWidget extends JPanel {
 									dialog.removeNeighbour(y, x);
 								}
 							}
+							
+							dialog.fireIntegrationMappingChange();
 
 						}
 
@@ -240,11 +242,15 @@ public class AdjacencyMatrixWidget extends JPanel {
 		for (int x = 0; x < matrix.length; x++)
 			for (int y = 0; y < matrix.length; y++)
 				if (selection) {
-					if (matrix[x][y].isSelected())
+					if (matrix[x][y].isSelected()) {
 						matrix[y][x].setSelected(true);
+						dialog.addNeighbour(y, x);
+					}
 				} else {
-					if (!matrix[x][y].isSelected())
+					if (!matrix[x][y].isSelected()) {
 						matrix[y][x].setSelected(false);
+						dialog.removeNeighbour(y, x);
+					}
 				}
 
 	}
@@ -274,8 +280,12 @@ public class AdjacencyMatrixWidget extends JPanel {
 		AdjacencyMatrixWidget widget = new AdjacencyMatrixWidget(dialog);
 		for (int x = 0; x < matrix.length; x++)
 			for (int y = 0; y < matrix.length; y++)
-				if (matrix[x][y].isSelected())
+				if (matrix[x][y].isSelected()) {
 					widget.setSelected(x, y);
+					if (widget.isSelected(x, y))
+						dialog.addNeighbour(x, y);
+				} else
+					dialog.removeNeighbour(x, y);
 
 		widget.setSymmetry(isSymmetric());
 		return widget;
