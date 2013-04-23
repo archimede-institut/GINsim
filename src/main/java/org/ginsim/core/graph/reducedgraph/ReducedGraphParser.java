@@ -7,6 +7,7 @@ import java.util.Vector;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
@@ -37,6 +38,7 @@ public class ReducedGraphParser extends GsXMLHelper {
     private int vslevel = 0;
     
     private NodeReducedData vertex = null;
+    private Edge<NodeReducedData> edge = null;
     private Vector v_content = null;
     private NodeAttributesReader vareader = null;
     private EdgeAttributesReader ereader = null;
@@ -149,6 +151,7 @@ public class ReducedGraphParser extends GsXMLHelper {
                 break; // POS_VERTEX_CONTENT
 			case POS_EDGE:
 			    if (qName.equals("edge")) {
+			    	edge = null;
 			        pos = POS_OUT;
 			    }
 			    break; // POS_EDGE
@@ -187,7 +190,7 @@ public class ReducedGraphParser extends GsXMLHelper {
                     String s_to = attributes.getValue("to");
                     if (set == null || set.contains(s_from) && set.contains(s_to)) {
                         pos = POS_EDGE;
-                        graph.addEdge(new NodeReducedData(s_from), new NodeReducedData(s_to));
+                        edge = graph.addEdge(new NodeReducedData(s_from), new NodeReducedData(s_to));
                     } else {
                         pos = POS_FILTERED;
                     }
@@ -240,7 +243,10 @@ public class ReducedGraphParser extends GsXMLHelper {
                 break; // POS_EDGE
                 
             case POS_EDGE_VS:
-            	GinmlHelper.applyEdgeVisualSettings(null, ereader, vareader, qName, attributes);
+            	if (edge != null) {
+            		ereader.setEdge(edge);
+            		GinmlHelper.applyEdgeVisualSettings(edge, ereader, vareader, qName, attributes);
+            	}
                 break; // POS_EDGE_VS
             case POS_VERTEX_VS:
             	vslevel = GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);

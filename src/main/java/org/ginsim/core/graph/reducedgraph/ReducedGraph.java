@@ -21,7 +21,7 @@ public interface ReducedGraph<AG extends Graph<AV,AE>, AV, AE extends Edge<AV>> 
 	 * @param source source node of this edge.
 	 * @param target target node of this edge.
 	 */
-	public void addEdge(NodeReducedData source, NodeReducedData target);
+	public Edge<NodeReducedData> addEdge(NodeReducedData source, NodeReducedData target);
 	
 	
     /**
