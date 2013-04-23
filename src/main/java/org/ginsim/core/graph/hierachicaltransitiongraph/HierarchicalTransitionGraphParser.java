@@ -38,6 +38,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
     private int vslevel = 0;
     
     private HierarchicalNode vertex = null;
+    private DecisionOnEdge edge = null;
     private NodeAttributesReader vareader = null;
     private EdgeAttributesReader ereader = null;
     private Annotation annotation = null;
@@ -142,6 +143,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                 break; // POS_VERTEX_STATES
 			case POS_EDGE:
 			    if (qName.equals("edge")) {
+			    	edge = null;
 			        pos = POS_OUT;
 			    }
 			    break; // POS_EDGE
@@ -180,7 +182,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                     String s_to = attributes.getValue("to");
                     if (nodeToParse == null || nodeToParse.contains(s_from) && nodeToParse.contains(s_to)) {
                         pos = POS_EDGE;
-                        htg.addEdge(oldIdToNode.get(s_from), oldIdToNode.get(s_to));
+                        edge = htg.addEdge(oldIdToNode.get(s_from), oldIdToNode.get(s_to));
                     } else {
                         pos = POS_FILTERED;
                     }
@@ -263,8 +265,8 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                 break; // POS_EDGE
                 
             case POS_EDGE_VS:
-            	
-            	GinmlHelper.applyEdgeVisualSettings(null, ereader, vareader, qName, attributes);
+            	ereader.setEdge(edge);
+            	GinmlHelper.applyEdgeVisualSettings(edge, ereader, vareader, qName, attributes);
                 break; // POS_EDGE_VS
             case POS_VERTEX_VS:
             	vslevel = GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);

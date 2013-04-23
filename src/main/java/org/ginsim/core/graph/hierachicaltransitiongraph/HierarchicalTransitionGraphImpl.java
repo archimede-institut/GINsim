@@ -24,7 +24,7 @@ import org.ginsim.core.io.parser.GinmlHelper;
 
 
 public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<HierarchicalNode, DecisionOnEdge, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
-	implements HierarchicalTransitionGraph{
+	implements HierarchicalTransitionGraph {
 
 	public static final String GRAPH_ZIP_NAME = "hierarchicalTransitionGraph.ginml";
 	
@@ -156,57 +156,13 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 
 	
 	protected void doSave(OutputStreamWriter os, Collection<HierarchicalNode> nodes, Collection<DecisionOnEdge> edges, int mode) throws GsException {
-       try {
-            XMLWriter out = new XMLWriter(os, dtdFile);
-	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
-			out.write("\t<graph id=\"" + graphName + "\"");
-			out.write(" class=\""+HierarchicalTransitionGraphFactory.KEY+"\"");
-			out.write(" iscompact=\""+this.transientCompactionMode+"\"");
-			out.write(" nodeorder=\"" + stringNodeOrder() +"\">\n");
-			saveNode(out, mode, nodes);
-			saveEdge(out, mode, edges);
-            if (graphAnnotation != null) {
-            	graphAnnotation.toXML(out, null, 0);
-            }
-            // save the ref of the associated regulatory graph!
-            if (associatedGraph != null) {
-                associatedID = GraphManager.getInstance().getGraphPath( associatedGraph);
-            }
-            if (associatedID != null) {
-                out.write("<link xlink:href=\""+associatedID+"\"/>\n");
-            }
-	  		out.write("\t</graph>\n");
-	  		out.write("</gxl>\n");
-        } catch (IOException e) {
+		try {
+			HierarchicalGINMLWriter writer = new HierarchicalGINMLWriter(this, mode, stringNodeOrder());
+			writer.write(os, nodes, edges, mode);
+		} catch (IOException e) {
             throw new GsException( "STR_unableToSave", e);
         }
 	}
-	
-	private void saveEdge(XMLWriter out, int mode, Collection<DecisionOnEdge> edges) throws IOException {
-	     for (DecisionOnEdge edge: edges) {
-            String source = "" + edge.getSource().getUniqueId();
-            String target = "" + edge.getTarget().getUniqueId();
-            out.write("\t\t<edge id=\"e"+(++saveEdgeId)+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
-	     }
-	 }
-	 
-	 /**
-	  * @param out
-	  * @param mode
-	  * @param vertices
-	  * @throws IOException
-	  */
-	 private void saveNode(XMLWriter out, int mode, Collection<HierarchicalNode> vertices) throws IOException {
-	 	NodeAttributesReader vReader = getNodeAttributeReader();
-	     for (HierarchicalNode vertex: vertices) {
-	         vReader.setNode(vertex);
-	         out.write("\t\t<node id=\"s"+vertex.getUniqueId()+"\">\n");
-	         out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");
-	         out.write("<attr name=\"states\"><string>"+vertex.write().toString()+"</string></attr>");
-	         out.write(GinmlHelper.getFullNodeVS(vReader));
-	         out.write("\t\t</node>\n");
-	     }
-	 }		
 		
 /* **************** NODE SEARCH ************/
 	
