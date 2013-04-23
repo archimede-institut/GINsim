@@ -40,11 +40,11 @@ public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  exten
 	 * @param map
 	 * @param file
 	 */
-	public ReducedGraphImpl(Map map, File file)  throws GsException{
+	public ReducedGraphImpl(Set set, File file)  throws GsException{
 		
 	    this( true);
         ReducedGraphParser parser = new ReducedGraphParser();
-        parser.parse(file, map, this);
+        parser.parse(file, set, this);
 	}
 
 	/**

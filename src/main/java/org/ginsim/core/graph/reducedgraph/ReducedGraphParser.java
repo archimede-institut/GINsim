@@ -1,7 +1,7 @@
 package org.ginsim.core.graph.reducedgraph;
 
 import java.io.File;
-import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import org.ginsim.common.application.GsException;
@@ -41,7 +41,7 @@ public class ReducedGraphParser extends GsXMLHelper {
     private NodeAttributesReader vareader = null;
     private EdgeAttributesReader ereader = null;
     private Annotation annotation = null;
-    private Map map;
+    private Set set;
     
     /**
      * @param map
@@ -49,10 +49,10 @@ public class ReducedGraphParser extends GsXMLHelper {
      * @param s_dtd
      * @param s_filename
      */
-    public ReducedGraphParser(Map map, Attributes attributes, String s_dtd, String s_filename) throws GsException{
+    public ReducedGraphParser(Set<String> set, Attributes attributes, String s_dtd, String s_filename) throws GsException{
     	
     	this.graph = GraphManager.getInstance().getNewGraph( ReducedGraph.class, true);
-    	this.map = map;
+    	this.set = set;
 		vareader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
 		
@@ -62,6 +62,20 @@ public class ReducedGraphParser extends GsXMLHelper {
 			throw new GsException(GsException.GRAVITY_ERROR, "invalidGraphName");
 		}
     }
+    
+    public ReducedGraphParser(Set<String> set, Attributes attributes, String s_dtd) throws GsException {
+    	this.graph = GraphManager.getInstance().getNewGraph( ReducedGraph.class, true);
+    	this.set = set;
+		vareader = graph.getNodeAttributeReader();
+		ereader = graph.getEdgeAttributeReader();
+		
+		try {
+			graph.setGraphName(attributes.getValue("id"));
+		} catch (GsException e) {
+			throw new GsException(GsException.GRAVITY_ERROR, "invalidGraphName");
+		}
+    }
+
 
     /**
      * 
@@ -76,10 +90,10 @@ public class ReducedGraphParser extends GsXMLHelper {
      * @param map
      * @param graph the graph to fill with this data.
      */
-    public void parse(File file, Map map, Graph graph)  throws GsException{
+    public void parse(File file, Set<String> set, Graph graph)  throws GsException{
     	
     	this.graph = (ReducedGraph) graph;
-    	this.map = map;
+    	this.set = set;
 		vareader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
 
@@ -160,7 +174,7 @@ public class ReducedGraphParser extends GsXMLHelper {
         	case POS_OUT:
                 if (qName.equals("node")) {
                     String id = attributes.getValue("id");
-                    if (map == null || map.containsKey(id)) {
+                    if (set == null || set.contains(id)) {
                         pos = POS_VERTEX;
                         v_content = new Vector();
                         vertex = new NodeReducedData(id, v_content);
@@ -171,7 +185,7 @@ public class ReducedGraphParser extends GsXMLHelper {
                 } else if (qName.equals("edge")) {
                     String s_from = attributes.getValue("from");
                     String s_to = attributes.getValue("to");
-                    if (map == null || map.containsKey(s_from) && map.containsKey(s_to)) {
+                    if (set == null || set.contains(s_from) && set.contains(s_to)) {
                         pos = POS_EDGE;
                         graph.addEdge(new NodeReducedData(s_from), new NodeReducedData(s_to));
                     } else {

@@ -773,7 +773,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 		}
 		
 		regexp = regexp.substring(2);
-		System.out.println("custom search "+regexp);
 		List<RegulatoryNode> v = new ArrayList<RegulatoryNode>();
 		
 		Pattern pattern = Pattern.compile(regexp, Pattern.COMMENTS | Pattern.CASE_INSENSITIVE);
