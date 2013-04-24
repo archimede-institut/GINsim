@@ -51,7 +51,7 @@ public class ViewHelper {
 		points.add(getIntersection(targetBounds, middlePoints.get(middlePoints.size()-1), false, w));
 		
 		// replace the first point
-		points.set(0, getIntersection(srcBounds, middlePoints.get(0), false, w));
+		points.set(0, getIntersection(srcBounds, middlePoints.get(0), false, 0));
 		
 		return points;
 	}
@@ -60,7 +60,7 @@ public class ViewHelper {
 		PointList points = new PointList();
 
 		Point p = new Point((int)targetBounds.getCenterX(), (int)targetBounds.getCenterY());
-		p = getIntersection(srcBounds, p, true, w);
+		p = getIntersection(srcBounds, p, true, 0);
 		points.add(p);
 		p = getIntersection(targetBounds, p, true, w);
 		points.add(p);
@@ -156,11 +156,24 @@ public class ViewHelper {
 	 */
 	private static Rectangle getBounds(NodeAttributesReader nodeReader, Object node) {
 		
+		return getBounds(nodeReader, node, 0);
+	}
+
+	/**
+	 * Get the bounding box of a node, with a custom margin.
+	 * 
+	 * @param nodeReader
+	 * @param node
+	 * @param margin
+	 * @return
+	 */
+	private static Rectangle getBounds(NodeAttributesReader nodeReader, Object node, int margin) {
+		
 		nodeReader.setNode(node);
-		int x = nodeReader.getX();
-		int y = nodeReader.getY();
-		int w = nodeReader.getWidth();
-		int h = nodeReader.getHeight();
+		int x = nodeReader.getX()-margin;
+		int y = nodeReader.getY()-margin;
+		int w = nodeReader.getWidth() +2*margin;
+		int h = nodeReader.getHeight() + 2*margin;
 		
 		return new Rectangle(x, y, w, h);
 	}
@@ -270,10 +283,11 @@ public class ViewHelper {
 	 */
 	public static void trimPoints(Edge edge, List<Point> points, NodeAttributesReader nreader, EdgeAttributesReader ereader) {
 		
-		Rectangle b1 = getBounds(nreader, edge.getSource());
-		Rectangle b2 = getBounds(nreader, edge.getTarget());
-		
 		ereader.setEdge(edge);
+		int margin = (int)ereader.getLineWidth()+1;
+		Rectangle b1 = getBounds(nreader, edge.getSource(), margin);
+		Rectangle b2 = getBounds(nreader, edge.getTarget(), margin);
+		
 		if (points == null || points.size() < 1) {
 			return;
 		}
