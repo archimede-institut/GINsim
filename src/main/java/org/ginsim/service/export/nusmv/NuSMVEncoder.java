@@ -29,6 +29,36 @@ import org.ginsim.service.tool.stablestates.StableStatesService;
  * @author Pedro T. Monteiro
  */
 public class NuSMVEncoder {
+
+	private static String[] nusmvReserved = { "MODULE", "DEFINE", "MDEFINE",
+			"CONSTANTS", "VAR", "IVAR", "FROZENVAR", "INIT", "TRANS", "INVAR",
+			"SPEC", "CTLSPEC", "LTLSPEC", "PSLSPEC", "COMPUTE", "NAME",
+			"INVARSPEC", "FAIRNESS", "JUSTICE", "COMPASSION", "ISA", "ASSIGN",
+			"CONSTRAINT", "SIMPWFF", "CTLWFF", "LTLWFF", "PSLWFF", "COMPWFF",
+			"IN", "MIN", "MAX", "MIRROR", "PRED", "PREDICATES", "process",
+			"array", "of", "boolean", "integer", "real", "word", "word1",
+			"bool", "signed", "unsigned", "extend", "resize", "sizeof",
+			"uwconst", "swconst", "EX", "AX", "EF", "AF", "EG", "AG", "E", "F",
+			"O", "G", "H", "X", "Y", "Z", "A", "U", "S", "V", "T", "BU", "EBF",
+			"ABF", "EBG", "ABG", "case", "esac", "mod", "next", "init",
+			"union", "in", "xor", "xnor", "self", "TRUE", "FALSE", "count" };
+
+	private String avoidNuSMVNames(String keyword) {
+		if (keyword == null) {
+			return keyword;
+		}
+		if (keyword.length() == 1) {
+			return "_" + keyword;
+		}
+
+		for (String reserved : nusmvReserved) {
+			if (keyword.compareToIgnoreCase(reserved) == 0) {
+				return "_" + keyword;
+			}
+		}
+		return keyword;
+	}
+
 	/**
 	 * Export the graph to a SVG file
 	 * 
@@ -65,15 +95,10 @@ public class NuSMVEncoder {
 					"NuSMV needs at least one core (non-input/non-output) node");
 		}
 
-		// Check all the names.length > 1
 		NodeInfo[] aNodeOrder = new NodeInfo[coreNodes.size()];
 		boolean hasInputVars = false;
 		for (int i = 0; i < aNodeOrder.length; i++) {
 			NodeInfo node = model.getNodeOrder().get(i);
-			if (node.getNodeID().length() == 1)
-				throw new GsException(GsException.GRAVITY_ERROR,
-						"NuSMV does not support single-letter component name: "
-								+ node.getNodeID());
 			aNodeOrder[i] = node;
 			if (node.isInput())
 				hasInputVars = true;
@@ -104,7 +129,7 @@ public class NuSMVEncoder {
 			tmPcNum2Name.put(1, sTmp);
 			// every variable -> 1 class
 			for (int i = 0; i < coreNodes.size(); i++) {
-				sTmp += "_" + coreNodes.get(i).getNodeID();
+				sTmp += "_" + avoidNuSMVNames(coreNodes.get(i).getNodeID());
 				tmVarNum2PcNum.put(i, new Integer[] { 0, 1, 0 });
 			}
 			for (int i = 0; i < coreNodes.size(); i++)
@@ -134,7 +159,7 @@ public class NuSMVEncoder {
 				switch (iaTmp[i][1]) {
 				case 0: // Synchronous
 					for (int j = 2; j < iaTmp[i].length; j += 2) {
-						sTmp += "_" + aNodeOrder[iaTmp[i][j]].getNodeID();
+						sTmp += "_" + avoidNuSMVNames(aNodeOrder[iaTmp[i][j]].getNodeID());
 						Integer[] aiSplits = (tmVarNum2PcNum
 								.containsKey(iaTmp[i][j])) ? tmVarNum2PcNum
 								.get(iaTmp[i][j]) : new Integer[] { 0, 0, 0 };
@@ -159,7 +184,7 @@ public class NuSMVEncoder {
 						if (j > 2)
 							out.write(", ");
 						String sub = sTmp + "_"
-								+ aNodeOrder[iaTmp[i][j]].getNodeID();
+								+ avoidNuSMVNames(aNodeOrder[iaTmp[i][j]].getNodeID());
 						if (iaTmp[i][j + 1] != 0)
 							sub += (iaTmp[i][j + 1] == 1) ? "Plus" : "Minus";
 						out.write(sub);
@@ -200,7 +225,7 @@ public class NuSMVEncoder {
 			for (int i = 0; i < coreNodes.size(); i++) {
 				if (coreNodes.get(i).isInput())
 					continue;
-				sTmp = "PC_c" + (i + 1) + "_" + coreNodes.get(i).getNodeID();
+				sTmp = "PC_c" + (i + 1) + "_" + avoidNuSMVNames(coreNodes.get(i).getNodeID());
 				out.write("  PC_c" + (i + 1) + "_vars : { " + sTmp + " };\n");
 				tmVarNum2SubPcName.put(i, new String[] { null, sTmp, null });
 			}
@@ -214,7 +239,7 @@ public class NuSMVEncoder {
 					String s_levels = "0";
 					for (int j = 1; j <= coreNodes.get(i).getMax(); j++)
 						s_levels += ", " + j;
-					out.write("  " + coreNodes.get(i).getNodeID() + " : { "
+					out.write("  " + avoidNuSMVNames(coreNodes.get(i).getNodeID()) + " : { "
 							+ s_levels + "};\n");
 				}
 			}
@@ -260,7 +285,7 @@ public class NuSMVEncoder {
 			for (int j = 1; j <= nodeOrderDecl.get(i).getMax(); j++)
 				s_levels += ", " + j;
 
-			out.write("  " + nodeOrderDecl.get(i).getNodeID() + " : {"
+			out.write("  " + avoidNuSMVNames(nodeOrderDecl.get(i).getNodeID()) + " : {"
 					+ s_levels + "};\n");
 		}
 
@@ -280,16 +305,16 @@ public class NuSMVEncoder {
 								sTmp += " | ";
 							switch (iaTmp[c][v + 1]) {
 							case 1:
-								sTmp += aNodeOrder[iaTmp[c][v]].getNodeID()
+								sTmp += avoidNuSMVNames(aNodeOrder[iaTmp[c][v]].getNodeID())
 										+ "_inc";
 								break;
 							case -1:
-								sTmp += aNodeOrder[iaTmp[c][v]].getNodeID()
+								sTmp += avoidNuSMVNames(aNodeOrder[iaTmp[c][v]].getNodeID())
 										+ "_dec";
 								break;
 							default:
 								sTmp += "!"
-										+ aNodeOrder[iaTmp[c][v]].getNodeID()
+										+ avoidNuSMVNames(aNodeOrder[iaTmp[c][v]].getNodeID())
 										+ "_std";
 							}
 						}
@@ -313,26 +338,26 @@ public class NuSMVEncoder {
 			if (coreNodes.get(v).isInput())
 				continue;
 			// The real next(Variable) if conditions are satisfied
-			out.write("next(" + coreNodes.get(v).getNodeID() + ") := \n");
+			out.write("next(" + avoidNuSMVNames(coreNodes.get(v).getNodeID()) + ") := \n");
 			out.write("  case\n");
 
 			// Class entry conditions
 			Integer[] aiSplits = tmVarNum2PcNum.get(v);
-			out.write("    update_" + coreNodes.get(v).getNodeID());
+			out.write("    update_" + avoidNuSMVNames(coreNodes.get(v).getNodeID()));
 			if (aiSplits[2] > 0)
 				out.write("Plus");
-			out.write("_OK & (" + coreNodes.get(v).getNodeID() + "_inc) : ");
-			out.write(((coreNodes.get(v).getMax() > 1) ? coreNodes.get(v)
-					.getNodeID() + " + 1" : "1")
+			out.write("_OK & (" + avoidNuSMVNames(coreNodes.get(v).getNodeID()) + "_inc) : ");
+			out.write(((coreNodes.get(v).getMax() > 1) ? avoidNuSMVNames(coreNodes.get(v)
+					.getNodeID()) + " + 1" : "1")
 					+ ";\n");
-			out.write("    update_" + coreNodes.get(v).getNodeID());
+			out.write("    update_" + avoidNuSMVNames(coreNodes.get(v).getNodeID()));
 			if (aiSplits[0] > 0)
 				out.write("Minus");
-			out.write("_OK & (" + coreNodes.get(v).getNodeID() + "_dec) : ");
-			out.write(((coreNodes.get(v).getMax() > 1) ? coreNodes.get(v)
-					.getNodeID() + " - 1" : "0")
+			out.write("_OK & (" + avoidNuSMVNames(coreNodes.get(v).getNodeID()) + "_dec) : ");
+			out.write(((coreNodes.get(v).getMax() > 1) ? avoidNuSMVNames(coreNodes.get(v)
+					.getNodeID()) + " - 1" : "0")
 					+ ";\n");
-			out.write("    TRUE : " + coreNodes.get(v).getNodeID() + ";\n");
+			out.write("    TRUE : " + avoidNuSMVNames(coreNodes.get(v).getNodeID()) + ";\n");
 			out.write("  esac;\n");
 		}
 
@@ -345,7 +370,7 @@ public class NuSMVEncoder {
 			NodeInfo node = coreNodes.get(i);
 			if (node.isInput())
 				continue;
-			out.write(node.getNodeID() + "_focal :=\n");
+			out.write(avoidNuSMVNames(node.getNodeID()) + "_focal :=\n");
 			out.write("  case\n");
 			nodeRules2NuSMV(out, model, kMDDs[i], coreNodes, node);
 			out.write("  esac;\n");
@@ -355,15 +380,15 @@ public class NuSMVEncoder {
 		for (int v = 0; v < coreNodes.size(); v++) {
 			if (coreNodes.get(v).isInput())
 				continue;
-			out.write(coreNodes.get(v).getNodeID() + "_inc := ");
-			out.write(coreNodes.get(v).getNodeID() + "_focal > ");
-			out.write(coreNodes.get(v).getNodeID() + ";\n");
-			out.write(coreNodes.get(v).getNodeID() + "_dec := ");
-			out.write(coreNodes.get(v).getNodeID() + "_focal < ");
-			out.write(coreNodes.get(v).getNodeID() + ";\n");
-			out.write(coreNodes.get(v).getNodeID() + "_std := ");
-			out.write(coreNodes.get(v).getNodeID() + "_focal = ");
-			out.write(coreNodes.get(v).getNodeID() + ";\n\n");
+			out.write(avoidNuSMVNames(coreNodes.get(v).getNodeID()) + "_inc := ");
+			out.write(avoidNuSMVNames(coreNodes.get(v).getNodeID()) + "_focal > ");
+			out.write(avoidNuSMVNames(coreNodes.get(v).getNodeID()) + ";\n");
+			out.write(avoidNuSMVNames(coreNodes.get(v).getNodeID()) + "_dec := ");
+			out.write(avoidNuSMVNames(coreNodes.get(v).getNodeID()) + "_focal < ");
+			out.write(avoidNuSMVNames(coreNodes.get(v).getNodeID()) + ";\n");
+			out.write(avoidNuSMVNames(coreNodes.get(v).getNodeID()) + "_std := ");
+			out.write(avoidNuSMVNames(coreNodes.get(v).getNodeID()) + "_focal = ");
+			out.write(avoidNuSMVNames(coreNodes.get(v).getNodeID()) + ";\n\n");
 		}
 
 		for (int v = 0; v < coreNodes.size(); v++) {
@@ -374,7 +399,7 @@ public class NuSMVEncoder {
 			boolean bPlus = (aiSplits[2] > 0);
 			int pc = (bPlus) ? aiSplits[2] : aiSplits[1];
 			String sub = (bPlus) ? saSubName[2] : saSubName[1];
-			out.write("update_" + coreNodes.get(v).getNodeID()
+			out.write("update_" + avoidNuSMVNames(coreNodes.get(v).getNodeID())
 					+ ((bPlus) ? "Plus" : "") + "_OK := (PCs = ");
 			out.write(tmPcNum2Name.get(pc) + ") & (");
 			out.write(tmPcNum2Name.get(pc) + "_vars = ");
@@ -413,7 +438,7 @@ public class NuSMVEncoder {
 			kMDDs = model.getExtraLogicalFunctions();
 			for (int i = 0; i < outputNodes.size(); i++) {
 				NodeInfo node = outputNodes.get(i);
-				out.write(node.getNodeID() + " :=\n");
+				out.write(avoidNuSMVNames(node.getNodeID()) + " :=\n");
 				out.write("  case\n");
 				nodeRules2NuSMV(out, model, kMDDs[i], coreNodes, node);
 				out.write("  esac;\n");
@@ -429,8 +454,8 @@ public class NuSMVEncoder {
 			if (coreNodes.get(i).isInput()) {
 				continue;
 			}
-			out.write("next(" + coreNodes.get(i).getNodeID() + ") != ");
-			out.write(coreNodes.get(i).getNodeID() + " |\n");
+			out.write("next(" + avoidNuSMVNames(coreNodes.get(i).getNodeID()) + ") != ");
+			out.write(avoidNuSMVNames(coreNodes.get(i).getNodeID()) + " |\n");
 		}
 		out.write("stableStates;\n");
 
@@ -501,7 +526,7 @@ public class NuSMVEncoder {
 						s += "    ";
 					if (bWrite)
 						s += " & ";
-					s += "(" + coreNodeOrder.get(i).getNodeID() + " = "
+					s += "(" + avoidNuSMVNames(coreNodeOrder.get(i).getNodeID()) + " = "
 							+ path[i] + ")";
 					bWrite = true;
 				}
@@ -536,12 +561,12 @@ public class NuSMVEncoder {
 						for (int j = 0; j < v.size(); j++) {
 							if (j > 0)
 								s_init += " | ";
-							s_init += t_vertex[i].getNodeID() + "=" + v.get(j);
+							s_init += avoidNuSMVNames(t_vertex[i].getNodeID()) + "=" + v.get(j);
 						}
 						s_init += ")";
 					}
 				}
-				sb.append(iState.getName()).append(" := ").append(s_init)
+				sb.append(avoidNuSMVNames(iState.getName())).append(" := ").append(s_init)
 						.append(";\n");
 			}
 		}
@@ -596,7 +621,7 @@ public class NuSMVEncoder {
 				if (i < stateNodesSize) {
 					if (sSSdesc.length() > 0)
 						sSSdesc += " & ";
-					sSSdesc += nodeOrder.get(i) + "=" + iaSSPath[i];
+					sSSdesc += avoidNuSMVNames(nodeOrder.get(i).getNodeID()) + "=" + iaSSPath[i];
 				} else if (iaSSPath[i] > -1)
 					bWeak = true;
 			}
