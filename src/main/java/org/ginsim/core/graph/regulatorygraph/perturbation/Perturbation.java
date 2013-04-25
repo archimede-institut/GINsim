@@ -1,13 +1,10 @@
 package org.ginsim.core.graph.regulatorygraph.perturbation;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.LogicalModelModifier;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.perturbation.LogicalModelPerturbation;
-import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
@@ -36,4 +33,6 @@ public interface Perturbation extends LogicalModelPerturbation {
 	void toXML(XMLWriter out) throws IOException;
 	
 	boolean affectsNode(NodeInfo node);
+	
+	Perturbation clone(ListOfPerturbations manager, Map<NodeInfo, NodeInfo> m_nodes, Map<Perturbation, Perturbation> m_perturbations);
 }

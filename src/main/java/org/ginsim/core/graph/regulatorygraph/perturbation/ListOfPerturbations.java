@@ -2,15 +2,12 @@ package org.ginsim.core.graph.regulatorygraph.perturbation;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 
 import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.perturbation.MultiplePerturbation;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.GraphManager;
