@@ -115,7 +115,7 @@ public class LogicalModel2RegulatoryGraph {
 					VariableEffect curEffect = effects[idxTh];
 					if (curEffect != null && curEffect != VariableEffect.NONE) {
 						RegulatoryEdgeSign sign = getSign(curEffect);
-						me.addEdge(sign, idxTh, lrg);
+						me.addEdge(sign, idxTh+1, lrg);
 					}
 				}
 				
