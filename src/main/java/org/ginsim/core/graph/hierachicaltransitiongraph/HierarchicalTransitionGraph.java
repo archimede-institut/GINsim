@@ -65,9 +65,9 @@ public interface HierarchicalTransitionGraph extends Graph<HierarchicalNode, Dec
 	/**
 	 * Set the mode
 	 * 
-	 * @param mode
+	 * @param compacted
 	 */
-	public void setMode(int mode);
+	public void setMode(boolean compacted);
 	
 	
 	/**

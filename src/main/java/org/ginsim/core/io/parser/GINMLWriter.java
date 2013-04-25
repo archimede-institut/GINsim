@@ -55,11 +55,13 @@ public abstract class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 		out.addAttr("id", graph.getGraphName());
 		hook_graphAttribute(out);
 		
+		saveNodes(out, mode, vertices);
+		saveEdges(out, mode, edges);
+		
 		Annotation annot = graph.getAnnotation();
 		if (annot != null) {
 			annot.toXML(out, null, 0);
 		}
-		
 
 		// handle associated graphs!
 		if (graph instanceof GraphAssociation) {
@@ -71,20 +73,13 @@ public abstract class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 	                out.addAttr("xlink:href", associatedID);
 	                out.closeTag();
 	            }
-
 			} catch (GsException e) {
-				
 			}
 		}
 		
-		saveNodes(out, mode, vertices);
-		saveEdges(out, mode, edges);
-		
 		out.closeTag(); // graph
 		out.closeTag(); // gxl
-		
 	}
-	
 	
 	protected void saveNodes(XMLWriter out, int mode, Collection<V> nodes) throws IOException {
 		for (V node: nodes) {
@@ -185,7 +180,31 @@ public abstract class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 		}
 	}
 	
-	public void addAttributeTag(XMLWriter out, String name, String type, String value) throws IOException {
+	public void addAttributeTag(XMLWriter out, String name, int value) throws IOException {
+		addAttributeTag(out, name, "int", ""+value);
+	}
+	
+	public void addAttributeTag(XMLWriter out, String name, boolean value) throws IOException {
+		addAttributeTag(out, name, "bool", ""+value);
+	}
+	
+	public void addAttributeTag(XMLWriter out, String name, String value) throws IOException {
+		addAttributeTag(out, name, "string", ""+value);
+	}
+	
+	public void addAttributeTag(XMLWriter out, String name, Object value) throws IOException {
+		if (value instanceof Integer) {
+			addAttributeTag(out, name, "int", ""+value);
+		} else if (value instanceof Boolean) {
+			addAttributeTag(out, name, "bool", ""+value);
+		} else if (value instanceof Float) {
+			addAttributeTag(out, name, "float", ""+value);
+		} else {
+			addAttributeTag(out, name, "string", ""+value);
+		}
+	}
+	
+	private void addAttributeTag(XMLWriter out, String name, String type, String value) throws IOException {
 		out.openTag("attr");
 		out.addAttr("name", name);
 		out.openTag(type);

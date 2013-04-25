@@ -23,7 +23,7 @@ public class ReducedGINMLWriter extends GINMLWriter<ReducedGraph<?,?,?>, NodeRed
 	@Override
 	public void hook_nodeAttribute(XMLWriter out, NodeReducedData node) throws IOException {
 		out.addAttr("id", ""+node);
-		addAttributeTag(out, "content", "string", node.getContentString());
+		addAttributeTag(out, "content", node.getContentString());
 	}
 
 	@Override

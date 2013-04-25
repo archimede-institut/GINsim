@@ -21,6 +21,8 @@ import org.xml.sax.SAXException;
 public class HierarchicalTransitionGraphParser extends GsXMLHelper {
     
     private static final int POS_OUT = 0;
+    private static final int POS_COMPACT = 5;
+    private static final int POS_COMPACT_B = 6;
     private static final int POS_FILTERED = 50;
     private static final int POS_GRAPH_NOTES = 1;
     private static final int POS_GRAPH_NOTES_LINKLIST = 2;
@@ -124,6 +126,18 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                 	curval = null;
                 }
                 break; // POS_VERTEX_TYPE_S
+            case POS_COMPACT_B:
+                if (qName.equals("bool")) {
+                    pos = POS_COMPACT;
+                    htg.setMode(curval.trim().equalsIgnoreCase("true"));
+                	curval = null;
+                }
+                break; // POS_COMPACT_B
+            case POS_COMPACT:
+                if (qName.equals("attr")) {
+                    pos = POS_OUT;
+                }
+                break; // POS_COMPACT
             case POS_VERTEX_TYPE:
                 if (qName.equals("attr")) {
                     pos = POS_VERTEX;
@@ -209,13 +223,12 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
 						} catch (NumberFormatException e) {
 							throw new SAXException( new GsException( "STR_InvalidNodeOrder", e));
 						}
+						
+						// DEPRECATED support old fashion storage of compaction mode
 						int mode = Integer.parseInt(attributes.getValue("iscompact"));
-						if (mode != 1 && mode != 2){
-							throw new SAXException( new GsException(GsException.GRAVITY_ERROR, "STR_HTG_InvalidModeHTGorSCC"));
-						}
-						else{
-							htg.setMode(mode);
-						}
+						htg.setMode(mode==2);
+                } else if (qName.equals("attr") && attributes.getValue("name").equals("isCompact")) {
+                	pos = POS_COMPACT;
                 } else if (qName.equals("link")) {
                     htg.setAssociatedGraphID(attributes.getValue("xlink:href"));
                 }
@@ -247,6 +260,13 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
             case POS_VERTEX_TYPE:
                 if (qName.equals("string")) {
                     pos = POS_VERTEX_TYPE_S;
+                    curval = "";
+                }
+                break; // POS_VERTEX_TYPE
+                
+            case POS_COMPACT:
+                if (qName.equals("bool")) {
+                    pos = POS_COMPACT_B;
                     curval = "";
                 }
                 break; // POS_VERTEX_TYPE

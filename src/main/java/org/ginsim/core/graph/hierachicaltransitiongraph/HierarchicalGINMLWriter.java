@@ -8,13 +8,13 @@ import org.ginsim.core.io.parser.GINMLWriter;
 public class HierarchicalGINMLWriter extends GINMLWriter<HierarchicalTransitionGraph, HierarchicalNode, DecisionOnEdge> {
 
 	
-	private final int mode;
+	private final boolean isCompact;
 	private final String str_no;
 	private long saveEdgeID = 1;
 	
-	public HierarchicalGINMLWriter(HierarchicalTransitionGraph graph, int mode, String str_no) {
+	public HierarchicalGINMLWriter(HierarchicalTransitionGraph graph, boolean isCompact, String str_no) {
 		super(graph);
-		this.mode = mode;
+		this.isCompact = isCompact;
 		this.str_no = str_no;
 	}
 
@@ -25,16 +25,16 @@ public class HierarchicalGINMLWriter extends GINMLWriter<HierarchicalTransitionG
 
 	@Override
 	public void hook_graphAttribute(XMLWriter out) throws IOException {
-		out.addAttr("isCompact", ""+mode);
 		out.addAttr("nodeorder", str_no);
+		addAttributeTag(out, "isCompact", isCompact);
 	}
 
 	@Override
 	public void hook_nodeAttribute(XMLWriter out, HierarchicalNode node) throws IOException {
 		out.addAttr("id", "s"+node.getUniqueId());
 		
-		addAttributeTag(out, "type", "string", node.typeToString());
-		addAttributeTag(out, "states", "string", node.write().toString());
+		addAttributeTag(out, "type", node.typeToString());
+		addAttributeTag(out, "states", node.write().toString());
 	}
 
 	

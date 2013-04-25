@@ -28,23 +28,17 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 
 	public static final String GRAPH_ZIP_NAME = "hierarchicalTransitionGraph.ginml";
 	
-	public static final int MODE_SCC = 1;
-	public static final int MODE_HTG = 2;
-
-	private String dtdFile = GinmlHelper.DEFAULT_URL_DTD_FILE;
-	
 	private List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>();
 	
 	/**
 	 * Mode is either SCC or HTG depending if we group the transients component by their atteignability of attractors.
 	 */
-	private int transientCompactionMode;
+	private boolean transientCompaction;
 	
 	/**
 	 * An array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
 	 */
 	private byte[] childsCount = null;
-	private long saveEdgeId;
 	
 	
 /* **************** CONSTRUCTORS ************/	
@@ -62,13 +56,13 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	 * @param nodeOrder the node order
 	 * @param transientCompactionMode MODE_SCC or MODE_HTG
 	 */
-	public HierarchicalTransitionGraphImpl( List<NodeInfo> nodeOrder, int transientCompactionMode) {
+	public HierarchicalTransitionGraphImpl( List<NodeInfo> nodeOrder, boolean transientCompaction) {
 		
 	    this();
 	    for (NodeInfo vertex: nodeOrder) {
 	    	this.nodeOrder.add(vertex);
 	    }
-	    this.transientCompactionMode = transientCompactionMode;
+	    this.transientCompaction = transientCompaction;
 	}
 
 	public HierarchicalTransitionGraphImpl( boolean parsing) {
@@ -111,7 +105,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
     @Override
 	public void setNodeOrder( List<NodeInfo> node_order){
 		
-		nodeOrder = node_order;
+		this.nodeOrder = node_order;
 	}
 
 
@@ -157,7 +151,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	
 	protected void doSave(OutputStreamWriter os, Collection<HierarchicalNode> nodes, Collection<DecisionOnEdge> edges, int mode) throws GsException {
 		try {
-			HierarchicalGINMLWriter writer = new HierarchicalGINMLWriter(this, mode, stringNodeOrder());
+			HierarchicalGINMLWriter writer = new HierarchicalGINMLWriter(this, transientCompaction, stringNodeOrder());
 			writer.write(os, nodes, edges, mode);
 		} catch (IOException e) {
             throw new GsException( "STR_unableToSave", e);
@@ -257,12 +251,12 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	 */
 	@Override
 	public boolean areTransientCompacted() {
-		return transientCompactionMode == MODE_HTG;
+		return transientCompaction;
 	}
 	
 	@Override
-	public void setMode(int mode) {
-		transientCompactionMode = mode;
+	public void setMode(boolean compacted) {
+		transientCompaction = compacted;
 	}
 
     /**
