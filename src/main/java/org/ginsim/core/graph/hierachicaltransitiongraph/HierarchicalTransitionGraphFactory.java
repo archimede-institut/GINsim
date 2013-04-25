@@ -58,9 +58,9 @@ public class HierarchicalTransitionGraphFactory implements GraphFactory<Hierarch
 		return new HierarchicalTransitionGraphImpl();
 	}
 	
-	public HierarchicalTransitionGraph create( List<NodeInfo> nodeOrder, int transientCompactionMode){
+	public HierarchicalTransitionGraph create( List<NodeInfo> nodeOrder, boolean transientCompaction){
 		
-		return new HierarchicalTransitionGraphImpl( nodeOrder, transientCompactionMode);
+		return new HierarchicalTransitionGraphImpl( nodeOrder, transientCompaction);
 	}
     
 	public HierarchicalTransitionGraph create( boolean bool){

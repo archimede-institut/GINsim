@@ -7,6 +7,9 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Vector;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.LogicalModelImpl;
@@ -16,6 +19,8 @@ import org.colomoto.mddlib.MDDManagerFactory;
 import org.colomoto.mddlib.MDDVariableFactory;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.core.annotation.Annotation;
+import org.ginsim.core.annotation.AnnotationLink;
 import org.ginsim.core.annotation.BiblioManager;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.AbstractGraph;
@@ -760,4 +765,41 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 		}
 		return n_info;
 	}
+	
+	@Override
+	public List<RegulatoryNode> searchNodes( String regexp) {
+		if (!regexp.startsWith("::")) {
+			return super.searchNodes(regexp);
+		}
+		
+		regexp = regexp.substring(2);
+		List<RegulatoryNode> v = new ArrayList<RegulatoryNode>();
+		
+		Pattern pattern = Pattern.compile(regexp, Pattern.COMMENTS | Pattern.CASE_INSENSITIVE);
+		
+		for (RegulatoryNode vertex: getNodes()) {
+			Matcher matcher = pattern.matcher(vertex.toString());
+			if (matcher.find()) {
+				v.add(vertex);
+				continue;
+			}
+
+			matcher = pattern.matcher(vertex.getName());
+			if (matcher.find()) {
+				v.add(vertex);
+				continue;
+			}
+			
+			Annotation annot = vertex.getAnnotation();
+			for (AnnotationLink link: annot.getLinkList()) {
+				matcher = pattern.matcher(link.getLink());
+				if (matcher.find()) {
+					v.add(vertex);
+					break;
+				}
+			}
+		}
+		return v;
+	}
+
 }

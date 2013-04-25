@@ -1,9 +1,9 @@
 package org.ginsim.core.graph.regulatorygraph.perturbation;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.perturbation.FixedValuePerturbation;
 import org.colomoto.logicalmodel.perturbation.RangePerturbation;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -38,4 +38,12 @@ public class PerturbationRange extends RangePerturbation implements Perturbation
 		return component.equals(node);
 	}
 
+	@Override
+	public Perturbation clone(ListOfPerturbations manager, Map<NodeInfo, NodeInfo> m_nodes, Map<Perturbation, Perturbation> m_perturbations) {
+		NodeInfo newComponent = m_nodes.get(component);
+		if (newComponent != null) {
+			return new PerturbationRange(newComponent, min, max);
+		}
+		return null;
+	}
 }

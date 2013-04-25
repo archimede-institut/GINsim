@@ -40,11 +40,11 @@ public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  exten
 	 * @param map
 	 * @param file
 	 */
-	public ReducedGraphImpl(Map map, File file)  throws GsException{
+	public ReducedGraphImpl(Set set, File file)  throws GsException{
 		
 	    this( true);
         ReducedGraphParser parser = new ReducedGraphParser();
-        parser.parse(file, map, this);
+        parser.parse(file, set, this);
 	}
 
 	/**
@@ -100,92 +100,13 @@ public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  exten
 
     @Override
 	protected void doSave(OutputStreamWriter os, Collection<NodeReducedData> vertices, Collection<Edge<NodeReducedData>> edges, int mode) throws GsException {
+    	ReducedGINMLWriter writer = new ReducedGINMLWriter(this);
         try {
-            XMLWriter out = new XMLWriter(os, GinmlHelper.DEFAULT_URL_DTD_FILE);
-	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
-			out.write("\t<graph id=\"" + graphName + "\"");
-			out.write(" class=\"reduced\">\n");
-			saveNodes(out, mode, vertices);
-			saveEdge(out, mode, edges);
-            if (graphAnnotation != null) {
-            	graphAnnotation.toXML(out, null, 0);
-            }
-            // save the ref of the associated regulatory graph!
-            if (associatedGraph != null) {
-                associatedID = GraphManager.getInstance().getGraphPath( associatedGraph);
-            }
-            if (associatedID != null) {
-                out.write("<link xlink:href=\""+associatedID+"\"/>\n");
-            }
-	  		out.write("\t</graph>\n");
-	  		out.write("</gxl>\n");
+        	writer.write(os, vertices, edges, mode);
         } catch (IOException e) {
             throw new GsException( "STR_unableToSave", e);
         }
 	}
-
-    /**
-     * @param out
-     * @param mode
-     * @param selectedOnly
-     * @throws IOException
-     */
-    private void saveEdge(XMLWriter out, int mode, Collection<Edge<NodeReducedData>> edges) throws IOException {
-    	if (edges == null) {
-    		edges = getEdges();
-    	}
-        switch (mode) {
-        	default:
-		        for (Edge<NodeReducedData> edge: edges) {
-		            NodeReducedData source = edge.getSource();
-		            NodeReducedData target = edge.getTarget();
-		            out.write("\t\t<edge id=\""+ source +"_"+target+"\" from=\""+source+"\" to=\""+target+"\"/>\n");
-		        }
-		        break;
-        }
-    }
-
-    /**
-     * @param out
-     * @param mode
-     * @param selectedOnly
-     * @throws IOException
-     */
-    private void saveNodes(XMLWriter out, int mode, Collection<NodeReducedData> vertices) throws IOException {
-    	if (vertices == null) {
-    		vertices = getNodes();
-    	}
-    	NodeAttributesReader vReader = getNodeAttributeReader();
-    	switch (mode) {
-    		case 1:
-
-                for (NodeReducedData vertex: vertices) {
-                    String content = vertex.getContentString();
-                    out.write("\t\t<node id=\""+vertex+"\">\n");
-                    out.write("<attr name=\"content\"><string>"+content+"</string></attr>");
-                    out.write(GinmlHelper.getShortNodeVS(vReader));
-                    out.write("\t\t</node>\n");
-                }
-    			break;
-			case 2:
-                for (NodeReducedData vertex: vertices) {
-                    vReader.setNode(vertex);
-                    String content = ((NodeReducedData)vertex).getContentString();
-                    out.write("\t\t<node id=\""+vertex+"\">\n");
-                    out.write("<attr name=\"content\"><string>"+content+"</string></attr>");
-                    out.write(GinmlHelper.getFullNodeVS(vReader));
-                    out.write("\t\t</node>\n");
-                }
-    			break;
-    		default:
-                for (NodeReducedData vertex: vertices) {
-                    String content = vertex.getContentString();
-                    out.write("\t\t<node id=\""+vertex+"\">\n");
-                    out.write("<attr name=\"content\"><string>"+content+"</string></attr>");
-                    out.write("</node>");
-    	        }
-        }
-    }
 	
 	/**
 	 * add an edge to this graph.
@@ -193,9 +114,10 @@ public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  exten
 	 * @param target target node of this edge.
 	 */
     @Override
-	public void addEdge(NodeReducedData source, NodeReducedData target) {
+	public Edge<NodeReducedData> addEdge(NodeReducedData source, NodeReducedData target) {
 		Edge<NodeReducedData> edge = new Edge<NodeReducedData>(this, source, target);
 		addEdge( edge);
+		return edge;
 	}
 	
     @Override

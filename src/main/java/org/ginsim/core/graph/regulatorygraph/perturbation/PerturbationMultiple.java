@@ -1,7 +1,9 @@
 package org.ginsim.core.graph.regulatorygraph.perturbation;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.perturbation.MultiplePerturbation;
@@ -46,5 +48,19 @@ public class PerturbationMultiple extends MultiplePerturbation<Perturbation> imp
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public Perturbation clone(ListOfPerturbations manager, Map<NodeInfo, NodeInfo> m_nodes, Map<Perturbation, Perturbation> m_perturbations) {
+		List<Perturbation> newPerturbations = new ArrayList<Perturbation>();
+		for (Perturbation perturbation: perturbations) {
+			Perturbation newPerturbation = m_perturbations.get(perturbation);
+			if (newPerturbation == null) {
+				return null;
+			}
+			newPerturbations.add(newPerturbation);
+		}
+		
+		return manager.addMultiplePerturbation(newPerturbations);
 	}
 }

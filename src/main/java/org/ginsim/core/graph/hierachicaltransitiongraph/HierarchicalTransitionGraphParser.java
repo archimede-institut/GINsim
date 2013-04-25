@@ -21,6 +21,8 @@ import org.xml.sax.SAXException;
 public class HierarchicalTransitionGraphParser extends GsXMLHelper {
     
     private static final int POS_OUT = 0;
+    private static final int POS_COMPACT = 5;
+    private static final int POS_COMPACT_B = 6;
     private static final int POS_FILTERED = 50;
     private static final int POS_GRAPH_NOTES = 1;
     private static final int POS_GRAPH_NOTES_LINKLIST = 2;
@@ -38,6 +40,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
     private int vslevel = 0;
     
     private HierarchicalNode vertex = null;
+    private DecisionOnEdge edge = null;
     private NodeAttributesReader vareader = null;
     private EdgeAttributesReader ereader = null;
     private Annotation annotation = null;
@@ -62,20 +65,22 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
 		} catch (GsException e) {
 			throw new GsException(GsException.GRAVITY_ERROR, "invalidGraphName");
 		}
-		try {
-			String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
-			Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);
-			childCount = new byte[t_nodeOrder.length];
-			for (int i=0 ; i<t_nodeOrder.length ; i++) {
-				String[] args = t_nodeOrder[i].split(":");
-			    nodeOrder.add( new NodeInfo( args[0]));
-			    childCount[i] = (byte) (Byte.parseByte(args[1])+1);
+		String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
+		Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);
+		childCount = new byte[t_nodeOrder.length];
+		for (int i=0 ; i<t_nodeOrder.length ; i++) {
+			String[] args = t_nodeOrder[i].split(":");
+			byte max = 1;
+			try {
+				max = Byte.parseByte(args[1]);
+			} catch(NumberFormatException e) {
+				
 			}
-			htg.setNodeOrder(nodeOrder);
-			htg.setChildsCount(childCount);
-		} catch (NumberFormatException e) {
-			throw new GsException( GsException.GRAVITY_ERROR, e);
+		    nodeOrder.add( new NodeInfo( args[0], max));
+		    childCount[i] = (byte)(max+1);
 		}
+		htg.setNodeOrder(nodeOrder);
+		htg.setChildsCount(childCount);
 	}
 
     /**
@@ -123,6 +128,18 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                 	curval = null;
                 }
                 break; // POS_VERTEX_TYPE_S
+            case POS_COMPACT_B:
+                if (qName.equals("bool")) {
+                    pos = POS_COMPACT;
+                    htg.setMode(curval.trim().equalsIgnoreCase("true"));
+                	curval = null;
+                }
+                break; // POS_COMPACT_B
+            case POS_COMPACT:
+                if (qName.equals("attr")) {
+                    pos = POS_OUT;
+                }
+                break; // POS_COMPACT
             case POS_VERTEX_TYPE:
                 if (qName.equals("attr")) {
                     pos = POS_VERTEX;
@@ -142,6 +159,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                 break; // POS_VERTEX_STATES
 			case POS_EDGE:
 			    if (qName.equals("edge")) {
+			    	edge = null;
 			        pos = POS_OUT;
 			    }
 			    break; // POS_EDGE
@@ -180,7 +198,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                     String s_to = attributes.getValue("to");
                     if (nodeToParse == null || nodeToParse.contains(s_from) && nodeToParse.contains(s_to)) {
                         pos = POS_EDGE;
-                        htg.addEdge(oldIdToNode.get(s_from), oldIdToNode.get(s_to));
+                        edge = htg.addEdge(oldIdToNode.get(s_from), oldIdToNode.get(s_to));
                     } else {
                         pos = POS_FILTERED;
                     }
@@ -207,13 +225,12 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
 						} catch (NumberFormatException e) {
 							throw new SAXException( new GsException( "STR_InvalidNodeOrder", e));
 						}
+						
+						// DEPRECATED support old fashion storage of compaction mode
 						int mode = Integer.parseInt(attributes.getValue("iscompact"));
-						if (mode != 1 && mode != 2){
-							throw new SAXException( new GsException(GsException.GRAVITY_ERROR, "STR_HTG_InvalidModeHTGorSCC"));
-						}
-						else{
-							htg.setMode(mode);
-						}
+						htg.setMode(mode==2);
+                } else if (qName.equals("attr") && attributes.getValue("name").equals("isCompact")) {
+                	pos = POS_COMPACT;
                 } else if (qName.equals("link")) {
                     htg.setAssociatedGraphID(attributes.getValue("xlink:href"));
                 }
@@ -249,6 +266,13 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                 }
                 break; // POS_VERTEX_TYPE
                 
+            case POS_COMPACT:
+                if (qName.equals("bool")) {
+                    pos = POS_COMPACT_B;
+                    curval = "";
+                }
+                break; // POS_VERTEX_TYPE
+                
             case POS_VERTEX_STATES:
                 if (qName.equals("string")) {
                     pos = POS_VERTEX_STATES_S;
@@ -263,8 +287,8 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                 break; // POS_EDGE
                 
             case POS_EDGE_VS:
-            	
-            	GinmlHelper.applyEdgeVisualSettings(null, ereader, vareader, qName, attributes);
+            	ereader.setEdge(edge);
+            	GinmlHelper.applyEdgeVisualSettings(edge, ereader, vareader, qName, attributes);
                 break; // POS_EDGE_VS
             case POS_VERTEX_VS:
             	vslevel = GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);

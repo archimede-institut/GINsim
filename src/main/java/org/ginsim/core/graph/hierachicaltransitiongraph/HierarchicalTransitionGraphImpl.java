@@ -24,27 +24,21 @@ import org.ginsim.core.io.parser.GinmlHelper;
 
 
 public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<HierarchicalNode, DecisionOnEdge, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
-	implements HierarchicalTransitionGraph{
+	implements HierarchicalTransitionGraph {
 
 	public static final String GRAPH_ZIP_NAME = "hierarchicalTransitionGraph.ginml";
-	
-	public static final int MODE_SCC = 1;
-	public static final int MODE_HTG = 2;
-
-	private String dtdFile = GinmlHelper.DEFAULT_URL_DTD_FILE;
 	
 	private List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>();
 	
 	/**
 	 * Mode is either SCC or HTG depending if we group the transients component by their atteignability of attractors.
 	 */
-	private int transientCompactionMode;
+	private boolean transientCompaction;
 	
 	/**
 	 * An array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
 	 */
 	private byte[] childsCount = null;
-	private long saveEdgeId;
 	
 	
 /* **************** CONSTRUCTORS ************/	
@@ -62,13 +56,13 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	 * @param nodeOrder the node order
 	 * @param transientCompactionMode MODE_SCC or MODE_HTG
 	 */
-	public HierarchicalTransitionGraphImpl( List<NodeInfo> nodeOrder, int transientCompactionMode) {
+	public HierarchicalTransitionGraphImpl( List<NodeInfo> nodeOrder, boolean transientCompaction) {
 		
 	    this();
 	    for (NodeInfo vertex: nodeOrder) {
 	    	this.nodeOrder.add(vertex);
 	    }
-	    this.transientCompactionMode = transientCompactionMode;
+	    this.transientCompaction = transientCompaction;
 	}
 
 	public HierarchicalTransitionGraphImpl( boolean parsing) {
@@ -111,7 +105,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
     @Override
 	public void setNodeOrder( List<NodeInfo> node_order){
 		
-		nodeOrder = node_order;
+		this.nodeOrder = node_order;
 	}
 
 
@@ -156,57 +150,13 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 
 	
 	protected void doSave(OutputStreamWriter os, Collection<HierarchicalNode> nodes, Collection<DecisionOnEdge> edges, int mode) throws GsException {
-       try {
-            XMLWriter out = new XMLWriter(os, dtdFile);
-	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
-			out.write("\t<graph id=\"" + graphName + "\"");
-			out.write(" class=\""+HierarchicalTransitionGraphFactory.KEY+"\"");
-			out.write(" iscompact=\""+this.transientCompactionMode+"\"");
-			out.write(" nodeorder=\"" + stringNodeOrder() +"\">\n");
-			saveNode(out, mode, nodes);
-			saveEdge(out, mode, edges);
-            if (graphAnnotation != null) {
-            	graphAnnotation.toXML(out, null, 0);
-            }
-            // save the ref of the associated regulatory graph!
-            if (associatedGraph != null) {
-                associatedID = GraphManager.getInstance().getGraphPath( associatedGraph);
-            }
-            if (associatedID != null) {
-                out.write("<link xlink:href=\""+associatedID+"\"/>\n");
-            }
-	  		out.write("\t</graph>\n");
-	  		out.write("</gxl>\n");
-        } catch (IOException e) {
+		try {
+			HierarchicalGINMLWriter writer = new HierarchicalGINMLWriter(this, transientCompaction, stringNodeOrder());
+			writer.write(os, nodes, edges, mode);
+		} catch (IOException e) {
             throw new GsException( "STR_unableToSave", e);
         }
 	}
-	
-	private void saveEdge(XMLWriter out, int mode, Collection<DecisionOnEdge> edges) throws IOException {
-	     for (DecisionOnEdge edge: edges) {
-            String source = "" + edge.getSource().getUniqueId();
-            String target = "" + edge.getTarget().getUniqueId();
-            out.write("\t\t<edge id=\"e"+(++saveEdgeId)+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
-	     }
-	 }
-	 
-	 /**
-	  * @param out
-	  * @param mode
-	  * @param vertices
-	  * @throws IOException
-	  */
-	 private void saveNode(XMLWriter out, int mode, Collection<HierarchicalNode> vertices) throws IOException {
-	 	NodeAttributesReader vReader = getNodeAttributeReader();
-	     for (HierarchicalNode vertex: vertices) {
-	         vReader.setNode(vertex);
-	         out.write("\t\t<node id=\"s"+vertex.getUniqueId()+"\">\n");
-	         out.write("<attr name=\"type\"><string>"+vertex.typeToString()+"</string></attr>");
-	         out.write("<attr name=\"states\"><string>"+vertex.write().toString()+"</string></attr>");
-	         out.write(GinmlHelper.getFullNodeVS(vReader));
-	         out.write("\t\t</node>\n");
-	     }
-	 }		
 		
 /* **************** NODE SEARCH ************/
 	
@@ -301,12 +251,12 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	 */
 	@Override
 	public boolean areTransientCompacted() {
-		return transientCompactionMode == MODE_HTG;
+		return transientCompaction;
 	}
 	
 	@Override
-	public void setMode(int mode) {
-		transientCompactionMode = mode;
+	public void setMode(boolean compacted) {
+		transientCompaction = compacted;
 	}
 
     /**

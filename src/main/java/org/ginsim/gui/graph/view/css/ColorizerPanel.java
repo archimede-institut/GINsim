@@ -93,7 +93,7 @@ public class ColorizerPanel extends JPanel {
 	 */
 	private void init_initialColorizationCheckbox(GridBagConstraints c) {
 		if (cb_colorize == null) {
-			cb_colorize = new JCheckBox(Translator.getString("STR_colorize"));
+			cb_colorize = new JCheckBox(Translator.getString("STR_colorizer_panel"));
 			cb_colorize.setSelected(((Boolean)OptionStore.getOption(storeUserChoicePrefix+OPTION_STORE_INITIAL_COLORIZATION, Boolean.FALSE)).booleanValue());
 			cb_colorize.addChangeListener(new ChangeListener() {
 				@Override

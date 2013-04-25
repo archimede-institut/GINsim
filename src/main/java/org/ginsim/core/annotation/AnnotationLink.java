@@ -77,6 +77,15 @@ public class AnnotationLink {
 	public String getValue() {
 		return value;
 	}
+	
+	public String getLink() {
+		if (getHelper() != null) {
+			return getHelper().getLink(proto, value);
+		}
+
+		return OpenUtils.getLink(proto, value);
+	}
+	
 	public boolean equals(Object o) {
 		return toString().equals(o.toString());
 	}

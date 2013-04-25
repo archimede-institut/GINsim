@@ -19,11 +19,15 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryParser;
 import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
+import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
@@ -312,43 +316,26 @@ public class ModelSimplifier extends AbstractModelSimplifier  {
 		// get as much of the associated data as possible
 		Map m_alldata = new HashMap();
 		
-		// FIXME: for not do not try to deal with mutants!
-//		// mutants: only copy mutants that don't affect removed nodes
-//		RegulatoryMutants mutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, false);
-//		if (mutants != null && mutants.getNbElements(null) > 0) {
-//			RegulatoryMutants newMutants = (RegulatoryMutants) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, PerturbationManager.KEY, true);
-//			RegulatoryMutantDef mutant, newMutant;
-//			int mutantPos=0;
-//			for (int i=0 ; i<mutants.getNbElements(null) ; i++) {
-//				mutant = (RegulatoryMutantDef)mutants.getElement(null, i);
-//				mutantPos = newMutants.add();
-//				newMutant = (RegulatoryMutantDef)newMutants.getElement(null, mutantPos);
-//				newMutant.setName(mutant.getName());
-//				boolean ok = true;
-//				for (int j=0 ; j<mutant.getNbChanges() ; j++ ) {
-//					String id = mutant.getName(j);
-//					RegulatoryNode vertex = null;
-//					for (RegulatoryNode v: simplified_nodeOrder) {
-//						if (id.equals(v.getId())) {
-//							vertex = v;
-//							break;
-//						}
-//					}
-//					if (vertex == null) {
-//						ok = false;
-//						break;
-//					}
-//					newMutant.addChange(vertex, mutant.getMin(j), mutant.getMax(j));
-//					// TODO: transfer condition only if it does not involve removed nodes
-//					newMutant.setCondition(j, simplifiedGraph, mutant.getCondition(j));
-//				}
-//				if (!ok) {
-//					newMutants.remove(null, new int[] {mutantPos});
-//				} else {
-//                    m_alldata.put(mutant, newMutant);
-//				}
-//			}
-//		}
+		// adapt perturbations which do not affect the removed components
+		ListOfPerturbations perturbations = (ListOfPerturbations) ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, false);
+		if (perturbations != null && perturbations.size() > 0) {
+			ListOfPerturbations newPerturbations = (ListOfPerturbations) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, PerturbationManager.KEY, true);
+			Map<NodeInfo, NodeInfo> m_nodeinfos = new HashMap<NodeInfo, NodeInfo>();
+			Map<Perturbation,Perturbation> m_perturbations = new HashMap<Perturbation, Perturbation>();
+			for (RegulatoryNode vertex: oldNodeOrder) {
+				RegulatoryNode clone = (RegulatoryNode)copyMap.get(vertex);
+				if (clone != null) {
+					m_nodeinfos.put(vertex.getNodeInfo(), clone.getNodeInfo());
+				}
+			}
+			for (Perturbation p: perturbations) {
+				Perturbation pnew = p.clone(newPerturbations, m_nodeinfos, m_perturbations);
+				if (pnew != null) {
+					m_perturbations.put(p, pnew);
+				}
+			}
+		}
+
 		
 		// initial states
         GsInitialStateList linit = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject( graph, InitialStateManager.KEY, false);

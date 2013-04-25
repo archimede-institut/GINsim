@@ -77,6 +77,11 @@ public class LogicalModel2RegulatoryGraph {
 			NodeInfo target = nodes.get(idx);
 			RegulatoryNode regNode = node2node.get(target);
 			
+			if (target.isInput()) {
+				regNode.setInput(true, lrg);
+				continue;
+			}
+			
 			int[] regulators = matrix.getRegulators(idx, extra);
 			VariableEffect allEffects[][] = matrix.getRegulatorEffects(idx, extra);
 			int[][] t_values = new int[regulators.length][4];
@@ -110,7 +115,7 @@ public class LogicalModel2RegulatoryGraph {
 					VariableEffect curEffect = effects[idxTh];
 					if (curEffect != null && curEffect != VariableEffect.NONE) {
 						RegulatoryEdgeSign sign = getSign(curEffect);
-						me.addEdge(sign, idxTh, lrg);
+						me.addEdge(sign, idxTh+1, lrg);
 					}
 				}
 				

@@ -25,14 +25,12 @@ public class HTGSimulationHelper  implements SimulationHelper {
 	
 	public HTGSimulationHelper(LogicalModel model, SimulationParameters params) {
 		this.model = model;
-		int mode;
+		boolean compacted = false;
 		if (params.simulationStrategy == SimulationParameters.STRATEGY_HTG) {
-			mode = HierarchicalTransitionGraphImpl.MODE_HTG;
-		} else {
-			mode = HierarchicalTransitionGraphImpl.MODE_SCC;
+			compacted = true;
 		}
 		List<NodeInfo> nodes = model.getNodeOrder();
-		this.htg = GraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, nodes, mode);
+		this.htg = GraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, nodes, compacted);
 		
 		// FIXME: associated graph based on LogicalModel
 		htg.setAssociatedGraph(params.param_list.graph);

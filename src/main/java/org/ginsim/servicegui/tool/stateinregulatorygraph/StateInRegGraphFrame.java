@@ -259,7 +259,7 @@ class StableState extends TabComponantProvidingAState {
 		if (p != null) {
 			p.update(model);
 		}
-		sss = ServiceManager.get(StableStatesService.class).getStableStateSearcher(model);
+		sss = ServiceManager.getManager().getService(StableStatesService.class).getStableStateSearcher(model);
 		int stable;
 		try {
 			stable = sss.getResult();

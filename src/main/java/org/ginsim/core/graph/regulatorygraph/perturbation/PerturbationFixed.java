@@ -1,6 +1,7 @@
 package org.ginsim.core.graph.regulatorygraph.perturbation;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.perturbation.FixedValuePerturbation;
@@ -33,6 +34,15 @@ public class PerturbationFixed extends FixedValuePerturbation implements Perturb
 	@Override
 	public boolean affectsNode(NodeInfo node) {
 		return component.equals(node);
+	}
+
+	@Override
+	public Perturbation clone(ListOfPerturbations manager, Map<NodeInfo, NodeInfo> m_nodes, Map<Perturbation, Perturbation> m_perturbations) {
+		NodeInfo newComponent = m_nodes.get(component);
+		if (newComponent != null) {
+			return manager.addFixedPerturbation(newComponent, value);
+		}
+		return null;
 	}
 
 }
