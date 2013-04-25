@@ -101,6 +101,11 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 	}
 	
 	@Override
+	public int add(int position, int mode) {
+		return super.add(-1, mode);
+	}
+	
+	@Override
 	public String getColName(int col) {
 		switch (col) {
 			case 0:
