@@ -65,20 +65,22 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
 		} catch (GsException e) {
 			throw new GsException(GsException.GRAVITY_ERROR, "invalidGraphName");
 		}
-		try {
-			String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
-			Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);
-			childCount = new byte[t_nodeOrder.length];
-			for (int i=0 ; i<t_nodeOrder.length ; i++) {
-				String[] args = t_nodeOrder[i].split(":");
-			    nodeOrder.add( new NodeInfo( args[0]));
-			    childCount[i] = (byte) (Byte.parseByte(args[1])+1);
+		String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
+		Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);
+		childCount = new byte[t_nodeOrder.length];
+		for (int i=0 ; i<t_nodeOrder.length ; i++) {
+			String[] args = t_nodeOrder[i].split(":");
+			byte max = 1;
+			try {
+				max = Byte.parseByte(args[1]);
+			} catch(NumberFormatException e) {
+				
 			}
-			htg.setNodeOrder(nodeOrder);
-			htg.setChildsCount(childCount);
-		} catch (NumberFormatException e) {
-			throw new GsException( GsException.GRAVITY_ERROR, e);
+		    nodeOrder.add( new NodeInfo( args[0], max));
+		    childCount[i] = (byte)(max+1);
 		}
+		htg.setNodeOrder(nodeOrder);
+		htg.setChildsCount(childCount);
 	}
 
     /**
