@@ -1,6 +1,7 @@
 package org.ginsim.service.tool.connectivity;
 
 import java.awt.Color;
+import java.util.Collection;
 import java.util.List;
 
 import org.ginsim.common.utils.ColorPalette;
@@ -16,15 +17,20 @@ public class ConnectivitySelector extends Selector {
 	public static final String IDENTIFIER = "scc";
 	public static final String CAT_TRANSIENT_TRIVIAL = "transient-trivial";
 	private static final String CAT_TERMINAL_TRIVIAL = "terminal-trivial";
-	public static final String CAT_COMPLEX = "complex";
+	public static final String CAT_TRANSIENT_COMPLEX = "transient-complex";
+	public static final String CAT_TERMINAL_COMPLEX = "terminal-complex";
 	
-	public static final NodeStyle STYLE_TRANSIENT_TRIVIAL	= new NodeStyle(Color.green.darker(), Color.black, Color.white, NodeBorder.SIMPLE, NodeShape.RECTANGLE);
+	public static final NodeStyle STYLE_TRANSIENT_TRIVIAL	= new NodeStyle(Color.white, Color.black, Color.black, NodeBorder.SIMPLE, NodeShape.RECTANGLE);
 	public static final NodeStyle STYLE_TERMINAL_TRIVIAL	= new NodeStyle(Color.red.darker(),   Color.black, Color.white, NodeBorder.SIMPLE, NodeShape.ELLIPSE);
-	public static final NodeStyle STYLE_COMPLEX 			= new NodeStyle(Color.blue.darker(),  Color.black, Color.white, NodeBorder.SIMPLE, NodeShape.RECTANGLE);
+	public static final NodeStyle STYLE_TRANSIENT_COMPLEX	= new NodeStyle(Color.blue.darker(),  Color.black, Color.red, NodeBorder.SIMPLE, NodeShape.RECTANGLE);
+	public static final NodeStyle STYLE_TERMINAL_COMPLEX	= new NodeStyle(Color.orange,  Color.black, Color.blue, NodeBorder.SIMPLE, NodeShape.ELLIPSE);
 	
 	private List<NodeReducedData> cacheComponents;
 	private int totalComplexComponents;
-	private Graph<?, ?> cacheGraph;
+	private Graph cacheGraph;
+	
+	public static Color[] TRANSIENT_PALETTE = ColorPalette.createColorPaletteByHue(25, (float)0.5, (float)0.3, (float)0.6, (float)0.2);
+	public static Color[] TERMINAL_PALETTE  = ColorPalette.createColorPaletteByHue(25, (float)1.0, (float)0.3, (float)0.9, (float)0.1);
 	
 	public ConnectivitySelector() {
 		super(IDENTIFIER);
@@ -34,11 +40,13 @@ public class ConnectivitySelector extends Selector {
 	public void resetDefaultStyle() {
 		addCategory(CAT_TRANSIENT_TRIVIAL, (Style)STYLE_TRANSIENT_TRIVIAL.clone());
 		addCategory(CAT_TERMINAL_TRIVIAL, (Style)STYLE_TERMINAL_TRIVIAL.clone());
-		addCategory(CAT_COMPLEX, (Style)STYLE_COMPLEX.clone());
+		addCategory(CAT_TRANSIENT_COMPLEX, (Style)STYLE_TRANSIENT_COMPLEX.clone());
+		addCategory(CAT_TERMINAL_COMPLEX, (Style)STYLE_TERMINAL_COMPLEX.clone());
 	}
 
 	@Override
 	public String getCategoryForNode(Object obj) {
+		// if we are dealing with a SCC graph directly
 		if (obj instanceof NodeReducedData) {
 			NodeReducedData node = (NodeReducedData) obj;
 			if (node.isTrivial()) {
@@ -47,28 +55,37 @@ public class ConnectivitySelector extends Selector {
 				}
 				return CAT_TERMINAL_TRIVIAL;
 			}
-		} else {
-			if (cacheComponents == null) {
-				return CAT_COMPLEX;
+			Collection outgoing = cacheGraph.getOutgoingEdges(obj);
+			if (outgoing != null && outgoing.size() > 0) {
+				return CAT_TRANSIENT_COMPLEX;
 			}
-			int i_complex = 0;
-			for (NodeReducedData nrd : cacheComponents) {
-				if (!nrd.isTrivial()){
-					i_complex++;
-				}
-				if (nrd.getContent().contains(obj)) {
-					if (nrd.isTrivial()) {
-						if (nrd.isTransient(cacheGraph)) {
-							return CAT_TRANSIENT_TRIVIAL;
-						}
-						return CAT_TERMINAL_TRIVIAL;
-					} else {
-						return "complex_"+ColorPalette.blueHues[i_complex%ColorPalette.blueHues.length].getRGB();
+			return CAT_TERMINAL_COMPLEX;
+		}
+		
+		// if we don't have any further information
+		if (cacheComponents == null) {
+			return CAT_TRANSIENT_TRIVIAL;
+		}
+		
+		int i_complex = 0;
+		for (NodeReducedData nrd : cacheComponents) {
+			if (!nrd.isTrivial()){
+				i_complex++;
+			}
+			if (nrd.getContent().contains(obj)) {
+				if (nrd.isTrivial()) {
+					if (nrd.isTransient(cacheGraph)) {
+						return CAT_TRANSIENT_TRIVIAL;
 					}
+					return CAT_TERMINAL_TRIVIAL;
+				} else if (nrd.isTransient(cacheGraph)) {
+					return "complex_"+TRANSIENT_PALETTE[i_complex%TRANSIENT_PALETTE.length].getRGB();
+				} else {
+					return "complex_"+TERMINAL_PALETTE[i_complex%TERMINAL_PALETTE.length].getRGB();
 				}
 			}
 		}
-		return CAT_COMPLEX;
+		return CAT_TRANSIENT_TRIVIAL;
 	}
 
 	@Override
@@ -77,7 +94,7 @@ public class ConnectivitySelector extends Selector {
 		if (index == -1) {
 			return super.getStyle(category);
 		} else {
-			NodeStyle style = (NodeStyle)STYLE_COMPLEX.clone();
+			NodeStyle style = (NodeStyle)STYLE_TRANSIENT_COMPLEX.clone();
 			int color = Integer.parseInt(category.substring(index+1)); 
 			style.background = new Color(color);
 			style.textcolor = ColorPalette.getConstrastedForegroundColor(style.background);
@@ -99,9 +116,11 @@ public class ConnectivitySelector extends Selector {
 		this.cacheComponents = cache;
 		this.cacheGraph = graph;
 		this.totalComplexComponents = 0;
-		for (NodeReducedData nodeReducedData : cache) {
-			if (!nodeReducedData.isTrivial()) {
-				totalComplexComponents ++;
+		if (cache != null) {
+			for (NodeReducedData nodeReducedData : cache) {
+				if (!nodeReducedData.isTrivial()) {
+					totalComplexComponents ++;
+				}
 			}
 		}
 	}

@@ -124,6 +124,43 @@ public class ColorPalette {
 		}
     	return colorPalette;
     }
+
+	/**
+	 * Generate a color palette with colors in a restricted range of Hue and Brightness.
+	 * 
+	 * @param nbcolors
+	 * @param h
+	 * @param hrange
+	 * @param b
+	 * @param brange
+	 * @return
+	 */
+	public static Color[] createColorPaletteByHue(int nbcolors, float h, float hrange, float b, float brange) {
+
+		float hcur = (hrange)/(float)2;
+		float bcur = (brange)/(float)2;
+
+		float hmin = h - hcur;
+		float bmin = b - bcur;
+		
+		// steps for hue and brightness changes: this could be adapted
+		float hstep = (float)0.03456789;
+		float bstep = (float)0.03456789;
+		
+		float smin = (float)0.7;
+		float scur = (float)0.2;
+		
+    	Color[] colorPalette = new Color[nbcolors];
+    	for (int i = 0; i < nbcolors ; i++) {
+			colorPalette[i] = Color.getHSBColor(hmin+hcur , smin-scur, bmin+bcur);
+			
+			// prepare the next step
+			hcur = (hcur + hstep) % hrange;
+			bcur = (bcur + bstep) % brange;
+		}
+    	return colorPalette;
+    }
+	
 	public static Color[] createColorPaletteByRange(int nbcolors) {
 		return createColorPaletteByRange(nbcolors, 0.85f, 1.0f);
 	}

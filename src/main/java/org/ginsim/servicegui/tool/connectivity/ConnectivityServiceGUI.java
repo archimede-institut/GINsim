@@ -25,9 +25,12 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.ServiceStatus;
+import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.connectivity.ConnectivityResult;
 import org.ginsim.service.tool.connectivity.ConnectivitySelector;
 import org.ginsim.service.tool.connectivity.ConnectivityService;
+import org.ginsim.service.tool.sccgraph.SCCGraphResult;
+import org.ginsim.service.tool.sccgraph.SCCGraphService;
 import org.mangosdk.spi.ProviderFor;
 
 
@@ -39,26 +42,42 @@ import org.mangosdk.spi.ProviderFor;
 @ServiceStatus( ServiceStatus.RELEASED)
 public class ConnectivityServiceGUI extends AbstractServiceGUI {
 
-	private int initialWeight = W_GRAPH_COLORIZE + 20;
-
 	@Override
 	public List<Action> getAvailableActions( Graph<?, ?> graph) {
 		List<Action> actions = new ArrayList<Action>();
 		if (graph instanceof ReducedGraph) {
 			actions.add( new ExtractFromSCCGraphAction( (ReducedGraph)graph, this));
-			initialWeight = W_TOOLS_MAIN + 35;
 		} else {
 			actions.add( new ConnectivityColorizeGraphAction( graph, this));
-			initialWeight = W_GRAPH_COLORIZE + 20;
+			actions.add( new SCCGraphAction( graph, this));
 		}
 		return actions;
 	}
 
 	@Override
 	public int getInitialWeight() {
-		return initialWeight;
+		return W_TOOLS_MAIN + 35;
 	}
 }
+
+
+class SCCGraphAction extends ToolAction {
+	private static final long serialVersionUID = 8294301473668672512L;
+	private Graph graph;
+	
+	protected SCCGraphAction( Graph graph, ServiceGUI serviceGUI) {
+        super( "STR_constructReducedGraph", "STR_constructReducedGraph_descr", serviceGUI);
+		this.graph = graph;
+	}
+	
+	@Override
+	public void actionPerformed( ActionEvent arg0) {
+		SCCGraphService service = ServiceManager.getManager().getService(SCCGraphService.class);
+        SCCGraphResult result = service.run(graph);
+        GUIManager.getInstance().whatToDoWithGraph(result.getReducedGraph(), true);
+	}
+}
+
 
 class ConnectivityColorizeGraphAction extends GenericGraphAction {
 	private static final long serialVersionUID = 8294301473668672512L;

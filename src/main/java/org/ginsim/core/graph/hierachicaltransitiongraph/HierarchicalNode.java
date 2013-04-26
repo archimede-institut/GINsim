@@ -46,22 +46,15 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 	public static final String TYPE_TRANSIENT_CYCLE_STRING = "cycle";
 	public static final String TYPE_STABLE_STATE_STRING = "stableState";
 	
-	public static final Color TYPE_TRANSIENT_COMPONENT_COLOR = new Color(215, 246, 203);
+	public static final Color TYPE_TRANSIENT_COMPONENT_ALONE_COLOR = Color.white;
+	public static final Color TYPE_TRANSIENT_COMPONENT_COLOR = new Color(225, 225, 230);
 	public static final Color TYPE_TRANSIENT_CYCLE_COLOR = new Color(128, 158, 208);
-	public static final Color TYPE_TERMINAL_CYCLE_COLOR = new Color(240, 200, 200);
-	public static final Color TYPE_STABLE_STATE_COLOR = new Color(240, 200, 200);
-	public static final Color TYPE_TRANSIENT_COMPONENT_ALONE_COLOR = new Color(250, 250, 180);
-	public static final Color TYPE_EDEN_TRANSIENT_COMPONENT_COLOR = new Color(200, 200, 255);
 
-//	/**
-//	 * OMDDNode status to indicate the state is present in the GsStateSet but unprocessed 
-//	 */
-//	public static final int STATUS_UNPROCESSED = 1;
-//	/**
-//	 * OMDDNode status to indicate the state is present in the GsStateSet and processed 
-//	 */
-//	public static final int STATUS_PROCESSED = 2;
-	
+	public static final Color TYPE_EDEN_TRANSIENT_COMPONENT_COLOR = new Color(225, 255, 225);
+
+	public static final Color TYPE_TERMINAL_CYCLE_COLOR = new Color(240, 200, 200);
+	public static final Color TYPE_STABLE_STATE_COLOR = Color.red;
+
 	
 	/**
 	 * A static long used to give a unique id to each HN
@@ -89,11 +82,6 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 	 */
 	private List<byte[]> statePile = null;
 	
-//	/**
-//	 * Count of processed states in this node (a node is processed when all its childs are processed.
-//	 */
-//	private int processed = 0;
-
 	/**
 	 * Count of states in this node.
 	 */

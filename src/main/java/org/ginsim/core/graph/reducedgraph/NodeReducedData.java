@@ -131,7 +131,11 @@ public class NodeReducedData {
 		
 		for (Iterator it_nodes = content.iterator(); it_nodes.hasNext();) {
 			Object currentNode = it_nodes.next();
-			for (Edge edge: (Collection<Edge>)gm.getOutgoingEdges(currentNode)) {
+			Collection<Edge> outgoing =  (Collection<Edge>)gm.getOutgoingEdges(currentNode);
+			if (outgoing == null) {
+				return false;
+			}
+			for (Edge edge: outgoing) {
 				if (!content.contains(edge.getTarget())) return true; //There is a node that is not in the cycle
 			}
 		}

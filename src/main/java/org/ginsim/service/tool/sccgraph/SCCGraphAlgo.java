@@ -14,6 +14,8 @@ import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
+import org.ginsim.core.graph.view.css.Colorizer;
+import org.ginsim.service.tool.connectivity.ConnectivitySelector;
 
 
 
@@ -95,23 +97,31 @@ public class SCCGraphAlgo extends Thread {
 				}
 			}
 		}
-	          
+
+
 		NodeAttributesReader vreader = reducedGraph.getNodeAttributeReader();
 		int index = 1;
 		for (NodeReducedData component : components) {				//For each component
 			vreader.setNode(component);
 			if (component.isTrivial()) {
             	if (component.isTransient(graph)) {
-                	vreader.setBackgroundColor(Color.green.darker());
-            		vreader.setTextColor(Color.white);
+                	vreader.setBackgroundColor(Color.white);
+            		vreader.setTextColor(Color.black);
             	} else {
             		vreader.setBackgroundColor(Color.red.darker());
                 	vreader.setTextColor(Color.white);
             	}
 			} else {
-            	Color backgroundColor = ColorPalette.blueHues[index++%ColorPalette.blueHues.length];
-				vreader.setBackgroundColor(backgroundColor);
-            	vreader.setTextColor(ColorPalette.getConstrastedForegroundColor(backgroundColor));
+				Collection outgoing = reducedGraph.getOutgoingEdges(component);
+				if (outgoing != null && outgoing.size() > 0) {
+	            	Color backgroundColor = ConnectivitySelector.TRANSIENT_PALETTE[index++%ConnectivitySelector.TRANSIENT_PALETTE.length];
+					vreader.setBackgroundColor(backgroundColor);
+	            	vreader.setTextColor(ColorPalette.getConstrastedForegroundColor(backgroundColor));
+				} else {
+	            	Color backgroundColor = ConnectivitySelector.TERMINAL_PALETTE[index++%ConnectivitySelector.TERMINAL_PALETTE.length];
+					vreader.setBackgroundColor(backgroundColor);
+	            	vreader.setTextColor(ColorPalette.getConstrastedForegroundColor(backgroundColor));
+				}
 			}
             if (reducedGraph.getOutgoingEdges(component) == null) {	//  set the node's shape to ellipse if the node has no outgoing edges (is terminal).
                 vreader.setShape(NodeShape.ELLIPSE);
