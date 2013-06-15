@@ -65,13 +65,6 @@ public class AvatarEncoder {
 	public void write(AvatarConfig config, Writer out) throws IOException,
 			GsException {
 
-		DateFormat dateformat = DateFormat.getDateTimeInstance(DateFormat.LONG,
-				DateFormat.LONG);
-		out.write("-- " + dateformat.format(new Date()) + "\n");
-		out.write("-- GINsim export for AVATAR\n");
-		out.write("-- Inspired on the NuSMV v2.1+ syntax\n");
-		out.write("\n\nMODULE main\n");
-
 		LogicalModel model = config.getModel();
 		List<NodeInfo> coreNodes = model.getNodeOrder();
 		List<NodeInfo> outputNodes = model.getExtraComponents();
@@ -84,6 +77,12 @@ public class AvatarEncoder {
 					"AVATAR needs at least one core (non-input/non-output) node");
 		}
 
+		DateFormat dateformat = DateFormat.getDateTimeInstance(DateFormat.LONG,
+				DateFormat.LONG);
+		out.write("-- " + dateformat.format(new Date()) + "\n");
+		out.write("-- GINsim export for Avatar/Firefront\n");
+		out.write("-- Inspired on the NuSMV v2.1+ syntax\n");
+
 		NodeInfo[] aNodeOrder = new NodeInfo[coreNodes.size()];
 		boolean hasInputVars = false;
 		for (int i = 0; i < aNodeOrder.length; i++) {
@@ -93,8 +92,8 @@ public class AvatarEncoder {
 				hasInputVars = true;
 		}
 
-		out.write("\nIVAR\n");
 		if (hasInputVars) {
+			out.write("\nIVAR");
 			out.write("\n-- Input variables declaration\n");
 			for (int i = 0; i < coreNodes.size(); i++) {
 				if (coreNodes.get(i).isInput()) {
@@ -156,10 +155,10 @@ public class AvatarEncoder {
 		// Initial States definition
 		out.write("-- Declaration of core variables restriction list\n");
 		out.write(writeStateList(aNodeOrder, config.getInitialState().keySet()
-				.iterator()));
+				.iterator(), false));
 		out.write("-- Declaration of input variables restriction list\n");
 		out.write(writeStateList(aNodeOrder, config.getInputState().keySet()
-				.iterator()));
+				.iterator(), true));
 	}
 
 	private void nodeRules2Avatar(Writer out, LogicalModel model, int nodeMDD,
@@ -196,7 +195,7 @@ public class AvatarEncoder {
 	}
 
 	private String writeStateList(NodeInfo[] t_vertex,
-			Iterator<InitialState> iter) {
+			Iterator<InitialState> iter, boolean input) {
 		StringBuffer sb = new StringBuffer();
 		if (!iter.hasNext())
 			sb.append("-- Empty !\n");
@@ -207,6 +206,9 @@ public class AvatarEncoder {
 				String s_init = "";
 
 				for (int i = 0; i < t_vertex.length; i++) {
+					if (input != t_vertex[i].isInput()) {
+						continue;
+					}
 					List<Integer> v = m_states.get(t_vertex[i]);
 					if (v != null && v.size() > 0) {
 						s_init += "INIT ";
@@ -219,7 +221,8 @@ public class AvatarEncoder {
 						s_init += ";\n";
 					} else {
 						s_init += "-- INIT ";
-						s_init += avoidAvatarNames(t_vertex[i].getNodeID()) + "=0";
+						s_init += avoidAvatarNames(t_vertex[i].getNodeID())
+								+ "=0";
 						s_init += ";\n";
 					}
 				}

@@ -19,7 +19,8 @@ public class AvatarExportConfigPanel extends LogicalModelActionDialog {
 	private JPanel mainPanel;
 	private InitialStatePanel initPanel;
 
-	public AvatarExportConfigPanel(AvatarConfig config, AvatarExportAction action) {
+	public AvatarExportConfigPanel(AvatarConfig config,
+			AvatarExportAction action) {
 		super(config.getGraph(), null, Translator.getString("STR_AVATAR"), 600,
 				400);
 		this.setTitle(Translator.getString("STR_AVATARRunningTitle"));
@@ -29,9 +30,8 @@ public class AvatarExportConfigPanel extends LogicalModelActionDialog {
 
 		mainPanel = new JPanel(new BorderLayout());
 
-		initPanel = new InitialStatePanel(config.getGraph(), true);
+		initPanel = new InitialStatePanel(config.getGraph(), false);
 		initPanel.setParam(config);
-//		initPanel.setMessage(Translator.getString("STR_AVATAR_Checked"));
 		mainPanel.add(initPanel, BorderLayout.CENTER);
 		setMainPanel(mainPanel);
 	}
