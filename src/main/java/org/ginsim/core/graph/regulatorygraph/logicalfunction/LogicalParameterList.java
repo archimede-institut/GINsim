@@ -1,6 +1,7 @@
 package org.ginsim.core.graph.regulatorygraph.logicalfunction;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -13,7 +14,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
 public class LogicalParameterList extends ArrayList<LogicalParameter> {
 	private static final long serialVersionUID = 5768653095418077753L;
-	private HashSet manualp, functionp;
+	private final Collection manualp, functionp;
 	boolean updateDup = true;
 	int nbDup = 0;
 
@@ -45,8 +46,8 @@ public class LogicalParameterList extends ArrayList<LogicalParameter> {
 
 	public LogicalParameterList() {
 		super();
-		manualp = new HashSet();
-		functionp = new HashSet();
+		manualp = new ArrayList();
+		functionp = new ArrayList();
 	}
 	public boolean isManual(int i) {
 		if (i < size()) {
@@ -124,8 +125,8 @@ public class LogicalParameterList extends ArrayList<LogicalParameter> {
 		updateDup = true;
 	}
 	private void setParameters(List logicalParameters, boolean manual) {
-		HashSet hs1 = manual ? manualp : functionp;
-		HashSet hs2 = manual ? functionp : manualp;
+		Collection hs1 = manual ? manualp : functionp;
+		Collection hs2 = manual ? functionp : manualp;
 		Iterator it = logicalParameters.iterator();
 		LogicalParameter o;
 		int i;
@@ -210,7 +211,7 @@ public class LogicalParameterList extends ArrayList<LogicalParameter> {
 		manualp.add(I);
 		refreshDupAndConflicts();
 	}
-	private void findDup(LogicalParameter param, HashSet l) {
+	private void findDup(LogicalParameter param, Collection l) {
 		if (!updateDup) return;
 		param.isDup = false;
 		param.hasConflict = false;
