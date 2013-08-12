@@ -131,7 +131,7 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 					dim.setWidth(nreader.getWidth());
 					dim.setHeight(nreader.getHeight());
 					glyph.setBoundingBox(bb);
-					layout.add(glyph);
+					layout.addSpeciesGlyph(glyph);
 				}
 			}
 			
