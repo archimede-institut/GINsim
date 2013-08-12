@@ -52,7 +52,7 @@ public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  exten
 	 */
 	public ReducedGraphImpl( boolean parsing) {
 		
-        super( parsing);
+        super(ReducedGraphFactory.getInstance().getGraphType(), parsing);
 	}
 	/**
      * 

@@ -72,6 +72,8 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 
 
 	private final AbstractGraph backend;
+	private final String graphType;
+	
     private Map<Object, NodeVSdata> dataMap = null;
     
     private NodeVSdata vvsd;
@@ -82,13 +84,18 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
     private SimpleStroke stroke = new SimpleStroke();
 
     /**
+     * @param graphType
+     * @param backend
      * @param map
      */
-    public NodeAttributeReaderImpl(AbstractGraph backend, Map<Object, NodeVSdata> map) {
+    public NodeAttributeReaderImpl(String graphType, AbstractGraph backend, Map<Object, NodeVSdata> map) {
     	this.backend = backend;
         this.dataMap = map;
-        
-        
+        if (graphType == null) {
+        	this.graphType = "";
+        } else {
+        	this.graphType = graphType;
+        }
     }
 
     @Override
@@ -328,7 +335,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 	@Override
 	public void setDefaultNodeBackground(Color color) {
 		
-		OptionStore.setOption( VERTEX_BG, color.getRGB());
+		OptionStore.setOption( VERTEX_BG+graphType, color.getRGB());
 		bg = color;
 	}
 	

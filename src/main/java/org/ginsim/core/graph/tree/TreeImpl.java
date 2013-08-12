@@ -14,6 +14,8 @@ import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>> 
 	implements Tree{
 	
+	private static final String GRAPHTYPE = "tree";
+	
 	public final static int MODE_DIAGRAM_WITH_MULTIPLE_LEAFS = 0;
 	public final static int MODE_DIAGRAM = 1;
 	public final static int MODE_TREE = 2;
@@ -44,7 +46,7 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
 	 * @param parser the parser that will fill the tree.
 	 */
 	public TreeImpl(TreeBuilder parser) {
-		super();
+		super(GRAPHTYPE);
 		this.parser = parser;
 		parser.setTree(this);
 	}

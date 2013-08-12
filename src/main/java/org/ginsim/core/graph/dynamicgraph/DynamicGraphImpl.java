@@ -86,7 +86,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	 */
 	public DynamicGraphImpl( boolean parsing) {
 		
-        super( parsing);
+        super( DynamicGraphFactory.getInstance().getGraphType(), parsing);
 	}
 
 	/**

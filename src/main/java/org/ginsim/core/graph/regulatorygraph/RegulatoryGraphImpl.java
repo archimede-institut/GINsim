@@ -113,7 +113,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
      */
     public RegulatoryGraphImpl( boolean parsing) {
     	
-        super( parsing);
+        super( RegulatoryGraphFactory.getInstance().getGraphType(), parsing);
     	// getNodeAttributeReader().setDefaultNodeSize(55, 25);
     	// getEdgeAttributeReader().setDefaultEdgeSize(2);
     }

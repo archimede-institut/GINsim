@@ -41,6 +41,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     
 	private final AbstractGraph graph;
     private final Map<Edge<?>, EdgeVSdata> dataMap;
+    private final String graphType;
     
     private float defaultsize = 1;
     private boolean defaultfill = true;
@@ -62,10 +63,15 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     /**
      * @param dataMap
      */
-    public EdgeAttributeReaderImpl(AbstractGraph backend, Map dataMap, NodeAttributesReader nreader) {
+    public EdgeAttributeReaderImpl(String graphType, AbstractGraph backend, Map dataMap, NodeAttributesReader nreader) {
     	this.graph = backend;
         this.dataMap = dataMap;
         this.nreader = nreader;
+        if (graphType == null) {
+        	this.graphType = "";
+        } else {
+        	this.graphType = graphType;
+        }
     }
     
     public void setDefaultEdgeColor(Color color) {

@@ -67,7 +67,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 
 	public HierarchicalTransitionGraphImpl( boolean parsing) {
 		
-        super( parsing);
+        super(HierarchicalTransitionGraphFactory.getInstance().getGraphType(), parsing);
 	}
 
 	/**

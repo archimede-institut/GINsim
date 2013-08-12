@@ -75,19 +75,21 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     private static final List<GraphAssociatedObjectManager> v_OManager = new ArrayList<GraphAssociatedObjectManager>();
     public static final String ZIP_PREFIX = "GINsim-data/";
 	
+    private String graphType;
+    
 	/**
 	 * Create a new graph with the default back-end.
 	 */
-	public AbstractGraph() {
-		this( false);
+	public AbstractGraph(String graphType) {
+		this( graphType, false);
 	}
 	
     /**
      *
      * @param parsing
      */
-    public AbstractGraph( boolean parsing) {
-        this( (GraphBackend<V, E>)JgraphtBackendImpl.getGraphBackend(), parsing);
+    public AbstractGraph(String graphType, boolean parsing) {
+        this( graphType, (GraphBackend<V, E>)JgraphtBackendImpl.getGraphBackend(), parsing);
     }
 
 	
@@ -95,7 +97,8 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * Create a new graph with a back-end of choice.
 	 * @param backend
 	 */
-	private AbstractGraph(GraphBackend<V, E> backend, boolean parsing) {
+	private AbstractGraph(String graphType, GraphBackend<V, E> backend, boolean parsing) {
+		this.graphType = graphType;
 		this.graphBackend = backend;
         this.isParsing = parsing;
 	}
@@ -401,12 +404,12 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	
 	@Override
 	public EdgeAttributesReader getEdgeAttributeReader() {
-		return new EdgeAttributeReaderImpl(this, getEdgeVSMap(), getNodeAttributeReader());
+		return new EdgeAttributeReaderImpl(graphType, this, getEdgeVSMap(), getNodeAttributeReader());
 	}
 	
 	@Override
 	public NodeAttributesReader getNodeAttributeReader() {
-		return new NodeAttributeReaderImpl(this, getNodeVSMap());
+		return new NodeAttributeReaderImpl(graphType, this, getNodeVSMap());
 	}
 	
 	
