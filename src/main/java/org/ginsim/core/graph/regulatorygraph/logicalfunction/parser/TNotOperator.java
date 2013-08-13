@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TNotOperator extends TUnaryOperator {
-  public static final int priority = 1;
+  public static final int priority = 2;
   protected static String SYMBOL = "!";
 
   public TNotOperator() {

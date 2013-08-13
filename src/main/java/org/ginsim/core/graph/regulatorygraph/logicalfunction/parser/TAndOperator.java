@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TAndOperator extends TBinaryOperator {
-  public static final int priority = 0;
+  public static final int priority = 1;
   protected static String SYMBOL = "&";
 
   public TAndOperator() {
