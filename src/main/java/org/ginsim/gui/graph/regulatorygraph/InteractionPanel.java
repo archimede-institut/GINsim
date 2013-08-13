@@ -423,11 +423,11 @@ public class InteractionPanel extends AbstractParameterPanel
 		//int sepIndex = interactionList.getInteractions().getManualSize();
         int[]t_selection = jTable.getSelectedRows();
         boolean add = t_selection != null && t_selection.length == 1 ;
-        boolean edit = t_selection != null && t_selection.length > 0;
-				if (edit)
-					for (int i = 0; i < t_selection.length && edit; i++)
-						edit = interactionList.getInteractions().isManual(t_selection[i]);
-
+        boolean edit = t_selection != null;
+		for (int i = 0; edit && i < t_selection.length ; i++) {
+			edit = interactionList.getInteractions().isManual(t_selection[i]);
+		}
+		
     	getButRemove().setEnabled(edit);
     	getUpButton().setEnabled(edit);
     	getDownButton().setEnabled(edit);
