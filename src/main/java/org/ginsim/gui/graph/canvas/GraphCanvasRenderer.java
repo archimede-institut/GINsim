@@ -214,6 +214,15 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 	}
 
 	public Object getObjectUnderPoint(Point p) {
+		// selected edges have a higher priority
+		for (Object o: selectionCache) {
+			if (o instanceof Edge) {
+	    		ereader.setEdge((Edge)o);
+	    		if (ereader.select(p)) {
+	    			return o;
+	    		}
+			}
+		}
 
 		Object sel = null;
 		
