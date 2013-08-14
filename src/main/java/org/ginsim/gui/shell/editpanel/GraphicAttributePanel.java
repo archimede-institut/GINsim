@@ -60,6 +60,7 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	private JPanel jP_attr = null;
 	private JPanel jP_bttn = null;
 	private JButton jB_appToAll = null;
+	private JButton jB_appToSel = null;
 	private JButton jButton_fgcolor = null;
 	private JButton jButton_linecolor = null;
 	private JTextField jTF_width = null;
@@ -372,9 +373,13 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			cst.gridx = 0;
 			cst.gridy++;
 			cst.fill = GridBagConstraints.HORIZONTAL;
-			jP_bttn.add(getJB_appToAll(), cst);
+			jP_bttn.add(getJB_appToSel(), cst);
 
 			cst.gridx = 1;
+			jP_bttn.add(getJB_appToAll(), cst);
+
+			cst.gridx = 0;
+			cst.gridy++;
 			jP_bttn.add(getJBttn_setDefault(), cst);
 		}
 		return jP_bttn;
@@ -397,6 +402,25 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 			});
 		}
 		return jB_appToAll;
+	}
+
+	/**
+	 * This method initializes jB_appToSel
+	 *
+	 * @return javax.swing.JButton
+	 */
+	private JButton getJB_appToSel() {
+		if(jB_appToSel == null) {
+			jB_appToSel = new JButton(Translator.getString("STR_apply_to_sel"));
+			jB_appToSel.setSize(100, 25);
+			jB_appToSel.setToolTipText(Translator.getString("STR_apply_to_sel_descr"));
+			jB_appToSel.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					applyToSelection();
+				}
+			});
+		}
+		return jB_appToSel;
 	}
 
 	/**
@@ -823,63 +847,91 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	}
 
 	/**
-	 * apply all attribute to the selection if more than one cell is selected
-	 * or to all the graph in only one cell is selected
+	 * Apply selected attributes to the selection
+	 */
+	protected void applyToSelection() {
+		switch(whatIsSelected) {
+		case EDGESELECTED:
+			if (v_selection != null) {
+				applyToEdges(v_selection);
+			}
+			break;
+		case VERTEXSELECTED:
+			refreshSize();
+			if (v_selection != null) {
+				applyToNodes(v_selection);
+			}
+			break;
+		}
+	}
+	
+	/**
+	 * Apply selected attributes to all nodes or edges
 	 */
 	protected void applyToAll() {
 		switch(whatIsSelected) {
 		case EDGESELECTED:
-			Collection<?> edges = v_selection;
-			if (v_selection == null) {
-				edges = graph.getEdges();
-			}
-			for (Object edge: edges) {
-				eReader.setEdge((Edge)edge);
-				if (jCB_selectColor.isSelected()) {
-					eReader.setLineColor(jButton_linecolor.getBackground());
-				}
-				if (jCB_selectShape.isSelected()) {
-					eReader.setCurve( jCB_lineStyle.isSelected());
-				}
-				if (jCB_selectPattern.isSelected()) {
-					eReader.setDash((EdgePattern)jCB_linePattern.getSelectedItem());
-				}
-				if (jCB_selectSize.isSelected()) {
-					eReader.setLineWidth( ((Integer)jSpinner_linewidth.getValue()).intValue() );
-				}
-				eReader.refresh();
-			}
-			eReader.setEdge((Edge)selected);
+			applyToEdges(graph.getEdges());
 			break;
 		case VERTEXSELECTED:
 			refreshSize();
-			Collection<?> vertices = v_selection;
-			if (v_selection == null) {
-				vertices = graph.getNodes();
-			}
-			for (Object vertex: vertices) {
-				vReader.setNode(vertex);
-				if (jCB_selectShape.isSelected()) {
-					vReader.setShape(NodeShape.values()[jComboBox_shape.getSelectedIndex()]);
-				}
-				if (jCB_selectColor.isSelected()) {
-					vReader.setForegroundColor(jButton_fgcolor.getBackground());
-					vReader.setBackgroundColor(jButton_bgcolor.getBackground());
-					vReader.setTextColor(jButton_textcolor.getBackground());
-				}
-				if (jCB_selectSize.isSelected()) {
-					try {
-						int w = Integer.parseInt(jTF_width.getText());
-						int h = Integer.parseInt(jTF_height.getText());
-						vReader.setSize(w,h);
-					} catch (NumberFormatException e) {}
-				}
-				vReader.refresh();
-			}
-			vReader.setNode(selected);
+			applyToNodes(graph.getNodes());
 			break;
 		}
+		
 	}
+
+	/**
+	 * Apply the selected attributes to a list of nodes
+	 * @param nodes
+	 */
+	protected void applyToNodes(Collection<?> nodes) {
+		for (Object vertex: nodes) {
+			vReader.setNode(vertex);
+			if (jCB_selectShape.isSelected()) {
+				vReader.setShape(NodeShape.values()[jComboBox_shape.getSelectedIndex()]);
+			}
+			if (jCB_selectColor.isSelected()) {
+				vReader.setForegroundColor(jButton_fgcolor.getBackground());
+				vReader.setBackgroundColor(jButton_bgcolor.getBackground());
+				vReader.setTextColor(jButton_textcolor.getBackground());
+			}
+			if (jCB_selectSize.isSelected()) {
+				try {
+					int w = Integer.parseInt(jTF_width.getText());
+					int h = Integer.parseInt(jTF_height.getText());
+					vReader.setSize(w,h);
+				} catch (NumberFormatException e) {}
+			}
+			vReader.refresh();
+		}
+		vReader.setNode(selected);
+	}
+	
+	/**
+	 * Apply the selected attributes to a list of edges
+	 * @param edges
+	 */
+	protected void applyToEdges(Collection<?> edges) {
+		for (Object edge: edges) {
+			eReader.setEdge((Edge)edge);
+			if (jCB_selectColor.isSelected()) {
+				eReader.setLineColor(jButton_linecolor.getBackground());
+			}
+			if (jCB_selectShape.isSelected()) {
+				eReader.setCurve( jCB_lineStyle.isSelected());
+			}
+			if (jCB_selectPattern.isSelected()) {
+				eReader.setDash((EdgePattern)jCB_linePattern.getSelectedItem());
+			}
+			if (jCB_selectSize.isSelected()) {
+				eReader.setLineWidth( ((Integer)jSpinner_linewidth.getValue()).intValue() );
+			}
+			eReader.refresh();
+		}
+		eReader.setEdge((Edge)selected);
+	}
+	
 	/**
 	 * apply as default attributes
 	 */
