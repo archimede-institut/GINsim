@@ -132,9 +132,8 @@ public class LimitedSimulationFrame extends LogicalModelActionDialog {
 		}
 
 		LimitedSimulationService service = ServiceManager.getManager().getService(LimitedSimulationService.class);
-		DynamicGraph dynGraph;
 		try {
-			dynGraph = service.run(htg, constraint, model, params);
+			DynamicGraph dynGraph = service.run(htg, constraint, model, params);
 
 			// force a layout on the STG: not perfect but better than the current weird situation
 			for (Action action: ServiceGUIManager.getManager().getAvailableActions( dynGraph)) {

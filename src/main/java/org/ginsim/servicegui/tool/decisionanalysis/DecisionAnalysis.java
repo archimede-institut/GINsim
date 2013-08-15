@@ -29,12 +29,12 @@ public class DecisionAnalysis extends Thread {
 	/**
 	 * 
 	 */
-	public DecisionAnalysis(HierarchicalTransitionGraph htg, SimulationParameters params) throws GsException{
+	public DecisionAnalysis(LogicalModel model, HierarchicalTransitionGraph htg, SimulationParameters params) {
 		
 		this.htg = htg;
 		this.params = params;
-		this.model = htg.getAssociatedGraph().getModel();
-		this.geneCount = htg.getNodeOrderSize();
+		this.model = model;
+		this.geneCount = model.getNodeOrder().size();
 	}
 
 	public void run( Collection<HierarchicalNode> selected_vertices) {

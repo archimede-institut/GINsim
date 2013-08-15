@@ -11,6 +11,7 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
@@ -57,7 +58,8 @@ class DecisionAnalysisAction extends ToolAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		try{
-			new DecisionAnalysisFrame( GUIManager.getInstance().getFrame( graph), graph);
+			RegulatoryGraph lrg = graph.getAssociatedGraph();
+			new DecisionAnalysisFrame( GUIManager.getInstance().getFrame( graph), graph, lrg);
 		}
 		catch( GsException ge){
     		GUIMessageUtils.openErrorDialog( "Unable to launch the analysis");
