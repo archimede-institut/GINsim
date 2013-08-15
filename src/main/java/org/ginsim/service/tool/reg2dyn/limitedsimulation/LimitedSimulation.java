@@ -50,22 +50,15 @@ public class LimitedSimulation implements Runnable {
 	 * @param simulationManager
 	 * @param params
 	 */
-    public LimitedSimulation(HierarchicalTransitionGraph htg, SimulationConstraint constraint, SimulationParameters params, ProgressListener<Graph> simulationManager) {
+    public LimitedSimulation(LogicalModel model, HierarchicalTransitionGraph htg, SimulationConstraint constraint, SimulationParameters params, ProgressListener<Graph> simulationManager) {
     	this.htg = htg;
 		this.simulationManager = simulationManager;
 		this.breadthFirst = params.breadthFirst;
 		this.nbnode = 0;
 
-		try {
-			RegulatoryGraph regGraph = htg.getAssociatedGraph();
-			LogicalModel model = regGraph.getModel();
-			helper = new STGLimitedSimulationHelper(model, htg, params, constraint);
-			updater = SimulationUpdater.getInstance(model, params);
-		    initStatesIterator = constraint.getNewIterator();
-		} catch (GsException e) {
-			LogManager.error("The htg is not associated with a regulatory graph");
-		}
-		
+		helper = new STGLimitedSimulationHelper(model, htg, params, constraint);
+		updater = SimulationUpdater.getInstance(model, params);
+	    initStatesIterator = constraint.getNewIterator();
 	}
 
 

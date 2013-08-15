@@ -7,8 +7,11 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
@@ -52,7 +55,13 @@ class LimitedSimulationAction extends ToolAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		new LimitedSimulationFrame( GUIManager.getInstance().getFrame( graph), graph);
+		RegulatoryGraph lrg;
+		try {
+			lrg = graph.getAssociatedGraph();
+			new LimitedSimulationFrame( GUIManager.getInstance().getFrame( graph), graph, lrg);
+		} catch (GsException ex) {
+			LogManager.error("The htg is not associated with a regulatory graph");
+		}
 	}
 	
 }

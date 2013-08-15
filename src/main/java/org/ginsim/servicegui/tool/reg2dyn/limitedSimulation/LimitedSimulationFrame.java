@@ -1,6 +1,5 @@
 package org.ginsim.servicegui.tool.reg2dyn.limitedSimulation;
 
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Iterator;
@@ -14,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.application.Translator;
@@ -21,40 +21,42 @@ import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.StatesSet;
-import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
-import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
-import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
-import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.service.ServiceGUIManager;
 import org.ginsim.gui.service.common.LayoutAction;
 import org.ginsim.gui.shell.MainFrame;
-import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.gui.utils.data.GenericListSelectionPanel;
+import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.gui.utils.widgets.Frame;
+import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.limitedsimulation.LimitedSimulationService;
 import org.ginsim.service.tool.reg2dyn.limitedsimulation.OutgoingNodesHandlingStrategy;
 import org.ginsim.service.tool.reg2dyn.limitedsimulation.SimulationConstraint;
 import org.ginsim.service.tool.reg2dyn.limitedsimulation.StatesToHierarchicalEditTab;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
+import org.ginsim.servicegui.tool.reg2dyn.PrioritySelectionPanel;
 
-public class LimitedSimulationFrame extends StackDialog {
+public class LimitedSimulationFrame extends LogicalModelActionDialog {
 	private static final String OPTION_LIMITED_SIMULATION_INCLUDE_FIRST_OUTGOING_STATES = "limitedSimulation_includeFirstOutgoingStates";
 	private static final long serialVersionUID = 5659168888297711105L;
 	private HierarchicalTransitionGraph htg;
 	private JPanel mainPanel;
 	private JCheckBox strategy;
-	private PerturbationHolder mutantstore = new PerturbationStore();
-	private PerturbationSelectionPanel mutantPanel = null;
+	private PrioritySelectionPanel selectPriorityClass = null;
+	private PriorityClassManager pcmanager = null;
+	private SimulationParameters params = null;
 
-	public LimitedSimulationFrame(JFrame frame, HierarchicalTransitionGraph htg) {
-		super(frame, "STR_limitedSimulation", 475, 260);
+
+	public LimitedSimulationFrame(JFrame frame, HierarchicalTransitionGraph htg, RegulatoryGraph lrg) {
+		super(lrg, frame, "STR_limitedSimulation", 475, 260);
 		this.htg = htg;
 		setMainPanel(getMainPanel());			
 	}
 
-	
 	private JPanel getMainPanel() {
 		if (mainPanel == null) {
 			mainPanel = new JPanel();
@@ -79,24 +81,22 @@ public class LimitedSimulationFrame extends StackDialog {
 			mainPanel.add(strategy, c);
 
 			c.gridy++;
-			mainPanel.add(getMutantSelectionPanel(), c);
+			mainPanel.add(getPriorityClassSelector(), c);
 
 		}
 		return mainPanel;
 	}
 
-
-	private Component getMutantSelectionPanel() {
-		if (mutantPanel == null) {
-			try {
-				mutantPanel = new PerturbationSelectionPanel(this, htg.getAssociatedGraph(), mutantstore);				
-			} catch (GsException e) {
-				return null;
-			}
+	private GenericListSelectionPanel getPriorityClassSelector() {
+		if (selectPriorityClass == null) {
+			pcmanager = new PriorityClassManager(lrg);
+			selectPriorityClass = new PrioritySelectionPanel(this, pcmanager);
+			params = new SimulationParameters(lrg);
+			selectPriorityClass.setStore(params.store, SimulationParameters.PCLASS);
 		}
-    	return mutantPanel;
+		return selectPriorityClass;
 	}
-	
+
 	private OutgoingNodesHandlingStrategy getStrategy() {
 		if (strategy.isSelected()) {
 			return OutgoingNodesHandlingStrategy.ADD_FIRST_OUTGOING_STATE;
@@ -104,10 +104,6 @@ public class LimitedSimulationFrame extends StackDialog {
 		return OutgoingNodesHandlingStrategy.CONTAIN_TO_SELECTION;
 	}
 	
-	private Perturbation getMutant() {
-		return mutantstore.getPerturbation();
-	}
-
 	private StatesSet getStateSet() {
 		GraphSelection<HierarchicalNode, ?> selection = GUIManager.getInstance().getGraphGUI(htg).getSelection();
 		List<HierarchicalNode> selectedNodes = selection.getSelectedNodes();
@@ -128,7 +124,7 @@ public class LimitedSimulationFrame extends StackDialog {
 	}
 
 	@Override
-	protected void run() throws GsException {
+	public void run(LogicalModel model) {
 		SimulationConstraint constraint = new SimulationConstraint(getStateSet(), getStrategy());
 		if (!constraint.isValid()) {
 			NotificationManager.publishError(htg, "no_hierarchicalNode_selected");
@@ -136,18 +132,24 @@ public class LimitedSimulationFrame extends StackDialog {
 		}
 
 		LimitedSimulationService service = ServiceManager.getManager().getService(LimitedSimulationService.class);
-		DynamicGraph dynGraph = service.run(htg, constraint, getMutant());
+		DynamicGraph dynGraph;
+		try {
+			dynGraph = service.run(htg, constraint, model, params);
 
-		// force a layout on the STG: not perfect but better than the current weird situation
-		for (Action action: ServiceGUIManager.getManager().getAvailableActions( dynGraph)) {
-			if (action instanceof LayoutAction) {
-				action.actionPerformed(null);
-				break;
+			// force a layout on the STG: not perfect but better than the current weird situation
+			for (Action action: ServiceGUIManager.getManager().getAvailableActions( dynGraph)) {
+				if (action instanceof LayoutAction) {
+					action.actionPerformed(null);
+					break;
+				}
 			}
-		}
-		Frame frame = GUIManager.getInstance().newFrame(dynGraph);
-		if (frame != null && frame instanceof MainFrame) {
-			((MainFrame)frame).addTabToEditPanel(new StatesToHierarchicalEditTab(dynGraph, htg));
+			Frame frame = GUIManager.getInstance().newFrame(dynGraph);
+			if (frame != null && frame instanceof MainFrame) {
+				((MainFrame)frame).addTabToEditPanel(new StatesToHierarchicalEditTab(dynGraph, htg));
+			}
+		} catch (GsException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
