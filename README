@@ -1,53 +1,37 @@
 WHAT IS GINsim ?
+================================================
 
 GIMsim stands for Gene Interaction Networks simulation.
-for more info see http://gin.univ-mrs.fr/GINsim/
+for more info see http://ginsim.org
 
------------------------------------------------
+
 COMPILE AND INSTALL
-
-to compile ginsim just run ant in this directory.
-it will create a dist dir containing everything necessary to run ginsim.
-
-NOTE: do _NOT_ try to run runginsim in the compil directory, you have to use the start script found in the dist directory.
-on windows platform you 'll have to ENTER the dist directory before
-
-you can copy this dir anywhere you want, change it's name...
-
-PS: if you don't have ant installed you can find it here: http://ant.apache.org/
-
-PPS: if you want to run the .bat runner from within another directory, you may want to
-		correctly set the GINSIM_DIR environement variable in the .bat
-
 -----------------------------------------------
+
+GINsim uses maven: "mvn package" will compile it and prepare a jar
+as well as dependancies into the target folder.
+To use it outside of the build dir, copy the jar and the lib folder.
+
+
 DOC
+-----------------------------------------------
 
-* docbook:
-	ginsim has some doc in docbook format, to transform it to human readable format just run "ant docbook"
-	you may need to change the path to docbooc-xsl, if you don't have it, just go to http://docbook.sourceforge.net/projects/xsl/
-	and download it.
-* javadoc:
-	to generate ginsim's javadoc just run "ant javadoc"
-* both:
-	to generate both the javadoc and the docbook one, just run "ant doc"
+User documentation is available separately anc can be found on GINsim website.
+
+Generate javadoc (in the "target/site" folder) using "mvn javadoc:javadoc".
 	
-note: all generated doc is placed in the dist directory under the doc subdir.
 
-
------------------------------------------------
 RUN
-
-the "dist" dir contains startup scripts to run ginsim:
-  * runginsim.sh: for UNIX/linux/MacOSX
-  * runginsim.bat: for windows
-
-  just run it and voila.
-
-  NOTE: on windows platform you will have to ENTER the "dist" directory first
-  
 -----------------------------------------------
-PLUGINS
 
-GINsim can be improved by plugins.
-to install a new plugin you just have to copy it's jar file into GINsim's plugins dir.
-or refer to the doc included in the plugin.
+Run GINsim using the "java -jar GINsim.jar" command.
+
+  
+PLUGINS
+-----------------------------------------------
+
+Most features in GINsim are implemented as plugins and declared using java annotations.
+See the developer documentation for more details.
+Note that out-of-tree plugins (i.e. plugins distributed as separate jar files) are not
+supported, but supporting such plugins should be easy if needed.
+
