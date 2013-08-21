@@ -12,62 +12,28 @@ public abstract class Notification implements TimeoutObject, Comparable {
 
 	protected Object topic;
 	private String message;
-    private byte type;
-    
-    /** info, disappear quickly (7s) */
-    public static final byte NOTIFICATION_INFO = 0;
-    /** info, stay slowly (12s) */
-    public static final byte NOTIFICATION_INFO_LONG = 1;
-    /** warning, disappear quickly (10s) */
-    public static final byte NOTIFICATION_WARNING = 2;
-    /** warning, disappear slowly (15s) */
-    public static final byte NOTIFICATION_WARNING_LONG = 3;
-    /** error, disappear quickly (20s) */
-    public static final byte NOTIFICATION_ERROR = 4;
-    /** error, disappear slowly (30s) */
-    public static final byte NOTIFICATION_ERROR_LONG = 5;
-    
-    
+    private NotificationType type;
+
     /**
      * 
      * @param graph the Graph the notification is associated to 
      * @param message the message of the notification
      * @param type the type of the notification. See constants on Notification class.
      */
-    public Notification ( Object topic, String message, byte type) {
+    public Notification ( Object topic, String message, NotificationType type) {
     	
     	this.topic = topic;
 		this.message = message;
         this.type = type;
         
-        int timeout = 0;
-        switch (type) {
-            case NOTIFICATION_INFO:
-                timeout = 7;
-                break;
-            case NOTIFICATION_INFO_LONG:
-                timeout = 12;
-                break;
-            case NOTIFICATION_WARNING:
-                timeout = 10;
-                break;
-            case NOTIFICATION_WARNING_LONG:
-                timeout = 15;
-                break;
-            case NOTIFICATION_ERROR:
-                timeout = 20;
-                break;
-            case NOTIFICATION_ERROR_LONG:
-                timeout = 30;
-                break;
-            default:
-                this.type = NOTIFICATION_ERROR;
+        if (type == null) {
+        	this.type = NotificationType.ERROR;
         }
         
-        if (timeout > 0) {
-            Timeout.addTimeout( this, timeout*1000);
+        if (this.type.timeout > 0) {
+        	System.out.println("set timeout");
+            Timeout.addTimeout( this, this.type.timeout*1000);
         }
-        
     }
 
     /**
@@ -79,21 +45,21 @@ public abstract class Notification implements TimeoutObject, Comparable {
     	
     	return this.topic;
     }
-    
+
+    /**
+     * Get the message describing this notification.
+     * @return the message describing this notification
+     */
     public String getMessage() {
-    	
 		return message;
 	}
-    
-    /**
-     * 
-     * 
-     */
-    public void timeout() {
 
+    @Override
+    public void timeout() {
     	NotificationManager.getManager().publishDeletion( this);
     }
 
+    @Override
 	public String toString() {
 		return message;
 	}
@@ -101,7 +67,7 @@ public abstract class Notification implements TimeoutObject, Comparable {
     /**
      * @return the type of this notification.
      */
-    public byte getType() {
+    public NotificationType getType() {
         return type;
     }
     
@@ -117,7 +83,7 @@ public abstract class Notification implements TimeoutObject, Comparable {
     public int compareTo( Object obj) {
     	
     	if( obj instanceof Notification){
-    		return ((Notification) obj).getType() - this.type;
+    		return ((Notification) obj).getType().compareTo(this.type);
     	}
     	return 0;
     }

@@ -265,9 +265,8 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 	}
 
 	/**
-	 * Close the notification by set invisible the notification panel and ask it to test if a
-	 * other Notification is in the queue
-	 * 
+	 * Close the top notification by set invisible the notification panel
+	 * and updating it if another Notification is in the queue
 	 */
 	@Override
 	public void closeNotification() {
@@ -302,10 +301,14 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 	
 		synchronized( notificationList){
 			if( message != null){
-				notificationList.remove( message);
+				if (notificationList.remove( message)) {
+					return;
+				}
+				if (notificationPanel.isShowingMessage(message)) {
+					closeNotification();
+				}
 			}
 		}
-		
 	}
 
 	@Override

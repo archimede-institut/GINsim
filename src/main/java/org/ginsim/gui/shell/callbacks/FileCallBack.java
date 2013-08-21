@@ -19,6 +19,7 @@ import org.ginsim.common.application.Translator;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.shell.FileSelectionHelper;
@@ -195,6 +196,7 @@ class SaveAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		save();
+		NotificationManager.publishInformation(g, Translator.getString( "STR_Saved_msg"));
 	}
 }
 

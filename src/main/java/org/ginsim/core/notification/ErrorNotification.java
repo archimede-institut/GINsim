@@ -4,7 +4,7 @@ public class ErrorNotification extends Notification {
 
 	public ErrorNotification( Object topic, String message) {
 		
-		super( topic, message, Notification.NOTIFICATION_ERROR);
+		super( topic, message, NotificationType.ERROR);
 	}
 
 }

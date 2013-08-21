@@ -117,7 +117,7 @@ public class NotificationPanel extends JPanel {
 		_source.closeNotification();
 		
 	}
-
+	
 	public synchronized void updateNotificationMessage() {
 		
 		// If the notification panel is visible, it means a notification is currently displayed
@@ -128,24 +128,7 @@ public class NotificationPanel extends JPanel {
 		if (notification == null) {
 			return;
 		} else {
-            switch (notification.getType()) {
-            	case Notification.NOTIFICATION_INFO:
-            	case Notification.NOTIFICATION_INFO_LONG:
-            		setBackground(Color.CYAN);
-                break;
-            	case Notification.NOTIFICATION_WARNING:
-            	case Notification.NOTIFICATION_WARNING_LONG:
-            		setBackground(Color.ORANGE);
-                break;
-            	case Notification.NOTIFICATION_ERROR:
-            	case Notification.NOTIFICATION_ERROR_LONG:
-            		setBackground(Color.RED);
-                break;
-            default:
-                setBackground( null);
-                break;
-            }
-
+			setBackground(notification.getType().color);
 			setVisible(true);
 			notificationMessage.setText( Translator.getString( notification.getMessage()));
             String[] t_text = null;
@@ -192,6 +175,16 @@ public class NotificationPanel extends JPanel {
                 bcloseNotification.requestFocusInWindow();
 			}
 		}
+	}
+
+	/**
+	 * Test if this panel is currently showing the specified message.
+	 * 
+	 * @param message the message to test
+	 * @return true if this message is currently shown
+	 */
+	public boolean isShowingMessage(Notification message) {
+		return message != null && message == notification;
 	}
 
 }
