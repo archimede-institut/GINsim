@@ -10,6 +10,9 @@ import java.util.Set;
 
 import org.ginsim.common.utils.ArraySet;
 import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.common.NodeViewInfo;
+import org.ginsim.core.graph.view.DefaultNodeStyle;
+import org.ginsim.core.graph.view.NodeStyle;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.AbstractGraph;
@@ -221,6 +224,10 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
         return l;
     }
     
+    public NodeViewInfo getNodeViewInfo(V vertex) {
+    	return m_vertices.get(vertex);
+    }
+    
 	@Override
 	public V getEdgeSource(E e) {
 		return e.getSource();
@@ -252,10 +259,14 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
  * @param <V>
  * @param <E>
  */
-class VInfo<V,E extends Edge<V>> {
+class VInfo<V,E extends Edge<V>> implements NodeViewInfo {
     V self;
     Set<E> l_incoming;
     Set<E> l_outgoing;
+    
+    int x = 0;
+    int y = 0;
+    NodeStyle style = null;
     
     protected VInfo( V o ) {
         self = o;
@@ -327,6 +338,41 @@ class VInfo<V,E extends Edge<V>> {
             }
         }
     }
+
+	@Override
+	public int getX() {
+		return x;
+	}
+
+	@Override
+	public int getY() {
+		return y;
+	}
+
+	@Override
+	public NodeStyle getStyle() {
+		return style;
+	}
+
+	@Override
+	public boolean setPosition(int x, int y) {
+		if (x<0 || y < 0) {
+			return false;
+		}
+		this.x = x;
+		this.y = y;
+		
+		return true;
+	}
+
+	@Override
+	public boolean setStyle(NodeStyle style) {
+		if (this.style == style) {
+			return false;
+		}
+		this.style = style;
+		return true;
+	}
 }
 
 class EdgeSet<V,E extends Edge<V>> implements Set<E> {

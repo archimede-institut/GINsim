@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.common.NodeViewInfo;
 
 public interface GraphBackend<V, E extends Edge<V>> {
 
@@ -112,6 +113,8 @@ public interface GraphBackend<V, E extends Edge<V>> {
      * @return outgoing edges of the given node.
      */
     public Collection<E> getOutgoingEdges(V node);
+
+    public NodeViewInfo getNodeViewInfo(V node);
     
     
 	/**

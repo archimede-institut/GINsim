@@ -31,6 +31,8 @@ import org.ginsim.core.graph.common.EdgeAttributeReaderImpl.EdgeVSdata;
 import org.ginsim.core.graph.common.NodeAttributeReaderImpl.NodeVSdata;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.core.graph.view.DefaultEdgeStyle;
+import org.ginsim.core.graph.view.DefaultNodeStyle;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 
@@ -67,6 +69,8 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     // The mode the graph must use when saved
     private int saveMode;
 
+    private DefaultEdgeStyle<V, E> defaultEdgeStyle = null;
+    private DefaultNodeStyle<V> defaultNodeStyle = null;
     
     // TODO === List of variables that could be removed if a better solution is found =============
     private boolean isParsing = false;
@@ -404,7 +408,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	
 	@Override
 	public EdgeAttributesReader getEdgeAttributeReader() {
-		return new EdgeAttributeReaderImpl(graphType, this, getEdgeVSMap(), getNodeAttributeReader());
+		return new EdgeAttributeReaderImpl(getDefaultEdgeStyle(), this, getEdgeVSMap(), getNodeAttributeReader());
 	}
 	
 	@Override
@@ -412,6 +416,16 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		return new NodeAttributeReaderImpl(graphType, this, getNodeVSMap());
 	}
 	
+	private DefaultEdgeStyle<V, E> getDefaultEdgeStyle() {
+		if (defaultEdgeStyle == null) {
+			defaultEdgeStyle = createDefaultEdgeStyle();
+		}
+		return defaultEdgeStyle;
+	}
+	
+	protected DefaultEdgeStyle<V, E> createDefaultEdgeStyle() {
+		return new DefaultEdgeStyle<V,E>();
+	}
 	
 	protected EdgeAttributesReader getCachedEdgeAttributeReader() {
 		if (cachedEReader == null) {

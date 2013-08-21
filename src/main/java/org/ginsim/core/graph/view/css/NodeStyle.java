@@ -19,16 +19,10 @@ import org.ginsim.core.graph.view.NodeShape;
  * Attributes : 
  *     - background : the color for the background = any Color
  *     - foreground : the color for the text and the border = any Color
- *     - border : the style of theborder = simple, raised or strong
+ *     - border : the style of the border = simple, raised or strong
  *     - shape : the shape = ellipse or rectangle
  */
 public class NodeStyle implements Style {
-	@Deprecated
-	public static final Color NULL_FOREGROUND  = null;
-	@Deprecated
-	public static final NodeBorder NULL_BORDER = null;
-	@Deprecated
-	public static final NodeShape  NULL_SHAPE  = null;
 
 	public final static String CSS_BACKGROUND		= "background";
 	public final static String CSS_FOREGROUND		= "foreground";

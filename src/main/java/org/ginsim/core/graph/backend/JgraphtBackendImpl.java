@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.common.NodeViewInfo;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.alg.StrongConnectivityInspector;
 import org.jgrapht.graph.ListenableDirectedGraph;
@@ -99,6 +100,11 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	@Override
 	public Collection<E> getOutgoingEdges(V vertex) {
 		return outgoingEdgesOf(vertex);
+	}
+	
+	@Override
+	public NodeViewInfo getNodeViewInfo(V vertex) {
+		return base.getNodeViewInfo(vertex);
 	}
 	
     /**

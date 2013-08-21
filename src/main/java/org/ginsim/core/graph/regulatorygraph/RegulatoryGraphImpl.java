@@ -30,6 +30,7 @@ import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
+import org.ginsim.core.graph.view.DefaultEdgeStyle;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.css.CSSFilesAssociatedManager;
@@ -187,6 +188,12 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     	target.incomingEdgeAdded(obj);
     	return obj;
     }
+
+    
+	@Override
+	protected DefaultEdgeStyle<RegulatoryNode, RegulatoryMultiEdge> createDefaultEdgeStyle() {
+		return new DefaultRegulatoryEdgeStyle();
+	}
 
 	/**
 	 * Return the zip extension for the graph type

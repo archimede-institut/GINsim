@@ -25,11 +25,6 @@ public interface EdgeAttributesReader extends AttributesReader {
 	 * @param s
 	 */
 	void setDefaultEdgeSize(float s);
-	/**
-	 * change default for filling edge's end. 
-	 * @param b if true, edges end will be filled
-	 */
-	void setDefaultEdgeEndFill(boolean b);
     /**
      * Change the default curved flag
      * @param b
@@ -44,10 +39,6 @@ public interface EdgeAttributesReader extends AttributesReader {
 	 * @return the default edge size
 	 */
 	float getDefaultEdgeSize();
-	/**
-	 * @return if the default end is filled
-	 */
-	boolean getDefaultEdgeEndFill();
 	/**
 	 * @return the default line style
 	 *
