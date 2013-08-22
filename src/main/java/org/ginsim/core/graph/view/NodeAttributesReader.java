@@ -115,14 +115,6 @@ public interface NodeAttributesReader<V> extends AttributesReader {
      */
     void copyFrom(NodeAttributesReader fvreader);
 
-    /**
-     * Set the position and size at once
-     * 
-     * @param bounds the new bounds
-     * @return the old bounds
-     */
-	Rectangle setBounds(Rectangle bounds);
-
 	/**
 	 * Render the current node on a given graphics.
 	 * 

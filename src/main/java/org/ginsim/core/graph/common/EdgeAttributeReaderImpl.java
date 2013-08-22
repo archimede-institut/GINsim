@@ -81,7 +81,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
         }
         return cachedBounds;
     }
-
+    
     @Override
     public float getLineWidth() {
         if (evsd == null) {

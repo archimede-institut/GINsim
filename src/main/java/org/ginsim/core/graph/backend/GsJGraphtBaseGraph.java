@@ -11,7 +11,6 @@ import java.util.Set;
 import org.ginsim.common.utils.ArraySet;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.NodeViewInfo;
-import org.ginsim.core.graph.view.DefaultNodeStyle;
 import org.ginsim.core.graph.view.NodeStyle;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;

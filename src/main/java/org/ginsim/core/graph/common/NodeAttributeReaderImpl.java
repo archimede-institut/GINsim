@@ -17,18 +17,17 @@ import org.ginsim.core.graph.view.DefaultNodeStyle;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
+import org.ginsim.core.graph.view.NodeStyle;
+import org.ginsim.core.graph.view.SimpleNodeStyle;
 import org.ginsim.core.graph.view.SimpleStroke;
 
 
 /**
- * a generic nodeAttributeReader storing data into a dedicated hashmap
+ * A generic nodeAttributeReader showing a unified view of default and node-specific styles (from the graph backend).
  */
 public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttributesReader<V> {
 
 	private static char ELLIPSIS = '\u2026';
-	
-	private static final int MAX_SIZE = 500;
-	private static final int MIN_SIZE = 15;
 	
 	public static final int SW = 6;      // width of the selection mark
 	public static final int hSW = SW/2;  // half width of the selection mark
@@ -76,11 +75,12 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 
 	private final GraphBackend<V,E> backend;
 	private final DefaultNodeStyle<V> defaultStyle;
+	private final Rectangle cachedBounds = new Rectangle();
 	
-    private final Map<Object, NodeVSdata> dataMap;
-    
-    private NodeVSdata vvsd;
     private V vertex;
+    private NodeViewInfo viewInfo = null;
+    private NodeStyle<V> style = null;
+
     private boolean selected;
     private boolean hasChanged = false;
     
@@ -91,9 +91,8 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
      * @param backend
      * @param map
      */
-    public NodeAttributeReaderImpl(DefaultNodeStyle defaultStyle, GraphBackend<V, E> backend, Map<Object, NodeVSdata> map) {
+    public NodeAttributeReaderImpl(DefaultNodeStyle defaultStyle, GraphBackend<V, E> backend) {
     	this.backend = backend;
-        this.dataMap = map;
         this.defaultStyle = defaultStyle;
     }
 
@@ -105,117 +104,123 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
     public void setNode(V node, boolean selected) {
     	this.vertex = node;
     	this.selected = selected;
-        vvsd = (NodeVSdata)dataMap.get(vertex);
-        Dimension size = defaultStyle.getDimension(vertex);
-        if (vvsd == null) {
-            vvsd = new NodeVSdata();
-            vvsd.bgcolor = bg;
-            vvsd.fgcolor = fg;
-            vvsd.textcolor = text;
-            vvsd.border = border;
-            vvsd.bounds.setFrame(vvsd.bounds.getX(), vvsd.bounds.getY(), size.width, size.height);
-            vvsd.shape = shape;
-            dataMap.put(vertex, vvsd);
-        }
+    	viewInfo = backend.getNodeViewInfo(node);
+    	if (viewInfo == null) {
+    		style = null;
+    		return;
+    	}
+    	
+        style = viewInfo.getStyle();
+        refreshBounds();
     	hasChanged = false;
+    }
+    
+    private void refreshBounds() {
+    	NodeStyle<V> ns = style;
+    	if (ns == null) {
+    		ns = defaultStyle;
+    	}
+        cachedBounds.setLocation(viewInfo.getX(), viewInfo.getY());
+        cachedBounds.setSize(ns.getWidth(vertex), ns.getHeight(vertex));
+    }
+    
+    private boolean ensureOverride() {
+    	if (style == null) {
+    		if (viewInfo == null) {
+    			return false;
+    		}
+    		
+    		style = new SimpleNodeStyle<V>();
+    		style.setDimension(cachedBounds.width, cachedBounds.height);
+    		viewInfo.setStyle(style);
+    		return false;
+    	}
+    	return true;
     }
 
     @Override
     public int getX() {
-        if (vvsd == null) {
-            return 0;
-        }
-        return (int)vvsd.bounds.getX();
+        return cachedBounds.x;
     }
 
     @Override
     public int getY() {
-        if (vvsd == null) {
-            return 0;
-        }
-        return (int)vvsd.bounds.getY();
+        return cachedBounds.y;
     }
 
     @Override
     public int getHeight() {
-        if (vvsd == null) {
-            return 0;
-        }
-        return (int)vvsd.bounds.getHeight();
+        return cachedBounds.height;
     }
 
     @Override
     public int getWidth() {
-        if (vvsd == null) {
-            return 0;
-        }
-        return (int)vvsd.bounds.getWidth();
+        return cachedBounds.width;
     }
 
     @Override
     public Rectangle getBounds() {
-        if (vvsd == null) {
-            return null;
-        }
-    	return vvsd.bounds;
+    	return cachedBounds;
     }
 
-    
     @Override
     public Color getForegroundColor() {
-        if (vvsd == null) {
-            return null;
+    	Color color = null;
+        if (style != null) {
+        	color = style.getForeground(vertex);
         }
-        return vvsd.fgcolor;
+        if (color == null) {
+        	color = defaultStyle.getForeground(vertex);
+        }
+        return color;
     }
 
     @Override
    public void setForegroundColor(Color color) {
-        if (vvsd == null) {
-            return;
-        }
-        if (vvsd.fgcolor != color) {
-        	hasChanged = true;
-            vvsd.fgcolor = color;
-        }
+    	if ( !ensureOverride() ) {
+    		return;
+    	}
+    	hasChanged |= style.setForeground(color);
     }
 
     @Override
     public Color getTextColor() {
-        if (vvsd == null) {
-            return null;
+    	Color color = null;
+        if (style != null) {
+        	color = style.getTextColor(vertex);
         }
-        return vvsd.textcolor;
+        if (color == null) {
+        	color = defaultStyle.getTextColor(vertex);
+        }
+        return color;
     }
 
     @Override
    public void setTextColor(Color color) {
-        if (vvsd == null) {
-            return;
-        }
-        if (vvsd.textcolor != color) {
-        	hasChanged = true;
-            vvsd.textcolor = color;
-        }
+    	if ( !ensureOverride() ) {
+    		return;
+    	}
+    	hasChanged |= style.setTextColor(color);
     }
 
     @Override
     public Color getBackgroundColor() {
-        if (vvsd == null) {
-            return null;
+    	Color color = null;
+        if (style != null) {
+        	color = style.getBackground(vertex);
         }
-        return vvsd.bgcolor;
+        if (color == null) {
+        	color = defaultStyle.getBackground(vertex);
+        }
+        return color;
     }
 
     @Override
     public void setBackgroundColor(Color color) {
-        if (vvsd == null) {
-            return;
-        }
-        if (vvsd.bgcolor != color) {
-        	hasChanged = true;
-            vvsd.bgcolor = color;
-        }
+    	if ( !ensureOverride() ) {
+    		return;
+    	}
+    	hasChanged |= style.setBackground(color);
     }
 
     @Override
@@ -233,7 +238,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 
     @Override
     public void setPos(int x, int y) {
-        if (vvsd == null) {
+        if (viewInfo == null) {
             return;
         }
 
@@ -245,13 +250,14 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
         	y = 0;
         }
         
-        vvsd.bounds.setFrame(x,y, vvsd.bounds.getWidth(), vvsd.bounds.getHeight());
+        viewInfo.setPosition(x, y);
+        refreshBounds();
         hasChanged = true;
     }
     
     @Override
     public void move(int dx, int dy) {
-        if (vvsd == null) {
+        if (viewInfo == null) {
             return;
         }
 
@@ -262,76 +268,54 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 
     @Override
     public void setSize(int w, int h) {
-        if (vvsd == null) {
-            return;
-        }
-        if (w > MAX_SIZE) {
-        	w = MAX_SIZE;
-        } else if (w < MIN_SIZE) {
-        	w = MIN_SIZE;
-        }
-        if (h > MAX_SIZE) {
-        	h = MAX_SIZE;
-        } else if (h < MIN_SIZE) {
-        	h = MIN_SIZE;
-        }
-        vvsd.bounds.setFrame(vvsd.bounds.getX(), vvsd.bounds.getY(), w, h);
+    	if ( !ensureOverride() ) {
+    		return;
+    	}
+    	hasChanged |= style.setDimension(w, h);
+    	refreshBounds();
         hasChanged = true;
     }
 
     @Override
     public void setBorder(NodeBorder border) {
-        if (vvsd != null && vvsd.border != border) {
-        	vvsd.border = border;
-        	hasChanged = true;
-        }
+    	if ( !ensureOverride() ) {
+    		return;
+    	}
+    	hasChanged |= style.setNodeBorder(border);
     }
 
     @Override
     public NodeBorder getBorder() {
-        if (vvsd == null || vvsd.border == null) {
-            return defaultStyle.getNodeBorder(vertex);
+    	NodeBorder border = null;
+        if (style != null) {
+            border = style.getNodeBorder(vertex); 
         }
-        return vvsd.border;
+    	if (border == null) {
+    		border = defaultStyle.getNodeBorder(vertex);
+    	}
+        return border;
     }
 
     @Override
     public NodeShape getShape() {
-        if (vvsd == null) {
-            return defaultStyle.getNodeShape(vertex);
+    	NodeShape shape = null;
+        if (style != null) {
+        	shape = style.getNodeShape(vertex); 
         }
-        return vvsd.shape;
+    	if (shape == null) {
+    		shape = defaultStyle.getNodeShape(vertex);
+    	}
+        return shape;
     }
 
     @Override
     public void setShape(NodeShape shape) {
-        if (vvsd != null && vvsd.shape != shape) {
-        	vvsd.shape = shape;
-        	hasChanged = true;
-        }
+    	if ( !ensureOverride() ) {
+    		return;
+    	}
+    	hasChanged |= style.setNodeShape(shape);
     }
 
-    
-    class NodeVSdata {
-    	protected Rectangle bounds = new Rectangle();
-        protected Color fgcolor;
-        protected Color textcolor;
-        protected Color bgcolor;
-        
-        protected NodeShape shape;
-        protected NodeBorder border;
-    }
-
-	@Override
-	public Rectangle setBounds(Rectangle bounds) {
-		if (vvsd != null) {
-			Rectangle old = vvsd.bounds;
-			vvsd.bounds = bounds;
-			return old;
-		}
-		return null;
-	}
-	
 	@Override
     public void copyFrom(NodeAttributesReader fvreader) {
         setPos(fvreader.getX(), fvreader.getY());
@@ -368,10 +352,9 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 
 	@Override
 	public boolean select(Point p) {
-		if (vvsd == null) {
+		if (viewInfo == null) {
 			return false;
 		}
-		
 		return getBounds().contains(p);
 	}
 	
@@ -433,13 +416,11 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 			g.fillRect(w-SW, h-SW, SW, SW);
 			g.fillRect(w-SW, 0, SW, SW);
 		}
-		
 	}
 
 	@Override
 	public DefaultNodeStyle getDefaultNodeStyle() {
-		// TODO Auto-generated method stub
-		return null;
+		return defaultStyle;
 	}
 
 }

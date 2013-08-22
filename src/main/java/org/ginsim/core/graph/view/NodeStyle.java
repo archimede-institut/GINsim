@@ -6,21 +6,22 @@ import java.awt.Dimension;
 public interface NodeStyle<V> {
 
 	Color getBackground(V obj);
-	void  setBackground(Color bg);
-	
 	Color getForeground(V obj);
-	void  setForeground(Color bg);
-	
 	Color getTextColor(V obj);
-	void  setTextColor(Color bg);
 	
-	Dimension getDimension(V obj);
-	void setDimension(int w, int h);
-	void setDimension(Dimension d);
+	int getWidth(V obj);
+	int getHeight(V obj);
 	
 	NodeShape getNodeShape(V obj);
-	void setNodeShape(NodeShape shape);
-
 	NodeBorder getNodeBorder(V obj);
-	void setNodeBorder(NodeBorder border);
+
+	boolean setBackground(Color bg);
+	boolean setForeground(Color bg);
+	boolean setTextColor(Color bg);
+
+	boolean setDimension(int w, int h);
+	
+	boolean setNodeShape(NodeShape shape);
+
+	boolean setNodeBorder(NodeBorder border);
 }

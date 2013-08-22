@@ -16,12 +16,16 @@ public class DefaultNodeStyle<V extends Object> implements NodeStyle<V> {
 
 	private static NodeShape DEFAULT_SHAPE = NodeShape.RECTANGLE;
 	private static NodeBorder DEFAULT_BORDER = NodeBorder.SIMPLE;
+
+	private static final int MAX_SIZE = 500;
+	private static final int MIN_SIZE = 15;
 	
 	private Color background = Color.WHITE;
 	private Color foreground = Color.BLACK;
 	private Color textColor  = Color.BLACK;
 	
-	private Dimension size = new Dimension(40, 25);
+	private int width = 40;
+	private int height = 25;
 	
 	private NodeShape shape = DEFAULT_SHAPE;
 	private NodeBorder border = DEFAULT_BORDER;
@@ -42,47 +46,60 @@ public class DefaultNodeStyle<V extends Object> implements NodeStyle<V> {
 	}
 
 	@Override
-	public void setBackground(Color bg) {
-		this.background = bg;
+	public boolean setBackground(Color bg) {
+		if (bg != this.background) {
+			this.background = bg;
+			return true;
+		}
+		return false;
 	}
 
 	@Override
-	public void setForeground(Color fg) {
+	public boolean setForeground(Color fg) {
 		this.foreground = fg;
+		return true;
 	}
 
 	@Override
-	public void setTextColor(Color txt) {
+	public boolean setTextColor(Color txt) {
 		this.textColor = txt;
+		return true;
 	}
 
 	@Override
-	public Dimension getDimension(V obj) {
-		return size;
+	public int getWidth(V obj) {
+		return width;
 	}
 
 	@Override
-	public void setDimension(int w, int h) {
-		this.setDimension(new Dimension(w,h));
+	public int getHeight(V obj) {
+		return height;
 	}
 
 	@Override
-	public void setDimension(Dimension size) {
-		this.size = size;
+	public boolean setDimension(int w, int h) {
+		// TODO: implement min/max width/height
+		this.width = w;
+		this.height = h;
+		return true;
 	}
-	
+
 	@Override
 	public NodeShape getNodeShape(V obj) {
 		return shape;
 	}
 	
 	@Override
-	public void setNodeShape(NodeShape shape) {
+	public boolean setNodeShape(NodeShape shape) {
+		if (shape == this.shape) {
+			return false;
+		}
 		if (shape == null) {
 			this.shape = DEFAULT_SHAPE;
 		} else {
 			this.shape = shape;
 		}
+		return true;
 	}
 
 	@Override
@@ -91,10 +108,15 @@ public class DefaultNodeStyle<V extends Object> implements NodeStyle<V> {
 	}
 
 	@Override
-	public void setNodeBorder(NodeBorder border) {
+	public boolean setNodeBorder(NodeBorder border) {
+		if (border == this.border) {
+			return false;
+		}
 		if (border == null) {
 			this.border = DEFAULT_BORDER;
+		} else {
+			this.border = border;
 		}
-		this.border = border;
+		return true;
 	}
 }

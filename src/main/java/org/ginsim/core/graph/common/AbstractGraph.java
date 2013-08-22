@@ -2,7 +2,6 @@ package org.ginsim.core.graph.common;
 
 import java.awt.Dimension;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,7 +27,6 @@ import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.backend.JgraphtBackendImpl;
 import org.ginsim.core.graph.common.EdgeAttributeReaderImpl.EdgeVSdata;
-import org.ginsim.core.graph.common.NodeAttributeReaderImpl.NodeVSdata;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.view.DefaultEdgeStyle;
@@ -54,7 +52,6 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	// view data
 	private GraphViewListener listener;
     private Map<Edge<?>,EdgeVSdata> evsmap = null;
-    private Map<Object, NodeVSdata> vvsmap = null;
 
     // cache attribute readers for internal usage
     private EdgeAttributesReader cachedEReader = null;
@@ -369,13 +366,6 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
         return evsmap;
     }
     
-    private Map<Object, NodeVSdata> getNodeVSMap() {
-        if (vvsmap == null) {
-            vvsmap = new HashMap<Object, NodeVSdata>();
-        }
-        return vvsmap;
-    }
-
 	@Override
 	public void addViewListener(GraphViewListener listener) {
 		this.listener = listener;
@@ -413,7 +403,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	
 	@Override
 	public NodeAttributesReader getNodeAttributeReader() {
-		return new NodeAttributeReaderImpl(getDefaultNodeStyle(), graphBackend, getNodeVSMap());
+		return new NodeAttributeReaderImpl(getDefaultNodeStyle(), graphBackend);
 	}
 	
 	private DefaultEdgeStyle<V, E> getDefaultEdgeStyle() {
