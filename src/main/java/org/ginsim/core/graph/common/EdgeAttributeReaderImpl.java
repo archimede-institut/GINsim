@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ginsim.common.application.OptionStore;
+import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.view.Bezier;
 import org.ginsim.core.graph.view.DefaultEdgeStyle;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -28,7 +29,7 @@ import org.ginsim.core.graph.view.ViewHelper;
 /**
  * a generic edgeAttributeReader storing data into a dedicated hashmap
  */
-public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
+public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttributesReader<V,E> {
 
 	private static final int MAX_EDGE_SIZE = 7;
 	
@@ -36,18 +37,14 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 	
     protected static Map<String, float[]> m_pattern = null;
 	
-    protected float defaultLineWidth;
+	private final GraphBackend<V, E> graph;
+    private final Map<E, EdgeVSdata> dataMap;
+    private final DefaultEdgeStyle<V,E> defaultStyle;
     
-	private final AbstractGraph graph;
-    private final Map<Edge<?>, EdgeVSdata> dataMap;
-    private final DefaultEdgeStyle defaultStyle;
-    
-    private Edge<?> edge;
+    private E edge;
     private EdgeVSdata evsd = null;
     private boolean selected = false;
     private boolean hasChanged = false;
-    
-    private boolean defaultcurve;
     
     private final NodeAttributesReader nreader;
     
@@ -59,17 +56,13 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     /**
      * @param dataMap
      */
-    public EdgeAttributeReaderImpl(DefaultEdgeStyle defaultStyle, AbstractGraph backend, Map dataMap, NodeAttributesReader nreader) {
+    public EdgeAttributeReaderImpl(DefaultEdgeStyle defaultStyle, GraphBackend<V, E> backend, Map dataMap, NodeAttributesReader nreader) {
     	this.graph = backend;
         this.dataMap = dataMap;
         this.nreader = nreader;
         this.defaultStyle = defaultStyle;
     }
     
-    public void setDefaultEdgeColor(Color color) {
-    	defaultStyle.setColor(color);
-    }
-
     @Override
     public Rectangle getBounds() {
         if (evsd == null) {
@@ -87,17 +80,6 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
         	cachedBounds = new Rectangle(b.x-arrowmargin, b.y-arrowmargin, b.width+2*arrowmargin, b.height+2*arrowmargin);
         }
         return cachedBounds;
-    }
-
-    
-    @Override
-    public void setDefaultEdgeSize(float s) {
-        if (s > MAX_EDGE_SIZE) {
-        	s = MAX_EDGE_SIZE;
-        } else if (s < 1) {
-        	s = 1;
-        }
-// FIXME        defaultsize = s;
     }
 
     @Override
@@ -125,11 +107,11 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     }
 
     @Override
-    public void setEdge(Edge obj) {
+    public void setEdge(E obj) {
     	setEdge(obj, false);
     }
     @Override
-    public void setEdge(Edge obj, boolean selected) {
+    public void setEdge(E obj, boolean selected) {
     	this.selected = selected;
     	if (obj == this.edge) {
     		return;
@@ -137,16 +119,13 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     	this.edge = obj;
     	cachedBounds = null;
     	cachedPath = null;
-        evsd = (EdgeVSdata)dataMap.get(obj);
-        if (evsd == null && obj instanceof Edge) {
-            evsd = (EdgeVSdata)dataMap.get(obj);
-        }
+        evsd = dataMap.get(obj);
         if (evsd == null) {
             evsd = new EdgeVSdata();
             
             evsd.color = null;
-            evsd.curve = defaultcurve;
-            evsd.size = getDefaultEdgeSize();
+            evsd.curve = false;
+            evsd.size = defaultStyle.getWidth(edge);
             
             dataMap.put(obj, evsd);
         }
@@ -163,11 +142,8 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 
     @Override
     public Color getLineColor() {
-        if (evsd == null) {
-            return null;
-        }
-        if (evsd.color == null) {
-        	return getDefaultEdgeColor();
+        if (evsd == null || evsd.color == null) {
+            return defaultStyle.getColor(edge);
         }
         return evsd.color;
     }
@@ -175,7 +151,7 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
     @Override
     public void refresh() {
     	if (edge != null && hasChanged) {
-    		graph.refresh(edge);
+    		graph.damage(edge);
     	}
     }
     @Override
@@ -227,10 +203,6 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 		protected EdgePattern dash;
     }
 
-    public float getDefaultEdgeSize() {
-        return defaultStyle.getWidth(edge);
-    }
-
     @Override
 	public void setDash(EdgePattern pattern) {
 		if (evsd != null && evsd.dash != pattern) {
@@ -245,11 +217,6 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 			return null;
 		}
 		return evsd.dash;
-	}
-	
-	@Override
-	public Color getDefaultEdgeColor() {
-		return defaultStyle.getColor(edge);
 	}
 
 	@Override
@@ -273,17 +240,6 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
  }
  
 	@Override
-	public void copyDefaultFrom(EdgeAttributesReader fvreader) {
-		setDefaultEdgeSize(fvreader.getDefaultEdgeSize());
-		setDefaultCurve(fvreader.getDefaultCurve());
-	}
-
-	@Override
-	public void setDefaultCurve(boolean b) {
-		defaultcurve = b;
-	}
-
-	@Override
 	public boolean isCurve() {
 		if (evsd == null) {
 			return false;
@@ -297,11 +253,6 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 			evsd.curve = curve;
 			hasChanged = true;
 		}
-	}
-
-	@Override
-	public boolean getDefaultCurve() {
-		return defaultcurve;
 	}
 
 	@Override
@@ -469,4 +420,8 @@ public class EdgeAttributeReaderImpl implements EdgeAttributesReader {
 		}
 	}
 
+	@Override
+	public DefaultEdgeStyle<V, E> getDefaultEdgeStyle() {
+		return defaultStyle;
+	}
 }

@@ -1,6 +1,7 @@
 package org.ginsim.core.graph.common;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -11,6 +12,8 @@ import java.util.Map;
 
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
+import org.ginsim.core.graph.backend.GraphBackend;
+import org.ginsim.core.graph.view.DefaultNodeStyle;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
@@ -20,7 +23,7 @@ import org.ginsim.core.graph.view.SimpleStroke;
 /**
  * a generic nodeAttributeReader storing data into a dedicated hashmap
  */
-public class NodeAttributeReaderImpl implements NodeAttributesReader {
+public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttributesReader<V> {
 
 	private static char ELLIPSIS = '\u2026';
 	
@@ -42,8 +45,8 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
     public static Color fg = new Color(OptionStore.getOption( VERTEX_FG, Color.WHITE.getRGB()));
     public static Color text = new Color(OptionStore.getOption( VERTEX_TEXT, Color.BLACK.getRGB()));
     
-    public static int height = OptionStore.getOption( VERTEX_HEIGHT, 25);
-    public static int width = OptionStore.getOption( VERTEX_WIDTH, 50);
+//    public static int height = OptionStore.getOption( VERTEX_HEIGHT, 25);
+//    public static int width = OptionStore.getOption( VERTEX_WIDTH, 50);
     
     public static NodeShape  shape;
     public static NodeBorder border;
@@ -71,13 +74,13 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
     }
 
 
-	private final AbstractGraph backend;
-	private final String graphType;
+	private final GraphBackend<V,E> backend;
+	private final DefaultNodeStyle<V> defaultStyle;
 	
-    private Map<Object, NodeVSdata> dataMap = null;
+    private final Map<Object, NodeVSdata> dataMap;
     
     private NodeVSdata vvsd;
-    private Object vertex;
+    private V vertex;
     private boolean selected;
     private boolean hasChanged = false;
     
@@ -88,31 +91,29 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
      * @param backend
      * @param map
      */
-    public NodeAttributeReaderImpl(String graphType, AbstractGraph backend, Map<Object, NodeVSdata> map) {
+    public NodeAttributeReaderImpl(DefaultNodeStyle defaultStyle, GraphBackend<V, E> backend, Map<Object, NodeVSdata> map) {
     	this.backend = backend;
         this.dataMap = map;
-        if (graphType == null) {
-        	this.graphType = "";
-        } else {
-        	this.graphType = graphType;
-        }
+        this.defaultStyle = defaultStyle;
     }
 
     @Override
-    public void setNode(Object node) {
+    public void setNode(V node) {
     	setNode(node, false);
     }
-    public void setNode(Object node, boolean selected) {
+    
+    public void setNode(V node, boolean selected) {
     	this.vertex = node;
     	this.selected = selected;
         vvsd = (NodeVSdata)dataMap.get(vertex);
+        Dimension size = defaultStyle.getDimension(vertex);
         if (vvsd == null) {
             vvsd = new NodeVSdata();
             vvsd.bgcolor = bg;
             vvsd.fgcolor = fg;
             vvsd.textcolor = text;
             vvsd.border = border;
-            vvsd.bounds.setFrame(vvsd.bounds.getX(), vvsd.bounds.getY(), width, height);
+            vvsd.bounds.setFrame(vvsd.bounds.getX(), vvsd.bounds.getY(), size.width, size.height);
             vvsd.shape = shape;
             dataMap.put(vertex, vvsd);
         }
@@ -220,7 +221,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
     @Override
     public void refresh() {
     	if (vertex != null && hasChanged) {
-    		backend.refresh(vertex);
+    		backend.damage(vertex);
     	}
     }
     @Override
@@ -288,8 +289,8 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 
     @Override
     public NodeBorder getBorder() {
-        if (vvsd == null) {
-            return getDefaultNodeBorder();
+        if (vvsd == null || vvsd.border == null) {
+            return defaultStyle.getNodeBorder(vertex);
         }
         return vvsd.border;
     }
@@ -297,7 +298,7 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
     @Override
     public NodeShape getShape() {
         if (vvsd == null) {
-            return getDefaultNodeShape();
+            return defaultStyle.getNodeShape(vertex);
         }
         return vvsd.shape;
     }
@@ -331,96 +332,6 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 		return null;
 	}
 	
-	
-	@Override
-	public void setDefaultNodeBackground(Color color) {
-		
-		OptionStore.setOption( VERTEX_BG+graphType, color.getRGB());
-		bg = color;
-	}
-	
-	@Override
-	public void setDefaultNodeForeground(Color color) {
-		
-		OptionStore.setOption( VERTEX_FG, color.getRGB());
-		fg = color;
-	}
-	
-	@Override
-	public void setDefaultNodeBorder(NodeBorder border) {
-		
-		OptionStore.setOption( VERTEX_BORDER, border.name());
-		this.border = border;
-	}
-	/**
-	 * set the default size for vertices.
-	 * @param w
-	 * @param h
-	 */
-	public void setDefaultNodeSize(int w, int h) {
-		
-        if (w > MAX_SIZE) {
-        	w = MAX_SIZE;
-        } else if (w < MIN_SIZE) {
-        	w = MIN_SIZE;
-        }
-        if (h > MAX_SIZE) {
-        	h = MAX_SIZE;
-        } else if (h < MIN_SIZE) {
-        	h = MIN_SIZE;
-        }
-        OptionStore.setOption( VERTEX_HEIGHT, h);
-        OptionStore.setOption( VERTEX_WIDTH, w);
-		width = w;
-		height = h;
-	}
-	/**
-	 * set the default shape for vertices.
-	 * @param shape
-	 */
-	public void setDefaultNodeShape(NodeShape shape) {
-		
-		OptionStore.setOption( VERTEX_SHAPE, shape.name());
-		this.shape = shape;
-	}
-
-    /**
-     * @return the default background color for vertices.
-     */
-	public Color getDefaultNodeBackground() {
-		return bg;
-	}
-    /**
-     * @return the default foreground color for vertices.
-     */
-	public Color getDefaultNodeForeground() {
-		return fg;
-	}
-    /**
-     * @return the default kind of border for vertices.
-     */
-	public NodeBorder getDefaultNodeBorder() {
-		return border;
-	}
-	/**
-	 * @return the default width for vertices.
-	 */
-	public int getDefaultNodeWidth() {
-		return width;
-	}
-	/**
-	 * @return the default height for vertices.
-	 */
-	public int getDefaultNodeHeight() {
-		return height;
-	}
-	/**
-	 * @return the default shape for vertices.
-	 */
-	public NodeShape getDefaultNodeShape() {
-		return shape;
-	}
-
 	@Override
     public void copyFrom(NodeAttributesReader fvreader) {
         setPos(fvreader.getX(), fvreader.getY());
@@ -523,6 +434,12 @@ public class NodeAttributeReaderImpl implements NodeAttributesReader {
 			g.fillRect(w-SW, 0, SW, SW);
 		}
 		
+	}
+
+	@Override
+	public DefaultNodeStyle getDefaultNodeStyle() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

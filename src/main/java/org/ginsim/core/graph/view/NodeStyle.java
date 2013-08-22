@@ -21,4 +21,6 @@ public interface NodeStyle<V> {
 	NodeShape getNodeShape(V obj);
 	void setNodeShape(NodeShape shape);
 
+	NodeBorder getNodeBorder(V obj);
+	void setNodeBorder(NodeBorder border);
 }

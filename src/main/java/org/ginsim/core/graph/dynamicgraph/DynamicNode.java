@@ -55,7 +55,6 @@ public class DynamicNode {
 		stable = s;
 		if (stable) {
 			vreader.setNode(this);
-			vreader.setShape(vreader.getDefaultNodeShape() == NodeShape.RECTANGLE ? NodeShape.ELLIPSE: NodeShape.RECTANGLE);
 		}
 	}
 	

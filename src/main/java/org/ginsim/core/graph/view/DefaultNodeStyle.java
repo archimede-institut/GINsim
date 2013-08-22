@@ -15,6 +15,7 @@ import java.awt.Dimension;
 public class DefaultNodeStyle<V extends Object> implements NodeStyle<V> {
 
 	private static NodeShape DEFAULT_SHAPE = NodeShape.RECTANGLE;
+	private static NodeBorder DEFAULT_BORDER = NodeBorder.SIMPLE;
 	
 	private Color background = Color.WHITE;
 	private Color foreground = Color.BLACK;
@@ -23,6 +24,7 @@ public class DefaultNodeStyle<V extends Object> implements NodeStyle<V> {
 	private Dimension size = new Dimension(40, 25);
 	
 	private NodeShape shape = DEFAULT_SHAPE;
+	private NodeBorder border = DEFAULT_BORDER;
 
 	@Override
 	public Color getBackground(V obj) {
@@ -81,5 +83,18 @@ public class DefaultNodeStyle<V extends Object> implements NodeStyle<V> {
 		} else {
 			this.shape = shape;
 		}
+	}
+
+	@Override
+	public NodeBorder getNodeBorder(V obj) {
+		return border;
+	}
+
+	@Override
+	public void setNodeBorder(NodeBorder border) {
+		if (border == null) {
+			this.border = DEFAULT_BORDER;
+		}
+		this.border = border;
 	}
 }

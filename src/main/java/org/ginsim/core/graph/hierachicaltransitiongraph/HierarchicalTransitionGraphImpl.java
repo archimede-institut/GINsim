@@ -16,9 +16,12 @@ import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.AbstractDerivedGraph;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.common.GraphEventCascade;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.view.DefaultNodeStyle;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GinmlHelper;
 
@@ -63,6 +66,18 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	    	this.nodeOrder.add(vertex);
 	    }
 	    this.transientCompaction = transientCompaction;
+	}
+
+	@Override
+	public GraphEventCascade graphChanged(RegulatoryGraph g,
+			GraphChangeType type, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected DefaultNodeStyle<HierarchicalNode> createDefaultNodeStyle() {
+		return new DefaultHTGNodeStyle(this);
 	}
 
 	public HierarchicalTransitionGraphImpl( boolean parsing) {

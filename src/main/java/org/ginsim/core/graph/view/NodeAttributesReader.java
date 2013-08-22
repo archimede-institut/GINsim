@@ -8,20 +8,26 @@ import java.awt.Rectangle;
 /**
  * extract from graph graphic info on a node.
  */
-public interface NodeAttributesReader extends AttributesReader {
+public interface NodeAttributesReader<V> extends AttributesReader {
 
+	/**
+	 * Get the default style for the nodes in this graph.
+	 * @return the default node style.
+	 */
+	DefaultNodeStyle getDefaultNodeStyle();
+	
     /**
      * change the edited node.
      * @param node the node to edit
      */
-    void setNode(Object node);
+    void setNode(V node);
 
     /**
      * change the edited node, knowing that it is selected
      * @param node
      * @param selected
      */
-    void setNode(Object node, boolean selected); 
+    void setNode(V node, boolean selected); 
 
     /**
      * @return the horizontal position of the node.
@@ -69,7 +75,6 @@ public interface NodeAttributesReader extends AttributesReader {
      */
     void setBackgroundColor(Color color);
 
-    
     /**
      * change the node's position.
      * @param x
@@ -84,57 +89,6 @@ public interface NodeAttributesReader extends AttributesReader {
      */
     void setSize(int w, int h);
     
-    /**
-     * set the default background color for vertices.
-     * @param color
-     */
-	void setDefaultNodeBackground(Color color);
-    /**
-     * set the default foreground color for vertices.
-     * @param color
-     */
-	void setDefaultNodeForeground(Color color);
-    /**
-     * set the default kind of border for vertices.
-     * @param index
-     */
-	void setDefaultNodeBorder(NodeBorder index);
-	/**
-	 * set the default size for vertices.
-	 * @param w
-	 * @param h
-	 */
-	void setDefaultNodeSize(int w, int h);
-	/**
-	 * set the default shape for vertices.
-	 * @param shape
-	 */
-	void setDefaultNodeShape(NodeShape shape);
-    /**
-     * @return the default background color for vertices.
-     */
-	Color getDefaultNodeBackground();
-    /**
-     * @return the default foreground color for vertices.
-     */
-	Color getDefaultNodeForeground();
-    /**
-     * @return the default kind of border for vertices.
-     */
-	NodeBorder getDefaultNodeBorder();
-	/**
-	 * @return the default width for vertices.
-	 */
-	int getDefaultNodeWidth();
-	/**
-	 * @return the default height for vertices.
-	 */
-	int getDefaultNodeHeight();
-	/**
-	 * @return the default shape for vertices.
-	 */
-	NodeShape getDefaultNodeShape();
-
 	/**
 	 * change the kind of border for this node
 	 * @param index

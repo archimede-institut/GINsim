@@ -34,7 +34,6 @@ public class STGSimulationHelper implements SimulationHelper {
 		stateTransitionGraph.setLogicalModel(model);
 		
         vreader = stateTransitionGraph.getNodeAttributeReader();
-	    vreader.setDefaultNodeSize(5+10*nodes.size(), 25);
         // add some default comments to the state transition graph
         stateTransitionGraph.getAnnotation().setComment(params.getDescr(nodes)+"\n");
 	}

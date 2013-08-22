@@ -36,7 +36,6 @@ public class HTGSimulationHelper  implements SimulationHelper {
 		htg.setAssociatedGraph(params.param_list.graph);
 		
 		NodeAttributesReader vreader = htg.getNodeAttributeReader();
-		vreader.setDefaultNodeSize(5+10*nodes.size(), 25);
         htg.getAnnotation().setComment(params.getDescr(nodes)+"\n");
         arcs = new HashMap();
 	}

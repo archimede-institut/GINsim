@@ -114,6 +114,12 @@ public interface GraphBackend<V, E extends Edge<V>> {
      */
     public Collection<E> getOutgoingEdges(V node);
 
+    /**
+     * Get the Raw view info for a node.
+     * 
+     * @param node
+     * @return raw setting for node rendering
+     */
     public NodeViewInfo getNodeViewInfo(V node);
     
     
@@ -134,4 +140,12 @@ public interface GraphBackend<V, E extends Edge<V>> {
 	 */
 	List<Set<V>> getStronglyConnectedComponents();
 
+	
+	void setViewListener(GraphViewListener l);
+	/**
+	 * Declare an object visual setting change
+	 * 
+	 * @param o
+	 */
+	void damage(Object o);
 }

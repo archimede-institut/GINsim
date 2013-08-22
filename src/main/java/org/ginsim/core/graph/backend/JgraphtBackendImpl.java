@@ -20,6 +20,7 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	}
 	
 	GsJGraphtBaseGraph<V,E> base;
+	GraphViewListener viewListener = null;
 	
 	private JgraphtBackendImpl(GsJGraphtBaseGraph<V,E> base) {
 		super(base);
@@ -153,5 +154,17 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	public List<Set<V>> getStronglyConnectedComponents() {
 		
 		return new StrongConnectivityInspector<V, E>( this).stronglyConnectedSets();
+	}
+
+	@Override
+	public void damage(Object o) {
+		if (viewListener != null) {
+			viewListener.refresh(o);
+		}
+	}
+	
+	@Override
+	public void setViewListener(GraphViewListener l) {
+		this.viewListener = l;
 	}
 }

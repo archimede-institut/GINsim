@@ -29,6 +29,8 @@ import javax.swing.event.ChangeListener;
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.view.DefaultEdgeStyle;
+import org.ginsim.core.graph.view.DefaultNodeStyle;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
@@ -78,6 +80,8 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	private JCheckBox jCB_selectPattern = null;
 
 
+	private final DefaultNodeStyle defaultNodeStyle;
+	private final DefaultEdgeStyle defaultEdgeStyle;
 	private final NodeAttributesReader vReader;
 	private final EdgeAttributesReader eReader;
 
@@ -97,7 +101,9 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 		super(gui);
 		Graph<?,?> graph = gui.getGraph();
 		vReader = graph.getNodeAttributeReader();
+		defaultNodeStyle = vReader.getDefaultNodeStyle();
 		eReader = graph.getEdgeAttributeReader();
+		defaultEdgeStyle = eReader.getDefaultEdgeStyle();
 		initialize();
 		reload();
 	}
@@ -939,32 +945,34 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 		switch(whatIsSelected) {
 		case EDGESELECTED:
 			if (jCB_selectColor.isSelected()) {
-				eReader.setDefaultEdgeColor(jButton_linecolor.getBackground());
+				defaultEdgeStyle.setColor(jButton_linecolor.getBackground());
 			}
+			
 			if (jCB_selectShape.isSelected()) {
-				eReader.setDefaultCurve( jCB_lineStyle.isSelected());
+				// TODO: default for curve?
+				//defaultEdgeStyle.setCurve( jCB_lineStyle.isSelected());
 			}
 			if (jCB_selectPattern.isSelected()) {
-				// TODO: make it work
+				defaultEdgeStyle.setPattern((EdgePattern)jCB_linePattern.getSelectedItem());
 			}
 			if (jCB_selectSize.isSelected()) {
-				eReader.setDefaultEdgeSize(((Integer)jSpinner_linewidth.getValue()).intValue());
+				defaultEdgeStyle.setWidth(((Integer)jSpinner_linewidth.getValue()).intValue());
 			}
 			break;
 		case VERTEXSELECTED:
 			refreshSize();
 			if (jCB_selectShape.isSelected()) {
-				vReader.setDefaultNodeShape(NodeShape.values()[jComboBox_shape.getSelectedIndex()]);
+				defaultNodeStyle.setNodeShape(NodeShape.values()[jComboBox_shape.getSelectedIndex()]);
 			}
 			if (jCB_selectColor.isSelected()) {
-				vReader.setDefaultNodeForeground(jButton_fgcolor.getBackground());
-				vReader.setDefaultNodeBackground(jButton_bgcolor.getBackground());
+				defaultNodeStyle.setForeground(jButton_fgcolor.getBackground());
+				defaultNodeStyle.setBackground(jButton_bgcolor.getBackground());
 			}
 			if (jCB_selectSize.isSelected()) {
 				try {
 					int w = Integer.parseInt(jTF_width.getText());
 					int h = Integer.parseInt(jTF_height.getText());
-					vReader.setDefaultNodeSize(w, h);
+					defaultNodeStyle.setDimension(w, h);
 				} catch (NumberFormatException e) {}
 			}
 			break;

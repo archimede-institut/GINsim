@@ -47,7 +47,7 @@ import org.ginsim.core.graph.view.NodeAttributesReader;
  * @param <V>
  * @param <E>
  */
-abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E> {
+abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>, GraphViewListener {
 	
 	private final GraphBackend<V,E> graphBackend;
 	
@@ -105,6 +105,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		this.graphType = graphType;
 		this.graphBackend = backend;
         this.isParsing = parsing;
+		backend.setViewListener(this);
 	}
 	
 	
@@ -405,15 +406,14 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		}
 	}
 
-	
 	@Override
 	public EdgeAttributesReader getEdgeAttributeReader() {
-		return new EdgeAttributeReaderImpl(getDefaultEdgeStyle(), this, getEdgeVSMap(), getNodeAttributeReader());
+		return new EdgeAttributeReaderImpl(getDefaultEdgeStyle(), graphBackend, getEdgeVSMap(), getNodeAttributeReader());
 	}
 	
 	@Override
 	public NodeAttributesReader getNodeAttributeReader() {
-		return new NodeAttributeReaderImpl(graphType, this, getNodeVSMap());
+		return new NodeAttributeReaderImpl(getDefaultNodeStyle(), graphBackend, getNodeVSMap());
 	}
 	
 	private DefaultEdgeStyle<V, E> getDefaultEdgeStyle() {
@@ -425,6 +425,17 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	
 	protected DefaultEdgeStyle<V, E> createDefaultEdgeStyle() {
 		return new DefaultEdgeStyle<V,E>();
+	}
+	
+	private DefaultNodeStyle<V> getDefaultNodeStyle() {
+		if (defaultNodeStyle == null) {
+			defaultNodeStyle = createDefaultNodeStyle();
+		}
+		return defaultNodeStyle;
+	}
+	
+	protected DefaultNodeStyle<V> createDefaultNodeStyle() {
+		return new DefaultNodeStyle<V>();
 	}
 	
 	protected EdgeAttributesReader getCachedEdgeAttributeReader() {

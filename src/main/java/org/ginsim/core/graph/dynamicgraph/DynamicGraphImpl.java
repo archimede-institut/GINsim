@@ -24,6 +24,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.view.DefaultNodeStyle;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
@@ -87,6 +88,18 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	public DynamicGraphImpl( boolean parsing) {
 		
         super( DynamicGraphFactory.getInstance().getGraphType(), parsing);
+	}
+
+	@Override
+	public GraphEventCascade graphChanged(RegulatoryGraph g,
+			GraphChangeType type, Object data) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	protected DefaultNodeStyle<DynamicNode> createDefaultNodeStyle() {
+		return new DefaultDynamicNodeStyle(this);
 	}
 
 	/**

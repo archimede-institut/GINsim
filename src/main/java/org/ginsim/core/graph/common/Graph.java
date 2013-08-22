@@ -31,22 +31,21 @@ public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 	 * 
 	 * @return the attribute reader of edges
 	 */
-	public EdgeAttributesReader getEdgeAttributeReader();
-	
+	EdgeAttributesReader getEdgeAttributeReader();
 	
 	/**
 	 * Give access to the attribute reader of vertices
 	 * 
 	 * @return the attribute reader of vertices
 	 */
-	public NodeAttributesReader getNodeAttributeReader();
+	NodeAttributesReader getNodeAttributeReader();
 	
 	/**
 	 * Get the global bounds of the graph.
 	 * 
 	 * @return
 	 */
-	public Dimension getDimension();
+	Dimension getDimension();
 	
 	/**
 	 * Save this graph

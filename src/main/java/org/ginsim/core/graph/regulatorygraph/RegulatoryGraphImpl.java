@@ -38,8 +38,11 @@ import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.NotificationResolution;
 
-
-
+/**
+ * Implementation of the RegulatoryGraph interface.
+ * 
+ * @author Aurelien Naldi
+ */
 public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, RegulatoryMultiEdge> 
 	implements RegulatoryGraph{
 
@@ -49,8 +52,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 
 	private List<RegulatoryNode> nodeOrder = new ArrayList<RegulatoryNode>();
 
-    private static Graph copiedGraph = null;
-
     static {
     	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new PerturbationManager());
     	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class,  new BiblioManager());
@@ -58,21 +59,21 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     }
 
     /**
+     * Create a new Regulatory graph (not for parsing)
      */
     public RegulatoryGraphImpl() {
-    	
         this( false);
     }
 
-    
     /**
-     * Return the node order
-     * 
-     * @return the node order as a list of RegulatoryNode
+     * @param parsing
      */
+    public RegulatoryGraphImpl( boolean parsing) {
+        super( RegulatoryGraphFactory.getInstance().getGraphType(), parsing);
+    }
+    
     @Override
     public List<RegulatoryNode> getNodeOrder() {
-    	
     	return nodeOrder;
     }
     
@@ -81,11 +82,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 		return getNodeInfos(nodeOrder);
 	}
 
-    /**
-     * Return the size of the node order
-     * 
-     * @return the size of the node order
-     */
     @Override
 	public int getNodeOrderSize(){
 		
@@ -97,28 +93,12 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 		}
 	}
 	
-    
-	/**
-	 * Set a list of class dependent objects representing the order of node as defined by the model
-	 * 
-	 * @param list the list of objects representing the order of node as defined by the model
-	 */
     @Override
     public void setNodeOrder( List<RegulatoryNode> nodeOrder) {
-    	
 		this.nodeOrder = nodeOrder;
 	}
     
-    /**
-     * @param parsing
-     */
-    public RegulatoryGraphImpl( boolean parsing) {
-    	
-        super( RegulatoryGraphFactory.getInstance().getGraphType(), parsing);
-    	// getNodeAttributeReader().setDefaultNodeSize(55, 25);
-    	// getEdgeAttributeReader().setDefaultEdgeSize(2);
-    }
-    
+    @Override
     public RegulatoryNode addNode() {
 
         while ( getNodeByName("G" + nextid) != null) {
@@ -131,12 +111,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         return null;
     }
     
-    /**
-     * Add the node to the graph, updating the NodeOrder
-     * 
-     * @param node the node to add
-     * @return true if the node has been correctly added, false if not
-     */
     @Override
 	public boolean addNode( RegulatoryNode node){
 		
@@ -148,14 +122,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         return false;
 	}
     
-    /**
-     * Add a signed edge
-     * 
-     * @param source
-     * @param target
-     * @param sign
-     * @return
-     */
     @Override
     public RegulatoryMultiEdge addEdge(RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign sign) {
     	RegulatoryMultiEdge obj = getEdge(source, target);
@@ -195,16 +161,9 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 		return new DefaultRegulatoryEdgeStyle();
 	}
 
-	/**
-	 * Return the zip extension for the graph type
-	 * 
-	 * @return the zip extension for the graph type
-	 */
     @Override
 	protected String getGraphZipName(){
-		
 		return GRAPH_ZIP_NAME;
-		
 	}
     
 	@Override
@@ -295,26 +254,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         }
     }
 
-//    /**
-//     * @param edge
-//     */
-//    public void addToExistingEdge( RegulatoryMultiEdge edge) {
-//        edge.addEdge(this);
-//    }
-//
-//    /**
-//     * @param edge
-//     * @param param
-//     */
-//    public void addToExistingEdge(RegulatoryMultiEdge edge, int param) {
-//        edge.addEdge(this);
-//    }
-
-    /**
-     * 
-     * @param newId
-     * @return True if a node of the graph has the given ID
-     */
     @Override
     public boolean idExists(String newId) {
         Iterator it = getNodes().iterator();
@@ -326,12 +265,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         return false;
     }
     
-    /**
-     * 
-     * @param node
-     * @param newId
-     * @throws GsException
-     */
     @Override
     public void changeNodeId(Object node, String newId) throws GsException {
         RegulatoryNode rvertex = (RegulatoryNode)node;
@@ -344,28 +277,11 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         if (!rvertex.setId(newId)) {
         	throw  new GsException(GsException.GRAVITY_ERROR, "invalid id");
         }
+        refresh(node);
         fireMetaChange();
     }
 
-    /**
-     * @param multiEdge
-     * @param index
-     * @throws GsException
-     */
-    public void removeEdgeFromMultiEdge(RegulatoryMultiEdge multiEdge, int index) throws GsException {
-        if (index >= multiEdge.getEdgeCount()) {
-            throw new GsException(GsException.GRAVITY_ERROR, "STR_noSuchSubedge");
-        }
-        if (multiEdge.getEdgeCount() == 1) {
-            removeEdge(multiEdge);
-        } else {
-			multiEdge.removeEdge(index, this);
-		}
-    }
-    /**
-     *
-     * @param obj
-     */
+    @Override
     public boolean removeEdge(RegulatoryMultiEdge edge) {
        edge.markRemoved();
        super.removeEdge(edge);
@@ -379,6 +295,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
        return true;
     }
 
+    @Override
     public boolean removeNode(RegulatoryNode obj) {
     	List<RegulatoryMultiEdge> outedges = new ArrayList<RegulatoryMultiEdge>();
         for (RegulatoryMultiEdge me: getOutgoingEdges(obj)) {
@@ -393,14 +310,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         return true;
     }
 
-    /**
-     * add a node from textual parameters (for the parser).
-     *
-     * @param id
-     * @param name
-     * @param max
-     * @return the new node.
-     */
     @Override
     public RegulatoryNode addNewNode(String id, String name, byte max) {
     	RegulatoryNode existing = getNodeByName(id);
@@ -417,15 +326,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         return vertex;
     }
 
-    /**
-     * add an edge from textual parameters (for the parser).
-     * @param from
-     * @param to
-     * @param minvalue
-     * @param maxvalue
-     * @param sign
-     * @return the new edge
-     */
     @Override
     public RegulatoryEdge addNewEdge(String from, String to, byte minvalue, String sign)  throws GsException{
     	RegulatoryEdgeSign vsign = RegulatoryEdgeSign.UNKNOWN;
@@ -438,15 +338,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     	return addNewEdge(from, to, minvalue, vsign);
     }
     
-    /**
-     * add an edge from textual parameters (for the parser).
-     * @param from
-     * @param to
-     * @param minvalue
-     * @param maxvalue
-     * @param sign
-     * @return the new edge.
-     */
     @Override
     public RegulatoryEdge addNewEdge(String from, String to, byte minvalue, RegulatoryEdgeSign sign) throws GsException {
         RegulatoryNode source = null;
@@ -473,15 +364,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         return me.getEdge(index);
     }
 
-
-
-    /**
-     * 
-     * @param node
-     * @param newMax
-     * @param l_fixable
-     * @param l_conflict
-     */
     @Override
 	public void canApplyNewMaxValue(RegulatoryNode node, byte newMax, List l_fixable, List l_conflict) {
 		for (RegulatoryMultiEdge me: getOutgoingEdges(node)) {
@@ -500,11 +382,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 		return s;
 	}
 
-    protected Graph getCopiedGraph() {
-    	
-        return copiedGraph;
-    }
-
+    @Override
     protected List doMerge( Graph<RegulatoryNode, RegulatoryMultiEdge> otherGraph) {
         if (!(otherGraph instanceof RegulatoryGraph)) {
             return null;
@@ -603,16 +481,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
             }
         }
 
-        RegulatoryGraphImpl.copiedGraph = copiedGraph;
         return copiedGraph;
-    }
-
-    protected void setCopiedGraph( Graph graph) {
-        if (graph != null && graph instanceof RegulatoryGraph) {
-            copiedGraph = graph;
-        } else {
-            copiedGraph = null;
-        }
     }
 
     /**
@@ -645,22 +514,11 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         return true;
     }
 
-    /**
-     * @param focal if true, leaves are focal points. Otherwise their are directions (-1, 0, +1)
-     * @return a tree representation of logical parameters
-     */
     @Override
     public OMDDNode[] getAllTrees(boolean focal) {
     	return getAllTrees(null, focal);
     }
     
-    /**
-     * Computes the tree representing the logical parameters, receiving an optional node ordering
-     * (otherwise uses the one already defined in the regulatory graph)
-     * 
-     * @param focal if true, leaves are focal points. Otherwise their are directions (-1, 0, +1)
-     * @return a tree representation of logical parameters
-     */
     @Override
     public OMDDNode[] getAllTrees(List<RegulatoryNode> tmpNodeOrder, boolean focal) {
     	if (tmpNodeOrder == null)
@@ -723,20 +581,12 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     	return mdds;
     }
     
-    /**
-     * 
-     * @return
-     */
     @Override
 	public List<RegulatoryNode> getNodeOrderForSimulation() {
 		return getNodeOrder();
 	}
 	
-    /**
-     * 
-     * @param focal
-     * @return
-     */
+    @Override
 	public OMDDNode[] getParametersForSimulation(boolean focal) {
 		
 		return getAllTrees(focal);

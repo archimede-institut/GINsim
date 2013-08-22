@@ -7,43 +7,19 @@ import java.util.List;
 
 import org.ginsim.core.graph.common.Edge;
 
-
 /**
  * graphic info on an edge.
  * this extension of the GsGraphManager is used to get or change visual info on edges objects.
  * It can also change default value (but they aren't persistant yet).
  */
-public interface EdgeAttributesReader extends AttributesReader {
+public interface EdgeAttributesReader<V,E extends Edge<V>> extends AttributesReader {
 
-    /**
-     * set the default color for edges
-     * @param color
-     */
-	void setDefaultEdgeColor(Color color);
 	/**
-	 * set the default width for edges
-	 * @param s
+	 * Get the default style used for the edges in this graph.
+	 * @return the default style for edges.
 	 */
-	void setDefaultEdgeSize(float s);
-    /**
-     * Change the default curved flag
-     * @param b
-     */
-    void setDefaultCurve(boolean b);
+	DefaultEdgeStyle<V, E> getDefaultEdgeStyle();
 	
-	/**
-	 * @return the default edge color
-	 */
-	Color getDefaultEdgeColor();
-	/**
-	 * @return the default edge size
-	 */
-	float getDefaultEdgeSize();
-	/**
-	 * @return the default line style
-	 *
-	 */
-    boolean getDefaultCurve();
 	/**
 	 * @return the width of this edge
 	 */
@@ -57,7 +33,7 @@ public interface EdgeAttributesReader extends AttributesReader {
 	 * set the edge on which we work
 	 * @param obj
 	 */
-	void setEdge(Edge<?> obj);
+	void setEdge(E obj);
 
 	/**
 	 * Set the edge on which we work, knowing that it is selected.
@@ -65,7 +41,7 @@ public interface EdgeAttributesReader extends AttributesReader {
 	 * @param obj
 	 * @param selected
 	 */
-	void setEdge(Edge<?> obj, boolean selected);
+	void setEdge(E obj, boolean selected);
 	
 	/**
 	 * change this edge's line color.
@@ -113,11 +89,6 @@ public interface EdgeAttributesReader extends AttributesReader {
      */
     void copyFrom(EdgeAttributesReader fereader);
 
-     /**
-     * @param fvreader
-     */
-    void copyDefaultFrom(EdgeAttributesReader fvreader);
-    
     /**
      * @return the lineEnd
      */
