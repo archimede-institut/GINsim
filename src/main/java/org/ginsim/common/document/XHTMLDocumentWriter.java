@@ -13,7 +13,6 @@ import java.util.Vector;
 import javax.imageio.ImageIO;
 
 import org.ginsim.common.utils.ColorPalette;
-import org.ginsim.common.utils.MaskUtils;
 import org.ginsim.common.xml.XMLWriter;
 
 

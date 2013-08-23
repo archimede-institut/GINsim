@@ -2,7 +2,6 @@ package org.ginsim.core.graph.reducedgraph;
 
 
 import java.util.Collection;
-import java.util.Map;
 import java.util.Set;
 
 import org.ginsim.core.graph.common.Edge;

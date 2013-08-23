@@ -6,7 +6,6 @@ import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 import org.ginsim.common.utils.ColorPalette;
-import org.ginsim.common.utils.MaskUtils;
 import org.ginsim.core.graph.view.AttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;

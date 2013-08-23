@@ -8,7 +8,6 @@ import java.util.Map.Entry;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
-import org.colomoto.mddlib.MDDOperator;
 import org.colomoto.mddlib.MDDVariable;
 import org.colomoto.mddlib.operators.MDDBaseOperators;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;

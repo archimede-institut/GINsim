@@ -18,8 +18,8 @@ import javax.swing.JFileChooser;
 
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.IOUtils;
-import org.ginsim.common.utils.OpenUtils;
 import org.ginsim.common.utils.OpenHelper;
+import org.ginsim.common.utils.OpenUtils;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;

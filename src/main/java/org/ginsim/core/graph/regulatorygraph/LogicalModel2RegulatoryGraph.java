@@ -1,7 +1,6 @@
 package org.ginsim.core.graph.regulatorygraph;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,7 +9,6 @@ import org.colomoto.logicalmodel.ConnectivityMatrix;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
-import org.colomoto.mddlib.MDDVariable;
 import org.colomoto.mddlib.PathSearcher;
 import org.colomoto.mddlib.VariableEffect;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;

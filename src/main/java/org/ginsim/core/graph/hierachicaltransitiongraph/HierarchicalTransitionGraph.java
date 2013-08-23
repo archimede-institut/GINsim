@@ -1,7 +1,6 @@
 package org.ginsim.core.graph.hierachicaltransitiongraph;
 
 import java.util.List;
-import java.util.Map;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.common.Graph;

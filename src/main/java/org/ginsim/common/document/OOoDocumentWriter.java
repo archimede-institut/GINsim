@@ -16,7 +16,6 @@ import java.util.zip.ZipOutputStream;
 import javax.imageio.ImageIO;
 
 import org.ginsim.common.utils.ColorPalette;
-import org.ginsim.common.utils.MaskUtils;
 import org.ginsim.common.xml.XMLWriter;
 
 

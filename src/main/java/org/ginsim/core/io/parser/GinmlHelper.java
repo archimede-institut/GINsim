@@ -19,8 +19,6 @@ import org.ginsim.core.graph.view.NodeStyle;
 import org.ginsim.core.graph.view.ViewHelper;
 import org.xml.sax.Attributes;
 
-import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
-
 
 
 /**

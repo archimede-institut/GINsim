@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Vector;
 
 import org.ginsim.common.utils.CollectionUtils;
-import org.ginsim.common.utils.MaskUtils;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 

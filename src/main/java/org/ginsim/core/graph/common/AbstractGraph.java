@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 import java.util.regex.Matcher;
@@ -30,7 +29,6 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.view.DefaultEdgeStyle;
 import org.ginsim.core.graph.view.DefaultNodeStyle;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.EdgeViewInfo;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 
 /**

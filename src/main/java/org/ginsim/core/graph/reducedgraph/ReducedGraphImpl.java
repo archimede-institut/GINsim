@@ -5,21 +5,13 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 import org.ginsim.common.application.GsException;
-import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.AbstractDerivedGraph;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.io.parser.GinmlHelper;
 
 
 public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  extends AbstractDerivedGraph<NodeReducedData, Edge<NodeReducedData>, G,V,E>

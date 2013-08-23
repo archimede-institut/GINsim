@@ -1,7 +1,6 @@
 package org.ginsim.core.graph.view;
 
 import java.awt.Color;
-import java.awt.Dimension;
 
 public interface NodeStyle<V> {
 

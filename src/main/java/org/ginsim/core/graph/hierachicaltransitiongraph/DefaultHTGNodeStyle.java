@@ -1,9 +1,6 @@
 package org.ginsim.core.graph.hierachicaltransitiongraph;
 
-import java.awt.Dimension;
-
 import org.ginsim.core.graph.view.DefaultNodeStyle;
-import org.ginsim.core.graph.view.NodeShape;
 
 public class DefaultHTGNodeStyle extends DefaultNodeStyle {
 

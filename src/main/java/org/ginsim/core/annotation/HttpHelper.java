@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.ginsim.common.utils.OpenUtils;
 import org.ginsim.common.utils.OpenHelper;
+import org.ginsim.common.utils.OpenUtils;
 
 /**
  * OpenHelper for generic HTTP links.

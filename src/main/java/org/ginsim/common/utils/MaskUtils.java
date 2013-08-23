@@ -1,8 +1,5 @@
 package org.ginsim.common.utils;
 
-import java.awt.Color;
-import java.util.Vector;
-import java.util.regex.Pattern;
 
 /**
  * Manipulation of simple integer masks.

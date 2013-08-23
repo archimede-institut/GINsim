@@ -3,14 +3,12 @@ package org.ginsim.core.graph.regulatorygraph.initialstate;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.util.List;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
-import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

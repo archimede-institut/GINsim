@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
 
 

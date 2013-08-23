@@ -3,7 +3,6 @@ package org.ginsim.core.graph.common;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.annotation.Annotation;

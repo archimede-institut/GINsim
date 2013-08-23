@@ -2,7 +2,6 @@ package org.ginsim.core.graph.regulatorygraph;
 
 import java.awt.Color;
 
-import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.view.DefaultEdgeStyle;
 import org.ginsim.core.graph.view.EdgeEnd;
 

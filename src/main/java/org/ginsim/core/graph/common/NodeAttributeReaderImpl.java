@@ -1,14 +1,11 @@
 package org.ginsim.core.graph.common;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.geom.AffineTransform;
-import java.util.Map;
 
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
@@ -17,7 +14,6 @@ import org.ginsim.core.graph.view.DefaultNodeStyle;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.core.graph.view.NodeStyle;
 import org.ginsim.core.graph.view.NodeViewInfo;
 import org.ginsim.core.graph.view.SimpleNodeStyle;
 import org.ginsim.core.graph.view.SimpleStroke;

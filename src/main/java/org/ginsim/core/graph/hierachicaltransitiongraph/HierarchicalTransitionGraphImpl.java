@@ -12,8 +12,6 @@ import java.util.regex.Pattern;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.GsException;
-import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.AbstractDerivedGraph;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
@@ -22,8 +20,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.DefaultNodeStyle;
-import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.io.parser.GinmlHelper;
 
 
 public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<HierarchicalNode, DecisionOnEdge, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>

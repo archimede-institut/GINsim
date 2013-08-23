@@ -5,7 +5,6 @@ import java.util.Collection;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.graph.view.NodeShape;
 
 
 /**

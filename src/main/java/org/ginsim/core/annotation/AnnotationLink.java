@@ -3,8 +3,8 @@ package org.ginsim.core.annotation;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ginsim.common.utils.OpenUtils;
 import org.ginsim.common.utils.OpenHelper;
+import org.ginsim.common.utils.OpenUtils;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 

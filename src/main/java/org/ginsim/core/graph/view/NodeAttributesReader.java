@@ -2,7 +2,6 @@ package org.ginsim.core.graph.view;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 
 
 /**

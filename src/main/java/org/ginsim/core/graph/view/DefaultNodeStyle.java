@@ -1,7 +1,6 @@
 package org.ginsim.core.graph.view;
 
 import java.awt.Color;
-import java.awt.Dimension;
 
 /**
  * Implementation of NodeStyle to store default visual settings in a graph.

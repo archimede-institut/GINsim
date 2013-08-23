@@ -1,7 +1,7 @@
 package org.ginsim.core.annotation;
 
-import org.ginsim.common.utils.OpenUtils;
 import org.ginsim.common.utils.OpenHelper;
+import org.ginsim.common.utils.OpenUtils;
 
 /**
  * MIRIAM-based OpenHelper: open MIRIAM URNs
