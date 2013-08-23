@@ -18,6 +18,7 @@ import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.graph.view.NodeStyle;
+import org.ginsim.core.graph.view.NodeViewInfo;
 import org.ginsim.core.graph.view.SimpleNodeStyle;
 import org.ginsim.core.graph.view.SimpleStroke;
 
@@ -79,7 +80,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 	
     private V vertex;
     private NodeViewInfo viewInfo = null;
-    private NodeStyle<V> style = null;
+    private SimpleNodeStyle<V> style = null;
 
     private boolean selected;
     private boolean hasChanged = false;
@@ -116,12 +117,12 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
     }
     
     private void refreshBounds() {
-    	NodeStyle<V> ns = style;
-    	if (ns == null) {
-    		ns = defaultStyle;
-    	}
         cachedBounds.setLocation(viewInfo.getX(), viewInfo.getY());
-        cachedBounds.setSize(ns.getWidth(vertex), ns.getHeight(vertex));
+    	if (style == null) {
+            cachedBounds.setSize(defaultStyle.getWidth(vertex), defaultStyle.getHeight(vertex));
+    	} else {
+            cachedBounds.setSize(style.getWidth(vertex), style.getHeight(vertex));
+    	}
     }
     
     private boolean ensureOverride() {
@@ -130,7 +131,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
     			return false;
     		}
     		
-    		style = new SimpleNodeStyle<V>();
+    		style = new SimpleNodeStyle<V>(defaultStyle);
     		style.setDimension(cachedBounds.width, cachedBounds.height);
     		viewInfo.setStyle(style);
     		return false;
@@ -165,14 +166,10 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 
     @Override
     public Color getForegroundColor() {
-    	Color color = null;
         if (style != null) {
-        	color = style.getForeground(vertex);
+        	return style.getForeground(vertex);
         }
-        if (color == null) {
-        	color = defaultStyle.getForeground(vertex);
-        }
-        return color;
+    	return defaultStyle.getForeground(vertex);
     }
 
     @Override
@@ -185,14 +182,10 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 
     @Override
     public Color getTextColor() {
-    	Color color = null;
         if (style != null) {
-        	color = style.getTextColor(vertex);
+        	style.getTextColor(vertex);
         }
-        if (color == null) {
-        	color = defaultStyle.getTextColor(vertex);
-        }
-        return color;
+    	return defaultStyle.getTextColor(vertex);
     }
 
     @Override
@@ -205,14 +198,10 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 
     @Override
     public Color getBackgroundColor() {
-    	Color color = null;
         if (style != null) {
-        	color = style.getBackground(vertex);
+        	return style.getBackground(vertex);
         }
-        if (color == null) {
-        	color = defaultStyle.getBackground(vertex);
-        }
-        return color;
+    	return defaultStyle.getBackground(vertex);
     }
 
     @Override
@@ -286,26 +275,18 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 
     @Override
     public NodeBorder getBorder() {
-    	NodeBorder border = null;
         if (style != null) {
-            border = style.getNodeBorder(vertex); 
+            return style.getNodeBorder(vertex); 
         }
-    	if (border == null) {
-    		border = defaultStyle.getNodeBorder(vertex);
-    	}
-        return border;
+		return defaultStyle.getNodeBorder(vertex);
     }
 
     @Override
     public NodeShape getShape() {
-    	NodeShape shape = null;
         if (style != null) {
-        	shape = style.getNodeShape(vertex); 
+        	return style.getNodeShape(vertex); 
         }
-    	if (shape == null) {
-    		shape = defaultStyle.getNodeShape(vertex);
-    	}
-        return shape;
+		return defaultStyle.getNodeShape(vertex);
     }
 
     @Override

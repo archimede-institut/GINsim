@@ -5,7 +5,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.NodeViewInfo;
+import org.ginsim.core.graph.view.EdgeViewInfo;
+import org.ginsim.core.graph.view.NodeViewInfo;
 
 public interface GraphBackend<V, E extends Edge<V>> {
 
@@ -112,7 +113,7 @@ public interface GraphBackend<V, E extends Edge<V>> {
      * @param node
      * @return outgoing edges of the given node.
      */
-    public Collection<E> getOutgoingEdges(V node);
+    Collection<E> getOutgoingEdges(V node);
 
     /**
      * Get the Raw view info for a node.
@@ -120,8 +121,24 @@ public interface GraphBackend<V, E extends Edge<V>> {
      * @param node
      * @return raw setting for node rendering
      */
-    public NodeViewInfo getNodeViewInfo(V node);
+    NodeViewInfo getNodeViewInfo(V node);
     
+    /**
+     * Get raw view information for an edge.
+     * This may return null if the edge has no attached information.
+     *  
+     * @param edge
+     * @return the raw view information for this edge
+     */
+    EdgeViewInfo<V, E> getEdgeViewInfo(E edge);
+
+    /**
+     * Get raw view information for an edge, create it if needed.
+     *  
+     * @param edge
+     * @return the raw view information for this edge
+     */
+    EdgeViewInfo<V, E> ensureEdgeViewInfo(E edge);
     
 	/**
 	 * Find the shortest path between the two given vertices

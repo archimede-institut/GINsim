@@ -1,12 +1,15 @@
 package org.ginsim.core.graph.backend;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.NodeViewInfo;
+import org.ginsim.core.graph.view.EdgeViewInfo;
+import org.ginsim.core.graph.view.NodeViewInfo;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.alg.StrongConnectivityInspector;
 import org.jgrapht.graph.ListenableDirectedGraph;
@@ -19,8 +22,9 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 		return new JgraphtBackendImpl(base);
 	}
 	
-	GsJGraphtBaseGraph<V,E> base;
-	GraphViewListener viewListener = null;
+	private GsJGraphtBaseGraph<V,E> base;
+	private GraphViewListener viewListener = null;
+    private Map<E,EdgeViewInfo<V, E>> evsmap = new HashMap<E, EdgeViewInfo<V,E>>();
 	
 	private JgraphtBackendImpl(GsJGraphtBaseGraph<V,E> base) {
 		super(base);
@@ -166,5 +170,20 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	@Override
 	public void setViewListener(GraphViewListener l) {
 		this.viewListener = l;
+	}
+
+	@Override
+	public EdgeViewInfo<V, E> getEdgeViewInfo(E edge) {
+		return evsmap.get(edge);
+	}
+
+	@Override
+	public EdgeViewInfo<V, E> ensureEdgeViewInfo(E edge) {
+		EdgeViewInfo<V, E> info = evsmap.get(edge);
+		if (info == null) {
+			info = new EdgeViewInfoImpl<V,E>();
+			evsmap.put(edge, info);
+		}
+		return info;
 	}
 }

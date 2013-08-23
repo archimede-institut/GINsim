@@ -83,7 +83,7 @@ public interface EdgeAttributesReader<V,E extends Edge<V>> extends AttributesRea
      * set points used by this edge
      * @param l
      */
-    void setPoints(List l);
+    void setPoints(List<Point> l);
     /**
      * @param fereader
      */

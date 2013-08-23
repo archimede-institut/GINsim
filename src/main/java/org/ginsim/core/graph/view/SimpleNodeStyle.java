@@ -6,43 +6,70 @@ public class SimpleNodeStyle<V> implements NodeStyle<V> {
 
 	private Color bg, fg, txt;
 	
-	private int width, height;
+	private int width=-1, height=-1;
 	
 	private NodeShape shape;
 	private NodeBorder border;
 	
+	private DefaultNodeStyle<V> d;
+	
+	public SimpleNodeStyle(DefaultNodeStyle<V> d) {
+		this.d = d;
+	}
+	
 	@Override
 	public Color getBackground(V obj) {
+		if (bg == null) {
+			return d.getBackground(obj);
+		}
 		return bg;
 	}
 
 	@Override
 	public Color getForeground(V obj) {
+		if (fg == null) {
+			return d.getForeground(obj);
+		}
 		return fg;
 	}
 
 	@Override
 	public Color getTextColor(V obj) {
+		if (txt == null) {
+			return d.getTextColor(obj);
+		}
 		return txt;
 	}
 
 	@Override
 	public int getWidth(V obj) {
+		if (width < 0) {
+			return d.getWidth(obj);
+		}
 		return width;
 	}
 
 	@Override
 	public int getHeight(V obj) {
+		if (height < 0) {
+			return d.getHeight(obj);
+		}
 		return height;
 	}
 
 	@Override
 	public NodeShape getNodeShape(V obj) {
+		if (shape == null) {
+			return d.getNodeShape(obj);
+		}
 		return shape;
 	}
 
 	@Override
 	public NodeBorder getNodeBorder(V obj) {
+		if (border == null) {
+			return d.getNodeBorder(obj);
+		}
 		return border;
 	}
 

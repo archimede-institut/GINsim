@@ -40,10 +40,12 @@ public class DefaultRegulatoryEdgeStyle extends DefaultEdgeStyle<RegulatoryNode,
 	}
 
 	@Override
-	public void setColor(Color color) {
+	public boolean setColor(Color color) {
+		return false;
 	}
 
 	@Override
-	public void setEnding(EdgeEnd ending) {
+	public boolean setEnding(EdgeEnd ending) {
+		return false;
 	}
 }

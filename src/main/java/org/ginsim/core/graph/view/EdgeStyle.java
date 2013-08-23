@@ -17,15 +17,15 @@ import org.ginsim.core.graph.common.Edge;
 public interface EdgeStyle<V,E extends Edge<V>> {
 
 	Color getColor(E edge);
-	void setColor(Color color);
+	boolean setColor(Color color);
 	
 	int getWidth(E edge);
-	void setWidth(int w);
+	boolean setWidth(int w);
 	
 	EdgePattern getPattern(E edge);
-	void setPattern(EdgePattern pattern);
+	boolean setPattern(EdgePattern pattern);
 	
 	EdgeEnd getEnding(E edge);
-	void setEnding(EdgeEnd ending);
+	boolean setEnding(EdgeEnd ending);
 	
 }

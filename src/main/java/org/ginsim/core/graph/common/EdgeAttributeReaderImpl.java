@@ -5,23 +5,23 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
-import java.awt.Stroke;
-import java.awt.geom.GeneralPath;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.common.application.OptionStore;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.view.Bezier;
 import org.ginsim.core.graph.view.DefaultEdgeStyle;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
+import org.ginsim.core.graph.view.EdgeStyle;
+import org.ginsim.core.graph.view.EdgeViewInfo;
 import org.ginsim.core.graph.view.MovingEdgeType;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.SimpleEdgeStyle;
 import org.ginsim.core.graph.view.SimpleStroke;
 import org.ginsim.core.graph.view.ViewHelper;
 
@@ -32,21 +32,21 @@ import org.ginsim.core.graph.view.ViewHelper;
 public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttributesReader<V,E> {
 
 	private static final int MAX_EDGE_SIZE = 7;
-	
 	public static final String EDGE_COLOR = "vs.edgecolor";
-	
     protected static Map<String, float[]> m_pattern = null;
 	
+    
 	private final GraphBackend<V, E> graph;
-    private final Map<E, EdgeVSdata> dataMap;
     private final DefaultEdgeStyle<V,E> defaultStyle;
+    private final NodeAttributesReader nreader;
+    
     
     private E edge;
-    private EdgeVSdata evsd = null;
+    private EdgeViewInfo<V, E> viewInfo;
+    private EdgeStyle<V, E> style;
+    
     private boolean selected = false;
     private boolean hasChanged = false;
-    
-    private final NodeAttributesReader nreader;
     
     private Rectangle cachedBounds = null;
     private Shape cachedPath = null;
@@ -56,16 +56,15 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
     /**
      * @param dataMap
      */
-    public EdgeAttributeReaderImpl(DefaultEdgeStyle defaultStyle, GraphBackend<V, E> backend, Map dataMap, NodeAttributesReader nreader) {
+    public EdgeAttributeReaderImpl(DefaultEdgeStyle defaultStyle, GraphBackend<V, E> backend, NodeAttributesReader nreader) {
     	this.graph = backend;
-        this.dataMap = dataMap;
         this.nreader = nreader;
         this.defaultStyle = defaultStyle;
     }
     
     @Override
     public Rectangle getBounds() {
-        if (evsd == null) {
+        if (edge == null) {
             return null;
         }
     	
@@ -83,30 +82,6 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
     }
     
     @Override
-    public float getLineWidth() {
-        if (evsd == null) {
-            return 0;
-        }
-        return evsd.size;
-    }
-
-    @Override
-    public void setLineWidth(float w) {
-        if (evsd == null) {
-            return;
-        }
-        if (w > MAX_EDGE_SIZE) {
-        	w = MAX_EDGE_SIZE;
-        } else if (w < 1) {
-        	w = 1;
-        }
-        if (evsd.size != w) {
-        	evsd.size = w;
-        	hasChanged = true;
-        }
-    }
-
-    @Override
     public void setEdge(E obj) {
     	setEdge(obj, false);
     }
@@ -119,33 +94,71 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
     	this.edge = obj;
     	cachedBounds = null;
     	cachedPath = null;
-        evsd = dataMap.get(obj);
-        if (evsd == null) {
-            evsd = new EdgeVSdata();
-            
-            evsd.color = null;
-            evsd.curve = false;
-            evsd.size = defaultStyle.getWidth(edge);
-            
-            dataMap.put(obj, evsd);
-        }
+    	
+    	viewInfo = graph.getEdgeViewInfo(edge);
+    	if (viewInfo == null) {
+    		style = null;
+    	} else {
+    		style = viewInfo.getStyle();
+    	}
     	hasChanged = false;
+    }
+
+    private boolean ensureStyle() {
+    	if (edge == null) {
+    		return false;
+    	}
+
+    	if (style != null) {
+    		return true;
+    	}
+    	
+    	if (viewInfo == null) {
+    		viewInfo = graph.ensureEdgeViewInfo(edge);
+    	}
+    	
+    	style = new SimpleEdgeStyle<V,E>(defaultStyle);
+    	viewInfo.setStyle(style);
+    	
+    	return true;
+    }
+    
+    @Override
+    public float getLineWidth() {
+    	if (style == null) {
+    		return defaultStyle.getWidth(edge);
+    	}
+		return style.getWidth(edge);
+    }
+
+    @Override
+    public void setLineWidth(float w) {
+    	if ( !ensureStyle() ) {
+    		return;
+    	}
+
+    	if (w > MAX_EDGE_SIZE) {
+        	w = MAX_EDGE_SIZE;
+        } else if (w < 1) {
+        	w = 1;
+        }
+    	hasChanged |= style.setWidth((int)w);
     }
 
     @Override
     public void setLineColor(Color color) {
-        if (evsd != null && evsd.color != color) {
-            evsd.color = color;
-            hasChanged = true;
-        }
+    	if ( !ensureStyle() ) {
+    		return;
+    	}
+        hasChanged |= style.setColor(color);
     }
 
     @Override
     public Color getLineColor() {
-        if (evsd == null || evsd.color == null) {
-            return defaultStyle.getColor(edge);
-        }
-        return evsd.color;
+    	if (style == null) {
+    		return defaultStyle.getColor(edge);
+    	}
+		return style.getColor(edge);
     }
 
     @Override
@@ -162,61 +175,55 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
     }
 
     @Override
-    public void setLineEnd(EdgeEnd index) {
-        if (evsd != null && evsd.end != index) {
-        	evsd.end = index;
-        	hasChanged = true;
-        }
+    public void setLineEnd(EdgeEnd ending) {
+    	if ( !ensureStyle() ) {
+    		return;
+    	}
+    	hasChanged |= style.setEnding(ending);
     }
 
     @Override
     public EdgeEnd getLineEnd() {
-        if (evsd == null || evsd.end == null) {
-            return EdgeEnd.POSITIVE;
-        }
-        return evsd.end;
+    	if (style == null) {
+    		return defaultStyle.getEnding(edge);
+    	}
+		return style.getEnding(edge);
     }
 
     @Override
     public List<Point> getPoints() {
-        if ( evsd == null ) {
+        if ( viewInfo == null ) {
             return null;
         }
-        return evsd.points;
+        return viewInfo.getPoints();
     }
 
     @Override
-    public void setPoints(List l) {
-        if (evsd == null) {
+    public void setPoints(List<Point> l) {
+        if (edge == null) {
             return;
         }
-        evsd.points = l;
+        if (viewInfo == null) {
+        	graph.ensureEdgeViewInfo(edge);
+        }
+        viewInfo.setPoints(l);
         hasChanged = true;
-    }
-
-    class EdgeVSdata {
-        protected Color color;
-        protected float size;
-        protected EdgeEnd end;
-        protected boolean curve;
-        protected List points;
-		protected EdgePattern dash;
     }
 
     @Override
 	public void setDash(EdgePattern pattern) {
-		if (evsd != null && evsd.dash != pattern) {
-			evsd.dash = pattern;
-			hasChanged = true;
-		}
+    	if ( !ensureStyle() ) {
+    		return;
+    	}
+		hasChanged = style.setPattern(pattern);
 	}
 
     @Override
 	public EdgePattern getDash() {
-		if (evsd == null) {
-			return null;
-		}
-		return evsd.dash;
+    	if (style == null) {
+    		return defaultStyle.getPattern(edge);
+    	}
+		return style.getPattern(edge);
 	}
 
 	@Override
@@ -241,18 +248,26 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
  
 	@Override
 	public boolean isCurve() {
-		if (evsd == null) {
+		if (viewInfo != null) {
+			return viewInfo.isCurve();
+		}
+
+		if (edge == null) {
 			return false;
 		}
-		return evsd.curve;
+		
+		return (edge.source == edge.target);
 	}
 
 	@Override
 	public void setCurve(boolean curve) {
-		if (evsd != null && evsd.curve != curve) {
-			evsd.curve = curve;
-			hasChanged = true;
+		if (edge == null) {
+			return;
 		}
+        if (viewInfo == null) {
+        	graph.ensureEdgeViewInfo(edge);
+        }
+        viewInfo.setCurve(curve);
 	}
 
 	@Override
@@ -340,7 +355,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 	
 	@Override
 	public boolean select(Point p) {
-		if (evsd == null) {
+		if (edge == null) {
 			return false;
 		}
 		
@@ -407,7 +422,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 	
 	@Override
 	public void move(int dx, int dy) {
-		if (evsd == null) {
+		if (viewInfo == null) {
 			return;
 		}
 		List<Point> points = getPoints();

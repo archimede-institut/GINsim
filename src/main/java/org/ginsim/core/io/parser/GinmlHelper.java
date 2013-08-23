@@ -3,18 +3,23 @@ package org.ginsim.core.io.parser;
 import java.awt.Color;
 import java.awt.Point;
 import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.common.utils.ColorPalette;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
+import org.ginsim.core.graph.view.NodeStyle;
 import org.ginsim.core.graph.view.ViewHelper;
 import org.xml.sax.Attributes;
+
+import sun.reflect.ReflectionFactory.GetReflectionFactoryAction;
 
 
 
@@ -189,4 +194,29 @@ public class GinmlHelper {
 		svs.append("\"/>\n\t\t\t</nodevisualsetting>\n");
         return svs.toString();
 	}
+	
+	public static void nodeStyle2GINML(XMLWriter writer, NodeStyle style) throws IOException {
+		writer.openTag("style");
+		int w = style.getWidth(null);
+		int h = style.getWidth(null);
+		if (w>=0 && h>=0) {
+			writer.addAttr("width", ""+w);
+			writer.addAttr("height", ""+h);
+		}
+		
+		Color color = style.getBackground(null);
+		if (color != null) {
+			writer.addAttr("background", ColorPalette.getColorCode(color));
+		}
+		color = style.getForeground(null);
+		if (color != null) {
+			writer.addAttr("foreground", ColorPalette.getColorCode(color));
+		}
+		color = style.getTextColor(null);
+		if (color != null) {
+			writer.addAttr("text", ColorPalette.getColorCode(color));
+		}
+		writer.closeTag();
+	}
+	
 }

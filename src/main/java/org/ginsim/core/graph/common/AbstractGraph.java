@@ -8,7 +8,6 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,12 +25,12 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.backend.JgraphtBackendImpl;
-import org.ginsim.core.graph.common.EdgeAttributeReaderImpl.EdgeVSdata;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.view.DefaultEdgeStyle;
 import org.ginsim.core.graph.view.DefaultNodeStyle;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgeViewInfo;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 
 /**
@@ -51,7 +50,6 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	
 	// view data
 	private GraphViewListener listener;
-    private Map<Edge<?>,EdgeVSdata> evsmap = null;
 
     // cache attribute readers for internal usage
     private EdgeAttributesReader cachedEReader = null;
@@ -355,17 +353,6 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		return graphBackend.getShortestPath( source, target);
 	}
 	
-	/**
-	 * @return the place where local VS data is stored (create it if needed)
-	 * @see #hasFallBackVSData()
-	 */
-    private Map<Edge<?>, EdgeVSdata> getEdgeVSMap() {
-        if (evsmap == null) {
-            evsmap = new HashMap<Edge<?>, EdgeVSdata>();
-        }
-        return evsmap;
-    }
-    
 	@Override
 	public void addViewListener(GraphViewListener listener) {
 		this.listener = listener;
@@ -398,7 +385,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 
 	@Override
 	public EdgeAttributesReader getEdgeAttributeReader() {
-		return new EdgeAttributeReaderImpl(getDefaultEdgeStyle(), graphBackend, getEdgeVSMap(), getNodeAttributeReader());
+		return new EdgeAttributeReaderImpl(getDefaultEdgeStyle(), graphBackend, getNodeAttributeReader());
 	}
 	
 	@Override
