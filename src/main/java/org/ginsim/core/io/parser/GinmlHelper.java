@@ -28,7 +28,7 @@ import org.xml.sax.Attributes;
 public class GinmlHelper {
 	
     /** default URL of the DTD */
-    public static final String DEFAULT_URL_DTD_FILE = "http://gin.univ-mrs.fr/GINsim/GINML_2_1.dtd";
+    public static final String DEFAULT_URL_DTD_FILE = "http://ginsim.org/GINML_2_2.dtd";
 
     /**
      * we are reading node visual settings from a ginml file, apply them on

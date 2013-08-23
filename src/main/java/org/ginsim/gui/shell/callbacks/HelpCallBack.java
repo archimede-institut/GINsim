@@ -59,9 +59,7 @@ class HelpAction extends AbstractAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO: search for local help
-		OpenUtils.openURI("http://gin.univ-mrs.fr/GINsim/doc.html");
-		// GsEnv.error(new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_docPathError")), null);
+		OpenUtils.openURI("http://www.ginsim.org/documentation");
 	}
 }
 

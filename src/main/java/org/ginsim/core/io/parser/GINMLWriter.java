@@ -32,8 +32,6 @@ import org.ginsim.core.graph.view.ViewHelper;
  */
 public abstract class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 
-	public static final String DEFAULT_URL_DTD_FILE = "http://gin.univ-mrs.fr/GINsim/GINML_2_2.dtd";
-	
 	protected final G graph;
 	
 	protected final NodeAttributesReader nReader;
@@ -46,7 +44,7 @@ public abstract class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 	}
 
 	public void write(OutputStreamWriter os, Collection<V> vertices, Collection<E> edges, int mode) throws IOException {
-		XMLWriter out = new XMLWriter(os, DEFAULT_URL_DTD_FILE);
+		XMLWriter out = new XMLWriter(os, GinmlHelper.DEFAULT_URL_DTD_FILE);
 
 		out.openTag("gxl");
 		out.addAttr("xmlns:xlink", "http://www.w3.org/1999/xlink");

@@ -3,31 +3,31 @@
 	<Project>
 		<name>GINsim</name>
 		<description>A computer tool for the modeling and simulation of regulatory networks</description>
-		<homepage rdf:resource="http://gin.univ-mrs.fr/GINsim"/>
+		<homepage rdf:resource="http://www.ginsim.org"/>
 		<logo>gs1.gif</logo>
 		<license rdf:resource="http://usefulinc.com/doap/licenses/gpl">GPL</license>
 		<version>2.9</version>
 <!--
     <created>2008-01-21</created>
-    <bug-database rdf:resource="http://crfb.univ-mrs.fr/gp/GINsim/query" />
-    <mailing-list rdf:resource="http://gin.univ-mrs.fr/GINsim/contact.html" />
-    <download-page rdf:resource="http://gin.univ-mrs.fr/GINsim/download.html" />
+    <bug-database rdf:resource="http://www.ginsim.org" />
+    <mailing-list rdf:resource="http://www.ginsim.org" />
+    <download-page rdf:resource="http://www.ginsim.org" />
     <programming-language>Java</programming-language>
 -->
 <!--	CREDITS		-->
 <!-- Current team -->
 		<maintainer>
 			<foaf:Person>
-				<foaf:name>Duncan Berenguier</foaf:name>
-				<foaf:mbox rdf:resource="mailto:duncan.berenguier@gmail.com"/>
-				<foaf:made>Software development</foaf:made>
+				<foaf:name>Claudine Chaouiya</foaf:name>
+				<foaf:mbox rdf:resource="mailto:chaouiya@tagc.univ-mrs.fr"/>
+				<foaf:made>Project coordination</foaf:made>
 			</foaf:Person>
 		</maintainer>
 		<maintainer>
 			<foaf:Person>
-				<foaf:name>Claudine Chaouiya</foaf:name>
-				<foaf:mbox rdf:resource="mailto:chaouiya@tagc.univ-mrs.fr"/>
-				<foaf:made>Project coordination</foaf:made>
+				<foaf:name>Nuno Mendes</foaf:name>
+				<foaf:mbox rdf:resource="mailto:ndm@igc.gulbenkian.pt"/>
+				<foaf:made>Software development</foaf:made>
 			</foaf:Person>
 		</maintainer>
 		<maintainer>
@@ -59,6 +59,13 @@
 			</foaf:Person>
 		</maintainer>
 <!-- previous contributors -->
+		<helper>
+			<foaf:Person>
+				<foaf:name>Duncan Berenguier</foaf:name>
+				<foaf:mbox rdf:resource="mailto:duncan.berenguier@gmail.com"/>
+				<foaf:made>Software development</foaf:made>
+			</foaf:Person>
+		</helper>
 		<helper>
 			<foaf:Person>
 				<foaf:name>Frederic Cordeil</foaf:name>

@@ -42,8 +42,6 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 
 	public static final String GRAPH_ZIP_NAME = "stateTransitionGraph.ginml";
 	
-	private String dtdFile = GinmlHelper.DEFAULT_URL_DTD_FILE;
-
 	protected List v_stables = null;
 
     private List<NodeInfo> nodeOrder;
@@ -167,7 +165,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	@Override
 	protected void doSave(OutputStreamWriter os, Collection<DynamicNode> nodes, Collection<Edge<DynamicNode>> edges, int mode) throws GsException {
         try {
-            XMLWriter out = new XMLWriter(os, dtdFile);
+            XMLWriter out = new XMLWriter(os, GinmlHelper.DEFAULT_URL_DTD_FILE);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
 			out.write("\t<graph id=\"" + graphName + "\"");
 			out.write(" class=\"dynamical\"");
