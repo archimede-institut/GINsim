@@ -42,7 +42,7 @@ public class ModelSimplifierConfigManager extends BasicGraphAssociatedManager {
             out.openTag("modelSimplifications");
             // add the available configurations
             for (int i=0 ; i<paramList.getNbElements(null) ; i++) {
-                ((ModelSimplifierConfig)paramList.getElement(null, i)).toXML(out, null, 0);
+                ((ModelSimplifierConfig)paramList.getElement(null, i)).toXML(out);
             }
             out.closeTag();
             

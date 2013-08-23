@@ -26,7 +26,7 @@ public abstract class BasicGraphAssociatedManager implements GraphAssociatedObje
         if (o != null && o instanceof XMLize) {
         	try{
         		XMLWriter out = new XMLWriter(os, null);
-        		((XMLize)o).toXML(out, graph, 0);
+        		((XMLize)o).toXML(out);
         	}
         	catch( IOException ioe){
         		throw new GsException( GsException.GRAVITY_ERROR, ioe);

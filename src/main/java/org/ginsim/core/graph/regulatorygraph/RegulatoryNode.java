@@ -28,6 +28,7 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamod
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeString;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.NotificationResolution;
 
@@ -46,7 +47,7 @@ import org.ginsim.core.notification.resolvable.NotificationResolution;
  *			which the gene tends when some incoming edges are actives </li>
  * </ul>
  */
-public class RegulatoryNode implements ToolTipsable, XMLize, NodeInfoHolder {
+public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 
 	private final NodeInfo nodeInfo;
 	
@@ -365,7 +366,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize, NodeInfoHolder {
                 + (isOutput() ? "(output)" : "");
 	}
 
-	public void toXML(XMLWriter out, Object param, int mode) throws IOException {
+	public void toXML(XMLWriter out, NodeAttributesReader<RegulatoryNode> vReader) throws IOException {
 
 			out.openTag("node");
 	    	out.addAttr("id", getId());
@@ -383,15 +384,14 @@ public class RegulatoryNode implements ToolTipsable, XMLize, NodeInfoHolder {
     	    while (it.hasNext()) {
 		 		LogicalParameter lp = (LogicalParameter) it.next();
 		 		if(lpl.isManual(lp))
-		 			 lp.toXML(out, null, mode);		 			    
+		 			 lp.toXML(out);		 			    
 		 	} 
 		    // save logical function
-		 	saveInteractionsModel(out, mode);
-		 	gsa.toXML(out, null, mode);
+		 	saveInteractionsModel(out);
+		 	gsa.toXML(out);
 
-			if (param != null) {
-			    out.addContent("\n");
-			    out.write(param.toString());
+			if (vReader != null) {
+				vReader.writeGINML(out);
 			}
 			out.closeTag();
 	}
@@ -481,7 +481,7 @@ public class RegulatoryNode implements ToolTipsable, XMLize, NodeInfoHolder {
       return interactionsModel;
     }
 
-    public void saveInteractionsModel(XMLWriter out, int mode) throws IOException {
+    public void saveInteractionsModel(XMLWriter out) throws IOException {
       TreeString root = (TreeString)interactionsModel.getRoot();
       TreeValue val;
       TreeElement exp;

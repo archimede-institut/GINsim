@@ -310,8 +310,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
     }
 
 	@Override
-	public void toXML(XMLWriter out, Object param, int mode)
-			throws IOException {
+	public void toXML(XMLWriter out) throws IOException {
 		out.openTag("priorityClassList");
 		out.addAttr("id", name);
 		StringBuffer s_tmp;

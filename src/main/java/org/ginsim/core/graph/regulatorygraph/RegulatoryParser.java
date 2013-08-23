@@ -191,7 +191,6 @@ public final class RegulatoryParser extends GsXMLHelper {
 				if (qName.equals("graph")) {
 					placeInteractions();
 					placeNodeOrder();
-                    graph.setSaveMode(vslevel);
                     if (!values.isEmpty()) {
                     	parseBooleanFunctions();
                     }

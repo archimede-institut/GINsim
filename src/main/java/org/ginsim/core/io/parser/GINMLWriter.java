@@ -43,7 +43,7 @@ public abstract class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 		this.eReader = graph.getEdgeAttributeReader();
 	}
 
-	public void write(OutputStreamWriter os, Collection<V> vertices, Collection<E> edges, int mode) throws IOException {
+	public void write(OutputStreamWriter os, Collection<V> vertices, Collection<E> edges) throws IOException {
 		XMLWriter out = new XMLWriter(os, GinmlHelper.DEFAULT_URL_DTD_FILE);
 
 		out.openTag("gxl");
@@ -53,12 +53,12 @@ public abstract class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 		out.addAttr("id", graph.getGraphName());
 		hook_graphAttribute(out);
 		
-		saveNodes(out, mode, vertices);
-		saveEdges(out, mode, edges);
+		saveNodes(out, vertices);
+		saveEdges(out, edges);
 		
 		Annotation annot = graph.getAnnotation();
 		if (annot != null) {
-			annot.toXML(out, null, 0);
+			annot.toXML(out);
 		}
 
 		// handle associated graphs!
@@ -79,101 +79,86 @@ public abstract class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 		out.closeTag(); // gxl
 	}
 	
-	protected void saveNodes(XMLWriter out, int mode, Collection<V> nodes) throws IOException {
+	protected void saveNodes(XMLWriter out, Collection<V> nodes) throws IOException {
 		for (V node: nodes) {
 			out.openTag("node");
 			hook_nodeAttribute(out, node);
 			
 			// save visual settings
-	    	switch (mode) {
-    		case 1:
-    			nReader.setNode(node);
-    			out.openTag("nodevisualsetting");
-            	out.openTag("point");
-                out.addAttr("x", ""+nReader.getX());
-                out.addAttr("y", ""+nReader.getY());
-                out.closeTag();
-        		out.closeTag();
-    			break;
-    		case 2:
-    			nReader.setNode(node);
-    			out.openTag("nodevisualsetting");
-    			if (nReader.getShape() == NodeShape.ELLIPSE) {
-    	        	out.openTag("ellipse");
-    	        } else {
-    	        	out.openTag("rect");
-    	        }
-    	        out.addAttr("x",      ""+nReader.getX());
-    	        out.addAttr("y",      ""+nReader.getY());
-    	        out.addAttr("width",  ""+nReader.getWidth());
-    	        out.addAttr("height", ""+nReader.getHeight());
+			nReader.setNode(node);
+			out.openTag("nodevisualsetting");
+			if (nReader.getShape() == NodeShape.ELLIPSE) {
+	        	out.openTag("ellipse");
+	        } else {
+	        	out.openTag("rect");
+	        }
+	        out.addAttr("x",      ""+nReader.getX());
+	        out.addAttr("y",      ""+nReader.getY());
+	        out.addAttr("width",  ""+nReader.getWidth());
+	        out.addAttr("height", ""+nReader.getHeight());
 
-    			Color bg = nReader.getBackgroundColor();
-    			out.addAttr("backgroundColor", "#"+ColorPalette.getColorCode(bg));
-    			Color fg = nReader.getForegroundColor();
-    			out.addAttr("foregroundColor", "#"+ColorPalette.getColorCode(fg));
-    			Color txt = nReader.getTextColor();
-    			if (!txt.equals(fg)) {
-    				out.addAttr("textColor", "#"+ColorPalette.getColorCode(txt));
-    			}
-    	        out.closeTag();
-    			out.closeTag();
-    			break;
+			Color bg = nReader.getBackgroundColor();
+			out.addAttr("backgroundColor", "#"+ColorPalette.getColorCode(bg));
+			Color fg = nReader.getForegroundColor();
+			out.addAttr("foregroundColor", "#"+ColorPalette.getColorCode(fg));
+			Color txt = nReader.getTextColor();
+			if (!txt.equals(fg)) {
+				out.addAttr("textColor", "#"+ColorPalette.getColorCode(txt));
 			}
+	        out.closeTag();
+			out.closeTag();
 	    	
+			
 			out.closeTag();
 		}
 	}
-	protected void saveEdges(XMLWriter out, int mode, Collection<E> edges) throws IOException {
+	protected void saveEdges(XMLWriter out, Collection<E> edges) throws IOException {
 		for (E edge: edges) {
 			out.openTag("edge");
 			hook_edgeAttribute(out, edge);
 			
 			// save visual settings
-	    	switch (mode) {
-    		case 2:
-    			eReader.setEdge(edge);
-    			out.openTag("edgevisualsetting");
-    			out.openTag("polyline");
-    			
-    			
-    	        String s = "";
-    	        List l_point = ViewHelper.getPoints(nReader, eReader, edge);
-    	        if (l_point != null) {
-    	            for (int i=0 ; i<l_point.size() ; i++) {
-    	                Point2D pt = (Point2D)l_point.get(i); 
-    	                s += (int)pt.getX()+","+(int)pt.getY()+" ";
-    	            }
-    	            if (s.length() > 1) {
-    	            	out.addAttr("points", s.substring(0, s.length()-1));
-    	            } else {
-    	            	out.addAttr("points", "");
-    	            }
-    	        } else {
+			eReader.setEdge(edge);
+			out.openTag("edgevisualsetting");
+			out.openTag("polyline");
+			
+			
+	        String s = "";
+	        List l_point = ViewHelper.getPoints(nReader, eReader, edge);
+	        if (l_point != null) {
+	            for (int i=0 ; i<l_point.size() ; i++) {
+	                Point2D pt = (Point2D)l_point.get(i); 
+	                s += (int)pt.getX()+","+(int)pt.getY()+" ";
+	            }
+	            if (s.length() > 1) {
+	            	out.addAttr("points", s.substring(0, s.length()-1));
+	            } else {
 	            	out.addAttr("points", "");
-    	        }
+	            }
+	        } else {
+            	out.addAttr("points", "");
+	        }
 
-    	        if (eReader.isCurve()) {
-        	        out.addAttr("line_style", "curve");
-    	        } else {
-        	        out.addAttr("line_style", "straight");
-    	        }
-    	        
-    	        out.addAttr("line_color", "#"+ColorPalette.getColorCode(eReader.getLineColor()));
-    	        EdgePattern pattern = eReader.getDash();
-    	        if (pattern == EdgePattern.DASH) {
-    	            out.addAttr("pattern", "dash");
-    	        }
-    	        out.addAttr("line_width", ""+(int)eReader.getLineWidth());
-    	        
-    	        // FIXME: should we remove it completely or need a new system?
-    	        out.addAttr("routage","auto");
-    			
-    			out.closeTag();
-    			out.closeTag();
-    			break;
-			}
+	        if (eReader.isCurve()) {
+    	        out.addAttr("line_style", "curve");
+	        } else {
+    	        out.addAttr("line_style", "straight");
+	        }
+	        
+	        out.addAttr("line_color", "#"+ColorPalette.getColorCode(eReader.getLineColor()));
+	        EdgePattern pattern = eReader.getDash();
+	        if (pattern == EdgePattern.DASH) {
+	            out.addAttr("pattern", "dash");
+	        }
+	        out.addAttr("line_width", ""+(int)eReader.getLineWidth());
+	        
+	        // FIXME: should we remove it completely or need a new system?
+	        out.addAttr("routage","auto");
+			
+			out.closeTag();
+			out.closeTag();
 
+			
 			out.closeTag();
 		}
 	}

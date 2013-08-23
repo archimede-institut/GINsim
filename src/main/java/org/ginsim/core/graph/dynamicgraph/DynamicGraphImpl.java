@@ -163,7 +163,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	}
 
 	@Override
-	protected void doSave(OutputStreamWriter os, Collection<DynamicNode> nodes, Collection<Edge<DynamicNode>> edges, int mode) throws GsException {
+	protected void doSave(OutputStreamWriter os, Collection<DynamicNode> nodes, Collection<Edge<DynamicNode>> edges) throws GsException {
         try {
             XMLWriter out = new XMLWriter(os, GinmlHelper.DEFAULT_URL_DTD_FILE);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
@@ -171,10 +171,10 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 			out.write(" class=\"dynamical\"");
 			out.write(" nodeorder=\"" + stringNodeOrder() +"\"");
 			out.write(">\n");
-			saveNode(out, mode, nodes);
-			saveEdge(out, mode, edges);
+			saveNodes(out, nodes);
+			saveEdges(out, edges);
             if (graphAnnotation != null) {
-                graphAnnotation.toXML(out, null, 0);
+                graphAnnotation.toXML(out);
             }
             // save the ref of the associated regulatory graph!
             if (associatedGraph != null) {
@@ -210,7 +210,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveEdge(XMLWriter out, int mode, Collection<Edge<DynamicNode>> edges) throws IOException {
+    private void saveEdges(XMLWriter out, Collection<Edge<DynamicNode>> edges) throws IOException {
         if (edges == null) {
         	edges = getEdges();
         }
@@ -218,25 +218,13 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
         EdgeAttributesReader eReader = getCachedEdgeAttributeReader();
         NodeAttributesReader nReader = getCachedNodeAttributeReader();
         
-        switch (mode) {
-        	case 2:
-		        for (Edge<DynamicNode> edge: edges) {
-	        	    eReader.setEdge(edge);
-		            String source = edge.getSource().toString();
-		            String target = edge.getTarget().toString();
-		            out.write("\t\t<edge id=\"s"+ source +"_s"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\">\n");
-		            out.write(GinmlHelper.getEdgeVS(eReader, nReader, edge));
-		            out.write("</edge>");
-		        }
-        	    break;
-	    	default:
-		        for (Edge<DynamicNode> edge: edges) {
-	        	    eReader.setEdge(edge);
-		            String source = edge.getSource().toString();
-		            String target = edge.getTarget().toString();
-		            out.write("\t\t<edge id=\"s"+ source +"_s"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\"/>\n");
-		        }
-		        break;
+        for (Edge<DynamicNode> edge: edges) {
+    	    eReader.setEdge(edge);
+            String source = edge.getSource().toString();
+            String target = edge.getTarget().toString();
+            out.write("\t\t<edge id=\"s"+ source +"_s"+target+"\" from=\"s"+source+"\" to=\"s"+target+"\">\n");
+            out.write(GinmlHelper.getEdgeVS(eReader, nReader, edge));
+            out.write("</edge>");
         }
     }
 
@@ -246,36 +234,18 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveNode(XMLWriter out, int mode, Collection<DynamicNode> nodes) throws IOException {
+    private void saveNodes(XMLWriter out, Collection<DynamicNode> nodes) throws IOException {
     	if (nodes == null) {
     		nodes = getNodes();
     	}
     	
     	NodeAttributesReader vReader = getNodeAttributeReader();
-    	
-        	switch (mode) {
-	    		case 1:
-	                for (DynamicNode node: nodes) {
-	                    vReader.setNode(node);
-	                    String svs = GinmlHelper.getShortNodeVS(vReader);
-	                    out.write("\t\t<node id=\""+node.getId()+"\">\n");
-	                    out.write(svs);
-	                    out.write("\t\t</node>\n");
-	                }
-	    			break;
-				case 2:
-	                for (DynamicNode node: nodes) {
-	                    vReader.setNode(node);
-	                    String svs = GinmlHelper.getFullNodeVS(vReader);
-	                    out.write("\t\t<node id=\""+node.getId()+"\">\n");
-	                    out.write(svs);
-	                    out.write("\t\t</node>\n");
-	                }
-	    			break;
-        		default:
-	                for (DynamicNode node: nodes) {
-        	            out.write("\t\t<node id=\""+node.getId()+"\"/>\n");
-        	        }
+        for (DynamicNode node: nodes) {
+            vReader.setNode(node);
+            out.openTag("node");
+            out.addAttr("id", node.getId());
+            vReader.writeGINML(out);
+            out.closeTag();
         }
     }
 

@@ -16,8 +16,8 @@ public class DefaultNodeStyle<V extends Object> implements NodeStyle<V> {
 	private static NodeShape DEFAULT_SHAPE = NodeShape.RECTANGLE;
 	private static NodeBorder DEFAULT_BORDER = NodeBorder.SIMPLE;
 
-	private static final int MAX_SIZE = 500;
-	private static final int MIN_SIZE = 15;
+	public static final int MAX_SIZE = 500;
+	public static final int MIN_SIZE = 15;
 	
 	private Color background = Color.WHITE;
 	private Color foreground = Color.BLACK;
@@ -77,10 +77,19 @@ public class DefaultNodeStyle<V extends Object> implements NodeStyle<V> {
 
 	@Override
 	public boolean setDimension(int w, int h) {
-		// TODO: implement min/max width/height
-		this.width = w;
-		this.height = h;
+		this.width = checkSize(w);
+		this.height = checkSize(h);
 		return true;
+	}
+	
+	protected int checkSize(int s) {
+		if (s < MIN_SIZE) {
+			return MIN_SIZE;
+		}
+		if (s > MAX_SIZE) {
+			return MAX_SIZE;
+		}
+		return s;
 	}
 
 	@Override

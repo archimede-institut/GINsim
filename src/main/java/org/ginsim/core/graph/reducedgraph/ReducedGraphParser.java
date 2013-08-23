@@ -160,11 +160,6 @@ public class ReducedGraphParser extends GsXMLHelper {
 			        pos = POS_EDGE;
 			    }
 			    break; // POS_EDGE_VS
-            case POS_OUT:
-                if (qName.equals("graph")) {
-                    graph.setSaveMode(vslevel);
-                }
-                break;
         }
         super.endElement(uri, localName, qName);
     }

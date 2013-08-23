@@ -160,7 +160,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
     }
 
     @Override
-	public void toXML(XMLWriter out, Object param, int xmlmode) throws IOException {
+	public void toXML(XMLWriter out) throws IOException {
 		PriorityClassDefinition pcdef = (PriorityClassDefinition)store.getObject(PCLASS);
 		out.openTag("parameter");
 		out.addAttr("name", name);

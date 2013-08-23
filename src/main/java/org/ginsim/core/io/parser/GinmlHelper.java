@@ -12,7 +12,9 @@ import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
+import org.ginsim.core.graph.view.EdgeStyle;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.graph.view.NodeStyle;
@@ -170,7 +172,7 @@ public class GinmlHelper {
 	 * @param vReader
 	 * @return the corresponding ginml String
 	 */
-	public static String getFullNodeVS(NodeAttributesReader vReader) {
+	private static String getFullNodeVS(NodeAttributesReader vReader) {
         StringBuffer svs = new StringBuffer("\t\t\t<nodevisualsetting>\n\t\t\t\t<");
         if (vReader.getShape() == NodeShape.ELLIPSE) {
         	svs.append("ellipse");
@@ -193,27 +195,29 @@ public class GinmlHelper {
         return svs.toString();
 	}
 	
-	public static void nodeStyle2GINML(XMLWriter writer, NodeStyle style) throws IOException {
-		writer.openTag("style");
+	public static void edgeStyle2GINML(XMLWriter writer, EdgeStyle style) throws IOException {
+		writer.openTag("edgestyle");
+		
 		int w = style.getWidth(null);
-		int h = style.getWidth(null);
-		if (w>=0 && h>=0) {
+		if (w>0) {
 			writer.addAttr("width", ""+w);
-			writer.addAttr("height", ""+h);
 		}
 		
-		Color color = style.getBackground(null);
-		if (color != null) {
-			writer.addAttr("background", ColorPalette.getColorCode(color));
+		EdgePattern pattern = style.getPattern(null);
+		if (pattern != null) {
+			writer.addAttr("pattern", pattern.toString());
 		}
-		color = style.getForeground(null);
-		if (color != null) {
-			writer.addAttr("foreground", ColorPalette.getColorCode(color));
+		
+		EdgeEnd ending = style.getEnding(null);
+		if (ending != null) {
+			writer.addAttr("ending", ending.toString());
 		}
-		color = style.getTextColor(null);
+		
+		Color color = style.getColor(null);
 		if (color != null) {
-			writer.addAttr("text", ColorPalette.getColorCode(color));
+			writer.addAttr("color", ColorPalette.getColorCode(color));
 		}
+		
 		writer.closeTag();
 	}
 	

@@ -160,10 +160,10 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	}
 
 	
-	protected void doSave(OutputStreamWriter os, Collection<HierarchicalNode> nodes, Collection<DecisionOnEdge> edges, int mode) throws GsException {
+	protected void doSave(OutputStreamWriter os, Collection<HierarchicalNode> nodes, Collection<DecisionOnEdge> edges) throws GsException {
 		try {
 			HierarchicalGINMLWriter writer = new HierarchicalGINMLWriter(this, transientCompaction, stringNodeOrder());
-			writer.write(os, nodes, edges, mode);
+			writer.write(os, nodes, edges);
 		} catch (IOException e) {
             throw new GsException( "STR_unableToSave", e);
         }

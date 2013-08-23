@@ -31,7 +31,6 @@ public abstract class Notification implements TimeoutObject, Comparable {
         }
         
         if (this.type.timeout > 0) {
-        	System.out.println("set timeout");
             Timeout.addTimeout( this, this.type.timeout*1000);
         }
     }

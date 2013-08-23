@@ -11,9 +11,7 @@ public interface XMLize {
      * write the XML representation of this object to a file
      * 
      * @param out
-     * @param param
-     * @param mode
      * @throws IOException
      */
-	public void toXML(XMLWriter out, Object param, int mode) throws IOException;	
+	public void toXML(XMLWriter out) throws IOException;	
 }

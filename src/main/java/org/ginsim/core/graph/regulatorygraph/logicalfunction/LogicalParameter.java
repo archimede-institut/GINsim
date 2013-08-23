@@ -350,7 +350,8 @@ public class LogicalParameter implements XMLize {
 		return result;
 	}
 
-    public void toXML(XMLWriter out, Object param, int mode) throws IOException {
+	@Override
+    public void toXML(XMLWriter out) throws IOException {
     	out.openTag("parameter");
 		int len = edge_index.size();
 		if (len != 0) {

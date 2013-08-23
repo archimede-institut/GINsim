@@ -35,7 +35,7 @@ public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelpe
 	}
 	
 	@Override
-	public void toXML(XMLWriter out, Object param, int mode)
+	public void toXML(XMLWriter out)
 			throws IOException {
 		if (m_removed.size() < 1) {
 			return;
@@ -48,7 +48,7 @@ public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelpe
 		out.addAttr("name", this.name);
 		out.addAttr("strict", ""+this.strict);
 		out.addAttr("removeList", s_removed.substring(1));
-		note.toXML(out, param, mode);
+		note.toXML(out);
 		out.closeTag();
 	}
 	

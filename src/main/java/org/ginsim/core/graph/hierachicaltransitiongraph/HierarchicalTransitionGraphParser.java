@@ -168,11 +168,6 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
 			        pos = POS_EDGE;
 			    }
 			    break; // POS_EDGE_VS
-            case POS_OUT:
-                if (qName.equals("graph")) {
-                    htg.setSaveMode(vslevel);
-                }
-                break;
         }
         super.endElement(uri, localName, qName);
     }

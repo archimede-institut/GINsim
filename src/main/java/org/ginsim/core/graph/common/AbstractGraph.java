@@ -59,9 +59,6 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     // The annotation associated with the graph
     protected Annotation graphAnnotation = null;
     
-    // The mode the graph must use when saved
-    private int saveMode;
-
     private DefaultEdgeStyle<V, E> defaultEdgeStyle = null;
     private DefaultNodeStyle<V> defaultNodeStyle = null;
     
@@ -132,27 +129,27 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	
 	
 
-    //----------------------   GRAPH SAVING MANAGEMENT METHODS -------------------------------
-    
-    /**
-     * Set the mode of saving the graph must used when saved
-     * 
-     * @param save_mode the mode of saving
-     */
-    public void setSaveMode( int save_mode){
-    	
-    	saveMode = save_mode;
-    }
-    
-    /**
-     * Return the mode the graph must used when saved
-     * 
-     * @return the mode the graph must used when saved
-     */
-    public int getSaveMode(){
-    	
-    	return saveMode;
-    }
+//    //----------------------   GRAPH SAVING MANAGEMENT METHODS -------------------------------
+//    
+//    /**
+//     * Set the mode of saving the graph must used when saved
+//     * 
+//     * @param save_mode the mode of saving
+//     */
+//    public void setSaveMode( int save_mode){
+//    	
+//    	saveMode = save_mode;
+//    }
+//    
+//    /**
+//     * Return the mode the graph must used when saved
+//     * 
+//     * @return the mode the graph must used when saved
+//     */
+//    public int getSaveMode(){
+//    	
+//    	return saveMode;
+//    }
     
 	/**
 	 * Return the zip extension for the graph type
@@ -538,24 +535,10 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	// ----------------------   SAVING METHODS -----------------------------------------------
 	
 	public void save(String save_path) throws GsException {
-		save(save_path, null, null, 2);
+		save(save_path, null, null);
 	}
+
 	public void save(String save_path, Collection<V> vertices, Collection<E> edges) throws GsException {
-		save(save_path, vertices, edges, 2);
-	}
-	/**
-	 * 
-	 * @param save_path
-	 * @param vertices
-	 * @param edges
-	 * @param saveMode
-	 * @throws GsException
-	 * 
-	 * 	 TODO should we keep saveMode? 
-	 *   all interactive-notifications should be replaced by exceptions...
-	 * 
-	 */
-	private void save(String save_path, Collection<V> vertices, Collection<E> edges, int saveMode) throws GsException {
 
 		if (vertices == null) {
 			vertices = getNodes();
@@ -603,7 +586,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 			
 			// TODO: doSave should take the selection as parameter.
 			// note: this method should be the only caller and ensures that the selection is defined and consistent
-			doSave(osw, vertices, edges, saveMode);
+			doSave(osw, vertices, edges);
 			osw.flush();
 			zos.closeEntry();
 			// now save associated objects
@@ -679,7 +662,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * @param edges		edges that should be saved (can not be null)
 	 * @param saveMode	save mode, will probably go away
 	 */
-	protected abstract void doSave(OutputStreamWriter osw, Collection<V> vertices, Collection<E> edges, int saveMode) throws GsException;
+	protected abstract void doSave(OutputStreamWriter osw, Collection<V> vertices, Collection<E> edges) throws GsException;
    
 
     

@@ -17,7 +17,7 @@ import org.ginsim.core.graph.view.EdgeEnd;
 /**
  * This edge object allows to have several edges from a vertex to another
  */
-public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize, ToolTipsable {
+public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements ToolTipsable {
 
 	private RegulatoryEdge[] edges = new RegulatoryEdge[RegulatoryNode.MAXVALUE+1];
 	private int edgecount = 0;
@@ -147,14 +147,14 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements XMLize,
         return source+"_"+target+"_"+index;
     }
 
-    public void toXML(XMLWriter out, Object param, int mode) throws IOException {
+    public void toXML(XMLWriter out, String param) throws IOException {
         for (int i=0 ; i<edgecount ; i++) {
             RegulatoryEdge edge = edges[i];
 
             int max = i<edgecount-1 ? edges[i+1].threshold-1 : -1;
             out.write("\t\t<edge id=\""+ edge.getLongInfo(":") + "\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.threshold+"\""+ (max == -1 ? "" : " maxvalue=\""+max+"\"")+" sign=\""+ edge.getSign().getLongDesc() +"\">\n");
             if (i == 0) {
-            	annotation.toXML(out, null, mode);
+            	annotation.toXML(out);
             }
             if (param != null) {
                 out.write(""+param);

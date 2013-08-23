@@ -91,10 +91,10 @@ public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  exten
     }
 
     @Override
-	protected void doSave(OutputStreamWriter os, Collection<NodeReducedData> vertices, Collection<Edge<NodeReducedData>> edges, int mode) throws GsException {
+	protected void doSave(OutputStreamWriter os, Collection<NodeReducedData> vertices, Collection<Edge<NodeReducedData>> edges) throws GsException {
     	ReducedGINMLWriter writer = new ReducedGINMLWriter(this);
         try {
-        	writer.write(os, vertices, edges, mode);
+        	writer.write(os, vertices, edges);
         } catch (IOException e) {
             throw new GsException( "STR_unableToSave", e);
         }

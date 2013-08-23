@@ -166,7 +166,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 	}
     
 	@Override
-    protected void doSave( OutputStreamWriter os, Collection<RegulatoryNode> vertices, Collection<RegulatoryMultiEdge> edges, int mode) throws GsException {
+    protected void doSave( OutputStreamWriter os, Collection<RegulatoryNode> vertices, Collection<RegulatoryMultiEdge> edges) throws GsException {
     	try {
             XMLWriter out = new XMLWriter(os, GinmlHelper.DEFAULT_URL_DTD_FILE);
 	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
@@ -174,10 +174,10 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 			out.write(" class=\"regulatory\"");
 			out.write(" nodeorder=\"" + stringNodeOrder() +"\"");
 			out.write(">\n");
-			saveNode(out, mode, vertices);
-			saveEdge(out, mode, edges);
+			saveNodes(out, vertices);
+			saveEdges(out, edges);
             if (graphAnnotation != null) {
-            	graphAnnotation.toXML(out, null, 0);
+            	graphAnnotation.toXML(out);
             }
 	  		out.write("\t</graph>\n");
 	  		out.write("</gxl>\n");
@@ -192,25 +192,16 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveEdge(XMLWriter out, int mode, Collection<RegulatoryMultiEdge> edges) throws IOException {
+    private void saveEdges(XMLWriter out, Collection<RegulatoryMultiEdge> edges) throws IOException {
     	
         Iterator<RegulatoryMultiEdge> it = edges.iterator();
 
-        switch (mode) {
-	    	case 2:
-	    	    EdgeAttributesReader ereader = getCachedEdgeAttributeReader();
-	    	    NodeAttributesReader nreader = getCachedNodeAttributeReader();
-		        while (it.hasNext()) {
-		        	RegulatoryMultiEdge edge = it.next();
-		            ereader.setEdge(edge);
-		            edge.toXML(out, GinmlHelper.getEdgeVS(ereader, nreader, edge), mode);
-		        }
-		        break;
-        	default:
-		        while (it.hasNext()) {
-		        	RegulatoryMultiEdge edge = it.next();
-		            edge.toXML(out, null, mode);
-		        }
+	    EdgeAttributesReader ereader = getCachedEdgeAttributeReader();
+	    NodeAttributesReader nreader = getCachedNodeAttributeReader();
+        while (it.hasNext()) {
+        	RegulatoryMultiEdge edge = it.next();
+            ereader.setEdge(edge);
+            edge.toXML(out, GinmlHelper.getEdgeVS(ereader, nreader, edge));
         }
     }
 
@@ -220,36 +211,15 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
      * @param selectedOnly
      * @throws IOException
      */
-    private void saveNode(XMLWriter out, int mode, Collection<RegulatoryNode> vertices) throws IOException {
+    private void saveNodes(XMLWriter out, Collection<RegulatoryNode> vertices) throws IOException {
     	
     	Iterator<RegulatoryNode> it = vertices.iterator();
     	
-		NodeAttributesReader vReader = getNodeAttributeReader(); 
+		NodeAttributesReader<RegulatoryNode> vReader = getNodeAttributeReader(); 
     	
-    	switch (mode) {
-    		case 1:
-    	        while (it.hasNext()) {
-    	            Object vertex = it.next();
-    	            String svs = "";
-	                vReader.setNode(vertex);
-	                svs = GinmlHelper.getShortNodeVS( vReader);
-    	            ((RegulatoryNode)vertex).toXML(out, svs, mode);
-    	        }
-    			break;
-    		case 2:
-    	        while (it.hasNext()) {
-    	            Object vertex = it.next();
-    	            String svs = "";
-	                vReader.setNode(vertex);
-	                svs = GinmlHelper.getFullNodeVS(vReader);
-    	            ((RegulatoryNode)vertex).toXML(out, svs, mode);
-    	        }
-    			break;
-    		default:
-    	        while (it.hasNext()) {
-    	            Object vertex = it.next();
-    	            ((RegulatoryNode)vertex).toXML(out, "", mode);
-    	        }
+        for (RegulatoryNode vertex: vertices) {
+            vReader.setNode(vertex);
+            vertex.toXML(out, vReader);
         }
     }
 

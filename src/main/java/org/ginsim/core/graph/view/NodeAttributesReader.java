@@ -2,6 +2,9 @@ package org.ginsim.core.graph.view;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.io.IOException;
+
+import org.ginsim.common.xml.XMLWriter;
 
 
 /**
@@ -129,4 +132,6 @@ public interface NodeAttributesReader<V> extends AttributesReader {
 	 * @param movey
 	 */
 	void renderMoving(Graphics2D g, int movex, int movey);
+	
+	void writeGINML(XMLWriter writer) throws IOException;
 }

@@ -59,7 +59,8 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener<GraphModel<
 		GraphManager.getInstance().addGraphListener(graph, this);
 	}
 
-	public void toXML(XMLWriter out, Object param, int mode) throws IOException {
+	@Override
+	public void toXML(XMLWriter out) throws IOException {
 		out.openTag("biblio");
 		
 		out.openTag("files");
@@ -72,7 +73,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener<GraphModel<
 		for (String key: m_used) {
 			Ref ref = m_references.get(key);
 			if (ref != null) {
-				ref.toXML(out, param, mode);
+				ref.toXML(out);
 			}
 		}
 		out.closeTag();
@@ -250,7 +251,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener<GraphModel<
 
 }
 
-class Ref {
+class Ref implements XMLize {
 	String key;
 	Map links = new TreeMap();
 	
@@ -270,7 +271,9 @@ class Ref {
 			}
 		}
 	}
-	public void toXML(XMLWriter out, Object param, int mode) throws IOException {
+	
+	@Override
+	public void toXML(XMLWriter out) throws IOException {
 		out.openTag("ref");
 		out.addAttr("key", key);
 		for (Iterator it=links.entrySet().iterator() ; it.hasNext() ; ) {

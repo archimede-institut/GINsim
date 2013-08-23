@@ -62,23 +62,23 @@ public interface GraphModel<V,E extends Edge<V>> {
     void setGraphName( String graphName) throws GsException;
     
     
-    //----------------------   GRAPH SAVING MANAGEMENT METHODS -------------------------------
-    
-    
-    /**
-     * Set the mode of saving the graph must used when saved
-     * 
-     * @param save_mode the mode of saving
-     */
-    void setSaveMode( int save_mode);
-    
-    
-    /**
-     * Return the mode the graph must used when saved
-     * 
-     * @return the mode the graph must used when saved
-     */
-    int getSaveMode();
+//    //----------------------   GRAPH SAVING MANAGEMENT METHODS -------------------------------
+//    
+//    
+//    /**
+//     * Set the mode of saving the graph must used when saved
+//     * 
+//     * @param save_mode the mode of saving
+//     */
+//    void setSaveMode( int save_mode);
+//    
+//    
+//    /**
+//     * Return the mode the graph must used when saved
+//     * 
+//     * @return the mode the graph must used when saved
+//     */
+//    int getSaveMode();
     
 	
     //----------------------   GRAPH VERTICES AND EDGES MANAGEMENT METHODS -------------------------------

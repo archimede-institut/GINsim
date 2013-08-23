@@ -98,7 +98,8 @@ public class Annotation implements XMLize
 		}
 	}
 
-	public void toXML(XMLWriter out, Object param, int mode) throws IOException {
+	@Override
+	public void toXML(XMLWriter out) throws IOException {
 			if (comment.equals("") && getLinkList().size()==0) {
 			    return;         
             }

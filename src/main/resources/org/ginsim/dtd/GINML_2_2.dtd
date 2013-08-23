@@ -206,9 +206,34 @@ copyright by
 
 <!-- Graphical elements --> 
 
-<!ELEMENT nodevisualsetting ((point|rect|ellipse)?)> 
- 
-<!ELEMENT edgevisualsetting (polyline?)> 
+<!ELEMENT nodestyle EMPTY> 
+<!ATTLIST nodestyle 
+    width CDATA #IMPLIED
+    height CDATA #IMPLIED
+    shape CDATA #IMPLIED
+    background CDATA #IMPLIED
+    foreground CDATA #IMPLIED
+    text CDATA #IMPLIED
+>
+
+<!ELEMENT nodevisualsetting (nodestyle?, (point|rect|ellipse)?)> 
+<!ATTLIST nodevisualsetting 
+    x CDATA #IMPLIED
+    y CDATA #IMPLIED
+> 
+
+<!ELEMENT edgevisualsetting (edgestyle?, polyline?)> 
+<!ATTLIST edgevisualsetting 
+    points CDATA #IMPLIED
+    curve CDATA #IMPLIED
+> 
+
+<!ELEMENT edgestyle EMPTY> 
+<!ATTLIST edgestyle 
+    style CDATA #IMPLIED
+    color CDATA #IMPLIED
+    width CDATA #IMPLIED
+> 
 
 <!-- polyline --> 
 <!ELEMENT polyline EMPTY> 

@@ -1,6 +1,10 @@
 package org.ginsim.core.graph.view;
 
 import java.awt.Color;
+import java.io.IOException;
+
+import org.ginsim.common.utils.ColorPalette;
+import org.ginsim.common.xml.XMLWriter;
 
 public class SimpleNodeStyle<V> implements NodeStyle<V> {
 
@@ -114,5 +118,30 @@ public class SimpleNodeStyle<V> implements NodeStyle<V> {
 		}
 		this.border = border;
 		return true;
+	}
+	
+	public void writeGINML(XMLWriter writer) throws IOException {
+		writer.openTag("nodestyle");
+		
+		if (width>=0 && height>=0) {
+			writer.addAttr("width", ""+width);
+			writer.addAttr("height", ""+height);
+		}
+		
+		if (shape != null) {
+			writer.addAttr("shape", shape.toString());
+		}
+		
+		if (bg!= null) {
+			writer.addAttr("background", ColorPalette.getColorCode(bg));
+		}
+		if (fg != null) {
+			writer.addAttr("foreground", ColorPalette.getColorCode(fg));
+		}
+		if (txt != null) {
+			writer.addAttr("text", ColorPalette.getColorCode(txt));
+		}
+		
+		writer.closeTag();
 	}
 }

@@ -6,9 +6,12 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
+import java.io.IOException;
 
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
+import org.ginsim.common.utils.ColorPalette;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.view.DefaultNodeStyle;
 import org.ginsim.core.graph.view.NodeAttributesReader;
@@ -398,6 +401,45 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 	@Override
 	public DefaultNodeStyle getDefaultNodeStyle() {
 		return defaultStyle;
+	}
+	
+	public void writeGINML(XMLWriter writer) throws IOException {
+		if (vertex == null) {
+			// TODO: save default style
+			return;
+		}
+		
+		// save style information
+		writer.openTag("nodevisualsetting");
+		writer.addAttr("x", ""+getX());
+		writer.addAttr("y", ""+getY());
+		if (style != null) {
+			style.writeGINML(writer);
+		}
+		
+		// write old attributes for backward compatibility
+        if (getShape() == NodeShape.ELLIPSE) {
+        	writer.openTag("ellipse");
+        } else {
+        	writer.openTag("rect");
+        }
+        
+        writer.addAttr("x", ""+getX());
+        writer.addAttr("y", ""+getY());
+        writer.addAttr("width", ""+getWidth());
+        writer.addAttr("height", ""+getHeight());
+        
+        Color bg = getBackgroundColor();
+		Color fg = getForegroundColor();
+		Color txt = getTextColor();
+        writer.addAttr("backgroundColor", "#"+ColorPalette.getColorCode(bg));
+        writer.addAttr("foregroundColor", "#"+ColorPalette.getColorCode(fg));
+		if (!txt.equals(fg)) {
+	        writer.addAttr("textColor", "#"+ColorPalette.getColorCode(txt));
+		}
+		
+		writer.closeTag();
+		writer.closeTag();
 	}
 
 }

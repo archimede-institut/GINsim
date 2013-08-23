@@ -118,7 +118,7 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
 
 	@Override
 	public void doSave(OutputStreamWriter osw, Collection<TreeNode> vertices,
-			Collection<Edge<TreeNode>> edges, int saveMode) {
+			Collection<Edge<TreeNode>> edges) {
 	}
 
 	@Override
