@@ -5,9 +5,9 @@ import java.awt.Color;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.hierachicaltransitiongraph.StatesSet;
 import org.ginsim.core.graph.view.NodeBorder;
-import org.ginsim.core.graph.view.css.NodeStyle;
+import org.ginsim.core.graph.view.css.CSSNodeStyle;
 import org.ginsim.core.graph.view.css.Selector;
-import org.ginsim.core.graph.view.css.Style;
+import org.ginsim.core.graph.view.css.CSSStyle;
 
 public class PolytopesSelector extends Selector {
 	public static final String IDENTIFIER = "polytopes";
@@ -15,8 +15,8 @@ public class PolytopesSelector extends Selector {
 	private static final String CAT_OUT = "terminal-trivial";
 	public static final String CAT_COMPLEX = "complex";
 	
-	public static final NodeStyle STYLE_IN	= new NodeStyle(Color.green.darker(), Color.black, Color.white, NodeBorder.SIMPLE, null);
-	public static final NodeStyle STYLE_OUT	= new NodeStyle(Color.red.darker(),   Color.black, Color.white, NodeBorder.SIMPLE, null);
+	public static final CSSNodeStyle STYLE_IN	= new CSSNodeStyle(Color.green.darker(), Color.black, Color.white, NodeBorder.SIMPLE, null);
+	public static final CSSNodeStyle STYLE_OUT	= new CSSNodeStyle(Color.red.darker(),   Color.black, Color.white, NodeBorder.SIMPLE, null);
 	
 	private StatesSet polytope;
 	
@@ -26,8 +26,8 @@ public class PolytopesSelector extends Selector {
 	
 	@Override
 	public void resetDefaultStyle() {
-		addCategory(CAT_IN, (Style)STYLE_IN.clone());
-		addCategory(CAT_OUT, (Style)STYLE_OUT.clone());
+		addCategory(CAT_IN, (CSSStyle)STYLE_IN.clone());
+		addCategory(CAT_OUT, (CSSStyle)STYLE_OUT.clone());
 	}
 
 	@Override

@@ -11,8 +11,8 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.GraphicalAttributesStore;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.graph.view.css.EdgeStyle;
-import org.ginsim.core.graph.view.css.NodeStyle;
+import org.ginsim.core.graph.view.css.CSSEdgeStyle;
+import org.ginsim.core.graph.view.css.CSSNodeStyle;
 
 
 /**
@@ -56,7 +56,7 @@ public abstract class GraphComparator<G extends Graph<?,?>> {
 	 * Indicates if a node corresponding to the id is common to both graphs.
 	 */
 	public boolean isCommonNode(Object id) {
-		return ((NodeStyle)stylesMap.get(id).v).background == COMMON_COLOR;
+		return ((CSSNodeStyle)stylesMap.get(id).v).background == COMMON_COLOR;
 	}
 	
 	/**
@@ -79,7 +79,7 @@ public abstract class GraphComparator<G extends Graph<?,?>> {
 		
 		EdgeAttributesReader ereader = graph_new.getEdgeAttributeReader();
 		for (String id : verticesIdsSet) {
-			Color col = ((NodeStyle)stylesMap.get(graph_new.getNodeByName(id)).v).background;
+			Color col = ((CSSNodeStyle)stylesMap.get(graph_new.getNodeByName(id)).v).background;
 			
 			addEdgesFromGraph(graph_1, graph_2, id, col, SPECIFIC_G1_COLOR, ereader);
 			addEdgesFromGraph(graph_2, graph_1, id, col, SPECIFIC_G2_COLOR, ereader);
@@ -108,11 +108,11 @@ public abstract class GraphComparator<G extends Graph<?,?>> {
 		vreader.setBackgroundColor(col);
 		vreader.refresh();
 
-		if (col == SPECIFIC_G1_COLOR) stylesMap.put(v, new GraphComparatorStyleStore(new NodeStyle(vsourcereader), null, new NodeStyle(vreader)));
-		else if (col == SPECIFIC_G2_COLOR) stylesMap.put(v, new GraphComparatorStyleStore(null, new NodeStyle(vsourcereader), new NodeStyle(vreader)));
+		if (col == SPECIFIC_G1_COLOR) stylesMap.put(v, new GraphComparatorStyleStore(new CSSNodeStyle(vsourcereader), null, new CSSNodeStyle(vreader)));
+		else if (col == SPECIFIC_G2_COLOR) stylesMap.put(v, new GraphComparatorStyleStore(null, new CSSNodeStyle(vsourcereader), new CSSNodeStyle(vreader)));
 		else {
 			vauxreader.setNode(aux);
-			stylesMap.put(v, new GraphComparatorStyleStore(new NodeStyle(vsourcereader), new NodeStyle(vauxreader), new NodeStyle(vreader)));
+			stylesMap.put(v, new GraphComparatorStyleStore(new CSSNodeStyle(vsourcereader), new CSSNodeStyle(vauxreader), new CSSNodeStyle(vreader)));
 		}
 	}
 
@@ -132,11 +132,11 @@ public abstract class GraphComparator<G extends Graph<?,?>> {
 		ereader.setLineColor(col);
 		ereader.refresh();			
 		
-		if (col == SPECIFIC_G1_COLOR) stylesMap.put(e, new GraphComparatorStyleStore(new EdgeStyle(esourcereader), null, new EdgeStyle(ereader)));
-		else if (col == SPECIFIC_G2_COLOR) stylesMap.put(e, new GraphComparatorStyleStore(null, new EdgeStyle(esourcereader), new EdgeStyle(ereader)));
+		if (col == SPECIFIC_G1_COLOR) stylesMap.put(e, new GraphComparatorStyleStore(new CSSEdgeStyle(esourcereader), null, new CSSEdgeStyle(ereader)));
+		else if (col == SPECIFIC_G2_COLOR) stylesMap.put(e, new GraphComparatorStyleStore(null, new CSSEdgeStyle(esourcereader), new CSSEdgeStyle(ereader)));
 		else {
 			eauxreader.setEdge((Edge)aux);
-			stylesMap.put(e, new GraphComparatorStyleStore(new EdgeStyle(esourcereader), new EdgeStyle(eauxreader), new EdgeStyle(ereader)));
+			stylesMap.put(e, new GraphComparatorStyleStore(new CSSEdgeStyle(esourcereader), new CSSEdgeStyle(eauxreader), new CSSEdgeStyle(ereader)));
 		}
 	}
 	/**

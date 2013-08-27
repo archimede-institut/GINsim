@@ -1,13 +1,13 @@
 package org.ginsim.service.tool.graphcomparator;
 
-import org.ginsim.core.graph.view.css.Style;
+import org.ginsim.core.graph.view.css.CSSStyle;
 
 public class GraphComparatorStyleStore {
-	public Style v1;
-	public Style v2;
-	public Style v;
+	public CSSStyle v1;
+	public CSSStyle v2;
+	public CSSStyle v;
 	
-	public GraphComparatorStyleStore(Style v1, Style v2, Style v) {
+	public GraphComparatorStyleStore(CSSStyle v1, CSSStyle v2, CSSStyle v) {
 		this.v1 = v1;
 		this.v2 = v2;
 		this.v = v;

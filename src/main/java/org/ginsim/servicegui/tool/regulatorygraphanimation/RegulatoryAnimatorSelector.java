@@ -8,8 +8,8 @@ import java.util.Map;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.view.css.EdgeStyle;
-import org.ginsim.core.graph.view.css.NodeStyle;
+import org.ginsim.core.graph.view.css.CSSEdgeStyle;
+import org.ginsim.core.graph.view.css.CSSNodeStyle;
 import org.ginsim.core.graph.view.css.Selector;
 
 
@@ -24,22 +24,22 @@ public class RegulatoryAnimatorSelector extends Selector {
 	public static final String CAT_EDGE_ON	 = "on";
 	public static final String CAT_EDGE_OFF	 = "off";
 
-	public static final EdgeStyle STYLE_EDGE_ON		= new EdgeStyle();
-	public static final EdgeStyle STYLE_EDGE_OFF 	= new EdgeStyle(new Color(192, 192, 192));
+	public static final CSSEdgeStyle STYLE_EDGE_ON		= new CSSEdgeStyle();
+	public static final CSSEdgeStyle STYLE_EDGE_OFF 	= new CSSEdgeStyle(new Color(192, 192, 192));
 
 	public static final int MAX_STYLES = 9; 
 	public static final int STAR = MAX_STYLES+1;
-	public static final NodeStyle[] STYLE_NODES = new NodeStyle[MAX_STYLES+2];
+	public static final CSSNodeStyle[] STYLE_NODES = new CSSNodeStyle[MAX_STYLES+2];
 	public static final String[] CAT_NODES = new String[MAX_STYLES+2];
 
 
 	static {	
 		int step = 256/(MAX_STYLES+1);
 		for (int k = 0 ; k <= MAX_STYLES ; k++) {
-			STYLE_NODES[k] = new NodeStyle(new Color(255-k*step,  255, 255-k*step), null, Color.black, null, null);
+			STYLE_NODES[k] = new CSSNodeStyle(new Color(255-k*step,  255, 255-k*step), null, Color.black, null, null);
 			CAT_NODES[k] = String.valueOf(k);
 		}
-		STYLE_NODES[STAR] = new NodeStyle(new Color(0, 127, 255), null, Color.black, null,null);
+		STYLE_NODES[STAR] = new CSSNodeStyle(new Color(0, 127, 255), null, Color.black, null,null);
 		CAT_NODES[STAR] = "*";
 	}	
 

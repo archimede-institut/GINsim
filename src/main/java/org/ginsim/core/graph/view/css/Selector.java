@@ -71,11 +71,11 @@ public abstract class Selector {
 	 * @param category the id of the category
 	 * @return the default style
 	 */
-	public Style getStyle(String category) {
+	public CSSStyle getStyle(String category) {
 		if (!m.containsKey(category)) {
 			return missingCategory(category);
 		}
-		return (Style) m.get(category);
+		return (CSSStyle) m.get(category);
 	}
 	
 	/**
@@ -86,7 +86,7 @@ public abstract class Selector {
 	 * @param obj
 	 * @return the default style for this object
 	 */	
-	public Style getStyle(Object obj) {
+	public CSSStyle getStyle(Object obj) {
 		return getStyle(getCategory(obj));
 	}
 	
@@ -95,7 +95,7 @@ public abstract class Selector {
 	 * @param obj a node
 	 * @return the default style for this object
 	 */	
-	public Style getStyleForNode(Object obj) {
+	public CSSStyle getStyleForNode(Object obj) {
 		return getStyle(getCategoryForNode(obj));
 	}
 	
@@ -104,7 +104,7 @@ public abstract class Selector {
 	 * @param obj an edge
 	 * @return the default style for this object
 	 */	
-	public Style getStyleForEdge(Object obj) {
+	public CSSStyle getStyleForEdge(Object obj) {
 		return getStyle(getCategoryForEdge(obj));
 	}
 	
@@ -113,7 +113,7 @@ public abstract class Selector {
 	 * @param category the id of the category
 	 * @return false if the category doesn't exists
 	 */
-	public boolean setStyle(String category, Style style) {
+	public boolean setStyle(String category, CSSStyle style) {
 		if (!m.containsKey(category)) {
             return missingCategory(category, style);
         }
@@ -129,7 +129,7 @@ public abstract class Selector {
 	 * @param obj
 	 * @return the default style for this object
 	 */	
-	public boolean setStyle(Object obj, Style style) {
+	public boolean setStyle(Object obj, CSSStyle style) {
 		return setStyle(getCategory(obj), style);
 	}
 	
@@ -138,7 +138,7 @@ public abstract class Selector {
 	 * @param obj a node
 	 * @return the default style for this object
 	 */	
-	public boolean setStyleForNode(Object obj, Style style) {
+	public boolean setStyleForNode(Object obj, CSSStyle style) {
 		return setStyle(getCategoryForNode(obj), style);
 	}
 	
@@ -147,7 +147,7 @@ public abstract class Selector {
 	 * @param obj an edge
 	 * @return the default style for this object
 	 */	
-	public boolean setStyleForEdge(Object obj, Style style) {
+	public boolean setStyleForEdge(Object obj, CSSStyle style) {
 		return setStyle(getCategoryForEdge(obj), style);
 	}
 	
@@ -157,7 +157,7 @@ public abstract class Selector {
 	 * @return false if the category doesn't exist
 	 */
 	public boolean applyStyle(String category, AttributesReader areader) {
-		Style s = (Style) m.get(category);
+		CSSStyle s = (CSSStyle) m.get(category);
 		if (s != null) {
             s.apply(areader);
             areader.refresh();
@@ -202,7 +202,7 @@ public abstract class Selector {
 	 * @param category the identifier for this category
 	 * @param defaultStyle its default style
 	 */
-	protected void addCategory(String category, Style defaultStyle) {
+	protected void addCategory(String category, CSSStyle defaultStyle) {
 		m.put(category, defaultStyle);
 	}
 	
@@ -216,7 +216,7 @@ public abstract class Selector {
 	 * @param category
 	 * @return null
 	 */
-	protected Style missingCategory(String category) {
+	protected CSSStyle missingCategory(String category) {
 		return null;
 	}
 
@@ -236,7 +236,7 @@ public abstract class Selector {
 	 * @param style the style to save for this category
 	 * @return false
 	 */
-	protected boolean missingCategory(String category, Style style) {
+	protected boolean missingCategory(String category, CSSStyle style) {
 		return false;
 	}
 	

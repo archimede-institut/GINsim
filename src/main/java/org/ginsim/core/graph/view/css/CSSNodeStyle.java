@@ -21,7 +21,7 @@ import org.ginsim.core.graph.view.NodeShape;
  *     - border : the style of the border = simple, raised or strong
  *     - shape : the shape = ellipse or rectangle
  */
-public class NodeStyle implements Style {
+public class CSSNodeStyle implements CSSStyle {
 
 	public final static String CSS_BACKGROUND		= "background";
 	public final static String CSS_FOREGROUND		= "foreground";
@@ -46,7 +46,7 @@ public class NodeStyle implements Style {
 	/**
 	 * A new style from the with all values to NULL
 	 */
-	public NodeStyle() {
+	public CSSNodeStyle() {
 		this(null, null, null, null, null);
 	}
 
@@ -59,7 +59,7 @@ public class NodeStyle implements Style {
 	 * 
 	 * @see NodeAttributesReader
 	 */
-	public NodeStyle(Color background, Color foreground, Color textcolor, NodeBorder border, NodeShape shape) {
+	public CSSNodeStyle(Color background, Color foreground, Color textcolor, NodeBorder border, NodeShape shape) {
 		this.background = background;
 		this.foreground = foreground;
 		this.textcolor  = textcolor;
@@ -72,32 +72,32 @@ public class NodeStyle implements Style {
 	 * A new style from a GsAttributesReader areader
  	 * @param areader
  	 */
-	public NodeStyle(AttributesReader areader) {
-		background 	= ((NodeAttributesReader) areader).getBackgroundColor();
-		foreground 	= ((NodeAttributesReader) areader).getForegroundColor();
-		textcolor 	= ((NodeAttributesReader) areader).getTextColor();
-		border 		= ((NodeAttributesReader) areader).getBorder();
-		shape 		= ((NodeAttributesReader) areader).getShape();
+	public CSSNodeStyle(NodeAttributesReader areader) {
+		background 	= areader.getBackgroundColor();
+		foreground 	= areader.getForegroundColor();
+		textcolor 	= areader.getTextColor();
+		border 		= areader.getBorder();
+		shape 		= areader.getShape();
 	}
 	
 	/**
 	 * A new style copied from another
 	 * @param s
 	 */
-	public NodeStyle(Style s) {
-		background 	= ((NodeStyle) s).background;
-		foreground 	= ((NodeStyle) s).foreground;
-		textcolor 	= ((NodeStyle) s).textcolor;
-		border 		= ((NodeStyle) s).border;
-		shape 		= ((NodeStyle) s).shape;
+	public CSSNodeStyle(CSSNodeStyle s) {
+		background 	= s.background;
+		foreground 	= s.foreground;
+		textcolor 	= s.textcolor;
+		border 		= s.border;
+		shape 		= s.shape;
 	}
 	
-	public void merge(Style sa) {
-		if (!(sa instanceof NodeStyle)) {
+	public void merge(CSSStyle sa) {
+		if (!(sa instanceof CSSNodeStyle)) {
 			return;
 		}
 		
-		NodeStyle s = (NodeStyle)sa; 
+		CSSNodeStyle s = (CSSNodeStyle)sa; 
 		if (s.background != null)   background = s.background;
 		if (s.foreground != null)   foreground = s.foreground;
 		if (s.textcolor != null)    textcolor = s.textcolor;
@@ -200,7 +200,7 @@ public class NodeStyle implements Style {
 	 * @throws PatternSyntaxException
 	 * @throws CSSSyntaxException if there is an error in the syntax
 	 */
-	public static Style fromString(String []lines) throws PatternSyntaxException, CSSSyntaxException {
+	public static CSSStyle fromString(String []lines) throws PatternSyntaxException, CSSSyntaxException {
 		Color background  = null;
 		Color foreground  = null;
 		Color textColor  = null;
@@ -245,9 +245,9 @@ public class NodeStyle implements Style {
 				throw new CSSSyntaxException("Node has no key "+key+" at line "+i+" : "+lines[i]+". Must be "+CSS_BACKGROUND+", "+CSS_FOREGROUND+", "+CSS_SHAPE+" or "+CSS_BORDER);
 			}
 		}
-		return new NodeStyle(background, foreground, textColor, border, shape);
+		return new CSSNodeStyle(background, foreground, textColor, border, shape);
 	}
 	public Object clone() {
-		return new NodeStyle(this);
+		return new CSSNodeStyle(this);
 	}
 }

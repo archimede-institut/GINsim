@@ -66,7 +66,7 @@ public class CascadingStyleSheet {
 				affectedSelectors.put(styleSheet.selID, sel);
 				sel.addCategory(styleSheet.category, styleSheet.style);
 			} else {
-				Style style = old_sel.getStyle(styleSheet.category);
+				CSSStyle style = old_sel.getStyle(styleSheet.category);
 				if (style == null) {
 					old_sel.addCategory(styleSheet.category, styleSheet.style);
 				} else {
@@ -146,9 +146,9 @@ public class CascadingStyleSheet {
 class StyleSheet {
 	protected String selID;
 	protected String category;
-	protected Style style;
+	protected CSSStyle style;
 	
-	public StyleSheet(String sel, String category, Style style) {
+	public StyleSheet(String sel, String category, CSSStyle style) {
 		this.selID = sel;
 		this.category = category;
 		this.style = style;
@@ -238,7 +238,7 @@ class CSSParser {
 		StringBuffer property = new StringBuffer();
 		StringBuffer value = new StringBuffer();
 		
-		Style style = null ;
+		CSSStyle style = null ;
 		
 		
 		while (i < text.length()) {
@@ -252,13 +252,13 @@ class CSSParser {
 				i = parsePropertyAndValue(text, i-1, property, value);
 				if (style == null) {
 					String p = property.toString();
-					if (p.equals(EdgeStyle.CSS_LINECOLOR) 
-						|| p.equals(EdgeStyle.CSS_LINEEND) 
-						|| p.equals(EdgeStyle.CSS_BORDER) 
-						|| p.equals(EdgeStyle.CSS_SHAPE)) {
-						style = new EdgeStyle();
+					if (p.equals(CSSEdgeStyle.CSS_LINECOLOR) 
+						|| p.equals(CSSEdgeStyle.CSS_LINEEND) 
+						|| p.equals(CSSEdgeStyle.CSS_BORDER) 
+						|| p.equals(CSSEdgeStyle.CSS_SHAPE)) {
+						style = new CSSEdgeStyle();
 					} else {
-						style = new NodeStyle();
+						style = new CSSNodeStyle();
 					}
 				}
 				style.setProperty(property.toString(), value.toString(), i);

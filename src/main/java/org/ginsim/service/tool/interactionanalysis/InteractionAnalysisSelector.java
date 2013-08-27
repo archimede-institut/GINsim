@@ -5,9 +5,9 @@ import java.util.Map;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.view.EdgeEnd;
-import org.ginsim.core.graph.view.css.EdgeStyle;
+import org.ginsim.core.graph.view.css.CSSEdgeStyle;
 import org.ginsim.core.graph.view.css.Selector;
-import org.ginsim.core.graph.view.css.Style;
+import org.ginsim.core.graph.view.css.CSSStyle;
 
 
 public class InteractionAnalysisSelector extends Selector {
@@ -17,10 +17,10 @@ public class InteractionAnalysisSelector extends Selector {
 	public static final String CAT_NEGATIVE = "negative";
 	public static final String CAT_DUAL = "dual";
 	
-	public static final EdgeStyle STYLE_NONFUNCTIONNAL	= new EdgeStyle(Color.yellow, 	EdgeEnd.UNKNOWN,  EdgeStyle.NULL_CURVE,  5);
-	public static final EdgeStyle STYLE_POSITIVE 		= new EdgeStyle(Color.green, 	EdgeEnd.POSITIVE, EdgeStyle.NULL_CURVE,  5);
-	public static final EdgeStyle STYLE_NEGATIVE 		= new EdgeStyle(Color.red, 		EdgeEnd.NEGATIVE, EdgeStyle.NULL_CURVE,  5);
-	public static final EdgeStyle STYLE_DUAL	 		= new EdgeStyle(Color.blue, 	EdgeEnd.DUAL,     EdgeStyle.NULL_CURVE,  5);
+	public static final CSSEdgeStyle STYLE_NONFUNCTIONNAL	= new CSSEdgeStyle(Color.yellow, 	EdgeEnd.UNKNOWN,  CSSEdgeStyle.NULL_CURVE,  5);
+	public static final CSSEdgeStyle STYLE_POSITIVE 		= new CSSEdgeStyle(Color.green, 	EdgeEnd.POSITIVE, CSSEdgeStyle.NULL_CURVE,  5);
+	public static final CSSEdgeStyle STYLE_NEGATIVE 		= new CSSEdgeStyle(Color.red, 		EdgeEnd.NEGATIVE, CSSEdgeStyle.NULL_CURVE,  5);
+	public static final CSSEdgeStyle STYLE_DUAL	 		= new CSSEdgeStyle(Color.blue, 	EdgeEnd.DUAL,     CSSEdgeStyle.NULL_CURVE,  5);
 	
 	private Map<RegulatoryMultiEdge, String> cache = null;
 
@@ -29,10 +29,10 @@ public class InteractionAnalysisSelector extends Selector {
 	}
 
 	public void resetDefaultStyle() {
-		addCategory(CAT_NONFUNCTIONNAL, (Style)STYLE_NONFUNCTIONNAL.clone());
-		addCategory(CAT_POSITIVE, (Style)STYLE_POSITIVE.clone());
-		addCategory(CAT_NEGATIVE, (Style)STYLE_NEGATIVE.clone());
-		addCategory(CAT_DUAL, (Style)STYLE_DUAL.clone());
+		addCategory(CAT_NONFUNCTIONNAL, (CSSStyle)STYLE_NONFUNCTIONNAL.clone());
+		addCategory(CAT_POSITIVE, (CSSStyle)STYLE_POSITIVE.clone());
+		addCategory(CAT_NEGATIVE, (CSSStyle)STYLE_NEGATIVE.clone());
+		addCategory(CAT_DUAL, (CSSStyle)STYLE_DUAL.clone());
 	}
 	
 	public boolean respondToNodes() {return false;}

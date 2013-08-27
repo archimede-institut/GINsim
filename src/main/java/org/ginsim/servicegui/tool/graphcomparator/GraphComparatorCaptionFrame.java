@@ -30,9 +30,9 @@ import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.css.CascadingStyleSheetManager;
-import org.ginsim.core.graph.view.css.EdgeStyle;
-import org.ginsim.core.graph.view.css.NodeStyle;
-import org.ginsim.core.graph.view.css.Style;
+import org.ginsim.core.graph.view.css.CSSEdgeStyle;
+import org.ginsim.core.graph.view.css.CSSNodeStyle;
+import org.ginsim.core.graph.view.css.CSSStyle;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.service.tool.graphcomparator.GraphComparator;
 import org.ginsim.service.tool.graphcomparator.GraphComparatorResult;
@@ -50,8 +50,8 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	private JButton automaticRoutingButton;
 	private GraphComparatorResult gcResult;
 	
-	private static final EdgeStyle clearEdgeStyle = new EdgeStyle(Color.black, null, EdgeStyle.NULL_CURVE, 1);
-	private static final NodeStyle clearNodeStyle = new NodeStyle(Color.white, Color.gray, Color.gray, NodeBorder.SIMPLE, null);
+	private static final CSSEdgeStyle clearEdgeStyle = new CSSEdgeStyle(Color.black, null, CSSEdgeStyle.NULL_CURVE, 1);
+	private static final CSSNodeStyle clearNodeStyle = new CSSNodeStyle(Color.white, Color.gray, Color.gray, NodeBorder.SIMPLE, null);
 	
 	public GraphComparatorCaptionFrame(GraphComparatorResult gcResult) {
         this.g = gcResult.getDiffGraph();
@@ -285,7 +285,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
     	
     	for (Iterator<Object> it = styleMap.keySet().iterator(); it.hasNext();) {
 			Object o = it.next();
-			Style style = null;
+			CSSStyle style = null;
 			GraphComparatorStyleStore is = (GraphComparatorStyleStore)styleMap.get(o);
 			if (source == diffColor) {
 				style = is.v;
@@ -310,7 +310,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 				ereader.setEdge((Edge)o);
 				if (style != null) {
 					ereader.setDash(EdgePattern.SIMPLE); //FIXME : thats dirty, but copy/paste from DynamicGraph.
-					cs.applyOnEdge((EdgeStyle)style, o, ereader);
+					cs.applyOnEdge((CSSEdgeStyle)style, o, ereader);
 				} else {
 					ereader.setDash(EdgePattern.DASH); //FIXME : thats dirty, but copy/paste from DynamicGraph.
 					cs.applyOnEdge(clearEdgeStyle, o, ereader);
@@ -318,7 +318,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 			} else { //vertex
 				vreader.setNode(o);
 				if (style != null) {
-					cs.applyOnNode((NodeStyle)style, o, vreader);
+					cs.applyOnNode((CSSNodeStyle)style, o, vreader);
 				} else {
 					cs.applyOnNode(clearNodeStyle, o, vreader);
 				}

@@ -30,6 +30,7 @@ public class EditPanel extends JTabbedPane implements GraphGUIListener {
 		gui.addGraphGUIListener(this);
 		addTab(new MainEditTab(gui));
 		addTab(new GraphicAttributePanel(gui));
+		addTab(new StylePanel(gui));
 	}
 	
 	/**

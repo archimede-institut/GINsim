@@ -21,7 +21,7 @@ public class CSSTest {
 	public void singleStyleTest() {
 		CascadingStyleSheet css = new CascadingStyleSheet();
 		
-		css.cascade.add(new StyleSheet(AllSelector.IDENTIFIER, AllSelector.CAT_NODES, new NodeStyle(Color.red, Color.blue, Color.green, null, NodeShape.RECTANGLE)));
+		css.cascade.add(new StyleSheet(AllSelector.IDENTIFIER, AllSelector.CAT_NODES, new CSSNodeStyle(Color.red, Color.blue, Color.green, null, NodeShape.RECTANGLE)));
 		
 
 		CascadingStyleSheet css2 = null;

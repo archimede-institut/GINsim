@@ -9,9 +9,9 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.core.graph.view.css.NodeStyle;
+import org.ginsim.core.graph.view.css.CSSNodeStyle;
 import org.ginsim.core.graph.view.css.Selector;
-import org.ginsim.core.graph.view.css.Style;
+import org.ginsim.core.graph.view.css.CSSStyle;
 
 public class ConnectivitySelector extends Selector {
 	public static final String IDENTIFIER = "scc";
@@ -20,10 +20,10 @@ public class ConnectivitySelector extends Selector {
 	public static final String CAT_TRANSIENT_COMPLEX = "transient-complex";
 	public static final String CAT_TERMINAL_COMPLEX = "terminal-complex";
 	
-	public static final NodeStyle STYLE_TRANSIENT_TRIVIAL	= new NodeStyle(Color.white, Color.black, Color.black, NodeBorder.SIMPLE, NodeShape.RECTANGLE);
-	public static final NodeStyle STYLE_TERMINAL_TRIVIAL	= new NodeStyle(Color.red.darker(),   Color.black, Color.white, NodeBorder.SIMPLE, NodeShape.ELLIPSE);
-	public static final NodeStyle STYLE_TRANSIENT_COMPLEX	= new NodeStyle(Color.blue.darker(),  Color.black, Color.red, NodeBorder.SIMPLE, NodeShape.RECTANGLE);
-	public static final NodeStyle STYLE_TERMINAL_COMPLEX	= new NodeStyle(Color.orange,  Color.black, Color.blue, NodeBorder.SIMPLE, NodeShape.ELLIPSE);
+	public static final CSSNodeStyle STYLE_TRANSIENT_TRIVIAL	= new CSSNodeStyle(Color.white, Color.black, Color.black, NodeBorder.SIMPLE, NodeShape.RECTANGLE);
+	public static final CSSNodeStyle STYLE_TERMINAL_TRIVIAL	= new CSSNodeStyle(Color.red.darker(),   Color.black, Color.white, NodeBorder.SIMPLE, NodeShape.ELLIPSE);
+	public static final CSSNodeStyle STYLE_TRANSIENT_COMPLEX	= new CSSNodeStyle(Color.blue.darker(),  Color.black, Color.red, NodeBorder.SIMPLE, NodeShape.RECTANGLE);
+	public static final CSSNodeStyle STYLE_TERMINAL_COMPLEX	= new CSSNodeStyle(Color.orange,  Color.black, Color.blue, NodeBorder.SIMPLE, NodeShape.ELLIPSE);
 	
 	private List<NodeReducedData> cacheComponents;
 	private int totalComplexComponents;
@@ -38,10 +38,10 @@ public class ConnectivitySelector extends Selector {
 	
 	@Override
 	public void resetDefaultStyle() {
-		addCategory(CAT_TRANSIENT_TRIVIAL, (Style)STYLE_TRANSIENT_TRIVIAL.clone());
-		addCategory(CAT_TERMINAL_TRIVIAL, (Style)STYLE_TERMINAL_TRIVIAL.clone());
-		addCategory(CAT_TRANSIENT_COMPLEX, (Style)STYLE_TRANSIENT_COMPLEX.clone());
-		addCategory(CAT_TERMINAL_COMPLEX, (Style)STYLE_TERMINAL_COMPLEX.clone());
+		addCategory(CAT_TRANSIENT_TRIVIAL, (CSSStyle)STYLE_TRANSIENT_TRIVIAL.clone());
+		addCategory(CAT_TERMINAL_TRIVIAL, (CSSStyle)STYLE_TERMINAL_TRIVIAL.clone());
+		addCategory(CAT_TRANSIENT_COMPLEX, (CSSStyle)STYLE_TRANSIENT_COMPLEX.clone());
+		addCategory(CAT_TERMINAL_COMPLEX, (CSSStyle)STYLE_TERMINAL_COMPLEX.clone());
 	}
 
 	@Override
@@ -89,12 +89,12 @@ public class ConnectivitySelector extends Selector {
 	}
 
 	@Override
-	public Style getStyle(String category) {
+	public CSSStyle getStyle(String category) {
 		int index = category.indexOf('_');
 		if (index == -1) {
 			return super.getStyle(category);
 		} else {
-			NodeStyle style = (NodeStyle)STYLE_TRANSIENT_COMPLEX.clone();
+			CSSNodeStyle style = (CSSNodeStyle)STYLE_TRANSIENT_COMPLEX.clone();
 			int color = Integer.parseInt(category.substring(index+1)); 
 			style.background = new Color(color);
 			style.textcolor = ColorPalette.getConstrastedForegroundColor(style.background);

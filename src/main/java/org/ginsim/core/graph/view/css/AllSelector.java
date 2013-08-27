@@ -13,16 +13,16 @@ public class AllSelector extends Selector {
 	public static final String CAT_NODES = "nodes";
 	public static final String CAT_EDGES = "edges";
 	
-	public static final NodeStyle STYLE_NODES = new NodeStyle();
-	public static final EdgeStyle   STYLE_EDGES = new EdgeStyle();
+	public static final CSSNodeStyle STYLE_NODES = new CSSNodeStyle();
+	public static final CSSEdgeStyle   STYLE_EDGES = new CSSEdgeStyle();
 
 	public AllSelector() {
 		super(IDENTIFIER);
 	}
 
 	public void resetDefaultStyle() {
-		addCategory(CAT_NODES, (Style)STYLE_NODES.clone());
-		addCategory(CAT_EDGES, (Style)STYLE_EDGES.clone());		
+		addCategory(CAT_NODES, (CSSStyle)STYLE_NODES.clone());
+		addCategory(CAT_EDGES, (CSSStyle)STYLE_EDGES.clone());		
 	}
 
 	public String getCategoryForEdge(Object obj) {

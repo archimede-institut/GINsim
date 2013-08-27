@@ -29,8 +29,8 @@ public class CascadingStyleSheetManager {
 	 * @param edge
 	 * @param areader
 	 */
-	public void applyOnEdge(Selector sel, Object edge, AttributesReader areader) {
-		if (shouldStoreOldStyle) old_edges.put(edge, new EdgeStyle(areader));
+	public void applyOnEdge(Selector sel, Object edge, EdgeAttributesReader areader) {
+		if (shouldStoreOldStyle) old_edges.put(edge, new CSSEdgeStyle(areader));
 		sel.applyStyleForEdge(edge, areader);
 	}
 
@@ -41,8 +41,8 @@ public class CascadingStyleSheetManager {
 	 * @param edge
 	 * @param areader
 	 */
-	public void applyOnNode(Selector sel, Object node, AttributesReader areader) {
-		if (shouldStoreOldStyle) old_nodes.put(node, new NodeStyle(areader));
+	public void applyOnNode(Selector sel, Object node, NodeAttributesReader areader) {
+		if (shouldStoreOldStyle) old_nodes.put(node, new CSSNodeStyle(areader));
 		sel.applyStyleForNode(node, areader);
 	}
 
@@ -53,8 +53,8 @@ public class CascadingStyleSheetManager {
 	 * @param edge
 	 * @param areader
 	 */
-	public void applyOnEdge(EdgeStyle style, Object edge, AttributesReader areader) {
-		if (shouldStoreOldStyle) old_edges.put(edge, new EdgeStyle(areader));
+	public void applyOnEdge(CSSEdgeStyle style, Object edge, EdgeAttributesReader areader) {
+		if (shouldStoreOldStyle) old_edges.put(edge, new CSSEdgeStyle(areader));
 		style.apply(areader);
 	}
 
@@ -65,8 +65,8 @@ public class CascadingStyleSheetManager {
 	 * @param node
 	 * @param areader
 	 */
-	public void applyOnNode(NodeStyle style, Object node, AttributesReader areader) {
-		if (shouldStoreOldStyle) old_nodes.put(node, new NodeStyle(areader));
+	public void applyOnNode(CSSNodeStyle style, Object node, NodeAttributesReader areader) {
+		if (shouldStoreOldStyle) old_nodes.put(node, new CSSNodeStyle(areader));
 		style.apply(areader);
 	}
 
@@ -84,7 +84,7 @@ public class CascadingStyleSheetManager {
 		for (Iterator it_edges = edges.iterator(); it_edges.hasNext();) {			//For each edges
 			Object edge = it_edges.next();
 			ereader.setEdge((Edge)edge);
-			EdgeStyle style = new EdgeStyle(ereader);								//  get the style
+			CSSEdgeStyle style = new CSSEdgeStyle(ereader);								//  get the style
 			if (shouldStoreOldStyle) old_edges.put(edge, style.clone());					//  save a copy if needed
 			for (Iterator it_sel = selectors.iterator(); it_sel.hasNext();) {		//  For each selector
 				Selector sel = (Selector) it_sel.next();
@@ -107,7 +107,7 @@ public class CascadingStyleSheetManager {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {			//For each nodes
 			Object node = it_nodes.next();
 			vreader.setNode(node);
-			NodeStyle style = new NodeStyle(vreader);							//  get the style
+			CSSNodeStyle style = new CSSNodeStyle(vreader);							//  get the style
 			if (shouldStoreOldStyle) old_nodes.put(node, style.clone());					//  save a copy if needed
 			for (Iterator it_sel = selectors.iterator(); it_sel.hasNext();) {		//  For each selector
 				Selector sel = (Selector) it_sel.next();
@@ -131,9 +131,9 @@ public class CascadingStyleSheetManager {
 			Object edge = it_edges.next();
 			ereader.setEdge((Edge)edge);
 			if (shouldStoreOldStyle) {
-				old_edges.put(edge, new EdgeStyle(ereader));					//  save a copy if needed
+				old_edges.put(edge, new CSSEdgeStyle(ereader));					//  save a copy if needed
 			}
-			EdgeStyle style = (EdgeStyle)sel.getStyleForEdge(edge);
+			CSSEdgeStyle style = (CSSEdgeStyle)sel.getStyleForEdge(edge);
 			if (style != null) {
 				style.apply(ereader);		//  apply the style to the edge.
 			}
@@ -155,9 +155,9 @@ public class CascadingStyleSheetManager {
 			Object node = it_nodes.next();
 			vreader.setNode(node);
 			if (shouldStoreOldStyle) {
-				old_nodes.put(node, new NodeStyle(vreader));					//  save a copy if needed
+				old_nodes.put(node, new CSSNodeStyle(vreader));					//  save a copy if needed
 			}
-			NodeStyle style = (NodeStyle)sel.getStyleForNode(node);
+			CSSNodeStyle style = (CSSNodeStyle)sel.getStyleForNode(node);
 			if (style != null) {
 				style.apply(vreader);	//  apply the style to the node.
 			}
@@ -171,7 +171,7 @@ public class CascadingStyleSheetManager {
 	 * @param areader a edge attributesReader (must be set to the right edge)
 	 */
 	public void restoreEdge(Object edge, EdgeAttributesReader areader) {
-		((Style)old_edges.get(edge)).apply(areader);
+		((CSSStyle)old_edges.get(edge)).apply(areader);
 		areader.refresh();
 	}
 
@@ -181,7 +181,7 @@ public class CascadingStyleSheetManager {
 	 * @param areader a node attributesReader (must be set to the right vertex)
 	 */
 	public void restoreNode(Object node, NodeAttributesReader areader) {
-		((Style)old_nodes.get(node)).apply(areader);
+		((CSSStyle)old_nodes.get(node)).apply(areader);
 		areader.refresh();
 	}
 
@@ -193,7 +193,7 @@ public class CascadingStyleSheetManager {
 		for (Iterator it_edges = old_edges.keySet().iterator(); it_edges.hasNext();) {
 			Object edge = it_edges.next();
 			areader.setEdge((Edge)edge);
-			((Style)old_edges.get(edge)).apply(areader);
+			((CSSStyle)old_edges.get(edge)).apply(areader);
 		}
 		areader.refresh();
 	}
@@ -206,7 +206,7 @@ public class CascadingStyleSheetManager {
 		for (Iterator it_nodes = old_nodes.keySet().iterator(); it_nodes.hasNext();) {
 			Object node = it_nodes.next();
 			areader.setNode(node);
-			((Style)old_nodes.get(node)).apply(areader);
+			((CSSStyle)old_nodes.get(node)).apply(areader);
 		}
 		areader.refresh();
 	}
@@ -220,7 +220,7 @@ public class CascadingStyleSheetManager {
 		for (Iterator it_edges = edges.iterator(); it_edges.hasNext();) {
 			Object edge = it_edges.next();
 			areader.setEdge((Edge)edge);
-			Style style = (Style)old_edges.get(edge);
+			CSSStyle style = (CSSStyle)old_edges.get(edge);
 			if (style != null) style.apply(areader);
 		}
 		areader.refresh();
@@ -235,7 +235,7 @@ public class CascadingStyleSheetManager {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {
 			Object node = it_nodes.next();
 			areader.setNode(node);
-			Style style = (Style)old_nodes.get(node);
+			CSSStyle style = (CSSStyle)old_nodes.get(node);
 			if (style != null) style.apply(areader);
 		}
 		areader.refresh();
@@ -250,7 +250,7 @@ public class CascadingStyleSheetManager {
 		for (Iterator it_nodes = nodes.iterator(); it_nodes.hasNext();) {
 			Object node = it_nodes.next();
 			areader.setNode(node);
-			NodeStyle style = new NodeStyle(areader);
+			CSSNodeStyle style = new CSSNodeStyle(areader);
 			old_nodes.put(node, style);
 		}
 	}
@@ -264,7 +264,7 @@ public class CascadingStyleSheetManager {
 		for (Iterator it_edges = edges.iterator(); it_edges.hasNext();) {
 			Object edge = it_edges.next();
 			areader.setEdge((Edge)edge);
-			EdgeStyle style = new EdgeStyle(areader);
+			CSSEdgeStyle style = new CSSEdgeStyle(areader);
 			old_edges.put(edge, style);
 		}
 	}

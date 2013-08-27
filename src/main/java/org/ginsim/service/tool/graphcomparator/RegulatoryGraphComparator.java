@@ -19,7 +19,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterList;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.css.NodeStyle;
+import org.ginsim.core.graph.view.css.CSSNodeStyle;
 
 
 /**
@@ -65,7 +65,7 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> 
 	}
 	
 	public boolean isCommonNode(Object id) {
-		NodeStyle style = (NodeStyle)((GraphComparatorStyleStore)stylesMap.get(id)).v;
+		CSSNodeStyle style = (CSSNodeStyle)((GraphComparatorStyleStore)stylesMap.get(id)).v;
 		return style.background != SPECIFIC_G1_COLOR && style.background != SPECIFIC_G2_COLOR;
 	}
 	

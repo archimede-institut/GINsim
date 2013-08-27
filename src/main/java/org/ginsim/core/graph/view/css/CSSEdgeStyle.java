@@ -20,11 +20,10 @@ import org.ginsim.core.graph.view.EdgeEnd;
  *     - shape : the style of the edge = straight or curve
  *     - lineEnd : the line end = positive, negative, double or unknown
  */
-public class EdgeStyle implements Style {
+public class CSSEdgeStyle implements CSSStyle {
 	public final static float NULL_BORDER = -99;
 	public final static int NULL_CURVE = -99;
 
-	
 	public final static String CSS_LINECOLOR		= "line-color";
 	public final static String CSS_SHAPE			= "shape";
 	public final static String CSS_SHAPE_STRAIGHT	= "straight";
@@ -47,11 +46,11 @@ public class EdgeStyle implements Style {
 	/**
 	 * A new style from the with all values to NULL
 	 */
-	public EdgeStyle() {
+	public CSSEdgeStyle() {
 		this(null, null, NULL_CURVE, NULL_BORDER);
 	}
 
-	public EdgeStyle(Color lineColor) {
+	public CSSEdgeStyle(Color lineColor) {
 		this(lineColor, null, NULL_CURVE, NULL_BORDER);
 	}
 
@@ -64,7 +63,7 @@ public class EdgeStyle implements Style {
 	 * 
 	 * @see EdgeAttributesReader
 	 */
-	public EdgeStyle(Color lineColor, EdgeEnd lineEnd, int curve, float border) {
+	public CSSEdgeStyle(Color lineColor, EdgeEnd lineEnd, int curve, float border) {
 		this.lineColor	= lineColor;
 		this.lineEnd 	= lineEnd;
 		this.curve 		= curve;
@@ -75,38 +74,45 @@ public class EdgeStyle implements Style {
 	 * A new style from a GsAttributesReader areader
  	 * @param areader
  	 */
-	public EdgeStyle(AttributesReader areader) {
-		lineColor 	= ((EdgeAttributesReader) areader).getLineColor();
-		curve 		= (((EdgeAttributesReader) areader).isCurve()?1:0);
-		lineEnd 	= ((EdgeAttributesReader) areader).getLineEnd();
-		border	 	= ((EdgeAttributesReader) areader).getLineWidth();
+	public CSSEdgeStyle(EdgeAttributesReader areader) {
+		lineColor = areader.getLineColor();
+		curve     = areader.isCurve() ? 1 : 0;
+		lineEnd   = areader.getLineEnd();
+		border    = areader.getLineWidth();
 	}
 	
 	/**
 	 * A new style copied from another
 	 * @param s
 	 */
-	public EdgeStyle(Style s) {
-		lineColor 	= ((EdgeStyle) s).lineColor;
-		curve 		= ((EdgeStyle) s).curve;
-		lineEnd 	= ((EdgeStyle) s).lineEnd;
-		border	 	= ((EdgeStyle) s).border;
+	public CSSEdgeStyle(CSSEdgeStyle s) {
+		lineColor 	= s.lineColor;
+		curve 		= s.curve;
+		lineEnd 	= s.lineEnd;
+		border	 	= s.border;
 	}
 	
-	public void merge(Style s) {
-		if (s == null) return;
-		if (((EdgeStyle) s).lineColor != null)	lineColor 	= ((EdgeStyle) s).lineColor;
-		if (((EdgeStyle) s).lineEnd != null)		lineEnd 	= ((EdgeStyle) s).lineEnd;		
-		if (((EdgeStyle) s).border != NULL_BORDER)			border 		= ((EdgeStyle) s).border;
-		if (((EdgeStyle) s).curve != NULL_CURVE)	curve = ((EdgeStyle) s).curve;
+	public void merge(CSSStyle st) {
+		if (!(st instanceof CSSEdgeStyle)) {
+			return;
+		}
+		CSSEdgeStyle s = (CSSEdgeStyle) st;
+		if (s.lineColor != null)     lineColor  = s.lineColor;
+		if (s.lineEnd != null)       lineEnd    = s.lineEnd;		
+		if (s.border != NULL_BORDER) border     = s.border;
+		if (s.curve != NULL_CURVE)   curve      = s.curve;
 	}
 
 	public void apply(AttributesReader areader) {
-		if (lineColor != null)	((EdgeAttributesReader) areader).setLineColor(lineColor);
-		if (curve != NULL_CURVE) ((EdgeAttributesReader) areader).setCurve(curve==1);
-		if (lineEnd != null) 		((EdgeAttributesReader) areader).setLineEnd(lineEnd);
-		if (border != NULL_BORDER) 			((EdgeAttributesReader) areader).setLineWidth(border);
-		areader.damage();
+		if (!(areader instanceof EdgeAttributesReader)) {
+			return;
+		}
+		EdgeAttributesReader ereader = (EdgeAttributesReader)areader;
+		if (lineColor != null)	   ereader.setLineColor(lineColor);
+		if (curve != NULL_CURVE)   ereader.setCurve(curve==1);
+		if (lineEnd != null)       ereader.setLineEnd(lineEnd);
+		if (border != NULL_BORDER) ereader.setLineWidth(border);
+		ereader.damage();
 	}
 
 	@Override
@@ -189,7 +195,7 @@ public class EdgeStyle implements Style {
 	 * @throws PatternSyntaxException
 	 * @throws CSSSyntaxException if there is an error in the syntax
 	 */
-	public static Style fromString(String []lines) throws PatternSyntaxException, CSSSyntaxException {
+	public static CSSStyle fromString(String []lines) throws PatternSyntaxException, CSSSyntaxException {
 		Color lineColor = null;
 		int curve = NULL_CURVE;
 		EdgeEnd lineEnd = null;
@@ -222,11 +228,11 @@ public class EdgeStyle implements Style {
 				throw new CSSSyntaxException("Edge has no key "+key+" at line "+i+" : "+lines[i]+". Must be "+CSS_LINECOLOR+", "+CSS_SHAPE+" or "+CSS_LINEEND);
 			}
 		}
-		return new EdgeStyle(lineColor, lineEnd, curve, border);
+		return new CSSEdgeStyle(lineColor, lineEnd, curve, border);
 	}
 
 	public Object clone() {
-		return new EdgeStyle(this);
+		return new CSSEdgeStyle(this);
 	}
 
 }
