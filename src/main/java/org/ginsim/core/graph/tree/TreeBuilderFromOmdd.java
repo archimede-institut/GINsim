@@ -56,7 +56,7 @@ public abstract class TreeBuilderFromOmdd extends TreeBuilder {
 				
 		for (int i = 0 ; i < o.next.length ; i++) { //For all the children
 	    	TreeNode child = _createDiagramFromOmdd(o.next[i], o.level, currentWidthPerDepth, ereader);
-	    	linkNode(treeNode, child, i, ereader);
+	    	linkNode(treeNode, child, i);
 	    }
 		
 		if (mult > 1) {
@@ -95,12 +95,12 @@ public abstract class TreeBuilderFromOmdd extends TreeBuilder {
 					for (int i = 0; i < widthPerDepth[last_real]; i++) {
 						treeNode = new TreeNode(""+o.value, max_depth, ++currentWidthPerDepth[max_depth], TreeNode.TYPE_LEAF, o.value);
 						tree.addNode(treeNode);
-				    	linkNode(p, treeNode, i, ereader);
+				    	linkNode(p, treeNode, i);
 					}
 				} else {
 					treeNode = new TreeNode(""+o.value, max_depth, ++currentWidthPerDepth[max_depth], TreeNode.TYPE_LEAF, o.value);
 					tree.addNode(treeNode);
-			    	linkNode(p, treeNode, childIndex, ereader);	
+			    	linkNode(p, treeNode, childIndex);	
 				}
 			}
 			return null;
@@ -131,7 +131,7 @@ public abstract class TreeBuilderFromOmdd extends TreeBuilder {
 						if (childs != null) {
 							for (Iterator<TreeNode> it2 = childs.iterator(); it2 .hasNext();) {
 								TreeNode child = it2.next();
-								linkNode(treeNode, child, j, ereader);
+								linkNode(treeNode, child, j);
 							}
 						}
 					}
@@ -147,7 +147,7 @@ public abstract class TreeBuilderFromOmdd extends TreeBuilder {
 				TreeNode p = skippedParents.get(i);
 				for (int j = 0; j < max; j++) {
 					TreeNode child = currentNodes.get(j+i*max);
-					linkNode(p, child, j, ereader);
+					linkNode(p, child, j);
 				}
 			}
 			return null;

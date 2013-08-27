@@ -3,7 +3,7 @@ package org.ginsim.core.graph.tree;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 
-public interface Tree extends Graph<TreeNode, Edge<TreeNode>>{
+public interface Tree extends Graph<TreeNode, TreeEdge>{
 	
 	
 	public TreeBuilder getParser();
@@ -25,7 +25,7 @@ public interface Tree extends Graph<TreeNode, Edge<TreeNode>>{
 	 * @param target
 	 * @return the new edge
 	 */
-	public Edge<TreeNode> addEdge(TreeNode source, TreeNode target);
+	public Edge<TreeNode> addEdge(TreeNode source, TreeNode target, int value);
 	
 	
 	/**

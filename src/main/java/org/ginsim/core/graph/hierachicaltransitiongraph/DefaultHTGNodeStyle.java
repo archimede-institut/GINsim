@@ -1,13 +1,56 @@
 package org.ginsim.core.graph.hierachicaltransitiongraph;
 
+import java.awt.Color;
+import java.util.Collection;
+
+import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.graph.view.NodeStyleImpl;
 
 
 public class DefaultHTGNodeStyle extends NodeStyleImpl<HierarchicalNode> {
 
+	private final HierarchicalTransitionGraph graph;
+	
 	public DefaultHTGNodeStyle(HierarchicalTransitionGraph graph) {
+		this.graph = graph;
 		setDimension(5+10*graph.getNodeOrderSize(), 25);
 	}
+
+	@Override
+	public Color getBackground(HierarchicalNode hnode) {
+		switch (hnode.getType()) {
+		case HierarchicalNode.TYPE_STABLE_STATE:
+			return (HierarchicalNode.TYPE_STABLE_STATE_COLOR);
+		case HierarchicalNode.TYPE_TRANSIENT_CYCLE:
+			return (HierarchicalNode.TYPE_TRANSIENT_CYCLE_COLOR);
+		case HierarchicalNode.TYPE_TERMINAL_CYCLE:
+			return(HierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
+
+		case HierarchicalNode.TYPE_TRANSIENT_COMPONENT:
+			Collection in = graph.getIncomingEdges(hnode);
+			if (in == null || in.isEmpty()) {
+				return HierarchicalNode.TYPE_EDEN_TRANSIENT_COMPONENT_COLOR;
+			}
+			if (hnode.statesSet.getSizeOrOverApproximation() > 1) {
+				return HierarchicalNode.TYPE_TRANSIENT_COMPONENT_COLOR;
+			}
+			return HierarchicalNode.TYPE_TRANSIENT_COMPONENT_ALONE_COLOR;
+		}
+		return Color.WHITE;
+	}
+
+	@Override
+	public NodeShape getNodeShape(HierarchicalNode hnode) {
+		switch (hnode.getType()) {
+			case HierarchicalNode.TYPE_TRANSIENT_CYCLE:
+			case HierarchicalNode.TYPE_TERMINAL_CYCLE:
+			case HierarchicalNode.TYPE_TRANSIENT_COMPONENT:
+				return NodeShape.ELLIPSE;
+
+			case HierarchicalNode.TYPE_STABLE_STATE:
+			default:
+				return NodeShape.RECTANGLE;
+		}
+	}
 	
-	// TODO: default color based on node type
 }

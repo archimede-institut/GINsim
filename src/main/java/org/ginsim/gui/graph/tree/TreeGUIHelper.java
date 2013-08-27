@@ -6,8 +6,8 @@ import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.tree.Tree;
+import org.ginsim.core.graph.tree.TreeEdge;
 import org.ginsim.core.graph.tree.TreeNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
@@ -20,7 +20,7 @@ import org.mangosdk.spi.ProviderFor;
 
 
 @ProviderFor( GraphGUIHelper.class)
-public class TreeGUIHelper implements GraphGUIHelper<Tree, TreeNode, Edge<TreeNode>> {
+public class TreeGUIHelper implements GraphGUIHelper<Tree, TreeNode, TreeEdge> {
 
 	
 	/**
@@ -78,7 +78,7 @@ public class TreeGUIHelper implements GraphGUIHelper<Tree, TreeNode, Edge<TreeNo
 	}
 
 	@Override
-	public GUIEditor<Edge<TreeNode>> getEdgeEditionPanel(Tree graph) {
+	public GUIEditor<TreeEdge> getEdgeEditionPanel(Tree graph) {
 		return null;
 	}
 

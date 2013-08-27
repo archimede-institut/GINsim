@@ -116,25 +116,12 @@ public abstract class TreeBuilder {
 		vreader.setNode(vertex);
 		int total_width = getTerminalWidth()*TreeNode.PADDING_HORIZONTAL;
 		if (vertex.getType() == TreeNode.TYPE_LEAF) {
-			vreader.setShape(NodeShape.ELLIPSE);
-			vreader.setBackgroundColor(ColorPalette.defaultPalette[vertex.getValue()+1]);
-			vreader.setForegroundColor(Color.WHITE);
-			vreader.setBorder(NodeBorder.SIMPLE);
 			if (vertex.getDepth() != -1) {
 	    		vreader.setPos((int)((vertex.getWidth()-0.5)*total_width/getWidthPerDepth_acc(vertex))+100, getTotalLevels()*TreeNode.PADDING_VERTICAL+40);
 			} else {
 	    		vreader.setPos((int)((vertex.getWidth()+0.5)*total_width/getMaxTerminal())+100, getTotalLevels()*TreeNode.PADDING_VERTICAL+40);
 			}
 		} else {
-			vreader.setShape(NodeShape.RECTANGLE);			
-			if (vertex.getValue() == TreeNode.SKIPPED) {
-				vreader.setBackgroundColor(Color.WHITE);
-				vreader.setForegroundColor(Color.GRAY);
-			} else {
-				vreader.setBackgroundColor(ColorPalette.defaultPalette[0]);
-				vreader.setForegroundColor(Color.WHITE);
-
-			}
 			vreader.setPos((int)((vertex.getWidth()-0.5)*total_width/getWidthPerDepth_acc(vertex))+100, (getRealDepth(vertex)+1)*TreeNode.PADDING_VERTICAL-40);
 		}
 		vreader.refresh();
@@ -219,7 +206,7 @@ public abstract class TreeBuilder {
 				TreeNode treeNode = new TreeNode(parentId, j, ++currentWidthPerDepth[j], TreeNode.TYPE_BRANCH, TreeNode.SKIPPED);
 				newParents.add(treeNode);
 				tree.addNode(treeNode);
-				linkNode(o, treeNode, childIndex, ereader);
+				linkNode(o, treeNode, childIndex);
 			}
 		}
 		return newParents;
@@ -253,14 +240,8 @@ public abstract class TreeBuilder {
 	 * @param colorIndex
 	 * @param ereader
 	 */
-	protected void linkNode(TreeNode source, TreeNode target, int colorIndex, EdgeAttributesReader ereader) {
-		Edge<?> e = tree.addEdge(source, target);
-		ereader.setEdge(e);
-		ereader.setLineColor(ColorPalette.defaultPalette[colorIndex+1]);
-    	if (target.isLeaf()) {
-    		ereader.setDash(EdgePattern.DASH);
-    	}
-		ereader.refresh();
+	protected void linkNode(TreeNode source, TreeNode target, int colorIndex) {
+		Edge<?> e = tree.addEdge(source, target, colorIndex);
 	}
 
 	

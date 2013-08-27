@@ -440,45 +440,6 @@ public class HTGSimulation extends Simulation {
 		}
 		return null;
 	}
-
-	/**
-	 * Define the graphical properties (color, shape) of a hnode.
-	 * @param hnode
-	 */
-	private void setHnodeGraphicalProperties(HierarchicalNode hnode) {
-		vreader.setNode(hnode);
-	    vreader.setSize(15+10*params.param_list.graph.getNodeOrder().size(), 25);
-		switch (hnode.getType()) {
-		case HierarchicalNode.TYPE_STABLE_STATE:
-			vreader.setShape(NodeShape.RECTANGLE);
-			vreader.setBackgroundColor(HierarchicalNode.TYPE_STABLE_STATE_COLOR);
-			
-			break;
-		case HierarchicalNode.TYPE_TRANSIENT_CYCLE:
-			vreader.setShape(NodeShape.ELLIPSE);
-			vreader.setBackgroundColor(HierarchicalNode.TYPE_TRANSIENT_CYCLE_COLOR);
-			break;
-		case HierarchicalNode.TYPE_TERMINAL_CYCLE:
-			vreader.setShape(NodeShape.ELLIPSE);
-			vreader.setBackgroundColor(HierarchicalNode.TYPE_TERMINAL_CYCLE_COLOR);
-			break;
-		case HierarchicalNode.TYPE_TRANSIENT_COMPONENT:
-			vreader.setShape(NodeShape.ELLIPSE);
-			Color color = null;
-			if (hnode.getIn().isEmpty()) {
-				color = HierarchicalNode.TYPE_EDEN_TRANSIENT_COMPONENT_COLOR;
-			} else if (hnode.statesSet.getSizeOrOverApproximation() > 1) {
-				color = HierarchicalNode.TYPE_TRANSIENT_COMPONENT_COLOR;
-			} else {
-				color = HierarchicalNode.TYPE_TRANSIENT_COMPONENT_ALONE_COLOR;
-			}
-			vreader.setBackgroundColor(color);
-			break;
-		default:
-			break;
-		}
-		vreader.refresh();			
-	}
 	
 	/**
 	 * Add all the nodes to the graph, update their size and set their graphical properties
@@ -522,7 +483,6 @@ public class HTGSimulation extends Simulation {
 				}
 			}
 			htg.addNode(node);
-			setHnodeGraphicalProperties(node);
 		}
 		maxLabelsBySize = null;
 		newLabelsBySize = null;

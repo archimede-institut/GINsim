@@ -9,9 +9,11 @@ import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
+import org.ginsim.core.graph.view.EdgeStyle;
+import org.ginsim.core.graph.view.NodeStyle;
 
 
-public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>> 
+public class TreeImpl  extends AbstractGraph<TreeNode, TreeEdge> 
 	implements Tree{
 	
 	private static final String GRAPHTYPE = "tree";
@@ -68,11 +70,11 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
 	 * @return the new edge
 	 */
 	@Override
-	public Edge<TreeNode> addEdge(TreeNode source, TreeNode target) {
+	public TreeEdge addEdge(TreeNode source, TreeNode target, int value) {
 		
-		Edge<TreeNode> edge = getEdge(source, target);
+		TreeEdge edge = getEdge(source, target);
 		if (edge == null) {
-			edge = new Edge<TreeNode>(this, source, target);
+			edge = new TreeEdge(this, source, target, value);
 			if (!addEdge(edge)) {
 				return null;
 			}
@@ -118,18 +120,28 @@ public class TreeImpl  extends AbstractGraph<TreeNode, Edge<TreeNode>>
 
 	@Override
 	public void doSave(OutputStreamWriter osw, Collection<TreeNode> vertices,
-			Collection<Edge<TreeNode>> edges) {
+			Collection<TreeEdge> edges) {
 	}
 
 	@Override
-	protected List<?> doMerge(Graph<TreeNode, Edge<TreeNode>> graph) {
+	protected List<?> doMerge(Graph<TreeNode, TreeEdge> graph) {
 		return null;
 	}
 
 	@Override
-	public Graph<TreeNode, Edge<TreeNode>> getSubgraph(
-			Collection<TreeNode> vertex, Collection<Edge<TreeNode>> edges) {
+	public Graph<TreeNode, TreeEdge> getSubgraph(
+			Collection<TreeNode> vertex, Collection<TreeEdge> edges) {
 		return null;
+	}
+
+	@Override
+	protected NodeStyle<TreeNode> createDefaultNodeStyle() {
+		return new DefaultTreeNodeStyle();
+	}
+
+	@Override
+	protected EdgeStyle<TreeNode, TreeEdge> createDefaultEdgeStyle() {
+		return new DefaultTreeEdgeStyle();
 	}
 
 }
