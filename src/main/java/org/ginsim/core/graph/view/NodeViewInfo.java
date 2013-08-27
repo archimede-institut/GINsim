@@ -27,7 +27,7 @@ public interface NodeViewInfo {
 	 * If
 	 * @return the style for this node, or null to use the default.
 	 */
-	SimpleNodeStyle getStyle();
+	NodeStyleImpl getStyle();
 
 	/**
 	 * Set the style to use for this node.
@@ -35,7 +35,7 @@ public interface NodeViewInfo {
 	 * @param style the new style
 	 * @return true if the style was updated
 	 */
-	boolean setStyle(SimpleNodeStyle style);
+	boolean setStyle(NodeStyleImpl style);
 	
 	/**
 	 * Set the position of this node.

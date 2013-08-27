@@ -2,6 +2,14 @@ package org.ginsim.core.graph.view;
 
 import java.awt.Color;
 
+/**
+ * Define the visual parameters of a node.
+ * 
+ * @author Aurelien Naldi
+ *
+ * @param <V>
+ * @param <E>
+ */
 public interface NodeStyle<V> {
 
 	Color getBackground(V obj);
@@ -23,4 +31,9 @@ public interface NodeStyle<V> {
 	boolean setNodeShape(NodeShape shape);
 
 	boolean setNodeBorder(NodeBorder border);
+	
+	boolean enforceColors();
+	boolean enforceShape();
+	boolean enforceSize();
+	boolean enforceBorder();
 }

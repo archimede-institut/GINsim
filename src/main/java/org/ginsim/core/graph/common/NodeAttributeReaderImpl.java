@@ -13,12 +13,12 @@ import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.backend.GraphBackend;
-import org.ginsim.core.graph.view.DefaultNodeStyle;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
+import org.ginsim.core.graph.view.NodeStyle;
 import org.ginsim.core.graph.view.NodeViewInfo;
-import org.ginsim.core.graph.view.SimpleNodeStyle;
+import org.ginsim.core.graph.view.NodeStyleImpl;
 import org.ginsim.core.graph.view.SimpleStroke;
 
 
@@ -74,12 +74,12 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 
 
 	private final GraphBackend<V,E> backend;
-	private final DefaultNodeStyle<V> defaultStyle;
+	private final NodeStyle<V> defaultStyle;
 	private final Rectangle cachedBounds = new Rectangle();
 	
     private V vertex;
     private NodeViewInfo viewInfo = null;
-    private SimpleNodeStyle<V> style = null;
+    private NodeStyleImpl<V> style = null;
 
     private boolean selected;
     private boolean hasChanged = false;
@@ -91,7 +91,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
      * @param backend
      * @param map
      */
-    public NodeAttributeReaderImpl(DefaultNodeStyle defaultStyle, GraphBackend<V, E> backend) {
+    public NodeAttributeReaderImpl(NodeStyle defaultStyle, GraphBackend<V, E> backend) {
     	this.backend = backend;
         this.defaultStyle = defaultStyle;
     }
@@ -130,7 +130,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
     			return false;
     		}
     		
-    		style = new SimpleNodeStyle<V>(defaultStyle);
+    		style = new NodeStyleImpl<V>(defaultStyle);
     		style.setDimension(cachedBounds.width, cachedBounds.height);
     		viewInfo.setStyle(style);
     		return false;
@@ -399,7 +399,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 	}
 
 	@Override
-	public DefaultNodeStyle getDefaultNodeStyle() {
+	public NodeStyle getDefaultNodeStyle() {
 		return defaultStyle;
 	}
 	

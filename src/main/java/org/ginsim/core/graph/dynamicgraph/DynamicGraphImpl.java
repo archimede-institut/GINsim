@@ -24,10 +24,10 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.view.DefaultNodeStyle;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeStyle;
 import org.ginsim.core.io.parser.GinmlHelper;
 
 /**
@@ -96,7 +96,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	}
 
 	@Override
-	protected DefaultNodeStyle<DynamicNode> createDefaultNodeStyle() {
+	protected NodeStyle<DynamicNode> createDefaultNodeStyle() {
 		return new DefaultDynamicNodeStyle(this);
 	}
 

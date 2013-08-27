@@ -16,7 +16,7 @@ public interface NodeAttributesReader<V> extends AttributesReader {
 	 * Get the default style for the nodes in this graph.
 	 * @return the default node style.
 	 */
-	DefaultNodeStyle getDefaultNodeStyle();
+	NodeStyle<V> getDefaultNodeStyle();
 	
     /**
      * change the edited node.

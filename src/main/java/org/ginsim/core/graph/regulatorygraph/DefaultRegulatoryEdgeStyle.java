@@ -2,15 +2,15 @@ package org.ginsim.core.graph.regulatorygraph;
 
 import java.awt.Color;
 
-import org.ginsim.core.graph.view.DefaultEdgeStyle;
 import org.ginsim.core.graph.view.EdgeEnd;
+import org.ginsim.core.graph.view.EdgeStyleImpl;
 
 /**
  * Special default edge properties for regulatory graphs.
  * 
  * @author Aurelien Naldi
  */
-public class DefaultRegulatoryEdgeStyle extends DefaultEdgeStyle<RegulatoryNode, RegulatoryMultiEdge> {
+public class DefaultRegulatoryEdgeStyle extends EdgeStyleImpl<RegulatoryNode, RegulatoryMultiEdge> {
 
 	@Override
 	public Color getColor(RegulatoryMultiEdge edge) {
@@ -46,5 +46,10 @@ public class DefaultRegulatoryEdgeStyle extends DefaultEdgeStyle<RegulatoryNode,
 	@Override
 	public boolean setEnding(EdgeEnd ending) {
 		return false;
+	}
+	
+	@Override
+	public boolean enforceEnding() {
+		return true;
 	}
 }

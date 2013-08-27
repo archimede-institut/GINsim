@@ -18,7 +18,7 @@ public interface EdgeAttributesReader<V,E extends Edge<V>> extends AttributesRea
 	 * Get the default style used for the edges in this graph.
 	 * @return the default style for edges.
 	 */
-	DefaultEdgeStyle<V, E> getDefaultEdgeStyle();
+	EdgeStyle<V, E> getDefaultEdgeStyle();
 	
 	/**
 	 * @return the width of this edge

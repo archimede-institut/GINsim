@@ -11,7 +11,7 @@ import java.util.Set;
 import org.ginsim.common.utils.ArraySet;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.view.NodeViewInfo;
-import org.ginsim.core.graph.view.SimpleNodeStyle;
+import org.ginsim.core.graph.view.NodeStyleImpl;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.AbstractGraph;
@@ -265,7 +265,7 @@ class VInfo<V,E extends Edge<V>> implements NodeViewInfo {
     
     int x = 0;
     int y = 0;
-    SimpleNodeStyle<V> style = null;
+    NodeStyleImpl<V> style = null;
     
     protected VInfo( V o ) {
         self = o;
@@ -349,7 +349,7 @@ class VInfo<V,E extends Edge<V>> implements NodeViewInfo {
 	}
 
 	@Override
-	public SimpleNodeStyle<V> getStyle() {
+	public NodeStyleImpl<V> getStyle() {
 		return style;
 	}
 
@@ -365,7 +365,7 @@ class VInfo<V,E extends Edge<V>> implements NodeViewInfo {
 	}
 
 	@Override
-	public boolean setStyle(SimpleNodeStyle style) {
+	public boolean setStyle(NodeStyleImpl style) {
 		if (this.style == style) {
 			return false;
 		}

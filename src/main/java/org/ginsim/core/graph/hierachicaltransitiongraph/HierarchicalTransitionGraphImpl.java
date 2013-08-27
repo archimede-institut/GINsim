@@ -19,7 +19,7 @@ import org.ginsim.core.graph.common.GraphEventCascade;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.view.DefaultNodeStyle;
+import org.ginsim.core.graph.view.NodeStyle;
 
 
 public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<HierarchicalNode, DecisionOnEdge, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
@@ -72,7 +72,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	}
 
 	@Override
-	protected DefaultNodeStyle<HierarchicalNode> createDefaultNodeStyle() {
+	protected NodeStyle<HierarchicalNode> createDefaultNodeStyle() {
 		return new DefaultHTGNodeStyle(this);
 	}
 

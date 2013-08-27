@@ -29,12 +29,12 @@ import javax.swing.event.ChangeListener;
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.view.DefaultEdgeStyle;
-import org.ginsim.core.graph.view.DefaultNodeStyle;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgePattern;
+import org.ginsim.core.graph.view.EdgeStyle;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
+import org.ginsim.core.graph.view.NodeStyle;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
 
@@ -80,8 +80,8 @@ public class GraphicAttributePanel extends AbstractParameterPanel implements Edi
 	private JCheckBox jCB_selectPattern = null;
 
 
-	private final DefaultNodeStyle defaultNodeStyle;
-	private final DefaultEdgeStyle defaultEdgeStyle;
+	private final NodeStyle defaultNodeStyle;
+	private final EdgeStyle defaultEdgeStyle;
 	private final NodeAttributesReader vReader;
 	private final EdgeAttributesReader eReader;
 

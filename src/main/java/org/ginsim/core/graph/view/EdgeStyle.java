@@ -5,9 +5,7 @@ import java.awt.Color;
 import org.ginsim.core.graph.common.Edge;
 
 /**
- * Implementation of EdgeStyle to store default visual settings in a graph.
- * Each graph can tweak its own instance or extend the class
- * to make the default depend on the edge properties.
+ * Define the visual parameters of an edge.
  * 
  * @author Aurelien Naldi
  *
@@ -27,5 +25,10 @@ public interface EdgeStyle<V,E extends Edge<V>> {
 	
 	EdgeEnd getEnding(E edge);
 	boolean setEnding(EdgeEnd ending);
+
 	
+	boolean enforceColor();
+	boolean enforceEnding();
+	boolean enforcePattern();
+	boolean enforceWidth();
 }

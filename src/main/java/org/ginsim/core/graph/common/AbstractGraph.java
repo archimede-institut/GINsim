@@ -26,10 +26,12 @@ import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.backend.JgraphtBackendImpl;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.core.graph.view.DefaultEdgeStyle;
-import org.ginsim.core.graph.view.DefaultNodeStyle;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgeStyle;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.NodeStyle;
+import org.ginsim.core.graph.view.EdgeStyleImpl;
+import org.ginsim.core.graph.view.NodeStyleImpl;
 
 /**
  * Base class for graphs using a storage backend: it provides generic methods and storage abstraction.
@@ -59,8 +61,8 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     // The annotation associated with the graph
     protected Annotation graphAnnotation = null;
     
-    private DefaultEdgeStyle<V, E> defaultEdgeStyle = null;
-    private DefaultNodeStyle<V> defaultNodeStyle = null;
+    private EdgeStyle<V, E> defaultEdgeStyle = null;
+    private NodeStyle<V> defaultNodeStyle = null;
     
     // TODO === List of variables that could be removed if a better solution is found =============
     private boolean isParsing = false;
@@ -388,26 +390,26 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		return new NodeAttributeReaderImpl(getDefaultNodeStyle(), graphBackend);
 	}
 	
-	private DefaultEdgeStyle<V, E> getDefaultEdgeStyle() {
+	private EdgeStyle<V, E> getDefaultEdgeStyle() {
 		if (defaultEdgeStyle == null) {
 			defaultEdgeStyle = createDefaultEdgeStyle();
 		}
 		return defaultEdgeStyle;
 	}
 	
-	protected DefaultEdgeStyle<V, E> createDefaultEdgeStyle() {
-		return new DefaultEdgeStyle<V,E>();
+	protected EdgeStyle<V, E> createDefaultEdgeStyle() {
+		return new EdgeStyleImpl<V,E>();
 	}
 	
-	private DefaultNodeStyle<V> getDefaultNodeStyle() {
+	private NodeStyle<V> getDefaultNodeStyle() {
 		if (defaultNodeStyle == null) {
 			defaultNodeStyle = createDefaultNodeStyle();
 		}
 		return defaultNodeStyle;
 	}
 	
-	protected DefaultNodeStyle<V> createDefaultNodeStyle() {
-		return new DefaultNodeStyle<V>();
+	protected NodeStyle<V> createDefaultNodeStyle() {
+		return new NodeStyleImpl<V>();
 	}
 	
 	protected EdgeAttributesReader getCachedEdgeAttributeReader() {

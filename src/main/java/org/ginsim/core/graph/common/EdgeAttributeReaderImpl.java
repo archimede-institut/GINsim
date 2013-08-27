@@ -13,7 +13,6 @@ import java.util.Map;
 
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.view.Bezier;
-import org.ginsim.core.graph.view.DefaultEdgeStyle;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
@@ -21,7 +20,7 @@ import org.ginsim.core.graph.view.EdgeStyle;
 import org.ginsim.core.graph.view.EdgeViewInfo;
 import org.ginsim.core.graph.view.MovingEdgeType;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.graph.view.SimpleEdgeStyle;
+import org.ginsim.core.graph.view.EdgeStyleImpl;
 import org.ginsim.core.graph.view.SimpleStroke;
 import org.ginsim.core.graph.view.ViewHelper;
 
@@ -37,7 +36,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 	
     
 	private final GraphBackend<V, E> graph;
-    private final DefaultEdgeStyle<V,E> defaultStyle;
+    private final EdgeStyle<V,E> defaultStyle;
     private final NodeAttributesReader nreader;
     
     
@@ -56,7 +55,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
     /**
      * @param dataMap
      */
-    public EdgeAttributeReaderImpl(DefaultEdgeStyle defaultStyle, GraphBackend<V, E> backend, NodeAttributesReader nreader) {
+    public EdgeAttributeReaderImpl(EdgeStyle defaultStyle, GraphBackend<V, E> backend, NodeAttributesReader nreader) {
     	this.graph = backend;
         this.nreader = nreader;
         this.defaultStyle = defaultStyle;
@@ -117,7 +116,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
     		viewInfo = graph.ensureEdgeViewInfo(edge);
     	}
     	
-    	style = new SimpleEdgeStyle<V,E>(defaultStyle);
+    	style = new EdgeStyleImpl<V,E>(defaultStyle);
     	viewInfo.setStyle(style);
     	
     	return true;
@@ -436,7 +435,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 	}
 
 	@Override
-	public DefaultEdgeStyle<V, E> getDefaultEdgeStyle() {
+	public EdgeStyle<V, E> getDefaultEdgeStyle() {
 		return defaultStyle;
 	}
 }
