@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.List;
 
 import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.view.style.EdgeStyle;
 
 /**
  * Store basic view information on an edge: intermediate points and optional style.

@@ -36,7 +36,7 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 	
 	static Map m_stylesWriters = new HashMap();
 	static {
-		m_stylesWriters.put(DocumentStyle.COLOR, new ColorStyleWriter("color: #", ";"));
+		m_stylesWriters.put(DocumentStyle.COLOR, new ColorStyleWriter("color: ", ";"));
 		m_stylesWriters.put(DocumentStyle.FONT_SIZE, new SimpleStyleWriter("font-size: ", "pt;"));
 		m_stylesWriters.put(DocumentStyle.HEIGHT, new SimpleStyleWriter("height: ", "px;"));
 		m_stylesWriters.put(DocumentStyle.WIDTH, new SimpleStyleWriter("width: ", "px;"));
@@ -297,8 +297,8 @@ interface StyleWriter{
 }
 
 class SimpleStyleWriter implements StyleWriter {
-	String prefix;
-	String suffix;
+	final String prefix;
+	final String suffix;
 	public SimpleStyleWriter(String prefix, String suffix) {
 		this.prefix = prefix;
 		this.suffix = suffix;

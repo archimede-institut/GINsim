@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,6 +20,7 @@ import java.util.zip.ZipOutputStream;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphBackend;
@@ -27,11 +29,13 @@ import org.ginsim.core.graph.backend.JgraphtBackendImpl;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.EdgeStyle;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.graph.view.NodeStyle;
-import org.ginsim.core.graph.view.EdgeStyleImpl;
-import org.ginsim.core.graph.view.NodeStyleImpl;
+import org.ginsim.core.graph.view.style.EdgeStyle;
+import org.ginsim.core.graph.view.style.EdgeStyleImpl;
+import org.ginsim.core.graph.view.style.NodeStyle;
+import org.ginsim.core.graph.view.style.NodeStyleImpl;
+import org.ginsim.core.graph.view.style.StyleManager;
+import org.xml.sax.Attributes;
 
 /**
  * Base class for graphs using a storage backend: it provides generic methods and storage abstraction.
@@ -61,8 +65,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     // The annotation associated with the graph
     protected Annotation graphAnnotation = null;
     
-    private EdgeStyle<V, E> defaultEdgeStyle = null;
-    private NodeStyle<V> defaultNodeStyle = null;
+    private final StyleManager<V, E> styleManager;
     
     // TODO === List of variables that could be removed if a better solution is found =============
     private boolean isParsing = false;
@@ -97,6 +100,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		this.graphType = graphType;
 		this.graphBackend = backend;
         this.isParsing = parsing;
+        this.styleManager = new StyleManager<V, E>(createDefaultNodeStyle(), createDefaultEdgeStyle());
 		backend.setViewListener(this);
 	}
 	
@@ -381,31 +385,22 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	}
 
 	@Override
+	public StyleManager<V, E> getStyleManager() {
+		return styleManager;
+	}
+	
+	@Override
 	public EdgeAttributesReader getEdgeAttributeReader() {
-		return new EdgeAttributeReaderImpl(getDefaultEdgeStyle(), graphBackend, getNodeAttributeReader());
+		return new EdgeAttributeReaderImpl(styleManager, graphBackend, getNodeAttributeReader());
 	}
 	
 	@Override
 	public NodeAttributesReader getNodeAttributeReader() {
-		return new NodeAttributeReaderImpl(getDefaultNodeStyle(), graphBackend);
-	}
-	
-	private EdgeStyle<V, E> getDefaultEdgeStyle() {
-		if (defaultEdgeStyle == null) {
-			defaultEdgeStyle = createDefaultEdgeStyle();
-		}
-		return defaultEdgeStyle;
+		return new NodeAttributeReaderImpl(styleManager, graphBackend);
 	}
 	
 	protected EdgeStyle<V, E> createDefaultEdgeStyle() {
 		return new EdgeStyleImpl<V,E>();
-	}
-	
-	private NodeStyle<V> getDefaultNodeStyle() {
-		if (defaultNodeStyle == null) {
-			defaultNodeStyle = createDefaultNodeStyle();
-		}
-		return defaultNodeStyle;
 	}
 	
 	protected NodeStyle<V> createDefaultNodeStyle() {
@@ -667,7 +662,10 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	protected abstract void doSave(OutputStreamWriter osw, Collection<V> vertices, Collection<E> edges) throws GsException;
    
 
-    
+	protected void saveStyles(XMLWriter out) throws IOException {
+		styleManager.styles2ginml(out);
+	}
+	
 	// -------------------------  EVENT MANAGEMENT METHODS ---------------------------------
 
 	public void fireMetaChange() {

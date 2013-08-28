@@ -9,8 +9,8 @@ import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.core.graph.view.EdgeStyle;
-import org.ginsim.core.graph.view.NodeStyle;
+import org.ginsim.core.graph.view.style.EdgeStyle;
+import org.ginsim.core.graph.view.style.NodeStyle;
 
 
 public class TreeImpl  extends AbstractGraph<TreeNode, TreeEdge> 

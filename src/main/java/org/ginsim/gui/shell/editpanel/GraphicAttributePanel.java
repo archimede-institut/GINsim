@@ -31,10 +31,10 @@ import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgePattern;
-import org.ginsim.core.graph.view.EdgeStyle;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.core.graph.view.NodeStyle;
+import org.ginsim.core.graph.view.style.EdgeStyle;
+import org.ginsim.core.graph.view.style.NodeStyle;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
 

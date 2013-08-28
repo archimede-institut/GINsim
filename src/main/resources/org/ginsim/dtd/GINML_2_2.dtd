@@ -98,7 +98,7 @@ copyright by
 >
 
 <!-- graph -->
-<!ELEMENT graph (type? , attr* , ( node | edge | rel )* %graph-extension;) >
+<!ELEMENT graph (type? , attr* , (nodestyle | edgestyle)*, ( node | edge | rel )* %graph-extension;) >
 <!ATTLIST graph
 	id ID #REQUIRED
 	role NMTOKEN #IMPLIED
@@ -233,6 +233,7 @@ copyright by
     style CDATA #IMPLIED
     color CDATA #IMPLIED
     width CDATA #IMPLIED
+    ending CDATA #IMPLIED
 > 
 
 <!-- polyline --> 

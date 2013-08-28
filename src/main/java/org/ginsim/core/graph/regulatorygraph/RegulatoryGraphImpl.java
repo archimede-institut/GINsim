@@ -30,9 +30,9 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.EdgeStyle;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.css.CSSFilesAssociatedManager;
+import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.NotificationResolution;
@@ -169,18 +169,21 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     protected void doSave( OutputStreamWriter os, Collection<RegulatoryNode> vertices, Collection<RegulatoryMultiEdge> edges) throws GsException {
     	try {
             XMLWriter out = new XMLWriter(os, GinmlHelper.DEFAULT_URL_DTD_FILE);
-	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
-			out.write("\t<graph id=\"" + getGraphName() + "\"");
-			out.write(" class=\"regulatory\"");
-			out.write(" nodeorder=\"" + stringNodeOrder() +"\"");
-			out.write(">\n");
+	  		out.openTag("gxl");
+	  		out.addAttr("xmlns:xlink", "http://www.w3.org/1999/xlink");
+	  		out.openTag("graph");
+	  		out.addAttr("id", getGraphName());
+	  		out.addAttr("class", "regulatory");
+	  		out.addAttr("nodeorder", stringNodeOrder());
+
+	  		saveStyles(out);
 			saveNodes(out, vertices);
 			saveEdges(out, edges);
             if (graphAnnotation != null) {
             	graphAnnotation.toXML(out);
             }
-	  		out.write("\t</graph>\n");
-	  		out.write("</gxl>\n");
+	  		out.closeTag();
+	  		out.closeTag();
         } catch (IOException e) {
             throw new GsException( "STR_unableToSave", e);
         }

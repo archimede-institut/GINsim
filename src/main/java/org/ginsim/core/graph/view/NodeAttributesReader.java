@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.io.IOException;
 
 import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.core.graph.view.style.NodeStyle;
 
 
 /**

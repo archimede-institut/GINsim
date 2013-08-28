@@ -4,8 +4,8 @@ import java.awt.Point;
 import java.util.List;
 
 import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.view.EdgeStyle;
 import org.ginsim.core.graph.view.EdgeViewInfo;
+import org.ginsim.core.graph.view.style.EdgeStyle;
 
 public class EdgeViewInfoImpl<V, E extends Edge<V>> implements EdgeViewInfo<V, E> {
 

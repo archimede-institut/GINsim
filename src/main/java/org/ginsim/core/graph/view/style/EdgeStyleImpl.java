@@ -1,8 +1,17 @@
-package org.ginsim.core.graph.view;
+package org.ginsim.core.graph.view.style;
 
 import java.awt.Color;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
+import org.ginsim.common.utils.ColorPalette;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.view.EdgeEnd;
+import org.ginsim.core.graph.view.EdgePattern;
+import org.xml.sax.Attributes;
 
 /**
  * Simple implementation for EdgeStyle.
@@ -20,6 +29,12 @@ public class EdgeStyleImpl<V, E extends Edge<V>> implements EdgeStyle<V, E> {
 	private static Color DEFAULT_COLOR = Color.BLACK;
 	private static EdgeEnd DEFAULT_ENDING = EdgeEnd.POSITIVE;
 	private static EdgePattern DEFAULT_PATTERN = EdgePattern.SIMPLE;
+	
+	protected static final StyleProperty[] DEFAULT_PROPERTIES = {
+		StyleProperty.COLOR,
+		StyleProperty.PATTERN,
+		StyleProperty.ENDING,
+	};
 	
 	private final EdgeStyle<V, E> parent;
 	
@@ -156,5 +171,45 @@ public class EdgeStyleImpl<V, E extends Edge<V>> implements EdgeStyle<V, E> {
 			return parent.enforceWidth();
 		}
 		return false;
+	}
+
+	@Override
+	public StyleProperty[] getProperties() {
+		return DEFAULT_PROPERTIES;
+	}
+
+	@Override
+	public Object getProperty(StyleProperty prop) {
+		if (prop == StyleProperty.COLOR) {
+			return color;
+		}
+		if (prop == StyleProperty.ENDING) {
+			return ending;
+		}
+		
+		if (prop == StyleProperty.PATTERN) {
+			return pattern;
+		}
+		
+		return getCustomProperty(prop);
+	}
+	
+	@Override
+	public void setProperty(StyleProperty prop, Object value) {
+		if (prop == StyleProperty.COLOR) {
+			this.color = (Color)value;
+		} else if (prop == StyleProperty.ENDING) {
+			this.ending = (EdgeEnd)value;
+		} else if (prop == StyleProperty.PATTERN) {
+			this.pattern = (EdgePattern)value;
+		} else {
+			setCustomProperty(prop, value);
+		}
+	}
+	
+	protected Object getCustomProperty(StyleProperty prop) {
+		return null;
+	}
+	protected void setCustomProperty(StyleProperty prop, Object value) {
 	}
 }

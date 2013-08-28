@@ -14,11 +14,11 @@ import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
-import org.ginsim.core.graph.view.EdgeStyle;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.core.graph.view.NodeStyle;
 import org.ginsim.core.graph.view.ViewHelper;
+import org.ginsim.core.graph.view.style.EdgeStyle;
+import org.ginsim.core.graph.view.style.NodeStyle;
 import org.xml.sax.Attributes;
 
 
@@ -41,11 +41,12 @@ public class GinmlHelper {
      * @param attributes
      * @return 1 if byte VS, 2 otherwise
      */
-	public static int applyNodeVisualSettings(NodeAttributesReader vareader, String qName, Attributes attributes) {
+	public static void applyNodeVisualSettings(NodeAttributesReader vareader, String qName, Attributes attributes) {
         if (qName.equals("point")) {
             vareader.setPos(Integer.parseInt(attributes.getValue("x")),Integer.parseInt(attributes.getValue("y")));
-            return 1;
-        } 
+            return;
+        }
+        
         if (qName.equals("rect")) {
         	vareader.setShape(NodeShape.RECTANGLE);
         	vareader.setBackgroundColor(ColorPalette.getColorFromCode(attributes.getValue("backgroundColor")));
@@ -64,8 +65,9 @@ public class GinmlHelper {
         	vareader.setTextColor(col_text);
         	vareader.setSize(Integer.parseInt(attributes.getValue("width")), Integer.parseInt(attributes.getValue("height")));
             vareader.setPos(Integer.parseInt(attributes.getValue("x")),Integer.parseInt(attributes.getValue("y")));
-        } 
-        return 2;
+        }
+        
+        return;
 	}
 
 	/**
@@ -145,7 +147,7 @@ public class GinmlHelper {
     	    s = "straight";
         }
         svs += " line_style=\""+s+"\"";
-        svs += " line_color=\"#"+ColorPalette.getColorCode(eReader.getLineColor())+"\"";
+        svs += " line_color=\""+ColorPalette.getColorCode(eReader.getLineColor())+"\"";
         EdgePattern pattern = eReader.getDash();
         if (pattern == EdgePattern.DASH) {
             svs += " pattern=\"dash\"";
@@ -183,42 +185,16 @@ public class GinmlHelper {
 			"\" y=\""+vReader.getY()+
 			"\" width=\""+vReader.getWidth()+
 			"\" height=\""+vReader.getHeight()+
-			"\" backgroundColor=\"#"+ ColorPalette.getColorCode(vReader.getBackgroundColor())
+			"\" backgroundColor=\""+ ColorPalette.getColorCode(vReader.getBackgroundColor())
 		);
 		Color fg = vReader.getForegroundColor();
 		Color txt = vReader.getTextColor();
-		svs.append("\" foregroundColor=\"#"+ColorPalette.getColorCode(fg));
+		svs.append("\" foregroundColor=\""+ColorPalette.getColorCode(fg));
 		if (!txt.equals(fg)) {
-			svs.append("\" textColor=\"#"+ColorPalette.getColorCode(txt));
+			svs.append("\" textColor=\""+ColorPalette.getColorCode(txt));
 		}
 		svs.append("\"/>\n\t\t\t</nodevisualsetting>\n");
         return svs.toString();
 	}
-	
-	public static void edgeStyle2GINML(XMLWriter writer, EdgeStyle style) throws IOException {
-		writer.openTag("edgestyle");
-		
-		int w = style.getWidth(null);
-		if (w>0) {
-			writer.addAttr("width", ""+w);
-		}
-		
-		EdgePattern pattern = style.getPattern(null);
-		if (pattern != null) {
-			writer.addAttr("pattern", pattern.toString());
-		}
-		
-		EdgeEnd ending = style.getEnding(null);
-		if (ending != null) {
-			writer.addAttr("ending", ending.toString());
-		}
-		
-		Color color = style.getColor(null);
-		if (color != null) {
-			writer.addAttr("color", ColorPalette.getColorCode(color));
-		}
-		
-		writer.closeTag();
-	}
-	
+
 }

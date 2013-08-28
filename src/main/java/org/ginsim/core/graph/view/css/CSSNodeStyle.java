@@ -169,9 +169,9 @@ public class CSSNodeStyle implements CSSStyle {
 		for (int i = 1; i < tabs_count; i++) {
 			tabs += "\t";
 		}
-		if (background != null) s += tabs+CSS_BACKGROUND+": #"+ColorPalette.getColorCode(background)+";\n"; 
-		if (foreground != null) s += tabs+CSS_FOREGROUND+": #"+ColorPalette.getColorCode(foreground)+";\n";
-		if (textcolor != null) s += tabs+CSS_TEXTCOLOR+": #"+ColorPalette.getColorCode(textcolor)+";\n";
+		if (background != null) s += tabs+CSS_BACKGROUND+": "+ColorPalette.getColorCode(background)+";\n"; 
+		if (foreground != null) s += tabs+CSS_FOREGROUND+": "+ColorPalette.getColorCode(foreground)+";\n";
+		if (textcolor != null) s += tabs+CSS_TEXTCOLOR+": "+ColorPalette.getColorCode(textcolor)+";\n";
 		if (border != null) {
 			s += tabs+CSS_BORDER+": ";
 			switch (border) {

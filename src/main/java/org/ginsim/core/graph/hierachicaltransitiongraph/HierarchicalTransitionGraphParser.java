@@ -37,7 +37,6 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
 
     private int pos = POS_OUT;
     private HierarchicalTransitionGraph htg;
-    private int vslevel = 0;
     
     private HierarchicalNode vertex = null;
     private DecisionOnEdge edge = null;
@@ -286,7 +285,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
             	GinmlHelper.applyEdgeVisualSettings(edge, ereader, vareader, qName, attributes);
                 break; // POS_EDGE_VS
             case POS_VERTEX_VS:
-            	vslevel = GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);
+            	GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);
                 break; // POS_VERTEX_VS
         }
     }

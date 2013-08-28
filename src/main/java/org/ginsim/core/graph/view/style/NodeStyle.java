@@ -1,6 +1,12 @@
-package org.ginsim.core.graph.view;
+package org.ginsim.core.graph.view.style;
 
 import java.awt.Color;
+import java.io.IOException;
+
+import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.core.graph.view.NodeBorder;
+import org.ginsim.core.graph.view.NodeShape;
+import org.xml.sax.Attributes;
 
 /**
  * Define the visual parameters of a node.
@@ -10,7 +16,7 @@ import java.awt.Color;
  * @param <V>
  * @param <E>
  */
-public interface NodeStyle<V> {
+public interface NodeStyle<V> extends Style {
 
 	Color getBackground(V obj);
 	Color getForeground(V obj);
@@ -36,4 +42,5 @@ public interface NodeStyle<V> {
 	boolean enforceShape();
 	boolean enforceSize();
 	boolean enforceBorder();
+	
 }

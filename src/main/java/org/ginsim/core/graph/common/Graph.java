@@ -7,6 +7,7 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.style.StyleManager;
 
 
 /**
@@ -24,8 +25,12 @@ import org.ginsim.core.graph.view.NodeAttributesReader;
 
 public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 
+	/**
+	 * Retrieve the style manager for this graph.
+	 * @return the style manager
+	 */
+	StyleManager<V, E> getStyleManager();
 	
-
 	/**
 	 * Give access to the attribute reader of edges
 	 * 

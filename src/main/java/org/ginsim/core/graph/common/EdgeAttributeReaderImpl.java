@@ -16,13 +16,14 @@ import org.ginsim.core.graph.view.Bezier;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
-import org.ginsim.core.graph.view.EdgeStyle;
 import org.ginsim.core.graph.view.EdgeViewInfo;
 import org.ginsim.core.graph.view.MovingEdgeType;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.graph.view.EdgeStyleImpl;
 import org.ginsim.core.graph.view.SimpleStroke;
 import org.ginsim.core.graph.view.ViewHelper;
+import org.ginsim.core.graph.view.style.EdgeStyle;
+import org.ginsim.core.graph.view.style.EdgeStyleImpl;
+import org.ginsim.core.graph.view.style.StyleManager;
 
 
 /**
@@ -36,6 +37,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 	
     
 	private final GraphBackend<V, E> graph;
+	private final StyleManager<V, E> styleManager;
     private final EdgeStyle<V,E> defaultStyle;
     private final NodeAttributesReader nreader;
     
@@ -55,10 +57,11 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
     /**
      * @param dataMap
      */
-    public EdgeAttributeReaderImpl(EdgeStyle defaultStyle, GraphBackend<V, E> backend, NodeAttributesReader nreader) {
+    public EdgeAttributeReaderImpl(StyleManager<V, E> styleManager, GraphBackend<V, E> backend, NodeAttributesReader nreader) {
     	this.graph = backend;
         this.nreader = nreader;
-        this.defaultStyle = defaultStyle;
+        this.styleManager = styleManager;
+        this.defaultStyle = styleManager.getDefaultEdgeStyle();
     }
     
     @Override

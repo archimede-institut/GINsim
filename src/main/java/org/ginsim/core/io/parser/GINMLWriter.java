@@ -98,12 +98,12 @@ public abstract class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 	        out.addAttr("height", ""+nReader.getHeight());
 
 			Color bg = nReader.getBackgroundColor();
-			out.addAttr("backgroundColor", "#"+ColorPalette.getColorCode(bg));
+			out.addAttr("backgroundColor", bg);
 			Color fg = nReader.getForegroundColor();
-			out.addAttr("foregroundColor", "#"+ColorPalette.getColorCode(fg));
+			out.addAttr("foregroundColor", fg);
 			Color txt = nReader.getTextColor();
 			if (!txt.equals(fg)) {
-				out.addAttr("textColor", "#"+ColorPalette.getColorCode(txt));
+				out.addAttr("textColor", txt);
 			}
 	        out.closeTag();
 			out.closeTag();
@@ -145,7 +145,7 @@ public abstract class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
     	        out.addAttr("line_style", "straight");
 	        }
 	        
-	        out.addAttr("line_color", "#"+ColorPalette.getColorCode(eReader.getLineColor()));
+	        out.addAttr("line_color", eReader.getLineColor());
 	        EdgePattern pattern = eReader.getDash();
 	        if (pattern == EdgePattern.DASH) {
 	            out.addAttr("pattern", "dash");

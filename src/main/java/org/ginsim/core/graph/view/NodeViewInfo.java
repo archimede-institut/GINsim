@@ -1,5 +1,7 @@
 package org.ginsim.core.graph.view;
 
+import org.ginsim.core.graph.view.style.NodeStyle;
+
 
 /**
  * Store for basic view information on nodes.
@@ -27,7 +29,7 @@ public interface NodeViewInfo {
 	 * If
 	 * @return the style for this node, or null to use the default.
 	 */
-	NodeStyleImpl getStyle();
+	NodeStyle getStyle();
 
 	/**
 	 * Set the style to use for this node.
@@ -35,7 +37,7 @@ public interface NodeViewInfo {
 	 * @param style the new style
 	 * @return true if the style was updated
 	 */
-	boolean setStyle(NodeStyleImpl style);
+	boolean setStyle(NodeStyle style);
 	
 	/**
 	 * Set the position of this node.

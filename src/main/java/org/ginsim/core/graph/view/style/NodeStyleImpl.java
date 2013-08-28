@@ -1,11 +1,18 @@
-package org.ginsim.core.graph.view;
+package org.ginsim.core.graph.view.style;
 
 import java.awt.Color;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.core.graph.view.NodeBorder;
+import org.ginsim.core.graph.view.NodeShape;
+import org.ginsim.core.io.parser.GinmlHelper;
+import org.xml.sax.Attributes;
 
 /**
  * Simple implementation for NodeStyle.
@@ -29,6 +36,14 @@ public class NodeStyleImpl<V> implements NodeStyle<V> {
 	public static final int MAX_SIZE = 500;
 	public static final int MIN_SIZE = 15;
 
+	private static final StyleProperty[] DEFAULT_PROPERTIES = {
+		StyleProperty.BACKGROUND,
+		StyleProperty.FOREGROUND,
+		StyleProperty.TEXT,
+		StyleProperty.SHAPE,
+		StyleProperty.BORDER,
+	};
+	
 	private Color bg, fg, txt;
 	
 	private int width=-1, height=-1;
@@ -219,31 +234,6 @@ public class NodeStyleImpl<V> implements NodeStyle<V> {
 		this.border = border;
 		return true;
 	}
-	
-	public void writeGINML(XMLWriter writer) throws IOException {
-		writer.openTag("nodestyle");
-		
-		if (width>=0 && height>=0) {
-			writer.addAttr("width", ""+width);
-			writer.addAttr("height", ""+height);
-		}
-		
-		if (shape != null) {
-			writer.addAttr("shape", shape.toString());
-		}
-		
-		if (bg!= null) {
-			writer.addAttr("background", ColorPalette.getColorCode(bg));
-		}
-		if (fg != null) {
-			writer.addAttr("foreground", ColorPalette.getColorCode(fg));
-		}
-		if (txt != null) {
-			writer.addAttr("text", ColorPalette.getColorCode(txt));
-		}
-		
-		writer.closeTag();
-	}
 
 	@Override
 	public boolean enforceColors() {
@@ -275,5 +265,55 @@ public class NodeStyleImpl<V> implements NodeStyle<V> {
 			return parent.enforceBorder();
 		}
 		return false;
+	}
+
+	@Override
+	public StyleProperty[] getProperties() {
+		return DEFAULT_PROPERTIES;
+	}
+
+	@Override
+	public Object getProperty(StyleProperty prop) {
+		if (prop == StyleProperty.BACKGROUND) {
+			return bg;
+		}
+		if (prop == StyleProperty.FOREGROUND) {
+			return fg;
+		}
+		if (prop == StyleProperty.TEXT) {
+			return txt;
+		}
+		if (prop == StyleProperty.SHAPE) {
+			return shape;
+		}
+		
+		if (prop == StyleProperty.BORDER) {
+			return border;
+		}
+		
+		return getCustomProperty(prop);
+	}
+
+	@Override
+	public void setProperty(StyleProperty prop, Object value) {
+		if (prop == StyleProperty.BACKGROUND) {
+			this.bg = (Color)value;
+		} else if (prop == StyleProperty.FOREGROUND) {
+			this.fg = (Color)value;
+		} else if (prop == StyleProperty.TEXT) {
+			this.txt = (Color)value;
+		} else if (prop == StyleProperty.SHAPE) {
+			this.shape = (NodeShape)value;
+		} else if (prop == StyleProperty.BORDER) {
+			this.border = (NodeBorder)value;
+		} else {
+			setCustomProperty(prop, value);
+		}
+	}
+
+	protected Object getCustomProperty(StyleProperty prop) {
+		return null;
+	}
+	protected void setCustomProperty(StyleProperty prop, Object value) {
 	}
 }

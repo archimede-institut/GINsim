@@ -24,6 +24,7 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamod
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeParam;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.io.parser.GsXMLHelper;
 import org.ginsim.core.notification.NotificationManager;
@@ -55,11 +56,10 @@ public final class RegulatoryParser extends GsXMLHelper {
     private int pos = POS_OUTSIDE;
     private RegulatoryGraph graph;
 
-    private int vslevel = 0;
-
     private RegulatoryNode vertex = null;
     private NodeAttributesReader vareader = null;
     private EdgeAttributesReader ereader = null;
+    private StyleManager<RegulatoryNode, RegulatoryMultiEdge> styleManager;
     private RegulatoryEdge edge = null;
     private Annotation annotation = null;
     private Map m_edges = new HashMap();
@@ -98,6 +98,7 @@ public final class RegulatoryParser extends GsXMLHelper {
 			throw new GsException(GsException.GRAVITY_ERROR, "invalidGraphName");
 		}
 
+		styleManager = graph.getStyleManager();
 		vareader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
         pos = POS_OUT;
@@ -199,8 +200,8 @@ public final class RegulatoryParser extends GsXMLHelper {
                     	RegulatoryNode vertex = (RegulatoryNode)it.next();
                     	vertex.getV_logicalParameters().cleanupDup();
                     }
+                    pos = POS_OUTSIDE;
 				}
-                pos = POS_OUTSIDE;
 				break;
         }
         super.endElement(uri, localName, qName);
@@ -227,7 +228,10 @@ public final class RegulatoryParser extends GsXMLHelper {
                 pos = POS_OUT;
                 break;
         	case POS_OUT:
-                if (qName.equals("node")) {
+                if (qName.equals("nodestyle") || qName.equals("edgestyle")) {
+                	styleManager.parseStyle(qName, attributes);
+                } else
+        		if (qName.equals("node")) {
                     String id = attributes.getValue("id");
                     if (set == null || set.contains(id)) {
                         pos = POS_VERTEX;
@@ -307,8 +311,16 @@ public final class RegulatoryParser extends GsXMLHelper {
 
             case POS_VERTEX:
                 if (vareader != null && qName.equals("nodevisualsetting")) {
-                	pos = POS_VERTEX_VS;
-                	vareader.setNode(vertex);
+            		vareader.setNode(vertex);
+                	String sx = attributes.getValue("x");
+                	String sy = attributes.getValue("y");
+                	if (sx != null && sy != null) {
+                		int x = Integer.parseInt(sx);
+                		int y = Integer.parseInt(sy);
+                		vareader.setPos(x, y);
+                	} else if (sx == null) {
+                		pos = POS_VERTEX_VS;
+                	}
                 } else if (qName.equals("annotation")) {
                     pos = POS_VERTEX_NOTES;
                     annotation = vertex.getAnnotation();
@@ -337,7 +349,7 @@ public final class RegulatoryParser extends GsXMLHelper {
             	GinmlHelper.applyEdgeVisualSettings(edge.me, ereader, vareader, qName, attributes);
                 break; // POS_EDGE_VS
             case POS_VERTEX_VS:
-            	vslevel = GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);
+            	GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);
                 break; // POS_VERTEX_VS
             case POS_VERTEX_NOTES:
                 if (qName.equals("linklist")) {

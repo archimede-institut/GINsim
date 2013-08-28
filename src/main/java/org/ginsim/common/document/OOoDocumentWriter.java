@@ -161,7 +161,7 @@ public class OOoDocumentWriter extends DocumentWriter {
 
 	private String getStyleValue(String property, Object value) {
 		if (property.equals(DocumentStyle.COLOR)) {
-			return "#"+ColorPalette.getColorCode((Color)value);
+			return ColorPalette.getColorCode((Color)value);
 		} else if (property.equals(DocumentStyle.FONT_SIZE)) {
 			return value.toString()+"pt";
 		} else if (property.equals(DocumentStyle.HEIGHT)) {

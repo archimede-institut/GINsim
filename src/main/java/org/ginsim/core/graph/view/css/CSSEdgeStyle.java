@@ -156,14 +156,14 @@ public class CSSEdgeStyle implements CSSStyle {
 	
 	/**
 	 * a css string representation of this style.
-	 * @param tabs_count the number of tabulations to append at the begining of each line
+	 * @param tabs_count the number of tabulations to append at the beginning of each line
 	 */
 	public String toString(int tabs_count) {
 		String s = "", tabs = "\t";
 		for (int i = 1; i < tabs_count; i++) {
 			tabs += "\t";
 		}
-		if (lineColor!= null) s += tabs+CSS_LINECOLOR+": #"+ColorPalette.getColorCode(lineColor)+";\n";
+		if (lineColor!= null) s += tabs+CSS_LINECOLOR+": "+ColorPalette.getColorCode(lineColor)+";\n";
 		if (curve != NULL_CURVE) s += tabs+CSS_SHAPE+": "+(curve==1 ? CSS_SHAPE_CURVE:CSS_SHAPE_STRAIGHT)+";\n";
 		if (border != NULL_BORDER) s += tabs+CSS_BORDER+": "+border+";\n";
 		if (lineEnd != null) {

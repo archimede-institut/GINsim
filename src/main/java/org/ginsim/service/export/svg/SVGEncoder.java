@@ -96,9 +96,9 @@ public class SVGEncoder {
         int h = vreader.getHeight();
         int w = vreader.getWidth();
         
-        String bgCol = "#"+ColorPalette.getColorCode(vreader.getBackgroundColor());
-        String fgCol = "#"+ColorPalette.getColorCode(vreader.getForegroundColor());
-        String txtCol = "#"+ColorPalette.getColorCode(vreader.getTextColor());
+        String bgCol  = ColorPalette.getColorCode(vreader.getBackgroundColor());
+        String fgCol  = ColorPalette.getColorCode(vreader.getForegroundColor());
+        String txtCol = ColorPalette.getColorCode(vreader.getTextColor());
         
 	    out.write("  <g id=\""+id+"\">\n");
         switch (vreader.getShape()) {
@@ -148,7 +148,7 @@ public class SVGEncoder {
      * @throws IOException
      */
     private void writeEdge(FileWriter out, Rectangle box1, Rectangle box2, EdgeAttributesReader ereader, Set<String> markers) throws IOException {
-        String color = "#"+ColorPalette.getColorCode(ereader.getLineColor());
+        String color = ColorPalette.getColorCode(ereader.getLineColor());
         float w = ereader.getLineWidth();
         String marker = addMarker(out, markers, ereader.getLineEnd(), color, true);
         out.write("    <path " +

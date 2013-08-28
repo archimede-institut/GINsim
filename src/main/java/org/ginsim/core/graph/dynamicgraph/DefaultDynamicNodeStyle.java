@@ -1,7 +1,7 @@
 package org.ginsim.core.graph.dynamicgraph;
 
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.core.graph.view.NodeStyleImpl;
+import org.ginsim.core.graph.view.style.NodeStyleImpl;
 
 public class DefaultDynamicNodeStyle extends NodeStyleImpl<DynamicNode> {
 

@@ -34,7 +34,6 @@ public final class DynamicParser extends GsXMLHelper {
 
     private int pos = POS_OUT;
     private DynamicGraph graph;
-    private int vslevel = 0;
     
     private DynamicNode vertex = null;
     private Edge<?> edge = null;
@@ -222,7 +221,7 @@ public final class DynamicParser extends GsXMLHelper {
             	GinmlHelper.applyEdgeVisualSettings(edge, ereader, vareader, qName, attributes);
                 break; // POS_EDGE_VS
             case POS_VERTEX_VS:
-            	vslevel = GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);
+            	GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);
                 break; // POS_VERTEX_VS
         }
         

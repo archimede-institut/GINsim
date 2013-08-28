@@ -1,5 +1,6 @@
 package org.ginsim.common.xml;
 
+import java.awt.Color;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -9,6 +10,8 @@ import java.text.StringCharacterIterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
+
+import org.ginsim.common.utils.ColorPalette;
 
 /**
  * A helper to write well formed XML documents.
@@ -285,6 +288,18 @@ public class XMLWriter {
         inContent = false;
     }
 
+    /**
+     * Add a color attribute to the opened tag.
+     * The color will be encoded as #RRGGBB
+     * 
+     * @param name
+     * @param color
+     * @throws IOException
+     */
+    public void addAttr(String name, Color color) throws IOException {
+    	addAttr(name, ColorPalette.getColorCode(color));
+    }
+    
     /**
      * add an attribute to the opened tag.
      * If the tag is no-more really opened it will return silently without writing anything.

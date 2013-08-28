@@ -4,7 +4,7 @@ import java.awt.Color;
 
 import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.view.EdgeStyleImpl;
+import org.ginsim.core.graph.view.style.EdgeStyleImpl;
 
 public class DefaultTreeEdgeStyle extends EdgeStyleImpl<TreeNode, TreeEdge> {
 

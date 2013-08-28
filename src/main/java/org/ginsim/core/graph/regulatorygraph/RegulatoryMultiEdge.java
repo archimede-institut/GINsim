@@ -5,13 +5,10 @@ import java.util.List;
 
 import org.ginsim.common.utils.ToolTipsable;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.EdgeEnd;
 
 
 /**
@@ -298,24 +295,6 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements ToolTip
                 this.sign = RegulatoryEdgeSign.DUAL;
 			}
 		}
-		
-		// TODO: explicitly setting the line end is wrong, we should have some kind of vizmapper for this
-		EdgeAttributesReader ereader = graph.getEdgeAttributeReader();
-		ereader.setEdge(this);
-		EdgeEnd end = EdgeEnd.POSITIVE;
-		switch (sign) {
-		case NEGATIVE:
-			end = EdgeEnd.NEGATIVE;
-			break;
-		case UNKNOWN:
-			end = EdgeEnd.UNKNOWN;
-			break;
-		case DUAL:
-			end = EdgeEnd.DUAL;
-			break;
-		}
-		ereader.setLineEnd(end);
-		ereader.refresh();
 	}
 
 	/**

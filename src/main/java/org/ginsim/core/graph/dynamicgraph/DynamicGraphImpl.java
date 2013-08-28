@@ -27,7 +27,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.graph.view.NodeStyle;
+import org.ginsim.core.graph.view.style.NodeStyle;
 import org.ginsim.core.io.parser.GinmlHelper;
 
 /**
@@ -171,6 +171,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 			out.write(" class=\"dynamical\"");
 			out.write(" nodeorder=\"" + stringNodeOrder() +"\"");
 			out.write(">\n");
+			saveStyles(out);
 			saveNodes(out, nodes);
 			saveEdges(out, edges);
             if (graphAnnotation != null) {
@@ -254,13 +255,6 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 		return false;
 	}
 
-	/**
-	 * add an edge between source and target
-	 * @param source
-	 * @param target
-	 * @param multiple
-	 * @return the new edge
-	 */
 	@Override
 	public Edge<DynamicNode> addEdge(DynamicNode source, DynamicNode target, boolean multiple) {
 		

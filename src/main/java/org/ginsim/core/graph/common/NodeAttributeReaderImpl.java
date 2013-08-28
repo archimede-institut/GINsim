@@ -16,10 +16,11 @@ import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.core.graph.view.NodeStyle;
 import org.ginsim.core.graph.view.NodeViewInfo;
-import org.ginsim.core.graph.view.NodeStyleImpl;
 import org.ginsim.core.graph.view.SimpleStroke;
+import org.ginsim.core.graph.view.style.NodeStyle;
+import org.ginsim.core.graph.view.style.NodeStyleImpl;
+import org.ginsim.core.graph.view.style.StyleManager;
 
 
 /**
@@ -74,12 +75,13 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 
 
 	private final GraphBackend<V,E> backend;
+	private final StyleManager<V, E> styleManager;
 	private final NodeStyle<V> defaultStyle;
 	private final Rectangle cachedBounds = new Rectangle();
 	
     private V vertex;
     private NodeViewInfo viewInfo = null;
-    private NodeStyleImpl<V> style = null;
+    private NodeStyle<V> style = null;
 
     private boolean selected;
     private boolean hasChanged = false;
@@ -91,9 +93,10 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
      * @param backend
      * @param map
      */
-    public NodeAttributeReaderImpl(NodeStyle defaultStyle, GraphBackend<V, E> backend) {
+    public NodeAttributeReaderImpl(StyleManager<V, E> styleManager, GraphBackend<V, E> backend) {
     	this.backend = backend;
-        this.defaultStyle = defaultStyle;
+    	this.styleManager = styleManager;
+        this.defaultStyle = styleManager.getDefaultNodeStyle();
     }
 
     @Override
@@ -403,9 +406,11 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 		return defaultStyle;
 	}
 	
+	@Override
 	public void writeGINML(XMLWriter writer) throws IOException {
+		// FIXME: cleanup style saving
 		if (vertex == null) {
-			// TODO: save default style
+			LogManager.info("SAVE DEFAULT STYLE: SHOULD NOT BE CALLED");
 			return;
 		}
 		
@@ -414,7 +419,9 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 		writer.addAttr("x", ""+getX());
 		writer.addAttr("y", ""+getY());
 		if (style != null) {
-			style.writeGINML(writer);
+			// TODO: save node style
+			//writer.addAttr("style", style.getKey());
+			LogManager.info("SAVE NODE STYLE: SHOULD NOT BE CALLED");
 		}
 		
 		// write old attributes for backward compatibility
@@ -432,10 +439,10 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
         Color bg = getBackgroundColor();
 		Color fg = getForegroundColor();
 		Color txt = getTextColor();
-        writer.addAttr("backgroundColor", "#"+ColorPalette.getColorCode(bg));
-        writer.addAttr("foregroundColor", "#"+ColorPalette.getColorCode(fg));
+        writer.addAttr("backgroundColor", bg);
+        writer.addAttr("foregroundColor", fg);
 		if (!txt.equals(fg)) {
-	        writer.addAttr("textColor", "#"+ColorPalette.getColorCode(txt));
+	        writer.addAttr("textColor", txt);
 		}
 		
 		writer.closeTag();

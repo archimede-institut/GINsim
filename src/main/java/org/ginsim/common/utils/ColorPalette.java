@@ -209,7 +209,7 @@ public class ColorPalette {
 	 * 
 	 */
 	public static String getColorCode(Color color) {
-		return Integer.toHexString(color.getRGB() & 0xffffff | 0x1000000).substring(1);
+		return "#"+ Integer.toHexString(color.getRGB() & 0xffffff | 0x1000000).substring(1);
 	}
 
 	/**

@@ -35,7 +35,6 @@ public class ReducedGraphParser extends GsXMLHelper {
 
     private int pos = POS_OUT;
     private ReducedGraph graph;
-    private int vslevel = 0;
     
     private NodeReducedData vertex = null;
     private Edge<NodeReducedData> edge = null;
@@ -244,7 +243,7 @@ public class ReducedGraphParser extends GsXMLHelper {
             	}
                 break; // POS_EDGE_VS
             case POS_VERTEX_VS:
-            	vslevel = GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);
+            	GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);
                 break; // POS_VERTEX_VS
         }
     }
