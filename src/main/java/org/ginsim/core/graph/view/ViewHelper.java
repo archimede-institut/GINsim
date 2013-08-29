@@ -27,12 +27,26 @@ public class ViewHelper {
 
 		PointList points = new PointList();
 		
-		int x = (int)bounds.getCenterX();
+		int md = (int)bounds.getWidth();
+		int d = (int)bounds.getHeight();
+		if (d < md) {
+			md = d/2;
+		} else {
+			md = md/2;
+		}
+		d = 15;
+		if (md > d) {
+			md = d;
+		} else if (d > md*2) {
+			d = md*2;
+		}
+		int x = (int)bounds.getMaxX();
 		int y = (int)bounds.getMinY();
-		points.add(new Point(x-10, y));
-		points.add(new Point(x-3, y-20));
-		points.add(new Point(x+3, y-20));
-		points.add(new Point(x+10, y));
+		points.add(new Point(x-md, y));
+		points.add(new Point(x-md, y-d));
+		points.add(new Point(x+d, y-d));
+		points.add(new Point(x+d, y+md));
+		points.add(new Point(x+2, y+md));
 		return points;
 	}
 	
