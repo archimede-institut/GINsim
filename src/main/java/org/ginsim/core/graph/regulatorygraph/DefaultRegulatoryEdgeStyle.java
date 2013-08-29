@@ -24,9 +24,13 @@ public class DefaultRegulatoryEdgeStyle extends EdgeStyleImpl<RegulatoryNode, Re
 	};
 	private static final StyleProperty[] PROPERTIES = StyleProperty.merge(EdgeStyleImpl.DEFAULT_PROPERTIES, EXTRA_PROPERTIES);
 	
-	private Color c_positive = Color.cyan;
-	private Color c_negative = Color.red.darker();
-	private Color c_dual = Color.blue.darker();
+	private Color c_positive = new Color(0,200,0);
+	private Color c_negative = new Color(200,0,0);
+	private Color c_dual = new Color(0,0,200);
+	
+	public DefaultRegulatoryEdgeStyle() {
+		setWidth(2);
+	}
 	
 	@Override
 	public Color getColor(RegulatoryMultiEdge edge) {
