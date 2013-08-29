@@ -133,6 +133,6 @@ public interface NodeAttributesReader<V> extends AttributesReader {
 	 * @param movey
 	 */
 	void renderMoving(Graphics2D g, int movex, int movey);
-	
-	void writeGINML(XMLWriter writer) throws IOException;
+
+	void setStyle(NodeStyle style);
 }

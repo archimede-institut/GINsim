@@ -11,6 +11,7 @@ import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.io.parser.GsXMLHelper;
 import org.xml.sax.Attributes;
@@ -39,6 +40,7 @@ public class ReducedGraphParser extends GsXMLHelper {
     private NodeReducedData vertex = null;
     private Edge<NodeReducedData> edge = null;
     private Vector v_content = null;
+	private StyleManager styleManager;
     private NodeAttributesReader vareader = null;
     private EdgeAttributesReader ereader = null;
     private Annotation annotation = null;
@@ -54,6 +56,7 @@ public class ReducedGraphParser extends GsXMLHelper {
     	
     	this.graph = GraphManager.getInstance().getNewGraph( ReducedGraph.class, true);
     	this.set = set;
+    	styleManager = graph.getStyleManager();
 		vareader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
 		
@@ -67,6 +70,7 @@ public class ReducedGraphParser extends GsXMLHelper {
     public ReducedGraphParser(Set<String> set, Attributes attributes, String s_dtd) throws GsException {
     	this.graph = GraphManager.getInstance().getNewGraph( ReducedGraph.class, true);
     	this.set = set;
+    	styleManager = graph.getStyleManager();
 		vareader = graph.getNodeAttributeReader();
 		ereader = graph.getEdgeAttributeReader();
 		
@@ -239,11 +243,11 @@ public class ReducedGraphParser extends GsXMLHelper {
             case POS_EDGE_VS:
             	if (edge != null) {
             		ereader.setEdge(edge);
-            		GinmlHelper.applyEdgeVisualSettings(edge, ereader, vareader, qName, attributes);
+            		GinmlHelper.applyEdgeVisualSettings(edge, styleManager, ereader, vareader, qName, attributes);
             	}
                 break; // POS_EDGE_VS
             case POS_VERTEX_VS:
-            	GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);
+            	GinmlHelper.applyNodeVisualSettings(vareader, styleManager, qName, attributes);
                 break; // POS_VERTEX_VS
         }
     }

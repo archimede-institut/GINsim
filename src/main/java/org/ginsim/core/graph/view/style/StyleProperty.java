@@ -14,16 +14,16 @@ abstract public class StyleProperty {
 
 	private static int NEXTKEY = 0;
 	
-	public static final StyleProperty BACKGROUND = new ColorProperty("background");
-	public static final StyleProperty FOREGROUND = new ColorProperty("foreground");
-	public static final StyleProperty TEXT       = new ColorProperty("text");
-	public static final StyleProperty SHAPE      = new EnumProperty("shape", NodeShape.RECTANGLE);
-	public static final StyleProperty BORDER     = new EnumProperty("border", NodeBorder.SIMPLE);
+	public static final StyleProperty BACKGROUND = new ColorProperty("background", true);
+	public static final StyleProperty FOREGROUND = new ColorProperty("foreground", true);
+	public static final StyleProperty TEXT       = new ColorProperty("text", true);
+	public static final StyleProperty SHAPE      = new EnumProperty("shape", NodeShape.RECTANGLE, true);
+	public static final StyleProperty BORDER     = new EnumProperty("border", NodeBorder.SIMPLE, true);
 
 
-	public static final StyleProperty COLOR      = new ColorProperty("color");
-	public static final StyleProperty ENDING     = new EnumProperty("ending", EdgeEnd.POSITIVE);
-	public static final StyleProperty PATTERN    = new EnumProperty("pattern", EdgePattern.SIMPLE);
+	public static final StyleProperty COLOR      = new ColorProperty("color", true);
+	public static final StyleProperty ENDING     = new EnumProperty("ending", EdgeEnd.POSITIVE, true);
+	public static final StyleProperty PATTERN    = new EnumProperty("pattern", EdgePattern.SIMPLE, true);
 	
 	
 	public static StyleProperty[] merge(StyleProperty[] base, StyleProperty[] extra) {
@@ -42,11 +42,13 @@ abstract public class StyleProperty {
 		return new ColorProperty(name);
 	}
 	
+	public final boolean isCore;
 	public final int key;
 	public final String name;
 	
-	protected StyleProperty(String name) {
+	protected StyleProperty(String name, boolean isCore) {
 		this.name = name;
+		this.isCore = isCore;
 		this.key = NEXTKEY++;
 	}
 	
@@ -58,8 +60,12 @@ abstract public class StyleProperty {
 }
 
 class ColorProperty extends StyleProperty {
+
+	protected ColorProperty(String name, boolean isCore) {
+		super(name, isCore);
+	}
 	protected ColorProperty(String name) {
-		super(name);
+		super(name, false);
 	}
 
 	@Override
@@ -80,7 +86,10 @@ class ColorProperty extends StyleProperty {
 class EnumProperty extends StyleProperty {
 	private final Enum fallback;
 	protected EnumProperty(String name, Enum fallback) {
-		super(name);
+		this(name, fallback, false);
+	}
+	protected EnumProperty(String name, Enum fallback, boolean isCore) {
+		super(name, isCore);
 		this.fallback = fallback;
 	}
 	@Override

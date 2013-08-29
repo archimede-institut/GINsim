@@ -7,10 +7,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
@@ -19,6 +22,7 @@ import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.graph.view.ViewHelper;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.NodeStyle;
+import org.ginsim.core.graph.view.style.StyleManager;
 import org.xml.sax.Attributes;
 
 
@@ -41,33 +45,10 @@ public class GinmlHelper {
      * @param attributes
      * @return 1 if byte VS, 2 otherwise
      */
-	public static void applyNodeVisualSettings(NodeAttributesReader vareader, String qName, Attributes attributes) {
-        if (qName.equals("point")) {
-            vareader.setPos(Integer.parseInt(attributes.getValue("x")),Integer.parseInt(attributes.getValue("y")));
-            return;
-        }
-        
-        if (qName.equals("rect")) {
-        	vareader.setShape(NodeShape.RECTANGLE);
-        	vareader.setBackgroundColor(ColorPalette.getColorFromCode(attributes.getValue("backgroundColor")));
-        	vareader.setForegroundColor(ColorPalette.getColorFromCode(attributes.getValue("foregroundColor")));
-        	String s_textColor = attributes.getValue("textColor");
-        	Color col_text = s_textColor == null ? vareader.getForegroundColor() : ColorPalette.getColorFromCode(s_textColor);
-        	vareader.setTextColor(col_text);
-        	vareader.setSize(Integer.parseInt(attributes.getValue("width")), Integer.parseInt(attributes.getValue("height")));
-            vareader.setPos(Integer.parseInt(attributes.getValue("x")),Integer.parseInt(attributes.getValue("y")));
-        } else if (qName.equals("ellipse")) {
-        	vareader.setShape(NodeShape.ELLIPSE);
-        	vareader.setBackgroundColor(ColorPalette.getColorFromCode(attributes.getValue("backgroundColor")));
-        	vareader.setForegroundColor(ColorPalette.getColorFromCode(attributes.getValue("foregroundColor")));
-        	String s_textColor = attributes.getValue("textColor");
-        	Color col_text = s_textColor == null ? vareader.getForegroundColor() : ColorPalette.getColorFromCode(s_textColor);
-        	vareader.setTextColor(col_text);
-        	vareader.setSize(Integer.parseInt(attributes.getValue("width")), Integer.parseInt(attributes.getValue("height")));
-            vareader.setPos(Integer.parseInt(attributes.getValue("x")),Integer.parseInt(attributes.getValue("y")));
-        }
-        
-        return;
+	public static void applyNodeVisualSettings(NodeAttributesReader vareader, StyleManager stylemanager, String qName, Attributes attributes) {
+        vareader.setPos(Integer.parseInt(attributes.getValue("x")),Integer.parseInt(attributes.getValue("y")));
+        NodeStyle style = stylemanager.guessNodeStyle(qName, attributes);
+        vareader.setStyle(style);
 	}
 
 	/**
@@ -78,123 +59,107 @@ public class GinmlHelper {
 	 * @param qName
 	 * @param attributes
 	 */
-	public static void applyEdgeVisualSettings(Edge<?> edge, EdgeAttributesReader ereader, NodeAttributesReader nreader, String qName, Attributes attributes) {
-		if (qName.equals("polyline")) {
-			ereader.setLineColor(ColorPalette.getColorFromCode(attributes.getValue("line_color")));
-			boolean isCurved = false;
-			String s = attributes.getValue("line_style");
-			if (s.equals("curve") || s.equals("13") || s.equals("12") || s.equals("bezier") || s.equals("spline")) {
-			    isCurved = true;
-			}
-            try {
-                ereader.setLineWidth(Integer.parseInt(attributes.getValue("line_width")));
-            } catch (NullPointerException e) {}
-              catch (NumberFormatException e) {}
-              
-			ereader.setCurve(isCurved);
-			
-			s = attributes.getValue("points");
-			if (s != null) {
-    			s = s.trim();
-    			if (!s.equals("")) {
-    			    
-    				String[] ts = s.split(" ");
-    			    try {
-    					List l = new ArrayList();
-    					for (int j=0 ; j<ts.length ; j++) {
-    					    String[] t_point = ts[j].split(",");
-    				        l.add(new Point(Integer.parseInt(t_point[0]),Integer.parseInt(t_point[1])));
-    					}
-    					
-    					ViewHelper.trimPoints(edge, l, nreader, ereader);
-    					ereader.setPoints(l);
-    			    } catch (Exception e) {
-    			        GUIMessageUtils.openErrorDialog("invalid points");
-    			    }
-    			}
-			}
-			
-			s = attributes.getValue("pattern");
-			if (s != null) {
-			    ereader.setDash(EdgePattern.DASH);
-			}
-
-			ereader.refresh();
+	public static void applyEdgeVisualSettings(Edge<?> edge, StyleManager styleManager, EdgeAttributesReader ereader, NodeAttributesReader nreader, String qName, Attributes attributes) {
+		if (!qName.equals("polyline")) {
+			return;
 		}
-	}
+		
+		EdgeStyle style = styleManager.guessEdgeStyle(qName, attributes);
+		ereader.setStyle(style);
+		
+		String s = attributes.getValue("line_style");
+		if (s.equals("curve") || s.equals("13") || s.equals("12") || s.equals("bezier") || s.equals("spline")) {
+		    ereader.setCurve(true);
+		}
 
-	public static String getEdgeVS(EdgeAttributesReader eReader, NodeAttributesReader nReader, Edge edge) {
-        String svs = "\t\t\t<edgevisualsetting>\n";
-        svs += "\t\t\t\t<polyline";
-        String s = "";
-        List l_point = ViewHelper.getPoints(nReader, eReader, edge);
-        if (l_point != null) {
-            for (int i=0 ; i<l_point.size() ; i++) {
-                Point2D pt = (Point2D)l_point.get(i); 
-                s += (int)pt.getX()+","+(int)pt.getY()+" ";
-            }
-            if (s.length() > 1) {
-                svs += " points=\""+s.substring(0, s.length()-1)+"\"";
-            } else {
-            	svs += " points=\"\"";
-            }
-        } else {
-        	svs += " points=\"\"";
-        }
-        if (eReader.isCurve()) {
-    	    s = "curve";
-        } else {
-    	    s = "straight";
-        }
-        svs += " line_style=\""+s+"\"";
-        svs += " line_color=\""+ColorPalette.getColorCode(eReader.getLineColor())+"\"";
-        EdgePattern pattern = eReader.getDash();
-        if (pattern == EdgePattern.DASH) {
-            svs += " pattern=\"dash\"";
-        }
-        svs += " line_width=\""+(int)eReader.getLineWidth()+"\"";
-        svs += " routage=\"auto\""; // FIXME: should we remove it completely or need a new system?
-        svs += "/>\n";
-        svs += "\t\t\t</edgevisualsetting>\n";
-		return svs;
-	}
-	
-	/**
-	 * @param vReader
-	 * @return the corresponding ginml String
-	 */
-	public static String getShortNodeVS(NodeAttributesReader vReader) {
-        String svs = "\t\t\t<nodevisualsetting>\n";
-        svs += "\t\t\t\t<point x=\""+vReader.getX()+"\" y=\""+vReader.getY()+"\"/>\n";
-        svs += "\t\t\t</nodevisualsetting>\n";
-		return svs;
+        s = attributes.getValue("points");
+        List<Point> l = loadPoints(s);
+        if (l != null) {
+			ViewHelper.trimPoints(edge, l, nreader, ereader);
+			ereader.setPoints(l);
+		}
+
+		ereader.refresh();
 	}
 
 	/**
-	 * @param vReader
-	 * @return the corresponding ginml String
+	 * Load style and intermediate points from GINML.
+	 * 
+	 * @param styleManager
+	 * @param ereader
+	 * @param attributes
+	 * @return true if no data was found and the old visual settings must be loaded
 	 */
-	private static String getFullNodeVS(NodeAttributesReader vReader) {
-        StringBuffer svs = new StringBuffer("\t\t\t<nodevisualsetting>\n\t\t\t\t<");
-        if (vReader.getShape() == NodeShape.ELLIPSE) {
-        	svs.append("ellipse");
-        } else {
-        	svs.append("rect");
-        }
-		svs.append(" x=\""+vReader.getX()+
-			"\" y=\""+vReader.getY()+
-			"\" width=\""+vReader.getWidth()+
-			"\" height=\""+vReader.getHeight()+
-			"\" backgroundColor=\""+ ColorPalette.getColorCode(vReader.getBackgroundColor())
-		);
-		Color fg = vReader.getForegroundColor();
-		Color txt = vReader.getTextColor();
-		svs.append("\" foregroundColor=\""+ColorPalette.getColorCode(fg));
-		if (!txt.equals(fg)) {
-			svs.append("\" textColor=\""+ColorPalette.getColorCode(txt));
-		}
-		svs.append("\"/>\n\t\t\t</nodevisualsetting>\n");
-        return svs.toString();
+	public static boolean loadEdgeStyle(StyleManager styleManager, EdgeAttributesReader ereader, Attributes attributes) {
+    	boolean loadOldVS = true;
+
+    	String value = attributes.getValue("points");
+    	if (value != null) {
+    		loadOldVS = false;
+    		ereader.setPoints( GinmlHelper.loadPoints(value) );
+    	}
+    	
+    	value = attributes.getValue("style");
+    	if (value != null) {
+    		loadOldVS = false;
+    		ereader.setStyle( styleManager.getEdgeStyle(value) );
+    	}
+    	
+    	return loadOldVS;
 	}
 
+	/**
+	 * Load node position and style from GINML
+	 * 
+	 * @param styleManager
+	 * @param vreader
+	 * @param attributes
+	 * @return true if no data was found and the old visual settings must be loaded
+	 */
+	public static boolean loadNodeStyle(StyleManager styleManager, NodeAttributesReader vreader, Attributes attributes) {
+    	boolean loadOldVS = true;
+    	String sx = attributes.getValue("x");
+    	String sy = attributes.getValue("y");
+    	if (sx != null && sy != null) {
+    		loadOldVS = false;
+    		int x = Integer.parseInt(sx);
+    		int y = Integer.parseInt(sy);
+    		vreader.setPos(x, y);
+    	}
+
+    	sx =  attributes.getValue("style");
+    	if (sx != null) {
+    		loadOldVS = false;
+    		vreader.setStyle( styleManager.getNodeStyle(sx) );
+    	}
+    	return loadOldVS;
+	}
+
+	/**
+	 * Parse a string representing a list of points
+	 * 
+	 * @param s the string to parse
+	 * @return a proper list of points
+	 */
+	private static List<Point> loadPoints(String s) {
+		if (s == null) {
+			return null;
+		}
+		s = s.trim();
+		if (s.length() == 0) {
+			return null;
+		}
+		String[] ts = s.split(" ");
+	    try {
+			List l = new ArrayList();
+			for (int j=0 ; j<ts.length ; j++) {
+			    String[] t_point = ts[j].split(",");
+		        l.add(new Point(Integer.parseInt(t_point[0]),Integer.parseInt(t_point[1])));
+			}
+			return l;
+	    } catch (Exception e) {
+	        LogManager.error("invalid points");
+	    }
+	    return null;
+	}
 }

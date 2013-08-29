@@ -12,6 +12,7 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.io.parser.GsXMLHelper;
 import org.xml.sax.Attributes;
@@ -40,6 +41,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
     
     private HierarchicalNode vertex = null;
     private DecisionOnEdge edge = null;
+	private StyleManager<HierarchicalNode, DecisionOnEdge> styleManager;
     private NodeAttributesReader vareader = null;
     private EdgeAttributesReader ereader = null;
     private Annotation annotation = null;
@@ -56,6 +58,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
     	
     	this.htg = GraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, true);
     	this.nodeToParse = nodeToParse;
+		styleManager = htg.getStyleManager();
 		vareader = htg.getNodeAttributeReader();
 		ereader = htg.getEdgeAttributeReader();
 		
@@ -282,10 +285,10 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                 
             case POS_EDGE_VS:
             	ereader.setEdge(edge);
-            	GinmlHelper.applyEdgeVisualSettings(edge, ereader, vareader, qName, attributes);
+            	GinmlHelper.applyEdgeVisualSettings(edge, styleManager, ereader, vareader, qName, attributes);
                 break; // POS_EDGE_VS
             case POS_VERTEX_VS:
-            	GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);
+            	GinmlHelper.applyNodeVisualSettings(vareader, styleManager, qName, attributes);
                 break; // POS_VERTEX_VS
         }
     }

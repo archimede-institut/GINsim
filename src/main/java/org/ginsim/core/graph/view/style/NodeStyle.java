@@ -43,4 +43,5 @@ public interface NodeStyle<V> extends Style {
 	boolean enforceSize();
 	boolean enforceBorder();
 	
+	boolean matches(NodeShape shape, Color bg, Color fg, Color text, int w, int h);
 }

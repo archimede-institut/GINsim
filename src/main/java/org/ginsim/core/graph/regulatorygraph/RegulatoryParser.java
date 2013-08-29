@@ -115,9 +115,10 @@ public final class RegulatoryParser extends GsXMLHelper {
     public void parse(File file, Set set, Graph<?,?> graph)  throws GsException{
     	this.graph = (RegulatoryGraph) graph;
     	this.set = set;
-		  vareader = graph.getNodeAttributeReader();
-		  ereader = graph.getEdgeAttributeReader();
-		  startParsing(file);
+    	styleManager = this.graph.getStyleManager();
+    	vareader = graph.getNodeAttributeReader();
+    	ereader = graph.getEdgeAttributeReader();
+    	startParsing(file);
    	}
 
     public void endElement(String uri, String localName, String qName)
@@ -228,10 +229,9 @@ public final class RegulatoryParser extends GsXMLHelper {
                 pos = POS_OUT;
                 break;
         	case POS_OUT:
-                if (qName.equals("nodestyle") || qName.equals("edgestyle")) {
+        		if (qName.equals("nodestyle") || qName.equals("edgestyle")) {
                 	styleManager.parseStyle(qName, attributes);
-                } else
-        		if (qName.equals("node")) {
+                } else if (qName.equals("node")) {
                     String id = attributes.getValue("id");
                     if (set == null || set.contains(id)) {
                         pos = POS_VERTEX;
@@ -312,15 +312,9 @@ public final class RegulatoryParser extends GsXMLHelper {
             case POS_VERTEX:
                 if (vareader != null && qName.equals("nodevisualsetting")) {
             		vareader.setNode(vertex);
-                	String sx = attributes.getValue("x");
-                	String sy = attributes.getValue("y");
-                	if (sx != null && sy != null) {
-                		int x = Integer.parseInt(sx);
-                		int y = Integer.parseInt(sy);
-                		vareader.setPos(x, y);
-                	} else if (sx == null) {
+                	if (GinmlHelper.loadNodeStyle(styleManager, vareader, attributes)) {
                 		pos = POS_VERTEX_VS;
-                	}
+            		}
                 } else if (qName.equals("annotation")) {
                     pos = POS_VERTEX_NOTES;
                     annotation = vertex.getAnnotation();
@@ -338,7 +332,10 @@ public final class RegulatoryParser extends GsXMLHelper {
 
             case POS_EDGE:
                 if (qName.equals("edgevisualsetting")) {
-                	pos = POS_EDGE_VS;
+                	ereader.setEdge(edge.me);
+                	if (GinmlHelper.loadEdgeStyle(styleManager, ereader, attributes)) {
+                		pos = POS_EDGE_VS;
+                	}
                 } else if (qName.equals("annotation")) {
                     pos = POS_EDGE_NOTES;
                     annotation = edge.me.getAnnotation();
@@ -346,10 +343,10 @@ public final class RegulatoryParser extends GsXMLHelper {
                 break; // POS_EDGE
 
             case POS_EDGE_VS:
-            	GinmlHelper.applyEdgeVisualSettings(edge.me, ereader, vareader, qName, attributes);
+            	GinmlHelper.applyEdgeVisualSettings(edge.me, styleManager, ereader, vareader, qName, attributes);
                 break; // POS_EDGE_VS
             case POS_VERTEX_VS:
-            	GinmlHelper.applyNodeVisualSettings(vareader, qName, attributes);
+            	GinmlHelper.applyNodeVisualSettings(vareader, styleManager, qName, attributes);
                 break; // POS_VERTEX_VS
             case POS_VERTEX_NOTES:
                 if (qName.equals("linklist")) {

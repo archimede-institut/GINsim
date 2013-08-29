@@ -52,12 +52,13 @@ public class NodeStyleImpl<V> implements NodeStyle<V> {
 	private NodeBorder border;
 	
 	private final NodeStyle<V> parent;
+	private final int key;
 	
 	public NodeStyleImpl() {
-		this(null);
+		this(0, null);
 	}
 	
-	public NodeStyleImpl(NodeStyle<V> parent) {
+	public NodeStyleImpl(int key, NodeStyle<V> parent) {
 		if (parent == null) {
 			bg = DEFAULT_BACKGROUND;
 			fg = DEFAULT_FOREGROUND;
@@ -70,6 +71,7 @@ public class NodeStyleImpl<V> implements NodeStyle<V> {
 			border = DEFAULT_BORDER;
 		}
 		this.parent = parent;
+		this.key = key;
 	}
 	
 	@Override
@@ -268,6 +270,19 @@ public class NodeStyleImpl<V> implements NodeStyle<V> {
 	}
 
 	@Override
+	public int getKey() {
+		return key;
+	}
+
+	public String toString() {
+		if (key == 0) {
+			return "Default node style";
+		}
+		return "node style "+key;
+	}
+	
+
+	@Override
 	public StyleProperty[] getProperties() {
 		return DEFAULT_PROPERTIES;
 	}
@@ -315,5 +330,24 @@ public class NodeStyleImpl<V> implements NodeStyle<V> {
 		return null;
 	}
 	protected void setCustomProperty(StyleProperty prop, Object value) {
+	}
+
+	@Override
+	public boolean matches(NodeShape shape, Color bg, Color fg, Color text, int w, int h) {
+		return
+				equals(this.bg, bg) &&
+				equals(this.fg, fg) &&
+				equals(this.txt, text) &&
+				this.width == w && this.height == h;
+	}
+	
+	public static boolean equals(Color c1, Color c2) {
+		if (c1 == c2) {
+			return true;
+		}
+		if (c1 == null || c2 == null) {
+			return false;
+		}
+		return c1.equals(c2);
 	}
 }

@@ -208,32 +208,40 @@ copyright by
 
 <!ELEMENT nodestyle EMPTY> 
 <!ATTLIST nodestyle 
+    name CDATA #IMPLIED
     width CDATA #IMPLIED
     height CDATA #IMPLIED
     shape CDATA #IMPLIED
+    border CDATA #IMPLIED
     background CDATA #IMPLIED
     foreground CDATA #IMPLIED
     text CDATA #IMPLIED
+    properties CDATA #IMPLIED
 >
 
-<!ELEMENT nodevisualsetting (nodestyle?, (point|rect|ellipse)?)> 
+<!--  In the future, ttributes will be mandatory and sub elements removed -->
+<!ELEMENT nodevisualsetting ( (point|rect|ellipse)? )>
 <!ATTLIST nodevisualsetting 
     x CDATA #IMPLIED
     y CDATA #IMPLIED
+    style CDATA #IMPLIED
 > 
 
-<!ELEMENT edgevisualsetting (edgestyle?, polyline?)> 
+<!ELEMENT edgevisualsetting ( polyline? )> 
 <!ATTLIST edgevisualsetting 
     points CDATA #IMPLIED
     curve CDATA #IMPLIED
+    style CDATA #IMPLIED
 > 
 
 <!ELEMENT edgestyle EMPTY> 
 <!ATTLIST edgestyle 
+    name CDATA #IMPLIED
     style CDATA #IMPLIED
     color CDATA #IMPLIED
     width CDATA #IMPLIED
     ending CDATA #IMPLIED
+    properties CDATA #IMPLIED
 > 
 
 <!-- polyline --> 

@@ -204,7 +204,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         while (it.hasNext()) {
         	RegulatoryMultiEdge edge = it.next();
             ereader.setEdge(edge);
-            edge.toXML(out, GinmlHelper.getEdgeVS(ereader, nreader, edge));
+            edge.toXML(out, ereader);
         }
     }
 

@@ -7,10 +7,13 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import org.ginsim.common.utils.ColorPalette;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.view.Bezier;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -22,7 +25,6 @@ import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.SimpleStroke;
 import org.ginsim.core.graph.view.ViewHelper;
 import org.ginsim.core.graph.view.style.EdgeStyle;
-import org.ginsim.core.graph.view.style.EdgeStyleImpl;
 import org.ginsim.core.graph.view.style.StyleManager;
 
 
@@ -119,7 +121,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
     		viewInfo = graph.ensureEdgeViewInfo(edge);
     	}
     	
-    	style = new EdgeStyleImpl<V,E>(defaultStyle);
+    	style = styleManager.addEdgeStyle();
     	viewInfo.setStyle(style);
     	
     	return true;
@@ -206,7 +208,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
             return;
         }
         if (viewInfo == null) {
-        	graph.ensureEdgeViewInfo(edge);
+        	viewInfo = graph.ensureEdgeViewInfo(edge);
         }
         viewInfo.setPoints(l);
         hasChanged = true;
@@ -441,4 +443,71 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 	public EdgeStyle<V, E> getDefaultEdgeStyle() {
 		return defaultStyle;
 	}
+	
+	@Override
+	public void writeGINML(XMLWriter writer) throws IOException {
+		if (edge == null) {
+			return;
+		}
+		
+		if (style == null && getPoints() == null) {
+			return;
+		}
+		
+		// save style information
+		writer.openTag("edgevisualsetting");
+		String points = getPointDescr(getPoints());
+		if (points != null) {
+			writer.addAttr("points", points);
+		}
+		if (style != null) {
+			writer.addAttr("style", ""+style.getKey());
+		}
+		
+		// write old attributes for backward compatibility
+		if (NodeAttributeReaderImpl.SAVE_OLD_VS) {
+        	writer.openTag("polyline");
+	        
+	        writer.addAttr("points", getPointDescr( ViewHelper.getPoints(nreader, this, edge) ));
+	        writer.addAttr("line_color", getLineColor());
+	        writer.addAttr("line_style", isCurve() ? "curve" : "straight");
+	        writer.addAttr("line_width", ""+(int)getLineWidth());
+	        writer.addAttr("routage","auto");
+	        if (getDash() == EdgePattern.DASH) {
+	        	writer.addAttr("pattern","dash");
+	        }
+
+	        writer.closeTag();
+		}
+
+		writer.closeTag();
+	}
+	
+	private String getPointDescr(List<Point> points) {
+		if (points == null || points.size() < 1) {
+			return null;
+		}
+		String s_points = "";
+		for (Point p: points) {
+			s_points += p.x+","+p.y+" ";
+		}
+		return s_points.trim();
+	}
+
+	@Override
+	public void setStyle(EdgeStyle style) {
+		if (edge == null) {
+			return;
+		}
+		
+		if (viewInfo == null) {
+			viewInfo = graph.ensureEdgeViewInfo(edge);
+		}
+		if (viewInfo == null) {
+			return;
+		}
+		
+		viewInfo.setStyle(style);
+	}
+	
 }

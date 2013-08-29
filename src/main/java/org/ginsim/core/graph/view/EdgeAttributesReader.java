@@ -126,4 +126,6 @@ public interface EdgeAttributesReader<V,E extends Edge<V>> extends AttributesRea
 	
 	void renderMovingPoint(Graphics2D g, int idx, int movex, int movey);
 
+	void setStyle(EdgeStyle style);
+
 }

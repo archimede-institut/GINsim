@@ -9,6 +9,7 @@ import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.view.EdgeAttributesReader;
 
 
 /**
@@ -144,19 +145,27 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements ToolTip
         return source+"_"+target+"_"+index;
     }
 
-    public void toXML(XMLWriter out, String param) throws IOException {
+    public void toXML(XMLWriter out, EdgeAttributesReader<RegulatoryNode, RegulatoryMultiEdge> ereader) throws IOException {
         for (int i=0 ; i<edgecount ; i++) {
             RegulatoryEdge edge = edges[i];
 
             int max = i<edgecount-1 ? edges[i+1].threshold-1 : -1;
-            out.write("\t\t<edge id=\""+ edge.getLongInfo(":") + "\" from=\""+source+"\" to=\""+target+"\" minvalue=\""+edge.threshold+"\""+ (max == -1 ? "" : " maxvalue=\""+max+"\"")+" sign=\""+ edge.getSign().getLongDesc() +"\">\n");
+            out.openTag("edge");
+            out.addAttr("id", edge.getLongInfo(":"));
+            out.addAttr("from", ""+source.toString());
+            out.addAttr("to", target.toString());
+            out.addAttr("minvalue", ""+edge.threshold);
+            if (max != -1) {
+                out.addAttr("maxvalue", ""+max);
+            }
+            out.addAttr("sign", edge.getSign().getLongDesc());
+
             if (i == 0) {
             	annotation.toXML(out);
+                ereader.writeGINML(out);
             }
-            if (param != null) {
-                out.write(""+param);
-            }
-            out.write("\t\t</edge>\n");
+            
+            out.closeTag();
         }
     }
 

@@ -25,6 +25,8 @@ import org.xml.sax.Attributes;
  */
 public class EdgeStyleImpl<V, E extends Edge<V>> implements EdgeStyle<V, E> {
 
+	private final int key;
+	
 	private static int DEFAULT_WIDTH = 1;
 	private static Color DEFAULT_COLOR = Color.BLACK;
 	private static EdgeEnd DEFAULT_ENDING = EdgeEnd.POSITIVE;
@@ -44,11 +46,12 @@ public class EdgeStyleImpl<V, E extends Edge<V>> implements EdgeStyle<V, E> {
 	private int width = -1;
 	
 	public EdgeStyleImpl() {
-		this(null);
+		this(0, null);
 	}
 	
-	public EdgeStyleImpl(EdgeStyle<V, E> defaultStyle) {
+	public EdgeStyleImpl(int key, EdgeStyle<V, E> defaultStyle) {
 		this.parent = defaultStyle;
+		this.key = key;
 		
 		if (parent == null) {
 			color = DEFAULT_COLOR;
@@ -179,6 +182,18 @@ public class EdgeStyleImpl<V, E extends Edge<V>> implements EdgeStyle<V, E> {
 	}
 
 	@Override
+	public int getKey() {
+		return key;
+	}
+	
+	public String toString() {
+		if (key == 0) {
+			return "Default edge style";
+		}
+		return "edge style "+key;
+	}
+	
+	@Override
 	public Object getProperty(StyleProperty prop) {
 		if (prop == StyleProperty.COLOR) {
 			return color;
@@ -211,5 +226,12 @@ public class EdgeStyleImpl<V, E extends Edge<V>> implements EdgeStyle<V, E> {
 		return null;
 	}
 	protected void setCustomProperty(StyleProperty prop, Object value) {
+	}
+
+	@Override
+	public boolean matches(Color color, EdgePattern pattern, int width) {
+		return	NodeStyleImpl.equals(color, this.color) &&
+				pattern == this.pattern &&
+				width == this.width;
 	}
 }

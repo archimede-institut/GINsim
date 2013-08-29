@@ -35,5 +35,7 @@ public interface EdgeStyle<V,E extends Edge<V>> extends Style {
 	boolean setWidth(int w);
 	boolean setPattern(EdgePattern pattern);
 	boolean setEnding(EdgeEnd ending);
+	
+	boolean matches(Color color, EdgePattern pattern, int width);
 
 }

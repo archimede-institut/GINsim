@@ -28,6 +28,8 @@ import org.ginsim.core.graph.view.style.StyleManager;
  */
 public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttributesReader<V> {
 
+	public static final boolean SAVE_OLD_VS = false;
+	
 	private static char ELLIPSIS = '\u2026';
 	
 	public static final int SW = 6;      // width of the selection mark
@@ -41,13 +43,6 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 	public static final String VERTEX_SHAPE = "vs.vertexshape";
 	public static final String VERTEX_BORDER = "vs.vertexborder";
 
-    public static Color bg = new Color(OptionStore.getOption( VERTEX_BG, -26368));
-    public static Color fg = new Color(OptionStore.getOption( VERTEX_FG, Color.WHITE.getRGB()));
-    public static Color text = new Color(OptionStore.getOption( VERTEX_TEXT, Color.BLACK.getRGB()));
-    
-//    public static int height = OptionStore.getOption( VERTEX_HEIGHT, 25);
-//    public static int width = OptionStore.getOption( VERTEX_WIDTH, 50);
-    
     public static NodeShape  shape;
     public static NodeBorder border;
     
@@ -133,7 +128,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
     			return false;
     		}
     		
-    		style = new NodeStyleImpl<V>(defaultStyle);
+    		style = styleManager.addNodeStyle();
     		style.setDimension(cachedBounds.width, cachedBounds.height);
     		viewInfo.setStyle(style);
     		return false;
@@ -408,9 +403,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 	
 	@Override
 	public void writeGINML(XMLWriter writer) throws IOException {
-		// FIXME: cleanup style saving
 		if (vertex == null) {
-			LogManager.info("SAVE DEFAULT STYLE: SHOULD NOT BE CALLED");
 			return;
 		}
 		
@@ -419,34 +412,43 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 		writer.addAttr("x", ""+getX());
 		writer.addAttr("y", ""+getY());
 		if (style != null) {
-			// TODO: save node style
-			//writer.addAttr("style", style.getKey());
-			LogManager.info("SAVE NODE STYLE: SHOULD NOT BE CALLED");
+			writer.addAttr("style", ""+style.getKey());
 		}
 		
-		// write old attributes for backward compatibility
-        if (getShape() == NodeShape.ELLIPSE) {
-        	writer.openTag("ellipse");
-        } else {
-        	writer.openTag("rect");
-        }
-        
-        writer.addAttr("x", ""+getX());
-        writer.addAttr("y", ""+getY());
-        writer.addAttr("width", ""+getWidth());
-        writer.addAttr("height", ""+getHeight());
-        
-        Color bg = getBackgroundColor();
-		Color fg = getForegroundColor();
-		Color txt = getTextColor();
-        writer.addAttr("backgroundColor", bg);
-        writer.addAttr("foregroundColor", fg);
-		if (!txt.equals(fg)) {
-	        writer.addAttr("textColor", txt);
+		if (SAVE_OLD_VS) {
+			// write old attributes for backward compatibility
+	        if (getShape() == NodeShape.ELLIPSE) {
+	        	writer.openTag("ellipse");
+	        } else {
+	        	writer.openTag("rect");
+	        }
+	        
+	        writer.addAttr("x", ""+getX());
+	        writer.addAttr("y", ""+getY());
+	        writer.addAttr("width", ""+getWidth());
+	        writer.addAttr("height", ""+getHeight());
+	        
+	        Color bg = getBackgroundColor();
+			Color fg = getForegroundColor();
+			Color txt = getTextColor();
+	        writer.addAttr("backgroundColor", bg);
+	        writer.addAttr("foregroundColor", fg);
+			if (!txt.equals(fg)) {
+		        writer.addAttr("textColor", txt);
+			}
+			writer.closeTag();
 		}
 		
 		writer.closeTag();
-		writer.closeTag();
+	}
+
+	@Override
+	public void setStyle(NodeStyle style) {
+		if (viewInfo == null) {
+			return;
+		}
+		this.style = style;
+		viewInfo.setStyle(style);
 	}
 
 }
