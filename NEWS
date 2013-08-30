@@ -1,3 +1,28 @@
+Version 3.0. 
+Changes since version 2.4:
+
+General Changes:
+* large refactoring
+* styles for graphical settings
+* some features were moved to the LogicalModel lib
+* semi-official script-mode (using jython)
+* Welcome screen
+
+Definition of the regulatory graph:
+* new (simpler) definition of perturbations
+
+Simulation module:
+* strip outputs option
+
+Exports:
+* SBML qual (using LogicalModel)
+
+Imports:
+* SBML qual
+* Truth table
+
+
+---------------------------------------------------------------------------------------------------------------------
 Version 2.4. 
 Changes since version 2.3:
 
@@ -21,6 +46,8 @@ Exports:
 * Cytoscape export
 * Documentation export: build a document with the description of the model and stable states for every mutants.
   Two backends are available: "xhtml" and "open document"
+
+
 ---------------------------------------------------------------------------------------------------------------------
 Version 2.3.
 Changes since version 2.2:
