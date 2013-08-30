@@ -17,13 +17,13 @@ abstract public class StyleProperty {
 	public static final StyleProperty BACKGROUND = new ColorProperty("background", true);
 	public static final StyleProperty FOREGROUND = new ColorProperty("foreground", true);
 	public static final StyleProperty TEXT       = new ColorProperty("text", true);
-	public static final StyleProperty SHAPE      = new EnumProperty("shape", NodeShape.RECTANGLE, true);
-	public static final StyleProperty BORDER     = new EnumProperty("border", NodeBorder.SIMPLE, true);
+	public static final StyleProperty SHAPE      = new EnumProperty("shape", NodeShape.values(), true);
+	public static final StyleProperty BORDER     = new EnumProperty("border", NodeBorder.values(), true);
 
 
 	public static final StyleProperty COLOR      = new ColorProperty("color", true);
-	public static final StyleProperty ENDING     = new EnumProperty("ending", EdgeEnd.POSITIVE, true);
-	public static final StyleProperty PATTERN    = new EnumProperty("pattern", EdgePattern.SIMPLE, true);
+	public static final StyleProperty ENDING     = new EnumProperty("ending", EdgeEnd.values(), true);
+	public static final StyleProperty PATTERN    = new EnumProperty("pattern", EdgePattern.values(), true);
 	
 	
 	public static StyleProperty[] merge(StyleProperty[] base, StyleProperty[] extra) {
@@ -54,60 +54,8 @@ abstract public class StyleProperty {
 	
 	abstract public Object getValue(String s);
 
-	abstract public Class getPropertyClass();
-	
 	public String getString(Object value) {
 		return value.toString();
 	}
 }
 
-class ColorProperty extends StyleProperty {
-
-	protected ColorProperty(String name, boolean isCore) {
-		super(name, isCore);
-	}
-	protected ColorProperty(String name) {
-		super(name, false);
-	}
-
-	@Override
-	public Object getValue(String s) {
-		return ColorPalette.getColorFromCode(s);
-	}
-
-	@Override
-	public String getString(Object value) {
-		if (value instanceof Color) {
-			Color color = (Color)value;
-			return ColorPalette.getColorCode(color);
-		}
-		return null;
-	}
-	@Override
-	public Class getPropertyClass() {
-		return Color.class;
-	}
-}
-
-class EnumProperty extends StyleProperty {
-	private final Enum fallback;
-	protected EnumProperty(String name, Enum fallback) {
-		this(name, fallback, false);
-	}
-	protected EnumProperty(String name, Enum fallback, boolean isCore) {
-		super(name, isCore);
-		this.fallback = fallback;
-	}
-	@Override
-	public Object getValue(String s) {
-		try {
-			return Enum.valueOf(fallback.getClass(), s);
-		} catch (Exception e) {
-			return fallback;
-		}
-	}
-	@Override
-	public Class getPropertyClass() {
-		return Enum.class;
-	}
-}

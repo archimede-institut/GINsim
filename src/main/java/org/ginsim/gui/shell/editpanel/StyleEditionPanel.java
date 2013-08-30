@@ -2,11 +2,11 @@ package org.ginsim.gui.shell.editpanel;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,6 +19,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.ginsim.common.application.Translator;
+import org.ginsim.core.graph.view.EdgePattern;
+import org.ginsim.core.graph.view.style.ColorProperty;
+import org.ginsim.core.graph.view.style.EnumProperty;
 import org.ginsim.core.graph.view.style.Style;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.graph.view.style.StyleProperty;
@@ -83,10 +86,11 @@ public class StyleEditionPanel extends JPanel {
 	
 	private PropertyEditor addProperty(StyleProperty property) {
 		PropertyEditor ped = null;
-		Class cl = property.getPropertyClass();
-		if (cl == Color.class) {
-			ped = new ColorPropertyButton(styleManager, property, gui);
-		} else if (cl == Enum.class) {
+		if (property instanceof ColorProperty) {
+			ped = new ColorPropertyButton(styleManager, (ColorProperty)property, gui);
+		} else if (property instanceof EnumProperty) {
+			ped = new EnumPropertyBox(styleManager, (EnumProperty)property, gui);
+		} else {
 			ped = new PropertyEditor<Component>(styleManager, property, gui, new JLabel("TODO"));
 		}
 		m_properties.put(property, ped);
@@ -192,9 +196,9 @@ class ColorPropertyButton extends PropertyEditor<JButton> implements ActionListe
 
 class EnumPropertyBox extends PropertyEditor<JComboBox> implements ActionListener {
 	
-	
-	public EnumPropertyBox(StyleManager styleManager, StyleProperty property, GraphGUI gui) {
-		super(styleManager, property, gui, new JComboBox());
+	public EnumPropertyBox(StyleManager styleManager, EnumProperty property, GraphGUI gui) {
+		super(styleManager, property, gui, new JComboBox(property.getValues()));
+		this.component.addActionListener(this);
 	}
 
 	@Override
@@ -202,13 +206,15 @@ class EnumPropertyBox extends PropertyEditor<JComboBox> implements ActionListene
 		if (style == null) {
 			return;
 		}
-		// TODO ??
+		style.setProperty(property, component.getSelectedItem());
+		styleManager.styleUpdated(style);
 		update();
 	}
 	
 	protected void update() {
 		if (style == null) {
 		} else {
+			this.component.setSelectedItem(style.getProperty(this.property));
 			// TODO
 		}
 	}
