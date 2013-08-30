@@ -13,14 +13,9 @@ public class HierarchicalGINMLWriter extends GINMLWriter<HierarchicalTransitionG
 	private long saveEdgeID = 1;
 	
 	public HierarchicalGINMLWriter(HierarchicalTransitionGraph graph, boolean isCompact, String str_no) {
-		super(graph);
+		super(graph, HierarchicalTransitionGraphFactory.KEY);
 		this.isCompact = isCompact;
 		this.str_no = str_no;
-	}
-
-	@Override
-	public String getGraphClassName() {
-		return HierarchicalTransitionGraphFactory.KEY;
 	}
 
 	@Override

@@ -12,12 +12,7 @@ public class ReducedGINMLWriter extends GINMLWriter<ReducedGraph<?,?,?>, NodeRed
 	private long saveEdgeID = 1;
 	
 	public ReducedGINMLWriter(ReducedGraph graph) {
-		super(graph);
-	}
-
-	@Override
-	public String getGraphClassName() {
-		return "reduced";
+		super(graph, ReducedGraphFactory.KEY);
 	}
 
 	@Override

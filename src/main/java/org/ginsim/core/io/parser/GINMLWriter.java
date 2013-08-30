@@ -19,6 +19,7 @@ import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.graph.view.ViewHelper;
+import org.ginsim.core.graph.view.style.StyleManager;
 
 /**
  * Base GINMLWriter class: it provides the common parts of a GINML file and hooks
@@ -30,15 +31,24 @@ import org.ginsim.core.graph.view.ViewHelper;
  * @param <V>
  * @param <E>
  */
-public abstract class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
+public class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 
 	protected final G graph;
+	protected final String graphClassName;
 	
+	protected final StyleManager<V, E> styleManager; 
 	protected final NodeAttributesReader nReader;
 	protected final EdgeAttributesReader eReader;
 	
-	public GINMLWriter(G graph) {
+	/**
+	 * Create a GINML writer.
+	 * 
+	 * @param graph
+	 */
+	public GINMLWriter(G graph, String graphClassName) {
 		this.graph = graph;
+		this.graphClassName = graphClassName;
+		this.styleManager = graph.getStyleManager();
 		this.nReader = graph.getNodeAttributeReader();
 		this.eReader = graph.getEdgeAttributeReader();
 	}
@@ -49,9 +59,12 @@ public abstract class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 		out.openTag("gxl");
 		out.addAttr("xmlns:xlink", "http://www.w3.org/1999/xlink");
 		out.openTag("graph");
-		out.addAttr("class", getGraphClassName());
+		out.addAttr("class", graphClassName);
 		out.addAttr("id", graph.getGraphName());
+		
 		hook_graphAttribute(out);
+		
+		styleManager.styles2ginml(out);
 		
 		saveNodes(out, vertices);
 		saveEdges(out, edges);
@@ -86,29 +99,8 @@ public abstract class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 			
 			// save visual settings
 			nReader.setNode(node);
-			out.openTag("nodevisualsetting");
-			if (nReader.getShape() == NodeShape.ELLIPSE) {
-	        	out.openTag("ellipse");
-	        } else {
-	        	out.openTag("rect");
-	        }
-	        out.addAttr("x",      ""+nReader.getX());
-	        out.addAttr("y",      ""+nReader.getY());
-	        out.addAttr("width",  ""+nReader.getWidth());
-	        out.addAttr("height", ""+nReader.getHeight());
+			nReader.writeGINML(out);
 
-			Color bg = nReader.getBackgroundColor();
-			out.addAttr("backgroundColor", bg);
-			Color fg = nReader.getForegroundColor();
-			out.addAttr("foregroundColor", fg);
-			Color txt = nReader.getTextColor();
-			if (!txt.equals(fg)) {
-				out.addAttr("textColor", txt);
-			}
-	        out.closeTag();
-			out.closeTag();
-	    	
-			
 			out.closeTag();
 		}
 	}
@@ -119,63 +111,25 @@ public abstract class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 			
 			// save visual settings
 			eReader.setEdge(edge);
-			out.openTag("edgevisualsetting");
-			out.openTag("polyline");
-			
-			
-	        String s = "";
-	        List l_point = ViewHelper.getPoints(nReader, eReader, edge);
-	        if (l_point != null) {
-	            for (int i=0 ; i<l_point.size() ; i++) {
-	                Point2D pt = (Point2D)l_point.get(i); 
-	                s += (int)pt.getX()+","+(int)pt.getY()+" ";
-	            }
-	            if (s.length() > 1) {
-	            	out.addAttr("points", s.substring(0, s.length()-1));
-	            } else {
-	            	out.addAttr("points", "");
-	            }
-	        } else {
-            	out.addAttr("points", "");
-	        }
-
-	        if (eReader.isCurve()) {
-    	        out.addAttr("line_style", "curve");
-	        } else {
-    	        out.addAttr("line_style", "straight");
-	        }
-	        
-	        out.addAttr("line_color", eReader.getLineColor());
-	        EdgePattern pattern = eReader.getDash();
-	        if (pattern == EdgePattern.DASH) {
-	            out.addAttr("pattern", "dash");
-	        }
-	        out.addAttr("line_width", ""+(int)eReader.getLineWidth());
-	        
-	        // FIXME: should we remove it completely or need a new system?
-	        out.addAttr("routage","auto");
-			
-			out.closeTag();
-			out.closeTag();
-
+			eReader.writeGINML(out);
 			
 			out.closeTag();
 		}
 	}
 	
-	public void addAttributeTag(XMLWriter out, String name, int value) throws IOException {
+	protected void addAttributeTag(XMLWriter out, String name, int value) throws IOException {
 		addAttributeTag(out, name, "int", ""+value);
 	}
 	
-	public void addAttributeTag(XMLWriter out, String name, boolean value) throws IOException {
+	protected void addAttributeTag(XMLWriter out, String name, boolean value) throws IOException {
 		addAttributeTag(out, name, "bool", ""+value);
 	}
 	
-	public void addAttributeTag(XMLWriter out, String name, String value) throws IOException {
+	protected void addAttributeTag(XMLWriter out, String name, String value) throws IOException {
 		addAttributeTag(out, name, "string", ""+value);
 	}
 	
-	public void addAttributeTag(XMLWriter out, String name, Object value) throws IOException {
+	protected void addAttributeTag(XMLWriter out, String name, Object value) throws IOException {
 		if (value instanceof Integer) {
 			addAttributeTag(out, name, "int", ""+value);
 		} else if (value instanceof Boolean) {
@@ -196,17 +150,15 @@ public abstract class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 		out.closeTag();
 	}
 	
-	public abstract String getGraphClassName();
-	
-	public void hook_graphAttribute(XMLWriter out) throws IOException {
+	protected void hook_graphAttribute(XMLWriter out) throws IOException {
 		
 	}
 	
-	public void hook_nodeAttribute(XMLWriter out, V node) throws IOException {
+	protected void hook_nodeAttribute(XMLWriter out, V node) throws IOException {
 		out.addAttr("id", node.toString());
 	}
 	
-	public void hook_edgeAttribute(XMLWriter out, E edge) throws IOException {
+	protected void hook_edgeAttribute(XMLWriter out, E edge) throws IOException {
 		V source = edge.getSource();
 		V target = edge.getTarget();
 		out.addAttr("id", edge.toString());

@@ -13,6 +13,7 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor( GraphFactory.class)
 public class ReducedGraphFactory<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphFactory<ReducedGraph<G,V,E>> {
 
+	public static final String KEY = "reduced";
     private static ReducedGraphFactory<?,?,?> instance = null;
     
     public ReducedGraphFactory() {
@@ -34,7 +35,7 @@ public class ReducedGraphFactory<G extends Graph<V,E>, V, E extends Edge<V>> imp
     
     @Override
     public String getGraphType() {
-        return "reduced";
+        return KEY;
     }
     
     @Override
