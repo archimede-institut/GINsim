@@ -171,4 +171,7 @@ public interface GraphBackend<V, E extends Edge<V>> {
 
 	NodeStyle<V> getDefaultNodeStyle();
 	EdgeStyle<V,E> getDefaultEdgeStyle();
+
+
+	public void styleUpdated();
 }

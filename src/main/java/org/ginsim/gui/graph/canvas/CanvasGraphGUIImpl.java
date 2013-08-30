@@ -42,7 +42,10 @@ public class CanvasGraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> exte
 
 	@Override
 	public void refresh(Object o) {
-		// TODO Auto-generated method stub
+		if (o == null) {
+			canvas.clearOffscreen();
+		}
+		repaint();
 	}
 
 	@Override

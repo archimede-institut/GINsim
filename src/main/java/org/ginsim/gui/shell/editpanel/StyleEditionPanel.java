@@ -3,6 +3,8 @@ package org.ginsim.gui.shell.editpanel;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -12,6 +14,7 @@ import java.util.Map;
 
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -19,32 +22,30 @@ import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.view.style.Style;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.graph.view.style.StyleProperty;
+import org.ginsim.gui.graph.GraphGUI;
 import org.python.modules.math;
 
 public class StyleEditionPanel extends JPanel {
 
 	private final StyleManager styleManager;
-	private final Frame parent;
+	private final GraphGUI gui;
 
 	private final Map<StyleProperty, PropertyEditor> m_properties= new HashMap<StyleProperty, PropertyEditor>();
 	private final List<PropertyEditor> editors = new ArrayList<PropertyEditor>();
 	
 	JLabel label = new JLabel();
 	
+	private final GridBagConstraints c;
 	
-	public StyleEditionPanel(Frame parent, StyleManager styleManager) {
-		this.parent = parent;
+	public StyleEditionPanel(GraphGUI gui, StyleManager styleManager) {
+		super(new GridBagLayout());
+		this.gui = gui;
 		this.styleManager = styleManager;
 		
-		add(label);
+		this.c = new GridBagConstraints();
+		c.anchor = GridBagConstraints.WEST;
+		c.fill = GridBagConstraints.HORIZONTAL;
 		setStyle(null);
-		
-		// some hardcoded properties for now
-		addColorProperty(StyleProperty.BACKGROUND);
-		addColorProperty(StyleProperty.FOREGROUND);
-		addColorProperty(StyleProperty.TEXT);
-		addColorProperty(StyleProperty.COLOR);
-		
 	}
 	
 	public void setStyle(Style style) {
@@ -52,89 +53,128 @@ public class StyleEditionPanel extends JPanel {
 		
 		if (style == null) {
 			label.setText("no style to edit");
-			add(label);
+			c.gridx = 0;
+			c.gridy = 0;
+			add(label, c);
 			return;
 		}
 		
+		int x = 0;
+		int y = 0;
 		for (StyleProperty prop: style.getProperties()) {
-			PropertyEditor ped = m_properties.get(prop);
-			if (ped == null) {
-				// TODO: create editors on demand
+			if (!m_properties.containsKey(prop)) {
+				addProperty(prop);
 			}
-			
+			PropertyEditor ped = m_properties.get(prop);
 			if (ped != null) {
+				
 				ped.setStyle(style);
-				add(ped.getComponent());
+				
+				c.gridx = x;
+				c.gridy = y;
+				add(ped.getLabel(), c);
+				c.gridx = x+1;
+				c.gridy = y;
+				add(ped.getComponent(), c);
+				y++;
 			}
 		}
 	}
 	
-	private void addColorProperty(StyleProperty property) {
-		PropertyEditor ped = new ColorPropertyButton(styleManager, property, parent);
+	private PropertyEditor addProperty(StyleProperty property) {
+		PropertyEditor ped = null;
+		Class cl = property.getPropertyClass();
+		if (cl == Color.class) {
+			ped = new ColorPropertyButton(styleManager, property, gui);
+		} else if (cl == Enum.class) {
+			ped = new PropertyEditor<Component>(styleManager, property, gui, new JLabel("TODO"));
+		}
 		m_properties.put(property, ped);
+		return ped;
 	}
 }
 
-interface PropertyEditor {
-	Component getComponent();
-	StyleProperty getProperty();
-	void setStyle(Style style);
-}
+class PropertyEditor<C extends Component> {
 
-class ColorPropertyButton extends JButton implements ActionListener, PropertyEditor {
+	protected final StyleProperty property;
+	protected final StyleManager styleManager;
+	protected final GraphGUI gui;
 	
-	private final StyleProperty property;
-	private final StyleManager styleManager;
-	private final Frame parent;
-	
-	private Style style = null;
-	private Color currentColor = Color.white;
-	
-	public ColorPropertyButton(StyleManager styleManager, StyleProperty property, Frame parent) {
+	private final JLabel label;
+
+	protected final C component;
+
+	protected Style style = null;
+
+	public PropertyEditor(StyleManager styleManager, StyleProperty property, GraphGUI gui, C component) {
 		this.property = property;
 		this.styleManager = styleManager;
-		this.parent = parent;
-		this.addActionListener(this);
+		this.gui = gui;
+		this.label = new JLabel(property.name);
+		this.component = component;
 	}
 
-	@Override
+	public Component getLabel() {
+		return label;
+	}
+
+	public Component getComponent() {
+		return component;
+	}
+
+	public StyleProperty getProperty() {
+		return property;
+	}
+
 	public void setStyle(Style style) {
 		this.style = style;
 		update();
 	}
 	
+	protected void update() {
+	}
+	
+}
+
+class ColorPropertyButton extends PropertyEditor<JButton> implements ActionListener {
+	
+	private Color currentColor = Color.white;
+	
+	public ColorPropertyButton(StyleManager styleManager, StyleProperty property, GraphGUI gui) {
+		super(styleManager, property, gui, new JButton());
+		this.component.addActionListener(this);
+	}
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (style == null) {
 			return;
 		}
-		Color selected = JColorChooser.showDialog(parent,Translator.getString("choose_color"), currentColor);
+		Color selected = JColorChooser.showDialog(null, Translator.getString("choose_color"), currentColor);
 		if (selected != null) {
 			style.setProperty(property, selected);
+			styleManager.styleUpdated(style);
 		}
 		update();
 	}
 	
-	private void update() {
+	protected void update() {
 		if (style == null) {
 			this.currentColor = null;
-			setText("--");
-			setBackground(currentColor);
+			updateComponent(currentColor, "-----");
 		} else {
 			this.currentColor = (Color)style.getProperty(property);
 			if (currentColor == null) {
-				setText("UNDEFINED");
-				setBackground(Color.WHITE);
+				updateComponent(Color.WHITE, "UNDEFINED");
 			} else {
-				setText(property.getString( style.getProperty(property) ));
-				setBackground(currentColor);
+				updateComponent(currentColor, property.getString( style.getProperty(property) ));
 			}
 		}
 	}
 	
-	@Override
-	public void setBackground(Color c) {
-		super.setBackground(c);
+	public void updateComponent(Color c, String text) {
+		component.setBackground(c);
+		component.setText(text);
 		
 		int r = c.getRed();
 		int g = c.getGreen();
@@ -143,19 +183,33 @@ class ColorPropertyButton extends JButton implements ActionListener, PropertyEdi
 		brightness = math.sqrt(brightness);
 		
 		if (brightness > 200) {
-			setForeground(Color.BLACK);
+			component.setForeground(Color.BLACK);
 		} else {
-			setForeground(Color.WHITE);
+			component.setForeground(Color.WHITE);
 		}
 	}
+}
 
-	@Override
-	public Component getComponent() {
-		return this;
+class EnumPropertyBox extends PropertyEditor<JComboBox> implements ActionListener {
+	
+	
+	public EnumPropertyBox(StyleManager styleManager, StyleProperty property, GraphGUI gui) {
+		super(styleManager, property, gui, new JComboBox());
 	}
 
 	@Override
-	public StyleProperty getProperty() {
-		return property;
+	public void actionPerformed(ActionEvent e) {
+		if (style == null) {
+			return;
+		}
+		// TODO ??
+		update();
+	}
+	
+	protected void update() {
+		if (style == null) {
+		} else {
+			// TODO
+		}
 	}
 }

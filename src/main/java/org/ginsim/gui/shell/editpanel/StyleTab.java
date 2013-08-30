@@ -1,25 +1,24 @@
 package org.ginsim.gui.shell.editpanel;
 
 import java.awt.Component;
-import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
-import javax.swing.event.ListDataListener;
 
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.NodeStyle;
 import org.ginsim.core.graph.view.style.Style;
 import org.ginsim.core.graph.view.style.StyleManager;
-import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
 
@@ -27,24 +26,54 @@ public class StyleTab extends JPanel implements EditTab {
 
     protected final Graph<?,?> graph;
     
+    private final StyleManager manager;
     private final StyleComboModel styleModel;
     
-    private StyleEditionPanel stylePanel;
-    private JComboBox styleSelection;
+    private final StyleEditionPanel stylePanel;
+    private final JComboBox styleSelection;
+    
+    private final JButton newStyleButton;
 	
 	public StyleTab(GraphGUI<?, ?, ?> gui) {
-
+		super(new GridBagLayout());
     	this.graph = gui.getGraph();
     	
-    	StyleManager manager = graph.getStyleManager();
-    	this.stylePanel = new StyleEditionPanel(null, manager);
+    	this.manager = graph.getStyleManager();
+    	this.stylePanel = new StyleEditionPanel(gui, manager);
     	this.styleModel = new StyleComboModel(manager, stylePanel);
     	this.styleSelection = new JComboBox(styleModel);
+    	this.newStyleButton = new JButton("+");
 
-		add(styleSelection);
-		add(stylePanel);
+    	newStyleButton.addActionListener( new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				createStyle();
+			}
+		});
+
+    	GridBagConstraints c = new GridBagConstraints();
+    	c.gridx = 0;
+    	c.gridy = 0;
+    	c.weightx = 1;
+    	c.fill = GridBagConstraints.HORIZONTAL;
+		add(styleSelection, c);
+		
+		c.gridx = 1;
+		c.weightx = 0;
+		add(newStyleButton, c);
+		c.gridx = 0;
+		c.gridy = 1;
+		c.gridwidth = 2;
+		c.weightx = 1;
+		c.weighty = 1;
+		c.fill = GridBagConstraints.BOTH;
+		add(stylePanel, c);
 	}
 
+	protected void createStyle() {
+		styleModel.createStyle();
+	}
+	
 	@Override
 	public final Component getComponent() {
 		return this;
@@ -97,6 +126,16 @@ class StyleComboModel extends AbstractListModel implements ComboBoxModel {
 		this.editPanel = editPanel;
 	}
 	
+	public void createStyle() {
+		Style newStyle = null;
+		if (selectedNode != null ) {
+			newStyle = styleManager.addNodeStyle();
+		} else if (selectedEdge != null) {
+			newStyle = styleManager.addEdgeStyle();
+		}
+		setSelectedItem(newStyle);
+	}
+
 	public void disableEdit() {
 		this.selectedEdge = null;
 		this.selectedNode = null;

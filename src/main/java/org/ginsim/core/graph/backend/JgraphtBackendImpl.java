@@ -169,9 +169,16 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	}
 
 	@Override
-	public void damage(Object o) {
+	public void damage(Object o) {	
 		if (viewListener != null) {
 			viewListener.refresh(o);
+		}
+	}
+
+	@Override
+	public void styleUpdated() {
+		if (viewListener != null) {
+			viewListener.refresh(null);
 		}
 	}
 	
@@ -205,4 +212,5 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	public EdgeStyle<V, E> getDefaultEdgeStyle() {
 		return defaultEdgeStyle;
 	}
+
 }

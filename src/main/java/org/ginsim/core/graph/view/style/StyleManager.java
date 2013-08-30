@@ -302,6 +302,7 @@ public class StyleManager<V, E extends Edge<V>> {
 		if (style == null) {
 			style = defaultNodeStyle;
 		}
+		backend.damage(node);
 		backend.getNodeViewInfo(node).setStyle(style);
 		backend.damage(node);
 	}
@@ -317,5 +318,9 @@ public class StyleManager<V, E extends Edge<V>> {
 			backend.ensureEdgeViewInfo(edge).setStyle(style);
 		}
 		backend.damage(edge);
+	}
+
+	public void styleUpdated(Style style) {
+		backend.styleUpdated();
 	}
 }

@@ -53,6 +53,8 @@ abstract public class StyleProperty {
 	}
 	
 	abstract public Object getValue(String s);
+
+	abstract public Class getPropertyClass();
 	
 	public String getString(Object value) {
 		return value.toString();
@@ -81,6 +83,10 @@ class ColorProperty extends StyleProperty {
 		}
 		return null;
 	}
+	@Override
+	public Class getPropertyClass() {
+		return Color.class;
+	}
 }
 
 class EnumProperty extends StyleProperty {
@@ -99,5 +105,9 @@ class EnumProperty extends StyleProperty {
 		} catch (Exception e) {
 			return fallback;
 		}
+	}
+	@Override
+	public Class getPropertyClass() {
+		return Enum.class;
 	}
 }
