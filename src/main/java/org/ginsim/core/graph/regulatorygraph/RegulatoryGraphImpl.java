@@ -33,6 +33,7 @@ import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.css.CSSFilesAssociatedManager;
 import org.ginsim.core.graph.view.style.EdgeStyle;
+import org.ginsim.core.io.parser.GINMLWriter;
 import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.NotificationResolution;
@@ -165,14 +166,9 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 		return GRAPH_ZIP_NAME;
 	}
     
-	@Override
-    protected void doSave( OutputStreamWriter os, Collection<RegulatoryNode> vertices, Collection<RegulatoryMultiEdge> edges) throws GsException {
-    	try {
-    		RegulatoryGINMLWriter writer = new RegulatoryGINMLWriter(this);
-    		writer.write(os, vertices, edges);
-        } catch (IOException e) {
-            throw new GsException( "STR_unableToSave", e);
-        }
+    @Override
+	protected GINMLWriter getGINMLWriter() {
+    	return new RegulatoryGINMLWriter(this);
     }
 
     @Override

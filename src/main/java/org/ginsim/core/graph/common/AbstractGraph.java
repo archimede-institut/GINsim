@@ -26,6 +26,7 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.backend.JgraphtBackendImpl;
+import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalGINMLWriter;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -35,6 +36,7 @@ import org.ginsim.core.graph.view.style.EdgeStyleImpl;
 import org.ginsim.core.graph.view.style.NodeStyle;
 import org.ginsim.core.graph.view.style.NodeStyleImpl;
 import org.ginsim.core.graph.view.style.StyleManager;
+import org.ginsim.core.io.parser.GINMLWriter;
 import org.xml.sax.Attributes;
 
 /**
@@ -659,8 +661,21 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * @param edges		edges that should be saved (can not be null)
 	 * @param saveMode	save mode, will probably go away
 	 */
-	protected abstract void doSave(OutputStreamWriter osw, Collection<V> vertices, Collection<E> edges) throws GsException;
-   
+	protected final void doSave(OutputStreamWriter osw, Collection<V> nodes, Collection<E> edges) throws GsException {
+		GINMLWriter writer = getGINMLWriter();
+		if (writer == null) {
+			throw new GsException(GsException.GRAVITY_ERROR, "Can not save this graph type");
+		}
+		try {
+			writer.write(osw, nodes, edges);
+		} catch (IOException e) {
+            throw new GsException( "STR_unableToSave", e);
+        }
+	}
+
+	protected GINMLWriter getGINMLWriter() {
+		return null;
+	}
 
 	protected void saveStyles(XMLWriter out) throws IOException {
 		styleManager.styles2ginml(out);

@@ -28,6 +28,7 @@ import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.style.NodeStyle;
+import org.ginsim.core.io.parser.GINMLWriter;
 import org.ginsim.core.io.parser.GinmlHelper;
 
 /**
@@ -157,101 +158,12 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	 */
 	@Override
 	protected String getGraphZipName(){
-		
 		return GRAPH_ZIP_NAME;
-		
 	}
-
-	@Override
-	protected void doSave(OutputStreamWriter os, Collection<DynamicNode> nodes, Collection<Edge<DynamicNode>> edges) throws GsException {
-        try {
-            XMLWriter out = new XMLWriter(os, GinmlHelper.DEFAULT_URL_DTD_FILE);
-	  		out.write("<gxl xmlns:xlink=\"http://www.w3.org/1999/xlink\">\n");
-			out.write("\t<graph id=\"" + graphName + "\"");
-			out.write(" class=\"dynamical\"");
-			out.write(" nodeorder=\"" + stringNodeOrder() +"\"");
-			out.write(">\n");
-			saveStyles(out);
-			saveNodes(out, nodes);
-			saveEdges(out, edges);
-            if (graphAnnotation != null) {
-                graphAnnotation.toXML(out);
-            }
-            // save the ref of the associated regulatory graph!
-            if (associatedGraph != null) {
-                associatedID = GraphManager.getInstance().getGraphPath( associatedGraph);
-            }
-            if (associatedID != null) {
-                out.write("<link xlink:href=\""+associatedID+"\"/>\n");
-            }
-
-	  		out.write("\t</graph>\n");
-	  		out.write("</gxl>\n");
-        } catch (IOException e) {
-            throw new GsException( "STR_unableToSave", e);
-        }
-	}
-
 	
-	
-	private String stringNodeOrder() {
-		String s = "";
-		for (int i=0 ; i<nodeOrder.size() ; i++) {
-			s += nodeOrder.get(i)+" ";
-		}
-		if (s.length() > 0) {
-			return s.substring(0, s.length()-1);
-		}
-		return s;
-	}
-
-    /**
-     * @param out
-     * @param mode
-     * @param selectedOnly
-     * @throws IOException
-     */
-    private void saveEdges(XMLWriter out, Collection<Edge<DynamicNode>> edges) throws IOException {
-        if (edges == null) {
-        	edges = getEdges();
-        }
-
-        EdgeAttributesReader eReader = getCachedEdgeAttributeReader();
-        NodeAttributesReader nReader = getCachedNodeAttributeReader();
-        
-        for (Edge<DynamicNode> edge: edges) {
-            String source = edge.getSource().toString();
-            String target = edge.getTarget().toString();
-            out.openTag("edge");
-            out.addAttr("id", "s"+ source +"_s"+target);
-            out.addAttr("from", "s"+ source);
-            out.addAttr("to", "s"+target);
-            
-    	    eReader.setEdge(edge);
-    	    eReader.writeGINML(out);
-            out.closeTag();
-        }
-    }
-
-    /**
-     * @param out
-     * @param mode
-     * @param selectedOnly
-     * @throws IOException
-     */
-    private void saveNodes(XMLWriter out, Collection<DynamicNode> nodes) throws IOException {
-    	if (nodes == null) {
-    		nodes = getNodes();
-    	}
-    	
-    	NodeAttributesReader vReader = getNodeAttributeReader();
-        for (DynamicNode node: nodes) {
-            vReader.setNode(node);
-            out.openTag("node");
-            out.addAttr("id", node.getId());
-            vReader.writeGINML(out);
-            out.closeTag();
-        }
+    @Override
+	protected GINMLWriter getGINMLWriter() {
+    	return new DynamicGINMLWriter(this);
     }
 
 	@Override

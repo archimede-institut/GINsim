@@ -12,6 +12,7 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.common.AbstractDerivedGraph;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.io.parser.GINMLWriter;
 
 
 public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  extends AbstractDerivedGraph<NodeReducedData, Edge<NodeReducedData>, G,V,E>
@@ -86,18 +87,12 @@ public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  exten
      */
     @Override
     protected boolean isAssociationValid( Graph<?, ?> graph) {
-    	
 		return true;
     }
 
     @Override
-	protected void doSave(OutputStreamWriter os, Collection<NodeReducedData> vertices, Collection<Edge<NodeReducedData>> edges) throws GsException {
-    	ReducedGINMLWriter writer = new ReducedGINMLWriter(this);
-        try {
-        	writer.write(os, vertices, edges);
-        } catch (IOException e) {
-            throw new GsException( "STR_unableToSave", e);
-        }
+	protected GINMLWriter getGINMLWriter() {
+    	return new ReducedGINMLWriter(this);
 	}
 	
 	/**

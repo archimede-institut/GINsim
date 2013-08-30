@@ -20,6 +20,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.style.NodeStyle;
+import org.ginsim.core.io.parser.GINMLWriter;
 
 
 public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<HierarchicalNode, DecisionOnEdge, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
@@ -147,26 +148,14 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 		
 /* **************** SAVE ************/	
 		
-	/**
-	 * Return the zip extension for the graph type
-	 * 
-	 * @return the zip extension for the graph type
-	 */
 	@Override
 	public String getGraphZipName(){
-		
 		return GRAPH_ZIP_NAME;
-		
 	}
 
-	
-	protected void doSave(OutputStreamWriter os, Collection<HierarchicalNode> nodes, Collection<DecisionOnEdge> edges) throws GsException {
-		try {
-			HierarchicalGINMLWriter writer = new HierarchicalGINMLWriter(this, transientCompaction, stringNodeOrder());
-			writer.write(os, nodes, edges);
-		} catch (IOException e) {
-            throw new GsException( "STR_unableToSave", e);
-        }
+	@Override
+	protected GINMLWriter getGINMLWriter() {
+		return new HierarchicalGINMLWriter(this, transientCompaction, stringNodeOrder());
 	}
 		
 /* **************** NODE SEARCH ************/

@@ -148,7 +148,9 @@ public final class DynamicParser extends GsXMLHelper {
         
         switch(pos) {
         	case POS_OUT:
-                if (qName.equals("node")) {
+        		if (qName.equals("nodestyle") || qName.equals("edgestyle")) {
+                	styleManager.parseStyle(qName, attributes);
+        		} else if (qName.equals("node")) {
                     String id = attributes.getValue("id");
                     if (set == null || set.contains(id.substring(1))) {
 	                    pos = POS_VERTEX;
@@ -211,15 +213,19 @@ public final class DynamicParser extends GsXMLHelper {
 
             case POS_VERTEX:
                 if (vareader != null && qName.equals("nodevisualsetting")) {
-                	pos = POS_VERTEX_VS;
                 	vareader.setNode(vertex);
+                	if (GinmlHelper.loadNodeStyle(styleManager, vareader, attributes)) {
+                		pos = POS_VERTEX_VS;
+            		}
                 }
                 break; // POS_VERTEX
                 
             case POS_EDGE:
                 if (ereader != null && qName.equals("edgevisualsetting")) {
-                	pos = POS_EDGE_VS;
                     ereader.setEdge(edge);
+                	if (GinmlHelper.loadEdgeStyle(styleManager, ereader, attributes)) {
+                		pos = POS_EDGE_VS;
+                	}
                 }
                 break; // POS_EDGE
                 

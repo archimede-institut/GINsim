@@ -119,11 +119,6 @@ public class TreeImpl  extends AbstractGraph<TreeNode, TreeEdge>
 	}
 
 	@Override
-	public void doSave(OutputStreamWriter osw, Collection<TreeNode> vertices,
-			Collection<TreeEdge> edges) {
-	}
-
-	@Override
 	protected List<?> doMerge(Graph<TreeNode, TreeEdge> graph) {
 		return null;
 	}

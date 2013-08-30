@@ -13,6 +13,8 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor( GraphFactory.class)
 public class DynamicGraphFactory implements GraphFactory<DynamicGraph> {
 
+	public static final String KEY = "dynamical";
+	
     private static DynamicGraphFactory instance = null;
 	
     public DynamicGraphFactory(){
@@ -42,7 +44,7 @@ public class DynamicGraphFactory implements GraphFactory<DynamicGraph> {
     @Override
 	public String getGraphType() {
 		
-		return "dynamical";
+		return KEY;
 	}
 	
     @Override

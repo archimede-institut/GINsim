@@ -6,7 +6,13 @@ import org.ginsim.core.graph.view.style.NodeStyleImpl;
 public class DefaultDynamicNodeStyle extends NodeStyleImpl<DynamicNode> {
 
 	public DefaultDynamicNodeStyle(DynamicGraph graph) {
-		setDimension(5+10*graph.getNodeOrderSize(), 25);
+		int w = 5+10*graph.getNodeOrderSize();
+		if (w < 30) {
+			w = 30;
+		} else if (w > 500) {
+			w = 500;
+		}
+		setDimension(w, 25);
 	}
 
 	@Override
