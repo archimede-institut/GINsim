@@ -173,7 +173,9 @@ public class ReducedGraphParser extends GsXMLHelper {
         
         switch(pos) {
         	case POS_OUT:
-                if (qName.equals("node")) {
+        		if (qName.equals("nodestyle") || qName.equals("edgestyle")) {
+                	styleManager.parseStyle(qName, attributes);
+        		} else if (qName.equals("node")) {
                     String id = attributes.getValue("id");
                     if (set == null || set.contains(id)) {
                         pos = POS_VERTEX;
@@ -222,8 +224,10 @@ public class ReducedGraphParser extends GsXMLHelper {
                 if (qName.equals("attr") && "content".equals(attributes.getValue("name"))) {
                     pos = POS_VERTEX_CONTENT;
                 } else if (vareader != null && qName.equals("nodevisualsetting")) {
-                    pos = POS_VERTEX_VS;
-                    vareader.setNode(vertex);
+                	vareader.setNode(vertex);
+                	if (GinmlHelper.loadNodeStyle(styleManager, vareader, attributes)) {
+                		pos = POS_VERTEX_VS;
+            		}
                 }
                 break; // POS_VERTEX
 
@@ -236,7 +240,10 @@ public class ReducedGraphParser extends GsXMLHelper {
                 
             case POS_EDGE:
                 if (qName.equals("edgevisualsetting")) {
-                	pos = POS_EDGE_VS;
+                    ereader.setEdge(edge);
+                	if (GinmlHelper.loadEdgeStyle(styleManager, ereader, attributes)) {
+                		pos = POS_EDGE_VS;
+                	}
                 }
                 break; // POS_EDGE
                 
