@@ -366,9 +366,8 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
                 + (isOutput() ? "(output)" : "");
 	}
 
-	public void toXML(XMLWriter out, NodeAttributesReader<RegulatoryNode> vReader) throws IOException {
+	public void toXML(XMLWriter out) throws IOException {
 
-			out.openTag("node");
 	    	out.addAttr("id", getId());
 			if (name.length()>0) {
 			    out.addAttr("name", name);
@@ -389,11 +388,6 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 		    // save logical function
 		 	saveInteractionsModel(out);
 		 	gsa.toXML(out);
-
-			if (vReader != null) {
-				vReader.writeGINML(out);
-			}
-			out.closeTag();
 	}
 
 	/**

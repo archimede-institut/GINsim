@@ -47,7 +47,7 @@ copyright by
 <!ENTITY % gxl-extension "">
 <!ENTITY % graph-extension ", annotation?, link?">
 <!ENTITY % node-extension ",parameter*,value*,annotation?,nodevisualsetting?">
-<!ENTITY % edge-extension ",subedge?,annotation?,edgevisualsetting?">
+<!ENTITY % edge-extension ",annotation?,edgevisualsetting?">
 <!ENTITY % rel-extension "">
 <!ENTITY % value-extension "">
 <!ENTITY % relend-extension "">
@@ -55,7 +55,7 @@ copyright by
 <!ENTITY % graph-attr-extension "class (regulatory|dynamical|cellular|reduced|hierarchical) 'regulatory'
                                                               nodeorder NMTOKENS #IMPLIED">
 <!ENTITY % node-attr-extension "name CDATA #IMPLIED basevalue CDATA '0' maxvalue CDATA '1'">
-<!ENTITY % edge-attr-extension "sign (positive|negative|unknown|dual) 'positive' minvalue CDATA '1' maxvalue CDATA #IMPLIED">
+<!ENTITY % edge-attr-extension "effects CDATA #IMPLIED sign (positive|negative|unknown|dual) 'positive' minvalue CDATA '1'">
 <!ENTITY % rel-attr-extension "">
 <!ENTITY % relend-attr-extension "">
 
@@ -148,7 +148,7 @@ copyright by
 <!-- parameter -->
 <!ELEMENT parameter EMPTY>
 <!ATTLIST parameter 
-    	idActiveInteractions  IDREFS  #IMPLIED
+    	idActiveInteractions  CDATA  #IMPLIED
 	val CDATA "0"
 >
 
@@ -169,12 +169,6 @@ copyright by
 <!ELEMENT link EMPTY> 
 <!ATTLIST link  
     xlink:href CDATA #REQUIRED 
-> 
-
-<!-- Sub-edge --> 
-<!ELEMENT subedge EMPTY> 
-<!ATTLIST subedge  
- %edge-attr-extension;
 > 
 
 <!-- attr -->

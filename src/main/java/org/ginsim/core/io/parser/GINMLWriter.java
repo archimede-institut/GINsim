@@ -165,4 +165,16 @@ public class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 		out.addAttr("from", source.toString());
 		out.addAttr("to", target.toString());
 	}
+	
+	protected String stringNodeOrder(Collection nodeOrder) {
+		String s = "";
+		for (Object o: nodeOrder) {
+			s += o+" ";
+		}
+		if (s.length() > 0) {
+			return s.substring(0, s.length()-1);
+		}
+		return s.trim();
+	}
+
 }

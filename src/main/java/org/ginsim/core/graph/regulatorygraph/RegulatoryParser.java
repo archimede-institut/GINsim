@@ -62,7 +62,7 @@ public final class RegulatoryParser extends GsXMLHelper {
     private StyleManager<RegulatoryNode, RegulatoryMultiEdge> styleManager;
     private RegulatoryEdge edge = null;
     private Annotation annotation = null;
-    private Map m_edges = new HashMap();
+    private Map<String, RegulatoryEdge> m_edges = new HashMap();
     private Vector v_waitingInteractions = new Vector();
     private String s_nodeOrder;
     private Set set;
@@ -265,11 +265,20 @@ public final class RegulatoryParser extends GsXMLHelper {
                         pos = POS_EDGE;
                         try {
                             String id = attributes.getValue("id");
-                            byte minvalue = (byte)Integer.parseInt(getAttributeValueWithDefault(attributes,"minvalue", "1"));
-                            String smax = getAttributeValueWithDefault(attributes,"maxvalue", "-1");
-                            byte maxvalue = -2;
-                            String sign = attributes.getValue("sign");
-                            try{
+                            String effects = attributes.getValue("effects");
+                            if (effects != null) {
+                            	String[] teffects = effects.split(" ");
+                            	for (String s: teffects) {
+                            		String[] t = s.split(":");
+    	                            byte minvalue = (byte)Integer.parseInt(t[0]);
+                            		edge = graph.addNewEdge(from, to, minvalue, t[1]);
+    	                            m_edges.put(id+":"+minvalue, edge);
+                            	}
+                            } else {
+	                            byte minvalue = (byte)Integer.parseInt(getAttributeValueWithDefault(attributes,"minvalue", "1"));
+	                            String smax = getAttributeValueWithDefault(attributes,"maxvalue", "-1");
+	                            byte maxvalue = -2;
+	                            String sign = attributes.getValue("sign");
 	                            edge = graph.addNewEdge(from, to, minvalue, sign);
 	                            if (smax.startsWith("m")) {
 	                            	maxvalue = -1;
@@ -281,11 +290,7 @@ public final class RegulatoryParser extends GsXMLHelper {
 	                            edge.me.rescanSign(graph);
 	                            ereader.setEdge(edge.me);
                             }
-                            catch (GsException e) {
-								LogManager.error( "Unable to create edge between nodes '" + from + "' and '" + to + "' : One of the node was not found in the graph");
-								LogManager.error( e);
-							}
-                        } catch (NumberFormatException e) { 
+                        } catch (Exception e) { 
                         	throw new SAXException( new GsException( "STR_LRG_MalformedInteractionParameters", e)); 
                         }
                     } else {

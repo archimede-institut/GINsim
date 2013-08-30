@@ -30,6 +30,7 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements ToolTip
     public RegulatoryMultiEdge(RegulatoryGraph g, RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign param) {
     	this(g, source, target, param, (byte)1);
     }
+
     public RegulatoryMultiEdge(RegulatoryGraph g, RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign param, byte threshold) {
     	super(g, source, target);
     	source.setOutput(false, g);
@@ -137,41 +138,30 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements ToolTip
         return source+"_"+index;
     }
 
-    /**
-     * @param index
-     * @return the full id of the given sub edge.
-     */
-    public String getFullId(int index) {
-        return source+"_"+target+"_"+index;
-    }
+    public void toXML(XMLWriter out) throws IOException {
 
-    public void toXML(XMLWriter out, EdgeAttributesReader<RegulatoryNode, RegulatoryMultiEdge> ereader) throws IOException {
-        for (int i=0 ; i<edgecount ; i++) {
-            RegulatoryEdge edge = edges[i];
-
-            int max = i<edgecount-1 ? edges[i+1].threshold-1 : -1;
-            out.openTag("edge");
-            out.addAttr("id", edge.getLongInfo(":"));
-            out.addAttr("from", ""+source.toString());
-            out.addAttr("to", target.toString());
+    	out.addAttr("id", source+":"+target);
+        out.addAttr("from", source.toString());
+        out.addAttr("to", target.toString());
+        
+        if (edgecount == 1) {
+        	RegulatoryEdge edge = edges[0];
             out.addAttr("minvalue", ""+edge.threshold);
-            if (max != -1) {
-                out.addAttr("maxvalue", ""+max);
-            }
             out.addAttr("sign", edge.getSign().getLongDesc());
-
-            if (i == 0) {
-            	annotation.toXML(out);
-                ereader.writeGINML(out);
+        	
+        } else {
+            String s = "";
+            for (int i=0 ; i<edgecount ; i++) {
+            	RegulatoryEdge edge = edges[i];
+            	s += edge.threshold+":"+edge.getSign().getLongDesc()+" ";
             }
-            
-            out.closeTag();
+            out.addAttr("effects", s.trim());
         }
+
+    	annotation.toXML(out);
     }
 
-	/**
-	 * @see org.ginsim.common.utils.ToolTipsable#toToolTip()
-	 */
+    @Override
 	public String toToolTip() {
 		return ""+source+" -> "+target+ (edgecount > 1 ? " ; "+edgecount : "");
 	}

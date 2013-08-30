@@ -168,61 +168,10 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 	@Override
     protected void doSave( OutputStreamWriter os, Collection<RegulatoryNode> vertices, Collection<RegulatoryMultiEdge> edges) throws GsException {
     	try {
-            XMLWriter out = new XMLWriter(os, GinmlHelper.DEFAULT_URL_DTD_FILE);
-	  		out.openTag("gxl");
-	  		out.addAttr("xmlns:xlink", "http://www.w3.org/1999/xlink");
-	  		out.openTag("graph");
-	  		out.addAttr("id", getGraphName());
-	  		out.addAttr("class", "regulatory");
-	  		out.addAttr("nodeorder", stringNodeOrder());
-
-	  		saveStyles(out);
-			saveNodes(out, vertices);
-			saveEdges(out, edges);
-            if (graphAnnotation != null) {
-            	graphAnnotation.toXML(out);
-            }
-	  		out.closeTag();
-	  		out.closeTag();
+    		RegulatoryGINMLWriter writer = new RegulatoryGINMLWriter(this);
+    		writer.write(os, vertices, edges);
         } catch (IOException e) {
             throw new GsException( "STR_unableToSave", e);
-        }
-    }
-
-    /**
-     * @param out
-     * @param mode
-     * @param selectedOnly
-     * @throws IOException
-     */
-    private void saveEdges(XMLWriter out, Collection<RegulatoryMultiEdge> edges) throws IOException {
-    	
-        Iterator<RegulatoryMultiEdge> it = edges.iterator();
-
-	    EdgeAttributesReader ereader = getCachedEdgeAttributeReader();
-	    NodeAttributesReader nreader = getCachedNodeAttributeReader();
-        while (it.hasNext()) {
-        	RegulatoryMultiEdge edge = it.next();
-            ereader.setEdge(edge);
-            edge.toXML(out, ereader);
-        }
-    }
-
-    /**
-     * @param out
-     * @param mode
-     * @param selectedOnly
-     * @throws IOException
-     */
-    private void saveNodes(XMLWriter out, Collection<RegulatoryNode> vertices) throws IOException {
-    	
-    	Iterator<RegulatoryNode> it = vertices.iterator();
-    	
-		NodeAttributesReader<RegulatoryNode> vReader = getNodeAttributeReader(); 
-    	
-        for (RegulatoryNode vertex: vertices) {
-            vReader.setNode(vertex);
-            vertex.toXML(out, vReader);
         }
     }
 
