@@ -72,14 +72,8 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 		return null;
 	}
 
-	@Override
-	protected NodeStyle<HierarchicalNode> createDefaultNodeStyle() {
-		return new DefaultHTGNodeStyle(this);
-	}
-
 	public HierarchicalTransitionGraphImpl( boolean parsing) {
-		
-        super(HierarchicalTransitionGraphFactory.getInstance().getGraphType(), parsing);
+        super(HierarchicalTransitionGraphFactory.getInstance(), parsing);
 	}
 
 	/**

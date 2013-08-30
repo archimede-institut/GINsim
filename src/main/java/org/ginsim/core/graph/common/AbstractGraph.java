@@ -26,18 +26,12 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.backend.JgraphtBackendImpl;
-import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalGINMLWriter;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.graph.view.style.EdgeStyle;
-import org.ginsim.core.graph.view.style.EdgeStyleImpl;
-import org.ginsim.core.graph.view.style.NodeStyle;
-import org.ginsim.core.graph.view.style.NodeStyleImpl;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.io.parser.GINMLWriter;
-import org.xml.sax.Attributes;
 
 /**
  * Base class for graphs using a storage backend: it provides generic methods and storage abstraction.
@@ -51,6 +45,9 @@ import org.xml.sax.Attributes;
  * @param <E>
  */
 abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>, GraphViewListener {
+	
+    private static final List<GraphAssociatedObjectManager> v_OManager = new ArrayList<GraphAssociatedObjectManager>();
+    public static final String ZIP_PREFIX = "GINsim-data/";
 	
 	private final GraphBackend<V,E> graphBackend;
 	
@@ -73,37 +70,25 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     private boolean isParsing = false;
     protected boolean annoted = false;
     
-    private static final List<GraphAssociatedObjectManager> v_OManager = new ArrayList<GraphAssociatedObjectManager>();
-    public static final String ZIP_PREFIX = "GINsim-data/";
-	
-    private String graphType;
+    private final String graphType;
     
 	/**
 	 * Create a new graph with the default back-end.
 	 */
-	public AbstractGraph(String graphType) {
-		this( graphType, false);
+	protected AbstractGraph(GraphFactory factory) {
+		this( factory, false);
 	}
 	
     /**
      *
      * @param parsing
      */
-    public AbstractGraph(String graphType, boolean parsing) {
-        this( graphType, (GraphBackend<V, E>)JgraphtBackendImpl.getGraphBackend(), parsing);
-    }
-
-	
-	/**
-	 * Create a new graph with a back-end of choice.
-	 * @param backend
-	 */
-	private AbstractGraph(String graphType, GraphBackend<V, E> backend, boolean parsing) {
-		this.graphType = graphType;
-		this.graphBackend = backend;
+    protected AbstractGraph(GraphFactory factory, boolean parsing) {
+    	this.graphBackend = (GraphBackend<V, E>)JgraphtBackendImpl.getGraphBackend(this, factory);
+		this.graphType = factory.getGraphType();
         this.isParsing = parsing;
-        this.styleManager = new StyleManager<V, E>(createDefaultNodeStyle(), createDefaultEdgeStyle());
-		backend.setViewListener(this);
+        this.styleManager = new StyleManager<V, E>(graphBackend);
+        graphBackend.setViewListener(this);
 	}
 	
 	
@@ -399,14 +384,6 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	@Override
 	public NodeAttributesReader getNodeAttributeReader() {
 		return new NodeAttributeReaderImpl(styleManager, graphBackend);
-	}
-	
-	protected EdgeStyle<V, E> createDefaultEdgeStyle() {
-		return new EdgeStyleImpl<V,E>();
-	}
-	
-	protected NodeStyle<V> createDefaultNodeStyle() {
-		return new NodeStyleImpl<V>();
 	}
 	
 	protected EdgeAttributesReader getCachedEdgeAttributeReader() {

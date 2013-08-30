@@ -1,24 +1,24 @@
 package org.ginsim.core.graph.reducedgraph;
 
+import org.ginsim.core.graph.common.AbstractGraphFactory;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphFactory;
 import org.mangosdk.spi.ProviderFor;
 
 
-
 /**
  * descriptor for regulatoryGraph.
  */
 @ProviderFor( GraphFactory.class)
-public class ReducedGraphFactory<G extends Graph<V,E>, V, E extends Edge<V>> implements GraphFactory<ReducedGraph<G,V,E>> {
+public class ReducedGraphFactory<G extends Graph<V,E>, V, E extends Edge<V>> extends AbstractGraphFactory<ReducedGraph<G,V,E>> {
 
 	public static final String KEY = "reduced";
     private static ReducedGraphFactory<?,?,?> instance = null;
     
     public ReducedGraphFactory() {
-    	
-    	if( instance == null){
+    	super(ReducedGraph.class, KEY);
+    	if (instance == null) {
     		instance = this;
     	}
     }
@@ -34,16 +34,10 @@ public class ReducedGraphFactory<G extends Graph<V,E>, V, E extends Edge<V>> imp
     }
     
     @Override
-    public String getGraphType() {
-        return KEY;
-    }
-    
-    @Override
 	public Class<ReducedGraph<G,V,E>> getGraphClass(){
     	Class<? extends ReducedGraph> cl = ReducedGraph.class;
 		return (Class<ReducedGraph<G, V, E>>)cl;
 	}
-    
     
     @Override
     public Class<ReducedGraphParser> getParser() {
@@ -56,7 +50,6 @@ public class ReducedGraphFactory<G extends Graph<V,E>, V, E extends Edge<V>> imp
         return graph;
     }
     
-
     public ReducedGraph create( boolean bool){
     	
     	return new ReducedGraphImpl( bool);
@@ -68,6 +61,5 @@ public class ReducedGraphFactory<G extends Graph<V,E>, V, E extends Edge<V>> imp
     	return new ReducedGraphImpl( graph);
     }
     
-
 
 }

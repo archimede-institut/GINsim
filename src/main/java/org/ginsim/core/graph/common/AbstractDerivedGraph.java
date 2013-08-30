@@ -15,9 +15,8 @@ abstract public class AbstractDerivedGraph<V, E extends Edge<V>, AG extends Grap
     protected String associatedID = null;
 
     
-    public AbstractDerivedGraph( String graphType, boolean parsing) {
-    	
-    	super(graphType, parsing);
+    public AbstractDerivedGraph( GraphFactory factory, boolean parsing) {
+    	super(factory, parsing);
     }
     
     

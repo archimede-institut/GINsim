@@ -16,8 +16,6 @@ import org.ginsim.core.graph.view.style.NodeStyle;
 public class TreeImpl  extends AbstractGraph<TreeNode, TreeEdge> 
 	implements Tree{
 	
-	private static final String GRAPHTYPE = "tree";
-	
 	public final static int MODE_DIAGRAM_WITH_MULTIPLE_LEAFS = 0;
 	public final static int MODE_DIAGRAM = 1;
 	public final static int MODE_TREE = 2;
@@ -48,7 +46,7 @@ public class TreeImpl  extends AbstractGraph<TreeNode, TreeEdge>
 	 * @param parser the parser that will fill the tree.
 	 */
 	public TreeImpl(TreeBuilder parser) {
-		super(GRAPHTYPE);
+		super( TreeFactory.getInstance());
 		this.parser = parser;
 		parser.setTree(this);
 	}
@@ -128,15 +126,4 @@ public class TreeImpl  extends AbstractGraph<TreeNode, TreeEdge>
 			Collection<TreeNode> vertex, Collection<TreeEdge> edges) {
 		return null;
 	}
-
-	@Override
-	protected NodeStyle<TreeNode> createDefaultNodeStyle() {
-		return new DefaultTreeNodeStyle();
-	}
-
-	@Override
-	protected EdgeStyle<TreeNode, TreeEdge> createDefaultEdgeStyle() {
-		return new DefaultTreeEdgeStyle();
-	}
-
 }

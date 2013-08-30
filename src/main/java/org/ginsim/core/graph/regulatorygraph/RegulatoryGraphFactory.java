@@ -1,6 +1,8 @@
 package org.ginsim.core.graph.regulatorygraph;
 
+import org.ginsim.core.graph.common.AbstractGraphFactory;
 import org.ginsim.core.graph.common.GraphFactory;
+import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.mangosdk.spi.ProviderFor;
 
 
@@ -8,12 +10,13 @@ import org.mangosdk.spi.ProviderFor;
  * Factory for regulatory graphs.
  */
 @ProviderFor( GraphFactory.class)
-public class RegulatoryGraphFactory implements GraphFactory<RegulatoryGraph> {
+public class RegulatoryGraphFactory extends AbstractGraphFactory<RegulatoryGraph> {
 
 	public static final String KEY = "regulatory";
     private static RegulatoryGraphFactory instance = null;
     
-    public RegulatoryGraphFactory(){
+    public RegulatoryGraphFactory() {
+    	super(RegulatoryGraph.class, KEY);
     	if( instance == null){
     		instance = this;
     	}
@@ -30,16 +33,6 @@ public class RegulatoryGraphFactory implements GraphFactory<RegulatoryGraph> {
     }
     
 	@Override
-    public String getGraphType() {
-        return KEY;
-    }
-    
-	@Override
-	public Class<RegulatoryGraph> getGraphClass(){
-		return RegulatoryGraph.class;
-	}
-	
-	@Override
     public RegulatoryGraph create() {
     	RegulatoryGraph graph = new RegulatoryGraphImpl();
         return graph;
@@ -54,4 +47,10 @@ public class RegulatoryGraphFactory implements GraphFactory<RegulatoryGraph> {
     public Class getParser() {
     	return RegulatoryParser.class;
     }
+
+	@Override
+	public EdgeStyle<RegulatoryNode, RegulatoryMultiEdge> createDefaultEdgeStyle(RegulatoryGraph graph) {
+		return new DefaultRegulatoryEdgeStyle();
+	}
+
 }

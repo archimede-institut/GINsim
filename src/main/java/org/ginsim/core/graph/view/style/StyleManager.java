@@ -7,11 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.biojava.bio.seq.db.ViewingSequenceDB;
 import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.common.xml.XMLWriter;
+import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.view.EdgePattern;
+import org.ginsim.core.graph.view.EdgeViewInfo;
 import org.ginsim.core.graph.view.NodeShape;
+import org.ginsim.core.graph.view.NodeViewInfo;
 import org.xml.sax.Attributes;
 
 /**
@@ -24,6 +28,8 @@ import org.xml.sax.Attributes;
  */
 public class StyleManager<V, E extends Edge<V>> {
 
+	private final GraphBackend<V, E> backend;
+	
 	private final NodeStyle<V> defaultNodeStyle;
 	private final EdgeStyle<V,E> defaultEdgeStyle;
 
@@ -38,11 +44,15 @@ public class StyleManager<V, E extends Edge<V>> {
 	 * @param nodeStyle
 	 * @param edgeStyle
 	 */
-	public StyleManager(NodeStyle<V> nodeStyle, EdgeStyle<V, E> edgeStyle) {
-		this.defaultNodeStyle = nodeStyle;
-		this.defaultEdgeStyle = edgeStyle;
+	public StyleManager(GraphBackend<V,E> backend) {
+		this.backend = backend;
+		this.defaultNodeStyle = backend.getDefaultNodeStyle();
 		this.nodeStyles = new ArrayList<NodeStyle<V>>();
+		nodeStyles.add(defaultNodeStyle);
+
+		this.defaultEdgeStyle = backend.getDefaultEdgeStyle();
 		this.edgeStyles = new ArrayList<EdgeStyle<V,E>>();
+		edgeStyles.add(defaultEdgeStyle);
 	}
 
 	/**
@@ -258,5 +268,54 @@ public class StyleManager<V, E extends Edge<V>> {
     	style.setPattern(pattern);
     	style.setWidth(width);
 		return style;
+	}
+
+	public List<NodeStyle<V>> getNodeStyles() {
+		return nodeStyles;
+	}
+	public List<EdgeStyle<V,E>> getEdgeStyles() {
+		return edgeStyles;
+	}
+
+	public NodeStyle getUsedNodeStyle(V node) {
+		NodeViewInfo info = backend.getNodeViewInfo(node);
+		NodeStyle<V> style = info.getStyle();
+		if (style == null) {
+			return defaultNodeStyle;
+		}
+		return style;
+	}
+
+	public EdgeStyle getUsedEdgeStyle(E edge) {
+		EdgeViewInfo<V, E> info = backend.getEdgeViewInfo(edge);
+		if (info == null) {
+			return defaultEdgeStyle;
+		}
+		EdgeStyle<V, E> style = info.getStyle();
+		if (style == null) {
+			return defaultEdgeStyle;
+		}
+		return style;
+	}
+
+	public void applyNodeStyle(V node, NodeStyle<V> style) {
+		if (style == null) {
+			style = defaultNodeStyle;
+		}
+		backend.getNodeViewInfo(node).setStyle(style);
+		backend.damage(node);
+	}
+
+	public void applyEdgeStyle(E edge, EdgeStyle<V,E> style) {
+		if (style == null || style == defaultEdgeStyle) {
+			EdgeViewInfo<V, E> info = backend.getEdgeViewInfo(edge);
+			if (info == null) {
+				return;
+			}
+			info.setStyle(defaultEdgeStyle);
+		} else {
+			backend.ensureEdgeViewInfo(edge).setStyle(style);
+		}
+		backend.damage(edge);
 	}
 }

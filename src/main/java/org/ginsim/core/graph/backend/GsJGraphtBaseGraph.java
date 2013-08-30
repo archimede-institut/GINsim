@@ -28,6 +28,8 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
     private Set<V> vertexSet = null;
     private int edgeCount = 0;
     
+    private NodeStyle<V> defaultNodeStyle = null;
+    
     private static final Set emptySet = new HashSet();
     
     @Override
@@ -93,7 +95,7 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
         if (m_vertices.containsKey(v)) {
             return false;
         }
-        m_vertices.put(v, new VInfo<V,E>( v ));
+        m_vertices.put(v, new VInfo<V,E>( v, defaultNodeStyle ));
         return true;
     }
 
@@ -268,11 +270,12 @@ class VInfo<V,E extends Edge<V>> implements NodeViewInfo {
     int y = 0;
     NodeStyle<V> style = null;
     
-    protected VInfo( V o ) {
+    protected VInfo( V o, NodeStyle<V> style ) {
         self = o;
+        this.style = style;
     }
     
-    protected boolean addIncoming(E e ) {
+	protected boolean addIncoming(E e ) {
         if (l_incoming == null) {
             l_incoming = new ArraySet<E>();
             l_incoming.add(e);

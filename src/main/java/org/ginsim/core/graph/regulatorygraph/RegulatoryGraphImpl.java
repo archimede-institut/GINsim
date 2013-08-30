@@ -69,7 +69,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
      * @param parsing
      */
     public RegulatoryGraphImpl( boolean parsing) {
-        super( RegulatoryGraphFactory.getInstance().getGraphType(), parsing);
+        super( RegulatoryGraphFactory.getInstance(), parsing);
     }
     
     @Override
@@ -156,11 +156,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     }
 
     
-	@Override
-	protected EdgeStyle<RegulatoryNode, RegulatoryMultiEdge> createDefaultEdgeStyle() {
-		return new DefaultRegulatoryEdgeStyle();
-	}
-
     @Override
 	protected String getGraphZipName(){
 		return GRAPH_ZIP_NAME;

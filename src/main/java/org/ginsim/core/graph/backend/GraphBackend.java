@@ -7,6 +7,8 @@ import java.util.Set;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.view.EdgeViewInfo;
 import org.ginsim.core.graph.view.NodeViewInfo;
+import org.ginsim.core.graph.view.style.EdgeStyle;
+import org.ginsim.core.graph.view.style.NodeStyle;
 
 public interface GraphBackend<V, E extends Edge<V>> {
 
@@ -165,4 +167,8 @@ public interface GraphBackend<V, E extends Edge<V>> {
 	 * @param o
 	 */
 	void damage(Object o);
+
+
+	NodeStyle<V> getDefaultNodeStyle();
+	EdgeStyle<V,E> getDefaultEdgeStyle();
 }

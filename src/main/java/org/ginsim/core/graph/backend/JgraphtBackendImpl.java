@@ -8,8 +8,12 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphFactory;
 import org.ginsim.core.graph.view.EdgeViewInfo;
 import org.ginsim.core.graph.view.NodeViewInfo;
+import org.ginsim.core.graph.view.style.EdgeStyle;
+import org.ginsim.core.graph.view.style.NodeStyle;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.alg.StrongConnectivityInspector;
 import org.jgrapht.graph.ListenableDirectedGraph;
@@ -17,17 +21,21 @@ import org.jgrapht.graph.ListenableDirectedGraph;
 public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirectedGraph<V, E> implements GraphBackend<V, E> {
 	private static final long serialVersionUID = -7766943723639796018L;
 	
-	public static GraphBackend getGraphBackend() {
+	public static GraphBackend getGraphBackend(Graph graph, GraphFactory factory) {
 		GsJGraphtBaseGraph base = new GsJGraphtBaseGraph();
-		return new JgraphtBackendImpl(base);
+		return new JgraphtBackendImpl(base, graph, factory);
 	}
 	
 	private GsJGraphtBaseGraph<V,E> base;
 	private GraphViewListener viewListener = null;
     private Map<E,EdgeViewInfo<V, E>> evsmap = new HashMap<E, EdgeViewInfo<V,E>>();
+	private final NodeStyle<V> defaultNodeStyle;
+	private final EdgeStyle<V, E> defaultEdgeStyle;
 	
-	private JgraphtBackendImpl(GsJGraphtBaseGraph<V,E> base) {
+	private JgraphtBackendImpl(GsJGraphtBaseGraph<V,E> base, Graph graph, GraphFactory factory) {
 		super(base);
+		this.defaultNodeStyle = factory.createDefaultNodeStyle(graph);
+		this.defaultEdgeStyle = factory.createDefaultEdgeStyle(graph);
 		this.base = base;
 	}
 	
@@ -182,8 +190,19 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 		EdgeViewInfo<V, E> info = evsmap.get(edge);
 		if (info == null) {
 			info = new EdgeViewInfoImpl<V,E>();
+			info.setStyle(defaultEdgeStyle);
 			evsmap.put(edge, info);
 		}
 		return info;
+	}
+
+	@Override
+	public NodeStyle<V> getDefaultNodeStyle() {
+		return defaultNodeStyle;
+	}
+
+	@Override
+	public EdgeStyle<V, E> getDefaultEdgeStyle() {
+		return defaultEdgeStyle;
 	}
 }

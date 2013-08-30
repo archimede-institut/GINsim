@@ -85,8 +85,7 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 	 * @param filename
 	 */
 	public DynamicGraphImpl( boolean parsing) {
-		
-        super( DynamicGraphFactory.getInstance().getGraphType(), parsing);
+        super( DynamicGraphFactory.getInstance(), parsing);
 	}
 
 	@Override
@@ -94,11 +93,6 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
 			GraphChangeType type, Object data) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	@Override
-	protected NodeStyle<DynamicNode> createDefaultNodeStyle() {
-		return new DefaultDynamicNodeStyle(this);
 	}
 
 	/**
