@@ -1,13 +1,10 @@
 package org.ginsim.core.graph.view.style;
 
 import java.awt.Color;
-import java.io.IOException;
 
-import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
-import org.xml.sax.Attributes;
 
 /**
  * Define the visual parameters of an edge.

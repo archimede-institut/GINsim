@@ -1,18 +1,9 @@
 package org.ginsim.core.graph.view.style;
 
 import java.awt.Color;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
-import org.ginsim.common.application.LogManager;
-import org.ginsim.common.utils.ColorPalette;
-import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.core.io.parser.GinmlHelper;
-import org.xml.sax.Attributes;
 
 /**
  * Simple implementation for NodeStyle.
@@ -42,6 +33,8 @@ public class NodeStyleImpl<V> implements NodeStyle<V> {
 		StyleProperty.TEXT,
 		StyleProperty.SHAPE,
 		StyleProperty.BORDER,
+		StyleProperty.WIDTH,
+		StyleProperty.HEIGHT,
 	};
 	
 	private Color bg, fg, txt;
@@ -305,6 +298,14 @@ public class NodeStyleImpl<V> implements NodeStyle<V> {
 		if (prop == StyleProperty.BORDER) {
 			return border;
 		}
+
+		if (prop == StyleProperty.WIDTH) {
+			return width;
+		}
+
+		if (prop == StyleProperty.HEIGHT) {
+			return height;
+		}
 		
 		return getCustomProperty(prop);
 	}
@@ -319,6 +320,10 @@ public class NodeStyleImpl<V> implements NodeStyle<V> {
 			this.txt = (Color)value;
 		} else if (prop == StyleProperty.SHAPE) {
 			this.shape = (NodeShape)value;
+		} else if (prop == StyleProperty.WIDTH) {
+			this.width = (Integer)value;
+		} else if (prop == StyleProperty.HEIGHT) {
+			this.height = (Integer)value;
 		} else if (prop == StyleProperty.BORDER) {
 			this.border = (NodeBorder)value;
 		} else {

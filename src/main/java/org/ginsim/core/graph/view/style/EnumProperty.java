@@ -1,6 +1,5 @@
 package org.ginsim.core.graph.view.style;
 
-import org.ginsim.core.graph.view.EdgePattern;
 
 public class EnumProperty extends StyleProperty {
 	private final Object[] values;

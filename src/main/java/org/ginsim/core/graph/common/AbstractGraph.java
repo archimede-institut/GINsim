@@ -354,6 +354,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	public void refresh(Object o) {
 		if (listener != null) {
 			listener.refresh(o);
+		} else if(o == null) {
 		} else if (o instanceof Edge) {
 			fireGraphChange(GraphChangeType.EDGEUPDATED, o);
 		} else {

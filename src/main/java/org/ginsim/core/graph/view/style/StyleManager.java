@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.biojava.bio.seq.db.ViewingSequenceDB;
 import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.backend.GraphBackend;

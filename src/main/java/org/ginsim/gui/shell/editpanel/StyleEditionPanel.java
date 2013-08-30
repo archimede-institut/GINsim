@@ -4,9 +4,9 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,9 +19,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.style.ColorProperty;
 import org.ginsim.core.graph.view.style.EnumProperty;
+import org.ginsim.core.graph.view.style.IntegerProperty;
 import org.ginsim.core.graph.view.style.Style;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.graph.view.style.StyleProperty;
@@ -30,6 +30,9 @@ import org.python.modules.math;
 
 public class StyleEditionPanel extends JPanel {
 
+	private static final Insets inset_l = new Insets(3, 15, 3, 2);
+	private static final Insets inset_c = new Insets(3, 2, 3, 15);
+	
 	private final StyleManager styleManager;
 	private final GraphGUI gui;
 
@@ -62,8 +65,7 @@ public class StyleEditionPanel extends JPanel {
 			return;
 		}
 		
-		int x = 0;
-		int y = 0;
+		int y1=0, y2=0, y3=0;
 		for (StyleProperty prop: style.getProperties()) {
 			if (!m_properties.containsKey(prop)) {
 				addProperty(prop);
@@ -73,13 +75,26 @@ public class StyleEditionPanel extends JPanel {
 				
 				ped.setStyle(style);
 				
+				int x;
+				int y;
+				if (ped.col == 0) {
+					x = 0;
+					y = y1++;
+				} else if (ped.col == 1) {
+					x = 2;
+					y = y2++;
+				} else {
+					x = 4;
+					y = y3++;
+				}
 				c.gridx = x;
 				c.gridy = y;
+				c.insets = inset_l;
 				add(ped.getLabel(), c);
 				c.gridx = x+1;
 				c.gridy = y;
+				c.insets = inset_c;
 				add(ped.getComponent(), c);
-				y++;
 			}
 		}
 	}
@@ -90,8 +105,10 @@ public class StyleEditionPanel extends JPanel {
 			ped = new ColorPropertyButton(styleManager, (ColorProperty)property, gui);
 		} else if (property instanceof EnumProperty) {
 			ped = new EnumPropertyBox(styleManager, (EnumProperty)property, gui);
+		} else if (property instanceof IntegerProperty) {
+			ped = new IntegerPropertyBox(styleManager, (IntegerProperty)property, gui);
 		} else {
-			ped = new PropertyEditor<Component>(styleManager, property, gui, new JLabel("TODO"));
+			ped = new PropertyEditor<Component>(styleManager, property, gui, new JLabel("TODO"), 2);
 		}
 		m_properties.put(property, ped);
 		return ped;
@@ -100,6 +117,8 @@ public class StyleEditionPanel extends JPanel {
 
 class PropertyEditor<C extends Component> {
 
+	public final int col;
+	
 	protected final StyleProperty property;
 	protected final StyleManager styleManager;
 	protected final GraphGUI gui;
@@ -110,12 +129,13 @@ class PropertyEditor<C extends Component> {
 
 	protected Style style = null;
 
-	public PropertyEditor(StyleManager styleManager, StyleProperty property, GraphGUI gui, C component) {
+	public PropertyEditor(StyleManager styleManager, StyleProperty property, GraphGUI gui, C component, int col) {
 		this.property = property;
 		this.styleManager = styleManager;
 		this.gui = gui;
 		this.label = new JLabel(property.name);
 		this.component = component;
+		this.col = col;
 	}
 
 	public Component getLabel() {
@@ -145,7 +165,7 @@ class ColorPropertyButton extends PropertyEditor<JButton> implements ActionListe
 	private Color currentColor = Color.white;
 	
 	public ColorPropertyButton(StyleManager styleManager, StyleProperty property, GraphGUI gui) {
-		super(styleManager, property, gui, new JButton());
+		super(styleManager, property, gui, new JButton(), 0);
 		this.component.addActionListener(this);
 	}
 
@@ -197,7 +217,7 @@ class ColorPropertyButton extends PropertyEditor<JButton> implements ActionListe
 class EnumPropertyBox extends PropertyEditor<JComboBox> implements ActionListener {
 	
 	public EnumPropertyBox(StyleManager styleManager, EnumProperty property, GraphGUI gui) {
-		super(styleManager, property, gui, new JComboBox(property.getValues()));
+		super(styleManager, property, gui, new JComboBox(property.getValues()), 1);
 		this.component.addActionListener(this);
 	}
 
@@ -215,6 +235,29 @@ class EnumPropertyBox extends PropertyEditor<JComboBox> implements ActionListene
 		if (style == null) {
 		} else {
 			this.component.setSelectedItem(style.getProperty(this.property));
+			// TODO
+		}
+	}
+}
+
+class IntegerPropertyBox extends PropertyEditor<JLabel> implements ActionListener {
+	
+	public IntegerPropertyBox(StyleManager styleManager, IntegerProperty property, GraphGUI gui) {
+		super(styleManager, property, gui, new JLabel("TODO: int"), 2);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (style == null) {
+			return;
+		}
+		// TODO
+		update();
+	}
+	
+	protected void update() {
+		if (style == null) {
+		} else {
 			// TODO
 		}
 	}

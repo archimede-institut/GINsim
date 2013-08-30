@@ -1,17 +1,10 @@
 package org.ginsim.core.graph.view.style;
 
 import java.awt.Color;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
-import org.ginsim.common.utils.ColorPalette;
-import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
-import org.xml.sax.Attributes;
 
 /**
  * Simple implementation for EdgeStyle.
@@ -36,6 +29,7 @@ public class EdgeStyleImpl<V, E extends Edge<V>> implements EdgeStyle<V, E> {
 		StyleProperty.COLOR,
 		StyleProperty.PATTERN,
 		StyleProperty.ENDING,
+		StyleProperty.LINEWIDTH,
 	};
 	
 	private final EdgeStyle<V, E> parent;

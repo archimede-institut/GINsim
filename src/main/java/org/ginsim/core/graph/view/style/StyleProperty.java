@@ -1,10 +1,5 @@
 package org.ginsim.core.graph.view.style;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeBorder;
@@ -25,7 +20,12 @@ abstract public class StyleProperty {
 	public static final StyleProperty ENDING     = new EnumProperty("ending", EdgeEnd.values(), true);
 	public static final StyleProperty PATTERN    = new EnumProperty("pattern", EdgePattern.values(), true);
 	
-	
+
+	public static final StyleProperty WIDTH     = new IntegerProperty("width", true, 15, 400, 5, 40);
+	public static final StyleProperty HEIGHT    = new IntegerProperty("height", true, 15, 400, 5, 25);
+	public static final StyleProperty LINEWIDTH = new IntegerProperty("line_width", true, 1, 7, 1, 1);
+
+
 	public static StyleProperty[] merge(StyleProperty[] base, StyleProperty[] extra) {
 		StyleProperty[] result = new StyleProperty[base.length + extra.length];
 		int pos = 0;

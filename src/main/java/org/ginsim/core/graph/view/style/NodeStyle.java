@@ -1,12 +1,9 @@
 package org.ginsim.core.graph.view.style;
 
 import java.awt.Color;
-import java.io.IOException;
 
-import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
-import org.xml.sax.Attributes;
 
 /**
  * Define the visual parameters of a node.
