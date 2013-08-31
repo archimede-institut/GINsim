@@ -9,7 +9,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.io.parser.GINMLWriter;
 
-public class DynamicGINMLWriter extends GINMLWriter<DynamicGraph, DynamicNode, Edge<DynamicNode>> {
+public class DynamicGINMLWriter extends GINMLWriter<DynamicGraph, DynamicNode, DynamicEdge> {
 
 	public DynamicGINMLWriter(DynamicGraph graph) {
 		super(graph, DynamicGraphFactory.KEY);
@@ -23,7 +23,7 @@ public class DynamicGINMLWriter extends GINMLWriter<DynamicGraph, DynamicNode, E
         out.addAttr("id", node.getId());
 	}
 	
-	protected void hook_edgeAttribute(XMLWriter out, Edge<DynamicNode> edge) throws IOException {
+	protected void hook_edgeAttribute(XMLWriter out, DynamicEdge edge) throws IOException {
 		String source = edge.getSource().getId();
 		String target = edge.getTarget().getId();
         out.addAttr("id", source+"_"+target);

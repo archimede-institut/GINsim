@@ -235,11 +235,12 @@ public class StyleManager<V, E extends Edge<V>> {
     	}
     	
     	NodeStyle<V> style = addNodeStyle();
-    	style.setNodeShape(shape);
-    	style.setBackground(bg);
-    	style.setForeground(fg);
-    	style.setTextColor(text);
-    	style.setDimension(w, h);
+    	style.setProperty(StyleProperty.SHAPE, shape);
+    	style.setProperty(StyleProperty.BACKGROUND, bg);
+    	style.setProperty(StyleProperty.FOREGROUND, fg);
+    	style.setProperty(StyleProperty.TEXT, text);
+    	style.setProperty(StyleProperty.WIDTH, w);
+    	style.setProperty(StyleProperty.HEIGHT, h);
 		return style;
 	}
 
@@ -263,9 +264,9 @@ public class StyleManager<V, E extends Edge<V>> {
     	}
     	
     	EdgeStyle<V,E> style = addEdgeStyle();
-    	style.setColor(color);
-    	style.setPattern(pattern);
-    	style.setWidth(width);
+    	style.setProperty(StyleProperty.COLOR, color);
+    	style.setProperty(StyleProperty.PATTERN, pattern);
+    	style.setProperty(StyleProperty.WIDTH, width);
 		return style;
 	}
 

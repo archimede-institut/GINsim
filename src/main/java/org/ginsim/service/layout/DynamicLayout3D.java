@@ -95,9 +95,6 @@ public class DynamicLayout3D {
 		byte[] diffstate = getDiffStates((DynamicNode)edge.getSource(), (DynamicNode)edge.getTarget());
 		int change = getChange(diffstate);
 	
-		ereader.setLineColor(colorPalette[change]);
-		ereader.setLineWidth(1.5f);
-
 		ereader.refresh();
 	}
 	

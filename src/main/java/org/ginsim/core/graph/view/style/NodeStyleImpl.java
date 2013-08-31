@@ -173,64 +173,6 @@ public class NodeStyleImpl<V> implements NodeStyle<V> {
 	}
 
 	@Override
-	public boolean setBackground(Color bg) {
-		if (bg == null && parent == null) {
-			return false;
-		}
-		this.bg = bg;
-		return true;
-	}
-
-	@Override
-	public boolean setForeground(Color fg) {
-		if (fg == null && parent == null) {
-			return false;
-		}
-		this.fg = fg;
-		return true;
-	}
-
-	@Override
-	public boolean setTextColor(Color txt) {
-		if (txt == null && parent == null) {
-			return false;
-		}
-		this.txt = txt;
-		return true;
-	}
-
-	@Override
-	public boolean setDimension(int w, int h) {
-		this.width = w;
-		this.height = h;
-		return true;
-	}
-
-	@Override
-	public boolean setNodeShape(NodeShape shape) {
-		if (shape == null && parent == null) {
-			return false;
-		}
-		if (this.shape == shape) {
-			return false;
-		}
-		this.shape = shape;
-		return true;
-	}
-
-	@Override
-	public boolean setNodeBorder(NodeBorder border) {
-		if (border == null && parent == null) {
-			return false;
-		}
-		if (this.border == border) {
-			return false;
-		}
-		this.border = border;
-		return true;
-	}
-
-	@Override
 	public boolean enforceColors() {
 		if (parent != null) {
 			return parent.enforceColors();

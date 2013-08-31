@@ -29,7 +29,7 @@ public class DefaultRegulatoryEdgeStyle extends EdgeStyleImpl<RegulatoryNode, Re
 	private Color c_dual = new Color(0,0,200);
 	
 	public DefaultRegulatoryEdgeStyle() {
-		setWidth(2);
+		// setWidth(2);
 	}
 	
 	@Override
@@ -59,20 +59,9 @@ public class DefaultRegulatoryEdgeStyle extends EdgeStyleImpl<RegulatoryNode, Re
 	}
 
 	@Override
-	public boolean setColor(Color color) {
-		return false;
-	}
-
-	@Override
-	public boolean setEnding(EdgeEnd ending) {
-		return false;
-	}
-	
-	@Override
 	public boolean enforceEnding() {
 		return true;
 	}
-
 	
 	@Override
 	public StyleProperty[] getProperties() {

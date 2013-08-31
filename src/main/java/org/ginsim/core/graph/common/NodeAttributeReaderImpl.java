@@ -10,7 +10,6 @@ import java.io.IOException;
 
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.view.NodeAttributesReader;
@@ -19,7 +18,6 @@ import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.graph.view.NodeViewInfo;
 import org.ginsim.core.graph.view.SimpleStroke;
 import org.ginsim.core.graph.view.style.NodeStyle;
-import org.ginsim.core.graph.view.style.NodeStyleImpl;
 import org.ginsim.core.graph.view.style.StyleManager;
 
 
@@ -108,7 +106,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
     		return;
     	}
     	
-        style = viewInfo.getStyle();
+        style = styleManager.getUsedNodeStyle(node);
         refreshBounds();
     	hasChanged = false;
     }
@@ -120,20 +118,6 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
     	} else {
             cachedBounds.setSize(style.getWidth(vertex), style.getHeight(vertex));
     	}
-    }
-    
-    private boolean ensureOverride() {
-    	if (style == null) {
-    		if (viewInfo == null) {
-    			return false;
-    		}
-    		
-    		style = styleManager.addNodeStyle();
-    		style.setDimension(cachedBounds.width, cachedBounds.height);
-    		viewInfo.setStyle(style);
-    		return false;
-    	}
-    	return true;
     }
 
     @Override
@@ -170,14 +154,6 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
     }
 
     @Override
-   public void setForegroundColor(Color color) {
-    	if ( !ensureOverride() ) {
-    		return;
-    	}
-    	hasChanged |= style.setForeground(color);
-    }
-
-    @Override
     public Color getTextColor() {
         if (style != null) {
         	style.getTextColor(vertex);
@@ -186,27 +162,11 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
     }
 
     @Override
-   public void setTextColor(Color color) {
-    	if ( !ensureOverride() ) {
-    		return;
-    	}
-    	hasChanged |= style.setTextColor(color);
-    }
-
-    @Override
     public Color getBackgroundColor() {
         if (style != null) {
         	return style.getBackground(vertex);
         }
     	return defaultStyle.getBackground(vertex);
-    }
-
-    @Override
-    public void setBackgroundColor(Color color) {
-    	if ( !ensureOverride() ) {
-    		return;
-    	}
-    	hasChanged |= style.setBackground(color);
     }
 
     @Override
@@ -253,24 +213,6 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
     }
 
     @Override
-    public void setSize(int w, int h) {
-    	if ( !ensureOverride() ) {
-    		return;
-    	}
-    	hasChanged |= style.setDimension(w, h);
-    	refreshBounds();
-        hasChanged = true;
-    }
-
-    @Override
-    public void setBorder(NodeBorder border) {
-    	if ( !ensureOverride() ) {
-    		return;
-    	}
-    	hasChanged |= style.setNodeBorder(border);
-    }
-
-    @Override
     public NodeBorder getBorder() {
         if (style != null) {
             return style.getNodeBorder(vertex); 
@@ -284,14 +226,6 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
         	return style.getNodeShape(vertex); 
         }
 		return defaultStyle.getNodeShape(vertex);
-    }
-
-    @Override
-    public void setShape(NodeShape shape) {
-    	if ( !ensureOverride() ) {
-    		return;
-    	}
-    	hasChanged |= style.setNodeShape(shape);
     }
 
 	@Override
@@ -443,12 +377,21 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 	}
 
 	@Override
-	public void setStyle(NodeStyle style) {
+	public void setStyle(NodeStyle<V> style) {
 		if (viewInfo == null) {
 			return;
 		}
 		this.style = style;
 		viewInfo.setStyle(style);
 	}
+
+
+    // TODO: remove setters completely
+	public void setForegroundColor(Color color) {}
+	public void setTextColor(Color color) {}
+    public void setBackgroundColor(Color color) {}
+    public void setSize(int w, int h) {}
+    public void setBorder(NodeBorder border) {}
+    public void setShape(NodeShape shape) {}
 
 }

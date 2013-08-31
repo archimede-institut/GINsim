@@ -1,19 +1,18 @@
 package org.ginsim.core.graph.dynamicgraph;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import java.awt.Color;
 import java.util.Set;
 
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
-import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
-import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -106,8 +105,7 @@ public class BasicDynamicGraphTest {
 		graph.addNode( node2);
 		
 		// Add Edge
-		Edge<DynamicNode> edge = new Edge<DynamicNode>( graph, node1, node2);
-		graph.addEdge( edge);
+		graph.addEdge(node1, node2, false);
 		
 		int edge_count = graph.getEdges().size();
 		assertEquals( "Add Edge : the Graph does not contains the right number of edges.", 1, edge_count);			

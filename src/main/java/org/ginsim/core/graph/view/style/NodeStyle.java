@@ -25,16 +25,6 @@ public interface NodeStyle<V> extends Style {
 	NodeShape getNodeShape(V obj);
 	NodeBorder getNodeBorder(V obj);
 
-	boolean setBackground(Color bg);
-	boolean setForeground(Color bg);
-	boolean setTextColor(Color bg);
-
-	boolean setDimension(int w, int h);
-	
-	boolean setNodeShape(NodeShape shape);
-
-	boolean setNodeBorder(NodeBorder border);
-	
 	boolean enforceColors();
 	boolean enforceShape();
 	boolean enforceSize();

@@ -5,6 +5,7 @@ import java.util.List;
 import org.ginsim.core.graph.common.AbstractGraphFactory;
 import org.ginsim.core.graph.common.GraphFactory;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.NodeStyle;
 import org.mangosdk.spi.ProviderFor;
 
@@ -58,5 +59,9 @@ public class DynamicGraphFactory extends AbstractGraphFactory<DynamicGraph> {
 	@Override
 	public NodeStyle<DynamicNode> createDefaultNodeStyle(DynamicGraph graph) {
 		return new DefaultDynamicNodeStyle(graph);
+	}
+	@Override
+	public EdgeStyle<DynamicNode,DynamicEdge> createDefaultEdgeStyle(DynamicGraph graph) {
+		return new DefaultDynamicEdgeStyle();
 	}
 }

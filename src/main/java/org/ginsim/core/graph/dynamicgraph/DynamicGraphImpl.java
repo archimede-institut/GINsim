@@ -1,8 +1,6 @@
 package org.ginsim.core.graph.dynamicgraph;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -13,8 +11,6 @@ import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.application.GsException;
-import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.AbstractDerivedGraph;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
@@ -24,12 +20,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.graph.view.style.NodeStyle;
 import org.ginsim.core.io.parser.GINMLWriter;
-import org.ginsim.core.io.parser.GinmlHelper;
 
 /**
  * Implementation of dynamical graphs.
@@ -38,8 +30,9 @@ import org.ginsim.core.io.parser.GinmlHelper;
  * @author Aurelien Naldi
  * @author Lionel Spinelli
  */
-public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Edge<DynamicNode>, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> implements DynamicGraph{
-
+public final class DynamicGraphImpl
+	extends AbstractDerivedGraph<DynamicNode, DynamicEdge, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
+	implements DynamicGraph {
 
 	public static final String GRAPH_ZIP_NAME = "stateTransitionGraph.ginml";
 	
@@ -161,21 +154,16 @@ public final class DynamicGraphImpl extends AbstractDerivedGraph<DynamicNode, Ed
     }
 
 	@Override
-	public boolean removeEdge(Edge<DynamicNode> obj) {
+	public boolean removeEdge(DynamicEdge obj) {
 		return false;
 	}
 
 	@Override
-	public Edge<DynamicNode> addEdge(DynamicNode source, DynamicNode target, boolean multiple) {
+	public DynamicEdge addEdge(DynamicNode source, DynamicNode target, boolean multiple) {
 		
-		Edge<DynamicNode> edge = new Edge<DynamicNode>(this, source, target);
+		DynamicEdge edge = new DynamicEdge(this, source, target);
 		if (!addEdge(edge)) {
 			return null;
-		}
-		if (multiple) {
-			EdgeAttributesReader eReader = getEdgeAttributeReader();
-			eReader.setEdge(edge);
-			eReader.setDash(EdgePattern.DASH);
 		}
 		return edge;
 	}

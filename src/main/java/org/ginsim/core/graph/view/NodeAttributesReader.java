@@ -2,9 +2,7 @@ package org.ginsim.core.graph.view;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.io.IOException;
 
-import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.view.style.NodeStyle;
 
 
@@ -55,28 +53,13 @@ public interface NodeAttributesReader<V> extends AttributesReader {
      */
     Color getForegroundColor();
     /**
-     * change the foreground color of the node.
-     * @param color the new color.
-     */
-    void setForegroundColor(Color color);
-    /**
      * @return the text color of the node.
      */
     Color getTextColor();
     /**
-     * change the text color of the node.
-     * @param color the new color.
-     */
-    void setTextColor(Color color);
-    /**
      * @return the background color of the node.
      */
     Color getBackgroundColor();
-    /**
-     * change the background color of the node.
-     * @param color the new color.
-     */
-    void setBackgroundColor(Color color);
 
     /**
      * change the node's position.
@@ -84,21 +67,8 @@ public interface NodeAttributesReader<V> extends AttributesReader {
      * @param y
      */
     void setPos(int x, int y);
-    
+
     /**
-     * change the node's size.
-     * @param w
-     * @param h
-     */
-    void setSize(int w, int h);
-    
-	/**
-	 * change the kind of border for this node
-	 * @param index
-	 * @see #getBorderList()
-	 */
-	void setBorder(NodeBorder index);
-	/**
 	 * @return the border of the node.
 	 */
 	NodeBorder getBorder();
@@ -106,12 +76,6 @@ public interface NodeAttributesReader<V> extends AttributesReader {
 	 * @return the shape of the node
 	 */
 	NodeShape getShape();
-	/**
-	 * change the shape of the node.
-	 * @param shapeIndex
-	 * @see #getShapeList()
-	 */
-	void setShape(NodeShape shapeIndex);
 
     /**
      * @param fvreader
@@ -134,5 +98,20 @@ public interface NodeAttributesReader<V> extends AttributesReader {
 	 */
 	void renderMoving(Graphics2D g, int movex, int movey);
 
-	void setStyle(NodeStyle style);
+	void setStyle(NodeStyle<V> style);
+
+
+    @Deprecated
+    void setForegroundColor(Color color);
+    @Deprecated
+    void setTextColor(Color color);
+    @Deprecated
+    void setBackgroundColor(Color color);
+    @Deprecated
+    void setSize(int w, int h);
+    @Deprecated
+	void setBorder(NodeBorder index);
+    @Deprecated
+	void setShape(NodeShape shapeIndex);
+
 }

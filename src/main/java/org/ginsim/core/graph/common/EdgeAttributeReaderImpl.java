@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.view.Bezier;
@@ -108,53 +107,12 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
     	hasChanged = false;
     }
 
-    private boolean ensureStyle() {
-    	if (edge == null) {
-    		return false;
-    	}
-
-    	if (style != null) {
-    		return true;
-    	}
-    	
-    	if (viewInfo == null) {
-    		viewInfo = graph.ensureEdgeViewInfo(edge);
-    	}
-    	
-    	style = styleManager.addEdgeStyle();
-    	viewInfo.setStyle(style);
-    	
-    	return true;
-    }
-    
     @Override
     public float getLineWidth() {
     	if (style == null) {
     		return defaultStyle.getWidth(edge);
     	}
 		return style.getWidth(edge);
-    }
-
-    @Override
-    public void setLineWidth(float w) {
-    	if ( !ensureStyle() ) {
-    		return;
-    	}
-
-    	if (w > MAX_EDGE_SIZE) {
-        	w = MAX_EDGE_SIZE;
-        } else if (w < 1) {
-        	w = 1;
-        }
-    	hasChanged |= style.setWidth((int)w);
-    }
-
-    @Override
-    public void setLineColor(Color color) {
-    	if ( !ensureStyle() ) {
-    		return;
-    	}
-        hasChanged |= style.setColor(color);
     }
 
     @Override
@@ -179,14 +137,6 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
     }
 
     @Override
-    public void setLineEnd(EdgeEnd ending) {
-    	if ( !ensureStyle() ) {
-    		return;
-    	}
-    	hasChanged |= style.setEnding(ending);
-    }
-
-    @Override
     public EdgeEnd getLineEnd() {
     	if (style == null) {
     		return defaultStyle.getEnding(edge);
@@ -207,20 +157,14 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
         if (edge == null) {
             return;
         }
+        damage();
         if (viewInfo == null) {
         	viewInfo = graph.ensureEdgeViewInfo(edge);
         }
         viewInfo.setPoints(l);
         hasChanged = true;
+        refresh();
     }
-
-    @Override
-	public void setDash(EdgePattern pattern) {
-    	if ( !ensureStyle() ) {
-    		return;
-    	}
-		hasChanged = style.setPattern(pattern);
-	}
 
     @Override
 	public EdgePattern getDash() {
@@ -509,5 +453,17 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 		
 		viewInfo.setStyle(style);
 	}
+
 	
+	// TODO: remove setters
+	public void setDash(EdgePattern pattern) {
+	}
+    public void setLineEnd(EdgeEnd ending) {
+    }
+    public void setLineWidth(float w) {
+    }
+    public void setLineColor(Color color) {
+    }
+
+
 }

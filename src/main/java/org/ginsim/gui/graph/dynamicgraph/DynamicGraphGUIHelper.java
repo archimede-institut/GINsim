@@ -1,7 +1,6 @@
 package org.ginsim.gui.graph.dynamicgraph;
 
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,11 +13,10 @@ import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.colomoto.logicalmodel.NodeInfo;
-import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.dynamicgraph.DynamicEdge;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.gui.GUIManager;
@@ -36,7 +34,7 @@ import org.mangosdk.spi.ProviderFor;
 
 
 @ProviderFor( GraphGUIHelper.class)
-public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, DynamicNode, Edge<DynamicNode>> {
+public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, DynamicNode, DynamicEdge> {
 
 	static {
 		GenericPropertyEditorPanel.addSupportedClass(Annotation.class, AnnotationPanel.class);
@@ -91,7 +89,7 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
 	}
 
 	@Override
-	public GUIEditor<Edge<DynamicNode>> getEdgeEditionPanel(
+	public GUIEditor<DynamicEdge> getEdgeEditionPanel(
 			DynamicGraph graph) {
 		return new DynamicItemAttributePanel(graph);
 	}

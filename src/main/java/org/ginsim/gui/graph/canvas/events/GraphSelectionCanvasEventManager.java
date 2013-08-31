@@ -114,11 +114,11 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 			if (points == null || points.size() <= movingPoint.pointIdx) {
 				return;
 			}
-			ereader.damage();
 			if (points.size() == 1) {
 				ereader.setPoints(null);
 			} else {
 				points.remove(movingPoint.pointIdx);
+				ereader.setPoints(points);
 			}
 			ereader.refresh();
 		} else {
@@ -325,7 +325,6 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 		}
 		
 		ereader.setEdge(e);
-		ereader.damage();
 		List<Point> points = ereader.getPoints();
 		if (points == null) {
 			points = new ArrayList<Point>();

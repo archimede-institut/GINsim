@@ -26,11 +26,6 @@ public interface EdgeAttributesReader<V,E extends Edge<V>> extends AttributesRea
 	 */
 	float getLineWidth();
 	/**
-	 * change the width of this edge
-	 * @param w
-	 */
-	void setLineWidth(float w);
-	/**
 	 * set the edge on which we work
 	 * @param obj
 	 */
@@ -44,11 +39,6 @@ public interface EdgeAttributesReader<V,E extends Edge<V>> extends AttributesRea
 	 */
 	void setEdge(E obj, boolean selected);
 	
-	/**
-	 * change this edge's line color.
-	 * @param color the new color.
-	 */
-	void setLineColor(Color color);
 	/**
 	 * @return the color of this edge
 	 */
@@ -70,12 +60,6 @@ public interface EdgeAttributesReader<V,E extends Edge<V>> extends AttributesRea
 	void setCurve(boolean curve);
 	
 	/**
-	 * set the end of the line
-	 * @param index
-	 */
-	void setLineEnd(EdgeEnd index);
-	
-	/**
 	 * @return the list of points used by this edge.
 	 */
 	List<Point> getPoints();
@@ -94,12 +78,6 @@ public interface EdgeAttributesReader<V,E extends Edge<V>> extends AttributesRea
      * @return the lineEnd
      */
     EdgeEnd getLineEnd();
-    
-    /**
-     * set the edge as dashed.
-     * @param dashID
-     */
-    void setDash(EdgePattern dashID);
     
     /**
      * set the edge as dashed.
@@ -128,4 +106,14 @@ public interface EdgeAttributesReader<V,E extends Edge<V>> extends AttributesRea
 
 	void setStyle(EdgeStyle style);
 
+	
+	@Deprecated
+	void setLineWidth(float w);
+	@Deprecated
+	void setLineColor(Color color);
+	@Deprecated
+	void setLineEnd(EdgeEnd index);
+	@Deprecated
+    void setDash(EdgePattern dashID);
+    
 }

@@ -115,30 +115,6 @@ public class EdgeStyleImpl<V, E extends Edge<V>> implements EdgeStyle<V, E> {
 	}
 
 	@Override
-	public boolean setColor(Color color) {
-		this.color = color;
-		return true;
-	}
-
-	@Override
-	public boolean setWidth(int w) {
-		this.width = w;
-		return true;
-	}
-
-	@Override
-	public boolean setPattern(EdgePattern pattern) {
-		this.pattern = pattern;
-		return true;
-	}
-
-	@Override
-	public boolean setEnding(EdgeEnd ending) {
-		this.ending = ending;
-		return true;
-	}
-
-	@Override
 	public boolean enforceColor() {
 		if (parent != null) {
 			return parent.enforceColor();

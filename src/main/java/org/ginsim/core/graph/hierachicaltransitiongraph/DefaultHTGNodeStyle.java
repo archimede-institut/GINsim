@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.graph.view.style.NodeStyleImpl;
+import org.ginsim.core.graph.view.style.StyleProperty;
 
 
 public class DefaultHTGNodeStyle extends NodeStyleImpl<HierarchicalNode> {
@@ -13,7 +14,8 @@ public class DefaultHTGNodeStyle extends NodeStyleImpl<HierarchicalNode> {
 	
 	public DefaultHTGNodeStyle(HierarchicalTransitionGraph graph) {
 		this.graph = graph;
-		setDimension(5+10*graph.getNodeOrderSize(), 25);
+    	setProperty(StyleProperty.WIDTH, 5+10*graph.getNodeOrderSize());
+    	setProperty(StyleProperty.HEIGHT, 25);
 	}
 
 	@Override

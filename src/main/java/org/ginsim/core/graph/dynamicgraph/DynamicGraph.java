@@ -14,12 +14,11 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 /**
  * the dynamic (state transition) graph.
  */
-public interface DynamicGraph extends Graph<DynamicNode, Edge<DynamicNode>>, GraphAssociation<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>{
+public interface DynamicGraph extends Graph<DynamicNode, DynamicEdge>, GraphAssociation<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>{
 
 	public static final int MAXLEVEL = 9;
 	public static final int STARLEVEL = MAXLEVEL+1;
 
-	
 	/**
 	 * add an edge between source and target
 	 * @param source

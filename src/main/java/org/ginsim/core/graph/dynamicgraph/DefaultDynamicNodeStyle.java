@@ -2,6 +2,7 @@ package org.ginsim.core.graph.dynamicgraph;
 
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.graph.view.style.NodeStyleImpl;
+import org.ginsim.core.graph.view.style.StyleProperty;
 
 public class DefaultDynamicNodeStyle extends NodeStyleImpl<DynamicNode> {
 
@@ -12,7 +13,8 @@ public class DefaultDynamicNodeStyle extends NodeStyleImpl<DynamicNode> {
 		} else if (w > 500) {
 			w = 500;
 		}
-		setDimension(w, 25);
+    	setProperty(StyleProperty.WIDTH, w);
+    	setProperty(StyleProperty.HEIGHT, 25);
 	}
 
 	@Override

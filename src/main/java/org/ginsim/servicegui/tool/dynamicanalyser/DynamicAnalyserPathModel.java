@@ -5,8 +5,8 @@ import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
 
-import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.dynamicgraph.DynamicEdge;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 
@@ -22,7 +22,7 @@ public class DynamicAnalyserPathModel extends DefaultTableModel {
     private List nodeOrder;
     private List v;
     private List v_in;
-    private Graph<DynamicNode, Edge<DynamicNode>> graph;
+    private DynamicGraph graph;
     private DynamicSearchPathConfig searchConfig;
     
     /**

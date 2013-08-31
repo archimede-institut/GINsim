@@ -10,6 +10,7 @@ import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.dynamicgraph.DynamicEdge;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.gui.GUIManager;
@@ -131,7 +132,7 @@ public class DynamicItemModel extends AbstractTableModel {
         fireTableDataChanged();
     }
     
-    private DynamicNode[] getRelatedNodes(Collection<Edge<DynamicNode>> l_related, boolean target) {
+    private DynamicNode[] getRelatedNodes(Collection<DynamicEdge> l_related, boolean target) {
         if (l_related == null || l_related.size() == 0) {
             return null;
         }
