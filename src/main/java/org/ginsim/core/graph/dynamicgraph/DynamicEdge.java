@@ -15,4 +15,19 @@ public class DynamicEdge extends Edge<DynamicNode> {
 		}
 		this.changeType = change;
 	}
+	
+	/**
+     * get the coordinate of the first change between the two states.
+     * @param diffstate
+     * @return
+     */
+	public int getFirstChangeIndex() {
+    	for (int i = 0; i < source.state.length; i++) {
+    		if (source.state[i] != target.state[i]) {
+    			return i;
+    		}
+    	}
+		return 0;
+	}
+
 }

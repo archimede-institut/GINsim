@@ -108,7 +108,6 @@ public class DynamicLayoutMultidimention {
 	 */
 	private void moveEdge(Edge edge, byte[] maxValues) {
 		byte[] diffstate = getDiffStates((DynamicNode)edge.getSource(), (DynamicNode)edge.getTarget());
-		int change = get_change(diffstate);
 		
 		ereader.setEdge(edge);
 	   	List points = ViewHelper.getPoints(vreader, ereader, edge);
@@ -146,8 +145,6 @@ public class DynamicLayoutMultidimention {
     	points.add(last);
 		ereader.setPoints(points);
 		
-		ereader.setLineColor(colorPalette[change]);
-		ereader.setLineWidth(reduceChange(change)*0.5f+1.5f);
 		ereader.setCurve(p2 == null);
 		ereader.refresh();
 	}
@@ -164,20 +161,6 @@ public class DynamicLayoutMultidimention {
 		return size_main/1.75*(d_orth>0?1:0)+d_orth*12+d_main*3-size_orth/4;
 	}
 
-	/**
-     * return the coordinate of the first change between the two states.
-     * @param diffstate
-     * @return
-     */
-	private int get_change(byte[] diffstate) {
-    	for (int i = 0; i < diffstate.length; i++) {
-    		if (diffstate[i] != 0) {
-    			return i;
-    		}
-    	}
-		return 0;
-	}
-    
 	/**
 	 * Transform the change accordingly to the number of row.
 	 * @param change
