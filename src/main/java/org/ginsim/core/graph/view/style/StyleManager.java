@@ -36,6 +36,8 @@ public class StyleManager<V, E extends Edge<V>> {
 	private final List<EdgeStyle<V,E>> edgeStyles;
 	
 	private int nextkey = 1;
+
+	private StyleProvider<V, E> provider;
 	
 	/**
 	 * Create a style manager, defining default styles.
@@ -278,6 +280,12 @@ public class StyleManager<V, E extends Edge<V>> {
 	}
 
 	public NodeStyle getUsedNodeStyle(V node) {
+		if (provider != null) {
+			NodeStyle<V> style = provider.getNodeStyle(node);
+			if (style != null) {
+				return style;
+			}
+		}
 		NodeViewInfo info = backend.getNodeViewInfo(node);
 		NodeStyle<V> style = info.getStyle();
 		if (style == null) {
@@ -287,6 +295,12 @@ public class StyleManager<V, E extends Edge<V>> {
 	}
 
 	public EdgeStyle getUsedEdgeStyle(E edge) {
+		if (provider != null) {
+			EdgeStyle<V,E> style = provider.getEdgeStyle(edge);
+			if (style != null) {
+				return style;
+			}
+		}
 		EdgeViewInfo<V, E> info = backend.getEdgeViewInfo(edge);
 		if (info == null) {
 			return defaultEdgeStyle;
@@ -323,4 +337,15 @@ public class StyleManager<V, E extends Edge<V>> {
 	public void styleUpdated(Style style) {
 		backend.styleUpdated();
 	}
+
+	/**
+	 * Define the style provider, it will override graph's style until it is removed.
+	 * 
+	 * @param provider the provider to use or null to remove it
+	 */
+	public void setStyleProvider(StyleProvider<V, E> provider) {
+		this.provider = provider;
+		backend.damage(null);
+	}
+	
 }
