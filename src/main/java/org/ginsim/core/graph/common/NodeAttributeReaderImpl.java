@@ -106,7 +106,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
     		return;
     	}
     	
-        style = styleManager.getUsedNodeStyle(node);
+        style = styleManager.getViewNodeStyle(node);
         refreshBounds();
     	hasChanged = false;
     }

@@ -17,14 +17,16 @@ public interface StyleProvider<V, E extends Edge<V>> {
 	 * Get the style to use for a node.
 	 * 
 	 * @param node
+	 * @param baseStyle the style to use as fallback
 	 * @return the style to use or null to use the graph's style
 	 */
-	NodeStyle<V> getNodeStyle(V node);
+	NodeStyle<V> getNodeStyle(V node, NodeStyle<V> baseStyle);
 	
 	/**
 	 * Get the style used for an edge.
 	 * @param edge
+	 * @param baseStyle the style to use as fallback
 	 * @return the style to use, or null to use the graph's style
 	 */
-	EdgeStyle<V, E> getEdgeStyle(E edge);
+	EdgeStyle<V, E> getEdgeStyle(E edge, EdgeStyle<V, E> baseStyle);
 }

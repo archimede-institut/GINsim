@@ -279,13 +279,16 @@ public class StyleManager<V, E extends Edge<V>> {
 		return edgeStyles;
 	}
 
-	public NodeStyle getUsedNodeStyle(V node) {
+	public NodeStyle<V> getViewNodeStyle(V node) {
+		NodeStyle<V> base = getUsedNodeStyle(node);
 		if (provider != null) {
-			NodeStyle<V> style = provider.getNodeStyle(node);
-			if (style != null) {
-				return style;
-			}
+			return provider.getNodeStyle(node, base);
 		}
+		return base;
+	}
+
+	
+	public NodeStyle<V> getUsedNodeStyle(V node) {
 		NodeViewInfo info = backend.getNodeViewInfo(node);
 		NodeStyle<V> style = info.getStyle();
 		if (style == null) {
@@ -294,13 +297,14 @@ public class StyleManager<V, E extends Edge<V>> {
 		return style;
 	}
 
-	public EdgeStyle getUsedEdgeStyle(E edge) {
+	public EdgeStyle getViewEdgeStyle(E edge) {
+		EdgeStyle<V,E> base = getUsedEdgeStyle(edge);
 		if (provider != null) {
-			EdgeStyle<V,E> style = provider.getEdgeStyle(edge);
-			if (style != null) {
-				return style;
-			}
+			return provider.getEdgeStyle(edge, base);
 		}
+		return base;
+	}
+	public EdgeStyle getUsedEdgeStyle(E edge) {
 		EdgeViewInfo<V, E> info = backend.getEdgeViewInfo(edge);
 		if (info == null) {
 			return defaultEdgeStyle;
