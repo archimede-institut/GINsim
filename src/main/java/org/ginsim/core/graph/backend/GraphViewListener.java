@@ -4,4 +4,6 @@ public interface GraphViewListener {
 
 	void refresh(Object o);
 
+	void repaint();
+
 }

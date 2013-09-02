@@ -323,6 +323,8 @@ public class StyleManager<V, E extends Edge<V>> {
 		backend.damage(node);
 		backend.getNodeViewInfo(node).setStyle(style);
 		backend.damage(node);
+		
+		backend.repaint();
 	}
 
 	public void applyEdgeStyle(E edge, EdgeStyle<V,E> style) {
@@ -336,10 +338,13 @@ public class StyleManager<V, E extends Edge<V>> {
 			backend.ensureEdgeViewInfo(edge).setStyle(style);
 		}
 		backend.damage(edge);
+
+		backend.repaint();
 	}
 
 	public void styleUpdated(Style style) {
-		backend.styleUpdated();
+		backend.damage(null);
+		backend.repaint();
 	}
 
 	/**

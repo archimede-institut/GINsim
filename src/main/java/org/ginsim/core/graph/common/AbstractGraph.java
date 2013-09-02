@@ -362,6 +362,13 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		}
 	}
 
+	@Override
+	public void repaint() {
+		if (listener != null) {
+			listener.repaint();
+		}
+	}
+
 	public void damage(Object o) {
 		if (listener != null) {
 			listener.refresh(o);

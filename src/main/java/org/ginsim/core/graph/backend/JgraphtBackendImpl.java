@@ -176,9 +176,9 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	}
 
 	@Override
-	public void styleUpdated() {
+	public void repaint() {
 		if (viewListener != null) {
-			viewListener.refresh(null);
+			viewListener.repaint();
 		}
 	}
 	
