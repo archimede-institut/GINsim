@@ -5,7 +5,7 @@ import org.ginsim.core.graph.view.style.EdgeStyleImpl;
 import org.ginsim.core.graph.view.style.NodeStyle;
 import org.ginsim.core.graph.view.style.NodeStyleImpl;
 
-abstract public class AbstractGraphFactory<G extends Graph> implements GraphFactory<G> {
+abstract public class AbstractGraphFactory<G extends Graph<?,?>> implements GraphFactory<G> {
 
 	private final Class graphClass;
 	private final String graphClassName;
