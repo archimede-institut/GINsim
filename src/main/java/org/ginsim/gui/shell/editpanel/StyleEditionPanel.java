@@ -31,7 +31,8 @@ import org.python.modules.math;
 public class StyleEditionPanel extends JPanel {
 
 	private static final Insets inset_l = new Insets(3, 15, 3, 2);
-	private static final Insets inset_c = new Insets(3, 2, 3, 15);
+	private static final Insets inset_c = new Insets(3, 2, 3, 2);
+	private static final Insets inset_r = new Insets(3, 2, 3, 15);
 	
 	private final StyleManager styleManager;
 	private final GraphGUI gui;
@@ -81,10 +82,10 @@ public class StyleEditionPanel extends JPanel {
 					x = 0;
 					y = y1++;
 				} else if (ped.col == 1) {
-					x = 2;
+					x = 3;
 					y = y2++;
 				} else {
-					x = 4;
+					x = 6;
 					y = y3++;
 				}
 				c.gridx = x;
@@ -95,6 +96,10 @@ public class StyleEditionPanel extends JPanel {
 				c.gridy = y;
 				c.insets = inset_c;
 				add(ped.getComponent(), c);
+				c.gridx = x+2;
+				c.gridy = y;
+				c.insets = inset_r;
+				add(ped.getResetButton(), c);
 			}
 		}
 	}
@@ -124,6 +129,7 @@ class PropertyEditor<C extends Component> {
 	protected final GraphGUI gui;
 	
 	private final JLabel label;
+	private final JButton b_reset;
 
 	protected final C component;
 
@@ -134,6 +140,15 @@ class PropertyEditor<C extends Component> {
 		this.styleManager = styleManager;
 		this.gui = gui;
 		this.label = new JLabel(property.name);
+		this.b_reset = new JButton("x");
+		this.b_reset.setForeground(Color.RED.darker());
+		this.b_reset.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				reset();
+			}
+		});
 		this.component = component;
 		this.col = col;
 	}
@@ -145,6 +160,9 @@ class PropertyEditor<C extends Component> {
 	public Component getComponent() {
 		return component;
 	}
+	public Component getResetButton() {
+		return b_reset;
+	}
 
 	public StyleProperty getProperty() {
 		return property;
@@ -155,7 +173,21 @@ class PropertyEditor<C extends Component> {
 		update();
 	}
 	
+	protected void reset() {
+		if (style == null) {
+			return;
+		}
+		this.style.setProperty(property, null);
+		styleManager.styleUpdated(style);
+		update();
+	}
+	
 	protected void update() {
+		if (style == null) {
+			return;
+		}
+		Object val = style.getProperty(property);
+		b_reset.setEnabled( val != null );
 	}
 	
 }
@@ -183,6 +215,7 @@ class ColorPropertyButton extends PropertyEditor<JButton> implements ActionListe
 	}
 	
 	protected void update() {
+		super.update();
 		if (style == null) {
 			this.currentColor = null;
 			updateComponent(currentColor, "-----");
@@ -232,6 +265,7 @@ class EnumPropertyBox extends PropertyEditor<JComboBox> implements ActionListene
 	}
 	
 	protected void update() {
+		super.update();
 		if (style == null) {
 		} else {
 			this.component.setSelectedItem(style.getProperty(this.property));
@@ -256,6 +290,7 @@ class IntegerPropertyBox extends PropertyEditor<JLabel> implements ActionListene
 	}
 	
 	protected void update() {
+		super.update();
 		if (style == null) {
 		} else {
 			// TODO
