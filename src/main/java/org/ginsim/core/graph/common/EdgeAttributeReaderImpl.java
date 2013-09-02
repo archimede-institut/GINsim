@@ -99,11 +99,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
     	cachedPath = null;
     	
     	viewInfo = graph.getEdgeViewInfo(edge);
-    	if (viewInfo == null) {
-    		style = null;
-    	} else {
-    		style = viewInfo.getStyle();
-    	}
+		style = styleManager.getViewEdgeStyle(edge);
     	hasChanged = false;
     }
 

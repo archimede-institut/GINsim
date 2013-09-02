@@ -26,12 +26,13 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
 import org.ginsim.core.graph.view.css.Colorizer;
 import org.ginsim.core.service.ServiceManager;
-import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
+import org.ginsim.gui.graph.view.css.StyleColorizerCheckbox;
 import org.ginsim.gui.utils.data.SimpleStateListTableModel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.service.tool.stablestates.StableStatesService;
+import org.ginsim.servicegui.tool.regulatorygraphanimation.LRGStateStyleProvider;
 import org.ginsim.servicegui.tool.stablestates.StableTableModel;
 
 
@@ -48,13 +49,15 @@ public class StateInRegGraphFrame extends StackDialog {
 
 	private Container mainPanel;
 	private JTabbedPane tabbedPane;
+	
+	private final LRGStateStyleProvider styleProvider;
 
-	private StateInRegGraphColorizerPanel colorizerPanel;
-
+	private StyleColorizerCheckbox colorizerCheckbox;
 
 	public StateInRegGraphFrame(JFrame frame, Graph graph) {
 		super(frame, "stateInRegGraph", 420, 260);
 		this.regGraph = (RegulatoryGraph) graph;
+		this.styleProvider = new LRGStateStyleProvider(regGraph);
 		setMainPanel(getMainPanel());
 	}
 
@@ -91,29 +94,26 @@ public class StateInRegGraphFrame extends StackDialog {
 			c.gridy++;
 			c.ipady = 0;
 			c.fill = GridBagConstraints.CENTER;
-			colorizerPanel = new StateInRegGraphColorizerPanel("stateInRegGraph.", regGraph);
-			colorizerPanel.setColorizer(new Colorizer(new StateInRegGraphSelector(regGraph)));
-		    mainPanel.add(colorizerPanel, c);
+			colorizerCheckbox = new StyleColorizerCheckbox("stateInRegGraph.", regGraph, styleProvider);
+		    mainPanel.add(colorizerCheckbox, c);
 		}
 		return mainPanel;
 	}
 
 	protected void run() {
 		byte[] state = ((TabComponantProvidingAState)tabbedPane.getSelectedComponent()).getState();
-		colorizerPanel.setState(state);
-		colorizerPanel.runIsFinished();
+		styleProvider.setState(state);
+		colorizerCheckbox.refresh();
 	}
 
 	public void cancel() {
-		colorizerPanel.undoColorize();
+		colorizerCheckbox.undoColorize();
 		super.cancel();
 	}
 }
 
 /**
- * 
  * Provide proper initial layout and an abstract method returning a state.
- *
  */
 abstract class TabComponantProvidingAState extends JPanel {
 	private static final long serialVersionUID = -7502297761417113651L;

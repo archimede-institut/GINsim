@@ -33,7 +33,4 @@ public class AllSelector extends Selector {
 		return CAT_NODES;
 	}
 
-	public boolean requireCategory() {
-		return true;
-	}
 }

@@ -54,7 +54,7 @@ public abstract class Selector {
 	 * Return the identifier for this selector
 	 * @return identifier
 	 */
-	public String getIdentifer() {
+	public final String getIdentifer() {
 		return identifier;
 	}
 
@@ -62,7 +62,7 @@ public abstract class Selector {
 	 * A collection of all the categories this selector respond to.
 	 * @return the categories id
 	 */
-	public Collection categories() {
+	public final Collection categories() {
 		return m.values();
 	}
 
@@ -95,7 +95,7 @@ public abstract class Selector {
 	 * @param obj a node
 	 * @return the default style for this object
 	 */	
-	public CSSStyle getStyleForNode(Object obj) {
+	public final CSSStyle getStyleForNode(Object obj) {
 		return getStyle(getCategoryForNode(obj));
 	}
 	
@@ -104,7 +104,7 @@ public abstract class Selector {
 	 * @param obj an edge
 	 * @return the default style for this object
 	 */	
-	public CSSStyle getStyleForEdge(Object obj) {
+	public final CSSStyle getStyleForEdge(Object obj) {
 		return getStyle(getCategoryForEdge(obj));
 	}
 	
@@ -113,42 +113,12 @@ public abstract class Selector {
 	 * @param category the id of the category
 	 * @return false if the category doesn't exists
 	 */
-	public boolean setStyle(String category, CSSStyle style) {
+	public final boolean setStyle(String category, CSSStyle style) {
 		if (!m.containsKey(category)) {
             return missingCategory(category, style);
         }
 		m.put(category, style);
 		return true;
-	}
-
-	/**
-	 * Set the style for an object using getCategory to determine its category
-	 * 
-	 * If possible call setStyleForNode or setStyleForEdge, when you know the type of object
-	 * 
-	 * @param obj
-	 * @return the default style for this object
-	 */	
-	public boolean setStyle(Object obj, CSSStyle style) {
-		return setStyle(getCategory(obj), style);
-	}
-	
-	/**
-	 * Set the style for a node using getCategory to determine its category
-	 * @param obj a node
-	 * @return the default style for this object
-	 */	
-	public boolean setStyleForNode(Object obj, CSSStyle style) {
-		return setStyle(getCategoryForNode(obj), style);
-	}
-	
-	/**
-	 * Set the style for an edge using getCategory to determine its category
-	 * @param obj an edge
-	 * @return the default style for this object
-	 */	
-	public boolean setStyleForEdge(Object obj, CSSStyle style) {
-		return setStyle(getCategoryForEdge(obj), style);
 	}
 	
 	/**
@@ -156,7 +126,7 @@ public abstract class Selector {
 	 * @param category the id of the category
 	 * @return false if the category doesn't exist
 	 */
-	public boolean applyStyle(String category, AttributesReader areader) {
+	private final boolean applyStyle(String category, AttributesReader areader) {
 		CSSStyle s = (CSSStyle) m.get(category);
 		if (s != null) {
             s.apply(areader);
@@ -168,23 +138,11 @@ public abstract class Selector {
 	}
 
 	/**
-	 * Apply the style to an element using an attributesReder for a category id or null if the category doesn't exist.
-	 * 
-	 * If possible call applyStyleForNode or applyStyleForEdge, when you know the type of object
-	 * 
-	 * @param obj
-	 * @return false if the category doesn't exist
-	 */	
-	public boolean applyStyle(Object obj, AttributesReader areader) {
-		return applyStyle(getCategory(obj), areader);
-	}
-
-	/**
 	 * Apply the style to a node using an attributesReder for a category id or null if the category doesn't exist.
 	 * @param obj a node
 	 * @return false if the category doesn't exist
 	 */	
-	public boolean applyStyleForNode(Object obj, AttributesReader areader) {
+	public final boolean applyStyleForNode(Object obj, AttributesReader areader) {
 		return applyStyle(getCategoryForNode(obj), areader);
 	}
 	
@@ -193,7 +151,7 @@ public abstract class Selector {
 	 * @param obj an edge
 	 * @return false if the category doesn't exist
 	 */	
-	public boolean applyStyleForEdge(Object obj, AttributesReader areader) {
+	public final boolean applyStyleForEdge(Object obj, AttributesReader areader) {
 		return applyStyle(getCategoryForEdge(obj), areader);
 	}
 	
@@ -257,14 +215,6 @@ public abstract class Selector {
 	}
 	
 	/**
-	 * Indicates if the selector require a category or can be called alone in a sheet document.
-	 * @return false
-	 */
-	public boolean requireCategory() {
-		return false;
-	}
-
-	/**
 	 * Return the category corresponding to the object obj or null if it doesn't respond to any.
 	 * 
 	 * If possible call getCategoryForNode or getCategoryForEdge, when you know the type of object
@@ -272,14 +222,11 @@ public abstract class Selector {
 	 * @param obj
 	 * @return
 	 */
-	public String getCategory(Object obj) {
-		if (isNode(obj)) {
-            return getCategoryForNode(obj);
-        }
-		if (isEdge(obj)) {
+	public final String getCategory(Object obj) {
+		if (obj instanceof Edge) {
             return getCategoryForEdge(obj);
         }
-		return null;
+		return getCategoryForNode(obj);
 	}
 
 	/**
@@ -289,7 +236,7 @@ public abstract class Selector {
 	 * @param obj
 	 * @return
 	 */
-	abstract public String getCategoryForNode(Object obj);
+	abstract protected String getCategoryForNode(Object obj);
 	/**
 	 * Return the category corresponding to the object obj or null if it doesn't respond to any.
 	 * 
@@ -297,54 +244,23 @@ public abstract class Selector {
 	 * @param obj
 	 * @return
 	 */
-	abstract public String getCategoryForEdge(Object obj);
+	abstract protected String getCategoryForEdge(Object obj);
 	
-	/**
-	 * @param obj
-	 * @return true if obj is a node
-	 */
-	protected boolean isNode(Object obj) {
-		if (obj instanceof RegulatoryNode) {
-            return true;
-        }
-		if (obj instanceof DynamicNode) {
-            return true;
-        }
-		return false;
-	}
-
-	/**
-	 * @param obj
-	 * @return true if obj is an edge
-	 */
-	protected boolean isEdge(Object obj) {
-		if (obj instanceof Edge) {
-            return true;
-        }
-		if (obj instanceof RegulatoryEdge) {
-            return true;
-        }
-		if (obj instanceof RegulatoryMultiEdge) {
-            return true;
-        }
-		return false;
-	}
-
 	/**
 	 * By default this does nothing but subclasses of Selector could use this function to free the cache of category<=>object.
 	 * Should only be called if you are sure you doesn't need to use getCategory on this selector anymore.
 	 */
 	public void flush() {};
 	
-	public String toString() {
+	public final String toString() {
 		return identifier;
 	}
 	
-	public String toString(String category) {
+	public final String toString(String category) {
 		return identifier+"."+category;
 	}
 	
-	public String toCSS() {
+	public final String toCSS() {
 		StringBuffer s = new StringBuffer();
 		for (Object category : m.keySet()) {
 			s.append(identifier);
