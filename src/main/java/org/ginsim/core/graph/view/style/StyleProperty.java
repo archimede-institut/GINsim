@@ -9,21 +9,21 @@ abstract public class StyleProperty {
 
 	private static int NEXTKEY = 0;
 	
-	public static final StyleProperty BACKGROUND = new ColorProperty("background", true);
-	public static final StyleProperty FOREGROUND = new ColorProperty("foreground", true);
-	public static final StyleProperty TEXT       = new ColorProperty("text", true);
-	public static final StyleProperty SHAPE      = new EnumProperty("shape", NodeShape.values(), true);
-	public static final StyleProperty BORDER     = new EnumProperty("border", NodeBorder.values(), true);
+	public static final ColorProperty BACKGROUND = new ColorProperty("background", true);
+	public static final ColorProperty FOREGROUND = new ColorProperty("foreground", true);
+	public static final ColorProperty TEXT       = new ColorProperty("text", true);
+	public static final EnumProperty SHAPE      = new EnumProperty("shape", NodeShape.values(), true);
+	public static final EnumProperty BORDER     = new EnumProperty("border", NodeBorder.values(), true);
 
 
-	public static final StyleProperty COLOR      = new ColorProperty("color", true);
-	public static final StyleProperty ENDING     = new EnumProperty("ending", EdgeEnd.values(), true);
-	public static final StyleProperty PATTERN    = new EnumProperty("pattern", EdgePattern.values(), true);
+	public static final ColorProperty COLOR      = new ColorProperty("color", true);
+	public static final EnumProperty ENDING     = new EnumProperty("ending", EdgeEnd.values(), true);
+	public static final EnumProperty PATTERN    = new EnumProperty("pattern", EdgePattern.values(), true);
 	
 
-	public static final StyleProperty WIDTH     = new IntegerProperty("width", true, 15, 400, 5, 40);
-	public static final StyleProperty HEIGHT    = new IntegerProperty("height", true, 15, 400, 5, 25);
-	public static final StyleProperty LINEWIDTH = new IntegerProperty("line_width", true, 1, 7, 1, 1);
+	public static final IntegerProperty WIDTH     = new IntegerProperty("width", true, 15, 400, 5, 40);
+	public static final IntegerProperty HEIGHT    = new IntegerProperty("height", true, 15, 400, 5, 25);
+	public static final IntegerProperty LINEWIDTH = new IntegerProperty("line_width", true, 1, 7, 1, 1);
 
 
 	public static StyleProperty[] merge(StyleProperty[] base, StyleProperty[] extra) {

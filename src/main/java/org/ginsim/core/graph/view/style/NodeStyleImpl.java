@@ -242,10 +242,16 @@ public class NodeStyleImpl<V> implements NodeStyle<V> {
 		}
 
 		if (prop == StyleProperty.WIDTH) {
+			if (width < 0) {
+				return null;
+			}
 			return width;
 		}
 
 		if (prop == StyleProperty.HEIGHT) {
+			if (height < 0) {
+				return null;
+			}
 			return height;
 		}
 		
@@ -263,9 +269,17 @@ public class NodeStyleImpl<V> implements NodeStyle<V> {
 		} else if (prop == StyleProperty.SHAPE) {
 			this.shape = (NodeShape)value;
 		} else if (prop == StyleProperty.WIDTH) {
-			this.width = (Integer)value;
+			if (value == null) {
+				this.width = -1;
+			} else {
+				this.width = (Integer)value;
+			}
 		} else if (prop == StyleProperty.HEIGHT) {
-			this.height = (Integer)value;
+			if (value == null) {
+				this.height = -1;
+			} else {
+				this.height = (Integer)value;
+			}
 		} else if (prop == StyleProperty.BORDER) {
 			this.border = (NodeBorder)value;
 		} else {

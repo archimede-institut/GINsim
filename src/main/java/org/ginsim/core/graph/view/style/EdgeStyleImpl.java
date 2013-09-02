@@ -176,6 +176,13 @@ public class EdgeStyleImpl<V, E extends Edge<V>> implements EdgeStyle<V, E> {
 			return pattern;
 		}
 		
+		if (prop == StyleProperty.LINEWIDTH) {
+			if (width < 1) {
+				return null;
+			}
+			return width;
+		}
+		
 		return getCustomProperty(prop);
 	}
 	
@@ -187,6 +194,12 @@ public class EdgeStyleImpl<V, E extends Edge<V>> implements EdgeStyle<V, E> {
 			this.ending = (EdgeEnd)value;
 		} else if (prop == StyleProperty.PATTERN) {
 			this.pattern = (EdgePattern)value;
+		} else if (prop == StyleProperty.LINEWIDTH) {
+			if (value == null) {
+				this.width = -1;
+			} else {
+				this.width = (Integer)value;
+			}
 		} else {
 			setCustomProperty(prop, value);
 		}

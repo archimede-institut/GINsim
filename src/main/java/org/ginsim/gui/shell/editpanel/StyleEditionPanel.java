@@ -12,11 +12,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.AbstractSpinnerModel;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JSpinner;
+import javax.swing.SpinnerModel;
+import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.view.style.ColorProperty;
@@ -259,41 +265,156 @@ class EnumPropertyBox extends PropertyEditor<JComboBox> implements ActionListene
 		if (style == null) {
 			return;
 		}
-		style.setProperty(property, component.getSelectedItem());
-		styleManager.styleUpdated(style);
-		update();
+		Object current = style.getProperty(this.property);
+		Object next = component.getSelectedItem();
+		
+		if (next != current) {
+			style.setProperty(property, next);
+			styleManager.styleUpdated(style);
+			update();
+		}
 	}
 	
 	protected void update() {
 		super.update();
 		if (style == null) {
+			return;
+		}
+		this.component.setSelectedItem(style.getProperty(this.property));
+	}
+}
+
+class IntegerPropertyBox extends PropertyEditor<JSpinner> implements ChangeListener {
+	
+	private final PropertySpinnerModel model;
+	
+	public IntegerPropertyBox(StyleManager styleManager, IntegerProperty property, GraphGUI gui) {
+		super(styleManager, property, gui, new JSpinner(), 2);
+		
+		this.model = new PropertySpinnerModel(property);
+		this.component.setModel(model);
+		this.component.addChangeListener(this);
+	}
+
+	protected void update() {
+		super.update();
+		if (style == null) {
+			return;
+		}
+		Integer value = (Integer)style.getProperty(property);
+		if (value == null) {
+			component.setBackground(Color.YELLOW);
+			component.setValue(null);
 		} else {
-			this.component.setSelectedItem(style.getProperty(this.property));
-			// TODO
+			component.setBackground(Color.WHITE);
+			component.setValue(value);
+		}
+	}
+
+	@Override
+	public void stateChanged(ChangeEvent e) {
+		if (style == null) {
+			return;
+		}
+		
+		Object current = style.getProperty(this.property);
+		Object next = model.getRawValue();
+		
+		if (next != current) {
+			style.setProperty(property, next);
+			styleManager.styleUpdated(style);
+			update();
 		}
 	}
 }
 
-class IntegerPropertyBox extends PropertyEditor<JLabel> implements ActionListener {
+class PropertySpinnerModel extends AbstractSpinnerModel {
 	
-	public IntegerPropertyBox(StyleManager styleManager, IntegerProperty property, GraphGUI gui) {
-		super(styleManager, property, gui, new JLabel("TODO: int"), 2);
+	private final int fallback, min, max, step;
+	
+	private int value;
+	
+	public PropertySpinnerModel(IntegerProperty prop) {
+		this.fallback = prop.fallback;
+		this.min = prop.min;
+		this.max = prop.max;
+		this.step = prop.step;
+		this.value = -1;
+	}
+
+	public int getRawValue() {
+		return value;
 	}
 
 	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (style == null) {
+	public Object getNextValue() {
+		if (value < 0) {
+			return fallback;
+		}
+		
+		if (value < min) {
+			return min;
+		}
+		
+		int next = value+step;
+		if (next > max) {
+			return max;
+		}
+		
+		return next;
+	}
+
+	@Override
+	public Object getPreviousValue() {
+		if (value < 0) {
+			return fallback;
+		}
+		
+		if (value > max) {
+			return max;
+		}
+		
+		int next = value-step;
+		if (next < min) {
+			return min;
+		}
+		
+		return next;
+	}
+
+	@Override
+	public Object getValue() {
+		return ""+value;
+	}
+
+	@Override
+	public void setValue(Object value) {
+		int next = 0;
+		
+		if (value == null) {
+			next = -1;
+		} else if (value instanceof Integer) {
+			next = (Integer)value;
+		} else if (value instanceof String) {
+			try {
+				next = Integer.parseInt((String)value);
+			} catch (Exception e) {}
+		}
+		
+		if (next == 0) {
+			// invalid input?
 			return;
 		}
-		// TODO
-		update();
-	}
-	
-	protected void update() {
-		super.update();
-		if (style == null) {
-		} else {
-			// TODO
+		
+		if (next > max) {
+			next = max;
+		} else if (next != -1 && next < min) {
+			next = min;
+		}
+		
+		if (next != this.value) {
+			this.value = next;
+			fireStateChanged();
 		}
 	}
 }

@@ -3,8 +3,8 @@ package org.ginsim.core.graph.view.style;
 
 public class IntegerProperty extends StyleProperty {
 	
-	private final int fallback;
-	private final int min, max, step;
+	public final int fallback;
+	public final int min, max, step;
 	
 	protected IntegerProperty(String name, boolean isCore, int min, int max, int step, int fallback) {
 		super(name, isCore);
