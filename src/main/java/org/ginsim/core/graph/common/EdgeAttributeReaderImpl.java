@@ -209,7 +209,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 			return;
 		}
         if (viewInfo == null) {
-        	graph.ensureEdgeViewInfo(edge);
+        	viewInfo = graph.ensureEdgeViewInfo(edge);
         }
         viewInfo.setCurve(curve);
 	}
