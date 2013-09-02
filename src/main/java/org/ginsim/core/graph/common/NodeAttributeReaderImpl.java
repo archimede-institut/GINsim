@@ -156,7 +156,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
     @Override
     public Color getTextColor() {
         if (style != null) {
-        	style.getTextColor(vertex);
+        	return style.getTextColor(vertex);
         }
     	return defaultStyle.getTextColor(vertex);
     }

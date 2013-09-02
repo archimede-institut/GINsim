@@ -61,6 +61,7 @@ public abstract class BaseGraphGUI<G extends Graph<V,E>, V, E extends Edge<V>>
 		
 		editActionManager = new EditActionManager(this, helper.getEditActions(graph));
 		GraphManager.getInstance().addGraphListener(g, this);
+		g.addViewListener(this);
 	}
 
 	@Override

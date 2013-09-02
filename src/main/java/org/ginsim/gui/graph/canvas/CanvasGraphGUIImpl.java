@@ -45,7 +45,7 @@ public class CanvasGraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> exte
 		if (o == null) {
 			canvas.clearOffscreen();
 		}
-		repaint();
+		canvas.repaint();
 	}
 
 	@Override
