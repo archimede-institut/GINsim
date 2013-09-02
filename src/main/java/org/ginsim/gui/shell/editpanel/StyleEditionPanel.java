@@ -19,8 +19,6 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
-import javax.swing.SpinnerModel;
-import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -72,6 +70,7 @@ public class StyleEditionPanel extends JPanel {
 			return;
 		}
 		
+		boolean inherit = style.getKey() != 0;
 		int y1=0, y2=0, y3=0;
 		for (StyleProperty prop: style.getProperties()) {
 			if (!m_properties.containsKey(prop)) {
@@ -80,7 +79,7 @@ public class StyleEditionPanel extends JPanel {
 			PropertyEditor ped = m_properties.get(prop);
 			if (ped != null) {
 				
-				ped.setStyle(style);
+				ped.setStyle(style, inherit);
 				
 				int x;
 				int y;
@@ -140,6 +139,7 @@ class PropertyEditor<C extends Component> {
 	protected final C component;
 
 	protected Style style = null;
+	protected boolean inherit = false;
 
 	public PropertyEditor(StyleManager styleManager, StyleProperty property, GraphGUI gui, C component, int col) {
 		this.property = property;
@@ -174,13 +174,14 @@ class PropertyEditor<C extends Component> {
 		return property;
 	}
 
-	public void setStyle(Style style) {
+	public void setStyle(Style style, boolean inherit) {
 		this.style = style;
+		this.inherit = inherit;
 		update();
 	}
 	
 	protected void reset() {
-		if (style == null) {
+		if (style == null || !inherit) {
 			return;
 		}
 		this.style.setProperty(property, null);
@@ -193,7 +194,7 @@ class PropertyEditor<C extends Component> {
 			return;
 		}
 		Object val = style.getProperty(property);
-		b_reset.setEnabled( val != null );
+		b_reset.setEnabled( inherit && val != null );
 	}
 	
 }
