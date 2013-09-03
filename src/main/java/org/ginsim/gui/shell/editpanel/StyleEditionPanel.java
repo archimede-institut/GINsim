@@ -149,6 +149,7 @@ abstract class PropertyEditor<C extends Component> {
 		this.component = createComponent();
 		this.label = new JLabel(property.name);
 		this.b_reset = new JButton("x");
+		this.b_reset.setToolTipText("Reset to default");
 		this.b_reset.setForeground(Color.RED.darker());
 		this.b_reset.addActionListener(new ActionListener() {
 			@Override
