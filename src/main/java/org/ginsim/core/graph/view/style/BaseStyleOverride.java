@@ -35,10 +35,13 @@ abstract public class BaseStyleOverride<S extends Style> implements Style {
 	}
 
 	@Override
-	public int getKey() {
-		return 0;
+	public String getName() {
+		return null;
 	}
 
+	@Override
+	public void setName(String name) {
+	}
 
 	@Override
 	public Object getParentProperty(StyleProperty property) {

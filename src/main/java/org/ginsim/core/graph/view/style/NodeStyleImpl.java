@@ -45,11 +45,11 @@ public class NodeStyleImpl<V> extends BaseStyle<NodeStyle<V>> implements NodeSty
 	private NodeBorder border;
 	
 	public NodeStyleImpl() {
-		this(0, null);
+		this(null, null);
 	}
 	
-	public NodeStyleImpl(int key, NodeStyle<V> parent) {
-		super(parent, key);
+	public NodeStyleImpl(String name, NodeStyle<V> parent) {
+		super(parent, name);
 		if (parent == null) {
 			bg = DEFAULT_BACKGROUND;
 			fg = DEFAULT_FOREGROUND;
@@ -201,13 +201,12 @@ public class NodeStyleImpl<V> extends BaseStyle<NodeStyle<V>> implements NodeSty
 	}
 
 	public String toString() {
-		if (key == 0) {
+		if (name == null) {
 			return "Default node style";
 		}
-		return "node style "+key;
+		return name;
 	}
 	
-
 	@Override
 	public StyleProperty[] getProperties() {
 		return DEFAULT_PROPERTIES;

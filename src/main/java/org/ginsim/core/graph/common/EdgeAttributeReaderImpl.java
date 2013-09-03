@@ -401,7 +401,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 			writer.addAttr("points", points);
 		}
 		if (style != null) {
-			writer.addAttr("style", ""+style.getKey());
+			writer.addAttr("style", style.getName());
 		}
 		
 		// write old attributes for backward compatibility

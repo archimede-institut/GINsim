@@ -3,6 +3,7 @@ package org.ginsim.core.graph.view.style;
 import java.awt.Color;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +36,6 @@ public class StyleManager<V, E extends Edge<V>> {
 	private final List<NodeStyle<V>> nodeStyles;
 	private final List<EdgeStyle<V,E>> edgeStyles;
 	
-	private int nextkey = 1;
-
 	private StyleProvider<V, E> provider;
 	
 	/**
@@ -94,9 +93,9 @@ public class StyleManager<V, E extends Edge<V>> {
 	
 	private void style2ginml(XMLWriter writer, Style style, String styletype) throws IOException {
 		writer.openTag(styletype);
-		int key = style.getKey();
-		if (key != 0) {
-			writer.addAttr("name", ""+key);
+		String name = style.getName();
+		if (name != null) {
+			writer.addAttr("name", name);
 		}
 
 		StringBuffer sb_custom = null;
@@ -124,15 +123,13 @@ public class StyleManager<V, E extends Edge<V>> {
 	}
 
 	public void parseStyle(String qName, Attributes attributes) {
-		int key=0;
+		String name = null;
 		Map<String,String> mattrs = new HashMap<String, String>();
 		for (int i=0 ; i<attributes.getLength() ; i++) {
 			String qname = attributes.getQName(i);
 			String value = attributes.getValue(i);
 			if (qname == "name") {
-				try {
-					key = Integer.parseInt(value);
-				} catch (Exception e) {}
+				name = value;
 			} else if (qname == "properties") {
 				String[] props = value.split(" ");
 				for (String sp: props) {
@@ -148,31 +145,25 @@ public class StyleManager<V, E extends Edge<V>> {
 		
 		Style style = null;
 		if ("nodestyle".equals(qName)) {
-			if (key == 0) {
+			if (name == null) {
 				style = defaultNodeStyle;
 			} else {
-				style = new NodeStyleImpl<V>(key, defaultNodeStyle);
+				style = new NodeStyleImpl<V>(name, defaultNodeStyle);
 				nodeStyles.add((NodeStyle)style);
 			}
 		} else if ("edgestyle".equals(qName)) {
-			if (key == 0) {
+			if (name == null) {
 				style = defaultEdgeStyle;
 			} else {
-				style = new EdgeStyleImpl<V, E>(key, defaultEdgeStyle);
+				style = new EdgeStyleImpl<V, E>(name, defaultEdgeStyle);
 				edgeStyles.add((EdgeStyle)style);
 			}
 		}
 		
-		if (key >= nextkey) {
-			nextkey = key+1;
-		}
-
 		if (style != null) {
 			fillStyle(style, attributes);
 		}
 	}
-	
-	
 	
 	private void fillStyle(Style style, Attributes attrs) {
 		for (StyleProperty prop: style.getProperties()) {
@@ -183,36 +174,96 @@ public class StyleManager<V, E extends Edge<V>> {
 		}
 	}
 
+	/**
+	 * Create a new node style.
+	 * @return the new style
+	 */
 	public NodeStyle<V> addNodeStyle() {
-		NodeStyle<V> style = new NodeStyleImpl<V>(nextkey++, defaultNodeStyle);
+		String name = findName("Node style ",  nodeStyles);
+		NodeStyle<V> style = new NodeStyleImpl<V>(name, defaultNodeStyle);
 		nodeStyles.add(style);
 		return style;
 	}
+	/**
+	 * Create a new edge style.
+	 * @return the new style
+	 */
 	public EdgeStyle<V,E> addEdgeStyle() {
-		EdgeStyle<V,E> style = new EdgeStyleImpl<V,E>(nextkey++, defaultEdgeStyle);
+		String name = findName("Edge style ",  edgeStyles);
+		EdgeStyle<V,E> style = new EdgeStyleImpl<V,E>(name, defaultEdgeStyle);
 		edgeStyles.add(style);
 		return style;
 	}
 	
+	/**
+	 * Search for a unique name for a new style.
+	 * 
+	 * @param basename
+	 * @param styles
+	 * @return
+	 */
+	private <S extends Style> String findName(String basename, Collection<S> styles) {
+		
+		int ext = 1;
+		String name = basename;
+		while ( nameExists(name, styles) ) {
+			ext++;
+			name = basename+ext;
+		}
+		return name;
+	}
+	
+	/**
+	 * Retrieve a node style based on its name.
+	 * Note that this is not the regular way to retrieve a style, and should only be used by the parser.
+	 * 
+	 * @param name
+	 * @return the corresponding style, or null if not found/default
+	 */
 	public NodeStyle<V> getNodeStyle(String name) {
-		int key = Integer.parseInt(name);
+		if (name == null) {
+			return null;
+		}
+		
 		for (NodeStyle<V> style: nodeStyles) {
-			if (style.getKey() == key) {
+			if ( name.equals( style.getName() ) ) {
 				return style;
 			}
 		}
 		return null;
 	}
+	
+	/**
+	 * Retrieve an edge style based on its name.
+	 * Note that this is not the regular way to retrieve a style, and should only be used by the parser.
+	 * 
+	 * @param name
+	 * @return the corresponding style, or null if not found/default
+	 */
 	public EdgeStyle<V,E> getEdgeStyle(String name) {
-		int key = Integer.parseInt(name);
+		if (name == null) {
+			return defaultEdgeStyle;
+		}
+		
 		for (EdgeStyle<V,E> style: edgeStyles) {
-			if (style.getKey() == key) {
+			if (name.equals( style.getName() )) {
 				return style;
 			}
 		}
 		return null;
 	}
 
+	/**
+	 * Find a node style corresponding to the desired attributes.
+	 * If needed, a new style will be created.
+	 * Note that this is not the regular way to retrieve a style,
+	 * it should only used when parsing old models (without styles)
+	 * to assign the same style to elements with similar attributes.
+	 * 
+	 * @param qName
+	 * @param attributes
+	 * @return a matching style (can be a new one)
+	 */
 	public NodeStyle guessNodeStyle(String qName, Attributes attributes) {
 		NodeShape shape = null;
         if (qName.equals("rect")) {
@@ -246,6 +297,17 @@ public class StyleManager<V, E extends Edge<V>> {
 		return style;
 	}
 
+	/**
+	 * Find an edge style corresponding to the desired attributes.
+	 * If needed, a new style will be created.
+	 * Note that this is not the regular way to retrieve a style,
+	 * it should only used when parsing old models (without styles)
+	 * to assign the same style to elements with similar attributes.
+	 * 
+	 * @param qName
+	 * @param attributes
+	 * @return a matching style (can be a new one)
+	 */
 	public EdgeStyle guessEdgeStyle(String qName, Attributes attributes) {
 		Color color = ColorPalette.getColorFromCode(attributes.getValue("line_color"));
 		EdgePattern pattern = EdgePattern.SIMPLE;
@@ -272,13 +334,30 @@ public class StyleManager<V, E extends Edge<V>> {
 		return style;
 	}
 
+	/**
+	 * Get the list of all node styles
+	 * @return the list of node styles
+	 */
 	public List<NodeStyle<V>> getNodeStyles() {
 		return nodeStyles;
 	}
+
+	/**
+	 * Get the list of all edge styles
+	 * @return the list of edge styles
+	 */
 	public List<EdgeStyle<V,E>> getEdgeStyles() {
 		return edgeStyles;
 	}
 
+	/**
+	 * Get the node style used for the view.
+	 * The returned style can be the core one or a style
+	 * provided by a StyleProvider.
+	 * 
+	 * @param node
+	 * @return the style for this node.
+	 */
 	public NodeStyle<V> getViewNodeStyle(V node) {
 		NodeStyle<V> base = getUsedNodeStyle(node);
 		if (provider != null) {
@@ -288,6 +367,13 @@ public class StyleManager<V, E extends Edge<V>> {
 	}
 
 	
+	/**
+	 * Get the node style stored in the graph.
+	 * The returned style ignores the presence of a StyleProvider.
+	 * 
+	 * @param node
+	 * @return the style for this node.
+	 */
 	public NodeStyle<V> getUsedNodeStyle(V node) {
 		NodeViewInfo info = backend.getNodeViewInfo(node);
 		NodeStyle<V> style = info.getStyle();
@@ -297,6 +383,14 @@ public class StyleManager<V, E extends Edge<V>> {
 		return style;
 	}
 
+	/**
+	 * Get the edge style used for the view.
+	 * The returned style can be the core one or a style
+	 * provided by a StyleProvider.
+	 * 
+	 * @param node
+	 * @return the style for this edge.
+	 */
 	public EdgeStyle getViewEdgeStyle(E edge) {
 		EdgeStyle<V,E> base = getUsedEdgeStyle(edge);
 		if (provider != null) {
@@ -304,6 +398,13 @@ public class StyleManager<V, E extends Edge<V>> {
 		}
 		return base;
 	}
+	/**
+	 * Get the edge style stored in the graph.
+	 * The returned style ignores the presence of a StyleProvider.
+	 * 
+	 * @param node
+	 * @return the style for this edge.
+	 */
 	public EdgeStyle getUsedEdgeStyle(E edge) {
 		EdgeViewInfo<V, E> info = backend.getEdgeViewInfo(edge);
 		if (info == null) {
@@ -316,6 +417,12 @@ public class StyleManager<V, E extends Edge<V>> {
 		return style;
 	}
 
+	/**
+	 * Apply a style to a single node.
+	 * 
+	 * @param node
+	 * @param style
+	 */
 	public void applyNodeStyle(V node, NodeStyle<V> style) {
 		if (style == null) {
 			style = defaultNodeStyle;
@@ -327,6 +434,12 @@ public class StyleManager<V, E extends Edge<V>> {
 		backend.repaint();
 	}
 
+	/**
+	 * Apply a style to a single edge.
+	 * 
+	 * @param edge
+	 * @param style
+	 */
 	public void applyEdgeStyle(E edge, EdgeStyle<V,E> style) {
 		if (style == null || style == defaultEdgeStyle) {
 			EdgeViewInfo<V, E> info = backend.getEdgeViewInfo(edge);
@@ -342,7 +455,13 @@ public class StyleManager<V, E extends Edge<V>> {
 		backend.repaint();
 	}
 
+	/**
+	 * Called when a style has been modified, it will refresh the view.
+	 * @param style
+	 */
 	public void styleUpdated(Style style) {
+
+		// TODO: fire metadata change
 		backend.damage(null);
 		backend.repaint();
 	}
@@ -357,4 +476,38 @@ public class StyleManager<V, E extends Edge<V>> {
 		backend.damage(null);
 	}
 	
+	public void renameStyle(Style style, String newname) {
+		String oldname = style.getName();
+		if (newname == null || oldname == null|| newname.equals(style.getName())) {
+			return;
+		}
+		
+		if (style instanceof NodeStyle) {
+			if (nameExists(newname, nodeStyles)) {
+				return;
+			}
+		} else if (nameExists(newname, edgeStyles)) {
+			return;
+		}
+		
+		// TODO: fire metadata change
+		style.setName(newname);
+	}
+	
+	/**
+	 * Test if a style name already exists.
+	 * 
+	 * @param name
+	 * @param styles the list of styles (nodestyles or edgestyles)
+	 * @return
+	 */
+	private <S extends Style> boolean nameExists(String name, Collection<S> styles) {
+
+		for (Style style: styles) {
+			if (name.equals(style.getName())) {
+				return true;
+			}
+		}
+		return false;
+	}
 }

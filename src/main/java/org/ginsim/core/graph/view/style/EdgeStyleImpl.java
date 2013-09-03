@@ -36,11 +36,11 @@ public class EdgeStyleImpl<V, E extends Edge<V>> extends BaseStyle<EdgeStyle<V, 
 	private int width = -1;
 	
 	public EdgeStyleImpl() {
-		this(0, null);
+		this(null, null);
 	}
 	
-	public EdgeStyleImpl(int key, EdgeStyle<V, E> parent) {
-		super(parent, key);
+	public EdgeStyleImpl(String name, EdgeStyle<V, E> parent) {
+		super(parent, name);
 		
 		if (parent == null) {
 			color = DEFAULT_COLOR;
@@ -147,10 +147,10 @@ public class EdgeStyleImpl<V, E extends Edge<V>> extends BaseStyle<EdgeStyle<V, 
 	}
 
 	public String toString() {
-		if (key == 0) {
+		if (name == null) {
 			return "Default edge style";
 		}
-		return "edge style "+key;
+		return name;
 	}
 	
 	@Override

@@ -233,7 +233,7 @@ copyright by
     name CDATA #IMPLIED
     style CDATA #IMPLIED
     color CDATA #IMPLIED
-    width CDATA #IMPLIED
+    line_width CDATA #IMPLIED
     ending CDATA #IMPLIED
     properties CDATA #IMPLIED
 > 

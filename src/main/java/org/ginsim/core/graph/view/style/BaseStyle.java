@@ -2,17 +2,22 @@ package org.ginsim.core.graph.view.style;
 
 abstract public class BaseStyle<S extends Style> implements Style {
 
-	protected final int key;
+	protected String name;
 	protected final S parent;
 	
-	public BaseStyle(S parent, int key) {
+	public BaseStyle(S parent, String name) {
 		this.parent = parent;
-		this.key = key;
+		this.name = name;
 	}
 	
 	@Override
-	public int getKey() {
-		return key;
+	public String getName() {
+		return name;
+	}
+
+	@Override
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	@Override

@@ -346,7 +346,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 		writer.addAttr("x", ""+getX());
 		writer.addAttr("y", ""+getY());
 		if (style != null) {
-			writer.addAttr("style", ""+style.getKey());
+			writer.addAttr("style", style.getName());
 		}
 		
 		if (SAVE_OLD_VS) {

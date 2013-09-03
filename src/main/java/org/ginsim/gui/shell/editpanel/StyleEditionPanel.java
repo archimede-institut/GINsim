@@ -20,6 +20,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
+import javax.swing.JTextField;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -45,7 +46,9 @@ public class StyleEditionPanel extends JPanel {
 	private final Map<StyleProperty, PropertyEditor> m_properties= new HashMap<StyleProperty, PropertyEditor>();
 	private final List<PropertyEditor> editors = new ArrayList<PropertyEditor>();
 	
-	JLabel label = new JLabel();
+	private final JLabel label = new JLabel();
+	private final JTextField nameField = new JTextField();
+	private final JLabel nameLabel = new JLabel("Name");
 	
 	private final GridBagConstraints c;
 	
@@ -57,6 +60,10 @@ public class StyleEditionPanel extends JPanel {
 		this.c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.WEST;
 		c.fill = GridBagConstraints.BOTH;
+		
+		// TODO: implement name change
+		nameField.setEnabled(false);
+		
 		setStyle(null);
 	}
 	
@@ -71,8 +78,19 @@ public class StyleEditionPanel extends JPanel {
 			return;
 		}
 		
-		boolean inherit = style.getKey() != 0;
-		int y1=0, y2=0, y3=0;
+		c.gridx = 0;
+		c.gridy = 0;
+		c.insets = inset_l;
+		add(nameLabel, c);
+		c.gridx = 1;
+		c.gridwidth = 3;
+		c.insets = inset_r;
+		nameField.setText(style.getName() +" [TODO: change name]");
+		add(nameField, c);
+		
+		c.gridwidth = 1;
+		boolean inherit = style.getName() != null;
+		int y1=1, y2=1, y3=1;
 		for (StyleProperty prop: style.getProperties()) {
 			if (!m_properties.containsKey(prop)) {
 				addProperty(prop);

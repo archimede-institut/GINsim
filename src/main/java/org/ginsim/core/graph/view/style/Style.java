@@ -40,8 +40,10 @@ public interface Style {
 	 */
 	void setProperty(StyleProperty prop, Object value);
 
-	int getKey();
+	String getName();
 
+	void setName(String name);
+	
 	Object getParentProperty(StyleProperty property);
 
 }
