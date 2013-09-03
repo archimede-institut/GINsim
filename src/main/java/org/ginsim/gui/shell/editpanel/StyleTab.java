@@ -12,6 +12,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
@@ -67,7 +68,9 @@ public class StyleTab extends JPanel implements EditTab {
 		c.weightx = 1;
 		c.weighty = 1;
 		c.fill = GridBagConstraints.BOTH;
-		add(stylePanel, c);
+		JScrollPane sp = new JScrollPane();
+		sp.setViewportView(stylePanel);
+		add(sp, c);
 	}
 
 	protected void createStyle() {

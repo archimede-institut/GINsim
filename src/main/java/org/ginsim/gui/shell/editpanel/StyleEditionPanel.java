@@ -126,6 +126,8 @@ public class StyleEditionPanel extends JPanel {
 				add(ped.getResetButton(), c);
 			}
 		}
+		revalidate();
+		repaint();
 	}
 	
 	private PropertyEditor addProperty(StyleProperty property) {
