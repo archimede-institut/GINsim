@@ -7,16 +7,11 @@ public class LocalGraphConfig {
 
 	private RegulatoryGraph graph;
 	private DynamicGraph dyn;
-//	private List<byte[]> states;
 
 	public LocalGraphConfig(RegulatoryGraph graph, DynamicGraph dyn) {
 		this.graph = graph;
 		this.dyn = dyn;
 	}
-
-//	public void setStates(List<byte[]> states) {
-//		this.states = states;
-//	}
 
 	public RegulatoryGraph getGraph() {
 		return this.graph;
@@ -26,7 +21,4 @@ public class LocalGraphConfig {
 		return this.dyn;
 	}
 	
-//	public List<byte[]> getStates() {
-//		return this.states;
-//	}
 }
