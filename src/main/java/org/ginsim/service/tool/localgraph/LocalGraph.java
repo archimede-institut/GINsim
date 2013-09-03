@@ -9,7 +9,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
-import org.ginsim.servicegui.tool.localgraph.LocalGraphSelector;
 
 /**
  * 
@@ -39,8 +38,8 @@ public class LocalGraph {
 		this.states = states;
 	}
 
-	public Map<RegulatoryMultiEdge, String> run() {
-		Map<RegulatoryMultiEdge, String> functionalityMap = new HashMap<RegulatoryMultiEdge, String>();
+	public Map<RegulatoryMultiEdge, LocalGraphCategory> run() {
+		Map<RegulatoryMultiEdge, LocalGraphCategory> functionalityMap = new HashMap<RegulatoryMultiEdge, LocalGraphCategory>();
 
 		for (byte[] state : states) {
 			byte[] fstate = f(state);
@@ -61,7 +60,7 @@ public class LocalGraph {
 		return functionalityMap;
 	}
 
-	private void updateEdge(Map<RegulatoryMultiEdge, String> functionalityMap, 
+	private void updateEdge(Map<RegulatoryMultiEdge, LocalGraphCategory> functionalityMap, 
 			RegulatoryMultiEdge edge, byte[] state,
 			byte[] fstate, int i, int j, int diff) {
 		byte[] stateDiff = getStateDiff(state, i, diff);
@@ -69,19 +68,20 @@ public class LocalGraph {
 		if (fstateDiff[j] == fstate[j]) {
 			return; // No effect
 		}
-		String func = functionalityMap.get(edge);
+		LocalGraphCategory func = functionalityMap.get(edge);
 
-		if ((diff > 0 && fstateDiff[j] > fstate[j])
-				|| (diff < 0 && fstateDiff[j] < fstate[j])) {
-			if (func == null || func == LocalGraphSelector.CAT_POSITIVE)
-				functionalityMap.put(edge, LocalGraphSelector.CAT_POSITIVE);
-			else
-				functionalityMap.put(edge, LocalGraphSelector.CAT_DUAL);
+		if ( (diff > 0 && fstateDiff[j] > fstate[j])  ||  (diff < 0 && fstateDiff[j] < fstate[j])) {
+			if (func == null || func == LocalGraphCategory.POSITIVE) {
+				functionalityMap.put(edge, LocalGraphCategory.POSITIVE);
+			} else {
+				functionalityMap.put(edge, LocalGraphCategory.DUAL);
+			}
 		} else {
-			if (func == null || func == LocalGraphSelector.CAT_NEGATIVE)
-				functionalityMap.put(edge, LocalGraphSelector.CAT_NEGATIVE);
-			else
-				functionalityMap.put(edge, LocalGraphSelector.CAT_DUAL);
+			if (func == null || func == LocalGraphCategory.NEGATIVE) {
+				functionalityMap.put(edge, LocalGraphCategory.NEGATIVE);
+			} else {
+				functionalityMap.put(edge, LocalGraphCategory.DUAL);
+			}
 		}
 	}
 

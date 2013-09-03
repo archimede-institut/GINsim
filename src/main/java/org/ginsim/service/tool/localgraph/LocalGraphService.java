@@ -17,12 +17,12 @@ import org.mangosdk.spi.ProviderFor;
 @Alias("localgraph")
 public class LocalGraphService implements Service {
 
-	public Map<RegulatoryMultiEdge, String> run(RegulatoryGraph graph,
+	public Map<RegulatoryMultiEdge, LocalGraphCategory> run(RegulatoryGraph graph,
 			List<byte[]> selStates) throws GsException {
 		return this.run(graph, selStates, null);
 	}
 
-	public Map<RegulatoryMultiEdge, String> run(RegulatoryGraph graph,
+	public Map<RegulatoryMultiEdge, LocalGraphCategory> run(RegulatoryGraph graph,
 			List<byte[]> selStates, Perturbation mutant) throws GsException {
 		if (selStates == null) {
 			throw new GsException(GsException.GRAVITY_NORMAL,
@@ -36,7 +36,7 @@ public class LocalGraphService implements Service {
 
 		LocalGraph lg = new LocalGraph(graph, selStates);
 		lg.setUpdater(new SynchronousSimulationUpdater(model));
-		Map<RegulatoryMultiEdge, String> functionalityMap = lg.run();
+		Map<RegulatoryMultiEdge, LocalGraphCategory> functionalityMap = lg.run();
 		return functionalityMap;
 	}
 }

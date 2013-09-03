@@ -57,8 +57,7 @@ public class TestLocalGraph {
 			state[2] = (byte) 1;
 			// State: 0010...00
 			alStates.add(state);
-			Map<RegulatoryMultiEdge, String> funct = service.run(graph,
-					alStates);
+			Map<RegulatoryMultiEdge, LocalGraphCategory> funct = service.run(graph, alStates);
 
 			// CyclinE1 -> p21CIP
 			RegulatoryMultiEdge me = graph.getEdge(cyclinE1, p21CIP);
@@ -88,22 +87,19 @@ public class TestLocalGraph {
 			state[1] = (byte) 1;
 			// State: 0100
 			alStates.add(state);
-			Map<RegulatoryMultiEdge, String> funct = service.run(graph,
-					alStates);
+			Map<RegulatoryMultiEdge, LocalGraphCategory> funct = service.run(graph,	alStates);
 			RegulatoryNode gA = nodeOrder.get(0);
 			RegulatoryNode gB = nodeOrder.get(1);
 
 			// gA -> gB
 			RegulatoryMultiEdge me = graph.getEdge(gA, gB);
 			assertNotNull("Edge gA -> gB should not be null", me);
-			assertEquals("Edge gA -> gB should be negative", "negative",
-					funct.get(me));
+			assertEquals("Edge gA -> gB should be negative", LocalGraphCategory.NEGATIVE, funct.get(me));
 
 			// gB -> gA
 			me = saGraph[1].getEdge(gB, gA);
 			assertNotNull("Edge gB -> gA should not be null", me);
-			assertEquals("Edge gB -> gA should be positive", "positive",
-					funct.get(me));
+			assertEquals("Edge gB -> gA should be positive", LocalGraphCategory.POSITIVE, funct.get(me));
 		} catch (GsException e) {
 			fail(e.getMessage());
 		}

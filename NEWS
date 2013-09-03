@@ -2,11 +2,12 @@ Version 3.0.
 Changes since version 2.4:
 
 General Changes:
-* large refactoring
+* large refactoring, now require java6 and external libs
 * styles for graphical settings
 * some features were moved to the LogicalModel lib
 * semi-official script-mode (using jython)
 * Welcome screen
+* Local Graph
 
 Definition of the regulatory graph:
 * new (simpler) definition of perturbations

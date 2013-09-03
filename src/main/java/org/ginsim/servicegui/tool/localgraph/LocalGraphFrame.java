@@ -27,10 +27,10 @@ import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
-import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.css.CascadingStyleSheetManager;
+import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
@@ -40,8 +40,10 @@ import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPa
 import org.ginsim.gui.utils.data.SimpleStateListTableModel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
+import org.ginsim.service.tool.localgraph.LocalGraphCategory;
 import org.ginsim.service.tool.localgraph.LocalGraphConfig;
 import org.ginsim.service.tool.localgraph.LocalGraphService;
+import org.ginsim.service.tool.localgraph.LocalGraphStyleProvider;
 
 public class LocalGraphFrame extends StackDialog implements ActionListener,
 		TableModelListener, ListSelectionListener {
@@ -52,9 +54,9 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 	private JButton colorizeButton, addStatesButton, replaceStatesButton;
 
 	private LocalGraphConfig config;
-	private CascadingStyleSheetManager cs;
-	private LocalGraphSelector selector;
-	private Map<RegulatoryMultiEdge, String> functionalityMap;
+	private Map<RegulatoryMultiEdge, LocalGraphCategory> functionalityMap;
+	private LocalGraphStyleProvider styleProvider;
+	private final StyleManager<RegulatoryNode, RegulatoryMultiEdge> styleManager;
 
 	private boolean isColorized = false;
 	private PerturbationSelectionPanel mutantSelectionPanel;
@@ -64,6 +66,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 
 	public LocalGraphFrame(LocalGraphConfig config) {
 		super(config.getGraph(), "STR_localGraph", 420, 260);
+		this.styleManager = config.getGraph().getStyleManager();
 		this.config = config;
 		initialize();
 	}
@@ -127,8 +130,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 	}
 
 	private void undoColorize() {
-		cs.restoreAllEdges(config.getGraph().getEdges(), config.getGraph()
-				.getEdgeAttributeReader());
+		styleManager.setStyleProvider(null);
 		colorizeButton.setText(Translator.getString("STR_colorize_local"));
 		isColorized = false;
 	}
@@ -217,20 +219,9 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 		if (functionalityMap == null) {
 			return;
 		}
-		if (cs == null) {
-			cs = new CascadingStyleSheetManager(true);
-		} else {
-			cs.shouldStoreOldStyle = false;
-		}
-		selector = new LocalGraphSelector();
-		selector.setCache(functionalityMap);
 
-		EdgeAttributesReader ereader = config.getGraph()
-				.getEdgeAttributeReader();
-		for (RegulatoryMultiEdge me : config.getGraph().getEdges()) {
-			ereader.setEdge(me);
-			cs.applyOnEdge(selector, me, ereader);
-		}
+		styleProvider = new LocalGraphStyleProvider(styleManager, functionalityMap);
+		styleManager.setStyleProvider(styleProvider);
 
 		colorizeButton.setText(Translator.getString("STR_undo_colorize"));
 		isColorized = true;

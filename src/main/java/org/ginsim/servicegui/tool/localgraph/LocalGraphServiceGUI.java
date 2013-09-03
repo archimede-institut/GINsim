@@ -11,7 +11,6 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.view.css.Selector;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
@@ -25,11 +24,6 @@ import org.mangosdk.spi.ProviderFor;
 @GUIFor(LocalGraphService.class)
 @ServiceStatus(ServiceStatus.RELEASED)
 public class LocalGraphServiceGUI extends AbstractServiceGUI {
-
-	static {
-		Selector.registerSelector(LocalGraphSelector.IDENTIFIER,
-				LocalGraphSelector.class);
-	}
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
