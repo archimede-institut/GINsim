@@ -7,43 +7,12 @@ import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
 
 
-public class EdgeStyleOverride<V,E extends Edge<V>> implements EdgeStyle<V,E> {
+public class EdgeStyleOverride<V,E extends Edge<V>> extends BaseStyleOverride<EdgeStyle<V, E>> implements EdgeStyle<V,E> {
 
-	private final EdgeStyle<V,E> defaultStyle;
-	private EdgeStyle<V,E> baseStyle;
-	
 	public EdgeStyleOverride(EdgeStyle<V,E> style) {
-		this.defaultStyle = style;
-		this.baseStyle = defaultStyle;
+		super(style);
 	}
 	
-	public void setBaseStyle(EdgeStyle<V,E> style) {
-		if (style == null) {
-			this.baseStyle = defaultStyle;
-		} else {
-			this.baseStyle = style;
-		}
-	}
-	
-	@Override
-	public StyleProperty[] getProperties() {
-		return null;
-	}
-
-	@Override
-	public Object getProperty(StyleProperty prop) {
-		return null;
-	}
-
-	@Override
-	public void setProperty(StyleProperty prop, Object value) {
-	}
-
-	@Override
-	public int getKey() {
-		return 0;
-	}
-
 	@Override
 	public Color getColor(E edge) {
 		return baseStyle.getColor(edge);

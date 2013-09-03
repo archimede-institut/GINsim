@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.AbstractSpinnerModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
 import javax.swing.JComboBox;
@@ -55,7 +56,7 @@ public class StyleEditionPanel extends JPanel {
 		
 		this.c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.WEST;
-		c.fill = GridBagConstraints.HORIZONTAL;
+		c.fill = GridBagConstraints.BOTH;
 		setStyle(null);
 	}
 	
@@ -118,14 +119,14 @@ public class StyleEditionPanel extends JPanel {
 		} else if (property instanceof IntegerProperty) {
 			ped = new IntegerPropertyBox(styleManager, (IntegerProperty)property, gui);
 		} else {
-			ped = new PropertyEditor<Component>(styleManager, property, gui, new JLabel("TODO"), 2);
+			//ped = new PropertyEditor<Component>(styleManager, property, gui, new JLabel("TODO"), 2);
 		}
 		m_properties.put(property, ped);
 		return ped;
 	}
 }
 
-class PropertyEditor<C extends Component> {
+abstract class PropertyEditor<C extends Component> {
 
 	public final int col;
 	
@@ -141,21 +142,20 @@ class PropertyEditor<C extends Component> {
 	protected Style style = null;
 	protected boolean inherit = false;
 
-	public PropertyEditor(StyleManager styleManager, StyleProperty property, GraphGUI gui, C component, int col) {
+	public PropertyEditor(StyleManager styleManager, StyleProperty property, GraphGUI gui, int col) {
 		this.property = property;
 		this.styleManager = styleManager;
 		this.gui = gui;
+		this.component = createComponent();
 		this.label = new JLabel(property.name);
 		this.b_reset = new JButton("x");
 		this.b_reset.setForeground(Color.RED.darker());
 		this.b_reset.addActionListener(new ActionListener() {
-			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				reset();
 			}
 		});
-		this.component = component;
 		this.col = col;
 	}
 
@@ -189,13 +189,27 @@ class PropertyEditor<C extends Component> {
 		update();
 	}
 	
-	protected void update() {
+	protected final void update() {
 		if (style == null) {
+			b_reset.setEnabled( false );
+			component.setEnabled(false);
 			return;
 		}
 		Object val = style.getProperty(property);
 		b_reset.setEnabled( inherit && val != null );
+		component.setEnabled(true);
+
+		if (val == null) {
+			val = style.getParentProperty(property);
+			doUpdate(val, true);
+		} else {
+			doUpdate(val, false);
+		}
 	}
+	
+	abstract protected void doUpdate(Object val, boolean parent);
+
+	abstract protected C createComponent();
 	
 }
 
@@ -204,7 +218,7 @@ class ColorPropertyButton extends PropertyEditor<JButton> implements ActionListe
 	private Color currentColor = Color.white;
 	
 	public ColorPropertyButton(StyleManager styleManager, StyleProperty property, GraphGUI gui) {
-		super(styleManager, property, gui, new JButton(), 0);
+		super(styleManager, property, gui, 0);
 		this.component.addActionListener(this);
 	}
 
@@ -221,18 +235,13 @@ class ColorPropertyButton extends PropertyEditor<JButton> implements ActionListe
 		update();
 	}
 	
-	protected void update() {
-		super.update();
-		if (style == null) {
-			this.currentColor = null;
-			updateComponent(currentColor, "-----");
+	@Override
+	protected void doUpdate(Object val, boolean parent) {
+		this.currentColor = (Color)val;
+		if (currentColor == null) {
+			updateComponent(Color.WHITE, "#??????");
 		} else {
-			this.currentColor = (Color)style.getProperty(property);
-			if (currentColor == null) {
-				updateComponent(Color.WHITE, "UNDEFINED");
-			} else {
-				updateComponent(currentColor, property.getString( style.getProperty(property) ));
-			}
+			updateComponent(currentColor, property.getString( val ));
 		}
 	}
 	
@@ -252,12 +261,32 @@ class ColorPropertyButton extends PropertyEditor<JButton> implements ActionListe
 			component.setForeground(Color.WHITE);
 		}
 	}
+
+	@Override
+	protected JButton createComponent() {
+		return new JButton();
+	}
 }
 
 class EnumPropertyBox extends PropertyEditor<JComboBox> implements ActionListener {
+
+	private UndefinedValue undefined;
+	private DefaultComboBoxModel model;
+	
+	protected JComboBox createComponent() {
+		Object[] values = ((EnumProperty)property).getValues();
+		undefined = new UndefinedValue();
+		model = new DefaultComboBoxModel();
+		model.addElement(undefined);
+		int i=1;
+		for (Object o: values) {
+			model.addElement(o);
+		}
+		return new JComboBox(model);
+	}
 	
 	public EnumPropertyBox(StyleManager styleManager, EnumProperty property, GraphGUI gui) {
-		super(styleManager, property, gui, new JComboBox(property.getValues()), 1);
+		super(styleManager, property, gui, 1);
 		this.component.addActionListener(this);
 	}
 
@@ -269,6 +298,10 @@ class EnumPropertyBox extends PropertyEditor<JComboBox> implements ActionListene
 		Object current = style.getProperty(this.property);
 		Object next = component.getSelectedItem();
 		
+		if (next instanceof UndefinedValue) {
+			next = null;
+		}
+		
 		if (next != current) {
 			style.setProperty(property, next);
 			styleManager.styleUpdated(style);
@@ -276,12 +309,35 @@ class EnumPropertyBox extends PropertyEditor<JComboBox> implements ActionListene
 		}
 	}
 	
-	protected void update() {
-		super.update();
-		if (style == null) {
-			return;
+	protected void doUpdate(Object val, boolean parent) {
+		if (parent) {
+			undefined.setDefault(val);
+			this.component.setSelectedItem(undefined);
+		} else {
+			this.component.setSelectedItem(val);
 		}
-		this.component.setSelectedItem(style.getProperty(this.property));
+	}
+}
+
+class UndefinedValue<T> {
+	
+	public String defaultName;
+	public T value;
+	
+	public String toString() {
+		if (defaultName == null) {
+			return "Default";
+		}
+		return "# "+defaultName;
+	}
+
+	public void setDefault(T val) {
+		this.value = val;
+		if (val == null) {
+			defaultName = null;
+		} else {
+			defaultName = val.toString();
+		}
 	}
 }
 
@@ -290,26 +346,16 @@ class IntegerPropertyBox extends PropertyEditor<JSpinner> implements ChangeListe
 	private final PropertySpinnerModel model;
 	
 	public IntegerPropertyBox(StyleManager styleManager, IntegerProperty property, GraphGUI gui) {
-		super(styleManager, property, gui, new JSpinner(), 2);
-		
+		super(styleManager, property, gui, 2);
 		this.model = new PropertySpinnerModel(property);
 		this.component.setModel(model);
 		this.component.addChangeListener(this);
 	}
 
-	protected void update() {
-		super.update();
-		if (style == null) {
-			return;
-		}
-		Integer value = (Integer)style.getProperty(property);
-		if (value == null) {
-			component.setBackground(Color.YELLOW);
-			component.setValue(null);
-		} else {
-			component.setBackground(Color.WHITE);
-			component.setValue(value);
-		}
+	@Override
+	protected void doUpdate(Object val, boolean parent) {
+		Integer value = (Integer)val;
+		model.apply(value, parent);
 	}
 
 	@Override
@@ -327,10 +373,16 @@ class IntegerPropertyBox extends PropertyEditor<JSpinner> implements ChangeListe
 			update();
 		}
 	}
+
+	@Override
+	protected JSpinner createComponent() {
+		return new JSpinner();
+	}
 }
 
 class PropertySpinnerModel extends AbstractSpinnerModel {
 	
+	private final UndefinedValue<Integer> undefined = new UndefinedValue();
 	private final int fallback, min, max, step;
 	
 	private int value;
@@ -343,6 +395,18 @@ class PropertySpinnerModel extends AbstractSpinnerModel {
 		this.value = -1;
 	}
 
+	public void apply(Integer value, boolean parent) {
+		if (value == null) {
+			value = -1;
+		}
+		if (parent) {
+			undefined.setDefault(value);
+			setValue(-1);
+		} else {
+			setValue(value);
+		}
+	}
+
 	public int getRawValue() {
 		return value;
 	}
@@ -350,7 +414,7 @@ class PropertySpinnerModel extends AbstractSpinnerModel {
 	@Override
 	public Object getNextValue() {
 		if (value < 0) {
-			return fallback;
+			return undefined.value;
 		}
 		
 		if (value < min) {
@@ -368,7 +432,7 @@ class PropertySpinnerModel extends AbstractSpinnerModel {
 	@Override
 	public Object getPreviousValue() {
 		if (value < 0) {
-			return fallback;
+			return undefined.value;
 		}
 		
 		if (value > max) {
@@ -385,6 +449,9 @@ class PropertySpinnerModel extends AbstractSpinnerModel {
 
 	@Override
 	public Object getValue() {
+		if (value == -1) {
+			return undefined;
+		}
 		return ""+value;
 	}
 
@@ -392,7 +459,7 @@ class PropertySpinnerModel extends AbstractSpinnerModel {
 	public void setValue(Object value) {
 		int next = 0;
 		
-		if (value == null) {
+		if (value == null || value instanceof UndefinedValue) {
 			next = -1;
 		} else if (value instanceof Integer) {
 			next = (Integer)value;

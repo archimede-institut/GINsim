@@ -42,4 +42,6 @@ public interface Style {
 
 	int getKey();
 
+	Object getParentProperty(StyleProperty property);
+
 }

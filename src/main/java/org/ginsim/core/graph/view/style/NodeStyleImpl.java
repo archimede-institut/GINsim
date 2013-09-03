@@ -14,7 +14,7 @@ import org.ginsim.core.graph.view.NodeShape;
  *
  * @param <V>
  */
-public class NodeStyleImpl<V> implements NodeStyle<V> {
+public class NodeStyleImpl<V> extends BaseStyle<NodeStyle<V>> implements NodeStyle<V> {
 
 	private static NodeShape DEFAULT_SHAPE = NodeShape.RECTANGLE;
 	private static NodeBorder DEFAULT_BORDER = NodeBorder.SIMPLE;
@@ -44,14 +44,12 @@ public class NodeStyleImpl<V> implements NodeStyle<V> {
 	private NodeShape shape;
 	private NodeBorder border;
 	
-	private final NodeStyle<V> parent;
-	private final int key;
-	
 	public NodeStyleImpl() {
 		this(0, null);
 	}
 	
 	public NodeStyleImpl(int key, NodeStyle<V> parent) {
+		super(parent, key);
 		if (parent == null) {
 			bg = DEFAULT_BACKGROUND;
 			fg = DEFAULT_FOREGROUND;
@@ -63,8 +61,6 @@ public class NodeStyleImpl<V> implements NodeStyle<V> {
 			shape = DEFAULT_SHAPE;
 			border = DEFAULT_BORDER;
 		}
-		this.parent = parent;
-		this.key = key;
 	}
 	
 	@Override
@@ -202,11 +198,6 @@ public class NodeStyleImpl<V> implements NodeStyle<V> {
 			return parent.enforceBorder();
 		}
 		return false;
-	}
-
-	@Override
-	public int getKey() {
-		return key;
 	}
 
 	public String toString() {

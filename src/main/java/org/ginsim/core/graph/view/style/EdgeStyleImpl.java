@@ -16,10 +16,8 @@ import org.ginsim.core.graph.view.EdgePattern;
  * @param <V>
  * @param <E>
  */
-public class EdgeStyleImpl<V, E extends Edge<V>> implements EdgeStyle<V, E> {
+public class EdgeStyleImpl<V, E extends Edge<V>> extends BaseStyle<EdgeStyle<V, E>> implements EdgeStyle<V, E> {
 
-	private final int key;
-	
 	private static int DEFAULT_WIDTH = 1;
 	private static Color DEFAULT_COLOR = Color.BLACK;
 	private static EdgeEnd DEFAULT_ENDING = EdgeEnd.POSITIVE;
@@ -32,8 +30,6 @@ public class EdgeStyleImpl<V, E extends Edge<V>> implements EdgeStyle<V, E> {
 		StyleProperty.LINEWIDTH,
 	};
 	
-	private final EdgeStyle<V, E> parent;
-	
 	private Color color = null;
 	private EdgePattern pattern = null;
 	private EdgeEnd ending = null;
@@ -43,9 +39,8 @@ public class EdgeStyleImpl<V, E extends Edge<V>> implements EdgeStyle<V, E> {
 		this(0, null);
 	}
 	
-	public EdgeStyleImpl(int key, EdgeStyle<V, E> defaultStyle) {
-		this.parent = defaultStyle;
-		this.key = key;
+	public EdgeStyleImpl(int key, EdgeStyle<V, E> parent) {
+		super(parent, key);
 		
 		if (parent == null) {
 			color = DEFAULT_COLOR;
@@ -151,11 +146,6 @@ public class EdgeStyleImpl<V, E extends Edge<V>> implements EdgeStyle<V, E> {
 		return DEFAULT_PROPERTIES;
 	}
 
-	@Override
-	public int getKey() {
-		return key;
-	}
-	
 	public String toString() {
 		if (key == 0) {
 			return "Default edge style";
