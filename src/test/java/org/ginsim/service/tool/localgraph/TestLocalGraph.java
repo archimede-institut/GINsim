@@ -63,7 +63,7 @@ public class TestLocalGraph {
 			RegulatoryMultiEdge me = graph.getEdge(cyclinE1, p21CIP);
 			assertNotNull("Edge CyclinE1 -> p21CIP should not be null", me);
 			assertEquals("Edge ECyclinE1 -> p21CIP should be negative",
-					"negative", funct.get(me));
+					LocalGraphCategory.NEGATIVE, funct.get(me));
 
 			state[2] = (byte) 0;
 			// State: 0010...00
