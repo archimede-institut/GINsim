@@ -7,15 +7,11 @@ import java.util.Map;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.view.NodeBorder;
-import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.EdgeStyleOverride;
 import org.ginsim.core.graph.view.style.NodeStyle;
-import org.ginsim.core.graph.view.style.NodeStyleImpl;
 import org.ginsim.core.graph.view.style.NodeStyleOverride;
 import org.ginsim.core.graph.view.style.StyleManager;
-import org.ginsim.core.graph.view.style.StyleProperty;
 import org.ginsim.core.graph.view.style.StyleProvider;
 
 public class LRGStateStyleProvider implements StyleProvider<RegulatoryNode, RegulatoryMultiEdge> {

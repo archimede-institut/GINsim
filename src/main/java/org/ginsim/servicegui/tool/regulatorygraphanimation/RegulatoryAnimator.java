@@ -1,6 +1,8 @@
 package org.ginsim.servicegui.tool.regulatorygraphanimation;
 
 import java.awt.Color;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -12,12 +14,15 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.dynamicgraph.DynamicEdge;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.GraphicalAttributesStore;
 import org.ginsim.core.graph.view.NodeBorder;
-import org.ginsim.core.graph.view.css.Colorizer;
+import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
@@ -49,8 +54,15 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
     private AnimatorUI ui;
 
     private JFrame frame;
+    
+    private final LRGStateStyleProvider styleProvider;
+    private final StyleManager<RegulatoryNode, RegulatoryMultiEdge> styleManager;
 
-	private Colorizer colorizer;
+    private final STGPathStyleProvider stg_styleProvider;
+    private final StyleManager<DynamicNode, DynamicEdge> stg_styleManager;
+
+    private Collection<DynamicEdge> nextEdges = null;
+    private Collection<DynamicNode> nextNodes = new HashSet<DynamicNode>();
     
     /**
      * @param frame
@@ -85,22 +97,11 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
         this.dynGraph = dynGraph;
         nodeOrder = regGraph.getNodeOrder();
         dynGas = new GraphicalAttributesStore(dynGraph);
+        styleManager = regGraph.getStyleManager();
+        styleProvider = new LRGStateStyleProvider(regGraph);
+        stg_styleProvider = new STGPathStyleProvider(dynGraph, this);
+        stg_styleManager = dynGraph.getStyleManager();
         initAnim();
-    }
-
-    
-    
-    /**
-     * @param simulationManager
-     * @param regGraph
-     * @param dynHieGraph
-     */
-    private RegulatoryAnimator(RegulatoryGraph regGraph) {
-        this.frame = null;
-        this.regGraph = regGraph;
-        this.dynGraph = null;
-        nodeOrder = regGraph.getNodeOrder();
-        colorizer = new Colorizer(new RegulatoryAnimatorSelector(regGraph));
     }
 
     /**
@@ -112,8 +113,9 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
         GUIManager.getInstance().addBlockEdit( regGraph, this);
         GUIManager.getInstance().addBlockClose( dynGraph, this);
         GUIManager.getInstance().addBlockEdit( dynGraph, this);
-        colorizer = new Colorizer(new RegulatoryAnimatorSelector(regGraph));
         GUIManager.getInstance().getGraphGUI(dynGraph).addGraphGUIListener(this);
+        styleManager.setStyleProvider(styleProvider);
+        stg_styleManager.setStyleProvider(stg_styleProvider);
         ui = new AnimatorUI(frame, this);      
     }
     
@@ -127,8 +129,10 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
         
         GUIManager.getInstance().getGraphGUI(dynGraph).removeGraphGUIListener(this);
         revertPath(0);
-        colorizer.undoColorize(regGraph);
         
+        styleManager.setStyleProvider(null);
+        stg_styleManager.setStyleProvider(null);
+
         GUIManager.getInstance().removeBlockClose( regGraph, this);
         GUIManager.getInstance().removeBlockEdit( regGraph, this);
         GUIManager.getInstance().removeBlockClose( dynGraph, this);
@@ -147,56 +151,88 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
                return;
         }
         path.add(vertex);
-        unMarkAllPath();
-        markAllPath();
+        fillNext();
+        stg_styleManager.setStyleProvider(stg_styleProvider);
         fireContentsChanged(this, path.size()-2, path.size()-1);
     }
     
-    private void unMarkAllPath() {
-    	dynGas.restoreAll();
+    public int getStatus(DynamicNode node) {
+    	if (nextNodes.contains(node)) {
+    		return 0;
+    	}
+    	
+    	if (path.contains(node)) {
+    		return 1;
+    	}
+    	
+    	return -1;
     }
     
-    private void markAllPath() {
-        if (path.size() == 0) {
-            return;
-        }
-        // mark all vertices and followed edges
-        DynamicNode vertex = path.get(0);
-        dynGas.ensureStoreNode(vertex);
-        dynGas.vreader.setBackgroundColor(Color.BLUE);
-        dynGas.vreader.refresh();
-        for (int i=1 ; i<path.size() ; i++) {
-            DynamicNode vertex2 = path.get(i);
-            dynGas.ensureStoreNode(vertex2);
-            dynGas.vreader.setBackgroundColor(Color.BLUE);
-            dynGas.vreader.refresh();
-
-            Edge edge = dynGraph.getEdge(vertex, vertex2);
-            dynGas.ensureStoreEdge(edge);
-            dynGas.ereader.setLineColor(Color.MAGENTA);
-            dynGas.ereader.refresh();
-            vertex = vertex2;
-        }
-        
-        // highlight available edges and vertices
-        Iterator it = dynGraph.getOutgoingEdges(path.get(path.size()-1)).iterator();
-        Vector v_highlight = new Vector();
-        while (it.hasNext()) {
-            v_highlight.add(it.next());
-        }
-        for (int i=0 ; i<v_highlight.size() ; i++) {
-            Edge edge = (Edge)v_highlight.get(i);
-            Object target = edge.getTarget();
-            dynGas.ensureStoreEdge(edge);
-            dynGas.ensureStoreNode(target);
-            dynGas.vreader.setBorder(NodeBorder.STRONG);
-            dynGas.vreader.setForegroundColor(Color.RED);
-            dynGas.vreader.refresh();
-            dynGas.ereader.setLineColor(Color.GREEN);
-            dynGas.ereader.refresh();
-        }
+    public int getStatus(DynamicEdge edge) {
+    	if (nextEdges == null) {
+    		return -1;
+    	}
+    	
+    	if (nextEdges.contains(edge)) {
+    		return 0;
+    	}
+    	
+    	if (path.contains(edge)) {
+    		return 1;
+    	}
+    	
+    	return -1;
     }
-        
+    
+    private void fillNext() {
+      nextEdges = dynGraph.getOutgoingEdges(path.get(path.size()-1));
+      nextNodes.clear();
+      for (DynamicEdge edge: nextEdges) {
+    	  nextNodes.add(edge.getTarget());
+      }
+    }
+    
+//    private void markAllPath() {
+//        if (path.size() == 0) {
+//            return;
+//        }
+//        // mark all vertices and followed edges
+//        DynamicNode vertex = path.get(0);
+//        dynGas.ensureStoreNode(vertex);
+//        dynGas.vreader.setBackgroundColor(Color.BLUE);
+//        dynGas.vreader.refresh();
+//        for (int i=1 ; i<path.size() ; i++) {
+//            DynamicNode vertex2 = path.get(i);
+//            dynGas.ensureStoreNode(vertex2);
+//            dynGas.vreader.setBackgroundColor(Color.BLUE);
+//            dynGas.vreader.refresh();
+//
+//            Edge edge = dynGraph.getEdge(vertex, vertex2);
+//            dynGas.ensureStoreEdge(edge);
+//            dynGas.ereader.setLineColor(Color.MAGENTA);
+//            dynGas.ereader.refresh();
+//            vertex = vertex2;
+//        }
+//        
+//        // highlight available edges and vertices
+//        Iterator it = dynGraph.getOutgoingEdges(path.get(path.size()-1)).iterator();
+//        Vector v_highlight = new Vector();
+//        while (it.hasNext()) {
+//            v_highlight.add(it.next());
+//        }
+//        for (int i=0 ; i<v_highlight.size() ; i++) {
+//            Edge edge = (Edge)v_highlight.get(i);
+//            Object target = edge.getTarget();
+//            dynGas.ensureStoreEdge(edge);
+//            dynGas.ensureStoreNode(target);
+//            dynGas.vreader.setBorder(NodeBorder.STRONG);
+//            dynGas.vreader.setForegroundColor(Color.RED);
+//            dynGas.vreader.refresh();
+//            dynGas.ereader.setLineColor(Color.GREEN);
+//            dynGas.ereader.refresh();
+//        }
+//    }
+//        
     /**
      * rewind the path.
      * basically revert all color changes made on the dyngraph and eventually apply back
@@ -209,18 +245,13 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
             return;
         }
         
-        unMarkAllPath();
         for (int i=path.size()-1 ; i>=index ; i--) {
             path.remove(i);
         }
         
-        // if the new path is empty: stop here
+        fillNext();
+    	stg_styleManager.setStyleProvider(stg_styleProvider);
         fireContentsChanged(this, 0, path.size());
-        if (index == 0) {
-            return;
-        }
-        
-        markAllPath();
     }
     
     public int getSize() {
@@ -291,8 +322,8 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
      * @param i index of the selected element in the path list
      */
     public void colorizeGraph(int i) {
-    	((RegulatoryAnimatorSelector) colorizer.getSelector()).setState(((DynamicNode)path.get(i)).state);
-        colorizer.doColorize(regGraph);
+    	styleProvider.setState(((DynamicNode)path.get(i)).state);
+        styleManager.setStyleProvider(styleProvider);
         ui.setSelected(i);
     }
     
@@ -318,8 +349,8 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
 		GraphSelection<DynamicNode, ?> selection = gui.getSelection();
         if (selection.getSelectionType() == SelectionType.SEL_NODE) {
         	DynamicNode sel = selection.getSelectedNodes().get(0);
-        	((RegulatoryAnimatorSelector) colorizer.getSelector()).setState(sel.state);
-            colorizer.doColorize(regGraph);
+        	styleProvider.setState(sel.state);
+            styleManager.setStyleProvider(styleProvider);
             add2path( sel);
         }
 	}
