@@ -32,11 +32,9 @@ import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.view.css.CascadingStyleSheetManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
-
 
 
 public class PathFindingFrame extends StackDialog implements ActionListener, ResultHandler {
@@ -52,9 +50,8 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	private JButton copyButton;
 	private JScrollPane pathListScrollPane;
 	private boolean isColorized = false;
-	private Vector path;
-	private CascadingStyleSheetManager cs;
-	private PathFindingSelector selector;
+	private List path;
+	private PathStyleProvider selector;
 	private JButton selectionForEndButton, selectionForStartButton;
 	
 	
@@ -362,18 +359,13 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 
 	private void doColorize() {
 		if (path != null) {
-			if (cs == null) {
-	            cs = new CascadingStyleSheetManager(true);
-	        } else {
-	            cs.shouldStoreOldStyle = false;
-	        }
 			if (selector == null) {
-				selector = new PathFindingSelector();
+				selector = new PathStyleProvider(graph.getStyleManager());
 			}
-			selector.initCache(path);
+			
+			selector.setPath(path);
+			graph.getStyleManager().setStyleProvider(selector);
 		
-			cs.applySelectorOnEdges(selector, graph.getEdges(), graph.getEdgeAttributeReader());
-			cs.applySelectorOnNodes(selector, graph.getNodes(), graph.getNodeAttributeReader());
 			graph.fireGraphChange(GraphChangeType.GRAPHVIEWCHANGED, null);
 			colorizeButton.setText(Translator.getString("STR_undo_colorize"));
 			isColorized = true;
@@ -381,13 +373,9 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	}
 	
 	private void undoColorize() {
-		if (cs != null) {
-			cs.restoreAllEdges(graph.getEdgeAttributeReader());
-			cs.restoreAllNodes(graph.getNodeAttributeReader());
-			graph.fireGraphChange(GraphChangeType.GRAPHVIEWCHANGED, null);
-			colorizeButton.setText(Translator.getString("STR_do_colorize"));
-			isColorized = false;
-		}
+		graph.getStyleManager().setStyleProvider(null);
+		colorizeButton.setText(Translator.getString("STR_do_colorize"));
+		isColorized = false;
 	}
 
 	public Graph getGraph() {

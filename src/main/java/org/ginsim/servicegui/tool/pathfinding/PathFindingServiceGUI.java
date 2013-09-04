@@ -21,10 +21,6 @@ import org.mangosdk.spi.ProviderFor;
 @ServiceStatus( ServiceStatus.RELEASED)
 public class PathFindingServiceGUI extends AbstractServiceGUI {
 
-	static {
-		Selector.registerSelector(PathFindingSelector.IDENTIFIER, PathFindingSelector.class);
-	}
-
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		List<Action> actions = new ArrayList<Action>();
