@@ -418,6 +418,23 @@ public class StyleManager<V, E extends Edge<V>> {
 	}
 
 	/**
+	 * Apply a style to a group of nodes.
+	 * 
+	 * @param nodes
+	 * @param style
+	 */
+	public void applyNodeStyle(Collection<V> nodes, NodeStyle<V> style) {
+		if (style == null) {
+			style = defaultNodeStyle;
+		}
+		for (V node:nodes) {
+			backend.damage(node);
+			doApplyNodeStyle(node, style);
+			backend.damage(node);
+		}
+		backend.repaint();
+	}
+	/**
 	 * Apply a style to a single node.
 	 * 
 	 * @param node
@@ -433,6 +450,21 @@ public class StyleManager<V, E extends Edge<V>> {
 		backend.repaint();
 	}
 
+	/**
+	 * Apply a style to a group of edges.
+	 * 
+	 * @param edges
+	 * @param style
+	 */
+	public void applyEdgeStyle(Collection<E> edges, EdgeStyle<V,E> style) {
+		for (E edge: edges) {
+			backend.damage(edge);
+			doApplyEdgeStyle(edge, style);
+			backend.damage(edge);
+		}
+		backend.repaint();
+	}
+	
 	/**
 	 * Apply a style to a single edge.
 	 * 

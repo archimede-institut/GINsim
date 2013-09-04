@@ -76,6 +76,8 @@ public class StyleEditionPanel extends JPanel {
 			c.gridx = 0;
 			c.gridy = 0;
 			add(label, c);
+			revalidate();
+			repaint();
 			return;
 		}
 		
