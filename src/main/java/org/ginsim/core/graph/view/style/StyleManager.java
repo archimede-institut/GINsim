@@ -330,7 +330,7 @@ public class StyleManager<V, E extends Edge<V>> {
     	EdgeStyle<V,E> style = addEdgeStyle();
     	style.setProperty(StyleProperty.COLOR, color);
     	style.setProperty(StyleProperty.PATTERN, pattern);
-    	style.setProperty(StyleProperty.WIDTH, width);
+    	style.setProperty(StyleProperty.LINEWIDTH, width);
 		return style;
 	}
 
