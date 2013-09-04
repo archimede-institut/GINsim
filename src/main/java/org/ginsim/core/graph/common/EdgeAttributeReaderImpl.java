@@ -196,11 +196,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 			return viewInfo.isCurve();
 		}
 
-		if (edge == null) {
-			return false;
-		}
-		
-		return (edge.source == edge.target);
+		return false;
 	}
 
 	@Override

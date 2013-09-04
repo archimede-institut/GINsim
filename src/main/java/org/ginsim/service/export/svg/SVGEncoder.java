@@ -70,7 +70,9 @@ public class SVGEncoder {
             Rectangle box1 = boxes.get(edge.getSource());
             Rectangle box2 = boxes.get(edge.getTarget());
             ereader.setEdge(edge);
-            writeEdge(out, box1, box2, ereader, m_marker);
+            List<Point> l_point = ViewHelper.getPoints(vreader, ereader, edge);
+
+            writeEdge(out, box1, box2, ereader, m_marker, l_point);
         }
         
         for (Object obj: nodes) {
@@ -147,7 +149,7 @@ public class SVGEncoder {
      * @param markers
      * @throws IOException
      */
-    private void writeEdge(FileWriter out, Rectangle box1, Rectangle box2, EdgeAttributesReader ereader, Set<String> markers) throws IOException {
+    private void writeEdge(FileWriter out, Rectangle box1, Rectangle box2, EdgeAttributesReader ereader, Set<String> markers, List<Point> l_point) throws IOException {
         String color = ColorPalette.getColorCode(ereader.getLineColor());
         float w = ereader.getLineWidth();
         String marker = addMarker(out, markers, ereader.getLineEnd(), color, true);
@@ -171,24 +173,6 @@ public class SVGEncoder {
             out.write(s);
         }
         
-        List<Point> l_point = new ArrayList<Point>();
-        List<Point> graph_point = ereader.getPoints();
-        if (graph_point != null) {
-            l_point.addAll(graph_point);
-        }
-        
-        // add the first and last points
-        l_point.add(0, new Point((int)box1.getCenterX(), (int)box1.getCenterY()));
-        l_point.add(new Point((int)box2.getCenterX(), (int)box2.getCenterY()));
-        
-        boolean intersect = l_point.size() < 3 || ereader.isCurve();
-        // replace first and last points by bounding box points
-        if (box1 != null) {
-            l_point.set(0, ViewHelper.getIntersection(box1, l_point.get(1), intersect, w));
-        }
-        if (box2 != null) {
-            l_point.set(l_point.size()-1, ViewHelper.getIntersection(box2, l_point.get(l_point.size()-2), intersect, w));
-        }
         Point2D pt1 = l_point.get(l_point.size()-2);
         Point2D pt2 = l_point.get(l_point.size()-1);
         
