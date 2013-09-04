@@ -210,8 +210,6 @@ public class GraphSelection<V, E extends Edge<V>> {
 		updateType(false);
 	}
 
-
-	
 	/**
 	 * Add the nodes in l to the list of selected nodes
 	 * @param l the list of nodes to select
@@ -275,10 +273,11 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 * Add all the incoming nodes of the selected nodes to the list of selected nodes
 	 */
 	public void extendSelectionToIncomingNodes() {
-		ArrayList<V> new_nodes = new ArrayList<V>(nodes);
+
 		if (nodes == null) {
-			nodes = new ArrayList<V>();
+			return;
 		}
+		ArrayList<V> new_nodes = new ArrayList<V>(nodes);
 		for (V node : new_nodes) {
 			for (E edge : gui.getGraph().getIncomingEdges(node)) {
 				nodes.add(edge.getSource());
@@ -321,10 +320,11 @@ public class GraphSelection<V, E extends Edge<V>> {
 	 * Add all the outgoing nodes of the selected nodes to the list of selected nodes
 	 */
 	public void extendSelectionToOutgoingNodes() {
-		ArrayList<V> new_nodes = new ArrayList<V>(nodes);
+		
 		if (nodes == null) {
-			nodes = new ArrayList<V>();
+			return;
 		}
+		List<V> new_nodes = new ArrayList<V>(nodes);
 		for (V node : new_nodes) {
 			for (E edge : gui.getGraph().getOutgoingEdges(node)) {
 				nodes.add(edge.getTarget());
