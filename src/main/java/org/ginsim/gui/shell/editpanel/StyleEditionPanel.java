@@ -32,6 +32,7 @@ import org.ginsim.core.graph.view.style.Style;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.graph.view.style.StyleProperty;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.utils.widgets.StatusTextField;
 import org.python.modules.math;
 
 public class StyleEditionPanel extends JPanel {
@@ -47,7 +48,7 @@ public class StyleEditionPanel extends JPanel {
 	private final List<PropertyEditor> editors = new ArrayList<PropertyEditor>();
 	
 	private final JLabel label = new JLabel();
-	private final JTextField nameField = new JTextField();
+	private final StatusTextField nameField = new StatusTextField();
 	private final JLabel nameLabel = new JLabel("Name");
 	
 	private final GridBagConstraints c;

@@ -428,9 +428,8 @@ public class StyleManager<V, E extends Edge<V>> {
 			style = defaultNodeStyle;
 		}
 		backend.damage(node);
-		backend.getNodeViewInfo(node).setStyle(style);
+		doApplyNodeStyle(node, style);
 		backend.damage(node);
-		
 		backend.repaint();
 	}
 
@@ -441,6 +440,18 @@ public class StyleManager<V, E extends Edge<V>> {
 	 * @param style
 	 */
 	public void applyEdgeStyle(E edge, EdgeStyle<V,E> style) {
+		backend.damage(edge);
+		doApplyEdgeStyle(edge, style);
+		backend.damage(edge);
+
+		backend.repaint();
+	}
+	
+	private void doApplyNodeStyle(V node, NodeStyle<V> style) {
+		backend.getNodeViewInfo(node).setStyle(style);
+	}
+
+	private void doApplyEdgeStyle(E edge, EdgeStyle<V,E> style) {
 		if (style == null || style == defaultEdgeStyle) {
 			EdgeViewInfo<V, E> info = backend.getEdgeViewInfo(edge);
 			if (info == null) {
@@ -450,9 +461,6 @@ public class StyleManager<V, E extends Edge<V>> {
 		} else {
 			backend.ensureEdgeViewInfo(edge).setStyle(style);
 		}
-		backend.damage(edge);
-
-		backend.repaint();
 	}
 
 	/**
@@ -509,5 +517,36 @@ public class StyleManager<V, E extends Edge<V>> {
 			}
 		}
 		return false;
+	}
+	
+	public void deleteStyle(Style style) {
+		if (style == null) {
+			return;
+		}
+		
+		if (style instanceof NodeStyle) {
+			if (style == defaultNodeStyle) {
+				return;
+			}
+			NodeStyle ns = (NodeStyle)style;
+			for (V node: backend.getNodes()) {
+				if (getUsedNodeStyle(node) == ns) {
+					doApplyNodeStyle(node, defaultNodeStyle);
+				}
+			}
+		} else if (style instanceof EdgeStyle) {
+			if (style == defaultEdgeStyle) {
+				return;
+			}
+			EdgeStyle es = (EdgeStyle)style;
+			for (E edge: backend.getEdges()) {
+				if (getUsedEdgeStyle(edge) == es) {
+					doApplyEdgeStyle(edge, defaultEdgeStyle);
+				}
+			}
+		} else {
+			return;
+		}
+		styleUpdated(style);
 	}
 }

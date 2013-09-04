@@ -1,5 +1,6 @@
 package org.ginsim.gui.shell.editpanel;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -34,6 +35,7 @@ public class StyleTab extends JPanel implements EditTab {
     private final JComboBox styleSelection;
     
     private final JButton newStyleButton;
+    private final JButton deleteStyleButton;
 	
 	public StyleTab(GraphGUI<?, ?, ?> gui) {
 		super(new GridBagLayout());
@@ -43,8 +45,8 @@ public class StyleTab extends JPanel implements EditTab {
     	this.stylePanel = new StyleEditionPanel(gui, manager);
     	this.styleModel = new StyleComboModel(manager, stylePanel);
     	this.styleSelection = new JComboBox(styleModel);
-    	this.newStyleButton = new JButton("+");
 
+    	this.newStyleButton = new JButton("+");
     	newStyleButton.addActionListener( new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -52,6 +54,15 @@ public class StyleTab extends JPanel implements EditTab {
 			}
 		});
 
+    	this.deleteStyleButton = new JButton("x");
+    	this.deleteStyleButton.setForeground(Color.RED);
+    	deleteStyleButton.addActionListener( new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				deleteStyle();
+			}
+		});
+    	
     	GridBagConstraints c = new GridBagConstraints();
     	c.gridx = 0;
     	c.gridy = 0;
@@ -62,9 +73,14 @@ public class StyleTab extends JPanel implements EditTab {
 		c.gridx = 1;
 		c.weightx = 0;
 		add(newStyleButton, c);
+
+		c.gridx = 2;
+		c.weightx = 0;
+		add(deleteStyleButton, c);
+
 		c.gridx = 0;
 		c.gridy = 1;
-		c.gridwidth = 2;
+		c.gridwidth = 3;
 		c.weightx = 1;
 		c.weighty = 1;
 		c.fill = GridBagConstraints.BOTH;
@@ -75,6 +91,10 @@ public class StyleTab extends JPanel implements EditTab {
 
 	protected void createStyle() {
 		styleModel.createStyle();
+	}
+	
+	protected void deleteStyle() {
+		styleModel.deleteStyle();
 	}
 	
 	@Override
@@ -137,6 +157,13 @@ class StyleComboModel extends AbstractListModel implements ComboBoxModel {
 			newStyle = styleManager.addEdgeStyle();
 		}
 		setSelectedItem(newStyle);
+	}
+
+	public void deleteStyle() {
+		Style style = (Style)getSelectedItem();
+		if (style != null) {
+			styleManager.deleteStyle(style);
+		}
 	}
 
 	public void disableEdit() {
