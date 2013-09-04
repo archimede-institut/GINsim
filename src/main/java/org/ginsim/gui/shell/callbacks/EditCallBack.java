@@ -38,16 +38,12 @@ public class EditCallBack {
 	 * @param gui a graph
 	 * @return
 	 */
-	public static JMenu getEditMenu(GraphGUI<?, ?, ?> gui) {
+	public static void addEditEntries(JMenu menu, GraphGUI<?, ?, ?> gui) {
 		if (gui.canCopyPaste()) {
-			JMenu menu = new JMenu( Translator.getString( "STR_Edit"));
 			Graph<?, ?> g = gui.getGraph();
 			menu.add(new CopyAction(g));
 			menu.add(new PasteAction(g));
-	
-			return menu;
 		}
-		return null;
 	}
 }
 

@@ -58,7 +58,17 @@ public class FileCallBack {
 		menu.add(exportMenu);
 
 		menu.add(new JSeparator());
+		for (Action a: HelpCallBack.getActions()) {
+			menu.add(a);
+		}
+		JMenu support_menu = new JMenu( Translator.getString( "STR_Help_Support"));
+		menu.add( support_menu);
+		for (Action a: HelpCallBack.getSupportActions()) {
+			support_menu.add(a);
+		}
+		menu.add(support_menu);
 		
+		menu.add(new JSeparator());
 		menu.add(new CloseAction(g));
 		menu.add(new QuitAction());
 		

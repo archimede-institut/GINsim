@@ -53,6 +53,8 @@ public class MainFrameActionManager implements FrameActionManager {
 			 toolkitsMenu = new JMenu( Translator.getString( "STR_Toolkits"));
 		}
 
+		EditCallBack.addEditEntries(graphMenu, gui);
+		graphMenu.addSeparator();
 		SelectionCallBack.fillMenu(graphMenu, graph); //Add all the simple selection actions
 		
 		int nextSeparator = 0;
@@ -89,14 +91,8 @@ public class MainFrameActionManager implements FrameActionManager {
 		menubar.add( FileCallBack.getFileMenu(graph, importMenu, exportMenu));
 		// TODO: the file menu should add some stuff to the toolbar as well
 
-		
 		EditActionManager editManager = gui.getEditActionManager();
 		editManager.addEditButtons( toolbar);
-		
-		JMenu editMenu = EditCallBack.getEditMenu(gui);
-		if (editMenu != null) {
-			menubar.add( editMenu);
-		}
 		
 		menubar.add( gui.getViewMenu( layoutMenu));
 		
@@ -110,13 +106,6 @@ public class MainFrameActionManager implements FrameActionManager {
 			menubar.add( toolkitsMenu);
 		}
 		
-		JMenu menu = new JMenu( Translator.getString( "STR_Help"));
-		fillMenu(menu, HelpCallBack.getActions());
-		menu.addSeparator();
-		JMenu support_menu = new JMenu( Translator.getString( "STR_Help_Support"));
-		menu.add( support_menu);
-		fillMenu( support_menu, HelpCallBack.getSupportActions());
-		menubar.add(menu);
 	}
 
 }
