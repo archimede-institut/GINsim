@@ -92,8 +92,6 @@ public class HTGSimulation extends Simulation {
 	/**
 	 * The simulation parameters
 	 */
-	protected SimulationParameters params;
-	
 	protected HierarchicalSigmaSetFactory sigmaFactory;
 	
 	protected NodeAttributesReader vreader;
@@ -102,8 +100,11 @@ public class HTGSimulation extends Simulation {
 	public HTGSimulation(LogicalModel model, ProgressListener<Graph> plist, SimulationParameters params) {
 		super(model, plist, params);
 		
+		// ignore max depth and max nodes parameters
+		this.maxdepth = 0;
+		this.maxnodes = 0;
+				
 		helper = new HTGSimulationHelper(model, params);
-		this.params = params;
 	}
   
     

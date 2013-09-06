@@ -66,7 +66,6 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 	/* ****** PANELS **********/
 	private JPanel mainPanel;
 	private JPanel simulationStrategyPanel;
-	private JPanel graphSizeLimits;
 	private GenericListPanel listPanel;
 	private InitialStatePanel initStatePanel = null;
 	
@@ -82,11 +81,12 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 
 	private JTextField textMaxDepth = null;
 	private JTextField textMaxNodes = null;
+	private JLabel labelMaxDepth = null;
+	private JLabel labelMaxNodes = null;
 	private GenericListSelectionPanel selectPriorityClass;
 	
 	private Insets indentInset = new Insets(0, 30, 0, 0);
 
-	
 	
 	public SingleSimulationFrame(Frame regGraphFrame, SimulationParameterList paramList) {
 		super(paramList.graph, regGraphFrame, "display.simulation", 800, 400);
@@ -136,10 +136,6 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 			c.weightx = 0.4;
 			mainPanel.add(getSimulationStrategyPanel(), c);
 			
-			// size limits
-			c.gridy++;
-			mainPanel.add(getGraphSizeLimitsPanel(), c);
-			
 			c.gridx--;
 			mainPanel.add(getPriorityClassSelector(), c);
 			
@@ -159,66 +155,52 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 	
 	public JPanel getSimulationStrategyPanel() {
 		if (simulationStrategyPanel == null) {
-		   	simulationStrategyPanel = new JPanel();
-			simulationStrategyPanel.setLayout(new GridBagLayout());
+		   	simulationStrategyPanel = new JPanel( new GridBagLayout() );
 			simulationStrategyPanel.setBorder(BorderFactory.createTitledBorder(Translator.getString("STR_reg2dyn_mode")));
+
 			GridBagConstraints c = new GridBagConstraints();
-			c.gridx = 0;
-			c.gridy = 0;
 			c.weightx = 1;
 			c.insets = indentInset;
 			c.fill = GridBagConstraints.BOTH;
 			
 			c.gridx = 0;
 			c.gridy++;
-			c.gridwidth = 2;
+			c.gridwidth = 4;
 			simulationStrategyPanel.add(getSimulationMethodsComboBox(), c);
 			
 			c.gridx = 0;
 			c.gridy++;
-			c.gridwidth = 1;
+			c.gridwidth = 2;
 			simulationStrategyPanel.add(getRadioBreadthFirst(), c);
-			c.gridx++;
+			c.gridx += 2;
 			simulationStrategyPanel.add(getRadioDephtFirst(), c);
+
+			// size and depth limits
+			c.gridy++;
+			c.gridx = 0;
+			c.gridwidth = 1;
+			labelMaxDepth = new JLabel(Translator.getString("STR_maximum_depth"));
+			simulationStrategyPanel.add(labelMaxDepth, c);
+	   	
+			c.gridx++;
+			c.weightx = 1;
+			simulationStrategyPanel.add(getTextMaxDepth(), c);
+			
+			c.gridx++;
+			c.weightx = 0;
+			c.anchor = GridBagConstraints.WEST;
+			labelMaxNodes = new JLabel(Translator.getString("STR_maximum_nodes"));
+			simulationStrategyPanel.add(labelMaxNodes, c);
+			
+			c.gridx++;
+			c.fill = GridBagConstraints.HORIZONTAL;
+			c.weightx = 1;
+			simulationStrategyPanel.add(getTextMaxNodes(), c);
    		}	
 		return simulationStrategyPanel;
 	}
   
-	
-	public JPanel getGraphSizeLimitsPanel() {
-		if (graphSizeLimits == null) {
-			graphSizeLimits = new JPanel();
-			graphSizeLimits.setLayout(new GridBagLayout());
-			graphSizeLimits.setBorder(BorderFactory.createTitledBorder(Translator.getString("STR_sizeLimits")));
-			GridBagConstraints c = new GridBagConstraints();
-	
-			c.gridx = 0;
-			c.gridy = 0;
-			c.anchor = GridBagConstraints.WEST;
-			c.insets = indentInset;
-			graphSizeLimits.add(new JLabel(Translator.getString("STR_maximum_depth")), c);
-	   	
-			c.gridx++;
-			c.fill = GridBagConstraints.HORIZONTAL;
-			c.weightx = 1;
-			graphSizeLimits.add(getTextMaxDepth(), c);
-			
-			c = new GridBagConstraints();
-			c.gridx = 0;
-			c.gridy = 1;
-			c.anchor = GridBagConstraints.WEST;
-			c.insets = indentInset;
-			graphSizeLimits.add(new JLabel(Translator.getString("STR_maximum_nodes")), c);
-			
-			c.gridx++;
-			c.fill = GridBagConstraints.HORIZONTAL;
-			c.weightx = 1;
-			graphSizeLimits.add(getTextMaxNodes(), c);
-		}
-		return graphSizeLimits;
-	}
-
-/* *************** INITILISING THE WIDGETS (RADIO, COMBOBOX...) **********************/
+/* *************** INITIALISING THE WIDGETS (RADIO, COMBOBOX...) **********************/
 
 	/**
 	 * This method initializes radioDephtFirst
@@ -259,13 +241,13 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 			simulationMethodsComboBox.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					currentParameter.simulationStrategy = simulationMethodsComboBox.getSelectedIndex();
-					if (currentParameter.simulationStrategy != SimulationParameters.STRATEGY_STG) {
-						radioBreadthFirst.setEnabled(false);
-						radioDephtFirst.setEnabled(false);
-					} else {
-						radioBreadthFirst.setEnabled(true);
-						radioDephtFirst.setEnabled(true);
-					}
+					boolean depthControl = currentParameter.simulationStrategy == SimulationParameters.STRATEGY_STG;
+					radioBreadthFirst.setEnabled(depthControl);
+					radioDephtFirst.setEnabled(depthControl);
+					textMaxDepth.setEnabled(depthControl);
+					textMaxNodes.setEnabled(depthControl);
+					labelMaxDepth.setEnabled(depthControl);
+					labelMaxNodes.setEnabled(depthControl);
 					OptionStore.setOption("simulation.defaultMethod", new Integer(simulationMethodsComboBox.getSelectedIndex()));
 				}
 			});		
