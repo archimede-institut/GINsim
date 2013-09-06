@@ -120,7 +120,8 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 		c.fill = GridBagConstraints.BOTH;
 		c.weightx = c.weighty = 1;
 		setMainPanel(spane);
-
+		
+		updateSimulationMethod();
 	}
 	
 	private JPanel getMainPanel() {
@@ -240,21 +241,24 @@ public class SingleSimulationFrame extends BaseSimulationFrame implements ListSe
 			}
 			simulationMethodsComboBox.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					currentParameter.simulationStrategy = simulationMethodsComboBox.getSelectedIndex();
-					boolean depthControl = currentParameter.simulationStrategy == SimulationParameters.STRATEGY_STG;
-					radioBreadthFirst.setEnabled(depthControl);
-					radioDephtFirst.setEnabled(depthControl);
-					textMaxDepth.setEnabled(depthControl);
-					textMaxNodes.setEnabled(depthControl);
-					labelMaxDepth.setEnabled(depthControl);
-					labelMaxNodes.setEnabled(depthControl);
-					OptionStore.setOption("simulation.defaultMethod", new Integer(simulationMethodsComboBox.getSelectedIndex()));
+					updateSimulationMethod();
 				}
 			});		
 		}
 		return simulationMethodsComboBox;
 	}
 
+	protected void updateSimulationMethod() {
+		currentParameter.simulationStrategy = simulationMethodsComboBox.getSelectedIndex();
+		boolean depthControl = currentParameter.simulationStrategy == SimulationParameters.STRATEGY_STG;
+		radioBreadthFirst.setEnabled(depthControl);
+		radioDephtFirst.setEnabled(depthControl);
+		textMaxDepth.setEnabled(depthControl);
+		textMaxNodes.setEnabled(depthControl);
+		labelMaxDepth.setEnabled(depthControl);
+		labelMaxNodes.setEnabled(depthControl);
+		OptionStore.setOption("simulation.defaultMethod", new Integer(simulationMethodsComboBox.getSelectedIndex()));
+	}
   
 	
 	private GenericListSelectionPanel getPriorityClassSelector() {
