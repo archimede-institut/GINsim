@@ -50,6 +50,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     public static final String ZIP_PREFIX = "GINsim-data/";
 	
 	private final GraphBackend<V,E> graphBackend;
+	private final GraphFactory factory;
 	
 	// view data
 	private GraphViewListener listener;
@@ -64,7 +65,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     // The annotation associated with the graph
     protected Annotation graphAnnotation = null;
     
-    private final StyleManager<V, E> styleManager;
+    private StyleManager<V, E> styleManager = null;
     
     // TODO === List of variables that could be removed if a better solution is found =============
     private boolean isParsing = false;
@@ -80,14 +81,13 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	}
 	
     /**
-     *
      * @param parsing
      */
     protected AbstractGraph(GraphFactory factory, boolean parsing) {
-    	this.graphBackend = (GraphBackend<V, E>)JgraphtBackendImpl.getGraphBackend(this, factory);
+    	this.factory = factory;
+    	this.graphBackend = (GraphBackend<V, E>)JgraphtBackendImpl.getGraphBackend(this);
 		this.graphType = factory.getGraphType();
         this.isParsing = parsing;
-        this.styleManager = new StyleManager<V, E>(graphBackend);
         graphBackend.setViewListener(this);
 	}
 	
@@ -381,17 +381,20 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 
 	@Override
 	public StyleManager<V, E> getStyleManager() {
+		if (styleManager == null) {
+			this.styleManager = new StyleManager<V, E>(this, graphBackend, factory);
+		}
 		return styleManager;
 	}
 	
 	@Override
 	public EdgeAttributesReader getEdgeAttributeReader() {
-		return new EdgeAttributeReaderImpl(styleManager, graphBackend, getNodeAttributeReader());
+		return new EdgeAttributeReaderImpl(getStyleManager(), graphBackend, getNodeAttributeReader());
 	}
 	
 	@Override
 	public NodeAttributesReader getNodeAttributeReader() {
-		return new NodeAttributeReaderImpl(styleManager, graphBackend);
+		return new NodeAttributeReaderImpl(getStyleManager(), graphBackend);
 	}
 	
 	protected EdgeAttributesReader getCachedEdgeAttributeReader() {
@@ -662,10 +665,6 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		return null;
 	}
 
-	protected void saveStyles(XMLWriter out) throws IOException {
-		styleManager.styles2ginml(out);
-	}
-	
 	// -------------------------  EVENT MANAGEMENT METHODS ---------------------------------
 
 	public void fireMetaChange() {

@@ -12,6 +12,8 @@ import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.backend.GraphBackend;
 import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.common.GraphFactory;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.EdgeViewInfo;
 import org.ginsim.core.graph.view.NodeShape;
@@ -44,15 +46,17 @@ public class StyleManager<V, E extends Edge<V>> {
 	 * @param nodeStyle
 	 * @param edgeStyle
 	 */
-	public StyleManager(GraphBackend<V,E> backend) {
+	public StyleManager(Graph<V, E> g, GraphBackend<V, E> backend, GraphFactory factory) {
 		this.backend = backend;
-		this.defaultNodeStyle = backend.getDefaultNodeStyle();
+		this.defaultNodeStyle = factory.createDefaultNodeStyle(g);
 		this.nodeStyles = new ArrayList<NodeStyle<V>>();
 		nodeStyles.add(defaultNodeStyle);
 
-		this.defaultEdgeStyle = backend.getDefaultEdgeStyle();
+		this.defaultEdgeStyle = factory.createDefaultEdgeStyle(g);
 		this.edgeStyles = new ArrayList<EdgeStyle<V,E>>();
 		edgeStyles.add(defaultEdgeStyle);
+		
+		backend.setDefaultEdgeStyle(defaultEdgeStyle);
 	}
 
 	/**

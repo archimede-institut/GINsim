@@ -168,10 +168,10 @@ public interface GraphBackend<V, E extends Edge<V>> {
 	 */
 	void damage(Object o);
 
-
-	NodeStyle<V> getDefaultNodeStyle();
-	EdgeStyle<V,E> getDefaultEdgeStyle();
-
-
-	public void repaint();
+	/**
+	 * Trigger a repaint of the damaged areas
+	 */
+	void repaint();
+	
+	void setDefaultEdgeStyle(EdgeStyle<V, E> style);
 }

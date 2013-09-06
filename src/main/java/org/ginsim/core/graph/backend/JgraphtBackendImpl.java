@@ -21,21 +21,18 @@ import org.jgrapht.graph.ListenableDirectedGraph;
 public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirectedGraph<V, E> implements GraphBackend<V, E> {
 	private static final long serialVersionUID = -7766943723639796018L;
 	
-	public static GraphBackend getGraphBackend(Graph graph, GraphFactory factory) {
+	public static GraphBackend getGraphBackend(Graph graph) {
 		GsJGraphtBaseGraph base = new GsJGraphtBaseGraph();
-		return new JgraphtBackendImpl(base, graph, factory);
+		return new JgraphtBackendImpl(base, graph);
 	}
 	
 	private GsJGraphtBaseGraph<V,E> base;
 	private GraphViewListener viewListener = null;
     private Map<E,EdgeViewInfo<V, E>> evsmap = new HashMap<E, EdgeViewInfo<V,E>>();
-	private final NodeStyle<V> defaultNodeStyle;
-	private final EdgeStyle<V, E> defaultEdgeStyle;
+	private EdgeStyle<V, E> defaultEdgeStyle;
 	
-	private JgraphtBackendImpl(GsJGraphtBaseGraph<V,E> base, Graph graph, GraphFactory factory) {
+	private JgraphtBackendImpl(GsJGraphtBaseGraph<V,E> base, Graph graph) {
 		super(base);
-		this.defaultNodeStyle = factory.createDefaultNodeStyle(graph);
-		this.defaultEdgeStyle = factory.createDefaultEdgeStyle(graph);
 		this.base = base;
 	}
 	
@@ -204,13 +201,8 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	}
 
 	@Override
-	public NodeStyle<V> getDefaultNodeStyle() {
-		return defaultNodeStyle;
-	}
-
-	@Override
-	public EdgeStyle<V, E> getDefaultEdgeStyle() {
-		return defaultEdgeStyle;
+	public void setDefaultEdgeStyle(EdgeStyle<V, E> style) {
+		this.defaultEdgeStyle = style;
 	}
 
 }
