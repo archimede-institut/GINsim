@@ -499,8 +499,13 @@ public class InteractionPanel extends AbstractParameterPanel
 	    }
 		int[] selectedrows = jTable.getSelectedRows();
         if (selectedrows.length != 0) {
-    		    interactionList.removeInteractions(selectedrows);
-    		    ((AbstractGraph) graph).fireMetaChange();
+        	interactionList.removeInteractions(selectedrows);
+        	((AbstractGraph) graph).fireMetaChange();
+        	int i = selectedrows[0];
+        	if (i >= jTable.getRowCount()) {
+        		i = jTable.getRowCount()-1;
+        	}
+        	jTable.setRowSelectionInterval(i, i);
         }
 	}
 
