@@ -24,9 +24,9 @@ public class PerturbationRegulator extends InteractionPerturbation implements Pe
 
 	@Override
 	public void toXML(XMLWriter out) throws IOException {
-        out.openTag("change");
-        out.addAttr("target", target.getNodeID());
+        out.openTag("regulatorChange");
         out.addAttr("regulator", regulator.getNodeID());
+        out.addAttr("target", target.getNodeID());
         out.addAttr("value", ""+regValue);
         out.closeTag();
 	}
