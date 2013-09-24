@@ -71,6 +71,18 @@ public class ListOfPerturbations implements Iterable<Perturbation>, GraphListene
 		return addSimplePerturbation(p);
 	}
 
+	/**
+	 * Add a perturbation to fix a component.
+	 * 
+	 * @param component
+	 * @param value
+	 * @return
+	 */
+	public Perturbation addRegulatorPerturbation(NodeInfo regulator, NodeInfo component, int value) {
+		Perturbation p = new PerturbationRegulator(regulator, component, value);
+		return addSimplePerturbation(p);
+	}
+
 	public Perturbation addMultiplePerturbation(List<Perturbation> perturbations) {
 		if (!simplePerturbations.containsAll(perturbations)) {
 			LogManager.debug("unknown perturbations when adding multiple...");
