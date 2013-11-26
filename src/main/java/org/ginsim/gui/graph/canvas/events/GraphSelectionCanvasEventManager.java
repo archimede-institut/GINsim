@@ -169,6 +169,7 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 	private void applyMovedPoint() {
 		if (movingPoint == null) {
 			LogManager.error("MOVEPOINT without an actual moving point");
+			return;
 		}
 		renderer.damageItem(movingPoint.edge);
 		ereader.setEdge(movingPoint.edge);
@@ -323,9 +324,23 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 		if (e != under) {
 			return false;
 		}
-		
+		renderer.damageItem(e);
+
 		ereader.setEdge(e);
 		List<Point> points = ereader.getPoints();
+		// if no points are defined, use the default ones as initial state
+		if (points == null) {
+			List<Point> vPoints = ViewHelper.getPoints(nreader, ereader, e);
+			if (vPoints.size() > 2) {
+				points = new ArrayList<Point>();
+				ereader.setPoints(points);
+				int nbpoints = vPoints.size()-1;
+				for (int i=1 ; i< nbpoints ; i++) {
+					points.add(vPoints.get(i));
+				}
+			}
+		}
+		
 		if (points == null) {
 			points = new ArrayList<Point>();
 			points.add(p);

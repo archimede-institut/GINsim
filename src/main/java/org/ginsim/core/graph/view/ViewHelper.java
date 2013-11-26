@@ -211,7 +211,9 @@ public class ViewHelper {
 		Object source = edge.getSource();
 		Object target = edge.getTarget();
 		
-		if (source == target) {
+		List<Point> realPoints = ereader.getPoints();
+
+		if (source == target && realPoints == null) {
 			Rectangle box = getBounds(nreader, source);
 			if (type.source) {
 				box = translateRectangle(box, movex, movey);
@@ -228,7 +230,6 @@ public class ViewHelper {
 			b2 = translateRectangle(b2, movex, movey);
 		}
 
-		List<Point> realPoints = ereader.getPoints();
 		int w = (int)ereader.getLineWidth();
 		
 		if (realPoints == null || realPoints.size() == 0) {
@@ -249,15 +250,23 @@ public class ViewHelper {
 		Object source = edge.getSource();
 		Object target = edge.getTarget();
 		
+		List<Point> realPoints = edgeReader.getPoints();
+
 		if (source == target) {
-			Rectangle box = getBounds(nodeReader, source);
-			return getPoints(box);
+			if (realPoints != null && realPoints.size() < 3) {
+				realPoints = null;
+				edgeReader.setPoints(realPoints);
+			}
+			
+			if (realPoints == null) {
+				Rectangle box = getBounds(nodeReader, source);
+				return getPoints(box);
+			}
 		}
 		
 		Rectangle b1 = getBounds(nodeReader, source);
 		Rectangle b2 = getBounds(nodeReader, target);
 		
-		List<Point> realPoints = edgeReader.getPoints();
 		int w = (int)edgeReader.getLineWidth();
 		
 		if (realPoints == null || realPoints.size() == 0) {
@@ -271,7 +280,7 @@ public class ViewHelper {
 		Object source = edge.getSource();
 		Object target = edge.getTarget();
 		
-		if (source == target) {
+		if (source == target && modifiedPoints == null) {
 			Rectangle box = getBounds(nodeReader, source);
 			return getPoints(box);
 		}
