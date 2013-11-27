@@ -209,7 +209,7 @@ public class StyleManager<V, E extends Edge<V>> {
 	private <S extends Style> String findName(String basename, Collection<S> styles) {
 		
 		int ext = 1;
-		String name = basename;
+		String name = basename.trim();
 		while ( nameExists(name, styles) ) {
 			ext++;
 			name = basename+ext;

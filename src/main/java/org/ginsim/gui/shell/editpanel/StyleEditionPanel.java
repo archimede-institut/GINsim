@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.AbstractSpinnerModel;
+import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -32,6 +33,8 @@ import org.ginsim.core.graph.view.style.Style;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.graph.view.style.StyleProperty;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.utils.data.GenericPropertyInfo;
+import org.ginsim.gui.utils.data.ObjectEditor;
 import org.ginsim.gui.utils.widgets.StatusTextField;
 import org.python.modules.math;
 
@@ -45,11 +48,12 @@ public class StyleEditionPanel extends JPanel {
 	private final GraphGUI gui;
 
 	private final Map<StyleProperty, PropertyEditor> m_properties= new HashMap<StyleProperty, PropertyEditor>();
-	private final List<PropertyEditor> editors = new ArrayList<PropertyEditor>();
 	
 	private final JLabel label = new JLabel();
 	private final StatusTextField nameField = new StatusTextField();
 	private final JLabel nameLabel = new JLabel("Name");
+	
+	private final StyleEditor editor;
 	
 	private final GridBagConstraints c;
 	
@@ -57,19 +61,26 @@ public class StyleEditionPanel extends JPanel {
 		super(new GridBagLayout());
 		this.gui = gui;
 		this.styleManager = styleManager;
+		this.editor = new StyleEditor(styleManager);
 		
 		this.c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.WEST;
 		c.fill = GridBagConstraints.BOTH;
 		
-		// TODO: implement name change
-		nameField.setEnabled(false);
+		GenericPropertyInfo pinfo = new GenericPropertyInfo(editor, StyleEditor.PROP_NAME, "", Action.class);
+		nameField.setEditedProperty(pinfo, null);
 		
 		setStyle(null);
 	}
 	
 	public void setStyle(Style style) {
 		removeAll();
+		editor.setStyle(style);
+		if (editor.getRawValue( StyleEditor.PROP_NAME) == null) {
+			nameField.setEditable(false);
+		} else {
+			nameField.setEditable(true);
+		}
 		
 		if (style == null) {
 			label.setText("no style to edit");
@@ -88,7 +99,7 @@ public class StyleEditionPanel extends JPanel {
 		c.gridx = 1;
 		c.gridwidth = 3;
 		c.insets = inset_r;
-		nameField.setText(style.getName() +" [TODO: change name]");
+		nameField.refresh(true);
 		add(nameField, c);
 		
 		c.gridwidth = 1;

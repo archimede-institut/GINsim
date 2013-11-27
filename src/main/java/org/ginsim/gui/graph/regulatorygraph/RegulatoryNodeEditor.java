@@ -29,7 +29,6 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
     public static final int PROP_INPUT = 3;
 	public static final int PROP_ANNOTATION = 5;
 	public static final int PROP_RAW = 10;
-	private List<GenericPropertyInfo> l_prop = new ArrayList();
 	
 	RegulatoryGraph graph;
 
@@ -43,18 +42,18 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
 		this.graph = graph;
 		master = graph;
 		GenericPropertyInfo pinfo = new GenericPropertyInfo(this, PROP_ID, Translator.getString("STR_id"), String.class);
-		l_prop.add(pinfo);
+		v_prop.add(pinfo);
 		pinfo = new GenericPropertyInfo(this, PROP_NAME, Translator.getString("STR_name"), String.class);
-		l_prop.add(pinfo);
+		v_prop.add(pinfo);
 		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_max"), SpinModel.class);
 		pinfo.data = new NodeMaxValueSpinModel(graph);
 		pinfo.addPosition(0,3);
 		pinfo.addPosition(1, 3);
 		pinfo.addPosition(0, 2);
 		pinfo.addPosition(1, 2);
-		l_prop.add(pinfo);
+		v_prop.add(pinfo);
         pinfo = new GenericPropertyInfo(this, PROP_INPUT, Translator.getString("STR_Fixed_input"), Boolean.class);
-        l_prop.add(pinfo);
+        v_prop.add(pinfo);
 
 		// build the group [note, parameter, function]
 		GenericPropertyInfo[] t = new GenericPropertyInfo[3];
@@ -73,7 +72,7 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
 		pinfo.name = Translator.getString("STR_parameters");
 		pinfo.addPosition(0, 4, 2, 1, 0, 0, GridBagConstraints.SOUTH);
 		pinfo.addPosition(2, 0, 1, 5, 1, 1, GridBagConstraints.SOUTH);
-		l_prop.add(pinfo);
+		v_prop.add(pinfo);
 	}
 	
 	public int getIntValue(int prop) {
@@ -84,10 +83,6 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
                 return o.isInput() ? 1 : 0;
 		}
 		return 0;
-	}
-
-	public List getProperties() {
-		return l_prop;
 	}
 
 	public String getStringValue(int prop) {

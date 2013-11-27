@@ -161,6 +161,11 @@ public class StatusTextField extends JTextField implements FocusListener,
 
 	public void setEditedProperty(GenericPropertyInfo pinfo, GenericPropertyHolder panel) {
 		this.pinfo = pinfo;
+		
+		if (panel == null) {
+			return;
+		}
+		
 		int pos = 0;
 		if (pinfo.name != null) {
 			panel.addField(new JLabel(pinfo.name), pinfo, 0);
