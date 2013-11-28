@@ -88,31 +88,40 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
     	return new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_RGB);
 	}
 	
-	private void paintBuffer() {
+	private synchronized void paintBuffer() {
     	BufferedImage img = getNewBufferedImage();
     	paintAreaInBuffer(img, null);
+        this.img = img;
 	}
 	
-	private void paintAreaInBuffer(BufferedImage img, Rectangle area) {
+	private synchronized void paintAreaInBuffer(BufferedImage img, Rectangle area) {
+        if (renderer == null) {
+            return;
+        }
+
 		if (area == null) {
 			area = getVisibleArea();
 		} else {
 			area = getVisibleArea().intersection(area);
 		}
+
     	Graphics2D g = img.createGraphics();
     	g.setRenderingHints(RENDER_HINTS);
-		// erase the whole area
-		g.setColor(backgroundColor);
-		
-		if (renderer != null) {
-			transform(g);
-	    	g.clip(area);
-			g.fill(area);
-			renderer.render(g,area);
-			virtualDimensionUpdated = true;
-		}
 
-		this.img = img;
+		// Erase the whole area
+		g.setColor(backgroundColor);
+        transform(g);
+        g.clip(area);
+        g.fill(area);
+        boolean debug = false;
+        if (debug) {
+            g.setColor(Color.YELLOW);
+            g.fill(area);
+        }
+
+        // Draw the required area
+        renderer.render(g,area);
+        virtualDimensionUpdated = true;
 	}
 	
 	@Override
@@ -194,7 +203,7 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 		return visibleArea;
 	}
 	
-	public void zoom(int n) {
+	public synchronized void zoom(int n) {
 		if (n > 0) {
 			if (zoom >= MAXZOOM) {
 				return;
@@ -217,7 +226,7 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 	
 
 	@Override
-	public void setScrollPosition(int x, int y) {
+	public synchronized void setScrollPosition(int x, int y) {
 		if (x == tr_x && y == tr_y) {
 			return;
 		}
@@ -341,7 +350,7 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 	}
 
 	@Override
-	public void reshape(int x, int y, int w, int h) {
+	public synchronized void reshape(int x, int y, int w, int h) {
 		if (img != null) {
 			img = null;
 		}

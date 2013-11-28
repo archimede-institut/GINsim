@@ -160,24 +160,32 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 	 * @param item
 	 */
 	public void damageItem(Object item) {
-		Rectangle bounds = null;
-		if (item instanceof Edge) {
-			// force a reset of the ereader
-			ereader.setEdge(null);
-			ereader.setEdge((Edge)item);
-			bounds = ereader.getBounds();
-		} else {
-			// force a reset of the nreader
-			nreader.setNode(null);
-			nreader.setNode(item);
-			bounds = nreader.getBounds();
-		}
-		
-		if (bounds != null) {
-			canvas.damageCanvas(bounds);
-		}
+        damage( getDamageBounds(item) );
 	}
-	
+
+    public void damage(Rectangle bounds) {
+        if (bounds != null) {
+            canvas.damageCanvas(bounds);
+        }
+    }
+
+    public Rectangle getDamageBounds(Object item) {
+        Rectangle bounds = null;
+        if (item instanceof Edge) {
+            // force a reset of the ereader
+            ereader.setEdge(null);
+            ereader.setEdge((Edge)item);
+            bounds = ereader.getBounds();
+        } else {
+            // force a reset of the nreader
+            nreader.setNode(null);
+            nreader.setNode(item);
+            bounds = nreader.getBounds();
+        }
+        return bounds;
+    }
+
+
 	private Set buildSelectionCache() {
 		Set newset = new HashSet();
 		List selected = selection.getSelectedNodes();

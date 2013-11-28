@@ -159,6 +159,8 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
         }
         viewInfo.setPoints(l);
         hasChanged = true;
+        cachedBounds = null;
+        cachedPath = null;
         refresh();
     }
 

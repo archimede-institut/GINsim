@@ -184,6 +184,17 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 		renderer.repaintCanvas();
 	}
 	
+	private void applyChangedPoint() {
+		Edge e = (Edge)selection.getSelectedEdges().get(0);
+		if (e == null) {
+			return;
+		}
+		renderer.damageItem(e);
+		graph.fireGraphChange(GraphChangeType.EDGEUPDATED, e);
+		dragstatus = DragStatus.NODRAG;
+		renderer.repaintCanvas();
+	}
+
 	@Override
 	public void released(Point p) {
 		if (startPoint != null) {
@@ -208,6 +219,9 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 			renderer.select(selectionClip);
 			dragstatus = DragStatus.NODRAG;
 			renderer.repaintCanvas();
+			break;
+		case CHANGEDPOINT:
+			applyChangedPoint();
 			break;
 		default:
 			break;
@@ -324,9 +338,8 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 		if (e != under) {
 			return false;
 		}
-		renderer.damageItem(e);
-
 		ereader.setEdge(e);
+        Rectangle damaged = renderer.getDamageBounds(e);
 		List<Point> points = ereader.getPoints();
 		// if no points are defined, use the default ones as initial state
 		if (points == null) {
@@ -346,6 +359,7 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 			points.add(p);
 			ereader.setPoints(points);
 			movingPoint = new MovingPoint(e, 0);
+            renderer.damage(damaged);
 			ereader.refresh();
 			return true;
 		}
@@ -354,8 +368,12 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 		for (Point pt: points) {
 			if (Math.abs(pt.x-p.x) < 5 && Math.abs(pt.y-p.y) < 5) {
 				points.remove(i);
+				if (points.size() < 1) {
+					points = null;
+				}
+                renderer.damage(damaged);
 				ereader.setPoints(points);
-				ereader.refresh();
+                dragstatus = DragStatus.CHANGEDPOINT;
 				return true;
 			}
 			i++;
@@ -378,6 +396,7 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 		}
 		
 		points.add(idx, p);
+        renderer.damage(damaged);
 		ereader.setPoints(points);
 		ereader.refresh();
 		movingPoint = new MovingPoint(e, idx);
