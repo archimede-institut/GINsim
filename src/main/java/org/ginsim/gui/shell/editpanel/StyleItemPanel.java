@@ -1,6 +1,5 @@
 package org.ginsim.gui.shell.editpanel;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -16,12 +15,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.NodeStyle;
 import org.ginsim.core.graph.view.style.Style;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.utils.widgets.StockButton;
 
 public class StyleItemPanel extends JPanel {
 
@@ -42,7 +41,8 @@ public class StyleItemPanel extends JPanel {
     	this.styleModel = new StyleComboModel(manager, stylePanel);
     	this.styleSelection = new JComboBox(styleModel);
 
-    	this.newStyleButton = new JButton("+");
+    	this.newStyleButton = new StockButton("list-add.png", true);
+        newStyleButton.setToolTipText("Create a new style");
     	newStyleButton.addActionListener( new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
@@ -50,15 +50,15 @@ public class StyleItemPanel extends JPanel {
 			}
 		});
 
-    	this.deleteStyleButton = new JButton("x");
-    	this.deleteStyleButton.setForeground(Color.RED);
+    	this.deleteStyleButton = new StockButton("list-remove.png", true);
+        deleteStyleButton.setToolTipText("Reset style");
     	deleteStyleButton.addActionListener( new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				deleteStyle();
 			}
 		});
-    	
+
     	GridBagConstraints c = new GridBagConstraints();
     	c.gridx = 0;
     	c.gridy = 0;
@@ -130,6 +130,11 @@ class StyleComboModel extends AbstractListModel implements ComboBoxModel {
 		Style style = (Style)getSelectedItem();
 		if (style != null) {
 			styleManager.deleteStyle(style);
+            if (style instanceof NodeStyle) {
+                setSelected(styleManager.getDefaultNodeStyle());
+            } else if (style instanceof EdgeStyle) {
+                setSelected(styleManager.getDefaultEdgeStyle());
+            }
 		}
 	}
 
@@ -198,7 +203,7 @@ class StyleComboModel extends AbstractListModel implements ComboBoxModel {
 		this.styles = nodeStyles;
 		setSelected(selected);
 	}
-	
+
 	@Override
 	public Object getElementAt(int index) {
 		if (styles == null || index >= styles.size()) {

@@ -392,7 +392,7 @@ public class StyleManager<V, E extends Edge<V>> {
 	 * The returned style can be the core one or a style
 	 * provided by a StyleProvider.
 	 * 
-	 * @param node
+	 * @param edge
 	 * @return the style for this edge.
 	 */
 	public EdgeStyle getViewEdgeStyle(E edge) {
@@ -406,7 +406,7 @@ public class StyleManager<V, E extends Edge<V>> {
 	 * Get the edge style stored in the graph.
 	 * The returned style ignores the presence of a StyleProvider.
 	 * 
-	 * @param node
+	 * @param edge
 	 * @return the style for this edge.
 	 */
 	public EdgeStyle getUsedEdgeStyle(E edge) {
@@ -570,6 +570,7 @@ public class StyleManager<V, E extends Edge<V>> {
 					doApplyNodeStyle(node, defaultNodeStyle);
 				}
 			}
+            nodeStyles.remove(ns);
 		} else if (style instanceof EdgeStyle) {
 			if (style == defaultEdgeStyle) {
 				return;
@@ -580,6 +581,7 @@ public class StyleManager<V, E extends Edge<V>> {
 					doApplyEdgeStyle(edge, defaultEdgeStyle);
 				}
 			}
+            edgeStyles.remove(es);
 		} else {
 			return;
 		}

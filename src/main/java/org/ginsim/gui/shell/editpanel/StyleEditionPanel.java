@@ -1,10 +1,6 @@
 package org.ginsim.gui.shell.editpanel;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -12,16 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.AbstractSpinnerModel;
-import javax.swing.Action;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JColorChooser;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -40,10 +27,11 @@ import org.python.modules.math;
 
 public class StyleEditionPanel extends JPanel {
 
-	private static final Insets inset_l = new Insets(3, 15, 3, 2);
+    private static final Insets inset_f = new Insets(3, 10, 5, 10);
+    private static final Insets inset_l = new Insets(4, 11, 6, 11);
 	private static final Insets inset_c = new Insets(3, 2, 3, 2);
 	private static final Insets inset_r = new Insets(3, 2, 3, 15);
-	
+
 	private final StyleManager styleManager;
 	private final GraphGUI gui;
 
@@ -51,7 +39,7 @@ public class StyleEditionPanel extends JPanel {
 	
 	private final JLabel label = new JLabel();
 	private final StatusTextField nameField = new StatusTextField();
-	private final JLabel nameLabel = new JLabel("Name");
+	private final JLabel nameLabel = new JLabel("Default Style");
 	
 	private final StyleEditor editor;
 	
@@ -69,6 +57,8 @@ public class StyleEditionPanel extends JPanel {
 		
 		GenericPropertyInfo pinfo = new GenericPropertyInfo(editor, StyleEditor.PROP_NAME, "", Action.class);
 		nameField.setEditedProperty(pinfo, null);
+
+        nameLabel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.BLACK));
 		
 		setStyle(null);
 	}
@@ -76,12 +66,7 @@ public class StyleEditionPanel extends JPanel {
 	public void setStyle(Style style) {
 		removeAll();
 		editor.setStyle(style);
-		if (editor.getRawValue( StyleEditor.PROP_NAME) == null) {
-			nameField.setEditable(false);
-		} else {
-			nameField.setEditable(true);
-		}
-		
+
 		if (style == null) {
 			label.setText("no style to edit");
 			c.gridx = 0;
@@ -91,19 +76,23 @@ public class StyleEditionPanel extends JPanel {
 			repaint();
 			return;
 		}
-		
+
+        boolean inherit = style.getName() != null;
+
 		c.gridx = 0;
 		c.gridy = 0;
-		c.insets = inset_l;
-		add(nameLabel, c);
-		c.gridx = 1;
-		c.gridwidth = 3;
-		c.insets = inset_r;
-		nameField.refresh(true);
-		add(nameField, c);
-		
-		c.gridwidth = 1;
-		boolean inherit = style.getName() != null;
+        c.gridwidth = 9;
+        c.fill = GridBagConstraints.BOTH;
+        if (inherit) {
+            c.insets = inset_f;
+            nameField.refresh(true);
+            add(nameField, c);
+        } else {
+            c.insets = inset_l;
+            add(nameLabel, c);
+        }
+
+        c.gridwidth = 1;
 		int y1=1, y2=1, y3=1;
 		for (StyleProperty prop: style.getProperties()) {
 			if (!m_properties.containsKey(prop)) {
@@ -130,14 +119,16 @@ public class StyleEditionPanel extends JPanel {
 				c.gridy = y;
 				c.insets = inset_l;
 				add(ped.getLabel(), c);
+
 				c.gridx = x+1;
 				c.gridy = y;
 				c.insets = inset_c;
 				add(ped.getComponent(), c);
-				c.gridx = x+2;
-				c.gridy = y;
-				c.insets = inset_r;
-				add(ped.getResetButton(), c);
+
+                c.gridx = x+2;
+                c.gridy = y;
+                c.insets = inset_r;
+                add(ped.getResetButton(), c);
 			}
 		}
 		revalidate();
