@@ -110,6 +110,8 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
 	}
 
 	private void renderEdges(Graphics2D g, Rectangle area, SimpleDimension dim) {
+        // force refresh
+        ereader.setEdge(null);
     	for (Object edge: graph.getEdges()) {
     		ereader.setEdge((Edge)edge, selectionCache.contains(edge));
     		Rectangle bounds = ereader.getBounds();

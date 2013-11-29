@@ -40,6 +40,8 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 	private final static double MINZOOM = 0.1;
 	
 	private final static RenderingHints RENDER_HINTS;
+
+    private final static boolean DEBUGDAMAGED = false;
 	
 	static {
 		RENDER_HINTS = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -61,6 +63,7 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 
 	/** part of the canvas that was changed and should be repainted */
     private Rectangle damagedRegion = null;
+    private Rectangle prevDamaged = null;
     private final Rectangle visibleArea = new Rectangle();
     private final Dimension virtualDimension = new Dimension();
     
@@ -99,6 +102,9 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
             return;
         }
 
+        if (DEBUGDAMAGED) {
+            System.out.println("Update: "+area);
+        }
 		if (area == null) {
 			area = getVisibleArea();
 		} else {
@@ -132,9 +138,18 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 			paintAreaInBuffer(img, damagedRegion);
 		}
 		
-		damagedRegion = null;
 		g.drawImage(img, 0, 0, null);
 
+        if (DEBUGDAMAGED && damagedRegion != null) {
+            if (prevDamaged != null) {
+                g.setColor(Color.YELLOW);
+                g.drawRect(prevDamaged.x, prevDamaged.y, prevDamaged.width, prevDamaged.height);
+            }
+            g.setColor(Color.CYAN);
+            g.drawRect(damagedRegion.x, damagedRegion.y, damagedRegion.width, damagedRegion.height);
+            prevDamaged = damagedRegion;
+        }
+        damagedRegion = null;
 		if (renderer == null) {
 			return;
 		}
@@ -324,6 +339,9 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 	 * @param area the canvas area to mark as damaged
 	 */
 	public synchronized void damageCanvas(Rectangle area) {
+        if (DEBUGDAMAGED) {
+            System.out.println("DMG: "+area);
+        }
 		if (damagedRegion == null) {
 			damagedRegion = new Rectangle(area);
 		} else {

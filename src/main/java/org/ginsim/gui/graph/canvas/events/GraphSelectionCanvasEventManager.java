@@ -339,7 +339,7 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 			return false;
 		}
 		ereader.setEdge(e);
-        Rectangle damaged = renderer.getDamageBounds(e);
+        Rectangle damaged = ereader.getBounds();
 		List<Point> points = ereader.getPoints();
 		// if no points are defined, use the default ones as initial state
 		if (points == null) {
@@ -371,8 +371,9 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 				if (points.size() < 1) {
 					points = null;
 				}
-                renderer.damage(damaged);
 				ereader.setPoints(points);
+                damaged = damaged.union(ereader.getBounds());
+                renderer.damage(damaged);
                 dragstatus = DragStatus.CHANGEDPOINT;
 				return true;
 			}
