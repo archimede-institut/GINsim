@@ -30,7 +30,7 @@ public class StyleTab extends JPanel implements EditTab {
     	StyleManager manager = graph.getStyleManager();
     	
 		this.itemPanel = new StyleItemPanel(gui);
-		this.managerPanel = new StyleManagerPanel(manager);
+		this.managerPanel = new StyleManagerPanel(gui);
 
 		add(itemPanel, ITEMPANEL);
 		add(managerPanel, MANAGERPANEL);
