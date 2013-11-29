@@ -26,7 +26,6 @@ public class EdgeStyleImpl<V, E extends Edge<V>> extends BaseStyle<EdgeStyle<V, 
 	protected static final StyleProperty[] DEFAULT_PROPERTIES = {
 		StyleProperty.COLOR,
 		StyleProperty.PATTERN,
-		StyleProperty.ENDING,
 		StyleProperty.LINEWIDTH,
 	};
 	

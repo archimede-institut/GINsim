@@ -32,7 +32,6 @@ public class NodeStyleImpl<V> extends BaseStyle<NodeStyle<V>> implements NodeSty
 		StyleProperty.FOREGROUND,
 		StyleProperty.TEXT,
 		StyleProperty.SHAPE,
-		StyleProperty.BORDER,
 		StyleProperty.WIDTH,
 		StyleProperty.HEIGHT,
 	};
