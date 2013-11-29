@@ -57,3 +57,5 @@ Thumbs.db
 *.jpx
 *.jpx.local
 *.cld
+*.iml
+.idea
