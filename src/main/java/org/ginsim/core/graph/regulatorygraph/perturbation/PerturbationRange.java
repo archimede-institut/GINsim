@@ -6,8 +6,6 @@ import java.util.Map;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.perturbation.RangePerturbation;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
 public class PerturbationRange extends RangePerturbation implements Perturbation {
 

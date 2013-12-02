@@ -11,9 +11,7 @@ import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
 import org.colomoto.mddlib.operators.MDDBaseOperators;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.utils.data.NamedObject;
-
 
 
 public class InitialState implements NamedObject {
@@ -95,29 +93,6 @@ public class InitialState implements NamedObject {
 	}
 	public Map<NodeInfo,List<Integer>> getMap() {
 		return m;
-	}
-	public OMDDNode getMDD(List<RegulatoryNode> nodeOrder) {
-		OMDDNode falseNode = OMDDNode.TERMINALS[0];
-		OMDDNode ret = OMDDNode.TERMINALS[1];
-		for (int i=nodeOrder.size()-1 ; i>-1 ; i--) {
-			RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(i);
-			Object o = m.get(vertex);
-			if (o != null) {
-				OMDDNode newNode = new OMDDNode();
-				newNode.level = i;
-				newNode.next = new OMDDNode[vertex.getMaxValue()+1];
-				
-				for (int v=0 ; v<newNode.next.length ; v++) {
-					newNode.next[v] = falseNode;
-				}
-				List<Integer> l_val = m.get(vertex);
-				for (int n: l_val) {
-					newNode.next[n] = ret;
-				}
-				ret = newNode;
-			}
-		}
-		return ret;
 	}
 	public int getMDD(MDDManager factory) {
 

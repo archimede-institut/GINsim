@@ -16,7 +16,7 @@ public class ReachabilitySetHelper implements SimulationHelper {
 	protected int[] t_max;
 	protected int length;
 	protected OMDDNode dd_reachable = OMDDNode.TERMINALS[0];
-	
+
 	ReachabilitySetHelper(LogicalModel model, SimulationParameters params) {
 		List<NodeInfo> nodes = model.getNodeOrder();
 		length = nodes.size();

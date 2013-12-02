@@ -4,11 +4,8 @@ import java.io.IOException;
 import java.util.Map;
 
 import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.perturbation.FixedValuePerturbation;
 import org.colomoto.logicalmodel.perturbation.InteractionPerturbation;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
 public class PerturbationRegulator extends InteractionPerturbation implements Perturbation {
 

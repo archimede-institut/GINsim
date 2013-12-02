@@ -156,11 +156,11 @@ public class InteractionAnalysisAlgo {
 	}
 
     /**
-     * Recursive function scanning an OMDDNode 'omdd' and call itself on the 'omdd' children.
+     * Recursive function scanning an MDD 'omdd' and call itself on the 'omdd' children.
      * When the function end, the array 'leaf' contains the value of all the real leafs.
      *
      * @param ddmanager
-     * @param omdd the current OMDDNode to scan. Should be the root at the first call.
+     * @param omdd the current MDD to scan. Should be the root at the first call.
      * @param deep the deep call.
      * @param leafs the resulting array.
      * @param subtree_size
