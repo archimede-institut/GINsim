@@ -1,7 +1,5 @@
 package org.ginsim.core.graph.regulatorygraph;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,7 +15,6 @@ import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDManagerFactory;
 import org.colomoto.mddlib.MDDVariableFactory;
 import org.ginsim.common.application.GsException;
-import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.annotation.AnnotationLink;
 import org.ginsim.core.annotation.BiblioManager;
@@ -27,14 +24,11 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.css.CSSFilesAssociatedManager;
-import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.io.parser.GINMLWriter;
-import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.NotificationResolution;
 
@@ -404,7 +398,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
      * for exemple the state transition graph could have higher max value for one of the node.
      *
      * @param regGraph
-     * @param dynHieGraph
+     * @param dynGraph
      * @return true if the two graph can be associated
      */
     public static boolean associationValid(RegulatoryGraph regGraph, DynamicGraph dynGraph) {
@@ -424,29 +418,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
             }
         }
         return true;
-    }
-
-    @Override
-    public OMDDNode[] getAllTrees(boolean focal) {
-    	return getAllTrees(null, focal);
-    }
-    
-    @Override
-    public OMDDNode[] getAllTrees(List<RegulatoryNode> tmpNodeOrder, boolean focal) {
-    	if (tmpNodeOrder == null)
-    		tmpNodeOrder = nodeOrder;
-        OMDDNode[] t_tree = new OMDDNode[tmpNodeOrder.size()];
-        for (int i = 0; i < tmpNodeOrder.size(); i++) {
-        	RegulatoryNode vertex = (RegulatoryNode)tmpNodeOrder.get(i);
-            t_tree[i] = vertex.getTreeParameters(this, tmpNodeOrder);
-            if (!focal) {
-            	// FIXME: does non-focal tree works correctly ??????
-            	t_tree[i] = t_tree[i].buildNonFocalTree(i, vertex.getMaxValue()+1).reduce();
-            } else {
-            	t_tree[i] = t_tree[i].reduce();
-            }
-        }
-        return t_tree;
     }
 
     @Override
@@ -498,13 +469,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 		return getNodeOrder();
 	}
 	
-    @Override
-	public OMDDNode[] getParametersForSimulation(boolean focal) {
-		
-		return getAllTrees(focal);
-	}
-
-
 	@Override
 	public LogicalModel getModel() {
 		return getModel(null);

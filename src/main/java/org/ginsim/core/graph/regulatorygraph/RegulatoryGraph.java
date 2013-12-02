@@ -7,7 +7,6 @@ import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
 
 
@@ -54,7 +53,6 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param from
      * @param to
      * @param minvalue
-     * @param maxvalue
      * @param sign
      * @return the new edge.
      */
@@ -65,7 +63,6 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
      * @param from
      * @param to
      * @param minvalue
-     * @param maxvalue
      * @param sign
      * @return the new edge
      */
@@ -83,30 +80,6 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
     RegulatoryMultiEdge addEdge(RegulatoryNode source, RegulatoryNode target, RegulatoryEdgeSign sign);
     
     
-    /**
-     * @param focal if true, leaves are focal points. Otherwise their are directions (-1, 0, +1)
-     * @return a tree representation of logical parameters
-     */
-    OMDDNode[] getAllTrees(boolean focal);
-
-    /**
-     * Computes the tree representing the logical parameters, receiving an optional node ordering
-     * (otherwise uses the one already defined in the regulatory graph)
-     *  
-     * @param focal if true, leaves are focal points. Otherwise their are directions (-1, 0, +1)
-     * @return a tree representation of logical parameters
-     */
-    OMDDNode[] getAllTrees(List<RegulatoryNode> nodeOrder, boolean focal);
-
-    
-    /**
-     * 
-     * @param focal
-     * @return
-     */
-	OMDDNode[] getParametersForSimulation(boolean focal);
-
-	
     /**
      * Construct MDD representation of the logical functions of the nodes of this graph.
      * 
@@ -164,7 +137,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
 	/**
 	 * Get a ready-to-be-used model (list of nodes and functions, no graph structure)
 	 * 
-	 * @param order the desired node order
+	 * @param orderer helper providing the desired node order
 	 * 
 	 * @return a model matching this RegulatoryGraph
 	 */
