@@ -5,13 +5,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDVariable;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+
+//import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.mdd.OmsddNode;
 
 
@@ -53,11 +57,12 @@ public class CircuitAlgo {
 
     RegulatoryGraph graph;
 
-    List nodeOrder;
+    List<RegulatoryNode> nodeOrder;
     int[] t_maxValues;
     long fullPhaseSpace;
     long score;
-    OMDDNode[] t_parameters;
+    private final MDDManager ddmanager;
+    private final int[] functions;
     boolean do_cleanup;
 
     /**
@@ -67,18 +72,21 @@ public class CircuitAlgo {
     public CircuitAlgo(RegulatoryGraph graph, byte[][] t_constraint, Perturbation mutant, boolean do_cleanup) {
         this.do_cleanup = do_cleanup;
         this.t_constraint = t_constraint;
-        t_parameters = graph.getAllTrees(true);
+        LogicalModel lmodel = graph.getModel();
+        ddmanager = lmodel.getMDDManager();
+        if (mutant != null) {
+            lmodel = mutant.apply(lmodel);
+        }
+        functions = lmodel.getLogicalFunctions();
         this.nodeOrder = graph.getNodeOrder();
-        t_maxValues = new int[t_parameters.length];
+        t_maxValues = new int[functions.length];
         fullPhaseSpace = 1;
-        for (int i=0 ; i<t_maxValues.length ; i++) {
-        	t_maxValues[i] = ((RegulatoryNode)nodeOrder.get(i)).getMaxValue()+1;
+        int i=0;
+        for (RegulatoryNode node: nodeOrder) {
+        	t_maxValues[i] = node.getMaxValue()+1;
         	fullPhaseSpace *= t_maxValues[i];
         }
         this.graph = graph;
-        if (mutant != null) {
-        	mutant.apply(t_parameters, graph);
-        }
     }
 
     /**
@@ -174,7 +182,7 @@ public class CircuitAlgo {
         }
 
         // get the context tree
-        OmsddNode node = getContextFromParameters(t_parameters[nodeOrder.indexOf(target)],
+        OmsddNode node = getContextFromParameters(functions[nodeOrder.indexOf(target)],
         		nodeOrder.indexOf(source), min, t_circuit, nextmin, nextmax);
 
         node = checkConstraint(node).reduce();
@@ -203,21 +211,22 @@ public class CircuitAlgo {
      * @param nextmax
      * @return the context of functionality
      */
-    private OmsddNode getContextFromParameters(OMDDNode node, int level, int thresold, int[] t_circuit, int nextmin, int nextmax) {
-        if (node.next == null || node.level > level) { // no meeting: not functional
+    private OmsddNode getContextFromParameters(int node, int level, int thresold, int[] t_circuit, int nextmin, int nextmax) {
+        MDDVariable var = ddmanager.getNodeVariable(node);
+        if (var == null || var.order  > level) { // no meeting: not functional
             return OmsddNode.FALSE;
         }
-        if (node.level < level ) { // may still meet it later
+        if (var.order < level ) { // may still meet it later
             OmsddNode ret = new OmsddNode();
-            ret.level = node.level;
-            ret.next = new OmsddNode[node.next.length];
+            ret.level = var.order;
+            ret.next = new OmsddNode[var.nbval];
             for (int i=0 ; i<ret.next.length ; i++) {
-                ret.next[i] = getContextFromParameters(node.next[i], level, thresold, t_circuit, nextmin, nextmax);
+                ret.next[i] = getContextFromParameters(ddmanager.getChild(node, i), level, thresold, t_circuit, nextmin, nextmax);
             }
             return ret;
         }
         // now level == node.level.
-        return getContextFromParameters(node.next[thresold-1], node.next[thresold], t_circuit, nextmin, nextmax);
+        return getContextFromParameters(ddmanager.getChild(node, thresold-1), ddmanager.getChild(node, thresold), t_circuit, nextmin, nextmax);
     }
 
     /**
@@ -236,30 +245,31 @@ public class CircuitAlgo {
      * @param nextmax
      * @return the context of functionality
      */
-    private OmsddNode getContextFromParameters(OMDDNode node, OMDDNode next, int[] t_circuit, int nextmin, int nextmax) {
-
-        if (node.next == null) {
-            if (next.next == null) {
+    private OmsddNode getContextFromParameters(int node, int next, int[] t_circuit, int nextmin, int nextmax) {
+        MDDVariable var = ddmanager.getNodeVariable(node);
+        MDDVariable nextVar = ddmanager.getNodeVariable(next);
+        if (var == null) {
+            if (nextVar == null) {
                 // the real end: choose the sign.
                 // activate next edge = positive, desactivate it = negative.
             	if (testOutLimit) {
-	                if (node.value < nextmin || node.value > nextmax) {
-	                    if (next.value >= nextmin && next.value <= nextmax) {
+	                if (node < nextmin || node > nextmax) {
+	                    if (next >= nextmin && next <= nextmax) {
 	                        return OmsddNode.POSITIVE;
 	                    }
 	                    return OmsddNode.FALSE;
 	                }
-	                if (next.value < nextmin || next.value > nextmax) {
+	                if (next < nextmin || next > nextmax) {
 	                    return OmsddNode.NEGATIVE;
 	                }
             	} else {
-	                if (node.value < nextmin) {
-	                    if (next.value >= nextmin) {
+	                if (node < nextmin) {
+	                    if (next >= nextmin) {
 	                        return OmsddNode.POSITIVE;
 	                    }
 	                    return OmsddNode.FALSE;
 	                }
-	                if (next.value < nextmin) {
+	                if (next < nextmin) {
 	                    return OmsddNode.NEGATIVE;
 	                }
             	}
@@ -267,31 +277,31 @@ public class CircuitAlgo {
             }
         }
 
-        if (node.next == null || next.next != null && node.level > next.level) {
+        if (var == null || nextVar != null && var.order > nextVar.order) {
             OmsddNode ret = new OmsddNode();
-            ret.level = next.level;
-            ret.next = new OmsddNode[next.next.length];
+            ret.level = nextVar.order;
+            ret.next = new OmsddNode[nextVar.nbval];
             for (int i=0 ; i<ret.next.length ; i++) {
-                ret.next[i] = getContextFromParameters(node, next.next[i], t_circuit, nextmin, nextmax);
+                ret.next[i] = getContextFromParameters(node, ddmanager.getChild(next, i), t_circuit, nextmin, nextmax);
             }
             return ret;
         }
-        if (next.next == null || node.level < next.level) {
+        if (nextVar == null || var.order < nextVar.order) {
             OmsddNode ret = new OmsddNode();
-            ret.level = node.level;
-            ret.next = new OmsddNode[node.next.length];
+            ret.level = var.order;
+            ret.next = new OmsddNode[var.nbval];
             for (int i=0 ; i<ret.next.length ; i++) {
-                ret.next[i] = getContextFromParameters(node.next[i], next, t_circuit, nextmin, nextmax);
+                ret.next[i] = getContextFromParameters(ddmanager.getChild(node, i), next, t_circuit, nextmin, nextmax);
             }
             return ret;
         }
 
         // both are non-terminal of the same level
         OmsddNode ret = new OmsddNode();
-        ret.level = next.level;
-        ret.next = new OmsddNode[next.next.length];
+        ret.level = nextVar.order;
+        ret.next = new OmsddNode[nextVar.nbval];
         for (int i=0 ; i<ret.next.length ; i++) {
-            ret.next[i] = getContextFromParameters(node.next[i], next.next[i], t_circuit, nextmin, nextmax);
+            ret.next[i] = getContextFromParameters(ddmanager.getChild(node, i), ddmanager.getChild(next, i), t_circuit, nextmin, nextmax);
         }
         return ret;
     }
