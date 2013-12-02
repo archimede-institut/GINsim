@@ -16,13 +16,6 @@ public class PerturbationFixed extends FixedValuePerturbation implements Perturb
 	}
 
 	@Override
-	@Deprecated
-	public void apply(OMDDNode[] t_tree, RegulatoryGraph graph) {
-		int index = graph.getNodeOrderForSimulation().indexOf(component);
-		t_tree[index] = OMDDNode.TERMINALS[value];
-	}
-
-	@Override
 	public void toXML(XMLWriter out) throws IOException {
         out.openTag("change");
         out.addAttr("target", component.getNodeID());

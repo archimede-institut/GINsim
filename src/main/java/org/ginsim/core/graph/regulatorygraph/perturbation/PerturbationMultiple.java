@@ -23,14 +23,6 @@ public class PerturbationMultiple extends MultiplePerturbation<Perturbation> imp
 	}
 	
 	@Override
-	@Deprecated
-	public void apply(OMDDNode[] t_tree, RegulatoryGraph graph) {
-		for (Perturbation perturbation: perturbations) {
-			perturbation.apply(t_tree, graph);
-		}
-	}
-
-	@Override
 	public void toXML(XMLWriter out) throws IOException {
         out.openTag("mutant");
         out.addAttr("name", toString());

@@ -17,12 +17,6 @@ public class PerturbationRegulator extends InteractionPerturbation implements Pe
 	}
 
 	@Override
-	@Deprecated
-	public void apply(OMDDNode[] t_tree, RegulatoryGraph graph) {
-		// FIXME: implement for old MDDs ??
-	}
-
-	@Override
 	public void toXML(XMLWriter out) throws IOException {
         out.openTag("regulatorChange");
         out.addAttr("regulator", regulator.getNodeID());

@@ -16,15 +16,6 @@ public class PerturbationRange extends RangePerturbation implements Perturbation
 	}
 
 	@Override
-	@Deprecated
-	public void apply(OMDDNode[] t_tree, RegulatoryGraph graph) {
-		
-		int index = graph.getNodeOrderForSimulation().indexOf(component);
-		throw new RuntimeException("Range perturbation not yet fully implemented");
-		
-	}
-
-	@Override
 	public void toXML(XMLWriter out) throws IOException {
         out.openTag("change");
         out.addAttr("target", component.getNodeID());
