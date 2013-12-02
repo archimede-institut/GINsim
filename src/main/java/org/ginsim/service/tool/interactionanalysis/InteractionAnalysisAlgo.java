@@ -7,11 +7,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDVariable;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 
 /**
@@ -38,7 +40,7 @@ public class InteractionAnalysisAlgo {
 	 * 
 	 * For each vertices, scan the reduced Omdd representation of the node logical function to know which vertices are effective (<=>present). If an edge source vertex incoming on this vertex is not in the Omdd, then its non functional.
 	 * 
-	 * @param g the graph where to search the non functional interactions.
+	 * @param regGraph the graph where to search the non functional interactions.
 	 * @param mutant the mutant definition
 	 * @param selectedNodes the set of selected nodes to run the analysis on.
 	 * @return 
@@ -57,11 +59,14 @@ public class InteractionAnalysisAlgo {
 
 		//Preparing the logical function for the right mutant
 		LogManager.info("Getting the logical functions");
-		OMDDNode[] t_tree =  regGraph.getAllTrees(true);
+        LogicalModel lmodel = regGraph.getModel();
 		if (mutant != null) {
 			LogManager.info("Preparing the mutants");
-			mutant.apply(t_tree, regGraph);
+            lmodel = mutant.apply(lmodel);
 		}
+
+        MDDManager ddmanager = lmodel.getMDDManager();
+        int[] functions = lmodel.getLogicalFunctions();
 		
 		
 		//Create a map associating to a regulatoryNode, its position in the nodeOrder as an Integer.
@@ -93,8 +98,8 @@ public class InteractionAnalysisAlgo {
 			}
 			LogManager.info("Computing "+target.getId());
 			Collection<RegulatoryMultiEdge> l = regGraph.getIncomingEdges(target);											//  get the list l of incoming edges
-			OMDDNode omdd = t_tree[i];
-			
+            int curMDD = functions[i];
+
 			total_level = 1;																//  Compute the total number of level in the omdd tree
 			for (RegulatoryMultiEdge edge: l) {
 				RegulatoryNode source = edge.getSource();
@@ -120,7 +125,7 @@ public class InteractionAnalysisAlgo {
 					m++;
 				}
 			}
-		    scannOmdd(omdd, 0, leafs, subtree_size, small_node_order_vertex, small_node_order_level);												//  scan the logical function of v
+		    scanMDD(ddmanager, curMDD, 0, leafs, subtree_size, small_node_order_vertex, small_node_order_level);												//  scan the logical function of v
 
 			for (RegulatoryMultiEdge me: l) {									//	For each incoming edge
 				RegulatoryNode source = me.getSource();
@@ -150,60 +155,65 @@ public class InteractionAnalysisAlgo {
 		return algoResult;
 	}
 
-	/**
-	 * Recursive function scanning an OMDDNode 'omdd' and call itself on the 'omdd' children.
-	 * When the function end, the array 'leaf' contains the value of all the real leafs.
-	 * 	 * 
-	 * @param omdd the current OMDDNode to scan. Should be the root at the first call.
-	 * @param deep the deep call.
-	 * @param leafs the resulting array.
-	 * @param small_node_order 
-	 * @param subtree_size 
-	 */
-	private int scannOmdd(OMDDNode omdd, int deep, byte [] leafs, int[] subtree_size, RegulatoryNode[] small_node_order_vertex, int[] small_node_order_levels) {
-		if (omdd.next == null) { 								//If the current node is leaf
-			if (subtree_size[deep] == 1) { 							//a real leaf, ie. all the inputs are present in the branch
-				leafs[i_leafs++] = omdd.value;							//Save the current value.
-				return i_leafs;
-			} // else
-			if (omdd.value == 0) {
-				i_leafs += subtree_size[deep];		//if value is 0, skip them because the array is initialized to 0
-			} else {													//else add the unreal leaf value to each of the real leafs 
-				for (int i = 0; i < subtree_size[deep]; i++) {
-					leafs[i_leafs++] = omdd.value;
-				}
-			}
-			return subtree_size[deep];
-		}
-		
-		boolean hasJumpedNode = false;
-		int current_i = i_leafs, current_deep = deep;
-		while (omdd.level != small_node_order_levels[deep]) {
-			deep++;
-			hasJumpedNode = true;
-		}
+    /**
+     * Recursive function scanning an OMDDNode 'omdd' and call itself on the 'omdd' children.
+     * When the function end, the array 'leaf' contains the value of all the real leafs.
+     *
+     * @param ddmanager
+     * @param omdd the current OMDDNode to scan. Should be the root at the first call.
+     * @param deep the deep call.
+     * @param leafs the resulting array.
+     * @param subtree_size
+     * @param small_node_order_vertex
+     * @param small_node_order_levels
+     */
+    private int scanMDD(MDDManager ddmanager, int omdd, int deep, byte [] leafs, int[] subtree_size, RegulatoryNode[] small_node_order_vertex, int[] small_node_order_levels) {
+        if (ddmanager.isleaf(omdd)) {
+            if (subtree_size[deep] == 1) { 							//a real leaf, ie. all the inputs are present in the branch
+                leafs[i_leafs++] = (byte)omdd;							//Save the current value.
+                return i_leafs;
+            }
 
-		int res = -1, max = 0;
-		for (int i = 0; i < omdd.next.length; i++) {		//Scan all the childs
-			res = scannOmdd(omdd.next[i], deep+1, leafs, subtree_size, small_node_order_vertex, small_node_order_levels);
-			if (res > max) {
+            if (omdd == 0) {
+                i_leafs += subtree_size[deep];		//if value is 0, skip them because the array is initialized to 0
+            } else {													//else add the unreal leaf value to each of the real leafs
+                for (int i = 0; i < subtree_size[deep]; i++) {
+                    leafs[i_leafs++] = (byte)omdd;
+                }
+            }
+
+            return subtree_size[deep];
+        }
+
+        boolean hasJumpedNode = false;
+        int current_i = i_leafs, current_deep = deep;
+        MDDVariable variable = ddmanager.getNodeVariable(omdd);
+        while (variable.order != small_node_order_levels[deep]) {
+            deep++;
+            hasJumpedNode = true;
+        }
+
+        int res = -1, max = 0;
+        for (int i = 0; i < variable.nbval; i++) {		//Scan all the childs
+            res = scanMDD(ddmanager, ddmanager.getChild(omdd, i), deep+1, leafs, subtree_size, small_node_order_vertex, small_node_order_levels);
+            if (res > max) {
                 max = res;
             }
-		}
-		if (hasJumpedNode) {
-			int added = i_leafs-current_i;
-			for (int i = 0; i < subtree_size[current_deep]/added-1; i++) { //The first pass has ben computed, copy the results for the others
-				for (int j = i_leafs; j < i_leafs+added; j++) {
-					leafs[j] = leafs[j-added];
-				}
-				i_leafs += added;
-			} 
-			return i_leafs;
-		}
-		return res;
-	}
-	
-	/**
+        }
+        if (hasJumpedNode) {
+            int added = i_leafs-current_i;
+            for (int i = 0; i < subtree_size[current_deep]/added-1; i++) { //The first pass has ben computed, copy the results for the others
+                for (int j = i_leafs; j < i_leafs+added; j++) {
+                    leafs[j] = leafs[j-added];
+                }
+                i_leafs += added;
+            }
+            return i_leafs;
+        }
+        return res;
+    }
+
+    /**
 	 * Compute the functionality of the 'node_index'-nth node in the omdd represented by 'leafs'.
 	 * 
 	 * @param count_childs the count of child above 'node_index'
