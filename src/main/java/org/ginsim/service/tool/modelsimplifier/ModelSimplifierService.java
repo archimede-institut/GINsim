@@ -18,11 +18,6 @@ public class ModelSimplifierService implements Service {
         }
     }
 
-    @Deprecated
-    public ModelRewiring getRewirer( RegulatoryGraph graph) {
-    	return new ModelRewiring(graph);
-    }
-    
     public ModelReducer getModelReducer( RegulatoryGraph graph) {
     	return getModelReducer(graph.getModel());
     }
