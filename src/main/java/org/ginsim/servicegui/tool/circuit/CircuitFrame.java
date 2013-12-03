@@ -250,20 +250,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
     protected JPanel getConfigPanel() {
         if (configDialog == null) {
             if (config == null) {
-                config = new CircuitSearchStoreConfig();
-                config.v_list = graph.getNodeOrder();
-                config.minlen = 1;
-                config.maxlen = config.v_list.size();
-                config.t_status = new byte[graph.getNodeOrderSize()];
-                config.t_constraint = new byte[graph.getNodeOrderSize()][3];
-                for (int i = 0; i < config.t_status.length; i++) {
-                    config.t_status[i] = 3;
-                    byte max = ((RegulatoryNode) graph.getNodeOrder().get(
-                            i)).getMaxValue();
-                    config.t_constraint[i][0] = 0;
-                    config.t_constraint[i][1] = max;
-                    config.t_constraint[i][2] = max;
-                }
+                config = new CircuitSearchStoreConfig(graph.getNodeOrder());
             }
             configDialog = new CircuitConfigureSearch(this, config, graph.getNodeOrder());
         }
@@ -361,26 +348,6 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
             CircuitSearcher csearcher = new CircuitSearcher(graph);
             v_circuit = csearcher.getCircuits(result);
 
-            if (config == null || config.minlen < 2) { // search
-                                                       // autoregulation-like
-                                                       // circuits
-            	if (config.minMust < 2) {
-	                for (int i = 0; i < graph.getNodeOrderSize(); i++) {
-	                    RegulatoryNode vertex = (RegulatoryNode) graph
-	                            .getNodeOrder().get(i);
-	                    if (config.minMust == 1 && config.t_status[i] == 1 ||
-	                        config.minMust == 0 && config.t_status[i] == 3) {
-	                    	RegulatoryMultiEdge edge = graph.getEdge(vertex, vertex);
-		                    if (edge != null) {
-		                        CircuitDescr circuit = new CircuitDescr();
-		                        circuit.t_vertex = new RegulatoryNode[] { vertex };
-		                        circuit.t_me = new RegulatoryMultiEdge[] { edge };
-		                        v_circuit.add(new CircuitDescrInTree(circuit, true, CircuitDescr.ALL));
-		                    }
-	                    }
-	                }
-                }
-            }
             showCircuit();
         }
     }

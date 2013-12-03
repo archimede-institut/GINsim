@@ -5,6 +5,8 @@ import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.service.ServiceManager;
+import org.ginsim.service.tool.connectivity.ConnectivityService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,22 +18,54 @@ import java.util.List;
  */
 public class CircuitSearcher {
 
+    private final ConnectivityService connectivity = ServiceManager.getManager().getService(ConnectivityService.class);
+
     private final RegulatoryGraph graph;
-    CircuitSearchStoreConfig config;
+    private final CircuitSearchStoreConfig config;
 
     public CircuitSearcher(RegulatoryGraph graph) {
         this.graph = graph;
+        config = new CircuitSearchStoreConfig(graph.getNodeOrder());
+        config.setReady();
     }
 
-    public List getCircuits(List<NodeReducedData> sccs) {
-        List circuits = new ArrayList();
+    public List<CircuitDescrInTree> getCircuits() {
+        List<NodeReducedData> sccs = connectivity.getSCC(graph).getComponents();
+
+        List<CircuitDescrInTree> circuits = getCircuits(sccs);
+
+        if (config.minlen < 2) {
+            // also search autoregulations
+            if (config.minMust < 2) {
+                for (int i = 0; i < graph.getNodeOrderSize(); i++) {
+                    RegulatoryNode vertex = (RegulatoryNode) graph
+                            .getNodeOrder().get(i);
+                    if (config.minMust == 1 && config.t_status[i] == 1 ||
+                            config.minMust == 0 && config.t_status[i] == 3) {
+                        RegulatoryMultiEdge edge = graph.getEdge(vertex, vertex);
+                        if (edge != null) {
+                            CircuitDescr circuit = new CircuitDescr();
+                            circuit.t_vertex = new RegulatoryNode[] { vertex };
+                            circuit.t_me = new RegulatoryMultiEdge[] { edge };
+                            circuits.add(new CircuitDescrInTree(circuit, true, CircuitDescr.ALL));
+                        }
+                    }
+                }
+            }
+        }
+
+        return circuits;
+    }
+
+    public List<CircuitDescrInTree> getCircuits(List<NodeReducedData> sccs) {
+        List<CircuitDescrInTree> circuits = new ArrayList();
         for (NodeReducedData scc: sccs) {
             searchCircuitInSCC(scc.getContent(), circuits);
         }
         return circuits;
     }
 
-    private void searchCircuitInSCC(List v_cc, List circuits) {
+    private void searchCircuitInSCC(List v_cc, List<CircuitDescrInTree> circuits) {
 
         if (v_cc.size() < 2) {
             return;

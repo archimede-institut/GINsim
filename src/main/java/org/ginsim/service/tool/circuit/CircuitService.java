@@ -17,25 +17,17 @@ public class CircuitService implements Service {
 
     ConnectivityService connectivity = null;
 
-
-    CircuitAlgo getCircuitAnalyser(RegulatoryGraph graph) {
+    public CircuitAlgo getCircuitAnalyser(RegulatoryGraph graph) {
         return getCircuitAnalyser(graph, false);
     }
 
-    CircuitAlgo getCircuitAnalyser(RegulatoryGraph graph, boolean doCleanup) {
+    public CircuitAlgo getCircuitAnalyser(RegulatoryGraph graph, boolean doCleanup) {
         return new CircuitAlgo(graph, doCleanup);
     }
 
-    private void findCircuits(RegulatoryGraph graph) {
-        if (connectivity == null) {
-            connectivity = ServiceManager.getManager().getService(ConnectivityService.class);
-            if (connectivity == null) {
-                throw new RuntimeException("Circuit analysis requires the connectivity service");
-            }
-        }
-
-        List<NodeReducedData> sccs = connectivity.getSCC(graph).getComponents();
-
-
+    public List<CircuitDescrInTree> getCircuits(RegulatoryGraph graph) {
+        CircuitSearcher csearcher = new CircuitSearcher(graph);
+        return csearcher.getCircuits();
     }
+
 }
