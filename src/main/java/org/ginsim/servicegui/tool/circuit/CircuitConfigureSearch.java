@@ -18,6 +18,7 @@ import org.ginsim.gui.utils.data.models.MaxSpinModel;
 import org.ginsim.gui.utils.data.models.MinMaxSpinModel;
 import org.ginsim.gui.utils.data.models.MinSpinModel;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
+import org.ginsim.service.tool.circuit.CircuitSearchStoreConfig;
 
 
 /**

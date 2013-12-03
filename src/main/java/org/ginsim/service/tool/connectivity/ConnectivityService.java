@@ -14,9 +14,13 @@ public class ConnectivityService implements Service {
 	 * @param graph the graph to compute the SCC on
 	 * @return a ConnectivityResult object holding the SCC
 	 */
-	public ConnectivityResult run(Graph graph) {
-		return run(graph, true);
-	}
+    public ConnectivityResult run(Graph graph) {
+        return run(graph, true);
+    }
+
+    public ConnectivityResult getSCC(Graph graph) {
+        return run(graph, false);
+    }
 	/**
 	 * Compute the SCC of graph in another thread.
 	 * 

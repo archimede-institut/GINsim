@@ -11,10 +11,9 @@ import org.mangosdk.spi.ProviderFor;
 /**
  * CytoscapeExport is a plugin for GINsim to export a regulatory graph into XGMML format.
  * 
- * @author BERENGUIER duncan - M1BBSG
+ * @author Duncan Berenguier
  * @version 1.0
  * february 2008 - april 2008
- * 
  */
 @ProviderFor(Service.class)
 @Alias("cytoscape")

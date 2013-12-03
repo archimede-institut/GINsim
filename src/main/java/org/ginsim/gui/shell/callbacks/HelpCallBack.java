@@ -20,6 +20,8 @@ import org.ginsim.gui.shell.FileSelectionHelper;
 
 /**
  * Here are the (few) callback for entry in the "help" menu
+ *
+ * @author Lionel Spinelli
  */
 public class HelpCallBack {
 	
@@ -66,7 +68,7 @@ class HelpAction extends AbstractAction {
 /**
  * This Action concerns the export of log files into zip file that could be easily sent to support
  * 
- * @author spinelli
+ * @author Lionel Spinelli
  *
  */
 class ProvideLogAction extends AbstractAction {
@@ -98,7 +100,7 @@ class ProvideLogAction extends AbstractAction {
 /**
  * This action permit to activate/unactivate the trace/info log levels
  * 
- * @author spinelli
+ * @author Lionel Spinelli
  *
  */
 class ToggleTraceAction extends AbstractAction{

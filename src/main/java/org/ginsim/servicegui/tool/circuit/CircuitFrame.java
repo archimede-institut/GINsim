@@ -8,11 +8,7 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -35,13 +31,11 @@ import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
-import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationUser;
 import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeBuilder;
@@ -51,7 +45,6 @@ import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.NotificationListener;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.service.ServiceManager;
-import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
@@ -60,10 +53,7 @@ import org.ginsim.gui.utils.widgets.treetable.AbstractTreeTableModel;
 import org.ginsim.gui.utils.widgets.treetable.JTreeTable;
 import org.ginsim.gui.utils.widgets.treetable.TreeTableModel;
 import org.ginsim.gui.utils.widgets.treetable.TreeTableModelAdapter;
-import org.ginsim.service.tool.circuit.CircuitAlgo;
-import org.ginsim.service.tool.circuit.CircuitDescr;
-import org.ginsim.service.tool.circuit.CircuitDescrInTree;
-import org.ginsim.service.tool.circuit.FunctionalityContext;
+import org.ginsim.service.tool.circuit.*;
 import org.ginsim.service.tool.connectivity.ConnectivityAlgo;
 import org.ginsim.service.tool.connectivity.ConnectivityResult;
 import org.ginsim.service.tool.connectivity.ConnectivityService;
@@ -87,7 +77,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 
     private int status = STATUS_NONE;
 
-    private Vector v_circuit = new Vector();
+    private List v_circuit = new ArrayList();
     protected JTreeTable tree = null;
     private GsCircuitTreeModel treemodel = null;
     private JPanel configDialog = null;
@@ -103,8 +93,6 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
     private JCheckBox cb_cleanup = null;
     private PerturbationHolder mutantstore;
     private PerturbationSelectionPanel mutantPanel;
-
-	private JButton	but_pyexport;
 
 	private JButton viewContextButton;
 
@@ -205,9 +193,6 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         	c.gridx++;
             resultPanel.add(getCopyContextButton(), c);
             
-        	c.gridx++;
-            resultPanel.add(get_pythonPanel(), c);
-
             // cleanup checkbox
             c.gridx = 0;
             c.gridy++;
@@ -246,87 +231,6 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 		return viewContextButton;
 	}
 
-	private JButton get_pythonPanel() {
-    	if (but_pyexport == null) {
-    		but_pyexport = new JButton("to python");
-    		but_pyexport.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					pyExport();
-				}
-			});
-    	}
-    	return but_pyexport;
-    }
-    
-    protected void pyExport() {
-    	List no = graph.getNodeOrder();
-    	List l_func = (List)treemodel.m_parent.get(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONAL]);
-    	if (l_func == null) {
-    		LogManager.trace(" No func...");
-    		return;
-    	}
-    	StringBuffer s = new StringBuffer("#!/usr/bin/env python\n"
-    			+ "import circuittest\n"
-    			+ "if __name__ == \"__main__\":\n"
-    			+ "    ct = circuittest.CircuitTester(node_order=[");
-        Iterator it = no.iterator();
-        while (it.hasNext()) {
-            s.append("\""+((RegulatoryNode)it.next()).getId()+"\",");
-        }
-    	s.append("])\n");
-    	it = l_func.iterator();
-    	while (it.hasNext()) {
-    		CircuitDescrInTree cit = (CircuitDescrInTree)it.next();
-			// FIXME: we are using reg graph's sign, we should not rely on it!
-			if (treemodel.isLeaf(cit)) {
-				circuitToPython(no, s, cit);
-			} else {
-				// TODO: call it for all sub-circuit!
-			}
-    	}
-    	s.append("\n\n    ct.do_analyse((\n"
-    			+ "        # TODO: add path definition here\n"
-    			+ "        \n"
-    			+ "    ))\n");
-    	JFrame f = new JFrame("functional circuits in python");
-    	JScrollPane sp = new JScrollPane();
-    	sp.setViewportView(new JTextArea(s.toString()));
-    	f.add(sp);
-    	f.setSize(400, 300);
-    	f.setVisible(true);
-    }
-    
-    protected void circuitToPython(List no, StringBuffer s, CircuitDescrInTree cit) {
-    	for (int i=0 ; i<cit.getCircuit().t_context.length ; i++) {
-    	    if (cit.getCircuit().t_context[i].next != null) {
-    	        s.append("    ct.add_circuit((");
-
-    	        for (int j=0 ; j<cit.getCircuit().t_me.length ; j++) {
-    	            int idx = 0; // FIXME: get the right edge!
-    	            RegulatoryMultiEdge me = cit.getCircuit().t_me[j];
-    	            int src = no.indexOf(me.getSource());
-    	            int dst = no.indexOf(me.getTarget());
-    	            s.append("("+src+","+dst+","
-    	                     + me.getMin(idx)+","
-    	                     + (me.getSign(idx)==RegulatoryEdgeSign.NEGATIVE?"-1":"1")
-    	                     + "),");
-    	        }
-    	        s.append("), ");
-        	    s.append(mdd2py(cit.getCircuit().t_context[i]));
-                s.append(")\n");
-    	    }
-    	}
-    }
-    protected String mdd2py(OmsddNode node) {
-    	if (node.next == null) {
-    		return node.value == 0 ? "False" : "True";
-    	}
-    	String s = "("+node.level;
-    	for (int i=0 ; i<node.next.length ; i++) {
-    		s += "," + mdd2py(node.next[i]);
-    	}
-    	return s + ")";
-    }
     /**
      * Verify if the specified String is an integer
      * 
@@ -449,16 +353,14 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 
     public void setResult(List result) {
         updateStatus(STATUS_SEARCH_CIRCUIT);
-        if (result != null && result instanceof List) {
-            List l = (List) result;
+        if (result != null) {
             if (config != null) {
                 config.setReady();
             }
-            v_circuit.clear();
-            for (int i = 0; i < l.size(); i++) {
-                List v_cc = ((NodeReducedData) l.get(i)).getContent();
-                searchCircuitInSCC(v_cc);
-            }
+
+            CircuitSearcher csearcher = new CircuitSearcher(graph);
+            v_circuit = csearcher.getCircuits(result);
+
             if (config == null || config.minlen < 2) { // search
                                                        // autoregulation-like
                                                        // circuits
@@ -480,148 +382,6 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
                 }
             }
             showCircuit();
-        }
-    }
-
-    /**
-     * find circuits in the SCC (Strongly Connected Component) v_cc. add found
-     * circuits in v_circuit.
-     * 
-     * @param v_cc
-     */
-    private void searchCircuitInSCC(List v_cc) {
-        
-        if (v_cc.size() < 2) {
-            return;
-        }
-        byte[][] t_cc = buildTCC(graph, v_cc); // int[][] giving edges in
-                                                    // the current SCC
-        byte[] t_visited = new byte[t_cc.length]; // remember visited nodes
-                                                    // and their position
-        byte[][] t_path = new byte[t_cc.length][3]; // remember the followed
-                                                        // path: series of
-                                                        // nodes, index of the
-                                                        // followed edge and
-                                                        // score
-        byte[] t_map = new byte[t_cc.length];
-        byte cur = 0; // num of the current node
-        byte pos = 0; // position of the current node in the current path
-        boolean[] t_history = new boolean[t_cc.length]; // avoid refinding
-                                                        // cycles not starting
-                                                        // at the first gene
-        t_visited[0] = 0;
-        t_path[0][0] = 0;
-        t_path[0][1] = 0;
-        int score = 0; // score of the current circuit (to know if it can be
-                        // accepted)
-        t_map[0] = (byte) graph.getNodeOrder().indexOf(v_cc.get(0));
-        if (config != null && config.t_status[t_map[0]] == 1) {
-            score++;
-        }
-        for (int j = 1; j < t_visited.length; j++) {
-            t_visited[j] = -1;
-            t_history[j] = false;
-            t_map[j] = (byte) graph.getNodeOrder().indexOf(v_cc.get(j));
-            if (config != null && config.t_status[t_map[j]] == 1) {
-                score++;
-            }
-        }
-        if (config != null) {
-            t_path[0][2] = config.t_status[t_map[0]];
-        } else {
-            t_path[0][2] = 3;
-        }
-
-        // if the SCC doesn't contain enough "must have" node, don't even go on
-        if (config != null && score < config.minMust) {
-            return;
-        }
-
-        // while we can go on
-        while (true) {
-            // simply follow the path until finding an already visited node
-            cur = t_cc[cur][t_path[pos][1]];
-            while (t_visited[cur] == -1) {
-                // test "must have" and forbiden nodes
-                // mark it as visited, add it to the path
-                t_visited[cur] = ++pos;
-                t_path[pos][0] = cur;
-                t_path[pos][1] = 0;
-                if (config != null) {
-                    t_path[pos][2] = config.t_status[t_map[cur]];
-                } else {
-                    t_path[pos][2] = 3;
-                }
-                // go to next node
-                cur = t_cc[cur][0];
-            }
-
-            // if we are here, we have just found a path!
-            // first choose if it is acceptable!
-            boolean accepted = true;
-            if (config != null) {
-                int a = t_visited[cur];
-                score = pos - a + 1;
-                if (score >= config.minlen && score <= config.maxlen) {
-                    score = 0;
-                    for (; a <= pos; a++) {
-                        if (t_path[a][2] == 1) {
-                            score++;
-                        } else if (t_path[a][2] == 2) {
-                            accepted = false;
-                            break;
-                        }
-                    }
-
-                } else {
-                    accepted = false;
-                }
-            }
-            if (accepted && (config == null || score >= config.minMust)
-                    && !t_history[cur]) {
-                CircuitDescr circuit = new CircuitDescr();
-                v_circuit.add(new CircuitDescrInTree(circuit, true, CircuitDescr.ALL));
-                circuit.t_vertex = new RegulatoryNode[pos - t_visited[cur]
-                        + 1];
-                int p = 0;
-                int a = t_visited[cur];
-                circuit.t_vertex[p++] = (RegulatoryNode) v_cc
-                        .get(t_path[a][0]);
-                a++;
-                for (; a <= pos; a++) {
-                    circuit.t_vertex[p++] = (RegulatoryNode) v_cc
-                            .get(t_path[a][0]);
-                }
-
-                circuit.t_me = new RegulatoryMultiEdge[circuit.t_vertex.length];
-                RegulatoryNode source = circuit.t_vertex[0];
-                RegulatoryNode target = null;
-                for (int i = 1; i < circuit.t_vertex.length; i++) {
-                    target = circuit.t_vertex[i];
-                    circuit.t_me[i - 1] = graph.getEdge(source, target);
-                    source = target;
-                }
-                circuit.t_me[circuit.t_me.length - 1] = graph.getEdge(target, circuit.t_vertex[0]);
-            }
-
-            // rewind the path and get ready for the next search, stop if
-            // nothing more can be done
-            boolean goon = false;
-            do {
-                cur = t_path[pos][0];
-                // if the current node has remaining edges
-                if (++t_path[pos][1] < t_cc[cur].length) {
-                    goon = true;
-                    break;
-                }
-                // else rewind
-                t_visited[cur] = -1;
-                t_history[cur] = true;
-                pos--;
-            } while (pos >= 0);
-            if (!goon) {
-                break;
-            }
         }
     }
 
@@ -698,29 +458,6 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         } else {
             jta.setText(s);
         }
-    }
-
-    private byte[][] buildTCC( Graph graph, List v_cc) {
-        byte[][] t_cc = new byte[v_cc.size()][];
-        for (byte i = 0; i < t_cc.length; i++) {
-            byte[] t = new byte[t_cc.length - 1];
-            int last = 0;
-            Object source = v_cc.get(i);
-            for (byte j = 0; j < t_cc.length; j++) {
-                if (i != j && graph.containsEdge(source, v_cc.get(j))) {
-                    t[last++] = j;
-                }
-            }
-            if (t.length != last) {
-                byte[] t2 = new byte[last];
-                for (byte j = 0; j < last; j++) {
-                    t2[j] = t[j];
-                }
-                t = t2;
-            }
-            t_cc[i] = t;
-        }
-        return t_cc;
     }
 
     protected void runAnalyse() {
@@ -858,10 +595,10 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 
 class GsCircuitTreeModel extends AbstractTreeTableModel {
 
-    Vector v_listeners = new Vector();
-    Vector v_circuit;
-    Vector v_root = new Vector();
-    Map m_parent = new HashMap();
+    List v_listeners = new ArrayList();
+    List v_circuit;
+    List v_root = new ArrayList();
+    Map<Object, List> m_parent = new HashMap();
 
     protected static final String s_root = "Circuits";
     static protected Class[]  cTypes = {TreeTableModel.class, String.class, String.class};
@@ -869,7 +606,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
     /**
      * @param v_circuit
      */
-    public GsCircuitTreeModel(Vector v_circuit) {
+    public GsCircuitTreeModel(List v_circuit) {
     	super(s_root);
         v_root.add(CircuitDescr.SIGN_NAME[CircuitDescr.ALL]);
         this.v_circuit = v_circuit;
@@ -962,7 +699,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
     }
 
     public Object getChild(Object parent, int index) {
-        Vector v = (Vector) m_parent.get(parent);
+        List v = (List) m_parent.get(parent);
         if (v != null && v.size() > index) {
             return v.get(index);
         }
@@ -970,7 +707,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
     }
 
     public int getChildCount(Object parent) {
-        Vector v = (Vector) m_parent.get(parent);
+        List v = (List) m_parent.get(parent);
         if (v != null) {
             return v.size();
         }
@@ -982,7 +719,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
     }
 
     public int getIndexOfChild(Object parent, Object child) {
-        Vector v = (Vector) m_parent.get(parent);
+        List v = (List) m_parent.get(parent);
         if (v != null) {
             return v.indexOf(child);
         }

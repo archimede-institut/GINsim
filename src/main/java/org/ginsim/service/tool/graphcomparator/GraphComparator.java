@@ -17,9 +17,8 @@ import org.ginsim.core.graph.view.css.CSSNodeStyle;
 
 /**
  * Compare 2 GsGraph
- * @author Berenguier Duncan
+ * @author Duncan Berenguier
  * @since January 2009
- *
  */
 public abstract class GraphComparator<G extends Graph<?,?>> {
 	

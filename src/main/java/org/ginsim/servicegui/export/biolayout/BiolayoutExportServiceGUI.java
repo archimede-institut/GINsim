@@ -47,7 +47,7 @@ public class BiolayoutExportServiceGUI extends AbstractServiceGUI {
 /**
  * Export to Biolayout file Action
  * 
- * @author spinelli
+ * @author Lionel Spinelli
  *
  */
 class ExportBioLayoutAction extends ExportAction {

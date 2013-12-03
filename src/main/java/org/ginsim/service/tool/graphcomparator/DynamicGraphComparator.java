@@ -17,7 +17,7 @@ import org.ginsim.core.graph.view.EdgeAttributesReader;
 
 /**
  * Compare 2 DynamicGraph
- * @author Berenguier Duncan
+ * @author Duncan Berenguier
  * @since January 2009
  *
  */

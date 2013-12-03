@@ -46,7 +46,7 @@ public class SVGExportServiceGUI extends AbstractServiceGUI {
 /**
  * Export to SVG File Action
  * 
- * @author spinelli
+ * @author Lionel Spinelli
  *
  */
 class ExportSVGAction extends ExportAction {

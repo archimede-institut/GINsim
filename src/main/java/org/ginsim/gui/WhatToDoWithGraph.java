@@ -53,7 +53,7 @@ import org.ginsim.gui.utils.widgets.Frame;
  *  of the graph is disabled because the graph is too large
  * 
  * 
- * @author spinelli
+ * @author Lionel Spinelli
  *
  */
 public class WhatToDoWithGraph extends Frame {

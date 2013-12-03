@@ -46,7 +46,7 @@ public class ImageExportServiceGUI extends AbstractServiceGUI {
 /**
  * Export to PNG image Action
  * 
- * @author spinelli
+ * @author Lionel Spinelli
  *
  */
 class ExportImageAction extends ExportAction {

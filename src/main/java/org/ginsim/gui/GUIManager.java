@@ -397,7 +397,7 @@ public class GUIManager {
 	/**
 	 * Class containing the relationship between a Graph, its GraphGUI the corresponding Frame
 	 * 
-	 * @author Lionel spinelli
+	 * @author Lionel Spinelli
 	 *
 	 */
 	private class GUIObject{

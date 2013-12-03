@@ -20,7 +20,7 @@ import org.mangosdk.spi.ProviderFor;
 
 
 /**
- * @author spinelli
+ * @author Lionel Spinelli
  *
  */
 

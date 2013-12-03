@@ -24,7 +24,7 @@ import org.ginsim.common.xml.XMLWriter;
  * Such files are supported by OpenOffice/LibreOffice and recent versions of MS Office.
  * 
  * @see DocumentWriter
- * @author Naldi Aurelien
+ * @author Aurelien Naldi
  */
 public class OOoDocumentWriter extends DocumentWriter {
 

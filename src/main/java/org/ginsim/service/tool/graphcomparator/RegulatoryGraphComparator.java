@@ -24,9 +24,9 @@ import org.ginsim.core.graph.view.css.CSSNodeStyle;
 
 /**
  * Compare 2 RegulatoryGraph
- * @author Berenguier Duncan
- * @since January 2009
  *
+ * @author Duncan Berenguier
+ * @since January 2009
  */
 public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> {
 	public static final Color COMMON_COLOR_DIFF_FUNCTIONS = new Color(0, 0, 255);

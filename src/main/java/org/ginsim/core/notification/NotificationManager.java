@@ -18,7 +18,7 @@ import org.ginsim.core.notification.resolvable.ResolvableWarningNotification;
  * This manager receive registration from object that have to receive Notification on specific topics
  * It receive also all the Notification and distribute them to listening objects according to the Notification Topic 
  * 
- * @author spinelli
+ * @author Lionel Spinelli
  *
  */
 

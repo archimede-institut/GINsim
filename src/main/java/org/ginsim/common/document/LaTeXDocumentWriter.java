@@ -15,7 +15,7 @@ import javax.imageio.ImageIO;
  * LaTeX backend for DocumentWriter.
  * 
  * @see DocumentWriter
- * @author Naldi Aurelien
+ * @author Aurelien Naldi
  * @author Duncan Berenguier
  */
 public class LaTeXDocumentWriter extends DocumentWriter {

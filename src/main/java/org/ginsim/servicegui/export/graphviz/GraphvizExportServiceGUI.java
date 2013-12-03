@@ -45,8 +45,7 @@ public class GraphvizExportServiceGUI extends AbstractServiceGUI {
 /**
  * Export to GraphViz file Action
  * 
- * @author spinelli
- *
+ * @author Lionel Spinelli
  */
 class ExportGraphVizAction extends ExportAction {
 
