@@ -1,8 +1,6 @@
 package org.ginsim.service.tool.circuit;
 
 import org.ginsim.core.mdd.MDDContext;
-import org.ginsim.core.mdd.OmsddNode;
-
 
 
 public class FunctionalityContext implements MDDContext {
@@ -15,7 +13,7 @@ public class FunctionalityContext implements MDDContext {
 		this.contextIndex = contextIndex;
 	}
 	
-	public OmsddNode getContext() {
+	public int getContext() {
 		return circuitDesc.getContext()[contextIndex];
 	}
 
@@ -25,7 +23,7 @@ public class FunctionalityContext implements MDDContext {
 			s.append(circuitDesc.t_vertex[i]+", ");
 		}
 		s.append(circuitDesc.t_vertex[circuitDesc.t_vertex.length-1]);
-		if (contextIndex != 0 || ( circuitDesc.t_context.length > 1 && circuitDesc.t_context[1] != OmsddNode.FALSE)) {
+		if (contextIndex != 0 || ( circuitDesc.t_context.length > 1 && circuitDesc.t_context[1] != 0)) {
 			s.append(" [");
 			s.append(contextIndex);
 			s.append("]");

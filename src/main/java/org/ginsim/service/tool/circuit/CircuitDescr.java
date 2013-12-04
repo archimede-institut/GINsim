@@ -6,7 +6,6 @@ import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.mdd.OmsddNode;
 
 
 public class CircuitDescr {
@@ -28,10 +27,11 @@ public class CircuitDescr {
     	Translator.getString("STR_functional"),
     	Translator.getString("STR_positive"), 
     	Translator.getString("STR_negative"),
-    	Translator.getString("STR_dual")};
+    	Translator.getString("STR_dual")
+    };
     
     // data on all subcircuits
-    public OmsddNode[] t_context;
+    public int[] t_context;
     public long[][] t_mark;
     public int[][] t_sub;
     
@@ -40,7 +40,7 @@ public class CircuitDescr {
     public Vector v_negative = null;
     public Vector v_dual = null;
     public Vector v_all = new Vector();
-    public Vector v_functionnal = null;
+    public Vector v_functional = null;
     
     // to iterate through "subcircuits"
     private int[] t_pos;
@@ -101,59 +101,57 @@ public class CircuitDescr {
         RegulatoryEdge edge, next_edge;
         boolean goon;
         int sub = 0;
-        t_context = new OmsddNode[nbSub];
+        t_context = new int[nbSub];
         t_mark = new long[nbSub][];
         t_sub = new int[nbSub][];
         do {
-            OmsddNode context = OmsddNode.POSITIVE;
+            int context = 1;
             edge = t_me[t_me.length - 1].getEdge(t_pos[t_pos.length - 1]);
             for (int i = 0; i < t_me.length; i++) {
             	next_edge = t_me[i].getEdge(t_pos[i]);
-                OmsddNode node = algo.checkEdge(edge, t_circuit,
+                int node = algo.checkEdge(edge, t_circuit,
                         next_edge.getMin(), next_edge.getMax());
                 edge = next_edge;
-                context = context.merge(node, OmsddNode.AND);
+                context = algo.mergeContexts(context, node);
             }
 
             CircuitDescrInTree cdtree = new CircuitDescrInTree(this, false, sub);
             v_all.add(cdtree);
             if (algo.do_cleanup) {
-            	t_context[sub] = context.cleanup(t_circuit).reduce();
-            } else {
-            	t_context[sub] = context.reduce();
+            	t_context[sub] = algo.cleanupContext(context, t_circuit);
             }
             t_mark[sub] = algo.score(t_context[sub]);
-            t_sub[sub] = (int[])t_pos.clone();
+            t_sub[sub] = t_pos.clone();
             switch ((int)t_mark[sub][1]) {
                 case POSITIVE:
                     if (v_positive == null) {
                         v_positive = new Vector();
                     }
                     v_positive.add(cdtree);
-                    if (v_functionnal == null) {
-                        v_functionnal = new Vector();
+                    if (v_functional == null) {
+                        v_functional = new Vector();
                     }
-                    v_functionnal.add(cdtree);
+                    v_functional.add(cdtree);
                     break;
                 case NEGATIVE:
                     if (v_negative == null) {
                         v_negative = new Vector();
                     }
                     v_negative.add(cdtree);
-                    if (v_functionnal == null) {
-                        v_functionnal = new Vector();
+                    if (v_functional == null) {
+                        v_functional = new Vector();
                     }
-                    v_functionnal.add(cdtree);
+                    v_functional.add(cdtree);
                     break;
                 case DUAL:
                     if (v_dual == null) {
                         v_dual = new Vector();
                     }
                     v_dual.add(cdtree);
-                    if (v_functionnal == null) {
-                        v_functionnal = new Vector();
+                    if (v_functional == null) {
+                        v_functional = new Vector();
                     }
-                    v_functionnal.add(cdtree);
+                    v_functional.add(cdtree);
                     break;
             }
             if (t_mark[sub][0] > score) {
@@ -195,9 +193,9 @@ public class CircuitDescr {
 		if (v_all != null) {
 			v_all.clear();
 		}
-    	if (v_functionnal != null) {
-    		v_functionnal.clear();
-    		v_functionnal = null;
+    	if (v_functional != null) {
+    		v_functional.clear();
+    		v_functional = null;
     	}
     	if (v_positive != null) {
     		v_positive.clear();
@@ -213,13 +211,12 @@ public class CircuitDescr {
     	}
 	}
 
-	public OmsddNode[] getContext() {
+	public int[] getContext() {
 		return t_context;
 	}
 
-	public void setContext(OmsddNode[] tContext) {
+	public void setContext(int[] tContext) {
 		t_context = tContext;
 	}
-	
-	
+
 }

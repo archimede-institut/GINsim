@@ -21,7 +21,7 @@ public class CircuitSearchStoreConfig {
     public int minMust;
 
     public CircuitSearchStoreConfig(List v_list) {
-        v_list = v_list;
+        this.v_list = v_list;
         minlen = 1;
         maxlen = v_list.size();
         t_status = new byte[maxlen];

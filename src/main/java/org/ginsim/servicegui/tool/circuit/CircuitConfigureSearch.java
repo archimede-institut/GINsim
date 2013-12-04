@@ -139,7 +139,7 @@ public class CircuitConfigureSearch extends JPanel {
 class GsCircuitConfigModel extends DefaultTableModel {
     private static final long serialVersionUID = -8900180159435512429L;
  
-    private List v_list;
+    private List<RegulatoryNode> v_list;
     private byte[] t_status;
     private byte[][] t_constraint;
     private CircuitFrame frame;
@@ -151,7 +151,7 @@ class GsCircuitConfigModel extends DefaultTableModel {
      * @param t_status
      * @param t_constraint 
      */
-    public GsCircuitConfigModel(CircuitFrame frame, List v_list, byte[] t_status, byte[][] t_constraint) {
+    public GsCircuitConfigModel(CircuitFrame frame, List<RegulatoryNode> v_list, byte[] t_status, byte[][] t_constraint) {
         this.frame = frame;
         this.v_list = v_list;
         this.t_status = t_status;
@@ -216,7 +216,7 @@ class GsCircuitConfigModel extends DefaultTableModel {
                 }
                 return ""+t_constraint[row][0];
             case 5:
-                if (t_constraint[row][1] == ((RegulatoryNode)v_list.get(row)).getMaxValue()) {
+                if (t_constraint[row][1] == v_list.get(row).getMaxValue()) {
                     return "";
                 }
                 return ""+t_constraint[row][1];
@@ -234,7 +234,7 @@ class GsCircuitConfigModel extends DefaultTableModel {
                 t_constraint[row][0] = 0;
             } else {
                 byte val = ((Integer)aValue).byteValue();
-                if (val > 0 && val <= ((RegulatoryNode)v_list.get(row)).getMaxValue()) {
+                if (val > 0 && val <= v_list.get(row).getMaxValue()) {
                     t_constraint[row][0] = val;
                     if (t_constraint[row][0] > t_constraint[row][1]) {
                         t_constraint[row][1] = t_constraint[row][0];
@@ -245,10 +245,10 @@ class GsCircuitConfigModel extends DefaultTableModel {
             frame.updateStatus(CircuitFrame.STATUS_NONE);
         } else if (column == 5) {
             if (aValue == null) {
-                t_constraint[row][1] = ((RegulatoryNode)v_list.get(row)).getMaxValue();
+                t_constraint[row][1] = v_list.get(row).getMaxValue();
             } else {
                 byte val = ((Integer)aValue).byteValue();
-                if (val > 0 && val <= ((RegulatoryNode)v_list.get(row)).getMaxValue()) {
+                if (val > 0 && val <= v_list.get(row).getMaxValue()) {
                     t_constraint[row][1] = val;
                     if (t_constraint[row][0] > t_constraint[row][1]) {
                         t_constraint[row][0] = t_constraint[row][1];

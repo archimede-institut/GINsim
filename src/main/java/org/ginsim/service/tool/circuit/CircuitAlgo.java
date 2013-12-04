@@ -15,8 +15,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 
-import org.ginsim.core.mdd.OmsddNode;
-
 
 /**
  * analyse circuits to detect their functionality/functional range.
@@ -104,7 +102,7 @@ public class CircuitAlgo {
      *
      * @return the functionality context for this edge
      */
-    public OmsddNode checkEdge(RegulatoryEdge ei, int[] t_circuit, int nextmin, int nextmax) {
+    public int checkEdge(RegulatoryEdge ei, int[] t_circuit, int nextmin, int nextmax) {
         me = ei.me;
         // first look for a previous test on this interaction with the same constraints
         Vector[] t_report = (Vector[])m_report.get(me);
@@ -189,10 +187,10 @@ public class CircuitAlgo {
         }
 
         // get the context tree
-        OmsddNode node = getContextFromParameters(functions[nodeOrder.indexOf(target)],
+        int node = getContextFromParameters(functions[nodeOrder.indexOf(target)],
         		nodeOrder.indexOf(source), min, t_circuit, nextmin, nextmax);
 
-        node = checkConstraint(node).reduce();
+        node = checkConstraint(node);
         // cache the result
         subReport sr = new subReport();
         sr.min = nextmin;
@@ -218,19 +216,17 @@ public class CircuitAlgo {
      * @param nextmax
      * @return the context of functionality
      */
-    private OmsddNode getContextFromParameters(int node, int level, int thresold, int[] t_circuit, int nextmin, int nextmax) {
+    private int getContextFromParameters(int node, int level, int thresold, int[] t_circuit, int nextmin, int nextmax) {
         MDDVariable var = ddmanager.getNodeVariable(node);
         if (var == null || var.order  > level) { // no meeting: not functional
-            return OmsddNode.FALSE;
+            return 0;
         }
         if (var.order < level ) { // may still meet it later
-            OmsddNode ret = new OmsddNode();
-            ret.level = var.order;
-            ret.next = new OmsddNode[var.nbval];
-            for (int i=0 ; i<ret.next.length ; i++) {
-                ret.next[i] = getContextFromParameters(ddmanager.getChild(node, i), level, thresold, t_circuit, nextmin, nextmax);
+            int[] children = new int[var.nbval];
+            for (int i=0 ; i<children.length ; i++) {
+                children[i] = getContextFromParameters(ddmanager.getChild(node, i), level, thresold, t_circuit, nextmin, nextmax);
             }
-            return ret;
+            return var.getNode(children);
         }
         // now level == node.level.
         return getContextFromParameters(ddmanager.getChild(node, thresold-1), ddmanager.getChild(node, thresold), t_circuit, nextmin, nextmax);
@@ -252,65 +248,59 @@ public class CircuitAlgo {
      * @param nextmax
      * @return the context of functionality
      */
-    private OmsddNode getContextFromParameters(int node, int next, int[] t_circuit, int nextmin, int nextmax) {
+    private int getContextFromParameters(int node, int next, int[] t_circuit, int nextmin, int nextmax) {
         MDDVariable var = ddmanager.getNodeVariable(node);
         MDDVariable nextVar = ddmanager.getNodeVariable(next);
         if (var == null) {
             if (nextVar == null) {
                 // the real end: choose the sign.
                 // activate next edge = positive, desactivate it = negative.
-            	if (testOutLimit) {
-	                if (node < nextmin || node > nextmax) {
-	                    if (next >= nextmin && next <= nextmax) {
-	                        return OmsddNode.POSITIVE;
-	                    }
-	                    return OmsddNode.FALSE;
-	                }
-	                if (next < nextmin || next > nextmax) {
-	                    return OmsddNode.NEGATIVE;
-	                }
-            	} else {
-	                if (node < nextmin) {
-	                    if (next >= nextmin) {
-	                        return OmsddNode.POSITIVE;
-	                    }
-	                    return OmsddNode.FALSE;
-	                }
-	                if (next < nextmin) {
-	                    return OmsddNode.NEGATIVE;
-	                }
-            	}
-                return OmsddNode.FALSE;
+                if (testOutLimit) {
+                    if (node < nextmin || node > nextmax) {
+                        if (next >= nextmin && next <= nextmax) {
+                            return 1;
+                        }
+                        return 0;
+                    }
+                    if (next < nextmin || next > nextmax) {
+                        return 2;
+                    }
+                } else {
+                    if (node < nextmin) {
+                        if (next >= nextmin) {
+                            return 1;
+                        }
+                        return 0;
+                    }
+                    if (next < nextmin) {
+                        return 2;
+                    }
+                }
+                return 0;
             }
         }
 
         if (var == null || nextVar != null && var.order > nextVar.order) {
-            OmsddNode ret = new OmsddNode();
-            ret.level = nextVar.order;
-            ret.next = new OmsddNode[nextVar.nbval];
-            for (int i=0 ; i<ret.next.length ; i++) {
-                ret.next[i] = getContextFromParameters(node, ddmanager.getChild(next, i), t_circuit, nextmin, nextmax);
+            int[] children = new int[nextVar.nbval];
+            for (int i=0 ; i<children.length ; i++) {
+                children[i] = getContextFromParameters(node, ddmanager.getChild(next, i), t_circuit, nextmin, nextmax);
             }
-            return ret;
+            return nextVar.getNode(children);
         }
         if (nextVar == null || var.order < nextVar.order) {
-            OmsddNode ret = new OmsddNode();
-            ret.level = var.order;
-            ret.next = new OmsddNode[var.nbval];
-            for (int i=0 ; i<ret.next.length ; i++) {
-                ret.next[i] = getContextFromParameters(ddmanager.getChild(node, i), next, t_circuit, nextmin, nextmax);
+            int[] children = new int[var.nbval];
+            for (int i=0 ; i<children.length ; i++) {
+                children[i] = getContextFromParameters(ddmanager.getChild(node, i), next, t_circuit, nextmin, nextmax);
             }
-            return ret;
+            return var.getNode(children);
         }
 
         // both are non-terminal of the same level
-        OmsddNode ret = new OmsddNode();
-        ret.level = nextVar.order;
-        ret.next = new OmsddNode[nextVar.nbval];
-        for (int i=0 ; i<ret.next.length ; i++) {
-            ret.next[i] = getContextFromParameters(ddmanager.getChild(node, i), ddmanager.getChild(next, i), t_circuit, nextmin, nextmax);
+        int[] children = new int[nextVar.nbval];
+        for (int i=0 ; i<children.length ; i++) {
+            children[i] = getContextFromParameters(ddmanager.getChild(node, i), ddmanager.getChild(next, i), t_circuit, nextmin, nextmax);
         }
-        return ret;
+        return nextVar.getNode(children);
     }
 
     /**
@@ -324,7 +314,7 @@ public class CircuitAlgo {
      * @param node
      * @return a score along with a sign indication
      */
-    public long[] score (OmsddNode node) {
+    public long[] score (int node) {
     	int[] state = new int[t_maxValues.length];
     	for (int i=0 ; i<state.length ; i++) {
     		state[i] = -1;
@@ -335,9 +325,10 @@ public class CircuitAlgo {
     	ret[0] = score;  // FIXME: still need a better, "scaled", score
     	return ret;
     }
-    private byte score (OmsddNode node, int[] state) {
-        if (node.next == null) {
-            if (node == OmsddNode.FALSE) {
+
+    private byte score (int node, int[] state) {
+        if (ddmanager.isleaf(node)) {
+            if (node == 0) {
                 return CircuitDescr.FALSE;
             }
             long addScore = 1;
@@ -347,13 +338,14 @@ public class CircuitAlgo {
             	}
             }
             score -= addScore;
-            return (byte)(node == OmsddNode.POSITIVE ? CircuitDescr.POSITIVE : CircuitDescr.NEGATIVE);
+            return (byte)(node == 1 ? CircuitDescr.POSITIVE : CircuitDescr.NEGATIVE);
         }
 
         byte sign = CircuitDescr.FALSE;
-        for (int i=0 ; i<node.next.length ; i++) {
-        	state[node.level] = i;
-            byte tmp = score(node.next[i], state);
+        MDDVariable var = ddmanager.getNodeVariable(node);
+        for (int i=0 ; i<var.nbval ; i++) {
+        	state[var.order] = i;
+            byte tmp = score(ddmanager.getChild(node,i), state);
         	if (sign == CircuitDescr.FALSE) {
         		sign = tmp;
         	} else if (tmp == CircuitDescr.FALSE) {
@@ -361,7 +353,7 @@ public class CircuitAlgo {
         		sign = CircuitDescr.DUAL;
         	}
         }
-        state[node.level] = -1;
+        state[var.order] = -1;
         return sign;
     }
 
@@ -371,26 +363,71 @@ public class CircuitAlgo {
      * @param node
      * @return the new node
      */
-    private OmsddNode checkConstraint(OmsddNode node) {
-        if (t_constraint == null || node.next == null) {
+    private int checkConstraint(int node) {
+        if (t_constraint == null || ddmanager.isleaf(node)) {
             return node;
         }
-        for (int i=0 ; i<t_constraint[node.level][0] ; i++) {
-            node.next[i] = OmsddNode.FALSE;
+        MDDVariable var = ddmanager.getNodeVariable(node);
+        byte[] constraint = t_constraint[var.order];
+
+        int[] children = new int[var.nbval];
+        for (int i=0 ; i<t_constraint[var.order][0] ; i++) {
+            children[i] = 0;
         }
-        for (int i=t_constraint[node.level][0] ; i<=t_constraint[node.level][1] ; i++) {
-            node.next[i] = checkConstraint(node.next[i]);
+        for (int i=constraint[0] ; i<=constraint[1] ; i++) {
+            children[i] = checkConstraint(ddmanager.getChild(node, i));
         }
-        for (int i=t_constraint[node.level][1]+1 ; i<node.next.length ; i++) {
-            node.next[i] = OmsddNode.FALSE;
+        for (int i=constraint[1]+1 ; i<var.nbval ; i++) {
+            children[i] = 0;
         }
-        return node;
+        return var.getNode(children);
+    }
+
+    /**
+     * Merge functionality contexts.
+     *
+     * @param context
+     * @param node
+     * @return
+     */
+    public int mergeContexts(int context, int node) {
+        return FunctionalityMergeOperator.MERGE.combine(ddmanager, context, node);
+    }
+
+    /**
+     * Remove constraint on the members from a functionality context.
+     *
+     * @param context
+     * @param t_circuit
+     * @return
+     */
+    public int cleanupContext(int context, int[] t_circuit) {
+        if (ddmanager.isleaf(context)) {
+            return context;
+        }
+
+        MDDVariable var = ddmanager.getNodeVariable(context);
+        int cst = t_circuit[var.order];
+        if (cst != 0) {
+            int n = ddmanager.getChild(context, cst-1);
+            int n2 = ddmanager.getChild(context, cst);
+            int cleaned = FunctionalityCleanupOperator.CLEANUP.combine(ddmanager, n, n2);
+
+            return cleanupContext(cleaned, t_circuit);
+        }
+
+        int[] children = new int[var.nbval];
+        for (int i=0 ; i<var.nbval ; i++) {
+            children[i] = cleanupContext(ddmanager.getChild(context, i), t_circuit);
+        }
+
+        return var.getNode(children);
     }
 
     protected class subReport {
     	int min;
     	int max;
-    	OmsddNode node;
+    	int node;
     }
 
 }

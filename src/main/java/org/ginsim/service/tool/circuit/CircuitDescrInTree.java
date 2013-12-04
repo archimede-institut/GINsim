@@ -28,8 +28,8 @@ public class CircuitDescrInTree {
             	}
                 break;
             case CircuitDescr.FUNCTIONAL:
-            	nbChild = getCircuit().v_functionnal.size();
-            	o = getCircuit().v_functionnal.get(0);
+            	nbChild = getCircuit().v_functional.size();
+            	o = getCircuit().v_functional.get(0);
                 break;
             case CircuitDescr.POSITIVE:
             	nbChild = getCircuit().v_positive.size();

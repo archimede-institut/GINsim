@@ -1,11 +1,8 @@
 package org.ginsim.servicegui.tool.circuit;
 
 import java.awt.CardLayout;
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.*;
@@ -30,17 +27,13 @@ import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationUser;
 import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromCircuit;
-import org.ginsim.core.mdd.OmsddNode;
 import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.NotificationListener;
 import org.ginsim.core.notification.NotificationManager;
@@ -97,8 +90,6 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 	private JButton viewContextButton;
 
 	private ConnectivityResult resultAlgoConnectivity;
-
-	private JButton copyContextButton;
 
     /**
      * This is the default constructor
@@ -190,9 +181,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         	c.fill = GridBagConstraints.NONE;
         	c.gridwidth = 1;
             resultPanel.add(getViewContextButton(), c);
-        	c.gridx++;
-            resultPanel.add(getCopyContextButton(), c);
-            
+
             // cleanup checkbox
             c.gridx = 0;
             c.gridy++;
@@ -205,19 +194,6 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         return resultPanel;
     }
     
-    private Component getCopyContextButton() {
-       	if (copyContextButton == null) {
-       		copyContextButton = new JButton(Translator.getString("STR_circuit_copyContext"));
-       		copyContextButton.setEnabled(false);
-       		copyContextButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					copyContext();
-				}
-			});
-    	}
-		return copyContextButton;
-	}
-
 	private JButton getViewContextButton() {
     	if (viewContextButton == null) {
     		viewContextButton = new JButton(Translator.getString("STR_circuit_viewContext"));
@@ -391,7 +367,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
                     index = 0;
                     break;
                 case CircuitDescr.FUNCTIONAL:
-                    index = ((CircuitDescrInTree)cdtree.getCircuit().v_functionnal.get(0)).key;
+                    index = ((CircuitDescrInTree)cdtree.getCircuit().v_functional.get(0)).key;
                     break;
                 case CircuitDescr.POSITIVE:
                     index = ((CircuitDescrInTree)cdtree.getCircuit().v_positive.get(0)).key;
@@ -415,11 +391,15 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
             return;
         }
 
-        if (circuit.t_context[index] == OmsddNode.FALSE) {
+        if (circuit.t_context[index] == 0) {
             jta.setText(CircuitDescr.SIGN_NAME[CircuitDescr.FALSE]);
             return;
         }
-        String s = circuit.t_context[index].getString(0, graph.getNodeOrder()).trim();
+
+        // FIXME: show relevant circuit information!!
+        String s = "TODO: info for context "+ circuit.t_context[index];
+        // String s = circuit.t_context[index].getString(0, graph.getNodeOrder()).trim();
+
         if (s.equals("")) {
             jta.setText("empty data");
         } else {
@@ -443,7 +423,6 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         treemodel.reload(this);
         showCircuit();
         viewContextButton.setEnabled(true);
-        copyContextButton.setEnabled(true);
     }
 
     private JTextArea getJTextArea() {
@@ -480,23 +459,6 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 		GUIManager.getInstance().newFrame(tree,false);
 	}
 	
-    /**
-     * Copy the selected context of functionnality in the clipboard
-     */
-	private void copyContext() {
-		Clipboard clipboard = getToolkit ().getSystemClipboard ();
-		CircuitDescr circuit = getSelectedContextFromTreeTable().getCircuit();
-		OmsddNode[] contexts = circuit.getContext();
-		StringBuffer string = new StringBuffer();
-		for (int i = 0; i < contexts.length - 1; i++) {
-			string.append(contexts[i].write());
-			string.append("#");
-		}
-		string.append(contexts[contexts.length-1].write());
-		StringSelection data = new StringSelection(string.toString());
-		clipboard.setContents(data, data);
-	}
-	
 	/**
 	 * Return a vector of FunctionalityContext for each functional context of functionality.
 	 */
@@ -505,11 +467,11 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 		for (Iterator it = v_circuit.iterator(); it.hasNext();) {
 			CircuitDescrInTree cdit = (CircuitDescrInTree) it.next();
 			CircuitDescr cd = cdit.getCircuit();
-			OmsddNode[] context = cd.getContext();
+			int[] context = cd.getContext();
 			LogManager.debug_collection(context);
 			for (int i = 0; i < context.length; i++) {
-				OmsddNode o = context[i];
-				if (o != OmsddNode.FALSE) {
+				int o = context[i];
+				if (o != 0) {
 					contexts.add(new FunctionalityContext(cd, i));
 				}
 			}
@@ -583,7 +545,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
 
     protected void analyse(RegulatoryGraph graph, CircuitSearchStoreConfig config, Perturbation mutant, boolean do_cleanup) {
         CircuitAlgo circuitAlgo = new CircuitAlgo(graph, config == null ? null : config.t_constraint, mutant, do_cleanup);
-        Vector v_functionnal = new Vector();
+        Vector v_functional = new Vector();
         Vector v_positive = new Vector();
         Vector v_negative = new Vector();
         Vector v_dual = new Vector();
@@ -606,11 +568,11 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
             if (cdescr.v_all.size() > 1) {
                 m_parent.put(v_circuit.get(i), cdescr.v_all);
             }
-            if (cdescr.v_functionnal != null) {
+            if (cdescr.v_functional != null) {
                 cdtree = new CircuitDescrInTree(cdescr, true, CircuitDescr.FUNCTIONAL);
-                placeCircuit(v_functionnal, cdtree);
-                if (cdescr.v_functionnal.size() > 1) {
-                    m_parent.put(cdtree, cdescr.v_functionnal);
+                placeCircuit(v_functional, cdtree);
+                if (cdescr.v_functional.size() > 1) {
+                    m_parent.put(cdtree, cdescr.v_functional);
                 }
                 if (cdescr.v_positive != null) {
                     cdtree = new CircuitDescrInTree(cdescr, true, CircuitDescr.POSITIVE);
@@ -635,9 +597,9 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
                 }
             }
         }
-        if (v_functionnal.size() > 0) {
+        if (v_functional.size() > 0) {
             v_root.add(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONAL]);
-            m_parent.put(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONAL], v_functionnal);
+            m_parent.put(CircuitDescr.SIGN_NAME[CircuitDescr.FUNCTIONAL], v_functional);
             if (v_positive.size() > 0) {
                 v_root.add(CircuitDescr.SIGN_NAME[CircuitDescr.POSITIVE]);
                 m_parent.put(CircuitDescr.SIGN_NAME[CircuitDescr.POSITIVE], v_positive);
@@ -746,7 +708,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
 	                        index = 0;
 	                        break;
 	                    case CircuitDescr.FUNCTIONAL:
-	                        index = ((CircuitDescrInTree)cdtree.getCircuit().v_functionnal.get(0)).key;
+	                        index = ((CircuitDescrInTree)cdtree.getCircuit().v_functional.get(0)).key;
 	                        break;
 	                    case CircuitDescr.POSITIVE:
 	                        index = ((CircuitDescrInTree)cdtree.getCircuit().v_positive.get(0)).key;
