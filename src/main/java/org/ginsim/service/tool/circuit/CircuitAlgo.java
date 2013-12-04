@@ -430,4 +430,7 @@ public class CircuitAlgo {
     	int node;
     }
 
+    public MDDManager getManager() {
+        return ddmanager;
+    }
 }

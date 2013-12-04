@@ -21,6 +21,7 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
 import org.ginsim.common.callable.ProgressListener;
@@ -90,6 +91,8 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 	private JButton viewContextButton;
 
 	private ConnectivityResult resultAlgoConnectivity;
+
+    private MDDManager ddmanager = null;
 
     /**
      * This is the default constructor
@@ -409,7 +412,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 
     protected void runAnalyse() {
     	brun.setEnabled(false);
-        treemodel.analyse(graph, config, mutantstore.getPerturbation(), cb_cleanup.isSelected());
+        ddmanager = treemodel.analyse(graph, config, mutantstore.getPerturbation(), cb_cleanup.isSelected());
         brun.setEnabled(true);
 
         if (sp2 == null) {
@@ -450,10 +453,11 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
      * if a context is selected in the treeTable, it will use it, else it will use a "random" context (the first in v_circuit)
      */
 	private void viewContext() {
-		TreeBuilder parser = new TreeBuilderFromCircuit();
+        TreeBuilderFromCircuit parser = new TreeBuilderFromCircuit();
 		Tree tree = GraphManager.getInstance().getNewGraph( Tree.class, parser);
-			
-		parser.setParameter(TreeBuilder.PARAM_NODEORDER, graph.getNodeOrder());
+
+        parser.setParameter(TreeBuilder.PARAM_NODEORDER, graph.getNodeOrder());
+        parser.setParameter(TreeBuilderFromCircuit.PARAM_MANAGER, ddmanager);
 		parser.setParameter(TreeBuilderFromCircuit.PARAM_INITIALCIRCUITDESC, getSelectedContextFromTreeTable().getCircuit());
 		parser.setParameter(TreeBuilderFromCircuit.PARAM_ALLCONTEXTS, getCircuitDescriptors());
 		GUIManager.getInstance().newFrame(tree,false);
@@ -543,7 +547,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
         m_parent.put(s_root, v_root);
     }
 
-    protected void analyse(RegulatoryGraph graph, CircuitSearchStoreConfig config, Perturbation mutant, boolean do_cleanup) {
+    protected MDDManager analyse(RegulatoryGraph graph, CircuitSearchStoreConfig config, Perturbation mutant, boolean do_cleanup) {
         CircuitAlgo circuitAlgo = new CircuitAlgo(graph, config == null ? null : config.t_constraint, mutant, do_cleanup);
         Vector v_functional = new Vector();
         Vector v_positive = new Vector();
@@ -615,6 +619,8 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
         }
         // TODO: add a sorting by context!
         reload(this);
+
+        return circuitAlgo.getManager();
     }
 
     private void placeCircuit(Vector v, CircuitDescrInTree cdescr) {
