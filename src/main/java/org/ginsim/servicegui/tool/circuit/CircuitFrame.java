@@ -25,6 +25,7 @@ import org.colomoto.common.task.Task;
 import org.colomoto.common.task.TaskListener;
 import org.colomoto.common.task.TaskStatus;
 import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
 import org.ginsim.common.callable.ProgressListener;
@@ -38,9 +39,6 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationUser;
 import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromCircuit;
-import org.ginsim.core.notification.Notification;
-import org.ginsim.core.notification.NotificationListener;
-import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
@@ -95,6 +93,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
     private CircuitAlgo cAnalyser = null;
 
     private MDDManager ddmanager = null;
+    private PathSearcher mddPaths = null;
 
     /**
      * This is the default constructor
@@ -397,20 +396,45 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
             return;
         }
 
-        // FIXME: show relevant circuit information!!
-        String s = "TODO: info for context "+ circuit.t_context[index];
-        // String s = circuit.t_context[index].getString(0, graph.getNodeOrder()).trim();
 
-        if (s.equals("")) {
-            jta.setText("empty data");
-        } else {
-            jta.setText(s);
+        // FIXME: show relevant circuit information!!
+        int node = circuit.t_context[index];
+        mddPaths.setNode(node);
+        int[] path = mddPaths.getPath();
+        StringBuffer sb = new StringBuffer();
+        for (int l: mddPaths) {
+            if (l == 0) {
+                continue;
+            }
+            if (l == 1) {
+                sb.append("+ : ");
+            } else if (l == 2) {
+                sb.append("- : ");
+            } else {
+                sb.append("? : ");
+            }
+            boolean first = true;
+            for (int i=0 ; i<path.length ; i++) {
+                int cst = path[i];
+                if (cst > -1) {
+                    if (first) {
+                        first = false;
+                    } else {
+                        sb.append(" && ");
+                    }
+                    sb.append(i+"="+cst);
+                }
+            }
+            sb.append("\n");
         }
+
+        jta.setText(sb.toString());
     }
 
     protected void runAnalyse() {
     	brun.setEnabled(false);
         ddmanager = treemodel.analyse(graph, config, mutantstore.getPerturbation(), cb_cleanup.isSelected());
+        mddPaths = new PathSearcher(ddmanager);
         brun.setEnabled(true);
 
         if (sp2 == null) {
