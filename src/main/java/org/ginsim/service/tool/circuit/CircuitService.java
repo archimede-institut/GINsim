@@ -25,9 +25,12 @@ public class CircuitService implements Service {
         return new CircuitAlgo(graph, doCleanup);
     }
 
+    public CircuitSearcher getCircuitSearcher(RegulatoryGraph graph) {
+        return new CircuitSearcher(graph);
+    }
+
     public List<CircuitDescrInTree> getCircuits(RegulatoryGraph graph) {
-        CircuitSearcher csearcher = new CircuitSearcher(graph);
-        return csearcher.getCircuits();
+        return getCircuitSearcher(graph).getResult();
     }
 
 }

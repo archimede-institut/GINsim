@@ -21,6 +21,9 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.colomoto.common.task.Task;
+import org.colomoto.common.task.TaskListener;
+import org.colomoto.common.task.TaskStatus;
 import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
@@ -48,18 +51,16 @@ import org.ginsim.gui.utils.widgets.treetable.JTreeTable;
 import org.ginsim.gui.utils.widgets.treetable.TreeTableModel;
 import org.ginsim.gui.utils.widgets.treetable.TreeTableModelAdapter;
 import org.ginsim.service.tool.circuit.*;
-import org.ginsim.service.tool.connectivity.ConnectivityAlgo;
-import org.ginsim.service.tool.connectivity.ConnectivityResult;
-import org.ginsim.service.tool.connectivity.ConnectivityService;
-
 
 
 /**
  * configuration/status frame for circuit search/analyse
  */
-public class CircuitFrame extends StackDialog implements ProgressListener<List>, NotificationListener {
+public class CircuitFrame extends StackDialog implements ProgressListener<List>, TaskListener {
 
     private static final long serialVersionUID = 2671795894716799300L;
+
+    private static final CircuitService CIRCUITS = ServiceManager.getManager().getService(CircuitService.class);
 
     protected RegulatoryGraph graph;
 
@@ -90,7 +91,8 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 
 	private JButton viewContextButton;
 
-	private ConnectivityResult resultAlgoConnectivity;
+    private CircuitSearcher cSearcher = null;
+    private CircuitAlgo cAnalyser = null;
 
     private MDDManager ddmanager = null;
 
@@ -131,8 +133,8 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
      * configuration dialog if appropriate.
      */
     protected void cancel() {
-    	if (resultAlgoConnectivity != null) {
-    		resultAlgoConnectivity.cancel();
+    	if (cSearcher != null) {
+    		cSearcher.cancel();
     	}
         graph = null;
         super.cancel();
@@ -265,13 +267,12 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
     protected void run() {
         switch (status) {
         case STATUS_NONE:
+            cSearcher = CIRCUITS.getCircuitSearcher(graph);
+            cSearcher.background(this);
             updateStatus(STATUS_SCC);
-    		ConnectivityService service = ServiceManager.getManager().getService(ConnectivityService.class);
-            resultAlgoConnectivity = service.run(graph, true);
-            NotificationManager.getManager().registerListener(this, resultAlgoConnectivity);
             break;
         case STATUS_SCC:
-        	resultAlgoConnectivity.cancel();
+        	cSearcher.cancel();
             cancel();
             break;
         case STATUS_SEARCH_CIRCUIT:
@@ -320,13 +321,10 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
     public void setResult(List result) {
         updateStatus(STATUS_SEARCH_CIRCUIT);
         if (result != null) {
+            v_circuit = result;
             if (config != null) {
                 config.setReady();
             }
-
-            CircuitSearcher csearcher = new CircuitSearcher(graph);
-            v_circuit = csearcher.getCircuits(result);
-
             showCircuit();
         }
     }
@@ -509,14 +507,14 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 	}
 
 	@Override
-	public void receiveNotification(Notification message) {
-		if (message.getMessage().equals(ConnectivityAlgo.COMPUTATION_DONE_MESSAGE)) {
-			setResult(resultAlgoConnectivity.getComponents());
-		}
-	}
+	public void taskUpdated(Task task) {
+        if (task.getStatus() == TaskStatus.CANCELED) {
+            cancel();
+        }
 
-	@Override
-	public void deleteNotification(Notification message) {
+		if (task == cSearcher) {
+            setResult(cSearcher.getResult());
+		}
 	}
 
 	@Override

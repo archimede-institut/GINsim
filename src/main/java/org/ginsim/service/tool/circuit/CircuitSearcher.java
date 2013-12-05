@@ -1,5 +1,6 @@
 package org.ginsim.service.tool.circuit;
 
+import org.colomoto.common.task.AbstractTask;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -16,7 +17,7 @@ import java.util.List;
  *
  * @author Aurelien Naldi
  */
-public class CircuitSearcher {
+public class CircuitSearcher extends AbstractTask<List<CircuitDescrInTree>> {
 
     private final ConnectivityService connectivity = ServiceManager.getManager().getService(ConnectivityService.class);
 
@@ -29,7 +30,8 @@ public class CircuitSearcher {
         config.setReady();
     }
 
-    public List<CircuitDescrInTree> getCircuits() {
+    @Override
+    public List<CircuitDescrInTree> doGetResult() {
         List<NodeReducedData> sccs = connectivity.getSCC(graph).getComponents();
 
         List<CircuitDescrInTree> circuits = getCircuits(sccs);
