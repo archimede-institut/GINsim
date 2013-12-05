@@ -17,7 +17,6 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.ServiceManager;
-import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.service.tool.stablestates.StableStatesService;
@@ -36,8 +35,7 @@ public class StableStateSwingUI extends LogicalModelActionDialog  {
 	
 	StableTableModel model;
 	JTable tresult;
-	ObjectStore store = new ObjectStore();
-	
+
 	public StableStateSwingUI(JFrame f, RegulatoryGraph lrg) {
 		super(lrg, f, "stableStatesGUI", 600, 400);
 		setUserID("stable_search");
