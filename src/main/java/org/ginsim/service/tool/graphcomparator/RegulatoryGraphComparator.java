@@ -7,6 +7,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.colomoto.mddlib.MDDComparator;
+import org.colomoto.mddlib.MDDComparatorFactory;
+import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.annotation.Annotation;
@@ -17,7 +20,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterList;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.css.CSSNodeStyle;
 
@@ -38,7 +40,11 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> 
 	private List<RegulatoryNode[]> logicalFunctionPending;
 	private Map<RegulatoryMultiEdge, RegulatoryMultiEdge> meMap;
 
-	public RegulatoryGraphComparator( RegulatoryGraph g1,  RegulatoryGraph g2, RegulatoryGraph g) {
+    private MDDManager ddmanager1, ddmanager2;
+    private MDDComparator ddcomparator;
+
+
+    public RegulatoryGraphComparator( RegulatoryGraph g1,  RegulatoryGraph g2, RegulatoryGraph g) {
 		super();
         if (g  == null)  return;
         if (g1 == null)  return;
@@ -47,6 +53,10 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> 
         this.graph_new = g;
         this.graph_1 = g1;
         this.graph_2 = g2;
+
+        this.ddmanager1 = g1.getMDDFactory();
+        this.ddmanager2 = g2.getMDDFactory();
+        ddcomparator = MDDComparatorFactory.getComparator(ddmanager1, ddmanager2);
 
 		logicalFunctionPending = new ArrayList<RegulatoryNode[]>();
 		
@@ -222,15 +232,20 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> 
 				v.setName(n2);
 				n1 = "no name";
 			}
-			if (n2.equals("")) n2 = "no name";
+			if (n2.equals("")) {
+                n2 = "no name";
+            }
 			comment += "   names are differents : "+n1+" and "+n2+"\n";
 		}
+
 		if (v1.getMaxValue() != v2.getMaxValue()) {
 			byte mv1 = v1.getMaxValue();
 			byte mv2 = v2.getMaxValue();
 			comment += "   max values are differents : "+mv1+" and "+mv2+"\n";
 			color[0] = COMMON_COLOR_DIFF_MAXVALUES;
-		} else if (sameNodeOrder) comment += compareLogicalFunction(v1, v2, color); //Compare logical function only if they have the same maxValue.
+		} else if (sameNodeOrder) {
+            comment += compareLogicalFunction(v1, v2, color); //Compare logical function only if they have the same maxValue.
+        }
 		return comment;
 	}
 
@@ -242,28 +257,15 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> 
 	 */
 	private String compareLogicalFunction(RegulatoryNode v1, RegulatoryNode v2, Color[] color) {
 		String comment = "";
-		OMDDNode omdd1 = v1.getTreeParameters(((RegulatoryGraph)graph_1));
-		OMDDNode omdd2 = v2.getTreeParameters(((RegulatoryGraph)graph_2));
-		if (!compareLogicalFunction(omdd1, omdd2)) {
-			comment = "   logical functions are differents : \n      "+omdd1+"\n      "+omdd2;
+        int mdd1 = v1.getMDD(graph_1, ddmanager1);
+        int mdd2 = v2.getMDD(graph_2, ddmanager2);
+
+		if (!ddcomparator.similar(mdd1, mdd2)) {
+            // FIXME: print detailed MDDs ?
+			comment = "   logical functions are differents";
 			color[0] = COMMON_COLOR_DIFF_FUNCTIONS;
 		}
 		return comment;
-	}
-	private boolean compareLogicalFunction(OMDDNode omdd1, OMDDNode omdd2) {
-		if (omdd1.level != omdd2.level) return false;
-		//if (omdd1.min 	!= omdd2.min) 	return false; //TODO : usefull to compare ?
-		//if (omdd1.max 	!= omdd2.max) 	return false;
-		if (omdd1.value != omdd2.value) return false;
-		if (omdd1.next != null && omdd2.next != null) {
-			if (omdd1.next.length != omdd2.next.length) 	return false;
-			int i = 0;
-			while (i < omdd1.next.length) {
-				if (compareLogicalFunction(omdd1.next[i], omdd2.next[i]) == false) return false;
-				i++;
-			}
-		} 
-		return true;
 	}
 
 	/**
