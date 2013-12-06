@@ -10,21 +10,21 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
-import org.ginsim.common.application.GsException;
+import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
+import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryParser;
 import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
@@ -36,7 +36,6 @@ import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
-import org.ginsim.servicegui.tool.modelsimplifier.ParameterGenerator;
 import org.ginsim.servicegui.tool.modelsimplifier.TargetEdgesIterator;
 
 /**
@@ -54,30 +53,27 @@ import org.ginsim.servicegui.tool.modelsimplifier.TargetEdgesIterator;
  */
 public class ModelSimplifier extends AbstractModelSimplifier  {
 
-	//GsGraphManager manager;
 	ReductionLauncher launcher;
-	int[] t_remove = null;
 
-	RegulatoryGraph graph;
-	List<RegulatoryNode> oldNodeOrder;
-	RegulatoryGraph simplifiedGraph;
+	private final RegulatoryGraph graph;
+	private final List<RegulatoryNode> oldNodeOrder;
+    private final ModelReducer reducer;
 
 	Map<RegulatoryNode,boolean[]> m_edges = new HashMap<RegulatoryNode, boolean[]>();
 	Map<Object, Object> copyMap = new HashMap<Object, Object>();
 	Map<RegulatoryNode, List<RegulatoryNode>> m_removed;
 	
-	Map<RegulatoryNode, OMDDNode> m_affected = new HashMap<RegulatoryNode, OMDDNode>();
 	String s_comment = "";
 	List<RegulatoryNode> l_removed = new ArrayList<RegulatoryNode>();
 
 	TargetEdgesIterator it_targets;
 	
 	boolean strict;
-	ParameterGenerator pgen;
 
 	public ModelSimplifier(RegulatoryGraph graph, ModelSimplifierConfig config, ReductionLauncher launcher, boolean start) {
 		this.graph = graph;
 		this.oldNodeOrder = graph.getNodeOrder();
+        this.reducer = new ModelReducer(graph.getModel());
 		this.launcher = launcher;
 		this.m_removed = new HashMap<RegulatoryNode, List<RegulatoryNode>>(config.m_removed);
 		this.it_targets = new TargetEdgesIterator(m_removed);
@@ -166,38 +162,18 @@ public class ModelSimplifier extends AbstractModelSimplifier  {
     	List<RemovedInfo> l_failed = new ArrayList<RemovedInfo>();
     	
 		for (RemovedInfo ri: l_todo) {
-			RegulatoryNode vertex = ri.vertex;
-			List<RegulatoryNode> targets = new ArrayList<RegulatoryNode>();
-			OMDDNode deleted = m_affected.get(vertex);
-			if (deleted == null) {
-				deleted = vertex.getTreeParameters(graph);
-			}
-			try {
-				if (strict) {
-					// check that the node is not self-regulated
-					checkNoSelfReg(deleted, ri.pos);
-				}
-				s_comment += ", "+vertex.getId();
-			
-				// mark all its targets as affected
-				it_targets.setOutgoingList(ri.targets);
-				while (it_targets.hasNext()) {
-					RegulatoryNode target = it_targets.next();
-					if (!target.equals(vertex)) {
-						targets.add(target);
-						OMDDNode targetNode = m_affected.get(target);
-						if (targetNode == null) {
-							targetNode = target.getTreeParameters(graph);
-						}
-						m_affected.put(target, remove(targetNode, deleted, ri.pos).reduce());
-					}
-				}
-				m_removed.put(ri.vertex, new ArrayList<RegulatoryNode>(targets));
-				l_removed.add(vertex);
-			} catch (GsException e) {
-				// this removal failed, remember that we may get a second chance
-				l_failed.add(ri);
-			}
+            try {
+                RegulatoryNode vertex = ri.vertex;
+                List<RegulatoryNode> targets = new ArrayList<RegulatoryNode>();
+
+                reducer.remove(ri.pos);
+
+                m_removed.put(ri.vertex, new ArrayList<RegulatoryNode>(targets));
+                l_removed.add(vertex);
+            } catch (RuntimeException e) {
+                // this removal failed, remember that we may get a second chance
+                l_failed.add(ri);
+            }
 		}
     	return l_failed;
     }
@@ -209,7 +185,10 @@ public class ModelSimplifier extends AbstractModelSimplifier  {
      */
     private RegulatoryGraph extractReducedGraph() {
 		// create the new regulatory graph
-		simplifiedGraph = GraphManager.getInstance().getNewGraph();
+        LogicalModel newModel = reducer.getModel(false);
+
+        RegulatoryGraph simplifiedGraph = LogicalModel2RegulatoryGraph.importModel(newModel);
+
 		Annotation note = simplifiedGraph.getAnnotation();
 		note.copyFrom(graph.getAnnotation());
 		if (s_comment.length() > 2) {
@@ -218,24 +197,27 @@ public class ModelSimplifier extends AbstractModelSimplifier  {
 					", by removing the following nodes: "+s_comment.substring(2)+
 					"\n\n"+note.getComment());
 		}
-		
+
+        if (false) {
+            return simplifiedGraph;
+        }
+
 		//GsGraphManager<RegulatoryNode, RegulatoryMultiEdge> simplifiedManager = simplifiedGraph.getGraphManager();
 		List<RegulatoryNode> simplified_nodeOrder = simplifiedGraph.getNodeOrder();
-		
+
 		// Create all the nodes of the new model
 		NodeAttributesReader vreader = graph.getNodeAttributeReader();
 		NodeAttributesReader simplified_vreader = simplifiedGraph.getNodeAttributeReader();
 		for (RegulatoryNode vertex: graph.getNodeOrder()) {
-			if (!m_removed.containsKey(vertex)) {
-				RegulatoryNode clone = vertex.clone(simplifiedGraph);
-				simplifiedGraph.addNode(clone);
+            RegulatoryNode clone = simplifiedGraph.getNodeByName(vertex.getId());
+			if (clone != null) {
 				vreader.setNode(vertex);
 				simplified_vreader.setNode(clone);
 				simplified_vreader.copyFrom(vreader);
 				copyMap.put(vertex, clone);
 			}
 		}
-		
+
 		// copy all unaffected edges
 		EdgeAttributesReader ereader = graph.getEdgeAttributeReader();
 		EdgeAttributesReader simplified_ereader = simplifiedGraph.getEdgeAttributeReader();
@@ -243,9 +225,8 @@ public class ModelSimplifier extends AbstractModelSimplifier  {
 			RegulatoryNode src = (RegulatoryNode)copyMap.get(me.getSource());
 			RegulatoryNode target = (RegulatoryNode)copyMap.get(me.getTarget());
 			if (src != null && target != null) {
-				RegulatoryMultiEdge me_clone = new RegulatoryMultiEdge(simplifiedGraph, src, target);
-				me_clone.copyFrom(me);
-				if (simplifiedGraph.addEdge(me_clone)) {
+				RegulatoryMultiEdge me_clone = simplifiedGraph.getEdge(src, target);
+                if (me_clone != null) {
 					copyMap.put(me, me_clone);
 					ereader.setEdge(me);
 					simplified_ereader.setEdge(me_clone);
@@ -269,50 +250,7 @@ public class ModelSimplifier extends AbstractModelSimplifier  {
 				}
 			}
 		}
-		// create the parameter generator with it
-		pgen = new ParameterGenerator(oldNodeOrder, m_orderPos);
 
-		// copy parameters/logical functions on the unaffected nodes
-		for (RegulatoryNode vertex: oldNodeOrder) {
-			RegulatoryNode clone = (RegulatoryNode)copyMap.get(vertex);
-			if (m_removed.containsKey(vertex)) {
-				continue;
-			}
-			if (!m_affected.containsKey(vertex)) {
-				vertex.cleanupInteractionForNewGraph(copyMap);
-				continue;
-			}
-			
-			// this node needs new parameters
-			OMDDNode newNode = m_affected.get(vertex);
-
-			// make sure that the needed edges target the affected node
-			m_edges.clear();
-			extractEdgesFromNode(oldNodeOrder, m_edges, newNode);
-			RegulatoryNode target = (RegulatoryNode)copyMap.get(vertex);
-			for (Entry<RegulatoryNode,boolean[]> e: m_edges.entrySet()) {
-				RegulatoryNode src = (RegulatoryNode)copyMap.get(e.getKey());
-				RegulatoryMultiEdge de = simplifiedGraph.getEdge(src, target);
-				if (de == null) {
-					de = new RegulatoryMultiEdge(simplifiedGraph, src, target);
-					simplifiedGraph.addEdge(de);
-				}
-				boolean[] t_required = e.getValue();
-				de.copyFrom(t_required);
-			}
-			// rebuild the parameters
-			m_edges.clear();
-			Collection<RegulatoryMultiEdge> edges = simplifiedGraph.getIncomingEdges(clone);
-			for (RegulatoryMultiEdge e: edges) {
-				RegulatoryNode src = e.getSource();
-				
-				// FIXME: not sure what this should be! (used to be a integer[])
-				boolean[] t_val = {false, true};
-				m_edges.put(src, t_val);
-			}
-			pgen.browse(edges, clone, newNode);
-		}
-		
 		// get as much of the associated data as possible
 		Map m_alldata = new HashMap();
 		
