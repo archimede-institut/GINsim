@@ -11,6 +11,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.colomoto.common.task.Task;
+import org.colomoto.common.task.TaskListener;
+import org.colomoto.common.task.TaskStatus;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
 import org.ginsim.common.application.LogManager;
@@ -29,14 +32,16 @@ import org.ginsim.service.tool.stablestates.StableStatesService;
  * @author Aurelien Naldi
  */
 @SuppressWarnings("serial")
-public class StableStateSwingUI extends LogicalModelActionDialog  {
+public class StableStateSwingUI extends LogicalModelActionDialog implements TaskListener {
 
 	private static StableStatesService sss = ServiceManager.getManager().getService(StableStatesService.class);
 	
 	StableTableModel model;
 	JTable tresult;
 
-	public StableStateSwingUI(JFrame f, RegulatoryGraph lrg) {
+    StableStateSearcher m_finder;
+
+    public StableStateSwingUI(JFrame f, RegulatoryGraph lrg) {
 		super(lrg, f, "stableStatesGUI", 600, 400);
 		setUserID("stable_search");
 		
@@ -55,7 +60,25 @@ public class StableStateSwingUI extends LogicalModelActionDialog  {
 	
 	@Override
 	public void run(LogicalModel lmodel) {
-		StableStateSearcher m_finder = sss.getStableStateSearcher(lmodel);
+		m_finder = sss.getStableStateSearcher(lmodel);
+        setRunning(true);
+        m_finder.background(this);
+    }
+
+    public void taskUpdated(Task task) {
+        if (task != m_finder) {
+            return;
+        }
+
+        TaskStatus status = m_finder.getStatus();
+        if (status == TaskStatus.CANCELED) {
+            setRunning(false);
+            cancel();
+            return;
+        }
+
+        setRunning(false);
+        StableStateSearcher m_finder = (StableStateSearcher)task;
 		try {
 			int result = m_finder.getResult();
 			model.setResult(m_finder.getMDDManager(), result);
@@ -80,6 +103,15 @@ public class StableStateSwingUI extends LogicalModelActionDialog  {
 			LogManager.error(e);
 		}
 	}
+
+    @Override
+    protected boolean doCancel() {
+        if (m_finder != null && m_finder.getStatus() == TaskStatus.RUNNING) {
+            m_finder.cancel();
+            return false;
+        }
+        return true;
+    }
 }
 
 
@@ -96,7 +128,7 @@ class ColoredCellRenderer extends DefaultTableCellRenderer {
 	@Override
     public Component getTableCellRendererComponent( JTable table , Object value , boolean isSelected , boolean hasFocus ,
                                                                                         int row , int column ) {
-        Component cmp = super.getTableCellRendererComponent( table , value , isSelected , hasFocus , row , column );
+        Component cmp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
         if( table != null && row >= 0) {
             if (column == 0 || "0".equals(value)) {
             	if (isSelected) {

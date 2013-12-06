@@ -588,7 +588,7 @@ public class NuSMVEncoder {
 			StableStateSearcher sss = ServiceManager.getManager()
 					.getService(StableStatesService.class)
 					.getStableStateSearcher(model);
-			int omdds = sss.getResult();
+			int omdds = sss.call();
 			MDDManager ddmanager = sss.getMDDManager().getManager(newNodeOrder);
 			PathSearcher psearcher = new PathSearcher(ddmanager, 1);
 			psearcher.setNode(omdds);

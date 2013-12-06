@@ -128,7 +128,7 @@ public class TestStableStates {
 				stableStateSearcher);
 
 		// Get the OMDD containing the stable states
-		int root = stableStateSearcher.getResult();
+		int root = stableStateSearcher.call();
 		assertEquals(false, (root < 0));
 
 		// Check the states

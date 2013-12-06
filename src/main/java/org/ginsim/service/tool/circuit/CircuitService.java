@@ -30,7 +30,7 @@ public class CircuitService implements Service {
     }
 
     public List<CircuitDescrInTree> getCircuits(RegulatoryGraph graph) {
-        return getCircuitSearcher(graph).getResult();
+        return getCircuitSearcher(graph).call();
     }
 
 }

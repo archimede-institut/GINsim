@@ -84,7 +84,7 @@ abstract public class StackDialog extends SimpleDialog {
     
     /**
      * set the progress level, to give the user some feedback
-     * @param s
+     * @param message
      */
     public void setMessage(String message) {
     	setMessage(message, 0);
@@ -243,10 +243,17 @@ abstract public class StackDialog extends SimpleDialog {
     public void doClose() {
     	dispose();
     }
+
     protected void cancel() {
-    	closeEvent();
+        if (doCancel()) {
+            closeEvent();
+        }
     }
-    
+
+    protected boolean doCancel() {
+        return true;
+    }
+
     protected void setRunning(boolean b) {
     	brun.setEnabled(b==false);
     }
