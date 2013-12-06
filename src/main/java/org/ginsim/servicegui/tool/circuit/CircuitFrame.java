@@ -25,6 +25,7 @@ import org.colomoto.common.task.Task;
 import org.colomoto.common.task.TaskListener;
 import org.colomoto.common.task.TaskStatus;
 import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDVariable;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
@@ -401,6 +402,8 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         int node = circuit.t_context[index];
         mddPaths.setNode(node);
         int[] path = mddPaths.getPath();
+        int[] max = mddPaths.getMax();
+        MDDVariable[] variables = ddmanager.getAllVariables();
         StringBuffer sb = new StringBuffer();
         for (int l: mddPaths) {
             if (l == 0) {
@@ -422,7 +425,14 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
                     } else {
                         sb.append(" && ");
                     }
-                    sb.append(i+"="+cst);
+                    int m = max[i];
+                    if (m == -1) {
+                        sb.append(variables[i].key+">"+cst);
+                    } else if (m > cst) {
+                        sb.append(variables[i].key+"=["+cst+","+m+"]");
+                    } else {
+                        sb.append(variables[i].key+"="+cst);
+                    }
                 }
             }
             sb.append("\n");
@@ -434,7 +444,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
     protected void runAnalyse() {
     	brun.setEnabled(false);
         ddmanager = treemodel.analyse(graph, config, mutantstore.getPerturbation(), cb_cleanup.isSelected());
-        mddPaths = new PathSearcher(ddmanager);
+        mddPaths = new PathSearcher(ddmanager, 1,2, true);
         brun.setEnabled(true);
 
         if (sp2 == null) {
