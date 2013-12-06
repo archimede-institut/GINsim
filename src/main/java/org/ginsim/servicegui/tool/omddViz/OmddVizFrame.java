@@ -15,11 +15,13 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDOperator;
+import org.colomoto.mddlib.operators.MDDBaseOperators;
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromManualOmdd;
@@ -31,22 +33,26 @@ import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 public class OmddVizFrame extends StackDialog implements ActionListener {
 	private static final long serialVersionUID = -7619253564236142617L;
 	private JFrame frame;
-	private RegulatoryGraph graph;
 	private Container mainPanel;
 	
 	private JPanel calcPanel, resPanel;
 	private JComboBox  leftOperandCB, rightOperandCB, operatorCB;
 	private JTextField  resultTextField;
 	private JButton displayTreeButton;
-	private OMDDNode leftOmdd, rightOmdd, resOmdd;
+
+    private final RegulatoryGraph graph;
+    private final MDDManager ddmanager;
+    private int leftOmdd, rightOmdd, resOmdd;
 	
-	private String[] operationsOptions = new String[] {"or", "and", "constraint or", "constraint and", "max"};
+    // TODO: add missing operators, esp "constraint or", "constraint and" and "max"
+    MDDOperator[] operators = { MDDBaseOperators.OR, MDDBaseOperators.AND };
 	
 	
 	public OmddVizFrame( RegulatoryGraph graph) {
 		super(GUIManager.getInstance().getFrame(graph), "STR_omddViz", 475, 260);
 		this.frame = GUIManager.getInstance().getFrame(graph);
 		this.graph = graph;
+        this.ddmanager = graph.getMDDFactory();
         initialize();
     }
 
@@ -85,7 +91,7 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 			leftOperandCB.addActionListener(this);
 			calcPanel.add(leftOperandCB, c);
 			c.gridx++;
-			operatorCB = new JComboBox(operationsOptions);
+			operatorCB = new JComboBox(operators);
 			calcPanel.add(operatorCB, c);
 			c.gridx++;
 			rightOperandCB = new JComboBox();
@@ -115,9 +121,11 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 	}
 
 	protected void run() {
-		if (leftOmdd != null && rightOmdd != null) {
-			resOmdd = leftOmdd.merge(rightOmdd, operatorCB.getSelectedIndex());
-			resultTextField.setText(resOmdd.write().toString());			
+		if (leftOmdd != -1 && rightOmdd != -1) {
+            MDDOperator op = operators[operatorCB.getSelectedIndex()];
+            resOmdd = op.combine(ddmanager, leftOmdd, rightOmdd);
+            // FIXME: pretty printing of MDD
+			resultTextField.setText("[TODO: MDD pretty print] "+resOmdd);
 		}
 	}
 	
@@ -125,12 +133,12 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 		if (e.getSource() == leftOperandCB) {
 			RegulatoryNode item = (RegulatoryNode) leftOperandCB.getSelectedItem();
 			if (item != null) {
-				leftOmdd = item.getTreeParameters((RegulatoryGraph) graph);
+				leftOmdd = item.getMDD(graph, ddmanager);
 			}
 		} else if (e.getSource() == rightOperandCB) {
 			RegulatoryNode item = (RegulatoryNode) rightOperandCB.getSelectedItem();
 			if (item != null) {
-				rightOmdd = item.getTreeParameters((RegulatoryGraph) graph);
+				rightOmdd = item.getMDD(graph, ddmanager);
 			}
 		} else if (e.getSource() == displayTreeButton) {
 			run();

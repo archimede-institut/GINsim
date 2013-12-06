@@ -2,11 +2,12 @@ package org.ginsim.core.graph.tree;
 
 import java.util.List;
 
+import org.colomoto.mddlib.MDDVariable;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
-public class TreeBuilderFromRegulatoryGraph extends TreeBuilderFromOmdd {
+public class TreeBuilderFromRegulatoryGraph extends TreeBuilderFromMDD {
 	
 	public static final String PARAM_REGGRAPH = "pfrg_regGraph";
 	public static final String PARAM_INITIALVERTEXINDEX = "pfrg_initialNode";
@@ -19,9 +20,10 @@ public class TreeBuilderFromRegulatoryGraph extends TreeBuilderFromOmdd {
 		nodeOrder = (List<RegulatoryNode>)getParameter(PARAM_NODEORDER);
 		regGraph = (RegulatoryGraph)getParameter(PARAM_REGGRAPH);
 
+        this.ddmanager = regGraph.getMDDFactory();
 		RegulatoryNode initialNode = nodeOrder.get(initial_gene_id);
 		
-		this.root = initialNode.getTreeParameters(regGraph).reduce();
+		this.root = initialNode.getMDD(regGraph, ddmanager);
 		widthPerDepth = widthPerDepth_acc = realDetph = null;
 		total_levels = max_depth = 0;
 		max_terminal = initialNode.getMaxValue()+1;
@@ -31,7 +33,7 @@ public class TreeBuilderFromRegulatoryGraph extends TreeBuilderFromOmdd {
 	 * Initialize the <b>realDepth</b> array, and <b>max_terminal</b> from an initial node, assuming regGraph is defined
 	 * @param root
 	 */
-	public void initRealDepth(OMDDNode root) {
+	public void initRealDepth(int root) {
 		realDetph = new int[nodeOrder.size()+1]; //+1 for the leafs
 		_initRealDepth(root);
 		int next_realDepth = 0;
@@ -41,19 +43,6 @@ public class TreeBuilderFromRegulatoryGraph extends TreeBuilderFromOmdd {
 				realDetph[i] = next_realDepth++;
 			} else realDetph[i] = -2;
 		}
-	}
-    public void _initRealDepth(OMDDNode o) {
-        if (o.next == null) {
-            return ;
-        }
-        realDetph[o.level] = -1;
-        for (int i = 0 ; i < o.next.length ; i++) {
-            _initRealDepth(o.next[i]);
-        }
-    }
-
-    protected String getNodeName(int level) {
-		return nodeOrder.get(level).getId();
 	}
 
 }
