@@ -18,8 +18,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
-
 
 
 /**
@@ -84,8 +82,7 @@ public class LogicalParameter implements XMLize {
 
 	/**
 	 * Adds the GsEdgeIndex to the interaction
-	 * @param me
-	 * @param index
+	 * @param edge
 	 */
 	public void addEdge(RegulatoryEdge edge) {
 		edge_index.add(edge);
@@ -127,7 +124,7 @@ public class LogicalParameter implements XMLize {
 
 	/**
 	 * Set the vector of GsEdgeIndex
-	 * @param vector
+	 * @param list
 	 */
 	public void setEdges(List list) {
 		edge_index = list;
@@ -220,83 +217,6 @@ public class LogicalParameter implements XMLize {
      */
     public boolean activable(RegulatoryGraph regGraph, RegulatoryNode node) {
         return buildTac(regGraph, node, regGraph.getNodeOrder()) != null;
-    }
-
-	public OMDDNode buildTree(RegulatoryGraph regGraph, RegulatoryNode node,
-			OMDDNode valueNode) {
-		return buildTree(regGraph, node, valueNode, regGraph.getNodeOrder());
-	}
-    /**
-     * build a tree of condition of activation for this logical parameter
-     *
-     * @param regGraph
-     * @param node
-     * @return the OMDDNode representation of this logical parameter
-     */
-    public OMDDNode buildTree(RegulatoryGraph regGraph, RegulatoryNode node, List nodeOrder) {
-    	return buildTree(regGraph, node, OMDDNode.TERMINALS[this.value], nodeOrder);
-    }
-	public OMDDNode buildTree(RegulatoryGraph regGraph, RegulatoryNode node,
-			OMDDNode valueNode, List nodeOrder) {
-        byte[][] t_ac = buildTac(regGraph, node, nodeOrder);
-        byte[] t_tmp;
-
-        if (t_ac == null) {
-            return null;
-        }
-        // simple sort on rows:
-        for (int i=t_ac.length-1 ; i>0 ; i--) {
-            for (int j=1 ; j<i ; j++) {
-                if (t_ac[i][0] < t_ac[j][0]) {
-                    t_tmp = t_ac[i];
-                    t_ac[i] = t_ac[j];
-                    t_ac[j] = t_tmp;
-                }
-            }
-        }
-        OMDDNode curNode, curRoot = valueNode;
-        for (int i=t_ac.length-1 ; i>0 ; i--) {
-            t_tmp = t_ac[i];
-            int curLevel = t_tmp[0];
-            if (curRoot.next == null || curLevel < curRoot.level) {
-                curNode = new OMDDNode();
-                curNode.level = curLevel;
-	            curNode.next = new OMDDNode[ t_tmp.length-1 ];
-	            for (int j=1 ; j<t_tmp.length ; j++) {
-	                if (t_tmp[j] != -1) {
-	                    curNode.next[j-1] = curRoot;
-	                } else {
-	                    curNode.next[j-1] = OMDDNode.TERMINALS[0];
-	                }
-	            }
-	            curRoot = curNode;
-            } else {
-            	// we have a constraint on a higher priority node, take it first!
-            	OMDDNode newNode = new OMDDNode();
-            	newNode.level = curRoot.level;
-            	newNode.next = new OMDDNode[curRoot.next.length];
-            	for (int v=0 ; v< newNode.next.length ; v++) {
-            		OMDDNode curNext = curRoot.next[v];
-            		if (curNext == OMDDNode.TERMINALS[0]) {
-            			newNode.next[v] = curNext;
-            		} else {
-            			curNode = new OMDDNode();
-            			curNode.level = curLevel;
-			            curNode.next = new OMDDNode[ t_tmp.length-1 ];
-			            for (int j=1 ; j<t_tmp.length ; j++) {
-			                if (t_tmp[j] != -1) {
-			                    curNode.next[j-1] = curNext;
-			                } else {
-			                    curNode.next[j-1] = OMDDNode.TERMINALS[0];
-			                }
-			            }
-		                newNode.next[v] = curNode;
-            		}
-            	}
-            	curRoot = newNode;
-            }
-        }
-        return curRoot;
     }
 
 	/**

@@ -1,16 +1,11 @@
 package org.ginsim.core.graph.tree;
 
-import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.List;
 
 import org.ginsim.core.graph.common.AbstractGraph;
-import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
-import org.ginsim.core.graph.view.style.EdgeStyle;
-import org.ginsim.core.graph.view.style.NodeStyle;
 
 
 public class TreeImpl  extends AbstractGraph<TreeNode, TreeEdge> 
@@ -27,9 +22,9 @@ public class TreeImpl  extends AbstractGraph<TreeNode, TreeEdge>
 	public static TreeNode[] leafs;
 
 	static {
-		leafs = new TreeNode[OMDDNode.TERMINALS.length];
+		leafs = new TreeNode[10];
 		
-		for (byte i = 0; i < OMDDNode.TERMINALS.length; i++) {
+		for (byte i = 0; i < leafs.length; i++) {
 			leafs[i] = new TreeNode(""+i,-1, i, TreeNode.TYPE_LEAF, i);
 		}
 	}

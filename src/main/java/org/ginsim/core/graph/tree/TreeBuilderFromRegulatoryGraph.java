@@ -2,10 +2,8 @@ package org.ginsim.core.graph.tree;
 
 import java.util.List;
 
-import org.colomoto.mddlib.MDDVariable;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 
 public class TreeBuilderFromRegulatoryGraph extends TreeBuilderFromMDD {
 	
