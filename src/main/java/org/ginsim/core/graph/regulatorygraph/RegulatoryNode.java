@@ -26,7 +26,6 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamod
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeString;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.NotificationResolution;
 
@@ -323,39 +322,6 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 		}
 		return result;
 	}
-
-    /**
-     * get the DAG representation of logical parameters.
-     *
-     * @param graph
-     * @return an OMDDNode representing logical parameters associated to this node.
-     */
-	public OMDDNode getTreeParameters(RegulatoryGraph graph) {
-		return getTreeParameters(graph, graph.getNodeOrder());
-	}
-	public OMDDNode getTreeParameters(RegulatoryGraph graph, List<RegulatoryNode> nodeOrder) {
-        OMDDNode root;
-        if (isInput()) {
-            root = new OMDDNode();
-            root.level = nodeOrder.indexOf(this);
-            root.next = new OMDDNode[getMaxValue()+1];
-            for (int i=0 ; i<root.next.length ; i++) {
-                root.next[i] = OMDDNode.TERMINALS[i];
-            }
-        } else {
-            root = OMDDNode.TERMINALS[0];
-            OMDDNode curNode;
-            Iterator it = v_logicalParameters.iterator();
-            while (it.hasNext()) {
-                LogicalParameter gsi = (LogicalParameter)it.next();
-                curNode = gsi.buildTree(graph, this, nodeOrder);
-                if (curNode != null) {
-                    root = root.merge(curNode, OMDDNode.OR);
-                }
-            }
-        }
-        return root;
-    }
 
 	public String toToolTip() {
 		return    Translator.getString( S_ID) + ":" + getId() + "|"
