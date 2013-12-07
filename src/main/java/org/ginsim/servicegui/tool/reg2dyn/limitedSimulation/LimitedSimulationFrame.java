@@ -112,7 +112,7 @@ public class LimitedSimulationFrame extends LogicalModelActionDialog {
 			return null;
 		}
 		
-		StatesSet s = new StatesSet(selectedNodes.get(0).statesSet);
+		StatesSet s = (StatesSet)selectedNodes.get(0).statesSet.clone();
 		if (selectedNodes.size() > 1) {
 			for (Iterator<HierarchicalNode> iterator = selectedNodes.listIterator(1); iterator.hasNext();) {
 				HierarchicalNode hierarchicalNode = iterator.next();

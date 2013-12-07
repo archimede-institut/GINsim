@@ -126,7 +126,7 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 	 */
 	public void addAllTheStatesInQueue() {
 		if (statePile == null) return;
-		if (statesSet == null) statesSet = new StatesSet(htg.getChildsCount());
+		if (statesSet == null) statesSet = htg.createStateSet();
 		statesSet.addStates(statePile);
 		statePile = null;
 		updateSize();
@@ -151,7 +151,7 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 	 * @param status
 	 */
 	public void addState(byte[] state, int status) {
-		if (statesSet == null) statesSet = new StatesSet(htg.getChildsCount());
+		if (statesSet == null) statesSet = htg.createStateSet();
 		statesSet.addState(state, status);
 	}
 
@@ -346,7 +346,7 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 	}
 
 	public void parse(String parse) throws SAXException {
-		if (statesSet == null) statesSet = new StatesSet(htg.getChildsCount());
+		if (statesSet == null) statesSet = htg.createStateSet();
 		statesSet.parse(parse);
 	}
 

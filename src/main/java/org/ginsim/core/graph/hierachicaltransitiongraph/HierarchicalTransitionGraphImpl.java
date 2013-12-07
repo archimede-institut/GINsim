@@ -293,5 +293,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
         return null;
     }
 
-
+    public StatesSet createStateSet() {
+        return new StatesSet(getChildsCount());
+    }
 }

@@ -34,7 +34,7 @@ public interface HierarchicalTransitionGraph extends Graph<HierarchicalNode, Dec
 	/**
 	 * Set a list of NodeInfo representing the order of node as defined by the model
 	 * 
-	 * @param list the list of NodeInfo representing the order of node as defined by the model
+	 * @param node_order the list of NodeInfo representing the order of node as defined by the model
 	 */
 	public void setNodeOrder( List<NodeInfo> node_order);
 	
@@ -76,4 +76,5 @@ public interface HierarchicalTransitionGraph extends Graph<HierarchicalNode, Dec
 	 */
 	public boolean areTransientCompacted();
 
+    StatesSet createStateSet();
 }
