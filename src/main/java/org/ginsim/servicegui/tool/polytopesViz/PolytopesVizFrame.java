@@ -72,7 +72,8 @@ public class PolytopesVizFrame extends StackDialog {
 			c.gridy++;
 			c.weightx = 0;
 			colPanel = new ColorizerPanel(graph);
-			colPanel.setNewColorizer(ServiceManager.getManager().getService(PolytopesService.class).getColorizer());
+            // FIXME: use a StyleProvider here
+//			colPanel.setNewColorizer(ServiceManager.getManager().getService(PolytopesService.class).getColorizer());
 			mainPanel.add(colPanel, c);
 		}
 		return mainPanel;

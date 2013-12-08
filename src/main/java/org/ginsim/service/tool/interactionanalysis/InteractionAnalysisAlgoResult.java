@@ -1,23 +1,23 @@
 package org.ginsim.service.tool.interactionanalysis;
 
-import org.ginsim.core.graph.view.css.Colorizer;
+import org.ginsim.core.graph.view.style.StyleProvider;
 
 /**
  * This class is a simple container for the results of the algorithm :
- *		* The InteractionAnalysisColorizer
+ *		* The Style Provider
  *		* The InteractionAnalysisReport
  */
 public class InteractionAnalysisAlgoResult {
-	private Colorizer colorizer;
+	private StyleProvider style;
 	private InteractionAnalysisReport report;
 
-	protected InteractionAnalysisAlgoResult(Colorizer colorizer, InteractionAnalysisReport report) {
-		this.colorizer = colorizer;
+	protected InteractionAnalysisAlgoResult(StyleProvider style, InteractionAnalysisReport report) {
+		this.style = style;
 		this.report = report;
 	}
 	
-	public Colorizer getColorizer() {
-		return colorizer;
+	public StyleProvider getStyle() {
+		return style    ;
 	}
 
 	public InteractionAnalysisReport getReport() {

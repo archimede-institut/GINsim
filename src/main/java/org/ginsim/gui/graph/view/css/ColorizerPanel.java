@@ -3,12 +3,7 @@ package org.ginsim.gui.graph.view.css;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -16,8 +11,8 @@ import javax.swing.event.ChangeListener;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.view.css.Colorizer;
-
+import org.ginsim.core.graph.view.style.StyleManager;
+import org.ginsim.core.graph.view.style.StyleProvider;
 
 
 /**
@@ -41,27 +36,23 @@ public class ColorizerPanel extends JPanel {
 	
 	private static String OPTION_STORE_INITIAL_COLORIZATION = ".colorizer.initial_colorization";
 	
-	protected Colorizer colorizer;
+    protected StyleProvider style;
 	private String storeUserChoicePrefix;
 
 	private JCheckBox cb_colorize;
 
 
-	/**
-	 * The graph to colorize
-	 */
-	private Graph<?, ?> graph;
+    private final StyleManager styleManager;
 
 	/**
 	 * Create a ColorizerPanel containing the colorizeButton.
 	 * If addInitialColorizationCheckbox is true, also add the initialColorizationCheckbox.
 	 * 
 	 * @param storeUserChoicePrefix define the prefix to store the user preference on the initial checkbox state (default false)
-	 * @param addInitialColorizationCheckbox indicates if the initialColorizationCheckbox should be added to the panel
 	 */
 	public ColorizerPanel(String storeUserChoicePrefix, Graph<?, ?> graph) {
 		this.storeUserChoicePrefix = storeUserChoicePrefix;
-		this.graph = graph;
+        this.styleManager = graph.getStyleManager();
         initialize();
 	}
 
@@ -94,14 +85,16 @@ public class ColorizerPanel extends JPanel {
 	private void init_initialColorizationCheckbox(GridBagConstraints c) {
 		if (cb_colorize == null) {
 			cb_colorize = new JCheckBox(Translator.getString("STR_colorizer_panel"));
-			cb_colorize.setSelected(((Boolean)OptionStore.getOption(storeUserChoicePrefix+OPTION_STORE_INITIAL_COLORIZATION, Boolean.FALSE)).booleanValue());
+			cb_colorize.setSelected((OptionStore.getOption(storeUserChoicePrefix+OPTION_STORE_INITIAL_COLORIZATION, Boolean.FALSE)).booleanValue());
 			cb_colorize.addChangeListener(new ChangeListener() {
 				@Override
 				public void stateChanged(ChangeEvent e) {
 					boolean b = cb_colorize.isSelected();
-					if (colorizer != null && colorizer.isColored() != b) {
-						colorizer.toggleColorize(graph);
-					}
+					if (style != null && b) {
+						styleManager.setStyleProvider(style);
+					} else {
+                        styleManager.setStyleProvider(null);
+                    }
 					OptionStore.setOption(storeUserChoicePrefix+OPTION_STORE_INITIAL_COLORIZATION, Boolean.valueOf(b));
 				}
 		    });
@@ -113,7 +106,7 @@ public class ColorizerPanel extends JPanel {
 	 * Perform the colorization of the graph, update the button name accordingly
 	 */
 	public void doColorize() {
-		colorizer.doColorize(graph);
+		styleManager.setStyleProvider(style);
 		cb_colorize.setSelected(true);
 	}
 
@@ -121,10 +114,8 @@ public class ColorizerPanel extends JPanel {
 	 * Cancel the colorization of the graph, update the button name accordingly
 	 */
 	public void undoColorize() {
-		if (colorizer != null && colorizer.isColored()) {
-			colorizer.undoColorize(graph);
-			cb_colorize.setSelected(false);
-		}
+        styleManager.setStyleProvider(null);
+        cb_colorize.setSelected(false);
 	}
 	
 	/**
@@ -135,20 +126,21 @@ public class ColorizerPanel extends JPanel {
 		return cb_colorize.isSelected();
 	}
 
-	/**
-	 * Set the colorizer and enable the colorizeButton. If initialColorizationCheckbox is
-	 * used and checked, then the colorization is launched.
-	 * @param colorizer the colorizer returned by the algorithm
-	 */
-	public void setNewColorizer(Colorizer colorizer) {
-		if (this.colorizer != null && colorizer.isColored()) {
-			undoColorize();
-		}
-		this.colorizer = colorizer;
-		runIsFinished();
-	}
-	
-	/**
+    /**
+     * Set the style and enable the colorizeButton. If initialColorizationCheckbox is
+     * used and checked, then the colorization is launched.
+     * @param style the style returned by the algorithm
+     */
+    public void setStyle(StyleProvider style) {
+        this.style = style;
+        if (cb_colorize.isSelected()) {
+            styleManager.setStyleProvider(style);
+        }
+        runIsFinished();
+    }
+
+
+    /**
 	 * Enable the colorizeButton. If initialColorizationCheckbox is
 	 * used and checked, then the colorization is launched.
 	 */

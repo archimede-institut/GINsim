@@ -15,6 +15,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+import org.ginsim.core.graph.view.style.StyleProvider;
 
 /**
  * 
@@ -81,13 +82,8 @@ public class InteractionAnalysisAlgo {
 		LogManager.info("Preparing the report");
 		InteractionAnalysisReport report =  new InteractionAnalysisReport();
 		
-		Map<RegulatoryMultiEdge, String> functionalityMap = new HashMap<RegulatoryMultiEdge, String>();
-		InteractionAnalysisSelector selector = new InteractionAnalysisSelector();
-		selector.setCache(functionalityMap);
-		InteractionAnalysisColorizer colorizer = new InteractionAnalysisColorizer(selector, regGraph, functionalityMap);
-		
-		InteractionAnalysisAlgoResult algoResult = new InteractionAnalysisAlgoResult(colorizer, report);
-		
+		Map<RegulatoryMultiEdge, InteractionStatus> functionalityMap = new HashMap<RegulatoryMultiEdge, InteractionStatus>();
+
 		//Run the analysis on each regulatory node
 		node_in_subtree = new HashMap<RegulatoryNode, Integer>();
 		i = -1;
@@ -129,28 +125,26 @@ public class InteractionAnalysisAlgo {
 
 			for (RegulatoryMultiEdge me: l) {									//	For each incoming edge
 				RegulatoryNode source = me.getSource();
-//				for (int k = 0; k < me.getEdgeCount(); k++) {									// 		For each sub-edge of the multiedge
-//					RegulatoryEdge e = me.getEdge(k);
-					SourceItem sourceItem = report.reportFor(target, source);
-					currentSource = sourceItem.reportItems;
-					byte functionality = computeFunctionality(source.getMaxValue()+1, node_in_subtree.get(source).intValue(), leafs, subtree_size, small_node_order_vertex); //Compute its functionality
-					sourceItem.sign = functionality;
-					if (functionality == FUNC_POSITIVE) {
-						functionalityMap.put(me, InteractionAnalysisSelector.CAT_POSITIVE);
-					} else if (functionality == FUNC_NEGATIVE) {
-						functionalityMap.put(me, InteractionAnalysisSelector.CAT_NEGATIVE);
-					} else if (functionality == FUNC_DUAL) {
-						functionalityMap.put(me, InteractionAnalysisSelector.CAT_DUAL);
-					} else {
-						functionalityMap.put(me, InteractionAnalysisSelector.CAT_NONFUNCTIONNAL);
+                SourceItem sourceItem = report.reportFor(target, source);
+                currentSource = sourceItem.reportItems;
+                byte functionality = computeFunctionality(source.getMaxValue()+1, node_in_subtree.get(source).intValue(), leafs, subtree_size, small_node_order_vertex); //Compute its functionality
+                sourceItem.sign = functionality;
+                if (functionality == FUNC_POSITIVE) {
+                    functionalityMap.put(me, InteractionStatus.POSITIVE);
+                } else if (functionality == FUNC_NEGATIVE) {
+                    functionalityMap.put(me, InteractionStatus.NEGATIVE);
+                } else if (functionality == FUNC_DUAL) {
+                    functionalityMap.put(me, InteractionStatus.DUAL);
+                } else {
+                    functionalityMap.put(me, InteractionStatus.NON_FUNCTIONAL);
 
-					}
-	//			}
-
+                }
 			}
 		}
 				
 		report.timeSpent = new Date().getTime()-before;
+        StyleProvider style = new InteractionAnalysisStyleProvider(regGraph, functionalityMap);
+        InteractionAnalysisAlgoResult algoResult = new InteractionAnalysisAlgoResult(style, report);
 		LogManager.info("Done in "+report.timeSpent+"ms");
 		return algoResult;
 	}
