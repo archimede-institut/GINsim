@@ -43,9 +43,10 @@ public class StyleManager<V, E extends Edge<V>> {
 	/**
 	 * Create a style manager, defining default styles.
 	 * 
-	 * @param nodeStyle
-	 * @param edgeStyle
-	 */
+	 * @param g the graph to manage
+	 * @param backend the graph backend in which the data is stored
+     * @param backend factory the factory providing the default styles
+     */
 	public StyleManager(Graph<V, E> g, GraphBackend<V, E> backend, GraphFactory factory) {
 		this.backend = backend;
 		this.defaultNodeStyle = factory.createDefaultNodeStyle(g);
@@ -515,11 +516,20 @@ public class StyleManager<V, E extends Edge<V>> {
 	 * 
 	 * @param provider the provider to use or null to remove it
 	 */
-	public void setStyleProvider(StyleProvider<V, E> provider) {
-		this.provider = provider;
-		backend.damage(null);
-	}
-	
+    public void setStyleProvider(StyleProvider<V, E> provider) {
+        this.provider = provider;
+        backend.damage(null);
+    }
+
+    /**
+     * Retrieve the current style provider.
+     *
+     * @return the style provider (null by default)
+     */
+    public StyleProvider getStyleProvider() {
+        return provider;
+    }
+
 	public void renameStyle(Style style, String newname) {
 		String oldname = style.getName();
 		if (newname == null || oldname == null|| newname.equals(style.getName())) {
