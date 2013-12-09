@@ -119,7 +119,6 @@ public class LimitedSimulationFrame extends LogicalModelActionDialog {
 				s.merge(hierarchicalNode.statesSet);
 			}
 		}
-		s.reduce();
 		return s;
 	}
 

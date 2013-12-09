@@ -55,15 +55,12 @@ public class HierarchicalSigmaSet {
 
 	/**
 	 * @param unrecoverable the unrecoverable component associated to this SigmaSet to set
-	 * @param shouldCompactSCC
-	 * @param nodeSet 
+	 * @param nodeSet
 	 * @param htg 
 	 */
 	public void setUnrecoverable(HierarchicalNode unrecoverable, Collection<HierarchicalNode> nodeSet, HierarchicalSigmaSetFactory sigmaSetFactory, HierarchicalTransitionGraph htg) {
 		if (this.unrecoverable != null) {
 			this.unrecoverable.merge(unrecoverable, nodeSet, sigmaSetFactory, htg);
-			this.unrecoverable.statesSet.reduce();
-
 		} else {
 			this.unrecoverable = unrecoverable;			
 		}

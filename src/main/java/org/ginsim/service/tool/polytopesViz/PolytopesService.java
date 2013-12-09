@@ -5,7 +5,6 @@ import java.text.ParseException;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.StatesSet;
-import org.ginsim.core.graph.regulatorygraph.omdd.OMDDNode;
 import org.ginsim.core.graph.view.css.Colorizer;
 import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
@@ -23,8 +22,9 @@ public class PolytopesService implements Service {
 	
 
 	public void run(DynamicGraph graph, String logical_formulae) throws ParseException {
+        // FIXME: restore the polytope service
 		byte[] childCount = getChildCount(graph);
-		StatesSet polytope = new StatesSet(OMDDNode.read(logical_formulae, childCount), childCount);
+		StatesSet polytope = null; // new StatesSet(OMDDNode.read(logical_formulae, childCount), childCount);
 		if (polytope != null) {
 			run(graph, polytope);
 		}

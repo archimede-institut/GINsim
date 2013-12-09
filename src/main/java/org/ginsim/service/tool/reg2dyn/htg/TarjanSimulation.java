@@ -187,7 +187,6 @@ public class TarjanSimulation {
 		htgSimulation.nodeSet.add(scc);
 
 		scc.addAllTheStatesInQueue();
-		scc.statesSet.reduce();
 		scc.updateSize();
 		boolean isTerminal = true;
 		for (Iterator<byte[]> it = scc.statesSet.statesToFullList().iterator(); it.hasNext();) { //compute the edges and the sigma

@@ -29,7 +29,7 @@ public class HierarchicalGINMLWriter extends GINMLWriter<HierarchicalTransitionG
 		out.addAttr("id", "s"+node.getUniqueId());
 		
 		addAttributeTag(out, "type", node.typeToString());
-		addAttributeTag(out, "states", node.write().toString());
+		addAttributeTag(out, "states", node.write());
 	}
 
 	

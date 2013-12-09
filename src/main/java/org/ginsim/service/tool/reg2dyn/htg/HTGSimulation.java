@@ -346,8 +346,7 @@ public class HTGSimulation extends Simulation {
 //		LogManager.debug(DBG_SIGMA,log_tabdepth+"\tnew scc:"+scc.toLongString());
 
 		scc.addAllTheStatesInQueue();
-		scc.statesSet.reduce();
-		
+
 		if (shouldCompactSCC) {
 			sigmaFactory.beginNewSigma();
 			if (isCycle) sigmaFactory.addToNewSigma(scc);
