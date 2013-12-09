@@ -11,6 +11,7 @@ import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
 import org.ginsim.common.application.LogManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -130,14 +131,25 @@ public class InteractionAnalysisAlgo {
                 byte functionality = computeFunctionality(source.getMaxValue()+1, node_in_subtree.get(source).intValue(), leafs, subtree_size, small_node_order_vertex); //Compute its functionality
                 sourceItem.sign = functionality;
                 if (functionality == FUNC_POSITIVE) {
-                    functionalityMap.put(me, InteractionStatus.POSITIVE);
+                    if (me.getSign() == RegulatoryEdgeSign.POSITIVE) {
+                        functionalityMap.put(me, InteractionStatus.WELL_DEFINED);
+                    } else {
+                        functionalityMap.put(me, InteractionStatus.POSITIVE);
+                    }
                 } else if (functionality == FUNC_NEGATIVE) {
-                    functionalityMap.put(me, InteractionStatus.NEGATIVE);
+                    if (me.getSign() == RegulatoryEdgeSign.NEGATIVE) {
+                        functionalityMap.put(me, InteractionStatus.WELL_DEFINED);
+                    } else {
+                        functionalityMap.put(me, InteractionStatus.NEGATIVE);
+                    }
                 } else if (functionality == FUNC_DUAL) {
-                    functionalityMap.put(me, InteractionStatus.DUAL);
+                    if (me.getSign() == RegulatoryEdgeSign.DUAL) {
+                        functionalityMap.put(me, InteractionStatus.WELL_DEFINED);
+                    } else {
+                        functionalityMap.put(me, InteractionStatus.DUAL);
+                    }
                 } else {
                     functionalityMap.put(me, InteractionStatus.NON_FUNCTIONAL);
-
                 }
 			}
 		}

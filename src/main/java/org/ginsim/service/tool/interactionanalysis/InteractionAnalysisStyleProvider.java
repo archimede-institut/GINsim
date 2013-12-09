@@ -3,6 +3,7 @@ package org.ginsim.service.tool.interactionanalysis;
 import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.style.*;
 
 import java.awt.*;
@@ -16,24 +17,26 @@ import java.util.Map;
 public class InteractionAnalysisStyleProvider implements StyleProvider {
 
     private final InteractionAnalysisEdgeStyle edgeStyle;
+    private final StyleManager manager;
 
     InteractionAnalysisStyleProvider(RegulatoryGraph graph, Map<RegulatoryMultiEdge, InteractionStatus> functionalityMap) {
-        StyleManager manager = graph.getStyleManager();
+        this.manager = graph.getStyleManager();
         this.edgeStyle = new InteractionAnalysisEdgeStyle(manager.getDefaultEdgeStyle(), functionalityMap);
     }
 
     @Override
     public NodeStyle getNodeStyle(Object node, NodeStyle baseStyle) {
-        return null;
+        return baseStyle;
     }
 
     @Override
     public EdgeStyle getEdgeStyle(Edge edge, EdgeStyle baseStyle) {
+        edgeStyle.setBaseStyle(baseStyle);
         return edgeStyle;
     }
 }
 
-class InteractionAnalysisEdgeStyle extends EdgeStyleOverride {
+class InteractionAnalysisEdgeStyle extends EdgeStyleOverride<RegulatoryNode, RegulatoryMultiEdge> {
 
     private final Map<RegulatoryMultiEdge, InteractionStatus> functionalityMap;
 
@@ -43,11 +46,19 @@ class InteractionAnalysisEdgeStyle extends EdgeStyleOverride {
     }
 
     @Override
-    public Color getColor(Edge edge) {
+    public Color getColor(RegulatoryMultiEdge edge) {
         InteractionStatus status = functionalityMap.get(edge);
-        if (status == null) {
-            return super.getColor(edge);
+        if (status == null || status == InteractionStatus.WELL_DEFINED) {
+            switch (edge.getSign()) {
+                case POSITIVE:
+                case NEGATIVE:
+                case DUAL:
+                    return defaultStyle.getColor(edge);
+                default:
+                    return Color.BLACK;
+            }
         }
+
         switch (status) {
             case POSITIVE:
                 return Color.green;
@@ -62,10 +73,12 @@ class InteractionAnalysisEdgeStyle extends EdgeStyleOverride {
     }
 
     @Override
-    public int getWidth(Edge edge) {
-        if (true) {
-            return 2;
+    public int getWidth(RegulatoryMultiEdge edge) {
+        InteractionStatus status = functionalityMap.get(edge);
+        if (status == null || status == InteractionStatus.WELL_DEFINED) {
+            return 1;
         }
-        return super.getWidth(edge);
+
+        return 4;
     }
 }
