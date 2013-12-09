@@ -14,9 +14,7 @@ import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.core.graph.view.css.Colorizer;
-import org.ginsim.service.tool.connectivity.ConnectivitySelector;
-
+import org.ginsim.service.tool.connectivity.ConnectivityStyleProvider;
 
 
 /**
@@ -114,11 +112,11 @@ public class SCCGraphAlgo extends Thread {
 			} else {
 				Collection outgoing = reducedGraph.getOutgoingEdges(component);
 				if (outgoing != null && outgoing.size() > 0) {
-	            	Color backgroundColor = ConnectivitySelector.TRANSIENT_PALETTE[index++%ConnectivitySelector.TRANSIENT_PALETTE.length];
+	            	Color backgroundColor = ConnectivityStyleProvider.TRANSIENT_PALETTE[index++%ConnectivityStyleProvider.TRANSIENT_PALETTE.length];
 					vreader.setBackgroundColor(backgroundColor);
 	            	vreader.setTextColor(ColorPalette.getConstrastedForegroundColor(backgroundColor));
 				} else {
-	            	Color backgroundColor = ConnectivitySelector.TERMINAL_PALETTE[index++%ConnectivitySelector.TERMINAL_PALETTE.length];
+	            	Color backgroundColor = ConnectivityStyleProvider.TERMINAL_PALETTE[index++%ConnectivityStyleProvider.TERMINAL_PALETTE.length];
 					vreader.setBackgroundColor(backgroundColor);
 	            	vreader.setTextColor(ColorPalette.getConstrastedForegroundColor(backgroundColor));
 				}

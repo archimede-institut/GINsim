@@ -15,7 +15,7 @@ import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
-import org.ginsim.core.graph.view.css.Colorizer;
+import org.ginsim.core.graph.view.style.StyleProvider;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
@@ -27,7 +27,6 @@ import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.ServiceStatus;
 import org.ginsim.gui.service.common.ToolAction;
 import org.ginsim.service.tool.connectivity.ConnectivityResult;
-import org.ginsim.service.tool.connectivity.ConnectivitySelector;
 import org.ginsim.service.tool.connectivity.ConnectivityService;
 import org.ginsim.service.tool.sccgraph.SCCGraphResult;
 import org.ginsim.service.tool.sccgraph.SCCGraphService;
@@ -81,20 +80,18 @@ class SCCGraphAction extends ToolAction {
 
 class ConnectivityColorizeGraphAction extends GenericGraphAction {
 	private static final long serialVersionUID = 8294301473668672512L;
-	private Colorizer colorizer;
-	
+    private StyleProvider styler;
+
 	protected ConnectivityColorizeGraphAction( Graph graph, ServiceGUI serviceGUI) {
         super( graph, "STR_connectivity", null, "STR_connectivity_descr", null, serviceGUI);
-        colorizer = new Colorizer(new ConnectivitySelector());
-
 	}
 	
 	@Override
 	public void actionPerformed( ActionEvent arg0) {
 		ConnectivityService service = ServiceManager.getManager().getService(ConnectivityService.class);
         ConnectivityResult result = service.run(graph);
-        ((ConnectivitySelector)colorizer.getSelector()).setCache(result.getComponents(), graph);
-        colorizer.doColorize(graph);
+        styler = service.getStyleProvider(result, graph);
+        graph.getStyleManager().setStyleProvider(styler);
         if (GUIManager.getInstance().getFrame(graph) == null) {
         		GUIManager.getInstance().whatToDoWithGraph(graph, true);
         }

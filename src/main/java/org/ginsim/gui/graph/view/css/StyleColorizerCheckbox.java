@@ -1,22 +1,11 @@
 package org.ginsim.gui.graph.view.css;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
 import javax.swing.JCheckBox;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.view.css.Colorizer;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.graph.view.style.StyleProvider;
 
@@ -35,7 +24,7 @@ public class StyleColorizerCheckbox extends JCheckBox {
 	 * If addInitialColorizationCheckbox is true, also add the initialColorizationCheckbox.
 	 * 
 	 * @param storeUserChoicePrefix define the prefix to store the user preference on the initial checkbox state (default false)
-	 * @param addInitialColorizationCheckbox indicates if the initialColorizationCheckbox should be added to the panel
+	 * @param styleProvider the style to apply when the checkbox is selected
 	 */
 	public StyleColorizerCheckbox(String storeUserChoicePrefix, Graph<?, ?> graph, StyleProvider styleProvider) {
 		super(Translator.getString("STR_colorizer_panel"));
