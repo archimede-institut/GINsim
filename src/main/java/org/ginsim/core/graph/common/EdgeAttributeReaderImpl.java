@@ -56,7 +56,9 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
     private SimpleStroke stroke = new SimpleStroke();
     
     /**
-     * @param dataMap
+     * @param styleManager
+     * @param backend
+     * @param nreader
      */
     public EdgeAttributeReaderImpl(StyleManager<V, E> styleManager, GraphBackend<V, E> backend, NodeAttributesReader nreader) {
     	this.graph = backend;
@@ -97,9 +99,14 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
     	this.edge = obj;
     	cachedBounds = null;
     	cachedPath = null;
-    	
-    	viewInfo = graph.getEdgeViewInfo(edge);
-		style = styleManager.getViewEdgeStyle(edge);
+
+        if (obj == null) {
+            viewInfo = null;
+            style = null;
+        } else {
+    	    viewInfo = graph.getEdgeViewInfo(edge);
+		    style = styleManager.getViewEdgeStyle(edge);
+        }
     	hasChanged = false;
     }
 
