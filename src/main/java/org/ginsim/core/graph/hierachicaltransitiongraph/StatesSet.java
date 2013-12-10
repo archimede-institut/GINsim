@@ -510,9 +510,7 @@ public class StatesSet {
      */
 
 	public String write() {
-        // FIXME: write MDD for the StateSet
-		// return root.write();
-        return ""+root;
+        return ddmanager.dumpMDD(root);
 	}
 
 
@@ -600,18 +598,14 @@ public class StatesSet {
      * @param parse
      * @throws SAXException
      */
-    // FIXME: parse MDDs for the StateSet
-
 	public void parse(String parse) throws SAXException {
-/*
 		try {
-			root = OMDDNode.read(parse, childsCount);
+            root = ddmanager.parseDump(parse);
 			updateSize();
-
 		} catch (ParseException e) {
+            e.printStackTrace();
 			throw new SAXException( new GsException( "STR_ParsingError", e));
 		}
-*/
 	}
 
 }

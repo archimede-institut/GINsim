@@ -65,12 +65,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	public HierarchicalTransitionGraphImpl( List<NodeInfo> nodeOrder, boolean transientCompaction) {
 		
 	    this();
-        MDDVariableFactory vbuilder = new MDDVariableFactory();
-	    for (NodeInfo ni: nodeOrder) {
-	    	this.nodeOrder.add(ni);
-            vbuilder.add(ni, (byte)(ni.getMax()+1));
-        }
-        ddmanager = MDDManagerFactory.getManager(vbuilder, 10);
+        setNodeOrder(nodeOrder);
 	    this.transientCompaction = transientCompaction;
 	}
 
@@ -119,8 +114,14 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	 */
     @Override
 	public void setNodeOrder( List<NodeInfo> node_order){
-		
-		this.nodeOrder = node_order;
+
+        this.nodeOrder.clear();
+        MDDVariableFactory vbuilder = new MDDVariableFactory();
+        for (NodeInfo ni: node_order) {
+            this.nodeOrder.add(ni);
+            vbuilder.add(ni, (byte)(ni.getMax()+1));
+        }
+        ddmanager = MDDManagerFactory.getManager(vbuilder, 10);
 	}
 
 
