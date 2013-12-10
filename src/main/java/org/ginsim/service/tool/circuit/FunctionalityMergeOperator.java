@@ -34,6 +34,7 @@ public class FunctionalityMergeOperator extends AbstractOperator {
                     return 0;
                 }
                 if (first == 1) {
+                    ddmanager.use(other);
                     return other;
                 }
                 break;
@@ -43,6 +44,7 @@ public class FunctionalityMergeOperator extends AbstractOperator {
                     return 0;
                 }
                 if (other == 1) {
+                    ddmanager.use(first);
                     return first;
                 }
                 break;
