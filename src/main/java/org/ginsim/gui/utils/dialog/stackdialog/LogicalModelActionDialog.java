@@ -40,7 +40,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	private String userID = null;
 
 	private JPanel mainPanel = new JPanel(new GridBagLayout());
-	private JCheckBox cb_simplify = new JCheckBox("Strip outputs");
+	private JCheckBox cb_simplify = new JCheckBox("Strip (pseudo-)outputs");
 	
     public LogicalModelActionDialog(RegulatoryGraph lrg, Frame parent, String id, int w, int h) {
         super(parent, id, w, h);
