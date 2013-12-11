@@ -30,6 +30,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.core.utils.data.MultiColObject;
+import org.ginsim.core.utils.data.NamedList;
+import org.ginsim.core.utils.data.NamedObject;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.SplitPane;
 import org.ginsim.gui.utils.widgets.StockButton;
@@ -49,8 +51,8 @@ public class ListPanel<T> extends JPanel
     protected List<T> list;
     protected final ListPanelHelper<T> helper;
 
-    protected SimpleListModel<T> model = new SimpleListModel<T>();
-    EnhancedJTable jl = new EnhancedJTable(model);
+    private final SimpleListModel<T> model = new SimpleListModel<T>();
+    private final EnhancedJTable jl = new EnhancedJTable(model);
     boolean rendererInstalled = false;
     int autohide = -1;
     
@@ -458,19 +460,24 @@ class SimpleListModel<T> extends AbstractTableModel implements TableActionListen
     private static final long serialVersionUID = 886643323547667463L;
     
     private List<T> list;
+    private NamedList namedList;
     private ListPanel<T> panel;
 
     private int lastLineInc = 0;
     private Map m_button = new HashMap();
     
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-    	// TODO: editable cells?
+        if (columnIndex == 0 && namedList != null) {
+            return true;
+        }
         return false;
     }
     
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-    	// TODO: editable cells?
+        if (columnIndex == 0 && namedList != null) {
+            namedList.rename(rowIndex, aValue.toString());
+        }
     }
 
     @Override
@@ -545,6 +552,11 @@ class SimpleListModel<T> extends AbstractTableModel implements TableActionListen
         	lastLineInc = 1;
         } else {
         	lastLineInc = 0;
+        }
+        if (list instanceof NamedList) {
+            namedList = (NamedList)list;
+        } else {
+            namedList = null;
         }
         fireTableStructureChanged();
     }
