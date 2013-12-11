@@ -5,7 +5,6 @@ import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
 import org.mangosdk.spi.ProviderFor;
 
-import javax.swing.*;
 import java.awt.*;
 
 @ProviderFor(GUIHelper.class)
@@ -13,7 +12,7 @@ import java.awt.*;
 public class ReductionGUIHelper implements GUIHelper<ModelSimplifierConfigList> {
 
 	public static Component getPerturbationPanel(ModelSimplifierConfigList reductions) {
-        return ReductionConfigurationPanel.getPanel(reductions);
+        return new ReductionConfigurationPanel(reductions);
 	}
 	
 	@Override

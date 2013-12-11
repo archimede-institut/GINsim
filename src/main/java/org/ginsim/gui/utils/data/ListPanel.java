@@ -193,7 +193,24 @@ public class ListPanel<T> extends JPanel
     public int[] getSelection() {
     	return jl.getSelectedRows();
     }
-    
+
+    public T getSelectedItem() {
+        int[] selection = getSelection();
+        if (selection == null || selection.length < 1) {
+            return null;
+        }
+
+        int idx = selection[0];
+        if (idx < 0) {
+            return null;
+        }
+        return list.get(idx);
+    }
+
+    public void selectItem(int idx) {
+        jl.setRowSelectionInterval(idx, idx);
+    }
+
     /**
      * add a selection listener for this list
      * @param listener

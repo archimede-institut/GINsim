@@ -41,8 +41,8 @@ public class ModelSimplifierConfigManager extends BasicGraphAssociatedManager {
             out.openTag("modelModifierConfig");
             out.openTag("modelSimplifications");
             // add the available configurations
-            for (int i=0 ; i<paramList.getNbElements(null) ; i++) {
-                ((ModelSimplifierConfig)paramList.getElement(null, i)).toXML(out);
+            for (ModelSimplifierConfig cfg: paramList) {
+                cfg.toXML(out);
             }
             out.closeTag();
             
@@ -61,7 +61,7 @@ public class ModelSimplifierConfigManager extends BasicGraphAssociatedManager {
     }
 
 	public Object doCreate( Graph graph) {
-		return new ModelSimplifierConfigList( graph);
+		return new ModelSimplifierConfigList( (RegulatoryGraph)graph);
 	}
 }
 
@@ -84,7 +84,7 @@ class ModelSimplifierConfigParser extends XMLHelper {
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
         if (qName.equals("simplificationConfig")) {
-        	ModelSimplifierConfig cfg = (ModelSimplifierConfig)paramList.getElement(null, paramList.add());
+        	ModelSimplifierConfig cfg = paramList.get(paramList.create());
         	cfg.setName(attributes.getValue("name"));
         	String s_strict = attributes.getValue("strict");
         	if (s_strict != null) {

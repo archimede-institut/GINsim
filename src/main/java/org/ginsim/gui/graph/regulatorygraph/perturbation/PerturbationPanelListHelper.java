@@ -34,7 +34,7 @@ public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation> {
 	}
 	
 	@Override
-	public int create(Object arg) {
+	public int doCreate(Object arg) {
 		if (editPanel == null) {
 			return -1;
 		}

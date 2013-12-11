@@ -17,11 +17,12 @@ public class ListEditionPanel<T> extends SplitPane {
 	private final ListPanelHelper<T> helper;
 	private final Map<String, Component> m_panels = new HashMap<String, Component>();
 	private final Map<String, String> m_cardAliases = new HashMap<String, String>();
-	
+	private final ListPanel<T> listPanel;
+
 	public ListEditionPanel(ListPanelHelper<T> helper, List<T> list, String title) {
 		
 		this.helper = helper;
-		ListPanel<T> listPanel = new ListPanel<T>(helper, title);
+		listPanel = new ListPanel<T>(helper, title);
 		listPanel.setList(list);
 		setLeftComponent( listPanel);
 	}
@@ -49,5 +50,13 @@ public class ListEditionPanel<T> extends SplitPane {
 		cards.show(mainPanel, alias);
 		repaint();
 	}
+
+    public int[] getSelection() {
+        return listPanel.getSelection();
+    }
+
+    public T getSelectedItem() {
+        return listPanel.getSelectedItem();
+    }
 }
 

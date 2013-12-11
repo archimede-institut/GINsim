@@ -35,7 +35,7 @@ abstract public class ListPanelHelper<T> {
 
 	public ListEditionPanel<T> editPanel = null;
 	public ListPanel<T> listPanel = null;
-	
+
 	public Object getColumn(T o, int column) {
 		return o;
 	}
@@ -58,11 +58,19 @@ abstract public class ListPanelHelper<T> {
 	public Object[] getCreateTypes() {
 		return null;
 	}
-	
-	public int create(Object arg) {
-		return -1;
-	}
-	
+
+    public int doCreate(Object arg) {
+        return -1;
+    }
+
+    public void create(Object arg) {
+        int idx = doCreate(arg);
+        if (idx > -1 && listPanel != null) {
+            listPanel.refresh();
+            listPanel.selectItem(idx);
+        }
+    }
+
 	public void selectionChanged(int[] selection) {
 		if (editPanel == null) {
 			return;
@@ -104,6 +112,7 @@ abstract public class ListPanelHelper<T> {
 		
 		if (doRemove(sel)) {
 			refresh();
+            listPanel.selectItem(sel[0]-1);
 			return true;
 		}
 		return false;

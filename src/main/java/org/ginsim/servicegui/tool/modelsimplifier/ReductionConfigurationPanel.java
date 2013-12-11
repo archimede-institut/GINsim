@@ -6,6 +6,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.GenericList;
 import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.gui.utils.data.GenericListPanel;
+import org.ginsim.gui.utils.data.ListEditionPanel;
+import org.ginsim.gui.utils.data.ListPanelHelper;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigManager;
@@ -17,8 +19,6 @@ import java.util.List;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 
 /**
@@ -26,52 +26,85 @@ import javax.swing.event.ListSelectionListener;
  *
  * @author Aurelien Naldi
  */
-public class ReductionConfigurationPanel extends GenericListPanel<ModelSimplifierConfig> {
+public class ReductionConfigurationPanel extends ListEditionPanel<ModelSimplifierConfig> {
 
 
-    public static ReductionConfigurationPanel getPanel(RegulatoryGraph graph) {
-        return getPanel((ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject(graph, ModelSimplifierConfigManager.KEY, true));
+    public ReductionConfigurationPanel(RegulatoryGraph graph) {
+        this((ModelSimplifierConfigList)ObjectAssociationManager.getInstance().getObject(graph, ModelSimplifierConfigManager.KEY, true));
     }
 
-    public static ReductionConfigurationPanel getPanel(ModelSimplifierConfigList cfgList) {
-        Map<Class<?>, Component> m = new HashMap<Class<?>, Component>();
-        SimplifierConfigContentList ctlist = new SimplifierConfigContentList(cfgList.getNodeOrder());
-
-        SimplifierConfigConfigurePanel panel = new SimplifierConfigConfigurePanel();
-        panel.setList(ctlist);
-        m.put(ModelSimplifierConfig.class, panel);
-
-        ReductionConfigurationPanel cfgPanel = new ReductionConfigurationPanel(m, cfgList, ctlist);
-        return cfgPanel;
-    }
-
-    private final SimplifierConfigContentList ctlist;
-
-    private ReductionConfigurationPanel(Map<Class<?>, Component> m, ModelSimplifierConfigList cfgList, SimplifierConfigContentList ctlist) {
-        super(m, "modelSimplifier");
-        if (cfgList.getNbElements(null) == 0) {
-            cfgList.add();
-        }
-
-        this.ctlist = ctlist;
-
-        this.setList(cfgList);
-
-    }
-
-    @Override
-    public void valueChanged(ListSelectionEvent e) {
-        super.valueChanged(e);
-        ctlist.mcolHelper = (ModelSimplifierConfig)getSelectedItem();
-        ctlist.refresh();
+    public ReductionConfigurationPanel(ModelSimplifierConfigList cfgList) {
+        super(new ReductionListHelper(cfgList), cfgList, "modelSimplifier");
+        init();
     }
 
 }
 
 
+class ReductionListHelper extends ListPanelHelper<ModelSimplifierConfig> {
+
+    private static final String EDIT = "edit";
+    private static final String EMPTY = "empty";
+
+    private final ModelSimplifierConfigList reductions;
+    private final SimplifierConfigContentList ctlist;
+
+    public ReductionListHelper(ModelSimplifierConfigList reductions) {
+        this.reductions = reductions;
+        if (reductions.size() == 0) {
+            create(null);
+        }
+
+        canOrder = true;
+        canAdd = true;
+        canRemove = true;
+
+        ctlist = new SimplifierConfigContentList(reductions.getNodeOrder());
+
+
+    }
+
+    @Override
+    public void selectionUpdated(int[] selection) {
+        if (selection == null || selection.length < 1) {
+            editPanel.showPanel(EMPTY);
+        } else {
+            ctlist.mcolHelper = listPanel.getSelectedItem();
+            ctlist.refresh();
+            editPanel.showPanel(EDIT);
+        }
+    }
+
+    @Override
+    public void fillEditPanel() {
+        SimplifierConfigConfigurePanel panel = new SimplifierConfigConfigurePanel();
+        panel.setList(ctlist);
+        editPanel.addPanel(panel, EDIT);
+
+        editPanel.addPanel(new JLabel("select or create a reduction"), EMPTY);
+    }
+
+    @Override
+    public int doCreate(Object arg) {
+        return reductions.create();
+    }
+
+    @Override
+    public boolean doRemove(int[] sel) {
+        if (sel == null || sel.length < 1) {
+            return false;
+        }
+
+        for (int i=sel.length-1 ; i>-1 ; i--) {
+            reductions.remove(i);
+        }
+        return true;
+    }
+}
+
+
 class SimplifierConfigConfigurePanel extends GenericListPanel<RegulatoryNode>
 	implements GenericListListener, ChangeListener {
-	private static final long serialVersionUID = -2219030309910143737L;
 	JCheckBox checkbox;
 
 	SimplifierConfigConfigurePanel() {
