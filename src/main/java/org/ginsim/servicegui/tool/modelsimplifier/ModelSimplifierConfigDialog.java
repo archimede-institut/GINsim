@@ -33,12 +33,11 @@ import org.ginsim.service.tool.modelsimplifier.RemovedInfo;
 
 
 
-public class ModelSimplifierConfigDialog extends StackDialog implements ListSelectionListener, ReductionLauncher {
+public class ModelSimplifierConfigDialog extends StackDialog implements ReductionLauncher {
 	private static final long	serialVersionUID	= 3618855894072951620L;
 
 	RegulatoryGraph graph;
-	GenericListPanel<ModelSimplifierConfig> lp;
-	SimplifierConfigContentList ctlist;
+    ReductionConfigurationPanel lp;
 	boolean isRunning = false;
 	
 	ModelSimplifierConfigDialog(RegulatoryGraph graph) {
@@ -46,18 +45,8 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
 		this.graph = graph;
 		setTitle("select nodes to remove");
 		
-        ModelSimplifierConfigList cfgList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, ModelSimplifierConfigManager.KEY, true);
-		if (cfgList.getNbElements(null) == 0) {
-			cfgList.add();
-		}
-		ctlist = new SimplifierConfigContentList(graph.getNodeOrder());
-		SimplifierConfigConfigurePanel panel = new SimplifierConfigConfigurePanel();
-        panel.setList(ctlist);
-        Map<Class<?>, Component> m = new HashMap<Class<?>, Component>();
-        m.put(ModelSimplifierConfig.class, panel);
-        lp = new GenericListPanel<ModelSimplifierConfig>(m, "modelSimplifier");
-        lp.addSelectionListener(this);
-        lp.setList(cfgList);
+        lp = ReductionConfigurationPanel.getPanel(graph);
+
 		setMainPanel(lp);
 		setVisible(true);
 	}
@@ -81,11 +70,6 @@ public class ModelSimplifierConfigDialog extends StackDialog implements ListSele
             cancel();
         }
     }
-
-	public void valueChanged(ListSelectionEvent e) {
-		ctlist.mcolHelper = (ModelSimplifierConfig)lp.getSelectedItem();
-		ctlist.refresh();
-	}
 
 	@Override
 	public boolean showPartialReduction(List<RemovedInfo> l_todo) {
@@ -117,41 +101,3 @@ class SimplifierConfigContentList extends SimpleGenericList<RegulatoryNode> {
 	}
 }
 
-class SimplifierConfigConfigurePanel extends GenericListPanel<RegulatoryNode> 
-	implements GenericListListener, ChangeListener {
-	private static final long serialVersionUID = -2219030309910143737L;
-	JCheckBox checkbox;
-	SimplifierConfigConfigurePanel() {
-		GridBagConstraints c = new GridBagConstraints();
-		c.gridx = 1;
-		c.gridy = 0;
-		c.fill = GridBagConstraints.HORIZONTAL;
-		this.checkbox = new JCheckBox("Strict (do not try to remove self-regulated nodes)");
-		add(this.checkbox, c);
-		this.checkbox.addChangeListener(this);
-	}
-	
-	@Override
-    public void setList(GenericList<RegulatoryNode> list) {
-    	super.setList(list);
-    	list.addListListener(this);
-    }
-
-	public void contentChanged() {
-    	if (list.mcolHelper != null) {
-    		checkbox.setSelected(((ModelSimplifierConfig)list.mcolHelper).strict);
-    	}
-	}
-	public void itemAdded(Object item, int pos) {
-	}
-	public void itemRemoved(Object item, int pos) {
-	}
-	public void structureChanged() {
-	}
-
-	public void stateChanged(ChangeEvent e) {
-    	if (list.mcolHelper != null) {
-    		((ModelSimplifierConfig)list.mcolHelper).strict = checkbox.isSelected();
-    	}
-	}
-}
