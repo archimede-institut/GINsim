@@ -2,6 +2,7 @@ package org.ginsim.service.tool.composition;
 
 import java.util.List;
 
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.service.tool.modelsimplifier.ReductionLauncher;
@@ -34,7 +35,6 @@ public class ReductionStub implements ReductionLauncher {
 	 * @see org.ginsim.service.tool.modelsimplifier.ReductionLauncher#endSimu(org
 	 *      .ginsim.core.graph.common.Graph, java.lang.Exception)
 	 */
-	@Override
 	public void endSimu(Graph graph, Exception e) {
 		// TODO: Verify whether graph is in fact a RegulatoryGraph
 		// TODO: Deal with Exception
@@ -51,7 +51,7 @@ public class ReductionStub implements ReductionLauncher {
 	 *      showPartialReduction(java.util.List)
 	 */
 	@Override
-	public boolean showPartialReduction(List<RemovedInfo> l_todo) {
+	public boolean showPartialReduction(List<NodeInfo> l_todo) {
 		return false;
 	}
 

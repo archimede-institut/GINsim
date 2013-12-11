@@ -19,8 +19,9 @@ import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
-import org.ginsim.service.tool.modelsimplifier.ModelSimplifier;
+import org.ginsim.service.tool.modelsimplifier.ReductionTask;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
+import org.ginsim.service.tool.modelsimplifier.ReconstructionTask;
 import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor(Service.class)
@@ -411,11 +412,8 @@ public class CompositionService implements Service {
 			// Mimmick a ReductionLauncher object
 			ReductionStub launcher = new ReductionStub(composedGraph);
 
-			ModelSimplifier simplifier = new ModelSimplifier(composedGraph,
-					simplifierConfig, launcher, false);
-			simplifier.run();
-
-			RegulatoryGraph finalComposedGraph = launcher.getReducedGraph();
+			ReductionTask simplifier = new ReductionTask(composedGraph,	simplifierConfig, null);
+			RegulatoryGraph finalComposedGraph = new ReconstructionTask(simplifier.call(), composedGraph).call();
 
 			return finalComposedGraph;
 		}

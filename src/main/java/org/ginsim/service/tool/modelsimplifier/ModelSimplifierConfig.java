@@ -1,10 +1,10 @@
 package org.ginsim.service.tool.modelsimplifier;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.annotation.Annotation;
@@ -17,7 +17,7 @@ import org.ginsim.core.utils.data.NamedObject;
 public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelper<RegulatoryNode> {
 	private String name;
 	Annotation note = new Annotation();
-	Map<RegulatoryNode, List<RegulatoryNode>> m_removed = new HashMap<RegulatoryNode, List<RegulatoryNode>>();
+	Set<NodeInfo> m_removed = new HashSet<NodeInfo>();
 	public boolean strict = true;
 
 	@Override
@@ -41,7 +41,7 @@ public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelpe
 			return;
 		}
 		String s_removed = "";
-		for (RegulatoryNode v: m_removed.keySet()) {
+		for (NodeInfo v: m_removed) {
 			s_removed += " "+v;
 		}
 		out.openTag("simplificationConfig");
@@ -55,7 +55,7 @@ public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelpe
 	@Override
 	public Object getVal(RegulatoryNode o, int index) {
 		if (index == 1) {
-			return m_removed.containsKey(o) ? Boolean.TRUE : Boolean.FALSE;
+			return m_removed.contains(o.getNodeInfo()) ? Boolean.TRUE : Boolean.FALSE;
 		}
 		return o;
 	}
@@ -63,9 +63,9 @@ public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelpe
 	public boolean setVal(RegulatoryNode vertex, int index, Object value) {
 		if (index == 1) {
 			if (value.equals(Boolean.TRUE)) {
-				m_removed.put(vertex, null);
+				m_removed.add(vertex.getNodeInfo());
 			} else {
-				m_removed.remove(vertex);
+				m_removed.remove(vertex.getNodeInfo());
 			}
 			return true;
 		}
@@ -73,6 +73,11 @@ public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelpe
 	}
 	
 	public void remove(RegulatoryNode vertex) {
-		m_removed.put(vertex, null);
+		m_removed.add(vertex.getNodeInfo());
 	}
+
+    public LogicalModel apply(LogicalModel model) {
+        ReductionTask task = new ReductionTask(model, this);
+        return task.call();
+    }
 }

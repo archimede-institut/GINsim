@@ -1,19 +1,9 @@
 package org.ginsim.service.tool.modelsimplifier;
 
-import java.text.DateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-
+import org.colomoto.common.task.AbstractTask;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
-import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
@@ -36,158 +26,36 @@ import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
-import org.ginsim.servicegui.tool.modelsimplifier.TargetEdgesIterator;
+
+import java.text.DateFormat;
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
- * Build a simplified model, based on a complete one, by removing some nodes.
- * 
- * The first step is to build new MDD for the targets of the removed nodes.
- * If this succeeded (no circuit was removed...), a new regulatory graph is created
- * and all non-removed nodes are copied into it, as well as all remaining interactions.
- * Then the logical parameters of the unaffected nodes are restored.
- * For the affected nodes, some work is required, using the newly built MDD for their logical function:
- * <ul>
- *   <li>new edges are added if needed (coming from the regulators of their deleted regulators)</li> 
- *   <li>new logical parameters are extracted from the MDD</li>
- * </ul>
+ * Reconstruct a Regulatory Graph from a Logical model and restore layout,
+ * comments and metadata from an original graph.
+ * This is used by the reduction tool to show the reduced graph.
+ *
+ * @author Aurelien Naldi
  */
-public class ModelSimplifier extends AbstractModelSimplifier  {
-
-	ReductionLauncher launcher;
+public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
 
 	private final RegulatoryGraph graph;
-	private final List<RegulatoryNode> oldNodeOrder;
-    private final ModelReducer reducer;
+    private final LogicalModel newModel;
 
-	Map<RegulatoryNode,boolean[]> m_edges = new HashMap<RegulatoryNode, boolean[]>();
-	Map<Object, Object> copyMap = new HashMap<Object, Object>();
-	Map<RegulatoryNode, List<RegulatoryNode>> m_removed;
-	
 	String s_comment = "";
-	List<RegulatoryNode> l_removed = new ArrayList<RegulatoryNode>();
 
-	TargetEdgesIterator it_targets;
-	
-	boolean strict;
-
-	public ModelSimplifier(RegulatoryGraph graph, ModelSimplifierConfig config, ReductionLauncher launcher, boolean start) {
-		this.graph = graph;
-		this.oldNodeOrder = graph.getNodeOrder();
-        this.reducer = new ModelReducer(graph.getModel());
-		this.launcher = launcher;
-		this.m_removed = new HashMap<RegulatoryNode, List<RegulatoryNode>>(config.m_removed);
-		this.it_targets = new TargetEdgesIterator(m_removed);
-		this.strict = config.strict;
-		
-		if (start) {
-		    start();
-		}
+	public ReconstructionTask(LogicalModel reducedModel, RegulatoryGraph graph) {
+        this.graph = graph;
+        this.newModel = reducedModel;
 	}
 	
-	/**
-	 * Run the reduction method.
-	 */
-	@Override
-    public void run() {
-		RegulatoryGraph simplifiedGraph = do_reduction();
-        if (simplifiedGraph != null && launcher != null) {
-            launcher.endSimu(simplifiedGraph, null);
-        }
-	}
-	
-    public RegulatoryGraph do_reduction() {
-    	// prepare the list of removal requests
-		List<RemovedInfo> l_todo = new ArrayList<RemovedInfo>();
-		for (RegulatoryNode vertex: m_removed.keySet()) {
-			int index = graph.getNodeOrder().indexOf(vertex);
-			RemovedInfo ri = new RemovedInfo(vertex, index, graph.getOutgoingEdges(vertex));
-			l_todo.add(ri);
-		}
-		
-		
-		// perform the actual reduction
-		l_todo = remove_all(l_todo);
+    public RegulatoryGraph doGetResult() {
+        List<RegulatoryNode> oldNodeOrder = graph.getNodeOrder();
 
-		// the "main" part is done, did it finish or fail ?
-		if (l_todo.size() > 0) {
-			if (launcher != null) {
-				if (!launcher.showPartialReduction(l_todo)) {
-					return null;
-				}
-				
-				for (RemovedInfo ri: l_todo) {
-					m_removed.remove(ri.vertex);
-				}
-				LogManager.trace( "Partial reduction result...");
-			} else {
-				// it failed, trigger an error message
-				StringBuffer sb = new StringBuffer("Reduction failed.\n  Removed: ");
-				for (RegulatoryNode v: l_removed) {
-					sb.append(" "+v);
-				}
-				sb.append("\n  Failed: ");
-				for (RemovedInfo ri: l_todo) {
-					sb.append(" "+ri.vertex);
-				}
-				throw new RuntimeException(sb.toString());
-			}
-		}
-
-		// go ahead and extract the result
-        return extractReducedGraph();
-    }
-    
-    private List<RemovedInfo> remove_all(List<RemovedInfo> l_todo) {
-		// first do the "real" simplification work
-		int todoSize = l_todo.size();
-		int oldSize = todoSize + 1;
-		while (todoSize > 0 && todoSize < oldSize) {
-			oldSize = todoSize;
-			l_todo = remove_batch(l_todo);
-			todoSize = l_todo.size();
-		}
-		return l_todo;
-    }
-	
-    /**
-     * Go through a list of nodes to remove and try to remove all of them.
-     * <p>
-     * It may fail on some removals, in which case it will go on with the others and add them to the list of failed.
-     * 
-     * @param l_todo
-     * @return the list of failed removals.
-     */
-    private List<RemovedInfo> remove_batch(List<RemovedInfo> l_todo) {
-    	LogManager.trace( "batch of removal...");
-    	List<RemovedInfo> l_failed = new ArrayList<RemovedInfo>();
-    	
-		for (RemovedInfo ri: l_todo) {
-            try {
-                RegulatoryNode vertex = ri.vertex;
-                List<RegulatoryNode> targets = new ArrayList<RegulatoryNode>();
-
-                reducer.remove(ri.pos);
-
-                m_removed.put(ri.vertex, new ArrayList<RegulatoryNode>(targets));
-                l_removed.add(vertex);
-            } catch (RuntimeException e) {
-                // this removal failed, remember that we may get a second chance
-                l_failed.add(ri);
-            }
-		}
-    	return l_failed;
-    }
-
-    /**
-     * After the reduction, build a new regulatory graph with the result.
-     * 
-     * @return the reduced graph obtained after reduction
-     */
-    private RegulatoryGraph extractReducedGraph() {
-		// create the new regulatory graph
-        LogicalModel newModel = reducer.getModel(false);
-
+        // create the new regulatory graph
         RegulatoryGraph simplifiedGraph = LogicalModel2RegulatoryGraph.importModel(newModel);
+        Map<Object, Object> copyMap = new HashMap<Object, Object>();
 
 		Annotation note = simplifiedGraph.getAnnotation();
 		note.copyFrom(graph.getAnnotation());
@@ -197,10 +65,6 @@ public class ModelSimplifier extends AbstractModelSimplifier  {
 					", by removing the following nodes: "+s_comment.substring(2)+
 					"\n\n"+note.getComment());
 		}
-
-        if (false) {
-            return simplifiedGraph;
-        }
 
 		//GsGraphManager<RegulatoryNode, RegulatoryMultiEdge> simplifiedManager = simplifiedGraph.getGraphManager();
 		List<RegulatoryNode> simplified_nodeOrder = simplifiedGraph.getNodeOrder();

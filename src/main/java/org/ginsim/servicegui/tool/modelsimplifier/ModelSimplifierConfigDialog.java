@@ -4,24 +4,28 @@ import java.util.List;
 
 import javax.swing.JOptionPane;
 
-import org.ginsim.commongui.dialog.GUIMessageUtils;
-import org.ginsim.core.graph.common.Graph;
+import org.colomoto.common.task.Task;
+import org.colomoto.common.task.TaskListener;
+import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.SimpleGenericList;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
-import org.ginsim.service.tool.modelsimplifier.ModelSimplifier;
+import org.ginsim.service.tool.modelsimplifier.ReductionTask;
+import org.ginsim.service.tool.modelsimplifier.ReconstructionTask;
 import org.ginsim.service.tool.modelsimplifier.ReductionLauncher;
-import org.ginsim.service.tool.modelsimplifier.RemovedInfo;
 
 
-
-public class ModelSimplifierConfigDialog extends StackDialog implements ReductionLauncher {
+public class ModelSimplifierConfigDialog extends StackDialog implements ReductionLauncher, TaskListener {
 	private static final long	serialVersionUID	= 3618855894072951620L;
 
 	private final RegulatoryGraph graph;
     private final ReductionConfigurationPanel lp;
+
+    ReductionTask simplifier = null;
+    ReconstructionTask reconstructionTask = null;
 
     private boolean isRunning = false;
 	
@@ -38,26 +42,37 @@ public class ModelSimplifierConfigDialog extends StackDialog implements Reductio
 	
 	protected void run() {
 		if (!isRunning && lp.getSelectedItem() != null) {
-			isRunning = true;
-			new ModelSimplifier(graph, lp.getSelectedItem(), this, true);
-	        brun.setEnabled(false);
+			simplifier = new ReductionTask(graph, lp.getSelectedItem(), this);
+            simplifier.background(this);
+            isRunning = true;
+            brun.setEnabled(false);
 		}
 	}
 	
 	@Override
-	public void endSimu( Graph graph, Exception e) {
-    	isRunning = false;
-        if (null == graph) {
-            GUIMessageUtils.openErrorDialog(e.getMessage(), GUIManager.getInstance().getFrame(graph));
-            brun.setEnabled(true);
-        } else {
-            GUIManager.getInstance().whatToDoWithGraph(graph, this.graph, false);
+    public void taskUpdated(Task task) {
+        if (task == null) {
+            return;
+        }
+
+        if (task == simplifier) {
+            LogicalModel model = simplifier.getResult();
+            simplifier = null;
+            reconstructionTask = new ReconstructionTask(model, graph);
+            reconstructionTask.background(this);
+            return;
+        }
+
+        if (task == reconstructionTask) {
+    	    isRunning = false;
+            RegulatoryGraph newGraph = reconstructionTask.getResult();
+            GUIManager.getInstance().whatToDoWithGraph(newGraph, this.graph, false);
             cancel();
         }
     }
 
 	@Override
-	public boolean showPartialReduction(List<RemovedInfo> l_todo) {
+	public boolean showPartialReduction(List<NodeInfo> l_todo) {
 
         int choice = JOptionPane.showConfirmDialog(this, "show result of partial reduction?", "Reduction failed",
 				JOptionPane.YES_NO_OPTION, JOptionPane.ERROR_MESSAGE);
@@ -69,6 +84,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements Reductio
 		}
 		return true;
 	}
+
 }
 
 

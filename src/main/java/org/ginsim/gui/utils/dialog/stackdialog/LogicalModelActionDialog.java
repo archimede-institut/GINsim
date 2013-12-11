@@ -189,8 +189,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         }
 
         if (getReduction() != null) {
-            // TODO: apply reduction
-            // model = getReduction().apply(model);
+            model = getReduction().apply(model);
         }
 
 		if (cb_simplify.isSelected()) {
