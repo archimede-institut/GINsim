@@ -22,6 +22,7 @@ public class ModelSimplifierConfigList extends NamedList<ModelSimplifierConfig>
     private String s_current;
     private RegulatoryGraph graph;
     private Set<String> outputStrippers = new HashSet<String>();
+    private Map<String, ModelSimplifierConfig> users = new HashMap<String, ModelSimplifierConfig>();
     
     public ModelSimplifierConfigList( RegulatoryGraph graph) {
     	
@@ -52,20 +53,33 @@ public class ModelSimplifierConfigList extends NamedList<ModelSimplifierConfig>
 		}
         return null;
 	}
-	
-	public void setStrippingOutput(String key, boolean use) {
-		if (!use) {
-			outputStrippers.remove(key);
-		} else {
-			outputStrippers.add(key);
-		}
-	}
-	
-	public boolean isStrippingOutput(String key) {
-		return outputStrippers.contains(key);
-	}
-	
-	protected Collection<String> getOutputStrippingUsers() {
+
+    public void setStrippingOutput(String key, boolean use) {
+        if (!use) {
+            outputStrippers.remove(key);
+        } else {
+            outputStrippers.add(key);
+        }
+    }
+
+    public boolean isStrippingOutput(String key) {
+        return outputStrippers.contains(key);
+    }
+
+    public void useReduction(String key, ModelSimplifierConfig reduction) {
+        if (reduction == null) {
+            users.remove(key);
+        } else {
+            users.put(key, reduction);
+        }
+    }
+
+    public ModelSimplifierConfig getUsedReduction(String key) {
+        return users.get(key);
+    }
+
+
+    protected Collection<String> getOutputStrippingUsers() {
 		return outputStrippers;
 	}
 

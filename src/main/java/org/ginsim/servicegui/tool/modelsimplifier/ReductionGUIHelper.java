@@ -1,5 +1,6 @@
 package org.ginsim.servicegui.tool.modelsimplifier;
 
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.guihelpers.GUIHelper;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
@@ -11,13 +12,13 @@ import java.awt.*;
 @GUIFor(ModelSimplifierConfigList.class)
 public class ReductionGUIHelper implements GUIHelper<ModelSimplifierConfigList> {
 
-	public static Component getPerturbationPanel(ModelSimplifierConfigList reductions) {
+	public static ReductionConfigurationPanel getReductionPanel(ModelSimplifierConfigList reductions) {
         return new ReductionConfigurationPanel(reductions);
 	}
-	
+
 	@Override
-	public Component getPanel(ModelSimplifierConfigList o) {
-		return getPerturbationPanel(o);
+	public Component getPanel(ModelSimplifierConfigList reductions) {
+		return getReductionPanel(reductions);
 	}
 
 	@Override

@@ -24,19 +24,25 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigManager;
+import org.ginsim.service.tool.modelsimplifier.ReductionHolder;
+import org.ginsim.servicegui.tool.modelsimplifier.ReductionGUIHelper;
+import org.ginsim.servicegui.tool.modelsimplifier.ReductionSelectionPanel;
 
-abstract public class LogicalModelActionDialog extends StackDialog implements ProgressListener, PerturbationHolder, ChangeListener {
+abstract public class LogicalModelActionDialog extends StackDialog implements ProgressListener, PerturbationHolder, ReductionHolder, ChangeListener {
 
 	private static final ObjectAssociationManager OManager = ObjectAssociationManager.getInstance();
 	
 	protected final RegulatoryGraph lrg;
 	private final ListOfPerturbations perturbations;
-	private final ModelSimplifierConfigList simplifierConfig;
-	private final PerturbationSelectionPanel perturbationPanel;
-	
+	private final ModelSimplifierConfigList reductions;
+    private final PerturbationSelectionPanel perturbationPanel;
+    private final ReductionSelectionPanel reductionPanel;
+
 	private Perturbation perturbation = null;
+    private ModelSimplifierConfig reduction = null;
 	private String userID = null;
 
 	private JPanel mainPanel = new JPanel(new GridBagLayout());
@@ -46,8 +52,9 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         super(parent, id, w, h);
         this.lrg = lrg;
         this.perturbations = (ListOfPerturbations)OManager.getObject(lrg, PerturbationManager.KEY, true);
-        this.simplifierConfig = (ModelSimplifierConfigList)OManager.getObject(lrg, ModelSimplifierConfigManager.KEY, true);
+        this.reductions = (ModelSimplifierConfigList)OManager.getObject(lrg, ModelSimplifierConfigManager.KEY, true);
         perturbationPanel = new PerturbationSelectionPanel(this, lrg, this);
+        reductionPanel = new ReductionSelectionPanel(this, lrg, this);
         super.setMainPanel(getMainPanel());
 
         cb_simplify.addChangeListener(this);
@@ -66,23 +73,33 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
     protected void setUserID(String userID) {
     	this.userID = userID;
     	perturbationPanel.refresh();
-    	cb_simplify.setSelected( simplifierConfig.isStrippingOutput(userID) );
+        reductionPanel.refresh();
+    	cb_simplify.setSelected(reductions.isStrippingOutput(userID));
     }
     
     private JPanel getMainPanel() {
 
-		// simplification checkbox
-    	GridBagConstraints c = new GridBagConstraints();
-		mainPanel.add(cb_simplify, c);
+        GridBagConstraints c = new GridBagConstraints();
 
-		// mutant panel
-		c = new GridBagConstraints();
-		c.gridx = 1;
+        // perturbation panel
+        c.weightx = 1;
+        c.gridwidth = 2;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        mainPanel.add(perturbationPanel, c);
+
+        // reduction panel
+        c.gridy = 1;
 		c.weightx = 1;
+        c.gridwidth = 1;
 		c.fill = GridBagConstraints.HORIZONTAL;
-		mainPanel.add(perturbationPanel, c);
+		mainPanel.add(reductionPanel, c);
 
-		return mainPanel;
+        // simplification checkbox
+        c.gridx = 1;
+        c.weightx = 0;
+        mainPanel.add(cb_simplify, c);
+
+        return mainPanel;
     }
     
     public void setProgress(int n) {
@@ -114,10 +131,28 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 		}
 	}
 
+    @Override
+    public ModelSimplifierConfig getReduction() {
+        if (userID != null) {
+            return reductions.getUsedReduction(userID);
+        }
+        return reduction;
+    }
+
+    @Override
+    public void setReduction(ModelSimplifierConfig reduction) {
+        if (userID != null) {
+            reductions.useReduction(userID, reduction);
+        } else {
+            this.reduction = reduction;
+        }
+    }
+
+
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		if (userID != null) {
-			simplifierConfig.setStrippingOutput(userID, cb_simplify.isSelected());
+            reductions.setStrippingOutput(userID, cb_simplify.isSelected());
 		}
 	}
 	
@@ -130,12 +165,12 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	/**
 	 * Intercept the setMainPanel method to integrate with this frame's panel
 	 * 
-	 * @param model
+	 * @param panel
 	 */
 	@Override
 	public void setMainPanel(Component panel) {
 		GridBagConstraints c = new GridBagConstraints();
-		c.gridy = 1;
+		c.gridy = 2;
 		c.gridwidth = 2;
 		c.weightx = 1;
 		c.weighty = 1;
@@ -148,11 +183,16 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	@Override
 	protected void run() throws GsException {
 		LogicalModel model = lrg.getModel();
-		
-		if (getPerturbation() != null) {
-			model = getPerturbation().apply(model);
-		}
-		
+
+        if (getPerturbation() != null) {
+            model = getPerturbation().apply(model);
+        }
+
+        if (getReduction() != null) {
+            // TODO: apply reduction
+            // model = getReduction().apply(model);
+        }
+
 		if (cb_simplify.isSelected()) {
 			ModelReducer reducer = new ModelReducer(model);
 			reducer.removePseudoOutputs();

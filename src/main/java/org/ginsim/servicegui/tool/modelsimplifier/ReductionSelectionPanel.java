@@ -27,7 +27,7 @@ public class ReductionSelectionPanel extends ListSelectionPanel<ModelSimplifierC
     private final ReductionHolder holder;
 
 	public ReductionSelectionPanel(StackDialog dialog, RegulatoryGraph graph, ReductionHolder holder) {
-		super(dialog, Translator.getString("STR_mutants"));
+		super(dialog, "Select a reduction");
 		
 		this.graph = graph;
 		this.holder = holder;
@@ -35,12 +35,12 @@ public class ReductionSelectionPanel extends ListSelectionPanel<ModelSimplifierC
         GraphGUI<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> gui = GUIManager.getInstance().getGraphGUI(graph);
         gui.addGraphGUIListener(this);
 
-        initialize(Translator.getString("STR_mutants"), true);
+        initialize("Select a reduction", true);
 	}
 	
 	@Override
 	public void configure() {
-		Component panel = ReductionGUIHelper.getPerturbationPanel(getPerturbationsObject(true));
+		Component panel = ReductionGUIHelper.getReductionPanel(getPerturbationsObject(true));
         dialog.addTempPanel(panel);
 	}
 
