@@ -25,19 +25,9 @@ public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation, L
     }
 
     private PerturbationPanelListHelper() {
-        canOrder = true;
+        // private constructor
+        canOrder = false;
     }
-
-	@Override
-	public boolean doRemove(ListOfPerturbations perturbations, int[] sel) {
-		List<Perturbation> removed = new ArrayList<Perturbation>();
-		for (int i=0 ; i< sel.length ; i++) {
-			removed.add(perturbations.get(sel[i]));
-		}
-		
-		perturbations.removePerturbation(removed);
-        return true;
-	}
 
     @Override
     public PerturbationPanelCompanion getCompanion(ListEditionPanel<Perturbation, ListOfPerturbations> editPanel) {
@@ -97,7 +87,10 @@ class PerturbationPanelCompanion implements ListPanelCompanion<Perturbation, Lis
             return;
         }
         if (selection == null || selection.length < 1) {
-            create(perturbations, null);
+            if (editPanel != null) {
+                editPanel.showPanel(CREATE);
+                refresh();
+            }
             return;
         }
 
@@ -114,16 +107,37 @@ class PerturbationPanelCompanion implements ListPanelCompanion<Perturbation, Lis
             editPanel.refresh();
         }
     }
+
+    public void addMultiple(int[] selected) {
+        List<Perturbation> lselected = new ArrayList<Perturbation>();
+        for (int i: selected) {
+            lselected.add(perturbations.get(i));
+        }
+        perturbations.addMultiplePerturbation(lselected);
+        refresh();
+    }
+
+    public boolean doRemove(int[] sel) {
+        // TODO: smart removal
+
+        List<Perturbation> removed = new ArrayList<Perturbation>();
+        for (int i=0 ; i< sel.length ; i++) {
+            removed.add(perturbations.get(sel[i]));
+        }
+
+        perturbations.removePerturbation(removed);
+        return true;
+    }
 }
 
 class MultipleSelectionPanel extends JPanel {
 
-	private final PerturbationPanelCompanion helper;
+	private final PerturbationPanelCompanion companion;
 	JButton btn = new JButton();
 	JLabel label = new JLabel();
 	
-	public MultipleSelectionPanel(PerturbationPanelCompanion helper) {
-		this.helper = helper;
+	public MultipleSelectionPanel(PerturbationPanelCompanion companion) {
+		this.companion = companion;
 		add(label);
 		add(btn);
 		select(-1);
@@ -141,7 +155,7 @@ class MultipleSelectionPanel extends JPanel {
 
 	public void select(ListOfPerturbations perturbations, int[] indices) {
 		label.setText("Selected: "+indices.length + " perturbations. TODO: show info");
-		Action createAction = new AddMultiplePerturbationAction(perturbations, indices);
+		Action createAction = new AddMultiplePerturbationAction(companion, indices);
 		btn.setAction(createAction);
 		btn.setEnabled(true);
 		btn.setVisible(true);
@@ -151,23 +165,17 @@ class MultipleSelectionPanel extends JPanel {
 
 class AddMultiplePerturbationAction extends AbstractAction {
 	
-	private final ListOfPerturbations perturbations;
+	private final PerturbationPanelCompanion companion;
 	private final int[] selected;
 	
-	public AddMultiplePerturbationAction(ListOfPerturbations perturbations, int[] selected) {
+	public AddMultiplePerturbationAction(PerturbationPanelCompanion companion, int[] selected) {
 		super("Create multiple perturbation");
-		this.perturbations = perturbations;
+		this.companion = companion;
 		this.selected = selected;
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		List<Perturbation> lselected = new ArrayList<Perturbation>();
-		for (int i: selected) {
-			lselected.add(perturbations.get(i));
-		}
-		perturbations.addMultiplePerturbation(lselected);
-        // TODO: refresh
+        companion.addMultiple(selected);
 	}
-
 }

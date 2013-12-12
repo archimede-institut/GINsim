@@ -12,6 +12,7 @@ import org.ginsim.gui.utils.widgets.SplitPane;
 
 public class ListEditionPanel<T,L extends List<T>> extends SplitPane {
 
+    private final Object associated;
 	private final CardLayout cards = new CardLayout();
 	private final JPanel mainPanel = new JPanel(cards);
 	private final Map<String, Component> m_panels = new HashMap<String, Component>();
@@ -19,8 +20,12 @@ public class ListEditionPanel<T,L extends List<T>> extends SplitPane {
 	private final ListPanel<T,L> listPanel;
     private final ListPanelCompanion companion;
 
-	public ListEditionPanel(ListPanelHelper<T,L> helper, L list, String title) {
-		
+    public ListEditionPanel(ListPanelHelper<T,L> helper, L list, String title) {
+        this(helper, list, title, null);
+    }
+
+	public ListEditionPanel(ListPanelHelper<T,L> helper, L list, String title, Object associated) {
+		this.associated = associated;
 		listPanel = new ListPanel<T,L>(helper, title, this);
 		listPanel.setList(list);
 		setLeftComponent( listPanel);
@@ -68,5 +73,9 @@ public class ListEditionPanel<T,L extends List<T>> extends SplitPane {
 
     public void refresh() {
         listPanel.refresh();
+    }
+
+    public Object retrieveAssociated() {
+        return associated;
     }
 }
