@@ -10,26 +10,27 @@ import javax.swing.JPanel;
 
 import org.ginsim.gui.utils.widgets.SplitPane;
 
-public class ListEditionPanel<T> extends SplitPane {
+public class ListEditionPanel<T,L extends List<T>> extends SplitPane {
 
-	private CardLayout cards = new CardLayout();
-	private JPanel mainPanel = new JPanel(cards);
-	private final ListPanelHelper<T> helper;
+	private final CardLayout cards = new CardLayout();
+	private final JPanel mainPanel = new JPanel(cards);
 	private final Map<String, Component> m_panels = new HashMap<String, Component>();
 	private final Map<String, String> m_cardAliases = new HashMap<String, String>();
-	private final ListPanel<T> listPanel;
+	private final ListPanel<T,L> listPanel;
+    private final ListPanelCompanion companion;
 
-	public ListEditionPanel(ListPanelHelper<T> helper, List<T> list, String title) {
+	public ListEditionPanel(ListPanelHelper<T,L> helper, L list, String title) {
 		
-		this.helper = helper;
-		listPanel = new ListPanel<T>(helper, title);
+		listPanel = new ListPanel<T,L>(helper, title, this);
 		listPanel.setList(list);
 		setLeftComponent( listPanel);
-	}
 
-	public void init() {
-		helper.setEditPanel(this);
-		setRightComponent(mainPanel);
+        companion = helper.getCompanion(this);
+        if (companion != null) {
+            companion.setList(list);
+        	setRightComponent(mainPanel);
+            companion.selectionUpdated(getSelection());
+        }
 	}
 	
 	public void addPanel(Component panel, String name) {
@@ -58,5 +59,14 @@ public class ListEditionPanel<T> extends SplitPane {
     public T getSelectedItem() {
         return listPanel.getSelectedItem();
     }
-}
 
+    public void selectionUpdated(int[] sel) {
+        if (companion != null) {
+            companion.selectionUpdated(sel);
+        }
+    }
+
+    public void refresh() {
+        listPanel.refresh();
+    }
+}

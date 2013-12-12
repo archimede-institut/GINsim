@@ -1,6 +1,9 @@
 package org.ginsim.gui.utils.data;
 
+import org.ginsim.core.utils.data.NamedList;
+
 import java.awt.Component;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 
@@ -14,108 +17,141 @@ import javax.swing.JLabel;
  * @author Aurelien Naldi
  * @param <T> the type of objects in the list
  */
-abstract public class ListPanelHelper<T> {
+abstract public class ListPanelHelper<T, L extends List<T>> {
 	
 	public static final String SEL_EMPTY="SEL_EMPTY", SEL_SINGLE="SEL_SINGLE", SEL_MULTIPLE="SEL_MULTIPLE";
-	
-	public int nbAction = 0;
-	
-	public int nbcol = 1;
-	
+
+    private static final String NAME_CREATE = "doCreate";
+    private static final String NAME_ADDINLINE = "addInline";
+    private static final String NAME_RENAME = "rename";
+    private static final String NAME_REMOVE = "doRemove";
+    private static final String NAME_COLUMN = "getColumnName";
+
+    private static final ColumnDefinition[] DEFAULT_COLUMN = new ColumnDefinition[] {ColumnDefinition.SINGLE};
+
 	public Map<Class<?>, Component> m_right = null;
 
 	public boolean canFilter = true;
 	public boolean canOrder = true;
-	public boolean canAdd = true;
-	public boolean doInlineAddRemove = false;
-	
+
+    // Auto-detected capabilities
+    private final boolean hasNamedColumn;
+	private final boolean canAdd;
+    private final boolean canAddInline;
+    private final boolean canRename;
+    private final boolean canRemove;
+
 	List<String> addOptions = null;
 
-	public boolean canRemove = true;
+    public ListPanelHelper() {
 
-	public ListEditionPanel<T> editPanel = null;
-	public ListPanel<T> listPanel = null;
-
-	public Object getColumn(T o, int column) {
-		return o;
-	}
-	
-	public String getColumnName(int column) {
-		return "C"+column;
-	}
-
-	public void runAction(int row, int col) {
-	}
-
-	public Class getColumnClass(int i) {
-		return String.class;
-	}
-
-	public Object getAction(int row, int col) {
-		return null;
-	}
-	
-	public Object[] getCreateTypes() {
-		return null;
-	}
-
-    public int doCreate(Object arg) {
-        return -1;
-    }
-
-    public void create(Object arg) {
-        int idx = doCreate(arg);
-        if (idx > -1 && listPanel != null) {
-            listPanel.refresh();
-            listPanel.selectItem(idx);
+        // Detect capabilities based on overridden methods
+        boolean canAdd = false;
+        boolean canAddInline = false;
+        boolean canRename = false;
+        boolean canRemove = false;
+        boolean hasNamedColumn = false;
+        Class cl = getClass();
+        for (Method m: cl.getMethods()) {
+            if (m.getDeclaringClass() != cl) {
+                continue;
+            }
+            if (m.getName() == NAME_CREATE) {
+                canAdd = true;
+            } else if (m.getName() == NAME_ADDINLINE) {
+                canAddInline = true;
+            } else if (m.getName() == NAME_RENAME) {
+                canRename = true;
+            } else if (m.getName() == NAME_REMOVE) {
+                canRemove = true;
+            } else if (m.getName() == NAME_COLUMN) {
+                hasNamedColumn = true;
+            }
         }
+
+        // save capabilities
+        this.canAdd = canAdd;
+        this.canAddInline = canAddInline;
+        this.canRename = canRename;
+        this.canRemove = canRemove;
+        this.hasNamedColumn = hasNamedColumn;
     }
 
-	public void selectionChanged(int[] selection) {
-		if (editPanel == null) {
-			return;
-		}
-		if (selection == null) {
-			selection = listPanel.getSelection();
-		}
-		selectionUpdated(selection);
-	}
-	
-	abstract public void selectionUpdated(int[] selection);
+    public int create(L list, Object arg) {
+        return doCreate(list, arg);
+    }
 
-	public void refresh() {
-		if (listPanel != null) {
-			listPanel.refresh();
-		}
-	}
-	
-	public void setListPanel(ListPanel<T> listPanel) {
-		this.listPanel = listPanel;
-	}
-	
-	public void setEditPanel(ListEditionPanel<T> editPanel) {
-		this.editPanel = editPanel;
-		fillEditPanel();
-		selectionChanged(null);
-	}
-	
-	public abstract void fillEditPanel();
-		
-	public boolean doRemove(int[] sel) {
-        return false;
-	}
-	
-	public boolean remove(int[] sel) {
+	public boolean remove(L list, int[] sel) {
 		if (sel == null || sel.length < 1 || !canRemove) {
 			return false;
 		}
 		
-		if (doRemove(sel)) {
-			refresh();
-            listPanel.selectItem(sel[0]-1);
+		if (doRemove(list, sel)) {
 			return true;
 		}
 		return false;
 	}
-	
+
+
+    /* *************************************************************************
+     *                       DECLARE CAPABILITIES
+     *****************************************************************************/
+    public boolean canCreate() {
+        return canAdd;
+    }
+    public boolean canAddInline() {
+        return canAddInline;
+    }
+    public boolean canRename() {
+        return canRename;
+    }
+    public boolean canRemove() {
+        return canRemove;
+    }
+    public boolean hasNamedColumn() {
+        return hasNamedColumn;
+    }
+
+
+    /* ***************************************************************************
+     *     The following methods should be overridden to extend capabilities
+     *****************************************************************************/
+    public ColumnDefinition[] getColumns() {
+        return DEFAULT_COLUMN;
+    }
+
+    public String[] getActionLabels() {
+        return new String[0];
+    }
+
+    public Object[] getCreateTypes() {
+        return null;
+    }
+
+    public Object getValue(L list, T o, int column) {
+        return o;
+    }
+    public boolean setValue(L list, int row, int column, Object value) {
+        if (column == 0 && list instanceof NamedList) {
+            return ((NamedList) list).rename(row, value.toString());
+        }
+        return false;
+    }
+    public int doCreate(L list, Object arg) {
+        return -1;
+    }
+
+    public int addInline(L list, String s) {
+        return -1;
+    }
+
+    public ListPanelCompanion getCompanion(ListEditionPanel<T,L> editPanel) {
+        return null;
+    }
+
+    public void runAction(L list, int row, int col) {}
+
+    public boolean doRemove(L list, int[] sel) {
+        return false;
+    }
 }

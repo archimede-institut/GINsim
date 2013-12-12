@@ -21,8 +21,8 @@ import org.ginsim.gui.utils.data.ListPanelHelper;
  */
 public class PerturbationPanel extends JPanel {
 	
-	private final ListEditionPanel<Perturbation> spanel;
-	private final ListPanel<Perturbation> mpanel;
+	private final ListEditionPanel<Perturbation, ListOfPerturbations> spanel;
+	private final ListPanel<Perturbation, List<Perturbation>> mpanel;
 	private final PerturbationPanelListHelper helper;
 	private final MultipleListHelper mhelper;
 	
@@ -31,9 +31,8 @@ public class PerturbationPanel extends JPanel {
 		super(new GridBagLayout());
 		GridBagConstraints cst;
 		
-		helper = new PerturbationPanelListHelper(perturbations, this);
-		spanel = new ListEditionPanel<Perturbation>(helper, perturbations.getSimplePerturbations(), "Perturbations");
-		spanel.init();
+		helper = PerturbationPanelListHelper.getHelper();
+		spanel = new ListEditionPanel<Perturbation, ListOfPerturbations>(helper, perturbations, "Perturbations");
 		cst = new GridBagConstraints();
 		cst.weightx = 1;
 		cst.weighty = 0.5;
@@ -41,7 +40,7 @@ public class PerturbationPanel extends JPanel {
 		add(spanel, cst);
 
 		mhelper = new MultipleListHelper(perturbations);
-		mpanel = new ListPanel<Perturbation>(mhelper, "Perturbations");
+		mpanel = new ListPanel<Perturbation,List<Perturbation>>(mhelper, "Perturbations");
 		mpanel.setList(perturbations.getMultiplePerturbations());
 		cst = new GridBagConstraints();
 		cst.gridy = 1;
@@ -60,13 +59,12 @@ public class PerturbationPanel extends JPanel {
 	}
 }
 
-class MultipleListHelper extends ListPanelHelper<Perturbation> {
+class MultipleListHelper extends ListPanelHelper<Perturbation, List<Perturbation>> {
 	
 	ListOfPerturbations perturbations;
 	
 	public MultipleListHelper(ListOfPerturbations perturbations) {
 		this.perturbations = perturbations;
-		this.canAdd = false;
 	}
 	
 	public boolean doRemove(int[] sel) {
@@ -79,13 +77,4 @@ class MultipleListHelper extends ListPanelHelper<Perturbation> {
 		perturbations.removePerturbation(removed);
         return true;
 	}
-
-	@Override
-	public void selectionUpdated(int[] selection) {
-	}
-
-	@Override
-	public void fillEditPanel() {
-	}
-
 }

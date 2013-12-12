@@ -30,8 +30,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.core.utils.data.MultiColObject;
-import org.ginsim.core.utils.data.NamedList;
-import org.ginsim.core.utils.data.NamedObject;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.SplitPane;
 import org.ginsim.gui.utils.widgets.StockButton;
@@ -44,16 +42,16 @@ import org.ginsim.gui.utils.widgets.StockButton;
  * capabilities and methods to alter the list.
  * It can be used as part of a ListEditionPanel.
  */
-public class ListPanel<T> extends JPanel 
+public class ListPanel<T, L extends List<T>> extends JPanel
 	implements ListSelectionListener {
     
 	JScrollPane sp = new JScrollPane();
-    protected List<T> list;
-    protected final ListPanelHelper<T> helper;
+    protected final ListPanelHelper<T, L> helper;
+    protected L list = null;
 
-    private final SimpleListModel<T> model = new SimpleListModel<T>();
-    private final EnhancedJTable jl = new EnhancedJTable(model);
-    boolean rendererInstalled = false;
+    private final SimpleListModel<T,L> model;
+    private final EnhancedJTable jl;
+    private final ListEditionPanel<T,L> editionPanel;
     int autohide = -1;
     
     JButton b_up;
@@ -65,15 +63,29 @@ public class ListPanel<T> extends JPanel
     protected JPanel p_right;
     protected JPanel targetpanel;
     protected CardLayout cards;
-    
 
 	// TODO: fix ugly hack for the size of the action column
-    int bsize = 25;
-    
-    public ListPanel(ListPanelHelper<T> helper, String name) {
+    static final int actionSize = 30;
+    static final int boolSize = 30;
+
+    public ListPanel(ListPanelHelper<T,L> helper, String name) {
+        this(helper, name, null);
+    }
+
+    public ListPanel(ListPanelHelper<T,L> helper, String name, ListEditionPanel editionPanel) {
     	this.helper = helper;
+        this.editionPanel = editionPanel;
+
+        model = new SimpleListModel<T,L>(helper);
+        jl = new EnhancedJTable(model);
     	jl.addActionListener(model);
-    	jl.getSelectionModel().addListSelectionListener(this);
+        jl.getSelectionModel().addListSelectionListener(this);
+
+        // Hide column names if none is provided
+        if (!helper.hasNamedColumn()) {
+            jl.setTableHeader(null);
+        }
+
     	targetpanel = this;
     	if (helper.m_right != null) {
     		setLayout(new GridLayout());
@@ -143,7 +155,11 @@ public class ListPanel<T> extends JPanel
         c.gridx = 2;
         c.gridy = 2;
         b_add = new StockButton("list-add.png", true);
-        b_add.addActionListener(new AddAction(helper));
+        b_add.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                doAdd(e);
+            }
+        });
         targetpanel.add(b_add, c);
         
         c = new GridBagConstraints();
@@ -167,8 +183,6 @@ public class ListPanel<T> extends JPanel
             }
         });
         targetpanel.add(b_down, c);
-        
-        helper.setListPanel(this);
     }
 
     /**
@@ -214,26 +228,10 @@ public class ListPanel<T> extends JPanel
     }
 
     /**
-     * add a selection listener for this list
-     * @param listener
-     */
-    public void addSelectionListener(ListSelectionListener listener) {
-        jl.getSelectionModel().addListSelectionListener(listener);
-    }
-    
-    /**
-     * remove a selection listener for this list
-     * @param listener
-     */
-    public void removeSelectionListener(ListSelectionListener listener) {
-        jl.getSelectionModel().removeListSelectionListener(listener);
-    }
-    
-    /**
      * set the list to show.
      * @param list
      */
-    public void setList(List<T> list) {
+    public void setList(L list) {
         this.list = list;
         if (list == null) {
             b_up.setVisible(false);
@@ -249,14 +247,26 @@ public class ListPanel<T> extends JPanel
         
         b_up.setVisible(helper.canOrder);
         b_down.setVisible(helper.canOrder);
-        b_add.setVisible(helper.canAdd && !helper.doInlineAddRemove);
-        
-        b_del.setVisible(helper.canRemove && !helper.doInlineAddRemove);
+        b_add.setVisible(helper.canCreate());
+        b_del.setVisible(helper.canRemove());
+
         if (list.size() > 0) {
             jl.getSelectionModel().setSelectionInterval(0, 0);
         }
-        for (int i=0 ; i<helper.nbAction ; i++) {
-        	jl.getColumnModel().getColumn(i).setMaxWidth(bsize);
+
+        String[] labels = helper.getActionLabels();
+        int i=0;
+        if (labels != null) {
+            for ( ; i<labels.length ; i++) {
+                jl.getColumnModel().getColumn(i).setMaxWidth(actionSize);
+            }
+        }
+
+        for (ColumnDefinition cdef: helper.getColumns()) {
+            if (cdef.type == Boolean.class) {
+                jl.getColumnModel().getColumn(i).setMaxWidth(boolSize);
+            }
+            i++;
         }
     }
     
@@ -294,7 +304,7 @@ public class ListPanel<T> extends JPanel
 
     
 	protected void doMoveUp() {
-        if (list == null) {
+        if (list == null || !helper.canOrder) {
             return;
         }
         int[] index = jl.getSelectedRows();
@@ -322,7 +332,7 @@ public class ListPanel<T> extends JPanel
     }
 	
     private void doMoveDown() {
-        if (list == null) {
+        if (list == null || !helper.canOrder) {
             return;
         }
         int[] index=jl.getSelectedRows();
@@ -350,13 +360,56 @@ public class ListPanel<T> extends JPanel
     }
     
     private void doRemove() {
-        if (list == null || !helper.canRemove) {
+        if (list == null || !helper.canRemove()) {
             return;
         }
         int[] sel = jl.getSelectedRows();
         
-        helper.remove(sel);
+        helper.remove(list, sel);
         refresh();
+    }
+
+    protected void doAdd(ActionEvent e) {
+        // Note: here I would love to hide the menu if it is visible...
+        // but menu.isVisible() seems to always returns false! Not worth the extra headache!
+
+        Object[] modes = helper.getCreateTypes();
+        if (modes == null || modes.length < 1) {
+            doCreate(null);
+            return;
+        }
+
+        if (modes.length == 1) {
+            doCreate(modes[0]);
+            return;
+        }
+
+        // several possibilities, build a menu for them!
+        JPopupMenu menu = new JPopupMenu();
+        for (Object o: modes) {
+            Action action = null;
+            if (o instanceof Action) {
+                action = (Action)o;
+            } else {
+                action = new CreateModeAction(this, o);
+            }
+            menu.add(action);
+        }
+
+        Object src = e.getSource();
+        if (src instanceof Component) {
+            Component dropdown = (Component)src;
+            menu.show(dropdown, 0, dropdown.getHeight());
+            return;
+        }
+    }
+
+    protected void doCreate(Object mode) {
+        int idx = helper.create(list, mode);
+        if (idx > -1) {
+            refresh();
+            selectItem(idx);
+        }
     }
 
     /**
@@ -368,6 +421,9 @@ public class ListPanel<T> extends JPanel
     }
     
     private void refreshHide() {
+        if (list == null) {
+            return;
+        }
         if (list.size() <= autohide) {
             if (sp.isVisible()) {
                 sp.setVisible(false);
@@ -387,96 +443,65 @@ public class ListPanel<T> extends JPanel
 
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
-		int[] sel = jl.getSelectedRows();
-		helper.selectionChanged(sel);
+        if (editionPanel != null) {
+		    int[] sel = jl.getSelectedRows();
+		    editionPanel.selectionUpdated(sel);
+        }
 	}
 	
 }
 
-class AddAction extends AbstractAction {
 
-	private final ListPanelHelper helper;
-	
-	public AddAction(ListPanelHelper helper) {
-		this.helper = helper;
-	}
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// Note: here I would love to hide the menu if it is visible...
-		// but menu.isVisible() seems to always returns false! Not worth the extra headache!
-		
-		Object[] modes = helper.getCreateTypes();
-		if (modes == null || modes.length < 1) {
-			helper.create(null);
-			return;
-		}
-		
-		if (modes.length == 1) {
-			helper.create(modes[0]);
-			return;
-		}
-		
-		// several possibilities, build a menu for them!
-		JPopupMenu menu = new JPopupMenu();
-		for (Object o: modes) {
-			Action action = null;
-			if (o instanceof Action) {
-				action = (Action)o;
-			} else {
-				action = new CreateModeAction(helper, o);
-			}
-			menu.add(action);
-		}
-		
-		Object src = e.getSource();
-		if (src instanceof Component) {
-			Component dropdown = (Component)src;
-			menu.show(dropdown, 0, dropdown.getHeight());
-			return;
-		}
-
-	}
-
-}
-
-class CreateModeAction extends AbstractAction {
+class CreateModeAction<T, L extends List<T>> extends AbstractAction {
 	private final Object mode;
-	private final ListPanelHelper helper;
-	
-	public CreateModeAction(ListPanelHelper helper, Object mode) {
+	private final ListPanel<T,L> listPanel;
+
+	public CreateModeAction(ListPanel<T,L> listPanel, Object mode) {
 		super(mode.toString());
-		this.helper = helper;
+        this.listPanel = listPanel;
 		this.mode = mode;
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		helper.create(mode);
+		listPanel.doCreate(mode);
 	}
 }
 
-class SimpleListModel<T> extends AbstractTableModel implements TableActionListener {
+class SimpleListModel<T, L extends List<T>> extends AbstractTableModel implements TableActionListener {
     private static final long serialVersionUID = 886643323547667463L;
     
-    private List<T> list;
-    private NamedList namedList;
-    private ListPanel<T> panel;
+    private L list;
+    private final ListPanelHelper helper;
+
+    private final ColumnDefinition[] columns;
+    private final String[] actions;
+    private final int nbActions;
 
     private int lastLineInc = 0;
     private Map m_button = new HashMap();
-    
-    public boolean isCellEditable(int rowIndex, int columnIndex) {
-        if (columnIndex == 0 && namedList != null) {
-            return true;
+
+
+
+    public SimpleListModel(ListPanelHelper helper) {
+        this.helper = helper;
+        this.columns = helper.getColumns();
+        this.actions = helper.getActionLabels();
+        if (actions == null) {
+            this.nbActions = 0;
+        } else {
+            this.nbActions = actions.length;
         }
-        return false;
+    }
+
+    public boolean isCellEditable(int rowIndex, int columnIndex) {
+        return columns[columnIndex].editable;
     }
     
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        if (columnIndex == 0 && namedList != null) {
-            namedList.rename(rowIndex, aValue.toString());
+        if (columns[columnIndex].editable && helper != null) {
+            helper.setValue(list, rowIndex, columnIndex, aValue);
         }
     }
 
@@ -488,8 +513,8 @@ class SimpleListModel<T> extends AbstractTableModel implements TableActionListen
         if (lastLineInc != 0 && row == list.size()) {
         	return "";
         }
-        if (col < panel.helper.nbAction) {
-        	Object oa = panel.helper.getAction(row, col);
+        if (col < actions.length) {
+        	Object oa = actions[col];
         	if (oa == null || "".equals(oa)) {
         		return "";
         	}
@@ -508,13 +533,17 @@ class SimpleListModel<T> extends AbstractTableModel implements TableActionListen
         	return b;
         }
         
-        col -= panel.helper.nbAction;
+        col -= nbActions;
         T o = list.get(row);
         
         if (o instanceof MultiColObject) {
     		return ((MultiColObject)o).getVal(col);
         }
-        
+
+        if (col > 0) {
+            return helper.getValue(list, o, col);
+        }
+
     	return o;
     }
 	@Override
@@ -526,43 +555,35 @@ class SimpleListModel<T> extends AbstractTableModel implements TableActionListen
     }
 	@Override
     public int getColumnCount() {
-    	if (list == null) {
-    		return 0;
-    	}
-        return panel.helper.nbcol;
+        return nbActions + columns.length;
     }
 	@Override
     public Class getColumnClass(int columnIndex) {
-    	if (columnIndex < panel.helper.nbAction) {
+    	if (columnIndex < nbActions) {
     		return JButton.class;
     	}
-    	return panel.helper.getColumnClass(columnIndex-panel.helper.nbAction);
+
+    	return columns[columnIndex-nbActions].type;
 	}
     @Override
     public String getColumnName(int column) {
-    	if (column < panel.helper.nbAction) {
+    	if (column < nbActions) {
     		return "";
     	}
-    	return panel.helper.getColumnName(column- panel.helper.nbAction);
+        return columns[column-nbActions].title;
     }
-    void setList(List<T> list, ListPanel<T> panel) {
+    void setList(L list, ListPanel<T,L> panel) {
         this.list = list;
-        this.panel = panel;
-        if (panel.helper.doInlineAddRemove) {
+        if (panel.helper.canAddInline()) {
         	lastLineInc = 1;
         } else {
         	lastLineInc = 0;
-        }
-        if (list instanceof NamedList) {
-            namedList = (NamedList)list;
-        } else {
-            namedList = null;
         }
         fireTableStructureChanged();
     }
 
     @Override
 	public void actionPerformed(int row, int col) {
-		panel.helper.runAction(row, col);
+		helper.runAction(list, row, col);
 	}
 }

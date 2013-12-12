@@ -14,7 +14,7 @@ import org.ginsim.core.utils.data.NamedObject;
 
 
 
-public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelper<RegulatoryNode> {
+public class ModelSimplifierConfig implements NamedObject, XMLize {
 	private String name;
 	Annotation note = new Annotation();
 	Set<NodeInfo> m_removed = new HashSet<NodeInfo>();
@@ -51,25 +51,17 @@ public class ModelSimplifierConfig implements NamedObject, XMLize, MultiColHelpe
 		note.toXML(out);
 		out.closeTag();
 	}
-	
-	@Override
-	public Object getVal(RegulatoryNode o, int index) {
-		if (index == 1) {
-			return m_removed.contains(o.getNodeInfo()) ? Boolean.TRUE : Boolean.FALSE;
-		}
-		return o;
-	}
-	@Override
-	public boolean setVal(RegulatoryNode vertex, int index, Object value) {
-		if (index == 1) {
-			if (value.equals(Boolean.TRUE)) {
-				m_removed.add(vertex.getNodeInfo());
-			} else {
-				m_removed.remove(vertex.getNodeInfo());
-			}
-			return true;
-		}
-		return false;
+
+    public boolean isSelected(NodeInfo node) {
+        return m_removed.contains(node);
+    }
+
+	public void setSelected(NodeInfo node, boolean selected) {
+        if (selected) {
+            m_removed.add(node);
+        } else {
+            m_removed.remove(node);
+        }
 	}
 	
 	public void remove(RegulatoryNode vertex) {

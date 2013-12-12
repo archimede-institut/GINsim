@@ -26,7 +26,7 @@ import org.ginsim.gui.utils.widgets.RangeSlider;
 public class PerturbationCreatePanel extends JPanel implements ActionListener, ChangeListener {
 
 	private final ListOfPerturbations perturbations;
-	private final PerturbationPanelListHelper helper;
+	private final PerturbationPanelCompanion helper;
 	private PerturbationType type = null;
 	
 	private static final boolean SHOWTYPECOMBO = PerturbationType.values().length > 1 ? true : false;
@@ -48,7 +48,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 	
 	private final CreateAction acCreate = new CreateAction(this);
 	
-	public PerturbationCreatePanel(PerturbationPanelListHelper helper, ListOfPerturbations perturbations) {
+	public PerturbationCreatePanel(PerturbationPanelCompanion helper, ListOfPerturbations perturbations) {
 		super(new GridBagLayout());
 		this.perturbations = perturbations;
 		this.helper = helper;

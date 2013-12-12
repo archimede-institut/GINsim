@@ -1,5 +1,6 @@
 package org.ginsim.servicegui.tool.modelsimplifier;
 
+import java.util.AbstractList;
 import java.util.List;
 
 import javax.swing.JOptionPane;
@@ -10,9 +11,9 @@ import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.utils.data.SimpleGenericList;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
 import org.ginsim.service.tool.modelsimplifier.ReductionTask;
 import org.ginsim.service.tool.modelsimplifier.ReconstructionTask;
 import org.ginsim.service.tool.modelsimplifier.ReductionLauncher;
@@ -84,21 +85,49 @@ public class ModelSimplifierConfigDialog extends StackDialog implements Reductio
 		}
 		return true;
 	}
-
 }
 
 
-class SimplifierConfigContentList extends SimpleGenericList<RegulatoryNode> {
+class SimplifierConfigContentList extends AbstractList<NodeInfo> {
+
+    private final List<RegulatoryNode> nodeOrder;
+    private ModelSimplifierConfig config;
 
 	SimplifierConfigContentList(List<RegulatoryNode> nodeOrder) {
-		super(nodeOrder);
-		canAdd = false;
-		canOrder = false;
-		canEdit = true;
-		nbcol = 2;
-		t_type = new Class[2];
-		t_type[0] = String.class;
-		t_type[1] = Boolean.class;
+		this.nodeOrder = nodeOrder;
 	}
-}
 
+    public void setConfig(ModelSimplifierConfig config) {
+        this.config = config;
+    }
+
+    @Override
+    public NodeInfo get(int i) {
+        return nodeOrder.get(i).getNodeInfo();
+    }
+
+    @Override
+    public int size() {
+        return nodeOrder.size();
+    }
+
+    public boolean isSelected(NodeInfo node) {
+        if (config == null) {
+            return false;
+        }
+        return config.isSelected(node);
+    }
+
+    public boolean setSelected(NodeInfo node, boolean selected) {
+        if (config == null) {
+            return false;
+        }
+
+        if (config.isSelected(node) == selected) {
+            return false;
+        }
+
+        config.setSelected(node, selected);
+        return true;
+    }
+}

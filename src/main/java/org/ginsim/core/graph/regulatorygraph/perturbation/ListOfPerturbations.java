@@ -1,11 +1,7 @@
 package org.ginsim.core.graph.regulatorygraph.perturbation;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
@@ -27,7 +23,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
  * 
  * @author Aurelien Naldi
  */
-public class ListOfPerturbations implements Iterable<Perturbation>, GraphListener<RegulatoryGraph>, UserSupporter {
+public class ListOfPerturbations extends AbstractList<Perturbation> implements GraphListener<RegulatoryGraph>, UserSupporter {
 
 	private final List<Perturbation> simplePerturbations = new ArrayList<Perturbation>();
 	private final List<Perturbation> multiplePerturbations = new ArrayList<Perturbation>();

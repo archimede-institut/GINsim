@@ -1,19 +1,15 @@
 package org.ginsim.servicegui.tool.modelsimplifier;
 
+import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.utils.data.GenericList;
-import org.ginsim.core.utils.data.GenericListListener;
-import org.ginsim.gui.utils.data.GenericListPanel;
-import org.ginsim.gui.utils.data.ListEditionPanel;
-import org.ginsim.gui.utils.data.ListPanelHelper;
+import org.ginsim.gui.utils.data.*;
+import org.ginsim.gui.utils.widgets.BooleanEditor;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigManager;
 
 import java.awt.*;
-import java.util.*;
 import java.util.List;
 
 import javax.swing.*;
@@ -26,88 +22,103 @@ import javax.swing.event.ChangeListener;
  *
  * @author Aurelien Naldi
  */
-public class ReductionConfigurationPanel extends ListEditionPanel<ModelSimplifierConfig> {
+public class ReductionConfigurationPanel extends ListEditionPanel<ModelSimplifierConfig, ModelSimplifierConfigList> {
 
+    private static final ReductionListHelper HELPER = new ReductionListHelper();
 
     public ReductionConfigurationPanel(RegulatoryGraph graph) {
         this((ModelSimplifierConfigList)ObjectAssociationManager.getInstance().getObject(graph, ModelSimplifierConfigManager.KEY, true));
     }
 
     public ReductionConfigurationPanel(ModelSimplifierConfigList cfgList) {
-        super(new ReductionListHelper(cfgList), cfgList, "modelSimplifier");
-        init();
+        super(HELPER, cfgList, "modelSimplifier");
     }
-
 }
 
 
-class ReductionListHelper extends ListPanelHelper<ModelSimplifierConfig> {
+class ReductionListHelper extends ListPanelHelper<ModelSimplifierConfig, ModelSimplifierConfigList> {
+
+    public static final ColumnDefinition[] COLUMNS = {
+            new ColumnDefinition(null,String.class, true),
+    };
+
+    public ReductionListHelper() {
+        canOrder = true;
+    }
+    @Override
+    public ColumnDefinition[] getColumns() {
+        return COLUMNS;
+    }
+
+    @Override
+    public int doCreate(ModelSimplifierConfigList reductions, Object arg) {
+        return reductions.create();
+    }
+
+    @Override
+    public boolean doRemove(ModelSimplifierConfigList reductions, int[] sel) {
+        if (sel == null || sel.length < 1) {
+            return false;
+        }
+
+        for (int i=sel.length-1 ; i>-1 ; i--) {
+            reductions.remove( sel[i]);
+        }
+        return true;
+    }
+
+    @Override
+    public ReductionPanelCompanion getCompanion(ListEditionPanel<ModelSimplifierConfig, ModelSimplifierConfigList> editPanel) {
+        return new ReductionPanelCompanion(editPanel);
+    }
+}
+
+class ReductionPanelCompanion implements ListPanelCompanion<ModelSimplifierConfig, ModelSimplifierConfigList> {
 
     private static final String EDIT = "edit";
     private static final String EMPTY = "empty";
 
-    private final ModelSimplifierConfigList reductions;
-    private final SimplifierConfigContentList ctlist;
+    private SimplifierConfigContentList ctlist = null;
+    private final ListEditionPanel<ModelSimplifierConfig, ModelSimplifierConfigList> editPanel;
+    private final SimplifierConfigConfigurePanel panel;
 
-    public ReductionListHelper(ModelSimplifierConfigList reductions) {
-        this.reductions = reductions;
-        if (reductions.size() == 0) {
-            create(null);
-        }
-
-        canOrder = true;
-        canAdd = true;
-        canRemove = true;
-
-        ctlist = new SimplifierConfigContentList(reductions.getNodeOrder());
-
-
-    }
-
-    @Override
-    public void selectionUpdated(int[] selection) {
-        if (selection == null || selection.length < 1) {
-            editPanel.showPanel(EMPTY);
-        } else {
-            ctlist.mcolHelper = listPanel.getSelectedItem();
-            ctlist.refresh();
-            editPanel.showPanel(EDIT);
-        }
-    }
-
-    @Override
-    public void fillEditPanel() {
-        SimplifierConfigConfigurePanel panel = new SimplifierConfigConfigurePanel();
-        panel.setList(ctlist);
+    public ReductionPanelCompanion(ListEditionPanel<ModelSimplifierConfig, ModelSimplifierConfigList> editPanel) {
+        this.editPanel = editPanel;
+        panel = new SimplifierConfigConfigurePanel();
         editPanel.addPanel(panel, EDIT);
 
         editPanel.addPanel(new JLabel("select or create a reduction"), EMPTY);
     }
 
     @Override
-    public int doCreate(Object arg) {
-        return reductions.create();
+    public void setList(ModelSimplifierConfigList reductions) {
+        this.ctlist = new SimplifierConfigContentList(reductions.getNodeOrder());
+        panel.setList(ctlist);
     }
 
     @Override
-    public boolean doRemove(int[] sel) {
-        if (sel == null || sel.length < 1) {
-            return false;
+    public void selectionUpdated(int[] selection) {
+        if (ctlist == null) {
+            return;
         }
-
-        for (int i=sel.length-1 ; i>-1 ; i--) {
-            reductions.remove(i);
+        if (selection == null || selection.length < 1) {
+            editPanel.showPanel(EMPTY);
+        } else {
+            panel.setConfig(editPanel.getSelectedItem());
+            editPanel.showPanel(EDIT);
         }
-        return true;
     }
 }
 
 
-class SimplifierConfigConfigurePanel extends GenericListPanel<RegulatoryNode>
-	implements GenericListListener, ChangeListener {
-	JCheckBox checkbox;
+class SimplifierConfigConfigurePanel extends ListPanel<NodeInfo, SimplifierConfigContentList> implements ChangeListener {
+
+	private final JCheckBox checkbox;
+    private ModelSimplifierConfig config;
 
 	SimplifierConfigConfigurePanel() {
+        super(ReductionConfigHelper.HELPER, "Selected");
+
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 1;
 		c.gridy = 0;
@@ -117,27 +128,64 @@ class SimplifierConfigConfigurePanel extends GenericListPanel<RegulatoryNode>
 		this.checkbox.addChangeListener(this);
 	}
 
-	@Override
-    public void setList(GenericList<RegulatoryNode> list) {
-    	super.setList(list);
-    	list.addListListener(this);
+    public void setConfig(ModelSimplifierConfig config) {
+        this.config = config;
+        if (list != null) {
+            list.setConfig(config);
+        }
+        checkbox.setSelected(config != null && config.strict);
     }
 
-	public void contentChanged() {
-    	if (list.mcolHelper != null) {
-    		checkbox.setSelected(((ModelSimplifierConfig)list.mcolHelper).strict);
-    	}
-	}
-	public void itemAdded(Object item, int pos) {
-	}
-	public void itemRemoved(Object item, int pos) {
-	}
-	public void structureChanged() {
-	}
-
+    @Override
 	public void stateChanged(ChangeEvent e) {
-    	if (list.mcolHelper != null) {
-    		((ModelSimplifierConfig)list.mcolHelper).strict = checkbox.isSelected();
-    	}
+        if (config != null) {
+            config.strict = checkbox.isSelected();
+        }
 	}
+}
+
+class ReductionConfigHelper extends ListPanelHelper<NodeInfo, SimplifierConfigContentList> {
+
+    public static final ReductionConfigHelper HELPER = new ReductionConfigHelper();
+
+    public static final ColumnDefinition[] COLUMNS = {
+            new ColumnDefinition(null,String.class, false),
+            new ColumnDefinition(null,Boolean.class, true),
+    };
+
+    private ReductionConfigHelper() {
+        // private constructor
+    }
+
+    @Override
+    public ColumnDefinition[] getColumns() {
+        return COLUMNS;
+    }
+
+    @Override
+    public Object getValue(SimplifierConfigContentList list, NodeInfo node, int column) {
+        if (column == 0) {
+            return node;
+        }
+
+        if (column == 1) {
+            return list.isSelected(node);
+        }
+
+        return null;
+    }
+
+    public boolean setValue(SimplifierConfigContentList list, int row, int column, Object value) {
+        if (column != 1) {
+            return false;
+        }
+
+        if (value instanceof Boolean) {
+            NodeInfo node = list.get(row);
+            return list.setSelected(node, (Boolean)value);
+        }
+
+        return false;
+    }
+
 }
