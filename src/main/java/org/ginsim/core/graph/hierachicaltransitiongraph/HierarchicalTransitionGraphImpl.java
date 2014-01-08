@@ -11,6 +11,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDManagerFactory;
+import org.colomoto.mddlib.MDDVariableFactory;
+import org.colomoto.mddlib.internal.MDDStoreImpl;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.common.AbstractDerivedGraph;
 import org.ginsim.core.graph.common.Graph;
@@ -29,6 +33,8 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	public static final String GRAPH_ZIP_NAME = "hierarchicalTransitionGraph.ginml";
 	
 	private List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>();
+
+    private MDDManager ddmanager;
 	
 	/**
 	 * Mode is either SCC or HTG depending if we group the transients component by their atteignability of attractors.
@@ -54,14 +60,12 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	/**
 	 * create a new DynamicalHierarchicalGraph with a nodeOrder.
 	 * @param nodeOrder the node order
-	 * @param transientCompactionMode MODE_SCC or MODE_HTG
+	 * @param transientCompaction flag to enable further compaction
 	 */
 	public HierarchicalTransitionGraphImpl( List<NodeInfo> nodeOrder, boolean transientCompaction) {
 		
 	    this();
-	    for (NodeInfo vertex: nodeOrder) {
-	    	this.nodeOrder.add(vertex);
-	    }
+        setNodeOrder(nodeOrder);
 	    this.transientCompaction = transientCompaction;
 	}
 
@@ -106,12 +110,18 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	/**
 	 * Set a list of NodeInfo representing the order of node as defined by the model
 	 * 
-	 * @param list the list of NodeInfo representing the order of node as defined by the model
+	 * @param node_order the list of NodeInfo representing the order of node as defined by the model
 	 */
     @Override
 	public void setNodeOrder( List<NodeInfo> node_order){
-		
-		this.nodeOrder = node_order;
+
+        this.nodeOrder.clear();
+        MDDVariableFactory vbuilder = new MDDVariableFactory();
+        for (NodeInfo ni: node_order) {
+            this.nodeOrder.add(ni);
+            vbuilder.add(ni, (byte)(ni.getMax()+1));
+        }
+        ddmanager = MDDManagerFactory.getManager(vbuilder, 10);
 	}
 
 
@@ -275,9 +285,7 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 
 
 	/**
-	 * @see fr.univmrs.tagc.GINsim.graph.GsGraph#getSubGraph(java.utils.Vector, java.utils.Vector)
-	 * 
-	 * not used for this kind of graph: it's not interactively editable
+	 * Not used for this kind of graph: it's not interactively editable
 	 */
 	@Override
 	public Graph getSubgraph(Collection<HierarchicalNode> vertex, Collection<DecisionOnEdge> edges) {
@@ -294,6 +302,6 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
     }
 
     public StatesSet createStateSet() {
-        return new StatesSet(getChildsCount());
+        return new StatesSet(ddmanager, getChildsCount());
     }
 }

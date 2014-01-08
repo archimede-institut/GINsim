@@ -260,7 +260,6 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 			size = statePile.size();
 		}
 		if (statesSet != null) {
-			statesSet.reduce();
 			int[] counts = statesSet.updateSize();
 			size += counts[1];// + counts[STATUS_PROCESSED];
 			//processed += counts[STATUS_PROCESSED];
@@ -415,7 +414,7 @@ public class HierarchicalNode implements Comparable<Object>, Dotify {
 	public String getLongId() {
 		return uid+"::"+toString();
 	}
-	public StringBuffer write() {
+	public String write() {
 		return statesSet.write();
 	}
 		
