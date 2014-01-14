@@ -87,7 +87,7 @@ public class ReductionTask extends AbstractTask<LogicalModel> {
 			}
 		}
 
-        return reducer.getModel();
+        return reducer.getModel(false, true);
     }
     
     private List<NodeInfo> remove_all(List<NodeInfo> l_todo) {
