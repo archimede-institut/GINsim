@@ -27,6 +27,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements Reductio
 
     ReductionTask simplifier = null;
     ReconstructionTask reconstructionTask = null;
+    ModelSimplifierConfig config = null;
 
     private boolean isRunning = false;
 	
@@ -42,8 +43,9 @@ public class ModelSimplifierConfigDialog extends StackDialog implements Reductio
 	}
 	
 	protected void run() {
-		if (!isRunning && lp.getSelectedItem() != null) {
-			simplifier = new ReductionTask(graph, lp.getSelectedItem(), this);
+        config = lp.getSelectedItem();
+		if (!isRunning && config != null) {
+			simplifier = new ReductionTask(graph, config, this);
             simplifier.background(this);
             isRunning = true;
             brun.setEnabled(false);
@@ -59,7 +61,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements Reductio
         if (task == simplifier) {
             LogicalModel model = simplifier.getResult();
             simplifier = null;
-            reconstructionTask = new ReconstructionTask(model, graph);
+            reconstructionTask = new ReconstructionTask(model, graph, config);
             reconstructionTask.background(this);
             return;
         }

@@ -1,9 +1,6 @@
 package org.ginsim.core.graph.regulatorygraph;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.colomoto.logicalmodel.ConnectivityMatrix;
 import org.colomoto.logicalmodel.LogicalModel;
@@ -26,30 +23,39 @@ public class LogicalModel2RegulatoryGraph {
 
 	private final List<NodeInfo> coreNodes;
 	private final Map<NodeInfo, RegulatoryNode> node2node;
-	
+
 	/**
 	 * Create a new Regulatory graph, based on an existing logical model.
 	 * 
 	 * @param model
 	 * @return
 	 */
-	public static RegulatoryGraph importModel(LogicalModel model) {
-		return new LogicalModel2RegulatoryGraph(model).getRegulatoryGraph();
-	}
-	
-	
-	private LogicalModel2RegulatoryGraph( LogicalModel model) {
+    public static RegulatoryGraph importModel(LogicalModel model) {
+        return new LogicalModel2RegulatoryGraph(model).getRegulatoryGraph();
+    }
+
+    public static RegulatoryGraph importModel(LogicalModel model, Collection<NodeInfo> to_remove) {
+        return new LogicalModel2RegulatoryGraph(model, to_remove).getRegulatoryGraph();
+    }
+
+
+
+    private LogicalModel2RegulatoryGraph( LogicalModel model) {
+        this(model, new ArrayList<NodeInfo>());
+    }
+
+    private LogicalModel2RegulatoryGraph( LogicalModel model, Collection<NodeInfo> to_remove) {
 		this.ddmanager = model.getMDDManager();
 		this.lrg = RegulatoryGraphFactory.getInstance().create();
 		this.matrix = new ConnectivityMatrix(model);
-		
+
 		// mapping
 		coreNodes = model.getNodeOrder();
 		node2node = new HashMap<NodeInfo, RegulatoryNode>();
 		
 		// add all components
-		addNodes(coreNodes);
-		addNodes(model.getExtraComponents());
+		addNodes(coreNodes, null);
+		addNodes(model.getExtraComponents(), to_remove);
 		
 		// import the logical functions
 		addRegulators(model.getLogicalFunctions(), coreNodes, false);
@@ -60,8 +66,11 @@ public class LogicalModel2RegulatoryGraph {
 		return lrg;
 	}
 	
-	private void addNodes(List<NodeInfo> nodes) {
+	private void addNodes(List<NodeInfo> nodes, Collection<NodeInfo> to_remove) {
     	for (NodeInfo ni: nodes) {
+            if (to_remove != null && to_remove.contains(ni)) {
+                continue;
+            }
     		RegulatoryNode node = lrg.addNode( );
     		node.setId(ni.getNodeID());
     		node.setMaxValue(ni.getMax(), lrg);
@@ -74,7 +83,11 @@ public class LogicalModel2RegulatoryGraph {
 		for (int idx=0 ; idx<functions.length ; idx++) {
 			NodeInfo target = nodes.get(idx);
 			RegulatoryNode regNode = node2node.get(target);
-			
+
+            if (regNode == null) {
+                continue;
+            }
+
 			if (target.isInput()) {
 				regNode.setInput(true, lrg);
 				continue;

@@ -413,7 +413,7 @@ public class CompositionService implements Service {
 			ReductionStub launcher = new ReductionStub(composedGraph);
 
 			ReductionTask simplifier = new ReductionTask(composedGraph,	simplifierConfig, null);
-			RegulatoryGraph finalComposedGraph = new ReconstructionTask(simplifier.call(), composedGraph).call();
+			RegulatoryGraph finalComposedGraph = new ReconstructionTask(simplifier.call(), composedGraph, simplifierConfig).call();
 
 			return finalComposedGraph;
 		}

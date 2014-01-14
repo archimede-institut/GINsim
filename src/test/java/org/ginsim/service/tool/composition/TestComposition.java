@@ -108,7 +108,7 @@ public class TestComposition {
 			composedGraph = service.run(graph, config);
 
 			assertEquals(
-					"The composed graph should have has many components as the sum of the components of the instances",
+					"The composed graph should have 4 components less than the sum of the components of the instances",
 					composedGraph.getNodeOrderSize(),
 					4 * (graph.getNodeOrderSize() - 1));
 
@@ -195,7 +195,7 @@ public class TestComposition {
 			composedGraph = service.run(graph, config);
 
 			assertEquals(
-					"The composed graph should have has many components as the sum of the components of the instances",
+					"The composed graph should have 4 components less than the sum of the components of the instances",
 					composedGraph.getNodeOrderSize(),
 					4 * (graph.getNodeOrderSize() - 1));
 
@@ -287,7 +287,7 @@ public class TestComposition {
 			composedGraph = service.run(graph, config);
 
 			assertEquals(
-					"The composed graph should have has many components as the sum of the components of the instances",
+					"The composed graph should have 4 components less than the sum of the components of the instances",
 					composedGraph.getNodeOrderSize(),
 					4 * (graph.getNodeOrderSize() - 1));
 
@@ -378,7 +378,7 @@ public class TestComposition {
 			composedGraph = service.run(graph, config);
 
 			assertEquals(
-					"The composed graph should have has many components as the sum of the components of the instances",
+					"The composed graph should have 4 components less than the sum of the components of the instances",
 					composedGraph.getNodeOrderSize(),
 					4 * (graph.getNodeOrderSize() - 1));
 

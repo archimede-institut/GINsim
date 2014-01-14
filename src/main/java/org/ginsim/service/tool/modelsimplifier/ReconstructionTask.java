@@ -42,19 +42,29 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
 
 	private final RegulatoryGraph graph;
     private final LogicalModel newModel;
+    private final Collection<NodeInfo> to_remove;
 
 	String s_comment = "";
 
-	public ReconstructionTask(LogicalModel reducedModel, RegulatoryGraph graph) {
+    public ReconstructionTask(LogicalModel reducedModel, RegulatoryGraph graph) {
+        this(reducedModel, graph, null);
+    }
+
+	public ReconstructionTask(LogicalModel reducedModel, RegulatoryGraph graph, ModelSimplifierConfig config) {
         this.graph = graph;
         this.newModel = reducedModel;
+        if (config == null) {
+            this.to_remove = new ArrayList<NodeInfo>();
+        } else {
+            this.to_remove = config.m_removed;
+        }
 	}
 	
     public RegulatoryGraph doGetResult() {
         List<RegulatoryNode> oldNodeOrder = graph.getNodeOrder();
 
         // create the new regulatory graph
-        RegulatoryGraph simplifiedGraph = LogicalModel2RegulatoryGraph.importModel(newModel);
+        RegulatoryGraph simplifiedGraph = LogicalModel2RegulatoryGraph.importModel(newModel, to_remove);
         Map<Object, Object> copyMap = new HashMap<Object, Object>();
 
 		Annotation note = simplifiedGraph.getAnnotation();
