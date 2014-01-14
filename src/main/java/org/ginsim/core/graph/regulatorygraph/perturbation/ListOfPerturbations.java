@@ -23,10 +23,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
  * 
  * @author Aurelien Naldi
  */
-public class ListOfPerturbations extends AbstractList<Perturbation> implements GraphListener<RegulatoryGraph>, UserSupporter {
+public class ListOfPerturbations extends ArrayList<Perturbation> implements GraphListener<RegulatoryGraph>, UserSupporter {
 
-	private final List<Perturbation> simplePerturbations = new ArrayList<Perturbation>();
-	private final List<Perturbation> multiplePerturbations = new ArrayList<Perturbation>();
 
 	private final Map<String, Perturbation> perturbationUsers = new HashMap<String, Perturbation>();
 	private final Map<String, Perturbation> aliases = new HashMap<String, Perturbation>();
@@ -47,7 +45,7 @@ public class ListOfPerturbations extends AbstractList<Perturbation> implements G
 	 */
 	public Perturbation addFixedPerturbation(NodeInfo component, int value) {
 		Perturbation p = new PerturbationFixed(component, value);
-		return addSimplePerturbation(p);
+		return addPerturbation(p);
 	}
 
 	/**
@@ -64,7 +62,7 @@ public class ListOfPerturbations extends AbstractList<Perturbation> implements G
 		}
 		
 		Perturbation p = new PerturbationRange(component, min, max);
-		return addSimplePerturbation(p);
+		return addPerturbation(p);
 	}
 
 	/**
@@ -76,17 +74,15 @@ public class ListOfPerturbations extends AbstractList<Perturbation> implements G
 	 */
 	public Perturbation addRegulatorPerturbation(NodeInfo regulator, NodeInfo component, int value) {
 		Perturbation p = new PerturbationRegulator(regulator, component, value);
-		return addSimplePerturbation(p);
+		return addPerturbation(p);
 	}
 
 	public Perturbation addMultiplePerturbation(List<Perturbation> perturbations) {
-		if (!simplePerturbations.containsAll(perturbations)) {
+		if (!containsAll(perturbations)) {
 			LogManager.debug("unknown perturbations when adding multiple...");
 		}
 		Perturbation p = new PerturbationMultiple(perturbations);
-		multiplePerturbations.add(p);
-		lrg.fireGraphChange(GraphChangeType.ASSOCIATEDUPDATED, this);
-		return p;
+		return addPerturbation(p);
 	}
 	
 	/**
@@ -96,72 +92,24 @@ public class ListOfPerturbations extends AbstractList<Perturbation> implements G
 	 * @param p
 	 * @return the added perturbation or an existing equivalent one.
 	 */
-	private Perturbation addSimplePerturbation(Perturbation p) {
+	private Perturbation addPerturbation(Perturbation p) {
 		if (p == null) {
 			throw new RuntimeException("Can not add an undefined perturbation");
 		}
 		
-		// for for an existing perturbation
-		for (Perturbation other: simplePerturbations) {
+		// look for a similar existing perturbation
+		for (Perturbation other: this) {
 			if (other.equals(p)) {
 				return other;
 			}
 		}
 		
 		// no equivalent perturbation way found: add it
-		simplePerturbations.add(p);
+		add(p);
 		lrg.fireGraphChange(GraphChangeType.ASSOCIATEDUPDATED, this);
 		return p;
 	}
 	
-	/**
-	 * Get the list of perturbations affecting a single component.
-	 * @return the list of single-component perturbations.
-	 */
-	public List<Perturbation> getSimplePerturbations() {
-		return simplePerturbations;
-	}
-	/**
-	 * Get the list of multiple perturbations.
-	 * @return the list of multiple perturbations.
-	 */
-	public List<Perturbation> getMultiplePerturbations() {
-		return multiplePerturbations;
-	}
-	/**
-	 * Get all perturbation
-	 * @return a merged list with all perturbations.
-	 */
-	public List<Perturbation> getAllPerturbations() {
-		if (multiplePerturbations.size() < 1) {
-			return simplePerturbations;
-		}
-		
-		List<Perturbation> all = new ArrayList<Perturbation>(simplePerturbations);
-		all.addAll(multiplePerturbations);
-		return all;
-	}
-	
-
-	public int size() {
-		return simplePerturbations.size() + multiplePerturbations.size();
-	}
-
-	/**
-	 * Get a perturbation directly. Single-component-perturbations come first.
-	 * 
-	 * @param index
-	 * @return
-	 */
-	public Perturbation get(int index) {
-		int nbsimple = simplePerturbations.size();
-		if (index < nbsimple) {
-			return simplePerturbations.get(index);
-		}
-		
-		return multiplePerturbations.get(index-nbsimple);
-	}
-
 	/**
 	 * Set an alias for a perturbation.
 	 * This is used to retrieve named perturbations from the old zginml files.
@@ -212,7 +160,7 @@ public class ListOfPerturbations extends AbstractList<Perturbation> implements G
 			return;
 		}
 		
-		if (!simplePerturbations.contains(perturbation) && !multiplePerturbations.contains(perturbation)) {
+		if (!contains(perturbation)) {
 			throw new RuntimeException("Can only use existing perturbations");
 		}
 		
@@ -229,32 +177,20 @@ public class ListOfPerturbations extends AbstractList<Perturbation> implements G
 		return perturbationUsers.get(key);
 	}
 	
-	@Override
-	public Iterator<Perturbation> iterator() {
-		if (multiplePerturbations.size() == 0) {
-			return simplePerturbations.iterator();
-		}
-		return new JoinedIterator<Perturbation>(simplePerturbations.iterator(), multiplePerturbations.iterator());
-	}
-
 	public void toXML(XMLWriter out) throws IOException {
 		
         out.openTag("perturbationConfig");
         
         out.openTag("listOfPerturbations");
-        for (Perturbation p: simplePerturbations) {
+        for (Perturbation p: this) {
         	// wrap them
             out.openTag("mutant");
             out.addAttr("name", p.toString());
             p.toXML(out);
             out.closeTag();
         }
-        for (Perturbation p: multiplePerturbations) {
-            p.toXML(out);
-        }
         out.closeTag();
-        
-        
+
         out.openTag("listOfUsers");
         for (String key: perturbationUsers.keySet()) {
         	out.openTag("user");
@@ -264,9 +200,7 @@ public class ListOfPerturbations extends AbstractList<Perturbation> implements G
         }
         out.closeTag();
         
-        
         out.closeTag();
-
 	}
 
 	public NodeInfo[] getNodes() {
@@ -284,32 +218,26 @@ public class ListOfPerturbations extends AbstractList<Perturbation> implements G
 		switch (type) {
 		case NODEREMOVED:
 			NodeInfo ni = ((RegulatoryNode)data).getNodeInfo();
-			boolean b = cleanup(ni, multiplePerturbations);
-			b = b || cleanup(ni, simplePerturbations);
-			if (b) {
+
+            // search perturbations to remove
+            List<Perturbation> removed = new ArrayList<Perturbation>();
+            for (Perturbation p: this) {
+                if (p.affectsNode(ni)) {
+                    removed.add(p);
+                }
+            }
+
+            if (removed.size() > 0) {
+                removeAll(removed);
 				lrg.fireGraphChange(GraphChangeType.ASSOCIATEDUPDATED, this);
 			}
 		}
 		return null;
 	}
 
-	private boolean cleanup(NodeInfo ni, List<Perturbation> perturbations) {
-		List<Perturbation> removed = new ArrayList<Perturbation>();
-		for (Perturbation p: perturbations) {
-			if (p.affectsNode(ni)) {
-				removed.add(p);
-			}
-		}
-		if (removed != null && removed.size() > 0) {
-			perturbations.removeAll(removed);
-			return true;
-		}
-		return false;
-	}
-	
-	public void removePerturbation(List<Perturbation> removed) {
+	public void removePerturbations(Collection<Perturbation> removed) {
 		List<Perturbation> extraRemoved = new ArrayList<Perturbation>();
-		for (Perturbation p: multiplePerturbations) {
+		for (Perturbation p: this) {
 			if (p instanceof PerturbationMultiple) {
 				PerturbationMultiple pm = (PerturbationMultiple)p;
 				for (Perturbation pi: removed) {
@@ -320,9 +248,8 @@ public class ListOfPerturbations extends AbstractList<Perturbation> implements G
 				}
 			}
 		}
-		multiplePerturbations.removeAll(removed);
-		multiplePerturbations.removeAll(extraRemoved);
-		simplePerturbations.removeAll(removed);
+        removeAll(extraRemoved);
+		removeAll(removed);
 
 		// also remove references to the removed perturbations 
 		List<String> userRemoved = new ArrayList<String>();

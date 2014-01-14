@@ -26,7 +26,16 @@ public class PerturbationPanelListHelper extends ListPanelHelper<Perturbation, L
 
     private PerturbationPanelListHelper() {
         // private constructor
-        canOrder = false;
+    }
+
+    @Override
+    public boolean doRemove(ListOfPerturbations list, int[] sel) {
+        List<Perturbation> to_remove = new ArrayList<Perturbation>();
+        for (int idx: sel) {
+            to_remove.add(list.get(idx));
+        }
+        list.removePerturbations(to_remove);
+        return true;
     }
 
     @Override
@@ -125,7 +134,7 @@ class PerturbationPanelCompanion implements ListPanelCompanion<Perturbation, Lis
             removed.add(perturbations.get(sel[i]));
         }
 
-        perturbations.removePerturbation(removed);
+        perturbations.removePerturbations(removed);
         return true;
     }
 }

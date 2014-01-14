@@ -75,8 +75,6 @@ public class PerturbationSelectionPanel extends ListSelectionPanel<Perturbation>
 	
 	@Override
 	protected List<Perturbation> getList() {
-        ListOfPerturbations perturbations = getPerturbationsObject(false);
-        List<Perturbation> allPerturbations = perturbations == null ? null : perturbations.getAllPerturbations();
-		return allPerturbations;
+        return getPerturbationsObject(false);
 	}
 }

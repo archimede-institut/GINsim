@@ -11,23 +11,42 @@ import org.ginsim.common.xml.XMLWriter;
 
 public class PerturbationMultiple extends MultiplePerturbation<Perturbation> implements Perturbation {
 
+    /**
+     * Make sure that the list contains only simple perturbations
+     *
+     * @param l
+     * @return
+     */
+    private static List<Perturbation> getSimplePerturbations(List<Perturbation> l) {
+        List<Perturbation> result = new ArrayList<Perturbation>();
+        fillSimplePerturbations(result, l);
+        return result;
+    }
+
+    private static void fillSimplePerturbations(List<Perturbation> result, List<Perturbation> l) {
+        for (Perturbation p: l) {
+            if (p instanceof MultiplePerturbation) {
+                fillSimplePerturbations(result, ((MultiplePerturbation)p).perturbations);
+            } else if(!result.contains(p)) {
+                result.add(p);
+            }
+        }
+    }
+
 	/**
 	 * Create a multiple perturbation
 	 * 
 	 * @param perturbations list of perturbations to apply.
 	 */
 	public PerturbationMultiple(List<Perturbation> perturbations) {
-		super(perturbations);
+		super(getSimplePerturbations(perturbations));
 	}
 	
 	@Override
 	public void toXML(XMLWriter out) throws IOException {
-        out.openTag("mutant");
-        out.addAttr("name", toString());
         for (Perturbation p: perturbations) {
             p.toXML(out);
         }
-        out.closeTag();
 	}
 
 	@Override
@@ -53,4 +72,15 @@ public class PerturbationMultiple extends MultiplePerturbation<Perturbation> imp
 		
 		return manager.addMultiplePerturbation(newPerturbations);
 	}
+
+    public boolean equals(Object o) {
+        if (o instanceof PerturbationMultiple) {
+            PerturbationMultiple other = (PerturbationMultiple)o;
+            if (perturbations.size() == other.perturbations.size() && perturbations.containsAll(other.perturbations)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
