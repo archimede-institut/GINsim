@@ -36,4 +36,8 @@ public class PerturbationFixed extends FixedValuePerturbation implements Perturb
 		return null;
 	}
 
+    @Override
+    public boolean isMultiple() {
+        return false;
+    }
 }
