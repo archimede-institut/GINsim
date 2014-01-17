@@ -18,13 +18,12 @@ import javax.swing.JLabel;
  * @author Aurelien Naldi
  * @param <T> the type of objects in the list
  */
-abstract public class ListPanelHelper<T, L extends List<T>> {
+public class ListPanelHelper<T, L extends List<T>> {
 	
 	public static final String SEL_EMPTY="SEL_EMPTY", SEL_SINGLE="SEL_SINGLE", SEL_MULTIPLE="SEL_MULTIPLE";
 
     private static final String NAME_CREATE = "doCreate";
     private static final String NAME_ADDINLINE = "addInline";
-    private static final String NAME_RENAME = "rename";
     private static final String NAME_REMOVE = "doRemove";
     private static final String NAME_COLUMN = "getColumnName";
 
@@ -39,7 +38,6 @@ abstract public class ListPanelHelper<T, L extends List<T>> {
     private final boolean hasNamedColumn;
 	private final boolean canAdd;
     private final boolean canAddInline;
-    private final boolean canRename;
     private final boolean canRemove;
 
 	List<String> addOptions = null;
@@ -49,7 +47,6 @@ abstract public class ListPanelHelper<T, L extends List<T>> {
         // Detect capabilities based on overridden methods
         boolean canAdd = false;
         boolean canAddInline = false;
-        boolean canRename = false;
         boolean canRemove = false;
         boolean hasNamedColumn = false;
         Class cl = getClass();
@@ -61,8 +58,6 @@ abstract public class ListPanelHelper<T, L extends List<T>> {
                 canAdd = true;
             } else if (m.getName() == NAME_ADDINLINE) {
                 canAddInline = true;
-            } else if (m.getName() == NAME_RENAME) {
-                canRename = true;
             } else if (m.getName() == NAME_REMOVE) {
                 canRemove = true;
             } else if (m.getName() == NAME_COLUMN) {
@@ -73,7 +68,6 @@ abstract public class ListPanelHelper<T, L extends List<T>> {
         // save capabilities
         this.canAdd = canAdd;
         this.canAddInline = canAddInline;
-        this.canRename = canRename;
         this.canRemove = canRemove;
         this.hasNamedColumn = hasNamedColumn;
     }
@@ -102,9 +96,6 @@ abstract public class ListPanelHelper<T, L extends List<T>> {
     }
     public final boolean canAddInline() {
         return canAddInline;
-    }
-    public final boolean canRename() {
-        return canRename;
     }
     public final boolean canRemove() {
         return canRemove;
@@ -146,10 +137,6 @@ abstract public class ListPanelHelper<T, L extends List<T>> {
         return -1;
     }
 
-    public boolean rename(L list, int idx, String s) {
-        return false;
-    }
-
     public ListPanelCompanion getCompanion(ListEditionPanel<T,L> editPanel) {
         return null;
     }
@@ -178,4 +165,33 @@ abstract public class ListPanelHelper<T, L extends List<T>> {
 
         return true;
     }
+
+    public boolean moveData(L list, int[] sel, int diff) {
+
+        // check that the move is possible
+        int max = list.size();
+        for (int a: sel) {
+            int dst = a+diff;
+            if (dst < 0 || dst >= max) {
+                // can not do this move
+                return false;
+            }
+        }
+
+        // actually move elements
+        for (int i=0 ; i<sel.length ; i++) {
+            int src = sel[i];
+            int dst = src + diff;
+
+            if (src < 0 || dst < 0 || src >= max || dst >= max) {
+                continue;
+            }
+            T o = list.remove(src);
+            list.add(dst, o);
+
+            sel[i] = dst;
+        }
+        return true;
+    }
+
 }

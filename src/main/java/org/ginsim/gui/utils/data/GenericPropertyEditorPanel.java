@@ -34,7 +34,8 @@ public class GenericPropertyEditorPanel extends JPanel implements GenericPropert
 		m_class.put(GenericPropertyInfo[].class, PropertySwitch.class);
 		m_class.put(MinMaxSpinModel.class, MinMaxEditor.class);
 		m_class.put(SpinModel.class, SpinEditor.class);
-		m_class.put(GenericList.class, GenericListPanel.class);
+        m_class.put(GenericList.class, GenericListPanel.class);
+        m_class.put(HelpedList.class, HelpedListEditorUI.class);
 		m_class.put(GenericNamedList.class, GenericNamedListPanel.class);
 		m_class.put(Action.class, PropertyActionButton.class);
 	}

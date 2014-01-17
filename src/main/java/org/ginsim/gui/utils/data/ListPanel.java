@@ -270,45 +270,12 @@ public class ListPanel<T, L extends List<T>> extends JPanel
         }
     }
     
-    private boolean moveData(int[] sel, int diff) {
-
-    	// check that the move is possible
-    	int max = list.size();
-		for (int a: sel) {
-			int dst = a+diff;
-			if (dst < 0 || dst >= max) {
-				// can not do this move
-				return false;
-			}
-		}
-
-    	// actually move elements
-	    for (int i=0 ; i<sel.length ; i++) {
-		    int a = sel[i];
-		    int dst = a + diff;
-		    moveElement(a, dst);
-		    sel[i] = dst;
-	    }
-    	return true;
-	}
-
-	private boolean moveElement(int src, int dst) {
-		if (src < 0 || dst < 0 || src >= list.size() || dst >= list.size()) {
-			return false;
-		}
-		
-		T o = list.remove(src);
-		list.add(dst, o);
-		return true;
-	}
-
-    
 	protected void doMoveUp() {
         if (list == null || !helper.canOrder) {
             return;
         }
         int[] index = jl.getSelectedRows();
-        if (!moveData(index, -1)) {
+        if (!helper.moveData(list, index, -1)) {
         	return;
         }
 
@@ -336,7 +303,7 @@ public class ListPanel<T, L extends List<T>> extends JPanel
             return;
         }
         int[] index=jl.getSelectedRows();
-        if (!moveData(index, 1)) {
+        if (!helper.moveData(list, index, 1)) {
         	return;
         }
 
@@ -488,6 +455,9 @@ class SimpleListModel<T, L extends List<T>> extends AbstractTableModel implement
     }
 
     public boolean isCellEditable(int rowIndex, int columnIndex) {
+        if (columnIndex < actions.length) {
+            return false;
+        }
         return columns[columnIndex-actions.length].editable;
     }
     

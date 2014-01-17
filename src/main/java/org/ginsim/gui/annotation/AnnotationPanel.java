@@ -149,17 +149,6 @@ class LinkListHelper extends ListPanelHelper<AnnotationLink, List<AnnotationLink
     }
 
     @Override
-    public boolean rename(List<AnnotationLink> list, int idx, String s) {
-        if (idx == list.size()) {
-            addInline(list, s);
-            return true;
-        }
-        AnnotationLink link = list.get(idx);
-        link.setText(s, graph);
-        return true;
-    }
-
-    @Override
     public void runAction(List<AnnotationLink> list, int row, int col) {
         list.get(row).open();
     }
