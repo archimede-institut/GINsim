@@ -51,8 +51,7 @@ public class SimulationParametersManager extends BasicGraphAssociatedManager {
                 }
             }
             // and the real parameters
-            for (int i=0 ; i<paramList.getNbElements(null) ; i++) {
-                SimulationParameters sparam = (SimulationParameters)paramList.getElement(null, i);
+            for (SimulationParameters sparam: paramList) {
                 sparam.toXML(out);
             }
             out.closeTag();

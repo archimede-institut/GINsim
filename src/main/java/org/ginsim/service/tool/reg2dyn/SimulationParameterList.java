@@ -14,7 +14,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.utils.data.GenericListListener;
-import org.ginsim.core.utils.data.SimpleGenericList;
+import org.ginsim.core.utils.data.NamedList;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
 
@@ -23,7 +23,7 @@ import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
  * store all simulation parameters and offer a mean to access them.
  * Also deals with updating them when the graph is changed
  */
-public class SimulationParameterList extends SimpleGenericList<SimulationParameters> 
+public class SimulationParameterList extends NamedList<SimulationParameters>
 	implements GraphListener<RegulatoryGraph>,  GenericListListener {
 
     public final RegulatoryGraph graph;
@@ -45,16 +45,11 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
         imanager.getInitialStates().addListListener(this);
         imanager.getInputConfigs().addListListener(this);
         pcmanager = new PriorityClassManager(this.graph);
-    	prefix = "parameter_";
-    	canAdd = true;
-    	canEdit = true;
-    	canRemove = true;
-    	canOrder = true;
         GraphManager.getInstance().addGraphListener( this.graph, this);
         if (param == null) {
         	add();
         } else {
-        	add(param,0);
+        	add(param);
         }
     }
 
@@ -113,26 +108,23 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
 	}
 
     public int add(SimulationParameters param, int index) {
-    	v_data.add(index, param);
-    	return v_data.indexOf(param);
-    }
-    public int add(SimulationParameters param) {
-    	return add(param, v_data.size());
+    	add(index, param);
+    	return indexOf(param);
     }
 
-	protected SimulationParameters doCreate(String name, int mode) {
-        SimulationParameters parameter = new SimulationParameters(this);
-        parameter.name = name;
-		return parameter;
-	}
+    public SimulationParameters add() {
+        SimulationParameters p = new SimulationParameters(this);
+        p.name = findUniqueName("parameter");
+        add(p);
+        return p;
+    }
 
 	public void itemAdded(Object item, int pos) {
 	}
 
 	public void itemRemoved(Object item, int pos) {
 		
-		for (int i=0 ; i<v_data.size() ; i++) {
-			SimulationParameters param = (SimulationParameters)v_data.get(i);
+		for (SimulationParameters param: this) {
 			if (param.m_initState != null) {
 				param.m_initState.remove(item);
 			}
@@ -144,7 +136,7 @@ public class SimulationParameterList extends SimpleGenericList<SimulationParamet
 	public void structureChanged() {
 	}
 
-	@Override
+    // FIXME: how to trigger this event now?
 	public void list_item_removed( SimulationParameters param) {
 		ObjectAssociationManager.getInstance().fireUserUpdate(graph, Reg2DynService.KEY, param.name, null);
 	}

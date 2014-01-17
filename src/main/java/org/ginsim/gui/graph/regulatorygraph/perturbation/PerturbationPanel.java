@@ -24,7 +24,7 @@ public class PerturbationPanel extends JPanel {
 		GridBagConstraints cst;
 		
 		helper = PerturbationPanelListHelper.getHelper();
-		spanel = new ListEditionPanel<Perturbation, ListOfPerturbations>(helper, perturbations, "Perturbations", this);
+		spanel = new ListEditionPanel<Perturbation, ListOfPerturbations>(helper, perturbations, "Perturbations", null, this);
 		cst = new GridBagConstraints();
 		cst.weightx = 1;
 		cst.weighty = 0.5;

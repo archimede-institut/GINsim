@@ -8,6 +8,7 @@ import java.util.Map;
 
 import javax.swing.JPanel;
 
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.SplitPane;
 
 public class ListEditionPanel<T,L extends List<T>> extends SplitPane {
@@ -19,13 +20,11 @@ public class ListEditionPanel<T,L extends List<T>> extends SplitPane {
 	private final Map<String, String> m_cardAliases = new HashMap<String, String>();
 	private final ListPanel<T,L> listPanel;
     private final ListPanelCompanion companion;
+    private final StackDialog dialog;
 
-    public ListEditionPanel(ListPanelHelper<T,L> helper, L list, String title) {
-        this(helper, list, title, null);
-    }
-
-	public ListEditionPanel(ListPanelHelper<T,L> helper, L list, String title, Object associated) {
+	public ListEditionPanel(ListPanelHelper<T,L> helper, L list, String title, StackDialog dialog, Object associated) {
 		this.associated = associated;
+        this.dialog = dialog;
 		listPanel = new ListPanel<T,L>(helper, title, this);
 		listPanel.setList(list);
 		setLeftComponent( listPanel);
@@ -77,5 +76,9 @@ public class ListEditionPanel<T,L extends List<T>> extends SplitPane {
 
     public Object retrieveAssociated() {
         return associated;
+    }
+
+    public StackDialog getDialog() {
+        return dialog;
     }
 }

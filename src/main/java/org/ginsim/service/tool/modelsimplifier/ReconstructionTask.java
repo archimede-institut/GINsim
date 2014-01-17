@@ -216,10 +216,8 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
 			new_pcman.remove(null, t_index);
 			
 			// simulation parameters
-			for (int i=0 ; i<params.getNbElements() ; i++) {
-			    SimulationParameters param = (SimulationParameters)params.getElement(null, i);
-			    int index = new_params.add();
-			    SimulationParameters new_param = (SimulationParameters)new_params.getElement(null, index);
+			for (SimulationParameters param: params) {
+			    SimulationParameters new_param = new_params.add();
 			    m_alldata.put("", new_pcman);
 			    param.copy_to(new_param, m_alldata);
 			}

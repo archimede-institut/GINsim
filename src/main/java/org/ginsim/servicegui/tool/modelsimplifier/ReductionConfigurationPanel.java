@@ -4,13 +4,11 @@ import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.utils.data.*;
-import org.ginsim.gui.utils.widgets.BooleanEditor;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigManager;
 
 import java.awt.*;
-import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -31,7 +29,7 @@ public class ReductionConfigurationPanel extends ListEditionPanel<ModelSimplifie
     }
 
     public ReductionConfigurationPanel(ModelSimplifierConfigList cfgList) {
-        super(HELPER, cfgList, "modelSimplifier");
+        super(HELPER, cfgList, "modelSimplifier", null, null);
     }
 }
 

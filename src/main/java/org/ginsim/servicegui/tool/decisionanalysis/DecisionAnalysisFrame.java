@@ -64,7 +64,7 @@ public class DecisionAnalysisFrame extends LogicalModelActionDialog  {
         SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( regGraph, SimulationParametersManager.KEY, true);
 		if (selectPriorityClass == null) {
 			selectPriorityClass = new PrioritySelectionPanel(this, paramList.pcmanager);
-			this.currentParameter = (SimulationParameters)paramList.getElement(null, 0);
+			this.currentParameter = paramList.get(0);
 			selectPriorityClass.setStore(currentParameter.store, SimulationParameters.PCLASS);
 		}
 		return selectPriorityClass;

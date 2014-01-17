@@ -70,7 +70,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
      * Change the ID used to remember the selected perturbation (and other settings)
      * @param userID
      */
-    protected void setUserID(String userID) {
+    public void setUserID(String userID) {
     	this.userID = userID;
     	perturbationPanel.refresh();
         reductionPanel.refresh();

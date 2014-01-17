@@ -77,13 +77,12 @@ public class SimulationParametersParser extends XMLHelper {
                     }
                 } else if (qName.equals("parameter")) {
                     pos = POS_PARAM;
-                    int index = 0;
                     if (addparameter) {
-                    	index = paramLists.add();
+                    	param = paramLists.add();
                     } else {
                     	addparameter = true;
+                        param = paramLists.get(0);
                     }
-                	param = (SimulationParameters)paramLists.getElement(null, index);
                     param.name = attributes.getValue("name");
                     // read old mode description
                     String s = attributes.getValue("mode");
