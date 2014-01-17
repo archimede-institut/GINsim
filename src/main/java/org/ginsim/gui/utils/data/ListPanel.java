@@ -476,31 +476,31 @@ class SimpleListModel<T, L extends List<T>> extends AbstractTableModel implement
 
     private final ColumnDefinition[] columns;
     private final String[] actions;
-    private final int nbActions;
 
     private int lastLineInc = 0;
     private Map m_button = new HashMap();
-
 
 
     public SimpleListModel(ListPanelHelper helper) {
         this.helper = helper;
         this.columns = helper.getColumns();
         this.actions = helper.getActionLabels();
-        if (actions == null) {
-            this.nbActions = 0;
-        } else {
-            this.nbActions = actions.length;
-        }
     }
 
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        return columns[columnIndex].editable;
+        return columns[columnIndex-actions.length].editable;
     }
     
     @Override
     public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-        if (columns[columnIndex].editable && helper != null) {
+        columnIndex -= actions.length;
+        if (columnIndex < 0) {
+            return;
+        }
+        if (rowIndex == list.size() && lastLineInc != 0) {
+            helper.addInline(list, (String)aValue);
+            fireTableRowsInserted(rowIndex, rowIndex);
+        } else if (columns[columnIndex].editable && helper != null) {
             helper.setValue(list, rowIndex, columnIndex, aValue);
         }
     }
@@ -533,7 +533,7 @@ class SimpleListModel<T, L extends List<T>> extends AbstractTableModel implement
         	return b;
         }
         
-        col -= nbActions;
+        col -= actions.length;
         T o = list.get(row);
         
         if (o instanceof MultiColObject) {
@@ -555,22 +555,22 @@ class SimpleListModel<T, L extends List<T>> extends AbstractTableModel implement
     }
 	@Override
     public int getColumnCount() {
-        return nbActions + columns.length;
+        return actions.length + columns.length;
     }
 	@Override
     public Class getColumnClass(int columnIndex) {
-    	if (columnIndex < nbActions) {
+    	if (columnIndex < actions.length) {
     		return JButton.class;
     	}
 
-    	return columns[columnIndex-nbActions].type;
+    	return columns[columnIndex-actions.length].type;
 	}
     @Override
     public String getColumnName(int column) {
-    	if (column < nbActions) {
+    	if (column < actions.length) {
     		return "";
     	}
-        return columns[column-nbActions].title;
+        return columns[column-actions.length].title;
     }
     void setList(L list, ListPanel<T,L> panel) {
         this.list = list;

@@ -4,6 +4,7 @@ import org.ginsim.core.utils.data.NamedList;
 
 import java.awt.Component;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -96,19 +97,19 @@ abstract public class ListPanelHelper<T, L extends List<T>> {
     /* *************************************************************************
      *                       DECLARE CAPABILITIES
      *****************************************************************************/
-    public boolean canCreate() {
+    public final boolean canCreate() {
         return canAdd;
     }
-    public boolean canAddInline() {
+    public final boolean canAddInline() {
         return canAddInline;
     }
-    public boolean canRename() {
+    public final boolean canRename() {
         return canRename;
     }
-    public boolean canRemove() {
+    public final boolean canRemove() {
         return canRemove;
     }
-    public boolean hasNamedColumn() {
+    public final boolean hasNamedColumn() {
         return hasNamedColumn;
     }
 
@@ -145,6 +146,10 @@ abstract public class ListPanelHelper<T, L extends List<T>> {
         return -1;
     }
 
+    public boolean rename(L list, int idx, String s) {
+        return false;
+    }
+
     public ListPanelCompanion getCompanion(ListEditionPanel<T,L> editPanel) {
         return null;
     }
@@ -153,5 +158,24 @@ abstract public class ListPanelHelper<T, L extends List<T>> {
 
     public boolean doRemove(L list, int[] sel) {
         return false;
+    }
+
+    protected final boolean removeItems(L list, int[] sel) {
+        if (sel == null || sel.length < 1) {
+            return false;
+        }
+
+        if (sel.length == 1) {
+            list.remove(sel[0]);
+            return true;
+        }
+
+        List<T> toRemove = new ArrayList<T>();
+        for (int idx: sel) {
+            toRemove.add(list.get(idx));
+        }
+        list.removeAll(toRemove);
+
+        return true;
     }
 }
