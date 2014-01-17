@@ -27,7 +27,6 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.graph.view.css.CSSFilesAssociatedManager;
 import org.ginsim.core.io.parser.GINMLWriter;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.NotificationResolution;
@@ -49,7 +48,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     static {
     	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new PerturbationManager());
     	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class,  new BiblioManager());
-    	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new CSSFilesAssociatedManager());
     }
 
     /**
