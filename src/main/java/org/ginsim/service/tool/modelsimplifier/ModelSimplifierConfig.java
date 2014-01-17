@@ -9,7 +9,6 @@ import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.utils.data.MultiColHelper;
 import org.ginsim.core.utils.data.NamedObject;
 
 

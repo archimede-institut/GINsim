@@ -12,7 +12,6 @@ import javax.swing.Action;
 import javax.swing.JPanel;
 
 import org.ginsim.core.utils.data.GenericList;
-import org.ginsim.core.utils.data.GenericNamedList;
 import org.ginsim.gui.utils.data.models.MinMaxSpinModel;
 import org.ginsim.gui.utils.data.models.SpinModel;
 import org.ginsim.gui.utils.widgets.BooleanEditor;
@@ -36,7 +35,6 @@ public class GenericPropertyEditorPanel extends JPanel implements GenericPropert
 		m_class.put(SpinModel.class, SpinEditor.class);
         m_class.put(GenericList.class, GenericListPanel.class);
         m_class.put(HelpedList.class, HelpedListEditorUI.class);
-		m_class.put(GenericNamedList.class, GenericNamedListPanel.class);
 		m_class.put(Action.class, PropertyActionButton.class);
 	}
 	public static void addSupportedClass(Class data, Class widget) {

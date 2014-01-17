@@ -27,7 +27,6 @@ abstract public class GenericList<T> {
 	protected Class[] t_type = null;
 	protected Map m_editor = null;
 	
-	public MultiColHelper<T> mcolHelper = null;
 	protected List<GenericListListener> v_listeners = new ArrayList<GenericListListener>();
 	
 	public List getAddOptions() {
