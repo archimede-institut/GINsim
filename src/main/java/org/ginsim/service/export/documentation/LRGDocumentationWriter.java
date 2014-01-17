@@ -199,7 +199,7 @@ public class LRGDocumentationWriter {
 	private void writeInitialStates() throws IOException {
 		InitialStateList initStates = ((GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, 
 				InitialStateManager.KEY, false)).getInitialStates();
-		if (initStates != null && initStates.getNbElements(null) > 0) {
+		if (initStates != null && initStates.size() > 0) {
 			InitStateTableModel model = new InitStateTableModel(null, initStates, false);
 			String[] t_cols = new String[len+1];
 			for (int i=0 ; i<=len ; i++) {
@@ -211,7 +211,7 @@ public class LRGDocumentationWriter {
 			for (int i = 0; i < len; i++) {
 				doc.openTableCell(""+nodeOrder.get(i));
 			}
-			for ( int i=0 ; i< initStates.getNbElements(null) ; i++ ) {
+			for ( int i=0 ; i< initStates.size() ; i++ ) {
 				doc.openTableRow(null);
 				doc.openTableCell(""+model.getValueAt(i, 0));
 				for (int j = 2; j < model.getColumnCount(); j++) {

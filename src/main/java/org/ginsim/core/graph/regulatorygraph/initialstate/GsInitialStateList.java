@@ -103,7 +103,7 @@ public class GsInitialStateList implements GraphListener<RegulatoryGraph> {
 	}
 
     public boolean isEmpty() {
-        return inputConfigs.getNbElements() == 0 && initialStates.getNbElements() == 0;
+        return inputConfigs.size() == 0 && initialStates.size() == 0;
     }
 
     public InitialStateList getInitialStates() {

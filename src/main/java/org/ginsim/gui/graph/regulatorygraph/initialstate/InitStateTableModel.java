@@ -11,6 +11,7 @@ import javax.swing.table.AbstractTableModel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
+import org.ginsim.core.utils.data.ListTools;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 
 
@@ -33,8 +34,9 @@ public class InitStateTableModel extends AbstractTableModel {
 	/**
 	 * simple constructor
 	 * 
-	 * @param nodeOrder
-     * @param frame
+	 * @param panel
+     * @param imanager
+     * @param several
 	 */	
     public InitStateTableModel(InitialStatePanel panel, InitialStateList imanager, boolean several) {
 		super();
@@ -49,11 +51,11 @@ public class InitStateTableModel extends AbstractTableModel {
         if (imanager == null ) {
             return 0;
         }
-		return imanager.getNbElements(null)+1;
+		return imanager.size()+1;
 	}
 
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		if (columnIndex < columnShift && rowIndex >= imanager.getNbElements(null)) {
+		if (columnIndex < columnShift && rowIndex >= imanager.size()) {
 			return false;
 		}
 		return true;
@@ -77,26 +79,26 @@ public class InitStateTableModel extends AbstractTableModel {
 		List element;
 
 		if (columnIndex == 0) {
-			if (rowIndex >= imanager.getNbElements(null)) {
+			if (rowIndex >= imanager.size()) {
 				return "";
 			}
-			return ((InitialState)imanager.getElement(null, rowIndex)).getName();
+			return ((InitialState)imanager.get(rowIndex)).getName();
 		}
 		if (m_initState != null && columnIndex == 1) {
-			if ( rowIndex >= imanager.getNbElements(null)) {
+			if ( rowIndex >= imanager.size()) {
 				return Boolean.FALSE;
 			}
-			if ( m_initState.containsKey(imanager.getElement(null, rowIndex))) {
+			if ( m_initState.containsKey(imanager.get(rowIndex))) {
 				return Boolean.TRUE;
 			}
 			return Boolean.FALSE;
 		}
 		
 		int ci = columnIndex - columnShift;
-		if (imanager == null || rowIndex >= imanager.getNbElements(null)) {
+		if (imanager == null || rowIndex >= imanager.size()) {
 			return "";
 		}
-        Map m_row = ((InitialState)imanager.getElement(null, rowIndex)).getMaxValueTable();
+        Map m_row = ((InitialState)imanager.get(rowIndex)).getMaxValueTable();
         element = (List)m_row.get(nodeOrder.get(ci).getNodeInfo());
         return showValue(element, nodeOrder.get(ci).getMaxValue());
     }
@@ -196,15 +198,15 @@ public class InitStateTableModel extends AbstractTableModel {
 		}
 		
 		if (columnIndex == 0) {
-			if (rowIndex >= imanager.getNbElements(null)) {
+			if (rowIndex >= imanager.size()) {
 				return;
 			}
-			((InitialState)imanager.getElement(null, rowIndex)).setName((String)aValue);
+			((InitialState)imanager.get(rowIndex)).setName((String)aValue);
 			// FIXME: the name should be unique
 			return;
 		}
 		if (columnIndex == 1 && m_initState != null) {
-			if (rowIndex >= imanager.getNbElements(null)) {
+			if (rowIndex >= imanager.size()) {
 				return;
 			}
 			if (aValue == Boolean.TRUE) {
@@ -212,10 +214,10 @@ public class InitStateTableModel extends AbstractTableModel {
 					m_initState.clear();
 					//fireTableDataChanged();
 				}
-				Object o = imanager.getElement(null, rowIndex);
+				Object o = imanager.get(rowIndex);
                 m_initState.put(o, null);
 			} else {
-				m_initState.remove(imanager.getElement(null, rowIndex));
+				m_initState.remove(imanager.get(rowIndex));
 				// set it to null if empty ? probably _not_ a good idea
 			}
 			return;
@@ -235,10 +237,10 @@ public class InitStateTableModel extends AbstractTableModel {
 		int maxvalue = nodeOrder.get(ci).getMaxValue();
         if (aValue == null || ((String)aValue).trim().equals("") || ((String)aValue).trim().equals("*")) {
             if (rowIndex >= 0 && rowIndex < getRowCount()-1) {
-                Map m_line = ((InitialState)imanager.getElement(null, rowIndex)).getMaxValueTable();
+                Map m_line = ((InitialState)imanager.get(rowIndex)).getMaxValueTable();
                 m_line.remove(nodeOrder.get(ci));
                 if (m_line.size() == 0) {
-                    imanager.remove(null, new int[] {rowIndex});
+                    imanager.remove(rowIndex);
                     fireTableStructureChanged();
                 }
             }
@@ -292,22 +294,22 @@ public class InitStateTableModel extends AbstractTableModel {
 				}
 			}
             // if on the last line: create a new line an check it
-            if (rowIndex == imanager.getNbElements(null)) {
+            if (rowIndex == imanager.size()) {
             	imanager.add();
             	fireTableRowsInserted(rowIndex, rowIndex);
             	if (m_initState != null) {
             		setValueAt(Boolean.TRUE, rowIndex, 1);
             	}
             }
-            Map m_line = ((InitialState)imanager.getElement(null, rowIndex)).getMaxValueTable();
+            Map m_line = ((InitialState)imanager.get(rowIndex)).getMaxValueTable();
             m_line.put(nodeOrder.get(ci).getNodeInfo(),newcell);
 			fireTableCellUpdated(rowIndex,ci+2);
 		} catch (Exception e) {}
 	}
 
 	public void copyLine(int line) {
-		Map m_line = ((InitialState)imanager.getElement(null, line)).getMaxValueTable();
-		InitialState newState = (InitialState)imanager.getElement(null, imanager.add());
+		Map m_line = ((InitialState)imanager.get(line)).getMaxValueTable();
+		InitialState newState = (InitialState)imanager.get(imanager.add());
 		newState.setMaxValueTable( new HashMap(m_line));
 		fireTableDataChanged();
 	}
@@ -319,7 +321,7 @@ public class InitStateTableModel extends AbstractTableModel {
 	 * @param direction
 	 */
 	public void moveLine(int[] sel, int direction) {
-		imanager.move(sel, direction);
+		ListTools.moveItems(imanager, sel, direction);
 		fireTableDataChanged();
 	}
 	
@@ -364,7 +366,7 @@ public class InitStateTableModel extends AbstractTableModel {
         if (imanager == null || row < 0 || row == getRowCount()-1) {
             return;
         }
-        imanager.remove(null, new int[] {row});
+        imanager.remove(row);
         fireTableRowsDeleted(row, row);
 	}
 

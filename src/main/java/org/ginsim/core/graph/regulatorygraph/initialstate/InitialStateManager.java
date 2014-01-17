@@ -68,13 +68,13 @@ class initStateParser extends XMLHelper {
         
         if ("initialState".equals(qName)) {
             int index = list.add();
-            InitialState istate = (InitialState)list.getElement(null, index);
+            InitialState istate = (InitialState)list.get(index);
             istate.setData(attributes.getValue("value").trim().split(" "), imanager.normalNodes);
             istate.name = attributes.getValue("name").trim();
         }
         if ("input".equals(qName)) {
             int index = inputs.add();
-            InitialState istate = (InitialState)inputs.getElement(null, index);
+            InitialState istate = (InitialState)inputs.get(index);
             istate.setData(attributes.getValue("value").trim().split(" "), imanager.inputNodes);
             istate.name = attributes.getValue("name").trim();
         }

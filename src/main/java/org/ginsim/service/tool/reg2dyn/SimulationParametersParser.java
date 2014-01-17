@@ -169,12 +169,12 @@ public class SimulationParametersParser extends XMLHelper {
                     	// old file, do some cleanup
                     	if (pos == POS_INITSTATES) {
                             int index = initList.add();
-                            InitialState istate = (InitialState)initList.getElement(null, index);
+                            InitialState istate = (InitialState)initList.get(index);
                             istate.setData(attributes.getValue("value").trim().split(" "), nodeOrder);
                     	    param.m_initState.put(istate, null);
                     	} else {
                             int index = inputList.add();
-                            InitialState istate = (InitialState)inputList.getElement(null, index);
+                            InitialState istate = (InitialState)inputList.get(index);
                             istate.setData(attributes.getValue("value").trim().split(" "), nodeOrder);
                             param.m_input.put(istate, null);
                     	}

@@ -159,11 +159,11 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
 			for (int i=0 ; i<inits.length ; i++) {
                 InitialStateList init = inits[i];
                 InitialStateList newInit = newInits[i];
-    			if (init != null && init.getNbElements(null) > 0) {
-    				for (int j=0 ; j<init.getNbElements(null) ; j++) {
-    					InitialState istate = (InitialState)init.getElement(null, j);
+    			if (init != null && init.size() > 0) {
+    				for (int j=0 ; j<init.size() ; j++) {
+    					InitialState istate = (InitialState)init.get(j);
     					int epos = newInit.add();
-    					InitialState newIstate = (InitialState)newInit.getElement(null, epos);
+    					InitialState newIstate = (InitialState)newInit.get(pos);
     					newIstate.setName(istate.getName());
     					m_alldata.put(istate, newIstate);
     					Map<NodeInfo, List<Integer>> m_init = newIstate.getMap();
