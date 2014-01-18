@@ -5,8 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableModel;
@@ -56,9 +55,13 @@ public class DynamicItemAttributePanel extends AbstractParameterPanel {
 			c = new GridBagConstraints();
 			c.gridy = 1;
 	        c.weightx = 1;
+            c.fill = GridBagConstraints.HORIZONTAL;
+            this.add(new JLabel("Values for (pseudo) outputs"), c);
+
+            c.gridy++;
 	        c.weighty = 1;
 	        c.fill = GridBagConstraints.BOTH;
-	        this.add(getScrollPane(extraTableModel), c);
+            this.add(getScrollPane(extraTableModel), c);
 	        System.out.println("ADDING an extra table... "+extra[0]);
 		} else {
 			extraValues = null;
