@@ -81,16 +81,21 @@ public class AnnotationPanel extends JPanel
 
     public void setEditedObject(Object obj) {
         if (obj != null && obj instanceof Annotation) {
-            listenChanges = false;
-            currentNote = (Annotation)obj;
-            linkList = currentNote.getLinkList();
-            linkListPanel.setList(linkList);
-            jTextArea.setText(currentNote.getComment());
-            listenChanges = true;
+            setAnnotation((Annotation)obj);
         }
     }
 
-    protected void applyComment() {
+    public void setAnnotation(Annotation annotation) {
+        listenChanges = false;
+        currentNote = annotation;
+        linkList = currentNote.getLinkList();
+        linkListPanel.setList(linkList);
+        jTextArea.setText(currentNote.getComment());
+        listenChanges = true;
+    }
+
+
+        protected void applyComment() {
     	if (currentNote == null) {
     		return;
     	}

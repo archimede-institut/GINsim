@@ -375,25 +375,31 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements ToolTip
 	}
 
 	public int[] getFreeValues() {
-		int[] t = new int[source.getMaxValue()];
-		int cur = 1;
-		int index = 0;
-		for (int i=0 ; i<=edgecount ; i++) {
-			byte nextval = i>=edgecount ? (byte)(source.getMaxValue()+1) : edges[i].threshold;
-			if (nextval > cur) {
-				for ( ; cur<nextval ; cur++) {
-					t[index++] = cur;
-				}
-			}
-			cur = nextval+1;
+        int max = source.getMaxValue();
+        int size = getEdgeCount();
+
+        if (size >= max) {
+            return new int[] {};
+        }
+
+        int[] t = new int[max-size];
+        int cur = 1;
+        int index = 0;
+		for (int edgeIdx=0 ; edgeIdx<edgecount ; edgeIdx++) {
+			int curMax = edges[edgeIdx].threshold;
+            for ( ; cur<curMax ; cur++) {
+                t[index++] = cur;
+            }
+            cur++;
 		}
-		for ( ; index<t.length ; index++) {
-			t[index] = -1;
+		for ( ; cur<=max ; cur++) {
+			t[index++] = cur;
 		}
 		return t;
 	}
+
 	public RegulatoryEdge getEdgeForThreshold(int threshold) {
-		for (int i=0 ; i<=edgecount ; i++) {
+		for (int i=0 ; i<edgecount ; i++) {
 			if (edges[i].threshold == threshold) {
 				return edges[i];
 			}
