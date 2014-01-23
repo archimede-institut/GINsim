@@ -1,6 +1,6 @@
 package org.ginsim.gui.utils.widgets;
 
-import java.awt.Color;
+import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
@@ -12,7 +12,7 @@ import javax.swing.JTextField;
 import org.ginsim.gui.utils.data.GenericPropertyHolder;
 import org.ginsim.gui.utils.data.GenericPropertyInfo;
 import org.ginsim.gui.utils.data.ObjectPropertyEditorUI;
-
+import org.ginsim.gui.utils.data.TextProperty;
 
 
 public class StatusTextField extends JTextField implements FocusListener,
@@ -35,14 +35,16 @@ public class StatusTextField extends JTextField implements FocusListener,
 	boolean highlight;
 	boolean hasFocus = false;
 	
-	GenericPropertyInfo pinfo = null;
+	TextProperty pinfo = null;
 	
 	public StatusTextField() {
-		this.addKeyListener(this);
-		this.addFocusListener(this);
+        this(null, false);
 	}
 	public StatusTextField(String emptyText, boolean highlight) {
-		status = STATUS_OK;
+		Dimension d = new Dimension(100,20);
+        setPreferredSize(d);
+        setMinimumSize(d);
+        status = STATUS_OK;
 		this.emptyText = emptyText;
 		this.highlight = highlight;
 		redraw();
@@ -58,7 +60,7 @@ public class StatusTextField extends JTextField implements FocusListener,
 			apply();
 		} else if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 			if (pinfo != null) {
-				setText(pinfo.getStringValue());
+				setText(pinfo.getValue());
 			} else {
 				setText("");
 			}
@@ -99,7 +101,7 @@ public class StatusTextField extends JTextField implements FocusListener,
 		// first get the status
 		if (pinfo != null) {
 			String s = getText();
-			if (pinfo.getStringValue().equals(s)) {
+			if (s.equals(pinfo.getValue())) {
 				status = STATUS_OK;
 			} else if (pinfo.isValidValue(s)) {
 				status = STATUS_NEW;
@@ -154,32 +156,70 @@ public class StatusTextField extends JTextField implements FocusListener,
 
 	public void refresh(boolean force) {
 		if (force) {
-			setText(pinfo.getStringValue());
+			setText(pinfo.getValue());
 		}
 		redraw();
 	}
 
-	public void setEditedProperty(GenericPropertyInfo pinfo, GenericPropertyHolder panel) {
+    public void setEditedProperty(GenericPropertyInfo pinfo, GenericPropertyHolder panel) {
+        if (pinfo == null) {
+            setProperty(null);
+            return;
+        }
+        setProperty(new GenericTextProperty(pinfo));
+
+        if (panel == null) {
+            return;
+        }
+
+        int pos = 0;
+        if (pinfo.name != null) {
+            panel.addField(new JLabel(pinfo.name), pinfo, 0);
+            pos++;
+        }
+        if (pinfo.isEditable) {
+            setEditable(true);
+        } else {
+            setEditable(false);
+        }
+        panel.addField(this, pinfo, pos);
+    }
+
+	public void setProperty(TextProperty pinfo) {
 		this.pinfo = pinfo;
-		
-		if (panel == null) {
-			return;
-		}
-		
-		int pos = 0;
-		if (pinfo.name != null) {
-			panel.addField(new JLabel(pinfo.name), pinfo, 0);
-			pos++;
-		}
-		if (pinfo.isEditable) {
-			panel.addField(this, pinfo, pos);
-		} else {
-			setEditable(false);
-			panel.addField(this, pinfo, pos);
-		}
+        refresh(true);
 	}
+
 	@Override
 	public void release() {
 		apply();
 	}
+}
+
+class GenericTextProperty implements TextProperty {
+
+    private final GenericPropertyInfo pinfo;
+
+    public GenericTextProperty(GenericPropertyInfo pinfo) {
+        this.pinfo = pinfo;
+    }
+
+    @Override
+    public String getValue() {
+        try {
+            return pinfo.getStringValue();
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
+    @Override
+    public void setValue(String value) {
+        pinfo.setValue(value);
+    }
+
+    @Override
+    public boolean isValidValue(String value) {
+        return pinfo.isValidValue(value);
+    }
 }

@@ -11,7 +11,7 @@ import java.awt.Component;
  */
 public interface GUIEditor<T> {
 
-	public void setEditedItem(T item);
+	void setEditedItem(T item);
 	
-	public Component getComponent();
+	Component getComponent();
 }

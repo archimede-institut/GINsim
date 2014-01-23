@@ -1,11 +1,6 @@
 package org.ginsim.gui.utils.data;
 
-import java.awt.CardLayout;
-import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -80,6 +75,7 @@ public class ListPanel<T, L extends List<T>> extends JPanel
         jl = new EnhancedJTable(model);
     	jl.addActionListener(model);
         jl.getSelectionModel().addListSelectionListener(this);
+        jl.setMinimumSize(new Dimension(60, 60));
 
         // Hide column names if none is provided
         if (!helper.hasNamedColumn()) {

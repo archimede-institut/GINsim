@@ -1,117 +1,84 @@
 package org.ginsim.gui.graph.dynamicgraph;
 
-import java.awt.Component;
-import java.awt.GridBagConstraints;
+import java.awt.*;
+import java.util.List;
 
 import org.colomoto.logicalmodel.NodeInfo;
-import org.ginsim.common.application.Translator;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.common.GraphEventCascade;
 import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
-import org.ginsim.core.utils.data.GenericList;
-import org.ginsim.core.utils.data.SimpleGenericList;
-import org.ginsim.gui.utils.data.GenericPropertyInfo;
-import org.ginsim.gui.utils.data.ObjectEditor;
+import org.ginsim.gui.annotation.AnnotationPanel;
+import org.ginsim.gui.graph.GUIEditor;
+import org.ginsim.gui.utils.data.ListPanel;
+import org.ginsim.gui.utils.data.ListPanelHelper;
+import org.ginsim.gui.utils.data.TextProperty;
+import org.ginsim.gui.utils.widgets.StatusTextField;
+
+import javax.swing.*;
 
 
-public class StateTransitionGraphEditor extends ObjectEditor<DynamicGraph> implements GraphListener<DynamicGraph> {
+public class StateTransitionGraphEditor extends JPanel implements TextProperty, GUIEditor<DynamicGraph>, GraphListener<DynamicGraph> {
 
-	public static final int PROP_ID = 0;
-	public static final int PROP_NODEORDER = 1;
-	public static final int PROP_ANNOTATION = 2;
-	public static final int PROP_RAW = 10;
-	
-	DynamicGraph graph;
-	private SimpleGenericList<NodeInfo> nodeList;
+	private final DynamicGraph graph;
+	private final List<NodeInfo> nodeList;
+
+    private final StatusTextField nameField;
+    private final AnnotationPanel annotationPanel;
+    private final ListPanel nodePanel;
 
 	public StateTransitionGraphEditor(DynamicGraph graph) {
-		GenericPropertyInfo pinfo = new GenericPropertyInfo(this, PROP_ID, Translator.getString("STR_name"), String.class);
-		v_prop.add(pinfo);
-		pinfo = new GenericPropertyInfo(this, PROP_NODEORDER, null, GenericList.class);
-		pinfo.addPosition(0, 1, 2, 1, 1, 1, GridBagConstraints.SOUTH);
-		pinfo.data = nodeList;
-		v_prop.add(pinfo);
-		pinfo = new GenericPropertyInfo(this, PROP_ANNOTATION, Translator.getString("STR_notes"), Annotation.class);
-		pinfo.addPosition(3, 0, 1, 2, 4, 1, GridBagConstraints.SOUTH);
-		v_prop.add(pinfo);
-		
-		setEditedObject(graph);
+        super(new GridBagLayout());
+
+        this.graph = graph;
+        this.nodeList = graph.getNodeOrder();
+
+        GridBagConstraints cst = new GridBagConstraints();
+        cst.gridx = 1;
+        cst.gridy = 1;
+        cst.fill = GridBagConstraints.HORIZONTAL;
+        add(new JLabel("Name"), cst);
+        cst.gridx++;
+        nameField = new StatusTextField();
+        nameField.setProperty(this);
+        add(nameField, cst);
+
+        cst.gridx = 1;
+        cst.gridy = 2;
+        cst.gridwidth = 2;
+        cst.weighty = 1;
+        cst.fill = GridBagConstraints.BOTH;
+        nodePanel = new ListPanel(STGNodeListHelper.HELPER, "");
+        nodePanel.setList(nodeList);
+        add(nodePanel, cst);
+
+        cst.gridy = 1;
+        cst.gridx = 3;
+        cst.gridheight = 2;
+        cst.weightx = 1;
+        annotationPanel = new AnnotationPanel();
+        annotationPanel.setAnnotation(graph.getAnnotation());
+        add(annotationPanel, cst);
+
+        GraphManager.getInstance().addGraphListener( this.graph, this);
 	}
 
-	private void setEditedObject(DynamicGraph g) {
-		if (g != this.graph) {
-			if (this.graph != null) {
-		        GraphManager.getInstance().removeGraphListener( this.graph, this);
-			}
-			this.graph = g;
-			this.nodeList = new SimpleGenericList<NodeInfo>( graph.getNodeOrder());
-			if (this.graph != null) {
-		        GraphManager.getInstance().addGraphListener( this.graph, this);
-			}
-		}
-		master = g;
-		super.setEditedItem(g);
+    @Override
+	public void setEditedItem(DynamicGraph g) {
+        // should not be needed
 	}
+
+    public void refresh() {
+        nameField.refresh(true);
+        nodePanel.refresh();
+        annotationPanel.refresh(true);
+    }
 	
-	public int getIntValue(int prop) {
-		return 0;
-	}
-
-	public String getStringValue(int prop) {
-		switch (prop) {
-			case PROP_ID:
-				return graph.getGraphName();
-		}
-		return null;
-	}
-
-	public boolean isValidValue(int prop, String value) {
-		if (prop == PROP_ID) {
-			return XMLWriter.isValidId(value);
-		}
-		return false;
-	}
-
-	public boolean isValidValue(int prop, int value) {
-		return false;
-	}
-
-	public boolean setValue(int prop, String value) {
-		try {
-			if (prop == PROP_ID) {
-					graph.setGraphName( value);
-					return true;
-			}
-		} catch (Exception e) {
-		}
-		return false;
-	}
-
-	public boolean setValue(int prop, int value) {
-		return false;
-	}
-
-	public Object getRawValue(int prop) {
-		switch (prop) {
-			case PROP_ANNOTATION:
-				return graph.getAnnotation();
-			case PROP_NODEORDER:
-				return nodeList;
-			case PROP_RAW:
-				return graph;
-		}
-		return null;
-	}
-
 	@Override
 	public Component getComponent() {
-		Component component = super.getComponent();
-		refresh(true);
-		return component;
+		return this;
 	}
 
 	@Override
@@ -120,8 +87,35 @@ public class StateTransitionGraphEditor extends ObjectEditor<DynamicGraph> imple
 		case NODEADDED:
 		case NODEREMOVED:
 		case NODEUPDATED:
-			refresh(true);
+			refresh();
 		}
 		return null;
 	}
+
+    @Override
+    public String getValue() {
+        return graph.getGraphName();
+    }
+
+    @Override
+    public void setValue(String value) {
+        try {
+            graph.setGraphName( value);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public boolean isValidValue(String value) {
+        return XMLWriter.isValidId(value);
+    }
+}
+
+class STGNodeListHelper extends ListPanelHelper {
+
+    public static final STGNodeListHelper HELPER = new STGNodeListHelper();
+
+    private STGNodeListHelper() {
+        canOrder = false;
+    }
 }
