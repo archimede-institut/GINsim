@@ -3,7 +3,6 @@ package org.ginsim.servicegui.tool.reg2dyn;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.application.Translator;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
-import org.ginsim.gui.utils.data.GenericListSelectionPanel;
 import org.ginsim.gui.utils.data.ListEditionPanel;
 import org.ginsim.gui.utils.data.ListPanelCompanion;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
@@ -49,7 +48,7 @@ public class SimulationParameterEditionPanel extends JPanel implements ListPanel
     private JTextField textMaxNodes = null;
     private JLabel labelMaxDepth = null;
     private JLabel labelMaxNodes = null;
-    private GenericListSelectionPanel selectPriorityClass;
+    private PrioritySelectionPanel selectPriorityClass;
 
     private Insets indentInset = new Insets(0, 30, 0, 0);
 
@@ -198,7 +197,7 @@ public class SimulationParameterEditionPanel extends JPanel implements ListPanel
     }
 
 
-    private GenericListSelectionPanel getPriorityClassSelector() {
+    private PrioritySelectionPanel getPriorityClassSelector() {
         if (selectPriorityClass == null) {
             selectPriorityClass = new PrioritySelectionPanel(stackDialog, paramList.pcmanager);
         }
@@ -351,7 +350,7 @@ public class SimulationParameterEditionPanel extends JPanel implements ListPanel
     }
 
     @Override
-    public void setList(SimulationParameterList list) {
+    public void setParentList(SimulationParameterList list) {
         this.paramList = list;
         this.currentParameter = null;
         initialize();
@@ -365,7 +364,7 @@ public class SimulationParameterEditionPanel extends JPanel implements ListPanel
         } else {
             currentParameter = paramList.get(sel[0]);
             initStatePanel.setParam(currentParameter);
-            selectPriorityClass.setStore(currentParameter.store, SimulationParameters.PCLASS);
+            selectPriorityClass.setStore(currentParameter);
             if (currentParameter.breadthFirst) {
                 radioBreadthFirst.setSelected(true);
             } else {

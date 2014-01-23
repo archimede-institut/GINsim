@@ -89,7 +89,7 @@ class ReductionPanelCompanion implements ListPanelCompanion<ModelSimplifierConfi
     }
 
     @Override
-    public void setList(ModelSimplifierConfigList reductions) {
+    public void setParentList(ModelSimplifierConfigList reductions) {
         this.ctlist = new SimplifierConfigContentList(reductions.getNodeOrder());
         panel.setList(ctlist);
     }

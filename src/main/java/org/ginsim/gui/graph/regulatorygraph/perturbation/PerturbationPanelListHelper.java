@@ -81,7 +81,7 @@ class PerturbationPanelCompanion implements ListPanelCompanion<Perturbation, Lis
     }
 
     @Override
-    public void setList(ListOfPerturbations perturbations) {
+    public void setParentList(ListOfPerturbations perturbations) {
         this.perturbations = perturbations;
         if (perturbations != null && createPanel == null) {
             createPanel = new PerturbationCreatePanel(this, this.perturbations);

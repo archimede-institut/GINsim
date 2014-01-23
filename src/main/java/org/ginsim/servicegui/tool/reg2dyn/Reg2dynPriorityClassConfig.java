@@ -18,19 +18,21 @@ import javax.swing.event.ListSelectionListener;
 
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.utils.data.SimpleGenericList;
-import org.ginsim.gui.utils.data.GenericListPanel;
+import org.ginsim.gui.utils.data.*;
 import org.ginsim.gui.utils.widgets.StockButton;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
 
 
 /**
  * configure priority classes.
   */
-public class Reg2dynPriorityClassConfig extends GenericListPanel implements ListSelectionListener {
+public class Reg2dynPriorityClassConfig extends GenericListPanel implements ListPanelCompanion, ListSelectionListener {
 
     private static final long serialVersionUID = -3214357334096594239L;
+
+    private static final ListPanelHelper LISTING_HELPER = new ListingHelper();
 
     private static final int UP = PriorityClassDefinition.UP;
     private static final int DOWN = PriorityClassDefinition.DOWN;
@@ -42,11 +44,9 @@ public class Reg2dynPriorityClassConfig extends GenericListPanel implements List
     private JButton but_remove;
     
     private List<RegulatoryNode> nodeOrder;
-    GenericListPanel contentPanel;
-    GenericListPanel availablePanel;
-    SimpleGenericList<PriorityMember> contentList = new SimpleGenericList<PriorityMember>();
-    SimpleGenericList<PriorityMember> availableList = new SimpleGenericList<PriorityMember>();
-    
+    ListPanel contentPanel;
+    ListPanel availablePanel;
+
     private List<PriorityMember> l_content = new ArrayList<PriorityMember>();
     private List<PriorityMember> l_avaible = new ArrayList<PriorityMember>();
     
@@ -55,19 +55,21 @@ public class Reg2dynPriorityClassConfig extends GenericListPanel implements List
     PriorityClassDefinition pcdef;
     
     private StockButton but_group;
-	private GenericListPanel pcpanel;
+	private ListEditionPanel<PriorityClassDefinition, PriorityClassManager> parentPanel;
     
     /**
-     * @param frame
      * @param nodeOrder
-     * @param param
      */
-    public Reg2dynPriorityClassConfig(List<RegulatoryNode> nodeOrder) {
+    public Reg2dynPriorityClassConfig(ListEditionPanel editPanel, List<RegulatoryNode> nodeOrder) {
     	super(new HashMap<Class<?>, Component>(), "pclassConfig");
+        this.parentPanel = editPanel;
         this.nodeOrder = nodeOrder;
         initialize();
-        contentList.setData(l_content);
-        availableList.setData(l_avaible);
+
+        if (parentPanel != null) {
+            parentPanel.addPanel(this, "PCLASS");
+            parentPanel.showPanel("PCLASS");
+        }
     }
     
     private void initialize() {
@@ -127,17 +129,17 @@ public class Reg2dynPriorityClassConfig extends GenericListPanel implements List
         targetpanel.add(getBut_group(), c);
     }
     
-    protected GenericListPanel getContentPanel() {
+    protected ListPanel getContentPanel() {
     	if (contentPanel == null) {
-    		contentPanel = new GenericListPanel();
-    		contentPanel.setList(contentList);
+    		contentPanel = new ListPanel(LISTING_HELPER, "");
+    		contentPanel.setList(l_content);
     	}
     	return contentPanel;
     }
-    protected GenericListPanel getAvaiblePanel() {
+    protected ListPanel getAvaiblePanel() {
     	if (availablePanel == null) {
-    		availablePanel = new GenericListPanel();
-    		availablePanel.setList(availableList);
+    		availablePanel = new ListPanel(LISTING_HELPER, "");
+    		availablePanel.setList(l_avaible);
     	}
     	return availablePanel;
     }
@@ -304,8 +306,8 @@ public class Reg2dynPriorityClassConfig extends GenericListPanel implements List
         if (ti.length != 1) {
             but_remove.setEnabled(false);
             but_insert.setEnabled(false);
-            contentList.refresh();
-            availableList.refresh();
+            contentPanel.refresh();
+            availablePanel.refresh();
             return;
         }
         but_remove.setEnabled(true);
@@ -354,28 +356,14 @@ public class Reg2dynPriorityClassConfig extends GenericListPanel implements List
                 }
             }
         }
-        contentList.refresh();
-        availableList.refresh();
+        contentPanel.refresh();
+        availablePanel.refresh();
     }
     
-	public void setClassPanel(GenericListPanel pcpanel) {
-		this.pcpanel = pcpanel;
-		pcpanel.addSelectionListener(this);
-	}
-
 	public void valueChanged(ListSelectionEvent e) {
 		if (e.getSource() == getSelectionModel()) {
 			super.valueChanged(e);
 			classSelectionChanged();
-		} else {
-			pcdef = (PriorityClassDefinition)pcpanel.getSelectedItem();
-			if (pcdef == null) {
-				setList(null);
-				setEnabled(false);
-				return;
-			}
-			setEnabled(true);
-			setList(pcdef);
 		}
 	}
 	
@@ -386,6 +374,23 @@ public class Reg2dynPriorityClassConfig extends GenericListPanel implements List
 		but_insert.setEnabled(b);
 		but_remove.setEnabled(b);
 	}
+
+    @Override
+    public void setParentList(List list) {
+        // nothing to do
+    }
+
+    @Override
+    public void selectionUpdated(int[] selection) {
+        pcdef = parentPanel.getSelectedItem();
+        if (pcdef == null) {
+            setList(null);
+            setEnabled(false);
+            return;
+        }
+        setEnabled(true);
+        setList(pcdef);
+    }
 }
 
 class PriorityMember {
@@ -400,4 +405,11 @@ class PriorityMember {
 	public String toString() {
 		return vertex+Reg2dynPriorityClassConfig.t_typeName[type];
 	}
+}
+
+class ListingHelper extends ListPanelHelper {
+
+    public ListingHelper() {
+        canOrder = false;
+    }
 }

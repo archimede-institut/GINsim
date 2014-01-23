@@ -227,6 +227,11 @@ public class ListPanel<T, L extends List<T>> extends JPanel
         jl.setRowSelectionInterval(idx, idx);
     }
 
+    public L getList() {
+        return this.list;
+    }
+
+
     /**
      * set the list to show.
      * @param list

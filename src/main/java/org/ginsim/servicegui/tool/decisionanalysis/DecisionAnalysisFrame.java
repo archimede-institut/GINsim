@@ -8,16 +8,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.colomoto.logicalmodel.LogicalModel;
-import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.utils.data.GenericListSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
-import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
@@ -28,7 +24,7 @@ public class DecisionAnalysisFrame extends LogicalModelActionDialog  {
 	private static final long serialVersionUID = -7619253564236142617L;
 	private HierarchicalTransitionGraph htg;
 	private JPanel mainPanel;
-	private GenericListSelectionPanel selectPriorityClass;
+	private PrioritySelectionPanel selectPriorityClass;
 	private RegulatoryGraph regGraph;
 	private SimulationParameters currentParameter;
 	
@@ -60,12 +56,12 @@ public class DecisionAnalysisFrame extends LogicalModelActionDialog  {
 	}
 
 
-	private GenericListSelectionPanel getPriorityClassSelector() {
+	private PrioritySelectionPanel getPriorityClassSelector() {
         SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( regGraph, SimulationParametersManager.KEY, true);
 		if (selectPriorityClass == null) {
 			selectPriorityClass = new PrioritySelectionPanel(this, paramList.pcmanager);
 			this.currentParameter = paramList.get(0);
-			selectPriorityClass.setStore(currentParameter.store, SimulationParameters.PCLASS);
+			selectPriorityClass.setStore(currentParameter);
 		}
 		return selectPriorityClass;
 	}

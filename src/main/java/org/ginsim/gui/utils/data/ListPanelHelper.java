@@ -1,6 +1,8 @@
 package org.ginsim.gui.utils.data;
 
+import org.ginsim.core.utils.data.ListTools;
 import org.ginsim.core.utils.data.NamedList;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 
 import java.awt.Component;
 import java.lang.reflect.Method;
@@ -87,6 +89,13 @@ public class ListPanelHelper<T, L extends List<T>> {
 		return false;
 	}
 
+    public ListPanel<T,L> getListPanel(L list) {
+        return new ListPanel<T, L>(this, "");
+    }
+
+    public ListEditionPanel<T,L> getEditPanel(L list, StackDialog dialog) {
+        return new ListEditionPanel<T, L>(this, list, "", dialog, null);
+    }
 
     /* *************************************************************************
      *                       DECLARE CAPABILITIES
@@ -167,31 +176,7 @@ public class ListPanelHelper<T, L extends List<T>> {
     }
 
     public boolean moveData(L list, int[] sel, int diff) {
-
-        // check that the move is possible
-        int max = list.size();
-        for (int a: sel) {
-            int dst = a+diff;
-            if (dst < 0 || dst >= max) {
-                // can not do this move
-                return false;
-            }
-        }
-
-        // actually move elements
-        for (int i=0 ; i<sel.length ; i++) {
-            int src = sel[i];
-            int dst = src + diff;
-
-            if (src < 0 || dst < 0 || src >= max || dst >= max) {
-                continue;
-            }
-            T o = list.remove(src);
-            list.add(dst, o);
-
-            sel[i] = dst;
-        }
-        return true;
+        return ListTools.moveItems(list, sel, diff);
     }
 
 }

@@ -29,7 +29,6 @@ import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.service.ServiceGUIManager;
 import org.ginsim.gui.service.common.LayoutAction;
 import org.ginsim.gui.shell.MainFrame;
-import org.ginsim.gui.utils.data.GenericListSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.gui.utils.widgets.Frame;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
@@ -87,12 +86,12 @@ public class LimitedSimulationFrame extends LogicalModelActionDialog {
 		return mainPanel;
 	}
 
-	private GenericListSelectionPanel getPriorityClassSelector() {
+	private PrioritySelectionPanel getPriorityClassSelector() {
 		if (selectPriorityClass == null) {
 			pcmanager = new PriorityClassManager(lrg);
 			selectPriorityClass = new PrioritySelectionPanel(this, pcmanager);
 			params = new SimulationParameters(lrg);
-			selectPriorityClass.setStore(params.store, SimulationParameters.PCLASS);
+			selectPriorityClass.setStore(params);
 		}
 		return selectPriorityClass;
 	}

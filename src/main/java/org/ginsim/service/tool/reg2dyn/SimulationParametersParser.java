@@ -89,21 +89,21 @@ public class SimulationParametersParser extends XMLHelper {
                     if (s != null) {
                     	if ("asynchrone_df".equals(s)) {
                     		param.breadthFirst = false;
-                    		param.store.setObject(SimulationParameters.PCLASS, paramLists.pcmanager.getElement(null, 0));
+                    		param.setPriorityDefinition(paramLists.pcmanager.get(0));
                     	} else if ("asynchrone_bf".equals(s)) {
-                    		param.store.setObject(SimulationParameters.PCLASS, paramLists.pcmanager.getElement(null, 0));
+                    		param.setPriorityDefinition(paramLists.pcmanager.get(0));
                     		param.breadthFirst = true;
                     	} else if ("synchrone".equals(s)) {
-                    		param.store.setObject(SimulationParameters.PCLASS, paramLists.pcmanager.getElement(null, 1));
+                    		param.setPriorityDefinition(paramLists.pcmanager.get(1));
                     		param.breadthFirst = false;
                     	}
                     } else {
                         s = attributes.getValue("updating");
-                        Object o = paramLists.pcmanager.getElement(s);
+                        PriorityClassDefinition o = paramLists.pcmanager.getByName(s);
                         if (o == null) {
-                        	o = paramLists.pcmanager.getElement(PriorityClassManager.ASYNCHRONOUS);
+                        	o = paramLists.pcmanager.getByName(PriorityClassManager.ASYNCHRONOUS);
                         }
-                        param.store.setObject(SimulationParameters.PCLASS, o);
+                        param.setPriorityDefinition(o);
                         param.breadthFirst = "true".equals(attributes.getValue("breadthFirst"));
                     }
                     s = attributes.getValue("maxdepth");
@@ -111,8 +111,8 @@ public class SimulationParametersParser extends XMLHelper {
                     s = attributes.getValue("maxnodes");
                     param.maxnodes = Integer.parseInt(s);
                 } else if (qName.equals("priorityClassList")) {
-                	int index = paramLists.pcmanager.add();
-                	pcdef = (PriorityClassDefinition)paramLists.pcmanager.getElement(null, index);
+                	int index = paramLists.pcmanager.addDefinition(null);
+                	pcdef = (PriorityClassDefinition)paramLists.pcmanager.get(index);
                 	pcdef.v_data.clear();
                 	pcdef.m_elt.clear();
                 	pcdef.setName(attributes.getValue("id"));
@@ -143,17 +143,16 @@ public class SimulationParametersParser extends XMLHelper {
                   }
                 	
                 } else if (qName.equals("priorityClassList")) {
-                	int index = paramLists.pcmanager.add();
-                	pcdef = (PriorityClassDefinition)paramLists.pcmanager.getElement(null, index);
+                	int index = paramLists.pcmanager.addDefinition(null);
+                	pcdef = (PriorityClassDefinition)paramLists.pcmanager.get(index);
                 	pcdef.v_data.clear();
                 	pcdef.m_elt.clear();
-                	param.store.setObject(SimulationParameters.PCLASS, pcdef);
+                	param.setPriorityDefinition(pcdef);
                     pclass_fine = false;
                     posback = pos;
                     pos = POS_PCLASS;
                 } else if (qName.equals("priorityClass")) {
-                	param.store.setObject(SimulationParameters.PCLASS,
-                			paramLists.pcmanager.getElement(attributes.getValue("ref")));
+                	param.setPriorityDefinition(paramLists.pcmanager.getByName(attributes.getValue("ref")));
                 }
                 break;
             case POS_PCLASS:

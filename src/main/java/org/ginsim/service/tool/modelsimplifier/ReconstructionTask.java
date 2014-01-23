@@ -184,10 +184,10 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
 			PriorityClassManager pcman = params.pcmanager;
 			SimulationParameterList new_params = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, SimulationParametersManager.KEY, true);
 			PriorityClassManager new_pcman = new_params.pcmanager;
-			for (int i=2 ; i<pcman.getNbElements(null) ; i++) {
-				PriorityClassDefinition pcdef = (PriorityClassDefinition)pcman.getElement(null, i);
-				int index = new_pcman.add();
-				PriorityClassDefinition new_pcdef = (PriorityClassDefinition)new_pcman.getElement(null, index);
+			for (int i=2 ; i<pcman.size() ; i++) {
+				PriorityClassDefinition pcdef = (PriorityClassDefinition)pcman.get(i);
+				int index = new_pcman.addDefinition(null);
+				PriorityClassDefinition new_pcdef = (PriorityClassDefinition)new_pcman.get(index);
 				new_pcdef.setName(pcdef.getName());
 				m_alldata.put(pcdef, new_pcdef);
 				Map<Reg2dynPriorityClass, Reg2dynPriorityClass> m_pclass = new HashMap<Reg2dynPriorityClass, Reg2dynPriorityClass>();
@@ -213,7 +213,7 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
 				}
 			}
 			int[] t_index = {0};
-			new_pcman.remove(null, t_index);
+			new_pcman.remove(t_index);
 			
 			// simulation parameters
 			for (SimulationParameters param: params) {

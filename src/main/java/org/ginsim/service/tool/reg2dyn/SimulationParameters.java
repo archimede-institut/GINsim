@@ -14,25 +14,24 @@ import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.utils.data.NamedObject;
-import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityDefinitionStore;
 import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
 
 
 /**
  * remember, save and restore a simulation parameter.
  */
-public class SimulationParameters implements XMLize, NamedObject, InitialStateStore {
+public class SimulationParameters implements XMLize, NamedObject, InitialStateStore, PriorityDefinitionStore {
 
-	public static final int MUTANT = 0;
-	public static final int PCLASS = 1;
-		
+    public static final int MUTANT = 0;
+
 	public static final int STRATEGY_STG = 0;
 	public static final int STRATEGY_SCCG = 1;
 	public static final int STRATEGY_HTG = 2;
@@ -44,13 +43,11 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
     public boolean breadthFirst = false;
     public int simulationStrategy = STRATEGY_STG;
 
-    /**
-     * Stores the MUTANT and the PCLASS
-     */
-    public ObjectStore store = new ObjectStore(2);
     public Map m_initState = new HashMap();
     public Map m_input = new HashMap();
     public SimulationParameterList param_list;
+
+    private PriorityClassDefinition pcdef;
 
     /**
      * empty constructor for everyday use.
@@ -58,12 +55,12 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
      */
     public SimulationParameters(SimulationParameterList param_list) {
     	this.param_list = param_list;
-        store.setObject(PCLASS, param_list.pcmanager.getElement(null, 0));
+        setPriorityDefinition(param_list.pcmanager.get(0));
     }
 
     /**
      * empty constructor without parameter list.
-     * @param param_list
+     * @param graph
      */
     public SimulationParameters(RegulatoryGraph graph) {
     	this(new SimulationParameterList(graph));
@@ -92,7 +89,6 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
         s += "    Regulatory graph: " + name + "\n";
         s += "    Simulation strategy: " + simulationStrategy + "\n";
         s += "    Updating policy: ";
-		PriorityClassDefinition pcdef = (PriorityClassDefinition)store.getObject(PCLASS);
 		if (pcdef != null) {
 	        if (pcdef.getNbElements(null) > 1) {
 	            s += "by priority class\n";
@@ -147,8 +143,10 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
             s += "\n";
         }
 
-        if (store.getObject(MUTANT) != null) {
-            s += "    Mutant: "+store.getObject(MUTANT).toString()+"\n";
+        // TODO: get the real associated perturbation
+        Perturbation perturbation = null;
+        if (perturbation != null) {
+            s += "    Perturbation: "+perturbation+"\n";
         }
         if (maxdepth != 0) {
             s += "    Max depth: "+maxdepth+"\n";
@@ -161,7 +159,6 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
 
     @Override
 	public void toXML(XMLWriter out) throws IOException {
-		PriorityClassDefinition pcdef = (PriorityClassDefinition)store.getObject(PCLASS);
 		out.openTag("parameter");
 		out.addAttr("name", name);
 		out.addAttr("updating", pcdef.getName());
@@ -197,9 +194,12 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
             }
             out.closeTag();
         }
-		if (store.getObject(MUTANT) != null) {
+
+        // TODO: get the real associated perturbation
+        Perturbation perturbation = null;
+		if (perturbation != null) {
             out.openTag("mutant");
-            out.addAttr("value", store.getObject(MUTANT).toString());
+            out.addAttr("value", perturbation.toString());
             out.closeTag();
 		}
 		out.closeTag();
@@ -212,8 +212,10 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
     	newp.name = name;
     	newp.maxdepth = maxdepth;
     	newp.maxnodes = maxnodes;
-    	newp.store.setObject(MUTANT, store.getObject(MUTANT));
-    	newp.store.setObject(PCLASS, store.getObject(PCLASS));
+        // TODO: get the real associated perturbation
+        Perturbation perturbation = null;
+//    	newp.perturbation = perturbation;
+    	newp.setPriorityDefinition(pcdef);
 
     	if (m_initState != null) {
     		newp.m_initState = new HashMap();
@@ -246,12 +248,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
     }
 
 	public PriorityClassDefinition getPriorityClassDefinition() {
-		PriorityClassDefinition pcd = (PriorityClassDefinition)store.getObject(PCLASS);
-		if (pcd == null) {
-			pcd = (PriorityClassDefinition)param_list.pcmanager.getElement(null, 0);
-			store.setObject(PCLASS, pcd);
-		}
-		return pcd;
+        return getPriorityDefinition();
 	}
 
     public void copy_to(SimulationParameters other, Map mapping) {
@@ -268,23 +265,39 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
         while (it.hasNext()) {
             other.m_input.put(mapping.get(it.next()), null);
         }
-        other.store.setObject(MUTANT, mapping.get(store.getObject(MUTANT)));
-        PriorityClassDefinition pcdef = (PriorityClassDefinition)store.getObject(PCLASS);
+
+        // TODO: get the real associated perturbation
+        Perturbation perturbation = null;
+//        other.perturbation = (Perturbation)mapping.get(perturbation);
         PriorityClassDefinition new_pcdef = (PriorityClassDefinition)mapping.get(pcdef);
         if (new_pcdef == null) {
             PriorityClassManager new_pcman = (PriorityClassManager)mapping.get("");
             if (pcdef.getNbElements(null) < 2) {
                 Reg2dynPriorityClass pc = (Reg2dynPriorityClass)pcdef.getElement(null,0);
                 if (pc.getMode() == Reg2dynPriorityClass.SYNCHRONOUS) {
-                    new_pcdef = (PriorityClassDefinition)new_pcman.getElement(null, 1);
+                    new_pcdef = (PriorityClassDefinition)new_pcman.get(1);
                 } else {
-                    new_pcdef = (PriorityClassDefinition)new_pcman.getElement(null, 0);
+                    new_pcdef = (PriorityClassDefinition)new_pcman.get(0);
                 }
             } else {
                 LogManager.error( "[BUG] complex pcdef not transposed in the reduced model");
-                new_pcdef = (PriorityClassDefinition)new_pcman.getElement(null, 0);
+                new_pcdef = (PriorityClassDefinition)new_pcman.get(0);
             }
         }
-        other.store.setObject(PCLASS, new_pcdef);
+        other.setPriorityDefinition(new_pcdef);
     }
+
+    @Override
+    public PriorityClassDefinition getPriorityDefinition() {
+        if (pcdef == null) {
+            pcdef = param_list.pcmanager.get(0);
+        }
+        return pcdef;
+    }
+
+    @Override
+    public void setPriorityDefinition(PriorityClassDefinition pcdef) {
+        this.pcdef = pcdef;
+    }
+
 }

@@ -7,7 +7,7 @@ import java.util.List;
  */
 public interface ListPanelCompanion<T, L extends List<T>> {
 
-    void setList(L list);
+    void setParentList(L list);
 
     void selectionUpdated(int[] selection);
 }

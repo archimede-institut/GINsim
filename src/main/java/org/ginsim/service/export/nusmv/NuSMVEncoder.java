@@ -109,7 +109,7 @@ public class NuSMVEncoder {
 
 		String sTmp;
 		int[][] iaTmp = null;
-		PriorityClassDefinition priorities = config.getPriorityClasses();
+		PriorityClassDefinition priorities = config.getPriorityDefinition();
 		// classNum -> className
 		TreeMap<Integer, String> tmPcNum2Name = new TreeMap<Integer, String>();
 		// classNum -> RankNum

@@ -34,21 +34,14 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 		this.config = config;
 		this.action = action;
 
-		
 		mainPanel = new JPanel(new BorderLayout());
 
 		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager
 				.getInstance().getObject(config.getGraph(),
 						SimulationParametersManager.KEY, true);
 		priorityPanel = new PrioritySelectionPanel(this, paramList.pcmanager);
-		priorityPanel.setStore(config.getStore(), 0);
+		priorityPanel.setStore(config);
 		mainPanel.add(priorityPanel, BorderLayout.NORTH);
-
-		priorityPanel.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				changeUpdatePolicy();
-			}
-		});
 
 		initPanel = new InitialStatePanel(config.getGraph(), true);
 		initPanel.setParam(config);
@@ -57,10 +50,6 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 		setMainPanel(mainPanel);
 	}
 
-	public void changeUpdatePolicy() {
-		this.config.setUpdatePolicy();
-	}
-	
 	@Override
 	public void run(LogicalModel model) {
 		config.updateModel(model);

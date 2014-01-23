@@ -84,8 +84,8 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
     private void nodeRemoved(Object data) {
         // remove it from priority classes
     	pcmanager.nodeOrder.remove(data);
-        for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
-        	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
+        for (int i=0 ; i<pcmanager.size() ; i++) {
+        	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.get(i);
     		if (pcdef.m_elt != null) {
     			pcdef.m_elt.remove(data);
     		}
@@ -99,8 +99,8 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
 			return;
 		}
 		pcmanager.nodeOrder.add(node);
-        for (int i=0 ; i<pcmanager.getNbElements(null) ; i++) {
-        	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.getElement(null, i);
+        for (int i=0 ; i<pcmanager.size() ; i++) {
+        	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.get(i);
     		if (pcdef.m_elt != null) {
     			pcdef.m_elt.put(node, pcdef.getElement(null, 0));
     		}

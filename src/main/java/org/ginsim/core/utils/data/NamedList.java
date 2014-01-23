@@ -48,6 +48,14 @@ public class NamedList<T extends NamedObject> extends ArrayList<T> {
         return -1;
     }
 
+    public T getByName(String name) {
+        int idx = findName(name);
+        if (idx >= 0) {
+            return get(idx);
+        }
+        return null;
+    }
+
     public boolean isNameValid(int idx, String name) {
         if (name == null) {
             return false;

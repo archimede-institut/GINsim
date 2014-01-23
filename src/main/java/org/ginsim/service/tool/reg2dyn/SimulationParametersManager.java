@@ -45,9 +45,9 @@ public class SimulationParametersManager extends BasicGraphAssociatedManager {
             }
             out.addAttr("nodeOrder", s_nodeOrder);
             // add priority class definition
-            if (paramList.pcmanager != null && paramList.pcmanager.getNbElements(null) > 0) {
-                for (int i=2 ; i<paramList.pcmanager.getNbElements(null) ; i++) {
-                	((XMLize)paramList.pcmanager.getElement(null, i)).toXML(out);
+            if (paramList.pcmanager != null && paramList.pcmanager.size() > 0) {
+                for (int i=2 ; i<paramList.pcmanager.size() ; i++) {
+                	((XMLize)paramList.pcmanager.get(i)).toXML(out);
                 }
             }
             // and the real parameters

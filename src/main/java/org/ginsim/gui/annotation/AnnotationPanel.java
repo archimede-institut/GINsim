@@ -1,6 +1,5 @@
 package org.ginsim.gui.annotation;
 
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.List;
@@ -18,7 +17,6 @@ import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.annotation.AnnotationLink;
 import org.ginsim.core.graph.common.AbstractGraph;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.utils.data.SimpleGenericList;
 import org.ginsim.gui.utils.data.*;
 
 /**

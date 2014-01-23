@@ -31,7 +31,7 @@ public class ListEditionPanel<T,L extends List<T>> extends SplitPane {
 
         companion = helper.getCompanion(this);
         if (companion != null) {
-            companion.setList(list);
+            companion.setParentList(list);
         	setRightComponent(mainPanel);
             companion.selectionUpdated(getSelection());
         }
@@ -58,6 +58,10 @@ public class ListEditionPanel<T,L extends List<T>> extends SplitPane {
 
     public int[] getSelection() {
         return listPanel.getSelection();
+    }
+
+    public L getList() {
+        return listPanel.getList();
     }
 
     public T getSelectedItem() {

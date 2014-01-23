@@ -7,10 +7,10 @@ import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
-import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityDefinitionStore;
 
-public class NuSMVConfig implements InitialStateStore {
+public class NuSMVConfig implements InitialStateStore, PriorityDefinitionStore {
 
 	public static final int CFG_SYNC = 0;
 	public static final int CFG_ASYNC = 1;
@@ -21,8 +21,7 @@ public class NuSMVConfig implements InitialStateStore {
 	private Map<InitialState, Object> m_initStates;
 	private Map<InitialState, Object> m_input;
 
-	// Store has one object: 0- PriorityClass
-	private ObjectStore store = new ObjectStore(1);
+    private PriorityClassDefinition priorities;
 	private int updatePolicy;
 
 	/**
@@ -37,7 +36,6 @@ public class NuSMVConfig implements InitialStateStore {
 	}
 
 	public void setUpdatePolicy() {
-		PriorityClassDefinition priorities = getPriorityClasses();
 		if (priorities == null)
 			updatePolicy = CFG_ASYNC;
 		else if (priorities.getNbElements() == 1) {
@@ -55,18 +53,6 @@ public class NuSMVConfig implements InitialStateStore {
 
 	public void setUpdatePolicy(int policy) {
 		updatePolicy = policy;
-	}
-
-	public ObjectStore getStore() {
-		return store;
-	}
-
-	public PriorityClassDefinition getPriorityClasses() {
-		return (PriorityClassDefinition) store.getObject(0);
-	}
-
-	public void setPriorityClasses(PriorityClassDefinition pcdef) {
-		store.setObject(0, pcdef);
 	}
 
 	public int getUpdatePolicy() {
@@ -88,4 +74,15 @@ public class NuSMVConfig implements InitialStateStore {
 	public LogicalModel getModel() {
 		return model;
 	}
+
+    @Override
+    public PriorityClassDefinition getPriorityDefinition() {
+        return priorities;
+    }
+
+    @Override
+    public void setPriorityDefinition(PriorityClassDefinition pcdef) {
+        this.priorities = pcdef;
+        setUpdatePolicy();
+    }
 }

@@ -458,4 +458,9 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 			pc.lock();
 		}
 	}
+
+    public boolean match(String filter) {
+        return this.getName().toLowerCase().indexOf(filter.toLowerCase()) >= 0;
+    }
+
 }
