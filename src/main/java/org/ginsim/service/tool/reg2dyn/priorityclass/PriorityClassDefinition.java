@@ -17,7 +17,6 @@ import org.ginsim.core.utils.data.ListenableNamedList;
 import org.ginsim.core.utils.data.NamedObject;
 
 
-
 public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriorityClass> implements NamedObject, XMLize {
 
     public static final int UP = 0;
@@ -134,18 +133,25 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
 		return true;
 	}
 
+    public boolean moveSelection(int[] sel, int diff) {
+        if (diff > 0) {
+            return doMoveDown(sel, diff);
+        } else {
+            return doMoveUp(sel, diff);
+        }
+    }
 	
     /**
      * move the whole selection up.
      * if some selected class are part of a group, the whole group will move with it.
      */
-    protected void doMoveUp(int[] selection, int diff) {
+    private boolean doMoveUp(int[] selection, int diff) {
 		if (locked) {
-			return;
+			return false;
 		}
         int[][] index = getMovingRows(UP, selection);
         if (index == null) {
-            return;
+            return false;
         }
         
         int reselect = 0;
@@ -172,19 +178,20 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
             }
         }
         refresh();
+        return true;
     }
 
     /**
      * move the whole selection down
      * if some selected class are part of a group, the whole group will move with it.
      */
-    protected void doMoveDown(int[] selection, int diff) {
+    private boolean doMoveDown(int[] selection, int diff) {
 		if (locked) {
-			return;
+			return false;
 		}
         int[][] index = getMovingRows(DOWN, selection);
         if (index == null) {
-            return;
+            return false;
         }
         
         int reselect = 0;
@@ -211,6 +218,7 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
             }
         }
         refresh();
+        return true;
     }
     
     /**
@@ -432,14 +440,14 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
     public void refresh() {
         // TODO: implement refresh
     }
-    public void add() {
-        add(size());
+    public int add() {
+        return add(size());
     }
 
-    public void add(int i) {
+    public int add(int i) {
         int len = size();
         if (locked || i>len || i<0) {
-            return;
+            return -1;
         }
 
         String name = findUniqueName("class ");
@@ -463,10 +471,14 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
         Reg2dynPriorityClass pc = new Reg2dynPriorityClass(priority+1, name);
         super.add(i, pc);
 
+        int idx = i;
+
         // increase the rank of the next classes
         for ( i++; i<len ; i++) {
             (get(i)).rank++;
         }
         refresh();
+
+        return idx;
     }
 }

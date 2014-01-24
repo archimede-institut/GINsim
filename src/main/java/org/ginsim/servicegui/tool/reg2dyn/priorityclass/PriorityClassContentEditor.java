@@ -42,7 +42,7 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
     private final Reg2dynPriorityClassConfig parentPanel;
 
     private final List<PriorityMember> l_content = new ArrayList<PriorityMember>();
-    private final List<PriorityMember> l_avaible = new ArrayList<PriorityMember>();
+    private final List<PriorityMember> l_available = new ArrayList<PriorityMember>();
 
 
     private PriorityClassDefinition pcdef;
@@ -111,7 +111,7 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
         contentPanel.setList(l_content);
         add(contentPanel, c_scroll_in);
         availablePanel = new ListPanel(LISTING_HELPER, "");
-        availablePanel.setList(l_avaible);
+        availablePanel.setList(l_available);
         add(availablePanel, c_scroll_av);
 
         if (parentPanel != null) {
@@ -127,7 +127,7 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
         int[] t = availablePanel.getSelection();
         for (int i=0 ; i<t.length ; i++) {
             int index = t[i];
-            PriorityMember k = l_avaible.get(index);
+            PriorityMember k = l_available.get(index);
             if (k.type != NONE) { // +1 and -1 are separated, don't move everything
                 Object[] tk = (Object[])pcdef.m_elt.get(k.vertex);
                 if (k.type == UP) {
@@ -190,7 +190,7 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
     private void refresh() {
 
         l_content.clear();
-        l_avaible.clear();
+        l_available.clear();
 
         if (currentClass == null) {
             but_remove.setEnabled(false);
@@ -219,20 +219,20 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
                         l_content.add(kp);
                     } else {
                         l_content.add(kp);
-                        l_avaible.add(k);
+                        l_available.add(k);
                     }
                 } else if (t[1] == currentClass) {
-                    l_avaible.add(kp);
+                    l_available.add(kp);
                     l_content.add(k);
                 } else {
-                    l_avaible.add(kp);
-                    l_avaible.add(k);
+                    l_available.add(kp);
+                    l_available.add(k);
                 }
             } else {
                 if (target == currentClass) {
                     l_content.add(k);
                 } else {
-                    l_avaible.add(k);
+                    l_available.add(k);
                 }
             }
         }
