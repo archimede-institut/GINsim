@@ -8,17 +8,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import javax.management.RuntimeErrorException;
-
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.ListenableNamedList;
 import org.ginsim.core.utils.data.NamedObject;
-import org.ginsim.core.utils.data.SimpleGenericList;
 
 
 
