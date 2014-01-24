@@ -33,8 +33,7 @@ public class PriorityManagerHelper extends ListPanelHelper<PriorityClassDefiniti
 
     @Override
     public ListPanelCompanion getCompanion(ListEditionPanel<PriorityClassDefinition, PriorityClassManager> editPanel) {
-        PriorityClassManager pcmanager = editPanel.getList();
-        Reg2dynPriorityClassConfig configPanel = new Reg2dynPriorityClassConfig(editPanel, pcmanager.nodeOrder);
+        Reg2dynPriorityClassConfig configPanel = new Reg2dynPriorityClassConfig(editPanel);
         return configPanel;
     }
 
@@ -48,10 +47,10 @@ public class PriorityManagerHelper extends ListPanelHelper<PriorityClassDefiniti
     public boolean match(String filter, PriorityClassDefinition pcdef) {
         if (filter != null && filter.startsWith(FILTER_NO_SYNCHRONOUS)) {
 
-            int l = pcdef.getNbElements();
+            int l = pcdef.size();
             boolean hasSync = false;
             for (int i=0 ; i<l ; i++) {
-                Reg2dynPriorityClass pc = pcdef.getElement(null, i);
+                Reg2dynPriorityClass pc = pcdef.get(i);
                 if (pc.getMode() == Reg2dynPriorityClass.SYNCHRONOUS) {
                     hasSync = true;
                     break;

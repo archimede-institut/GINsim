@@ -18,18 +18,21 @@ public class ListenableNamedList<T extends NamedObject> extends NamedList<T> {
         listeners.remove(l);
     }
 
-    private void fireAdded(T item, int idx) {
+    protected void fireAdded(T item, int idx) {
         for (GenericListListener l: listeners) {
             l.itemAdded(item, idx);
+        }
+    }
+    protected void fireRemoved(T item, int idx) {
+        for (GenericListListener l: listeners) {
+            l.itemRemoved(item, idx);
         }
     }
 
     public T remove(int idx) {
         T item = super.remove(idx);
         if (item != null) {
-            for (GenericListListener l: listeners) {
-                l.itemRemoved(item, idx);
-            }
+            fireRemoved(item, idx);
         }
         return item;
     }

@@ -102,7 +102,7 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
         for (int i=0 ; i<pcmanager.size() ; i++) {
         	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.get(i);
     		if (pcdef.m_elt != null) {
-    			pcdef.m_elt.put(node, pcdef.getElement(null, 0));
+    			pcdef.m_elt.put(node, pcdef.get(0));
     		}
         }
 	}

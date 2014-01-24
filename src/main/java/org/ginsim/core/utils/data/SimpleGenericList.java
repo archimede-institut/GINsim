@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 import org.ginsim.common.application.LogManager;
 
 
-public class SimpleGenericList<T> extends GenericList<T> implements Iterable<T> {
+public abstract class SimpleGenericList<T> extends GenericList<T> implements Iterable<T> {
 	public List<T>		v_data;
 	protected String	prefix			= "name_";
 	protected String	pattern			= "^[a-zA-Z0-9_-]+$";
@@ -17,12 +17,8 @@ public class SimpleGenericList<T> extends GenericList<T> implements Iterable<T> 
 	public boolean		enforceUnique	= true;
 	public boolean		addWithPosition = false;
 
-	public SimpleGenericList(List<T> v_data) {
-		setData(v_data);
-	}
-
-	public SimpleGenericList() {
-		this.v_data = new ArrayList<T>();
+	protected SimpleGenericList() {
+        setData(new ArrayList<T>());
 	}
 
 	public void setData(List<T> v_data) {

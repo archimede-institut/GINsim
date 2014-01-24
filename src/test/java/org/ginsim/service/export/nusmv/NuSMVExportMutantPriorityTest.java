@@ -86,12 +86,9 @@ public class NuSMVExportMutantPriorityTest {
 		class1.setMode(Reg2dynPriorityClass.SYNCHRONOUS);
 		Reg2dynPriorityClass class2 = new Reg2dynPriorityClass(2, "class_2");
 		class2.setMode(Reg2dynPriorityClass.ASYNCHRONOUS);
-		List<Reg2dynPriorityClass> pclist = new ArrayList<Reg2dynPriorityClass>();
-		pclist.add(class1);
-		pclist.add(class2);
-		PriorityClassDefinition pcDef = new PriorityClassDefinition(nodeOrder,
-				"pctest");
-		pcDef.setData(pclist);
+		PriorityClassDefinition pcDef = new PriorityClassDefinition(nodeOrder, "pctest");
+        pcDef.add(class1);
+        pcDef.add(class2);
 		config.setPriorityDefinition(pcDef);
 		pcDef.m_elt.put(nodeOrder.get(0), class1);
 		pcDef.m_elt.put(nodeOrder.get(1), class1);

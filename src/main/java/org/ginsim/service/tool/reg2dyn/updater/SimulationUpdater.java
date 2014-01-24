@@ -99,8 +99,8 @@ abstract public class SimulationUpdater implements Iterator {
 	
     static public SimulationUpdater getInstance(LogicalModel model, SimulationParameters params) {
 		PriorityClassDefinition pcdef = params.getPriorityClassDefinition();
-		if (pcdef.getNbElements(null) < 2) {
-			Reg2dynPriorityClass pc = (Reg2dynPriorityClass)pcdef.getElement(null,0);
+		if (pcdef.size() < 2) {
+			Reg2dynPriorityClass pc = (Reg2dynPriorityClass)pcdef.get(0);
 			if (pc.getMode() == Reg2dynPriorityClass.SYNCHRONOUS) {
 				return new SynchronousSimulationUpdater(model);
 			}

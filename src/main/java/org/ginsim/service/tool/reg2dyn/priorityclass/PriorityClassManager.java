@@ -30,7 +30,7 @@ public class PriorityClassManager extends NamedList<PriorityClassDefinition> {
 		int index = addDefinition(null);
 		PriorityClassDefinition pcdef = get(index);
 		pcdef.setName(ASYNCHRONOUS);
-		Reg2dynPriorityClass pc = pcdef.getElement(null, 0);
+		Reg2dynPriorityClass pc = pcdef.get(0);
 		pc.setName("all");
 		pc.setMode(Reg2dynPriorityClass.ASYNCHRONOUS);
 		pcdef.lock();
@@ -38,7 +38,7 @@ public class PriorityClassManager extends NamedList<PriorityClassDefinition> {
 		index = addDefinition(null);
 		pcdef = get(index);
 		pcdef.setName(SYNCHRONOUS);
-		pc = pcdef.getElement(null, 0);
+		pc = pcdef.get(0);
 		pc.setName("all");
 		pc.setMode(Reg2dynPriorityClass.SYNCHRONOUS);
 		pcdef.lock();
@@ -52,16 +52,16 @@ public class PriorityClassManager extends NamedList<PriorityClassDefinition> {
         String name = findUniqueName("priorities ");
 
 		PriorityClassDefinition pcdef = new PriorityClassDefinition(nodeOrder, name);
-        Object lastClass = pcdef.v_data.get(0);
+        Object lastClass = pcdef.get(0);
         Reg2dynPriorityClass currentClass;
         switch (addMode) {
             case SPLIT:
                 // should be equivalent to the old priority system: add one class per node
-            	pcdef.v_data.clear();
+            	pcdef.clear();
             	pcdef.m_elt.clear();
                 for (int i=0 ; i<nodeOrder.size() ; i++) {
                     currentClass = new Reg2dynPriorityClass();
-                    pcdef.v_data.add(i, currentClass);
+                    pcdef.add(i, currentClass);
                     pcdef.m_elt.put(nodeOrder.get(i), currentClass);
                     currentClass.setName(""+nodeOrder.get(i));
                 }

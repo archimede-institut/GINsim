@@ -64,11 +64,15 @@ public class ListEditionPanel<T,L extends List<T>> extends SplitPane {
         return listPanel.getList();
     }
 
+    public void setList(L list) {
+        listPanel.setList(list);
+    }
+
     public T getSelectedItem() {
         return listPanel.getSelectedItem();
     }
 
-    public void selectionUpdated(int[] sel) {
+    public void listSelectionUpdated(int[] sel) {
         if (companion != null) {
             companion.selectionUpdated(sel);
         }

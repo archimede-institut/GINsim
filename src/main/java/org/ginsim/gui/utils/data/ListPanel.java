@@ -103,7 +103,7 @@ public class ListPanel<T, L extends List<T>> extends JPanel
     		this.add(split);
     		split.setName(name+".split");
     	}
-        targetpanel .setLayout(new GridBagLayout());
+        targetpanel.setLayout(new GridBagLayout());
         sp.setViewportView(jl);
 
         GridBagConstraints c = new GridBagConstraints();
@@ -413,7 +413,7 @@ public class ListPanel<T, L extends List<T>> extends JPanel
 	public void valueChanged(ListSelectionEvent e) {
         if (editionPanel != null) {
 		    int[] sel = jl.getSelectedRows();
-		    editionPanel.selectionUpdated(sel);
+		    editionPanel.listSelectionUpdated(sel);
         }
 	}
 	

@@ -139,9 +139,8 @@ public class NuSMVEncoder {
 
 		case NuSMVConfig.CFG_PCLASS:
 			out.write("-- Priority classes\n  PCs : { ");
-			for (int i = 0; i < priorities.getNbElements(); i++) {
-				Reg2dynPriorityClass pc = (Reg2dynPriorityClass) priorities
-						.getElement(null, i);
+			for (int i = 0; i < priorities.size(); i++) {
+				Reg2dynPriorityClass pc = (Reg2dynPriorityClass) priorities.get(i);
 				if (i > 0)
 					out.write(", ");
 				sTmp = "PC_" + pc.getName();

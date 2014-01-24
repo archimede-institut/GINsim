@@ -113,7 +113,7 @@ public class SimulationParametersParser extends XMLHelper {
                 } else if (qName.equals("priorityClassList")) {
                 	int index = paramLists.pcmanager.addDefinition(null);
                 	pcdef = (PriorityClassDefinition)paramLists.pcmanager.get(index);
-                	pcdef.v_data.clear();
+                	pcdef.clear();
                 	pcdef.m_elt.clear();
                 	pcdef.setName(attributes.getValue("id"));
                     pclass_fine = false;
@@ -145,7 +145,7 @@ public class SimulationParametersParser extends XMLHelper {
                 } else if (qName.equals("priorityClassList")) {
                 	int index = paramLists.pcmanager.addDefinition(null);
                 	pcdef = (PriorityClassDefinition)paramLists.pcmanager.get(index);
-                	pcdef.v_data.clear();
+                	pcdef.clear();
                 	pcdef.m_elt.clear();
                 	param.setPriorityDefinition(pcdef);
                     pclass_fine = false;
@@ -276,7 +276,7 @@ public class SimulationParametersParser extends XMLHelper {
                 // TODO: report errors, unknown vertex... ?
             }
         }
-        pcdef.v_data.add(pc);
+        pcdef.add(pc);
     }
     
     private void closeClass() {
@@ -293,14 +293,14 @@ public class SimulationParametersParser extends XMLHelper {
                 } else if (oc instanceof Object[]) {
                 	t = (Object[])oc;
                 	if (t[0] == null) {
-                		t[0] = pcdef.v_data.get(0);
+                		t[0] = pcdef.get(0);
                 	}
                 	if (t[1] == null) {
-                		t[1] = pcdef.v_data.get(0);
+                		t[1] = pcdef.get(0);
                 	}
                 } else {
                     t = new Object[2];
-                    t[0] = t[1] = pcdef.v_data.get(0);
+                    t[0] = t[1] = pcdef.get(0);
                     pcdef.m_elt.put(vertex, t);
                 }
         	}

@@ -16,12 +16,13 @@ import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.GenericListListener;
+import org.ginsim.core.utils.data.ListenableNamedList;
 import org.ginsim.core.utils.data.NamedObject;
 import org.ginsim.core.utils.data.SimpleGenericList;
 
 
 
-public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityClass> implements NamedObject, XMLize {
+public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriorityClass> implements NamedObject, XMLize {
 
     public static final int UP = 0;
     public static final int DOWN = 1;
@@ -34,6 +35,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 	boolean locked;
 
 	public PriorityClassDefinition(List<RegulatoryNode> elts, String name) {
+/*
 		canAdd = true;
 		canRemove = true;
 		canOrder = true;
@@ -41,12 +43,14 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 		prefix = "class_";
 		nbcol = 3;
 		addWithPosition = true;
+
 		Class[] t = {Integer.class, Boolean.class, String.class};
 		t_type = t;
+*/
 		setName(name);
 		add();
 		m_elt = new HashMap();
-		Reg2dynPriorityClass newclass = getElement(null, 0);
+		Reg2dynPriorityClass newclass = get(0);
 		for (RegulatoryNode v: elts) {
 			m_elt.put(v, newclass);
 		}
@@ -74,38 +78,12 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 		}
 		moveElement(j, pos);
 	}
-	@Override
-	public Reg2dynPriorityClass doCreate(String name, int pos, int mode) {
-		if (locked) {
-			return null;
-		}
-		int priority;
-		int i = pos;
-		int len = getNbElements(null);
-		if (pos<0 || pos >= len) {
-			i = len == 0 ? 0 : len-1;
-		}
-		priority = len == 0 ? 0: (v_data.get(i)).rank;
-        for ( ; i < len ; i++) {
-            if ((v_data.get(i)).rank != priority) {
-                break;
-            }
-        }
-        Reg2dynPriorityClass pc = new Reg2dynPriorityClass(priority+1, name);
-        v_data.add(i, pc);
-        for ( i++; i<len ; i++) {
-            ((Reg2dynPriorityClass)v_data.get(i)).rank++;
-        }
-        refresh();
-        return null;
-	}
-	
-	@Override
-	public int add(int position, int mode) {
-		return super.add(-1, mode);
-	}
-	
-	@Override
+
+    private void moveElement(int j, int pos) {
+        // TODO: implement or delegate moving elements
+    }
+
+    // TODO: move col names to the helper
 	public String getColName(int col) {
 		switch (col) {
 			case 0:
@@ -115,34 +93,31 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 			case 2:
 				return "Name";
 			default:
-				return super.getColName(col);
+				return null;
 		}
 	}
 
-	@Override
-	public boolean remove(String filter, int startindex, int[] t_index) {
-		if (locked || t_index.length >= v_data.size()) {
+    // TODO: call the proper remove method
+	public boolean remove(int[] t_index) {
+		if (locked || t_index.length >= size()) {
 			return false;
 		}
-		if (startindex > 0) {
-			throw new RuntimeException("Startindex not handled here");
-		}
 		for (int i = t_index.length - 1 ; i > -1 ; i--) {
-			int index = getRealIndex(filter, t_index[i]);
+			int index = t_index[i];
 			
-            Reg2dynPriorityClass c = v_data.remove(index);
-            if (index < v_data.size()) {
+            Reg2dynPriorityClass c = remove(index);
+            if (index < size()) {
             	// update rank of the next priority classes
-            	if ( index == 0 || ( v_data.get(index-1)).rank != c.rank) {
-            		if (( v_data.get(index)).rank != c.rank) {
-            			for (int j=index ; j<v_data.size() ; j++) {
-            				( v_data.get(j)).rank--;
+            	if ( index == 0 || ( get(index-1)).rank != c.rank) {
+            		if (( get(index)).rank != c.rank) {
+            			for (int j=index ; j<size() ; j++) {
+            				( get(j)).rank--;
             			}
             		}
             	}
             }
             Set<RegulatoryNode> elts = m_elt.keySet();
-            Reg2dynPriorityClass lastClass = v_data.get(v_data.size()-1);
+            Reg2dynPriorityClass lastClass = get(size()-1);
             for (RegulatoryNode v: elts) {
                 Object cl = m_elt.get(v); 
                 if (cl == c) {
@@ -157,11 +132,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
                 }
             }
 
-			if (v_listeners != null) {
-				for (GenericListListener l: v_listeners) {
-					l.itemRemoved(c, t_index[i]);
-				}
-			}
+            fireRemoved(c, t_index[i]);
 		}
 		
 		return true;
@@ -172,7 +143,6 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
      * move the whole selection up.
      * if some selected class are part of a group, the whole group will move with it.
      */
-	@Override
     protected void doMoveUp(int[] selection, int diff) {
 		if (locked) {
 			return;
@@ -187,18 +157,18 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
             int start = index[i][0];
             int stop = index[i][1];
             int target = start+diff;
-            int pr = (v_data.get(start)).rank;
-            int prTarget = (v_data.get(target)).rank;
+            int pr = (get(start)).rank;
+            int prTarget = get(target).rank;
             target--;
-            while (target >= 0 && (v_data.get(target)).rank == prTarget) {
+            while (target >= 0 && get(target).rank == prTarget) {
                 target--;
             }
             target++;
             for (int j=target ; j<start ; j++) {
-                (v_data.get(j)).rank = pr;
+                get(j).rank = pr;
             }
             for (int j=0 ; j<=stop-start ; j++) {
-            	(v_data.get(start+j)).rank = prTarget;
+            	get(start+j).rank = prTarget;
             	moveElement(start+j, target+j);
             	if (reselect < selection.length && selection[reselect] == start+j) {
             		selection[reselect++] = target+j;
@@ -212,7 +182,6 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
      * move the whole selection down
      * if some selected class are part of a group, the whole group will move with it.
      */
-	@Override
     protected void doMoveDown(int[] selection, int diff) {
 		if (locked) {
 			return;
@@ -227,18 +196,18 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
             int start = index[i][0];
             int stop = index[i][1];
             int target = stop+diff;
-            int pr = v_data.get(start).rank;
-            int prTarget = v_data.get(target).rank;
+            int pr = get(start).rank;
+            int prTarget = get(target).rank;
             target++;
-            while (target < v_data.size() && v_data.get(target).rank == prTarget) {
+            while (target < size() && get(target).rank == prTarget) {
                 target++;
             }
             target--;
             for (int j=stop+1 ; j<=target ; j++) {
-                v_data.get(j).rank = pr;
+                get(j).rank = pr;
             }
             for (int j=0 ; j<=stop-start ; j++) {
-                v_data.get(start).rank = prTarget;
+                get(start).rank = prTarget;
                 moveElement(start, target);
                 if (reselect < selection.length && selection[reselect] == start+j) {
             		selection[reselect++] = target-stop+start+j;
@@ -259,18 +228,18 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
         if (index == null) {
         	return null;
         }
-        int end = v_data.size();
+        int end = size();
         int count = 0;
         int lastPriority = -1;
         for (int i=0 ; i<index.length ; i++) {
-            int priority = (v_data.get(index[i])).rank;
+            int priority = get(index[i]).rank;
             if (priority != lastPriority) {
                 int start = index[i]-1;
                 int stop = index[i]+1;
-                while(start >= 0 && (v_data.get(start)).rank == priority) {
+                while(start >= 0 && get(start).rank == priority) {
                     start--;
                 }
-                while(stop < end && (v_data.get(stop)).rank == priority) {
+                while(stop < end && get(stop).rank == priority) {
                     stop++;
                 }
                 start++;
@@ -288,14 +257,14 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
         lastPriority = -1;
         count = 0;
         for (int i=0 ; i<index.length ; i++) {
-            int priority = (v_data.get(index[i])).rank;
+            int priority = get(index[i]).rank;
             if (priority != lastPriority) {
                 int start = index[i]-1;
                 int stop = index[i]+1;
-                while(start >= 0 && (v_data.get(start)).rank == priority) {
+                while(start >= 0 && get(start).rank == priority) {
                     start--;
                 }
-                while(stop < end && (v_data.get(stop)).rank == priority) {
+                while(stop < end && get(stop).rank == priority) {
                     stop++;
                 }
                 start++;
@@ -314,9 +283,9 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 		out.openTag("priorityClassList");
 		out.addAttr("id", name);
 		StringBuffer s_tmp;
-		for (int i=0 ; i< v_data.size(); i++) {
+		for (int i=0 ; i< size(); i++) {
 			out.openTag("class");
-            Reg2dynPriorityClass pc = v_data.get(i);
+            Reg2dynPriorityClass pc = get(i);
             out.addAttr("name", pc.getName());
             out.addAttr("mode", ""+pc.getMode());
             out.addAttr("rank", ""+pc.rank);
@@ -365,7 +334,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
         //   - during the first pass asynchronous classes with the same priority are merged
         //   - then the real int[][] is created from the merged classes
 		List<List<Integer>> v_vpclass = new ArrayList<List<Integer>>();
-        for (Reg2dynPriorityClass pc: v_data) {
+        for (Reg2dynPriorityClass pc: this) {
             List<Integer> v_content;
             if (pc.getMode() == Reg2dynPriorityClass.ASYNCHRONOUS) {
                 v_content = new ArrayList<Integer>();
@@ -454,7 +423,7 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
 
 	public void lock() {
 		this.locked = true;
-		for (Reg2dynPriorityClass pc : v_data) {
+		for (Reg2dynPriorityClass pc : this) {
 			pc.lock();
 		}
 	}
@@ -463,4 +432,45 @@ public class PriorityClassDefinition extends SimpleGenericList<Reg2dynPriorityCl
         return this.getName().toLowerCase().indexOf(filter.toLowerCase()) >= 0;
     }
 
+
+    public void refresh() {
+        // TODO: implement refresh
+    }
+    public void add() {
+        add(size());
+    }
+
+    public void add(int i) {
+        int len = size();
+        if (locked || i>len || i<0) {
+            return;
+        }
+
+        String name = findUniqueName("class ");
+        int priority = 0;
+        if (i == len) {
+            if (len > 0) {
+                priority = get(len-1).rank;
+            }
+        } else {
+            priority = get(i).rank;
+        }
+
+        // move to the end of the group if needed
+        for ( ; i < len ; i++) {
+            if ((get(i)).rank != priority) {
+                break;
+            }
+        }
+
+        // create and insert the new class
+        Reg2dynPriorityClass pc = new Reg2dynPriorityClass(priority+1, name);
+        super.add(i, pc);
+
+        // increase the rank of the next classes
+        for ( i++; i<len ; i++) {
+            (get(i)).rank++;
+        }
+        refresh();
+    }
 }

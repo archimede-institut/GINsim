@@ -38,7 +38,7 @@ public class NuSMVConfig implements InitialStateStore, PriorityDefinitionStore {
 	public void setUpdatePolicy() {
 		if (priorities == null)
 			updatePolicy = CFG_ASYNC;
-		else if (priorities.getNbElements() == 1) {
+		else if (priorities.size() == 1) {
 			if (priorities.getPclass(graph.getNodeInfos())[0][1] == 0)
 				updatePolicy = CFG_SYNC;
 			else

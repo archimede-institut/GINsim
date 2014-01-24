@@ -192,12 +192,12 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
 				m_alldata.put(pcdef, new_pcdef);
 				Map<Reg2dynPriorityClass, Reg2dynPriorityClass> m_pclass = new HashMap<Reg2dynPriorityClass, Reg2dynPriorityClass>();
 				// copy all priority classes
-				for (int j=0 ; j<pcdef.getNbElements(null) ; j++) {
-					Reg2dynPriorityClass pc = (Reg2dynPriorityClass)pcdef.getElement(null, j);
+				for (int j=0 ; j<pcdef.size() ; j++) {
+					Reg2dynPriorityClass pc = (Reg2dynPriorityClass)pcdef.get(j);
 					if (j>0) {
 						new_pcdef.add();
 					}
-					Reg2dynPriorityClass new_pc = (Reg2dynPriorityClass)new_pcdef.getElement(null, j);
+					Reg2dynPriorityClass new_pc = (Reg2dynPriorityClass)new_pcdef.get(j);
 					new_pc.setName(pc.getName());
 					new_pc.rank = pc.rank;
 					new_pc.setMode(pc.getMode());

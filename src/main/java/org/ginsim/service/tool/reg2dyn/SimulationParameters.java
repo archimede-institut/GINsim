@@ -90,7 +90,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
         s += "    Simulation strategy: " + simulationStrategy + "\n";
         s += "    Updating policy: ";
 		if (pcdef != null) {
-	        if (pcdef.getNbElements(null) > 1) {
+	        if (pcdef.size() > 1) {
 	            s += "by priority class\n";
 	            int[][] pclass = getPriorityClassDefinition().getPclass(nodeOrder);
 	            for (int i=0 ; i<pclass.length ; i++) {
@@ -167,7 +167,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
 		out.addAttr("maxnodes", ""+maxnodes);
 		out.addAttr("simulationStrategy", ""+simulationStrategy);
 
-		if (pcdef.getNbElements(null) > 1) {
+		if (pcdef.size() > 1) {
 			out.openTag("priorityClass");
 			out.addAttr("ref", pcdef.getName());
 			out.closeTag();
@@ -272,8 +272,8 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
         PriorityClassDefinition new_pcdef = (PriorityClassDefinition)mapping.get(pcdef);
         if (new_pcdef == null) {
             PriorityClassManager new_pcman = (PriorityClassManager)mapping.get("");
-            if (pcdef.getNbElements(null) < 2) {
-                Reg2dynPriorityClass pc = (Reg2dynPriorityClass)pcdef.getElement(null,0);
+            if (pcdef.size() < 2) {
+                Reg2dynPriorityClass pc = (Reg2dynPriorityClass)pcdef.get(0);
                 if (pc.getMode() == Reg2dynPriorityClass.SYNCHRONOUS) {
                     new_pcdef = (PriorityClassDefinition)new_pcman.get(1);
                 } else {
