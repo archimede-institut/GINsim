@@ -23,7 +23,7 @@ import org.ginsim.servicegui.tool.reg2dyn.priorityclass.PriorityDefinitionHelper
  * configure priority classes.
   */
 public class PriorityDefinitionPanel extends ListEditionPanel<Reg2dynPriorityClass, PriorityClassDefinition>
-        implements ListPanelCompanion<PriorityClassDefinition, PriorityClassManager>, ListSelectionListener {
+        implements ListPanelCompanion<PriorityClassDefinition, PriorityClassManager> {
 
     private static final int UP = PriorityClassDefinition.UP;
     private static final int DOWN = PriorityClassDefinition.DOWN;
@@ -35,6 +35,7 @@ public class PriorityDefinitionPanel extends ListEditionPanel<Reg2dynPriorityCla
     PriorityClassDefinition pcdef;
     
     private final StockButton but_group = new StockButton("group.png",true);
+
 //	private final ListEditionPanel<PriorityClassDefinition, PriorityClassManager> parentPanel;
 
 
@@ -55,7 +56,7 @@ public class PriorityDefinitionPanel extends ListEditionPanel<Reg2dynPriorityCla
                 groupToggle();
             }
         });
-        // TODO: add getBut_group() to the list actions
+        addButton(but_group);
 
         if (editPanel != null) {
             editPanel.addPanel(this, "PCLASS");
@@ -74,10 +75,13 @@ public class PriorityDefinitionPanel extends ListEditionPanel<Reg2dynPriorityCla
     /**
      * call it when the user changes the class selection: update UI to match the selection
      */
-    protected void classSelectionChanged() {
-        // TODO: trigger update of b_group when needed
-        int[] ti = getSelection();
-        int[][] selExtended = pcdef.getMovingRows(NONE, ti);
+    public void listSelectionUpdated(int[] sel) {
+        super.listSelectionUpdated(sel);
+        if (pcdef == null) {
+            return;
+        }
+
+        int[][] selExtended = pcdef.getMovingRows(NONE, sel);
         if (selExtended.length > 1) {
             but_group.setEnabled(true);
             but_group.setStockIcon("group.png");
@@ -145,17 +149,10 @@ public class PriorityDefinitionPanel extends ListEditionPanel<Reg2dynPriorityCla
                 pcdef.refresh();
             }
         }
-    }
-    
 
-	public void valueChanged(ListSelectionEvent e) {
-        // TODO: follow selection
-//		if (e.getSource() == getSelectionModel()) {
-//			super.valueChanged(e);
-//			classSelectionChanged();
-//		}
-	}
-	
+        // TODO: refresh list view
+    }
+
 	public void setEnabled(boolean b) {
         if (but_group == null) {
             return;

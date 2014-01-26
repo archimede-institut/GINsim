@@ -130,7 +130,7 @@ public class ListPanel<T, L extends List<T>> extends JPanel
         c = new GridBagConstraints();
         c.gridx = 1;
         c.gridy = 2;
-        c.gridheight = 6;
+        c.gridheight = 7;
         c.weightx = 1;
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
@@ -416,7 +416,13 @@ public class ListPanel<T, L extends List<T>> extends JPanel
 		    editionPanel.listSelectionUpdated(sel);
         }
 	}
-	
+
+    public void addButton(JButton button) {
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 2;
+        c.gridy = 7;
+        targetpanel.add(button, c);
+    }
 }
 
 

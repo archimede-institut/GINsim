@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.SplitPane;
@@ -88,5 +88,9 @@ public class ListEditionPanel<T,L extends List<T>> extends SplitPane {
 
     public StackDialog getDialog() {
         return dialog;
+    }
+
+    public void addButton(JButton b) {
+        listPanel.addButton(b);
     }
 }
