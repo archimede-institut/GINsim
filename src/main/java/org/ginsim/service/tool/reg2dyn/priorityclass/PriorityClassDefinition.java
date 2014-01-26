@@ -75,7 +75,9 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
 	}
 
     private void moveElement(int j, int pos) {
-        // TODO: implement or delegate moving elements
+        Reg2dynPriorityClass tmp = get(pos);
+        set(pos, get(j));
+        set(j, tmp);
     }
 
     // TODO: move col names to the helper
@@ -159,7 +161,7 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
             int start = index[i][0];
             int stop = index[i][1];
             int target = start+diff;
-            int pr = (get(start)).rank;
+            int pr = get(start).rank;
             int prTarget = get(target).rank;
             target--;
             while (target >= 0 && get(target).rank == prTarget) {
