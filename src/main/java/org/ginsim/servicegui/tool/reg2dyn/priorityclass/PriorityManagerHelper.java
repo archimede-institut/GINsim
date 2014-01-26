@@ -7,7 +7,6 @@ import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassAddMode;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
-import org.ginsim.servicegui.tool.reg2dyn.Reg2dynPriorityClassConfig;
 
 /**
  * GUI helper for the list of priority class definitions
@@ -33,7 +32,7 @@ public class PriorityManagerHelper extends ListPanelHelper<PriorityClassDefiniti
 
     @Override
     public ListPanelCompanion getCompanion(ListEditionPanel<PriorityClassDefinition, PriorityClassManager> editPanel) {
-        Reg2dynPriorityClassConfig configPanel = new Reg2dynPriorityClassConfig(editPanel);
+        PriorityDefinitionPanel configPanel = new PriorityDefinitionPanel(editPanel);
         return configPanel;
     }
 

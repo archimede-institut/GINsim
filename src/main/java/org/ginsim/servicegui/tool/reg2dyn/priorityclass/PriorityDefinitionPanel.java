@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.reg2dyn;
+package org.ginsim.servicegui.tool.reg2dyn.priorityclass;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -22,7 +22,7 @@ import org.ginsim.servicegui.tool.reg2dyn.priorityclass.PriorityDefinitionHelper
 /**
  * configure priority classes.
   */
-public class Reg2dynPriorityClassConfig extends ListEditionPanel<Reg2dynPriorityClass, PriorityClassDefinition>
+public class PriorityDefinitionPanel extends ListEditionPanel<Reg2dynPriorityClass, PriorityClassDefinition>
         implements ListPanelCompanion<PriorityClassDefinition, PriorityClassManager>, ListSelectionListener {
 
     private static final int UP = PriorityClassDefinition.UP;
@@ -45,7 +45,7 @@ public class Reg2dynPriorityClassConfig extends ListEditionPanel<Reg2dynPriority
     /**
      * @param editPanel
      */
-    public Reg2dynPriorityClassConfig(ListEditionPanel<PriorityClassDefinition, PriorityClassManager> editPanel) {
+    public PriorityDefinitionPanel(ListEditionPanel<PriorityClassDefinition, PriorityClassManager> editPanel) {
     	super(PriorityDefinitionHelper.HELPER, editPanel.getSelectedItem(), "pclassConfig", null, null);
         this.nodeOrder = editPanel.getList().nodeOrder;
 

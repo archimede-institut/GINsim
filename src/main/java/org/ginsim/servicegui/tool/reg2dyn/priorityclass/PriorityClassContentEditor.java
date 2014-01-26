@@ -8,7 +8,6 @@ import org.ginsim.gui.utils.data.ListPanelHelper;
 import org.ginsim.gui.utils.widgets.StockButton;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
-import org.ginsim.servicegui.tool.reg2dyn.Reg2dynPriorityClassConfig;
 
 import java.util.List;
 import java.util.*;
@@ -39,7 +38,7 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
     private final ListPanel contentPanel;
     private final ListPanel availablePanel;
 
-    private final Reg2dynPriorityClassConfig parentPanel;
+    private final PriorityDefinitionPanel parentPanel;
 
     private final List<PriorityMember> l_content = new ArrayList<PriorityMember>();
     private final List<PriorityMember> l_available = new ArrayList<PriorityMember>();
@@ -49,7 +48,7 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
     private Reg2dynPriorityClass currentClass;
 
 
-    public PriorityClassContentEditor(Reg2dynPriorityClassConfig parentPanel) {
+    public PriorityClassContentEditor(PriorityDefinitionPanel parentPanel) {
         super(new GridBagLayout());
         this.parentPanel = parentPanel;
 
