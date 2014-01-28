@@ -35,6 +35,7 @@ public class ListEditionPanel<T,L extends List<T>> extends SplitPane {
         	setRightComponent(mainPanel);
             companion.selectionUpdated(getSelection());
         }
+        setDividerLocation(170);
 	}
 	
 	public void addPanel(Component panel, String name) {
