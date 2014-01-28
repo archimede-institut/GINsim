@@ -19,8 +19,8 @@ import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.service.ServiceManager;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
-import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 
 /**
@@ -109,7 +109,7 @@ public class NuSMVEncoder {
 
 		String sTmp;
 		int[][] iaTmp = null;
-		PriorityClassDefinition priorities = config.getPriorityDefinition();
+		PrioritySetDefinition priorities = config.getPriorityDefinition();
 		// classNum -> className
 		TreeMap<Integer, String> tmPcNum2Name = new TreeMap<Integer, String>();
 		// classNum -> RankNum
@@ -140,7 +140,7 @@ public class NuSMVEncoder {
 		case NuSMVConfig.CFG_PCLASS:
 			out.write("-- Priority classes\n  PCs : { ");
 			for (int i = 0; i < priorities.size(); i++) {
-				Reg2dynPriorityClass pc = (Reg2dynPriorityClass) priorities.get(i);
+				PriorityClass pc = (PriorityClass) priorities.get(i);
 				if (i > 0)
 					out.write(", ");
 				sTmp = "PC_" + pc.getName();

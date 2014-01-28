@@ -6,8 +6,8 @@ import org.ginsim.gui.utils.data.ListPanel;
 import org.ginsim.gui.utils.data.ListPanelCompanion;
 import org.ginsim.gui.utils.data.ListPanelHelper;
 import org.ginsim.gui.utils.widgets.StockButton;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
-import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 
 import java.util.List;
 import java.util.*;
@@ -27,9 +27,9 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
 
     protected static final String[] t_typeName = {" [+]", " [-]", ""};
 
-    private static final int UP = PriorityClassDefinition.UP;
-    private static final int DOWN = PriorityClassDefinition.DOWN;
-    private static final int NONE = PriorityClassDefinition.NONE;
+    private static final int UP = PrioritySetDefinition.UP;
+    private static final int DOWN = PrioritySetDefinition.DOWN;
+    private static final int NONE = PrioritySetDefinition.NONE;
 
 
     private final JButton but_insert;
@@ -44,8 +44,8 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
     private final List<PriorityMember> l_available = new ArrayList<PriorityMember>();
 
 
-    private PriorityClassDefinition pcdef;
-    private Reg2dynPriorityClass currentClass;
+    private PrioritySetDefinition pcdef;
+    private PriorityClass currentClass;
 
 
     public PriorityClassContentEditor(PriorityDefinitionPanel parentPanel) {

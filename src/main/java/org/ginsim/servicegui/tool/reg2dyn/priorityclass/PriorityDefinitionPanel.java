@@ -5,48 +5,34 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
-
 import org.ginsim.common.application.Translator;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.utils.data.*;
 import org.ginsim.gui.utils.widgets.StockButton;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
-import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
-import org.ginsim.servicegui.tool.reg2dyn.priorityclass.PriorityDefinitionHelper;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
 
 
 /**
  * configure priority classes.
   */
-public class PriorityDefinitionPanel extends ListEditionPanel<Reg2dynPriorityClass, PriorityClassDefinition>
-        implements ListPanelCompanion<PriorityClassDefinition, PriorityClassManager> {
+public class PriorityDefinitionPanel extends ListEditionPanel<PriorityClass, PrioritySetDefinition>
+        implements ListPanelCompanion<PrioritySetDefinition, PrioritySetList> {
 
-    private static final int UP = PriorityClassDefinition.UP;
-    private static final int DOWN = PriorityClassDefinition.DOWN;
-    private static final int NONE = PriorityClassDefinition.NONE;
-    
-    private List<RegulatoryNode> nodeOrder;
+    private final List<RegulatoryNode> nodeOrder;
 
-    PriorityClassManager pcmanager;
-    PriorityClassDefinition pcdef;
+    private PrioritySetList pcmanager;
+    private PrioritySetDefinition pcdef;
     
     private final StockButton but_group = new StockButton("group.png",true);
 
-//	private final ListEditionPanel<PriorityClassDefinition, PriorityClassManager> parentPanel;
-
-
     // TODO: make sure to always have at least one class selected
-
-
 
     /**
      * @param editPanel
      */
-    public PriorityDefinitionPanel(ListEditionPanel<PriorityClassDefinition, PriorityClassManager> editPanel) {
+    public PriorityDefinitionPanel(ListEditionPanel<PrioritySetDefinition, PrioritySetList> editPanel) {
     	super(PriorityDefinitionHelper.HELPER, editPanel.getSelectedItem(), "pclassConfig", null, null);
         this.nodeOrder = editPanel.getList().nodeOrder;
 
@@ -64,7 +50,7 @@ public class PriorityDefinitionPanel extends ListEditionPanel<Reg2dynPriorityCla
         }
     }
 
-    public PriorityClassDefinition getCurrentDefinition() {
+    public PrioritySetDefinition getCurrentDefinition() {
         return pcdef;
     }
 
@@ -81,7 +67,7 @@ public class PriorityDefinitionPanel extends ListEditionPanel<Reg2dynPriorityCla
             return;
         }
 
-        int[][] selExtended = pcdef.getMovingRows(NONE, sel);
+        int[][] selExtended = pcdef.getMovingRows(PrioritySetDefinition.NONE, sel);
         if (selExtended.length > 1) {
             but_group.setEnabled(true);
             but_group.setStockIcon("group.png");
@@ -105,52 +91,8 @@ public class PriorityDefinitionPanel extends ListEditionPanel<Reg2dynPriorityCla
      *    - if selected items are part of several groups, they will be merged with the first one
      */
     protected void groupToggle() {
-        int[] ts = getSelection();
-        int[][] selExtended = pcdef.getMovingRows(NONE, ts);
-        // if class with different priorities are selected: give them all the same priority
-        if (selExtended.length < 1) {
-        	return;
-        }
-        if (selExtended.length > 1) {
-            if (ts == null || ts.length < 1) {
-                return;
-            }
-            int pos = selExtended[0][1];
-            int pr = pcdef.get(pos).rank;
-            for (int i=1 ; i<selExtended.length ; i++) {
-            	for (int j=selExtended[i-1][1]+1 ; j<selExtended[i][0] ; j++) {
-            		pcdef.get(j).rank -= i-1;
-            	}
-            	for (int j=selExtended[i][0] ; j<=selExtended[i][1] ; j++) {
-	                pos++;
-	                pcdef.get(j).rank = pr;
-	                pcdef.moveElementAt(j, pos);
-            	}
-            }
-            int l = selExtended.length - 1;
-            for (int j=selExtended[l][1]+1 ; j<pcdef.size() ; j++) {
-            	pcdef.get(j).rank -= l;
-            }
-            pcdef.refresh();
-            // FIXME: select first item
-//            getSelectionModel().clearSelection();
-//            getSelectionModel().addSelectionInterval(selExtended[0][0],pos);
-        } else {
-            if (selExtended[0][0] != selExtended[0][1]) {
-                int i = selExtended[0][0];
-                int inc = 1;
-                for (i++ ; i<selExtended[0][1] ; i++) {
-                    pcdef.get(i).rank += inc;
-                    inc++;
-                }
-                for ( ; i<pcdef.size() ; i++) {
-                    pcdef.get(i).rank += inc;
-                }
-                pcdef.refresh();
-            }
-        }
-
-        // TODO: refresh list view
+        pcdef.groupToggle(getSelection());
+        refresh();
     }
 
 	public void setEnabled(boolean b) {
@@ -167,13 +109,13 @@ public class PriorityDefinitionPanel extends ListEditionPanel<Reg2dynPriorityCla
 	}
 
     @Override
-    public void setParentList(PriorityClassManager list) {
+    public void setParentList(PrioritySetList list) {
         this.pcmanager = list;
     }
 
     @Override
     public void selectionUpdated(int[] selection) {
-        PriorityClassDefinition curDef = pcdef;
+        PrioritySetDefinition curDef = pcdef;
         if (pcmanager == null || selection == null || selection.length != 1) {
             pcdef = null;
             if (curDef != null) {
@@ -190,4 +132,5 @@ public class PriorityDefinitionPanel extends ListEditionPanel<Reg2dynPriorityCla
             setList(pcdef);
         }
     }
+
 }

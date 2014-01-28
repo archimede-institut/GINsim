@@ -36,7 +36,7 @@ import org.ginsim.service.tool.reg2dyn.limitedsimulation.LimitedSimulationServic
 import org.ginsim.service.tool.reg2dyn.limitedsimulation.OutgoingNodesHandlingStrategy;
 import org.ginsim.service.tool.reg2dyn.limitedsimulation.SimulationConstraint;
 import org.ginsim.service.tool.reg2dyn.limitedsimulation.StatesToHierarchicalEditTab;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
 import org.ginsim.servicegui.tool.reg2dyn.PrioritySelectionPanel;
 
 public class LimitedSimulationFrame extends LogicalModelActionDialog {
@@ -46,7 +46,7 @@ public class LimitedSimulationFrame extends LogicalModelActionDialog {
 	private JPanel mainPanel;
 	private JCheckBox strategy;
 	private PrioritySelectionPanel selectPriorityClass = null;
-	private PriorityClassManager pcmanager = null;
+	private PrioritySetList pcmanager = null;
 	private SimulationParameters params = null;
 
 
@@ -88,7 +88,7 @@ public class LimitedSimulationFrame extends LogicalModelActionDialog {
 
 	private PrioritySelectionPanel getPriorityClassSelector() {
 		if (selectPriorityClass == null) {
-			pcmanager = new PriorityClassManager(lrg);
+			pcmanager = new PrioritySetList(lrg);
 			selectPriorityClass = new PrioritySelectionPanel(this, pcmanager);
 			params = new SimulationParameters(lrg);
 			selectPriorityClass.setStore(params);

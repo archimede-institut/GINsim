@@ -21,8 +21,8 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationFixed;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationMultiple;
 import org.ginsim.core.service.ServiceManager;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
-import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -82,11 +82,11 @@ public class NuSMVExportMutantPriorityTest {
 
 		// Priorities
 		config.setUpdatePolicy(NuSMVConfig.CFG_PCLASS);
-		Reg2dynPriorityClass class1 = new Reg2dynPriorityClass(1, "class_1");
-		class1.setMode(Reg2dynPriorityClass.SYNCHRONOUS);
-		Reg2dynPriorityClass class2 = new Reg2dynPriorityClass(2, "class_2");
-		class2.setMode(Reg2dynPriorityClass.ASYNCHRONOUS);
-		PriorityClassDefinition pcDef = new PriorityClassDefinition(nodeOrder, "pctest");
+		PriorityClass class1 = new PriorityClass(1, "class_1");
+		class1.setMode(PriorityClass.SYNCHRONOUS);
+		PriorityClass class2 = new PriorityClass(2, "class_2");
+		class2.setMode(PriorityClass.ASYNCHRONOUS);
+		PrioritySetDefinition pcDef = new PrioritySetDefinition(nodeOrder, "pctest");
         pcDef.clear();
         pcDef.add(class1);
         pcDef.add(class2);

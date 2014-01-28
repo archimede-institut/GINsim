@@ -7,8 +7,12 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.NamedList;
 
-
-public class PriorityClassManager extends NamedList<PriorityClassDefinition> {
+/**
+ * The list of all available priority set definitions.
+ *
+ * @author aurelien Naldi
+ */
+public class PrioritySetList extends NamedList<PrioritySetDefinition> {
 
 	public static final String SYNCHRONOUS = "synchronous", ASYNCHRONOUS = "asynchronous"; 
 	
@@ -23,16 +27,16 @@ public class PriorityClassManager extends NamedList<PriorityClassDefinition> {
 		return alFiltered;
 	}
 	
-	public PriorityClassManager(RegulatoryGraph graph) {
+	public PrioritySetList(RegulatoryGraph graph) {
 		this.nodeOrder = filterInputVariables(graph.getNodeOrder());
 
 		// add default priority classes
 		int index = addDefinition(null);
-		PriorityClassDefinition pcdef = get(index);
+		PrioritySetDefinition pcdef = get(index);
 		pcdef.setName(ASYNCHRONOUS);
-		Reg2dynPriorityClass pc = pcdef.get(0);
+		PriorityClass pc = pcdef.get(0);
 		pc.setName("all");
-		pc.setMode(Reg2dynPriorityClass.ASYNCHRONOUS);
+		pc.setMode(PriorityClass.ASYNCHRONOUS);
 		pcdef.lock();
 
 		index = addDefinition(null);
@@ -40,36 +44,35 @@ public class PriorityClassManager extends NamedList<PriorityClassDefinition> {
 		pcdef.setName(SYNCHRONOUS);
 		pc = pcdef.get(0);
 		pc.setName("all");
-		pc.setMode(Reg2dynPriorityClass.SYNCHRONOUS);
+		pc.setMode(PriorityClass.SYNCHRONOUS);
 		pcdef.lock();
 	}
 
     public int addDefinition(Object mode) {
-        PriorityClassAddMode addMode = PriorityClassAddMode.SIMPLE;
-        if (mode instanceof PriorityClassAddMode) {
-            addMode = (PriorityClassAddMode)mode;
+        PrioritySetAddMode addMode = PrioritySetAddMode.SIMPLE;
+        if (mode instanceof PrioritySetAddMode) {
+            addMode = (PrioritySetAddMode)mode;
         }
         String name = findUniqueName("priorities ");
 
-		PriorityClassDefinition pcdef = new PriorityClassDefinition(nodeOrder, name);
-        Object lastClass = pcdef.get(0);
-        Reg2dynPriorityClass currentClass;
+		PrioritySetDefinition pcdef = new PrioritySetDefinition(nodeOrder, name);
+        PriorityClass lastClass = pcdef.get(0);
+        PriorityClass currentClass;
         switch (addMode) {
             case SPLIT:
                 // should be equivalent to the old priority system: add one class per node
             	pcdef.clear();
             	pcdef.m_elt.clear();
-                for (int i=0 ; i<nodeOrder.size() ; i++) {
-                    currentClass = new Reg2dynPriorityClass();
-                    pcdef.add(i, currentClass);
-                    pcdef.m_elt.put(nodeOrder.get(i), currentClass);
-                    currentClass.setName(""+nodeOrder.get(i));
+                int rank = 0;
+                for (RegulatoryNode node: nodeOrder) {
+                    currentClass = pcdef.get(pcdef.add());
+                    pcdef.associate(node, currentClass);
+                    currentClass.setName(node.getId());
                 }
                 break;
             case FINE_GRAINED:
-                for (int i=0 ; i<nodeOrder.size() ; i++) {
-                    Object[] t = {lastClass, lastClass};
-                    pcdef.m_elt.put(nodeOrder.get(i), t);
+                for (RegulatoryNode node: nodeOrder) {
+                    pcdef.associate(node, lastClass, lastClass);
                 }
                 break;
         }
@@ -93,7 +96,7 @@ public class PriorityClassManager extends NamedList<PriorityClassDefinition> {
     }
 
     public boolean removeSelection(int[] sel) {
-        List<PriorityClassDefinition> toRemove = new ArrayList<PriorityClassDefinition>();
+        List<PrioritySetDefinition> toRemove = new ArrayList<PrioritySetDefinition>();
         for (int i: sel) {
             if (i < 2) {
                 return false;

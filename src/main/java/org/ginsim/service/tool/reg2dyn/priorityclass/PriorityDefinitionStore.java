@@ -12,12 +12,12 @@ public interface PriorityDefinitionStore {
      *
      * @return the stored class
      */
-  PriorityClassDefinition getPriorityDefinition();
+  PrioritySetDefinition getPriorityDefinition();
 
     /**
      * Store a priority definition
      *
      * @param pcdef
      */
-    void setPriorityDefinition(PriorityClassDefinition pcdef);
+    void setPriorityDefinition(PrioritySetDefinition pcdef);
 }

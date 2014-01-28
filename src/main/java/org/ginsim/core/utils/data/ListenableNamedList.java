@@ -29,6 +29,13 @@ public class ListenableNamedList<T extends NamedObject> extends NamedList<T> {
         }
     }
 
+    protected void fireChanged() {
+        for (GenericListListener l: listeners) {
+            l.contentChanged();
+        }
+    }
+
+
     public T remove(int idx) {
         T item = super.remove(idx);
         if (item != null) {

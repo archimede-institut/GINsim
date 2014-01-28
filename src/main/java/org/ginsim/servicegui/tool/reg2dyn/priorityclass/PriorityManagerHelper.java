@@ -3,54 +3,54 @@ package org.ginsim.servicegui.tool.reg2dyn.priorityclass;
 import org.ginsim.gui.utils.data.ListEditionPanel;
 import org.ginsim.gui.utils.data.ListPanelCompanion;
 import org.ginsim.gui.utils.data.ListPanelHelper;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassAddMode;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
-import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetAddMode;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
 
 /**
  * GUI helper for the list of priority class definitions
  *
  * @author Aurelien Naldi
  */
-public class PriorityManagerHelper extends ListPanelHelper<PriorityClassDefinition, PriorityClassManager> {
+public class PriorityManagerHelper extends ListPanelHelper<PrioritySetDefinition, PrioritySetList> {
 
     public static final String FILTER_NO_SYNCHRONOUS = "[no-synchronous]";
     public static final PriorityManagerHelper HELPER = new PriorityManagerHelper();
 
     public Object[] getCreateTypes() {
-        return PriorityClassAddMode.values();
+        return PrioritySetAddMode.values();
     }
 
-    public int doCreate(PriorityClassManager list, Object arg) {
+    public int doCreate(PrioritySetList list, Object arg) {
         return list.addDefinition(arg);
     }
 
-    public boolean doRemove(PriorityClassManager list, int[] sel) {
+    public boolean doRemove(PrioritySetList list, int[] sel) {
         return list.removeSelection(sel);
     }
 
     @Override
-    public ListPanelCompanion getCompanion(ListEditionPanel<PriorityClassDefinition, PriorityClassManager> editPanel) {
+    public ListPanelCompanion getCompanion(ListEditionPanel<PrioritySetDefinition, PrioritySetList> editPanel) {
         PriorityDefinitionPanel configPanel = new PriorityDefinitionPanel(editPanel);
         return configPanel;
     }
 
-    public boolean moveData(PriorityClassManager pcmanager, int[] sel, int diff) {
+    public boolean moveData(PrioritySetList pcmanager, int[] sel, int diff) {
         if (!pcmanager.canMoveItems(sel)) {
             return false;
         }
         return super.moveData(pcmanager, sel, diff);
     }
 
-    public boolean match(String filter, PriorityClassDefinition pcdef) {
+    public boolean match(String filter, PrioritySetDefinition pcdef) {
         if (filter != null && filter.startsWith(FILTER_NO_SYNCHRONOUS)) {
 
             int l = pcdef.size();
             boolean hasSync = false;
             for (int i=0 ; i<l ; i++) {
-                Reg2dynPriorityClass pc = pcdef.get(i);
-                if (pc.getMode() == Reg2dynPriorityClass.SYNCHRONOUS) {
+                PriorityClass pc = pcdef.get(i);
+                if (pc.getMode() == PriorityClass.SYNCHRONOUS) {
                     hasSync = true;
                     break;
                 }

@@ -16,36 +16,27 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.ListenableNamedList;
 import org.ginsim.core.utils.data.NamedObject;
 
-
-public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriorityClass> implements NamedObject, XMLize {
+/**
+ * Definition of a set of priority classes: store a list of classes
+ * and assign all nodes to one of them.
+ *
+ * @author Aurelien Naldi
+ */
+public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> implements NamedObject, XMLize {
 
     public static final int UP = 0;
     public static final int DOWN = 1;
     public static final int NONE = 2;
     
+	public Map<RegulatoryNode, Object> m_elt;
+	private String name;
+	private boolean locked;
 
-	
-	public Map<RegulatoryNode,Object> m_elt;
-	String name;
-	boolean locked;
-
-	public PriorityClassDefinition(List<RegulatoryNode> elts, String name) {
-/*
-		canAdd = true;
-		canRemove = true;
-		canOrder = true;
-		canEdit = true;
-		prefix = "class_";
-		nbcol = 3;
-		addWithPosition = true;
-
-		Class[] t = {Integer.class, Boolean.class, String.class};
-		t_type = t;
-*/
+	public PrioritySetDefinition(List<RegulatoryNode> elts, String name) {
 		setName(name);
 		add();
-		m_elt = new HashMap();
-		Reg2dynPriorityClass newclass = get(0);
+		m_elt = new HashMap<RegulatoryNode, Object>();
+		PriorityClass newclass = get(0);
 		for (RegulatoryNode v: elts) {
 			m_elt.put(v, newclass);
 		}
@@ -74,35 +65,56 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
 		moveElement(j, pos);
 	}
 
+    public void associate(RegulatoryNode node, PriorityClass cl) {
+        m_elt.put(node, cl);
+    }
+    public void associate(RegulatoryNode node, PriorityClass clUp, PriorityClass clDown) {
+        Object[] t = {clUp, clDown};
+        m_elt.put(node, t);
+    }
+
     private void moveElement(int j, int pos) {
-        Reg2dynPriorityClass tmp = get(pos);
+        PriorityClass tmp = get(pos);
         set(pos, get(j));
         set(j, tmp);
     }
 
-    // TODO: move col names to the helper
-	public String getColName(int col) {
-		switch (col) {
-			case 0:
-				return "Rank";
-			case 1:
-				return "Sync";
-			case 2:
-				return "Name";
-			default:
-				return null;
-		}
-	}
+    @Override
+    public PriorityClass remove(int idx) {
+        if (idx < 0 || idx >= size()) {
+            return null;
+        }
 
-    // TODO: call the proper remove method
-	public boolean remove(int[] t_index) {
+        PriorityClass cl = get(idx);
+        remove(new int[] {idx});
+        return cl;
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        int idx = indexOf(o);
+        if (idx < 0) {
+            return false;
+        }
+
+        remove(idx);
+        return true;
+    }
+
+    /**
+     * Remove a group of items
+     *
+     * @param t_index
+     * @return
+     */
+    public boolean remove(int[] t_index) {
 		if (locked || t_index.length >= size()) {
 			return false;
 		}
 		for (int i = t_index.length - 1 ; i > -1 ; i--) {
 			int index = t_index[i];
 			
-            Reg2dynPriorityClass c = remove(index);
+            PriorityClass c = remove(index);
             if (index < size()) {
             	// update rank of the next priority classes
             	if ( index == 0 || ( get(index-1)).rank != c.rank) {
@@ -114,7 +126,7 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
             	}
             }
             Set<RegulatoryNode> elts = m_elt.keySet();
-            Reg2dynPriorityClass lastClass = get(size()-1);
+            PriorityClass lastClass = get(size()-1);
             for (RegulatoryNode v: elts) {
                 Object cl = m_elt.get(v); 
                 if (cl == c) {
@@ -291,7 +303,7 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
 		StringBuffer s_tmp;
 		for (int i=0 ; i< size(); i++) {
 			out.openTag("class");
-            Reg2dynPriorityClass pc = get(i);
+            PriorityClass pc = get(i);
             out.addAttr("name", pc.getName());
             out.addAttr("mode", ""+pc.getMode());
             out.addAttr("rank", ""+pc.rank);
@@ -299,7 +311,7 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
             for (Entry<RegulatoryNode, Object> e: m_elt.entrySet()) {
             	RegulatoryNode v = e.getKey();
                 Object oc = e.getValue();
-                if (oc instanceof Reg2dynPriorityClass) {
+                if (oc instanceof PriorityClass) {
                     if (oc == pc) {
                         s_tmp.append(v+" ");
                     }
@@ -340,9 +352,9 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
         //   - during the first pass asynchronous classes with the same priority are merged
         //   - then the real int[][] is created from the merged classes
 		List<List<Integer>> v_vpclass = new ArrayList<List<Integer>>();
-        for (Reg2dynPriorityClass pc: this) {
+        for (PriorityClass pc: this) {
             List<Integer> v_content;
-            if (pc.getMode() == Reg2dynPriorityClass.ASYNCHRONOUS) {
+            if (pc.getMode() == PriorityClass.ASYNCHRONOUS) {
                 v_content = new ArrayList<Integer>();
                 v_content.add(pc.rank);
                 v_content.add(pc.getMode());
@@ -390,7 +402,7 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
                 t[1] = ((Integer)v_content.get(1)).intValue();
             } else {
                 // if only one node in the class, async mode is useless!
-                t[1] = Reg2dynPriorityClass.SYNCHRONOUS;
+                t[1] = PriorityClass.SYNCHRONOUS;
             }
             for (int n=2 ; n<t.length ; n++) {
                 t[n] = ((Integer)v_content.get(n)).intValue();
@@ -405,7 +417,7 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
      * @see <code>getPclass</code>
      */
     public int[][] getPclassNew(List<NodeInfo> nodeInfos) {
-    	
+
     	Map<NodeInfo, RegulatoryNode> m_info2node = new HashMap<NodeInfo, RegulatoryNode>();
     	for (RegulatoryNode node: m_elt.keySet()) {
     		for (NodeInfo ni: nodeInfos) {
@@ -415,7 +427,7 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
     			}
     		}
     	}
-    	
+
     	List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>();
 		for (NodeInfo ni: nodeInfos) {
 			nodeOrder.add(ni);
@@ -423,13 +435,13 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
 				LogManager.debug("No matching RegulatoryNode for "+ni);
 			}
 		}
-    	
+
     	return getPclass(nodeOrder);
     }
 
 	public void lock() {
 		this.locked = true;
-		for (Reg2dynPriorityClass pc : this) {
+		for (PriorityClass pc : this) {
 			pc.lock();
 		}
 	}
@@ -438,10 +450,10 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
         return this.getName().toLowerCase().indexOf(filter.toLowerCase()) >= 0;
     }
 
-
-    public void refresh() {
-        // TODO: implement refresh
+    private void refresh() {
+        fireChanged();
     }
+
     public int add() {
         return add(size());
     }
@@ -470,7 +482,7 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
         }
 
         // create and insert the new class
-        Reg2dynPriorityClass pc = new Reg2dynPriorityClass(priority+1, name);
+        PriorityClass pc = new PriorityClass(priority+1, name);
         super.add(i, pc);
 
         int idx = i;
@@ -483,4 +495,52 @@ public class PriorityClassDefinition extends ListenableNamedList<Reg2dynPriority
 
         return idx;
     }
+
+    /**
+     * toggle the selection grouping:
+     *    - if all selected items are part of the same group, it will be "ungrouped"
+     *    - if selected items are part of several groups, they will be merged with the first one
+     */
+    public void groupToggle(int[] ts) {
+        int[][] selExtended = getMovingRows(NONE, ts);
+        // if class with different priorities are selected: give them all the same priority
+        if (selExtended.length < 1) {
+            return;
+        }
+        if (selExtended.length > 1) {
+            if (ts == null || ts.length < 1) {
+                return;
+            }
+            int pos = selExtended[0][1];
+            int pr = get(pos).rank;
+            for (int i=1 ; i<selExtended.length ; i++) {
+                for (int j=selExtended[i-1][1]+1 ; j<selExtended[i][0] ; j++) {
+                    get(j).rank -= i-1;
+                }
+                for (int j=selExtended[i][0] ; j<=selExtended[i][1] ; j++) {
+                    pos++;
+                    get(j).rank = pr;
+                    moveElementAt(j, pos);
+                }
+            }
+            int l = selExtended.length - 1;
+            for (int j=selExtended[l][1]+1 ; j<size() ; j++) {
+                get(j).rank -= l;
+            }
+        } else {
+            if (selExtended[0][0] != selExtended[0][1]) {
+                int i = selExtended[0][0];
+                int inc = 1;
+                for (i++ ; i<selExtended[0][1] ; i++) {
+                    get(i).rank += inc;
+                    inc++;
+                }
+                for ( ; i<size() ; i++) {
+                    get(i).rank += inc;
+                }
+            }
+        }
+        refresh();
+    }
+
 }

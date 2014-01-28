@@ -3,8 +3,6 @@ package org.ginsim.service.tool.modelsimplifier;
 import org.colomoto.common.task.AbstractTask;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
-import org.ginsim.common.application.LogManager;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
@@ -23,9 +21,9 @@ import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
-import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
 
 import java.text.DateFormat;
 import java.util.*;
@@ -181,23 +179,23 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
 		// priority classes definition and simulation parameters
 		SimulationParameterList params = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, SimulationParametersManager.KEY, false);
 		if (params != null) {
-			PriorityClassManager pcman = params.pcmanager;
+			PrioritySetList pcman = params.pcmanager;
 			SimulationParameterList new_params = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, SimulationParametersManager.KEY, true);
-			PriorityClassManager new_pcman = new_params.pcmanager;
+			PrioritySetList new_pcman = new_params.pcmanager;
 			for (int i=2 ; i<pcman.size() ; i++) {
-				PriorityClassDefinition pcdef = (PriorityClassDefinition)pcman.get(i);
+				PrioritySetDefinition pcdef = (PrioritySetDefinition)pcman.get(i);
 				int index = new_pcman.addDefinition(null);
-				PriorityClassDefinition new_pcdef = (PriorityClassDefinition)new_pcman.get(index);
+				PrioritySetDefinition new_pcdef = (PrioritySetDefinition)new_pcman.get(index);
 				new_pcdef.setName(pcdef.getName());
 				m_alldata.put(pcdef, new_pcdef);
-				Map<Reg2dynPriorityClass, Reg2dynPriorityClass> m_pclass = new HashMap<Reg2dynPriorityClass, Reg2dynPriorityClass>();
+				Map<PriorityClass, PriorityClass> m_pclass = new HashMap<PriorityClass, PriorityClass>();
 				// copy all priority classes
 				for (int j=0 ; j<pcdef.size() ; j++) {
-					Reg2dynPriorityClass pc = (Reg2dynPriorityClass)pcdef.get(j);
+					PriorityClass pc = (PriorityClass)pcdef.get(j);
 					if (j>0) {
 						new_pcdef.add();
 					}
-					Reg2dynPriorityClass new_pc = (Reg2dynPriorityClass)new_pcdef.get(j);
+					PriorityClass new_pc = (PriorityClass)new_pcdef.get(j);
 					new_pc.setName(pc.getName());
 					new_pc.rank = pc.rank;
 					new_pc.setMode(pc.getMode());

@@ -15,8 +15,8 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.NamedList;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
 
 
 /**
@@ -28,7 +28,7 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
 
     public final RegulatoryGraph graph;
     public final GsInitialStateList imanager;
-    public final PriorityClassManager pcmanager;
+    public final PrioritySetList pcmanager;
 
     /**
      * @param graph
@@ -44,7 +44,7 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
         imanager = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, InitialStateManager.KEY, true);
         imanager.getInitialStates().addListListener(this);
         imanager.getInputConfigs().addListListener(this);
-        pcmanager = new PriorityClassManager(this.graph);
+        pcmanager = new PrioritySetList(this.graph);
         GraphManager.getInstance().addGraphListener( this.graph, this);
         if (param == null) {
         	add();
@@ -85,7 +85,7 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
         // remove it from priority classes
     	pcmanager.nodeOrder.remove(data);
         for (int i=0 ; i<pcmanager.size() ; i++) {
-        	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.get(i);
+        	PrioritySetDefinition pcdef = (PrioritySetDefinition)pcmanager.get(i);
     		if (pcdef.m_elt != null) {
     			pcdef.m_elt.remove(data);
     		}
@@ -100,7 +100,7 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
 		}
 		pcmanager.nodeOrder.add(node);
         for (int i=0 ; i<pcmanager.size() ; i++) {
-        	PriorityClassDefinition pcdef = (PriorityClassDefinition)pcmanager.get(i);
+        	PrioritySetDefinition pcdef = (PrioritySetDefinition)pcmanager.get(i);
     		if (pcdef.m_elt != null) {
     			pcdef.m_elt.put(node, pcdef.get(0));
     		}

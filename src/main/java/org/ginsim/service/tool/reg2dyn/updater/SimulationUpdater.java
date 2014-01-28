@@ -5,8 +5,8 @@ import java.util.Iterator;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
-import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 
 
 /**
@@ -98,10 +98,10 @@ abstract public class SimulationUpdater implements Iterator {
 	}
 	
     static public SimulationUpdater getInstance(LogicalModel model, SimulationParameters params) {
-		PriorityClassDefinition pcdef = params.getPriorityClassDefinition();
+		PrioritySetDefinition pcdef = params.getPriorityClassDefinition();
 		if (pcdef.size() < 2) {
-			Reg2dynPriorityClass pc = (Reg2dynPriorityClass)pcdef.get(0);
-			if (pc.getMode() == Reg2dynPriorityClass.SYNCHRONOUS) {
+			PriorityClass pc = (PriorityClass)pcdef.get(0);
+			if (pc.getMode() == PriorityClass.SYNCHRONOUS) {
 				return new SynchronousSimulationUpdater(model);
 			}
 			return new AsynchronousSimulationUpdater(model);
@@ -218,7 +218,7 @@ class PrioritySimulationUpdater extends SimulationUpdater {
     int priority;
 
 	
-    public PrioritySimulationUpdater(LogicalModel model, PriorityClassDefinition pcdef) {
+    public PrioritySimulationUpdater(LogicalModel model, PrioritySetDefinition pcdef) {
 		super(model);
 		pclass = pcdef.getPclassNew(model.getNodeOrder());
 	}
@@ -272,7 +272,7 @@ class PrioritySimulationUpdater extends SimulationUpdater {
         }
         next = (byte[])cur_state.clone();
         nextIndex = 1;
-        if (classChangesList[0] == Reg2dynPriorityClass.SYNCHRONOUS) {
+        if (classChangesList[0] == PriorityClass.SYNCHRONOUS) {
         	for ( ; nextIndex<classChangesList.length ; nextIndex++) {
         		next[classChangesList[nextIndex++]] += classChangesList[nextIndex];
         	}
@@ -345,7 +345,7 @@ class PrioritySimulationUpdater extends SimulationUpdater {
         }
         next = (byte[])cur_state.clone();
         nextIndex = 1;
-        if (classChangesList[0] == Reg2dynPriorityClass.SYNCHRONOUS) {
+        if (classChangesList[0] == PriorityClass.SYNCHRONOUS) {
         	for ( ; nextIndex<classChangesList.length ; nextIndex++) {
         		next[classChangesList[nextIndex++]] += classChangesList[nextIndex];
         	}

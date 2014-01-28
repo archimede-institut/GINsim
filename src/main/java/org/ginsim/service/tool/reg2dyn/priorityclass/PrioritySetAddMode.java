@@ -1,9 +1,11 @@
 package org.ginsim.service.tool.reg2dyn.priorityclass;
 
 /**
- * Created by aurelien on 1/23/14.
+ * Default modes to add a new priority set
+ *
+ * @author Aurelien Naldi
  */
-public enum PriorityClassAddMode {
+public enum PrioritySetAddMode {
 
     SIMPLE("One unique class"),
     SPLIT("One class for each node"),
@@ -11,7 +13,7 @@ public enum PriorityClassAddMode {
 
     private final String descr;
 
-    private PriorityClassAddMode(String s) {
+    private PrioritySetAddMode(String s) {
         this.descr = s;
     }
     public String toString() {

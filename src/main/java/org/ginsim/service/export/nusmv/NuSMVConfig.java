@@ -7,7 +7,7 @@ import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityDefinitionStore;
 
 public class NuSMVConfig implements InitialStateStore, PriorityDefinitionStore {
@@ -21,7 +21,7 @@ public class NuSMVConfig implements InitialStateStore, PriorityDefinitionStore {
 	private Map<InitialState, Object> m_initStates;
 	private Map<InitialState, Object> m_input;
 
-    private PriorityClassDefinition priorities;
+    private PrioritySetDefinition priorities;
 	private int updatePolicy;
 
 	/**
@@ -76,12 +76,12 @@ public class NuSMVConfig implements InitialStateStore, PriorityDefinitionStore {
 	}
 
     @Override
-    public PriorityClassDefinition getPriorityDefinition() {
+    public PrioritySetDefinition getPriorityDefinition() {
         return priorities;
     }
 
     @Override
-    public void setPriorityDefinition(PriorityClassDefinition pcdef) {
+    public void setPriorityDefinition(PrioritySetDefinition pcdef) {
         this.priorities = pcdef;
         setUpdatePolicy();
     }

@@ -19,10 +19,10 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.utils.data.NamedObject;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityDefinitionStore;
-import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
 
 
 /**
@@ -47,7 +47,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
     public Map m_input = new HashMap();
     public SimulationParameterList param_list;
 
-    private PriorityClassDefinition pcdef;
+    private PrioritySetDefinition pcdef;
 
     /**
      * empty constructor for everyday use.
@@ -247,7 +247,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
         return m_input;
     }
 
-	public PriorityClassDefinition getPriorityClassDefinition() {
+	public PrioritySetDefinition getPriorityClassDefinition() {
         return getPriorityDefinition();
 	}
 
@@ -269,26 +269,26 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
         // TODO: get the real associated perturbation
         Perturbation perturbation = null;
 //        other.perturbation = (Perturbation)mapping.get(perturbation);
-        PriorityClassDefinition new_pcdef = (PriorityClassDefinition)mapping.get(pcdef);
+        PrioritySetDefinition new_pcdef = (PrioritySetDefinition)mapping.get(pcdef);
         if (new_pcdef == null) {
-            PriorityClassManager new_pcman = (PriorityClassManager)mapping.get("");
+            PrioritySetList new_pcman = (PrioritySetList)mapping.get("");
             if (pcdef.size() < 2) {
-                Reg2dynPriorityClass pc = (Reg2dynPriorityClass)pcdef.get(0);
-                if (pc.getMode() == Reg2dynPriorityClass.SYNCHRONOUS) {
-                    new_pcdef = (PriorityClassDefinition)new_pcman.get(1);
+                PriorityClass pc = (PriorityClass)pcdef.get(0);
+                if (pc.getMode() == PriorityClass.SYNCHRONOUS) {
+                    new_pcdef = (PrioritySetDefinition)new_pcman.get(1);
                 } else {
-                    new_pcdef = (PriorityClassDefinition)new_pcman.get(0);
+                    new_pcdef = (PrioritySetDefinition)new_pcman.get(0);
                 }
             } else {
                 LogManager.error( "[BUG] complex pcdef not transposed in the reduced model");
-                new_pcdef = (PriorityClassDefinition)new_pcman.get(0);
+                new_pcdef = (PrioritySetDefinition)new_pcman.get(0);
             }
         }
         other.setPriorityDefinition(new_pcdef);
     }
 
     @Override
-    public PriorityClassDefinition getPriorityDefinition() {
+    public PrioritySetDefinition getPriorityDefinition() {
         if (pcdef == null) {
             pcdef = param_list.pcmanager.get(0);
         }
@@ -296,7 +296,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
     }
 
     @Override
-    public void setPriorityDefinition(PriorityClassDefinition pcdef) {
+    public void setPriorityDefinition(PrioritySetDefinition pcdef) {
         this.pcdef = pcdef;
     }
 

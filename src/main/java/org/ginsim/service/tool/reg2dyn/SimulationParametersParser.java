@@ -16,9 +16,9 @@ import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassDefinition;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClassManager;
-import org.ginsim.service.tool.reg2dyn.priorityclass.Reg2dynPriorityClass;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -46,7 +46,7 @@ public class SimulationParametersParser extends XMLHelper {
     SimulationParameters param;
     boolean pclass_fine;
     boolean addparameter = false;
-	private PriorityClassDefinition	pcdef;
+	private PrioritySetDefinition pcdef;
     
     /**
      * @param graph expected node order
@@ -99,9 +99,9 @@ public class SimulationParametersParser extends XMLHelper {
                     	}
                     } else {
                         s = attributes.getValue("updating");
-                        PriorityClassDefinition o = paramLists.pcmanager.getByName(s);
+                        PrioritySetDefinition o = paramLists.pcmanager.getByName(s);
                         if (o == null) {
-                        	o = paramLists.pcmanager.getByName(PriorityClassManager.ASYNCHRONOUS);
+                        	o = paramLists.pcmanager.getByName(PrioritySetList.ASYNCHRONOUS);
                         }
                         param.setPriorityDefinition(o);
                         param.breadthFirst = "true".equals(attributes.getValue("breadthFirst"));
@@ -112,7 +112,7 @@ public class SimulationParametersParser extends XMLHelper {
                     param.maxnodes = Integer.parseInt(s);
                 } else if (qName.equals("priorityClassList")) {
                 	int index = paramLists.pcmanager.addDefinition(null);
-                	pcdef = (PriorityClassDefinition)paramLists.pcmanager.get(index);
+                	pcdef = (PrioritySetDefinition)paramLists.pcmanager.get(index);
                 	pcdef.clear();
                 	pcdef.m_elt.clear();
                 	pcdef.setName(attributes.getValue("id"));
@@ -144,7 +144,7 @@ public class SimulationParametersParser extends XMLHelper {
                 	
                 } else if (qName.equals("priorityClassList")) {
                 	int index = paramLists.pcmanager.addDefinition(null);
-                	pcdef = (PriorityClassDefinition)paramLists.pcmanager.get(index);
+                	pcdef = (PrioritySetDefinition)paramLists.pcmanager.get(index);
                 	pcdef.clear();
                 	pcdef.m_elt.clear();
                 	param.setPriorityDefinition(pcdef);
@@ -225,7 +225,7 @@ public class SimulationParametersParser extends XMLHelper {
 	}
 	
     private void parseClass(Attributes attributes) {
-        Reg2dynPriorityClass pc = new Reg2dynPriorityClass();
+        PriorityClass pc = new PriorityClass();
         pc.setName(attributes.getValue("name"));
         try {
         	pc.setMode(Integer.parseInt(attributes.getValue("mode")));
@@ -247,7 +247,7 @@ public class SimulationParametersParser extends XMLHelper {
                     if (vertex.getId().equals(s_vertex)) {
                         Object oc = pcdef.m_elt.get(vertex);
                         Object[] t;
-                        if (oc == null || oc instanceof Reg2dynPriorityClass) {
+                        if (oc == null || oc instanceof PriorityClass) {
                             t = new Object[2];
                             t[0] = t[1] = oc;
                         } else { // should be an array 
@@ -285,7 +285,7 @@ public class SimulationParametersParser extends XMLHelper {
         	for (RegulatoryNode vertex: nodeOrder) {
         		Object oc = pcdef.m_elt.get(vertex);
         		Object[] t;
-        		if (oc instanceof Reg2dynPriorityClass) {
+        		if (oc instanceof PriorityClass) {
         			// added to a single class, fix it
                     t = new Object[2];
                     t[0] = t[1] = oc;

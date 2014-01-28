@@ -8,7 +8,7 @@ import org.ginsim.core.utils.data.NamedObject;
  * a priority class for the simulation.
  * each class has a name, a simulation mode and a list of elements
  */
-public class Reg2dynPriorityClass implements MultiColObject, NamedObject {
+public class PriorityClass implements MultiColObject, NamedObject {
     
     /** this class is synchronous */
     public static final int SYNCHRONOUS = 0;
@@ -23,13 +23,13 @@ public class Reg2dynPriorityClass implements MultiColObject, NamedObject {
     /**
      * 
      */
-    public Reg2dynPriorityClass() {
+    public PriorityClass() {
         this(0, null);
     }
     /**
      * @param priority
      */
-    public Reg2dynPriorityClass(int priority, String name) {
+    public PriorityClass(int priority, String name) {
         this.mode = ASYNCHRONOUS;
         this.rank = priority;
         this.name = name==null ? "new class": name;
@@ -75,7 +75,7 @@ public class Reg2dynPriorityClass implements MultiColObject, NamedObject {
     }
     
     public Object clone() {
-    	Reg2dynPriorityClass clone = new Reg2dynPriorityClass();
+    	PriorityClass clone = new PriorityClass();
     	clone.mode = mode;
     	clone.name = name;
     	clone.rank = rank;
