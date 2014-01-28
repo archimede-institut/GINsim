@@ -55,4 +55,6 @@ public interface GraphAssociatedObjectManager {
 	 * @return the existing object, or null if not created
 	 */
 	Object getObject( Graph graph);
+
+    boolean handles(String key);
 }

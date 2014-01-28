@@ -1,11 +1,7 @@
 package org.ginsim.core.graph.objectassociation;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Vector;
 
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.utils.IntrospectionUtils;
@@ -19,13 +15,13 @@ public class ObjectAssociationManager {
 	private HashMap<Class,List<GraphAssociatedObjectManager>> specializedObjectManagers = null;
 	
     // The map linking objects associated to the Graph with their representative key
-    private HashMap<Graph,Map<Object,Object>> objectsOfGraph;
+    private HashMap<Graph, Map<String, Object>> objectsOfGraph;
 	
 	private ObjectAssociationManager(){
 		
-		objectManagers = new Vector<GraphAssociatedObjectManager>();
+		objectManagers = new ArrayList<GraphAssociatedObjectManager>();
 		specializedObjectManagers = new HashMap<Class, List<GraphAssociatedObjectManager>>();
-		objectsOfGraph = new HashMap<Graph, Map<Object,Object>>();
+		objectsOfGraph = new HashMap<Graph, Map<String,Object>>();
 		
 	}
 	
@@ -64,7 +60,7 @@ public class ObjectAssociationManager {
 	 * @param newKey new ID, or null if it was removed
 	 */
 	public void fireUserUpdate(Graph<?,?> graph, String oldKey, String newKey) {
-		Map<Object,Object> m_objects = objectsOfGraph.get(graph);
+		Map<String,Object> m_objects = objectsOfGraph.get(graph);
 		if (m_objects == null) {
 			return;
 		}
@@ -151,14 +147,13 @@ public class ObjectAssociationManager {
      * 
      * @return the Object manager in charge of the given object, null if no Manager is defined for this object
      */
-    public GraphAssociatedObjectManager getObjectManager( Object key) {
+    public GraphAssociatedObjectManager getObjectManager( String key) {
     	
     	if (objectManagers == null) {
     		return null;
     	}
-        for (int i=0 ; i < objectManagers.size() ; i++) {
-        	GraphAssociatedObjectManager manager = (GraphAssociatedObjectManager) objectManagers.get(i);
-        	if (manager.getObjectName().equals( key)) {
+        for (GraphAssociatedObjectManager manager: objectManagers) {
+        	if (manager.handles( key)) {
         		return manager;
         	}
         }
@@ -171,7 +166,7 @@ public class ObjectAssociationManager {
      * 
      * @return the Object manager in charge of the given object, null if no Manager is defined for this object
      */
-    public GraphAssociatedObjectManager getObjectManager( Class graph_class, Object key) {
+    public GraphAssociatedObjectManager getObjectManager( Class graph_class, String key) {
     	
     	Class interface_class = IntrospectionUtils.getGraphInterface( graph_class);
     	
@@ -181,9 +176,8 @@ public class ObjectAssociationManager {
     		return null;
     	}
     	
-        for (int i=0 ; i < specialized_managers.size() ; i++) {
-        	GraphAssociatedObjectManager manager = (GraphAssociatedObjectManager) specialized_managers.get(i);
-        	if (manager.getObjectName().equals( key)) {
+        for (GraphAssociatedObjectManager manager: specialized_managers) {
+        	if (manager.handles(key)) {
         		return manager;
         	}
         }
@@ -195,32 +189,36 @@ public class ObjectAssociationManager {
      * Allow to associate objects with a graph to retrieve them later.
      * this (and <code>addObject(key, obj)</code>) makes it easy.
      *
-     * @see #addObject(Graph, Object, Object)
+     * @see #addObject(Graph, String, Object)
      * @param key
      * @param create if true, a non-defined object will be created
      * @return the associated object
      */
-    public Object getObject( Graph graph, Object key, boolean create) {
+    public Object getObject( Graph graph, String key, boolean create) {
     	
-    	Map<Object, Object> m_objects = objectsOfGraph.get( graph);
+    	Map<String, Object> m_objects = objectsOfGraph.get( graph);
     	
         if (m_objects == null) {
         	if ( create) {
-        		m_objects = new HashMap<Object,Object>();
+        		m_objects = new HashMap<String,Object>();
         	} else {
         		return null;
         	}
         }
+
+        GraphAssociatedObjectManager manager = getObjectManager( key);
+        if (manager == null) {
+            manager = getObjectManager( graph.getClass(), key);
+            if (manager == null) {
+                return null;
+            }
+        }
+        key = manager.getObjectName();
         Object ret = m_objects.get( key);
+
         if (create && ret == null) {
-        	GraphAssociatedObjectManager manager = getObjectManager( key);
-        	if (manager == null) {
-        		manager = getObjectManager( graph.getClass(), key);
-        	}
-        	if (manager != null) {
-        		ret = manager.doCreate( graph);
-        		addObject(graph, key, ret);
-        	}
+            ret = manager.doCreate( graph);
+            addObject(graph, key, ret);
         }
         return ret;
     }
@@ -228,17 +226,17 @@ public class ObjectAssociationManager {
     /**
      * Allow to associate objects with a graph to retrieve them later.
      *
-     * @see #getObject(Graph, Object, boolean)
-     * @see #removeObject(Graph, Object)
+     * @see #getObject(Graph, String, boolean)
+     * @see #removeObject(Graph, String)
      * @param key
      * @param obj
      */
-    public void addObject(Graph graph, Object key, Object obj) {
+    public void addObject(Graph graph, String key, Object obj) {
     	
-    	Map<Object, Object> m_objects = objectsOfGraph.get( graph);
+    	Map<String, Object> m_objects = objectsOfGraph.get( graph);
     	
     	if (m_objects == null) {
-            m_objects = new HashMap<Object,Object>();
+            m_objects = new HashMap<String, Object>();
             objectsOfGraph.put( graph, m_objects);
         }
         m_objects.put(key, obj);
@@ -247,13 +245,13 @@ public class ObjectAssociationManager {
     /**
      * remove an object previously associated to a graph with <code>addObject(Object, Object)</code>.
      *
-     * @see #getObject(Graph, Object, boolean)
-     * @see #addObject(Graph, Object, Object)
+     * @see #getObject(Graph, String, boolean)
+     * @see #addObject(Graph, String, Object)
      * @param key
      */
-    public void removeObject(Graph graph, Object key) {
+    public void removeObject(Graph graph, String key) {
     	
-    	Map<Object, Object> m_objects = objectsOfGraph.get( graph);
+    	Map<String, Object> m_objects = objectsOfGraph.get( graph);
     	
         if (m_objects != null) {
         	m_objects.remove(key);
@@ -268,7 +266,7 @@ public class ObjectAssociationManager {
      */
     public void removeAllObjects( Graph graph){
     	
-    	Map<Object, Object> m_objects = objectsOfGraph.get( graph);
+    	Map<String, Object> m_objects = objectsOfGraph.get( graph);
     	
         if (m_objects != null) {
         	// is that REALLY needed? (i.e. do we have copies of this map outside of here?)
@@ -291,13 +289,12 @@ public class ObjectAssociationManager {
         if (specialized_managers == null) {
             return false;
         }
-        for (int i=0 ; i<specialized_managers.size() ; i++) {
-            if (((GraphAssociatedObjectManager)specialized_managers.get(i)).getObjectName().equals(key)) {
+        for (GraphAssociatedObjectManager mgr: specialized_managers) {
+            if (mgr.handles(key)) {
                 return true;
             }
         }
         return false;
     }
-   	
 
 }

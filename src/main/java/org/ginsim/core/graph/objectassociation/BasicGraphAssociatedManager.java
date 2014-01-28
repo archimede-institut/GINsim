@@ -49,4 +49,25 @@ public abstract class BasicGraphAssociatedManager implements GraphAssociatedObje
 	public Object getObject( Graph graph) {
 		return ObjectAssociationManager.getInstance().getObject(graph, key, false);
 	}
+
+    @Override
+    public boolean handles(String key) {
+        if (key == null) {
+            return false;
+        }
+
+        if (key.equals(this.key)) {
+            return true;
+        }
+
+        if (aliases != null) {
+            for (String alias: aliases) {
+                if (alias.equals(key)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 }

@@ -19,7 +19,7 @@ public class PerturbationManager extends BasicGraphAssociatedManager {
 	public static final String KEY = "mutant";
 	
 	public PerturbationManager() {
-		super(KEY, null);
+		super(KEY, new String[] {"perturbation"});
 	}
 	
     public Object doOpen(InputStream is, Graph graph)  throws GsException{
