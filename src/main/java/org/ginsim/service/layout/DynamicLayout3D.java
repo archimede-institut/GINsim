@@ -8,6 +8,7 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -61,6 +62,7 @@ public class DynamicLayout3D {
     	for (Edge<DynamicNode> edge: graph.getEdges()) {
     		moveEdge(edge, maxValues);
     	}
+        graph.fireGraphChange(GraphChangeType.GRAPHVIEWCHANGED, null);
     }
 	
 
@@ -74,18 +76,14 @@ public class DynamicLayout3D {
 		byte[] state = node.state;
 
 		double left = MARGIN;
-//		double top = MARGIN;
 		double bottom = maxPossibleY + DIMENSIONSTEP;
 
 		for (int i = 0; i < state.length; i++) {
 			left += state[i]*decalx[i];
-//			top += state[i]*decaly[i];
 			bottom -= state[i]*decaly[i];
 		}
 
-//		vreader.setPos((int)left, (int)top);
 		vreader.setPos((int)left, (int)bottom);
-		vreader.refresh();
 	}
 
 	private void moveEdge(Edge<DynamicNode> edge, byte[] maxValues) {
@@ -94,8 +92,6 @@ public class DynamicLayout3D {
 		
 		byte[] diffstate = getDiffStates((DynamicNode)edge.getSource(), (DynamicNode)edge.getTarget());
 		int change = getChange(diffstate);
-	
-		ereader.refresh();
 	}
 	
 	   /**
