@@ -25,15 +25,13 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.gui.tbclient.decotreetable.DTreeNodeBuilder;
-import org.ginsim.gui.tbclient.decotreetable.DTreeTableBuilder;
-import org.ginsim.gui.tbclient.decotreetable.decotree.AbstractDTreeElement;
-import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElement;
-import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElementSelectable.JCB;
-import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElementToggleButton;
-import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeModel;
-import org.ginsim.gui.tbclient.decotreetable.decotree.DecoTree;
-import org.ginsim.gui.tbclient.decotreetable.table.DecoTreeTable;
+import org.ginsim.gui.graph.regulatorygraph.logicalfunction.decotreetable.AbstractDTreeElement;
+import org.ginsim.gui.graph.regulatorygraph.logicalfunction.decotreetable.DTreeElement;
+import org.ginsim.gui.graph.regulatorygraph.logicalfunction.decotreetable.DTreeElementSelectable.JCB;
+import org.ginsim.gui.graph.regulatorygraph.logicalfunction.decotreetable.DTreeElementToggleButton;
+import org.ginsim.gui.graph.regulatorygraph.logicalfunction.decotreetable.DTreeModel;
+import org.ginsim.gui.graph.regulatorygraph.logicalfunction.decotreetable.DecoTree;
+import org.ginsim.gui.graph.regulatorygraph.logicalfunction.decotreetable.DecoTreeTable;
 import org.ginsim.gui.utils.widgets.GsButton;
 import org.ginsim.gui.utils.widgets.GsPanel;
 

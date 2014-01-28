@@ -1,19 +1,15 @@
 package org.ginsim.gui.graph.regulatorygraph;
 
 import java.awt.GridBagConstraints;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.ginsim.common.application.Translator;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.annotation.AnnotationPanel;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.LogicalFunctionPanel;
-import org.ginsim.gui.graph.regulatorygraph.models.NodeMaxValueSpinModel;
 import org.ginsim.gui.utils.data.GenericPropertyEditorPanel;
 import org.ginsim.gui.utils.data.GenericPropertyInfo;
 import org.ginsim.gui.utils.data.ObjectEditor;

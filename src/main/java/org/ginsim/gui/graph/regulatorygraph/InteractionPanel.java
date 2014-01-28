@@ -34,8 +34,6 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInt
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeElement;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.gui.graph.regulatorygraph.models.IncomingEdgeListModel;
-import org.ginsim.gui.graph.regulatorygraph.models.TableInteractionsModel;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 import org.ginsim.gui.utils.data.GenericPropertyHolder;
 import org.ginsim.gui.utils.data.GenericPropertyInfo;

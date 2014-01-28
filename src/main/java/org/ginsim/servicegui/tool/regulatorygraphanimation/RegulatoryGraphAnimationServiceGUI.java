@@ -14,7 +14,7 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.GenericGraphAction;
 import org.ginsim.gui.service.common.ServiceStatus;
-import org.ginsim.service.tool.regulatorygraphanimation.RegulatoryGraphAnimationService;
+import org.ginsim.gui.service.common.StandaloneGUI;
 import org.mangosdk.spi.ProviderFor;
 
 /**
@@ -22,7 +22,7 @@ import org.mangosdk.spi.ProviderFor;
  * according to a path in the associated state transition graph.
  */
 @ProviderFor( ServiceGUI.class)
-@GUIFor( RegulatoryGraphAnimationService.class)
+@StandaloneGUI
 @ServiceStatus( ServiceStatus.RELEASED)
 public class RegulatoryGraphAnimationServiceGUI extends AbstractServiceGUI {
     

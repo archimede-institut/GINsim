@@ -1,7 +1,7 @@
 package org.ginsim.gui.graph.regulatorygraph.logicalfunction.neweditor;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.gui.tbclient.decotreetable.decotree.DTreeElementDeco;
+import org.ginsim.gui.graph.regulatorygraph.logicalfunction.decotreetable.DTreeElementDeco;
 
 
 public class ListInteraction {

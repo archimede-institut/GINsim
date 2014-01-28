@@ -21,13 +21,13 @@ import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GUIFor;
 import org.ginsim.gui.service.common.ServiceStatus;
+import org.ginsim.gui.service.common.StandaloneGUI;
 import org.ginsim.gui.service.common.ToolkitAction;
-import org.ginsim.service.tool.regulatoryfunctiontree.RegulatoryFunctionTreeService;
 import org.mangosdk.spi.ProviderFor;
 
 
 @ProviderFor( ServiceGUI.class)
-@GUIFor( RegulatoryFunctionTreeService.class)
+@StandaloneGUI
 @ServiceStatus( ServiceStatus.TOOLKIT)
 public class RegulatoryFunctionTreeServiceGUI extends AbstractServiceGUI {
 	
