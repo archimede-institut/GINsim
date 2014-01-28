@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.utils.Dotify;
+import org.ginsim.core.io.parser.Dotify;
 
 
 public class TreeNode implements Dotify {

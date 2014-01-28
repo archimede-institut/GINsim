@@ -3,8 +3,7 @@ package org.ginsim.core.utils.data;
 import java.util.List;
 
 /**
- * Default implementation of <code>GsValueInList</code>.
- * This implementation uses a List to store the possible values.
+ * Group a list of values and a selected item from this list.
  */
 public class ValueList<T> {
     private List<T> values;
@@ -16,21 +15,21 @@ public class ValueList<T> {
     }
 
     /**
-     * @param v_values
+     * @param values
      * @param selected
      */
     public ValueList(List<T> values, int selected) {
         this(values, selected, "");
     }
     /**
-     * @param v_values
+     * @param values
      * @param s_none
      */
     public ValueList(List<T> values, String s_none) {
         this(values, -1, s_none);
     }
     /**
-     * @param v_values
+     * @param values
      * @param selected
      * @param s_none
      */
@@ -40,7 +39,7 @@ public class ValueList<T> {
         this.s_none = s_none;
     }
     /**
-     * @param v_values
+     * @param values
      * @param selected
      * @param s_none
      */
@@ -49,7 +48,7 @@ public class ValueList<T> {
         this.selected = selected;
         this.s_none = s_none;
     }
-    
+
     public String toString() {
         if (selected == -1) {
             return s_none;
@@ -84,7 +83,7 @@ public class ValueList<T> {
         }
         return values.get(index);
     }
-    
+
     public int indexOf(Object anObject) {
         return values.indexOf(anObject);
     }

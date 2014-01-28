@@ -25,7 +25,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
 
-import org.ginsim.core.utils.data.MultiColObject;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.SplitPane;
 import org.ginsim.gui.utils.widgets.StockButton;
@@ -517,16 +516,9 @@ class SimpleListModel<T, L extends List<T>> extends AbstractTableModel implement
         col -= actions.length;
         T o = list.get(row);
         
-        if (o instanceof MultiColObject) {
-    		return ((MultiColObject)o).getVal(col);
-        }
-
-        if (col > 0) {
-            return helper.getValue(list, o, col);
-        }
-
-    	return o;
+        return helper.getValue(list, o, col);
     }
+
 	@Override
 	public int getRowCount() {
         if (list == null) {

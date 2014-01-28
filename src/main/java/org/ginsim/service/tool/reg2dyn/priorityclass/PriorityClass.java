@@ -1,6 +1,5 @@
 package org.ginsim.service.tool.reg2dyn.priorityclass;
 
-import org.ginsim.core.utils.data.MultiColObject;
 import org.ginsim.core.utils.data.NamedObject;
 
 
@@ -8,7 +7,7 @@ import org.ginsim.core.utils.data.NamedObject;
  * a priority class for the simulation.
  * each class has a name, a simulation mode and a list of elements
  */
-public class PriorityClass implements MultiColObject, NamedObject {
+public class PriorityClass implements NamedObject {
     
     /** this class is synchronous */
     public static final int SYNCHRONOUS = 0;

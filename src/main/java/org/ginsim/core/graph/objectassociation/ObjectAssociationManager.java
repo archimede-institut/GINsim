@@ -4,7 +4,7 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.utils.IntrospectionUtils;
+import org.ginsim.common.utils.IntrospectionUtils;
 
 /**
  * The association manager can be used as proxy to retrieve or create associated objects.

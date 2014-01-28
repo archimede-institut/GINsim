@@ -1,4 +1,4 @@
-package org.ginsim.core.utils;
+package org.ginsim.common.utils;
 
 import java.util.ArrayList;
 import java.util.List;
