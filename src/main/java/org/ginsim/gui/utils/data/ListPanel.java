@@ -23,6 +23,7 @@ import javax.swing.JSplitPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumnModel;
 
 import org.ginsim.core.utils.data.MultiColObject;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
@@ -61,7 +62,7 @@ public class ListPanel<T, L extends List<T>> extends JPanel
 
 	// TODO: fix ugly hack for the size of the action column
     static final int actionSize = 30;
-    static final int boolSize = 30;
+    static final int minColumnSize = 50;
 
     public ListPanel(ListPanelHelper<T,L> helper, String name) {
         this(helper, name, null);
@@ -256,16 +257,19 @@ public class ListPanel<T, L extends List<T>> extends JPanel
         }
 
         String[] labels = helper.getActionLabels();
+        TableColumnModel columnModel = jl.getColumnModel();
         int i=0;
         if (labels != null) {
             for ( ; i<labels.length ; i++) {
-                jl.getColumnModel().getColumn(i).setMaxWidth(actionSize);
+                columnModel.getColumn(i).setMaxWidth(actionSize);
             }
         }
 
         for (ColumnDefinition cdef: helper.getColumns()) {
-            if (cdef.type == Boolean.class) {
-                jl.getColumnModel().getColumn(i).setMaxWidth(boolSize);
+            if (cdef.fixedSize > 0) {
+                columnModel.getColumn(i).setMaxWidth(cdef.fixedSize);
+            } else {
+                columnModel.getColumn(i).setMinWidth(minColumnSize);
             }
             i++;
         }

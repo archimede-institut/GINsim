@@ -17,11 +17,10 @@ public class PriorityDefinitionHelper extends ListPanelHelper<PriorityClass, Pri
     public static final PriorityDefinitionHelper HELPER = new PriorityDefinitionHelper();
 
     private static final ColumnDefinition[] COLUMNS = new ColumnDefinition[] {
-            new ColumnDefinition("Rank", String.class, false),
+            new ColumnDefinition("Rank", String.class, false, 30),
             new ColumnDefinition("Sync", Boolean.class, true),
             new ColumnDefinition("Name", String.class, true),
     };
-
 
     @Override
     public ListPanelCompanion getCompanion(ListEditionPanel<PriorityClass, PrioritySetDefinition> editPanel) {

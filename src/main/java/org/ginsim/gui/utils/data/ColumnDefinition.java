@@ -16,9 +16,21 @@ public class ColumnDefinition {
     public final Class type;
     public final boolean editable;
 
+    public int fixedSize;
+
+    public ColumnDefinition(String title, Class type, boolean editable, int fixedSize) {
+        this(title, type, editable);
+        this.fixedSize = fixedSize;
+    }
+
     public ColumnDefinition(String title, Class type, boolean editable) {
         this.title = title;
-        this.type = type;
         this.editable = editable;
+        this.type = type;
+        if (type == Boolean.class) {
+            fixedSize = 30;
+        } else {
+            fixedSize = -1;
+        }
     }
 }
