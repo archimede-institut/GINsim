@@ -12,7 +12,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JPanel;
 import javax.swing.JTree;
 
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeElement;
 
 
 public abstract class BooleanFunctionTreePanel extends JPanel {

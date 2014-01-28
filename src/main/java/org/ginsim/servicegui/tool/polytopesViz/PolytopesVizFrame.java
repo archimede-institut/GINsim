@@ -14,7 +14,7 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.graph.view.css.ColorizerPanel;
+import org.ginsim.gui.graph.view.style.ColorizerPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.service.tool.polytopesViz.PolytopesService;
 

@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.tree;
+package org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function;
 
 import java.util.Enumeration;
 import java.util.Hashtable;

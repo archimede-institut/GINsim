@@ -13,9 +13,9 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeElement;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeExpression;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeValue;
 
 
 public class GsDragSourceListener implements DragSourceListener {

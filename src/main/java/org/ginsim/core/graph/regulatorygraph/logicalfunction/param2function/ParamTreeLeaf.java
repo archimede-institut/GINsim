@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.tree;
+package org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function;
 
 public abstract class ParamTreeLeaf implements ParamTreeElement {
   protected ParamTreeNode parent;

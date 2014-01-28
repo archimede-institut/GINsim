@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel;
+package org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree;
 
 import java.awt.Point;
 import java.util.Iterator;
@@ -10,8 +10,6 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.BooleanGene;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.BooleanParser;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalFunctionList;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalFunctionListElement;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.FunctionEditorModel;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBinaryOperator;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBooleanOperator;

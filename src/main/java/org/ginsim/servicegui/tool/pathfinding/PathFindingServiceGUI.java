@@ -7,7 +7,6 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.view.css.Selector;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.common.GenericGraphAction;

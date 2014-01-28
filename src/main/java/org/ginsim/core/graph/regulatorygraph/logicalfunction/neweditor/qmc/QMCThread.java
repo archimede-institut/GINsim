@@ -10,7 +10,7 @@ import javax.swing.tree.TreePath;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeExpression;
 
 
 public class QMCThread extends Thread {

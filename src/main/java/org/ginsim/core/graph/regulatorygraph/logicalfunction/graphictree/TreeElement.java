@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel;
+package org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree;
 
 import java.awt.Color;
 import java.util.Hashtable;

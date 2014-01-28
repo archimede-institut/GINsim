@@ -14,8 +14,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.tree.ParamTree;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.tree.ParamTreeLeafPattern;
 
 
 public class FunctionsCreator {

@@ -57,7 +57,7 @@ public abstract class GraphComparator<G extends Graph<?,?>> {
 	public boolean isCommonNode(Object id) {
 		return ((CSSNodeStyle)stylesMap.get(id).v).background == COMMON_COLOR;
 	}
-	
+
 	/**
 	 * Build the basic topology for the diff graph (node+edges) by calling others functions
 	 *  1) addNodesFromGraph on both graphs

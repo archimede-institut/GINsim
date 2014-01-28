@@ -3,24 +3,16 @@ package org.ginsim.servicegui.tool.pathfinding;
 
 import java.awt.Color;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
 
 import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.view.css.CSSEdgeStyle;
-import org.ginsim.core.graph.view.css.CSSNodeStyle;
-import org.ginsim.core.graph.view.css.Selector;
-import org.ginsim.core.graph.view.css.CSSStyle;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.EdgeStyleOverride;
 import org.ginsim.core.graph.view.style.NodeStyle;
 import org.ginsim.core.graph.view.style.NodeStyleOverride;
 import org.ginsim.core.graph.view.style.Style;
 import org.ginsim.core.graph.view.style.StyleManager;
-import org.ginsim.core.graph.view.style.StyleProperty;
 import org.ginsim.core.graph.view.style.StyleProvider;
 
 

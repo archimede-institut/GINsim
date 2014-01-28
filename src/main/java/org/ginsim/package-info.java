@@ -1,4 +1,4 @@
 /**
- * The base package for GINsim contains launcher classes.
+ * The base package for GINsim, with launcher classes.
  */
 package org.ginsim;

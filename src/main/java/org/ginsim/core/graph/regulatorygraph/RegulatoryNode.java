@@ -22,10 +22,10 @@ import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterList;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeString;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeElement;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeExpression;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeString;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeValue;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.NotificationResolution;
 

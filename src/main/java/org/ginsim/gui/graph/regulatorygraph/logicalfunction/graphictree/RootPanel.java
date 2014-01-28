@@ -14,8 +14,8 @@ import javax.swing.tree.TreePath;
 import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeElement;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeValue;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeElement;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeValue;
 import org.ginsim.gui.utils.widgets.GsButton;
 
 

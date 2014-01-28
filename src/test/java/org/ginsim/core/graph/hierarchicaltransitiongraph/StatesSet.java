@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.hierachicaltransitiongraph;
+package org.ginsim.core.graph.hierarchicaltransitiongraph;
 
 
 import org.colomoto.mddlib.MDDManager;

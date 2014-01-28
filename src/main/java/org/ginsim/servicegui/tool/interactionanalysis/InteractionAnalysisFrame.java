@@ -27,7 +27,7 @@ import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
-import org.ginsim.gui.graph.view.css.ColorizerPanel;
+import org.ginsim.gui.graph.view.style.ColorizerPanel;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.service.tool.interactionanalysis.InteractionAnalysisAlgoResult;

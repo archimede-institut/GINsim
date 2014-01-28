@@ -12,7 +12,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.JProgressBar;
 import javax.swing.JRadioButton;
 
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeExpression;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeExpression;
 import org.ginsim.gui.utils.widgets.GsButton;
 import org.ginsim.gui.utils.widgets.GsPanel;
 

@@ -78,7 +78,7 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> 
 		CSSNodeStyle style = (CSSNodeStyle)((GraphComparatorStyleStore)stylesMap.get(id)).v;
 		return style.background != SPECIFIC_G1_COLOR && style.background != SPECIFIC_G2_COLOR;
 	}
-	
+
 	public GraphComparatorResult buildDiffGraph() {
 		GraphComparatorResult result = super.buildDiffGraph();
 		

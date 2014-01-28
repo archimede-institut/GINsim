@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Vector;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel.TreeParam;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeParam;
 
 
 public class ParameterGroupS {

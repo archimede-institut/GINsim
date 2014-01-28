@@ -6,7 +6,13 @@ import java.util.Map.Entry;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.utils.IntrospectionUtils;
 
-
+/**
+ * The association manager can be used as proxy to retrieve or create associated objects.
+ * It loads all known specific managers and maintains the list of objects associated to all graphs.
+ *
+ * @author Lionel Spinelli
+ * @author Aurelien Naldi
+ */
 public class ObjectAssociationManager {
 
 	private static ObjectAssociationManager instance;

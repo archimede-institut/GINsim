@@ -9,7 +9,9 @@ import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.common.Graph;
 
 
-
+/**
+ * Base class to create managers for associated objects.
+ */
 public abstract class BasicGraphAssociatedManager implements GraphAssociatedObjectManager {
 
 	private final String key;

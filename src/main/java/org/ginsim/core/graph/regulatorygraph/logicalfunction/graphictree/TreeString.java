@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.datamodel;
+package org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree;
 
 public class TreeString extends TreeElement {
   private String string;

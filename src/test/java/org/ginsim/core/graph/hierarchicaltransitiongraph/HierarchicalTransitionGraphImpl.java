@@ -1,7 +1,5 @@
-package org.ginsim.core.graph.hierachicaltransitiongraph;
+package org.ginsim.core.graph.hierarchicaltransitiongraph;
 
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -14,8 +12,6 @@ import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDManagerFactory;
 import org.colomoto.mddlib.MDDVariableFactory;
-import org.colomoto.mddlib.internal.MDDStoreImpl;
-import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.common.AbstractDerivedGraph;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.common.GraphChangeType;
@@ -23,7 +19,6 @@ import org.ginsim.core.graph.common.GraphEventCascade;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.view.style.NodeStyle;
 import org.ginsim.core.io.parser.GINMLWriter;
 
 

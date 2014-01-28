@@ -1,4 +1,4 @@
-package org.ginsim.gui.graph.view.css;
+package org.ginsim.gui.graph.view.style;
 
 import javax.swing.JCheckBox;
 import javax.swing.event.ChangeEvent;
