@@ -5,9 +5,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.colomoto.logicalmodel.LogicalModel;
-import org.ginsim.core.graph.hierachicaltransitiongraph.DecisionOnEdge;
-import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
-import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
+import org.ginsim.core.graph.hierarchicaltransitiongraph.DecisionOnEdge;
+import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
+import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;

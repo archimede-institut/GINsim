@@ -3,7 +3,7 @@ package org.ginsim.service.tool.polytopesViz;
 import java.awt.Color;
 
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
-import org.ginsim.core.graph.hierachicaltransitiongraph.StatesSet;
+import org.ginsim.core.graph.hierarchicaltransitiongraph.StatesSet;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.css.CSSNodeStyle;
 import org.ginsim.core.graph.view.css.Selector;

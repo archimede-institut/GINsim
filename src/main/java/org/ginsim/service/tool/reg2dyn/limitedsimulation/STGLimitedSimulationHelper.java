@@ -2,8 +2,8 @@ package org.ginsim.service.tool.reg2dyn.limitedsimulation;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
-import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
-import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraph;
+import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
+import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;

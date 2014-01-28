@@ -1,5 +1,4 @@
 /**
- * The Graph Manager.
- * Sub-packages contain Graph interfaces definition and specialised graph types.
+ * Hierarchical Transition Graphs provide a compact representation of dynamical behaviours.
  */
-package org.ginsim.core.graph;
+package org.ginsim.core.graph.hierarchicaltransitiongraph;

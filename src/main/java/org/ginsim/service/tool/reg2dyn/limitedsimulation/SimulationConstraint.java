@@ -3,7 +3,7 @@ package org.ginsim.service.tool.reg2dyn.limitedsimulation;
 import java.util.Iterator;
 import java.util.List;
 
-import org.ginsim.core.graph.hierachicaltransitiongraph.StatesSet;
+import org.ginsim.core.graph.hierarchicaltransitiongraph.StatesSet;
 
 /**
  * Indicates from a set of states and a strategy if a given sate should be added to the simulation.

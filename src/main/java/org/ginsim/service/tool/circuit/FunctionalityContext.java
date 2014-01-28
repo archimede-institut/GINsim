@@ -1,7 +1,5 @@
 package org.ginsim.service.tool.circuit;
 
-import org.ginsim.core.mdd.MDDContext;
-
 
 public class FunctionalityContext implements MDDContext {
 

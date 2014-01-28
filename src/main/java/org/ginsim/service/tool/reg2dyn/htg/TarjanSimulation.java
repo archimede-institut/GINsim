@@ -10,8 +10,8 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Translator;
 import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
-import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNodeSet;
+import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
+import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNodeSet;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
 

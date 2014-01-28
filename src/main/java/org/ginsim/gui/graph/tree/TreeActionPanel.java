@@ -19,7 +19,7 @@ import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromCircuit;
 import org.ginsim.core.graph.tree.TreeBuilderFromRegulatoryGraph;
-import org.ginsim.core.mdd.MDDContext;
+import org.ginsim.service.tool.circuit.MDDContext;
 import org.ginsim.gui.graph.GUIEditor;
 
 

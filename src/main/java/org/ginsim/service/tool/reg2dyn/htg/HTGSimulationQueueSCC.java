@@ -1,6 +1,6 @@
 package org.ginsim.service.tool.reg2dyn.htg;
 
-import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
+import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
 
 public class HTGSimulationQueueSCC implements HTGSimulationQueueItem {
 

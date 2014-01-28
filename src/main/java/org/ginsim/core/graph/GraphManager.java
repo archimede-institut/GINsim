@@ -27,7 +27,7 @@ import org.ginsim.core.graph.common.GraphFactory;
 import org.ginsim.core.graph.common.GraphListener;
 import org.ginsim.core.graph.common.GraphModel;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraphImpl;
-import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalTransitionGraphImpl;
+import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraphImpl;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.reducedgraph.ReducedGraphImpl;

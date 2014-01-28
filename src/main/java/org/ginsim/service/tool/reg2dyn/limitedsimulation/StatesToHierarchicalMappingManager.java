@@ -6,7 +6,7 @@ import java.util.HashMap;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
+import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
 
 /**

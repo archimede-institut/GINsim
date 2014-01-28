@@ -4,8 +4,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
-import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNode;
-import org.ginsim.core.graph.hierachicaltransitiongraph.HierarchicalNodeSet;
+import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
+import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNodeSet;
 
 
 /**

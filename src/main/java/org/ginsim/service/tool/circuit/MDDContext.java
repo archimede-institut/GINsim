@@ -1,4 +1,4 @@
-package org.ginsim.core.mdd;
+package org.ginsim.service.tool.circuit;
 
 public interface MDDContext {
 
