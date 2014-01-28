@@ -5,6 +5,7 @@ import java.awt.Component;
 import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.gui.guihelpers.GUIHelper;
 import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor(GUIHelper.class)
@@ -12,7 +13,7 @@ import org.mangosdk.spi.ProviderFor;
 public class InitialStatesGUIHelper implements GUIHelper {
 
 	@Override
-	public Component getPanel(Object o) {
+	public Component getPanel(Object o, StackDialog dialog) {
 		if ( o == null || !(o instanceof GsInitialStateList)) {
 			throw new RuntimeException("Can only edit initial states");
 		}
@@ -23,10 +24,7 @@ public class InitialStatesGUIHelper implements GUIHelper {
 	}
 
 	@Override
-	public Component getSelectionPanel(Object o) {
-		
-		
-		// TODO Auto-generated method stub
+	public Component getSelectionPanel(Object o, StackDialog dialog) {
 		return null;
 	}
 

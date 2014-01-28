@@ -1,5 +1,7 @@
 package org.ginsim.gui.guihelpers;
 
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+
 import java.awt.Component;
 
 /**
@@ -14,13 +16,13 @@ public interface GUIHelper<T> {
 	 * get a panel to edit this data
 	 * @return a specialised component.
 	 */
-	Component getPanel(T o);
+	Component getPanel(T o, StackDialog dialog);
 	
 	/**
 	 * get a panel to select an item (for lists of elements)
 	 * @return a specialised component.
 	 */
-	Component getSelectionPanel(T o);
+	Component getSelectionPanel(T o, StackDialog dialog);
 
 	/**
 	 * Test if this helper supports a given object

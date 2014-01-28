@@ -3,6 +3,7 @@ package org.ginsim.servicegui.tool.modelsimplifier;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.guihelpers.GUIHelper;
 import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
 import org.mangosdk.spi.ProviderFor;
 
@@ -17,12 +18,12 @@ public class ReductionGUIHelper implements GUIHelper<ModelSimplifierConfigList> 
 	}
 
 	@Override
-	public Component getPanel(ModelSimplifierConfigList reductions) {
+	public Component getPanel(ModelSimplifierConfigList reductions, StackDialog dialog) {
 		return getReductionPanel(reductions);
 	}
 
 	@Override
-	public Component getSelectionPanel(ModelSimplifierConfigList o) {
+	public Component getSelectionPanel(ModelSimplifierConfigList o, StackDialog dialog) {
 		return null;
 	}
 

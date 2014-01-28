@@ -40,7 +40,7 @@ public class PerturbationSelectionPanel extends ListSelectionPanel<Perturbation>
 	
 	@Override
 	public void configure() {
-		Component panel = PerturbationGUIHelper.getPerturbationPanel(getPerturbationsObject(true));
+		Component panel = PerturbationGUIHelper.getPerturbationPanel(getPerturbationsObject(true), dialog);
         dialog.addTempPanel(panel);
 	}
 

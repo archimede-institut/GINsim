@@ -204,7 +204,7 @@ public class DataViewer extends JScrollPane implements StackDialogHandler {
 	}
 
 	public void view(String key, GUIHelper helper) {
-		dialog.addSecondaryPanel(helper.getPanel(objManager.getObject(graph, key, false)), "HELPER");
+		dialog.addSecondaryPanel(helper.getPanel(objManager.getObject(graph, key, false), dialog), "HELPER");
 		dialog.setVisiblePanel("HELPER");
 	}
 
