@@ -27,7 +27,7 @@ import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.service.ServiceGUIManager;
-import org.ginsim.gui.service.common.LayoutAction;
+import org.ginsim.gui.shell.actions.LayoutAction;
 import org.ginsim.gui.shell.MainFrame;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.gui.utils.widgets.Frame;

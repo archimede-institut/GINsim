@@ -19,10 +19,9 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
-import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.ServiceStatus;
-import org.ginsim.gui.service.common.StandaloneGUI;
-import org.ginsim.gui.service.common.ToolkitAction;
+import org.ginsim.gui.service.ServiceStatus;
+import org.ginsim.gui.service.StandaloneGUI;
+import org.ginsim.gui.shell.actions.ToolkitAction;
 import org.mangosdk.spi.ProviderFor;
 
 

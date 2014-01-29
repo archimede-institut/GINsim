@@ -12,7 +12,6 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.common.utils.IntrospectionUtils;
-import org.ginsim.gui.service.common.GUIFor;
 
 
 public abstract class SimpleServiceGUI<S extends Service> extends AbstractServiceGUI {

@@ -12,8 +12,8 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.FormatSupportService;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.service.common.ExportAction;
-import org.ginsim.gui.service.common.ImportAction;
+import org.ginsim.gui.shell.actions.ExportAction;
+import org.ginsim.gui.shell.actions.ImportAction;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 
 /**

@@ -5,7 +5,7 @@ import java.awt.GridBagLayout;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
-import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.service.format.sbml.SBMLQualConfig;
 

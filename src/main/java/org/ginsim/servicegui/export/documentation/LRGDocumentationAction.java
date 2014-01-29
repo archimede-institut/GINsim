@@ -2,7 +2,6 @@ package org.ginsim.servicegui.export.documentation;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.io.IOException;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -14,7 +13,7 @@ import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.utils.data.ValueList;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
-import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.gui.utils.data.models.ValueListComboModel;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;

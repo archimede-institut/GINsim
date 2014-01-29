@@ -4,6 +4,10 @@ import java.awt.Component;
 
 import org.ginsim.gui.graph.GraphSelection;
 
+/**
+ * Simple interface for edition panels.
+ * They provide a title, a component, and can decide to be disabled depending on the selection.
+ */
 public interface EditTab {
 
 	/**

@@ -6,7 +6,7 @@ import javax.swing.JPanel;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.application.Translator;
-import org.ginsim.gui.service.common.ExportAction;
+import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.service.format.ginml.GINMLFormatConfig;
 

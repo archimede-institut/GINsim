@@ -1,9 +1,8 @@
 package org.ginsim.servicegui.tool.reg2dyn;
 
 import org.ginsim.gui.guihelpers.GUIHelper;
-import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.utils.data.ListEditionPanel;
-import org.ginsim.gui.utils.data.ListSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;

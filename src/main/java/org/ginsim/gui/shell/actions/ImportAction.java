@@ -1,4 +1,4 @@
-package org.ginsim.gui.service.common;
+package org.ginsim.gui.shell.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.IOException;

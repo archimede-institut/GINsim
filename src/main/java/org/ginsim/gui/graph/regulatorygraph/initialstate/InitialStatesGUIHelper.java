@@ -4,7 +4,7 @@ import java.awt.Component;
 
 import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.gui.guihelpers.GUIHelper;
-import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.mangosdk.spi.ProviderFor;
 

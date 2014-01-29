@@ -1,4 +1,4 @@
-package org.ginsim.gui.shell.editpanel;
+package org.ginsim.gui.graph.view.style;
 
 import java.awt.CardLayout;
 import java.awt.Component;
@@ -11,6 +11,8 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
+import org.ginsim.gui.shell.editpanel.EditTab;
+import org.ginsim.gui.shell.editpanel.SelectionType;
 
 public class StyleTab extends JPanel implements EditTab {
 

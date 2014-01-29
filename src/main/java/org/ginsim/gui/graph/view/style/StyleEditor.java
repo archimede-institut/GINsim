@@ -1,4 +1,4 @@
-package org.ginsim.gui.shell.editpanel;
+package org.ginsim.gui.graph.view.style;
 
 import java.util.List;
 

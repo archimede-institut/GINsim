@@ -1,4 +1,4 @@
-package org.ginsim.gui.service.common;
+package org.ginsim.gui.service;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
@@ -9,8 +9,6 @@ import java.lang.annotation.Target;
 @Documented
 @Target(ElementType.TYPE)
 @Retention( RetentionPolicy.RUNTIME)
-public @interface GUIFor {
-	
-	Class<?> value();
+public @interface StandaloneGUI {
    
 }

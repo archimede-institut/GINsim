@@ -11,6 +11,7 @@ import org.ginsim.core.graph.common.GraphChangeType;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.graph.GraphSelection;
+import org.ginsim.gui.graph.view.style.StyleTab;
 
 
 /**
@@ -29,15 +30,13 @@ public class EditPanel extends JTabbedPane implements GraphGUIListener {
 		this.gui = gui;
 		gui.addGraphGUIListener(this);
 		addTab(new MainEditTab(gui));
-//		addTab(new GraphicAttributePanel(gui));
 		addTab(new StyleTab(gui));
 	}
 	
 	/**
 	 * Add an editing tab.
 	 * 
-	 * @param tab
-	 * @param constraint
+	 * @param tab the tab to add
 	 */
     public void addTab(EditTab tab) {
     	String name = tab.getTitle();

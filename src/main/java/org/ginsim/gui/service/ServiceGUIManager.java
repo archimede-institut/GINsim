@@ -14,10 +14,6 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceManager;
-import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.ServiceStatus;
-import org.ginsim.gui.service.common.StandaloneGUI;
-
 
 
 /**

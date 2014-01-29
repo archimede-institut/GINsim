@@ -1,4 +1,4 @@
-package org.ginsim.gui.service.common;
+package org.ginsim.gui.shell.actions;
 
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;

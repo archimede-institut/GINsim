@@ -4,8 +4,8 @@ import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.service.FormatSupportServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
-import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.ServiceStatus;
+import org.ginsim.gui.service.GUIFor;
+import org.ginsim.gui.service.ServiceStatus;
 import org.ginsim.service.format.TruthTableFormatService;
 import org.mangosdk.spi.ProviderFor;
 

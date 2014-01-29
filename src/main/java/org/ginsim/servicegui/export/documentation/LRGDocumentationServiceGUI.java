@@ -3,8 +3,8 @@ package org.ginsim.servicegui.export.documentation;
 import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.SimpleServiceGUI;
-import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.ServiceStatus;
+import org.ginsim.gui.service.GUIFor;
+import org.ginsim.gui.service.ServiceStatus;
 import org.ginsim.service.export.documentation.LRGDocumentationService;
 import org.mangosdk.spi.ProviderFor;
 

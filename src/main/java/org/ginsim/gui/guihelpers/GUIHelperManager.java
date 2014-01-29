@@ -9,7 +9,7 @@ import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
 import org.ginsim.common.application.LogManager;
-import org.ginsim.gui.service.common.GUIFor;
+import org.ginsim.gui.service.GUIFor;
 
 public class GUIHelperManager {
 

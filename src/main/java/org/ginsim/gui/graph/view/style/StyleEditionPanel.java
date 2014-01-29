@@ -1,11 +1,9 @@
-package org.ginsim.gui.shell.editpanel;
+package org.ginsim.gui.graph.view.style;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.*;
@@ -21,7 +19,6 @@ import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.graph.view.style.StyleProperty;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.utils.data.GenericPropertyInfo;
-import org.ginsim.gui.utils.data.ObjectEditor;
 import org.ginsim.gui.utils.widgets.StatusTextField;
 import org.python.modules.math;
 

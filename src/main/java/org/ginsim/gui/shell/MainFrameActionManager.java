@@ -15,15 +15,14 @@ import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.ServiceGUIManager;
-import org.ginsim.gui.service.common.BaseAction;
-import org.ginsim.gui.service.common.ExportAction;
-import org.ginsim.gui.service.common.GenericGraphAction;
-import org.ginsim.gui.service.common.ImportAction;
-import org.ginsim.gui.service.common.LayoutAction;
-import org.ginsim.gui.service.common.ToolAction;
+import org.ginsim.gui.shell.actions.BaseAction;
+import org.ginsim.gui.shell.actions.ExportAction;
+import org.ginsim.gui.shell.actions.GenericGraphAction;
+import org.ginsim.gui.shell.actions.ImportAction;
+import org.ginsim.gui.shell.actions.LayoutAction;
+import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.gui.shell.callbacks.EditCallBack;
 import org.ginsim.gui.shell.callbacks.FileCallBack;
-import org.ginsim.gui.shell.callbacks.HelpCallBack;
 import org.ginsim.gui.shell.callbacks.SelectionCallBack;
 
 public class MainFrameActionManager implements FrameActionManager {

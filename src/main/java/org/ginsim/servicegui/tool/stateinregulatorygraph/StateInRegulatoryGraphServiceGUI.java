@@ -11,9 +11,9 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
-import org.ginsim.gui.service.common.GenericGraphAction;
-import org.ginsim.gui.service.common.ServiceStatus;
-import org.ginsim.gui.service.common.StandaloneGUI;
+import org.ginsim.gui.shell.actions.GenericGraphAction;
+import org.ginsim.gui.service.ServiceStatus;
+import org.ginsim.gui.service.StandaloneGUI;
 import org.mangosdk.spi.ProviderFor;
 
 

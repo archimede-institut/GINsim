@@ -11,9 +11,9 @@ import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
-import org.ginsim.gui.service.common.ExportAction;
-import org.ginsim.gui.service.common.GUIFor;
-import org.ginsim.gui.service.common.ServiceStatus;
+import org.ginsim.gui.shell.actions.ExportAction;
+import org.ginsim.gui.service.GUIFor;
+import org.ginsim.gui.service.ServiceStatus;
 import org.ginsim.service.export.graphviz.GraphvizExportService;
 import org.mangosdk.spi.ProviderFor;
 
