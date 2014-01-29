@@ -17,7 +17,7 @@ import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
@@ -541,13 +541,13 @@ public class NuSMVEncoder {
 	}
 
 	private String writeStateList(NodeInfo[] t_vertex,
-			Iterator<InitialState> iter) {
+			Iterator<NamedState> iter) {
 		StringBuffer sb = new StringBuffer();
 		if (!iter.hasNext())
 			sb.append("-- Empty !\n");
 		else {
 			while (iter.hasNext()) {
-				InitialState iState = iter.next();
+				NamedState iState = iter.next();
 				Map<NodeInfo, List<Integer>> m_states = iState.getMap();
 				String s_init = "";
 

@@ -12,7 +12,7 @@ import org.ginsim.common.application.Txt;
 import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.Graph;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStatesIterator;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesIterator;
 import org.ginsim.service.tool.reg2dyn.helpers.STGSimulationHelper;
 import org.ginsim.service.tool.reg2dyn.helpers.SimulationHelper;
 import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
@@ -60,7 +60,7 @@ public class Simulation implements Runnable {
     }
 
     public void set_initialStates(List nodeOrder, Map inputs, Map m_initState) {
-        setInitStatesIterator(new InitialStatesIterator(nodeOrder, inputs, m_initState));
+        setInitStatesIterator(new NamedStatesIterator(nodeOrder, inputs, m_initState));
     }
 
     public void interrupt() {

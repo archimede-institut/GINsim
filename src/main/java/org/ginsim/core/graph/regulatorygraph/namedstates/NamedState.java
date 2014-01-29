@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.regulatorygraph.initialstate;
+package org.ginsim.core.graph.regulatorygraph.namedstates;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,8 +13,12 @@ import org.colomoto.mddlib.operators.MDDBaseOperators;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.NamedObject;
 
-
-public class InitialState implements NamedObject {
+/**
+ * Defines a (set of) named state(s): a name associated to an activity pattern.
+ *
+ * @author Aurelien Naldi
+ */
+public class NamedState implements NamedObject {
 	String name;
 	Map<NodeInfo, List<Integer>> m = new HashMap<NodeInfo, List<Integer>>();
 	

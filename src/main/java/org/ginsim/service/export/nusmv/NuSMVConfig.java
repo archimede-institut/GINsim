@@ -5,12 +5,12 @@ import java.util.Map;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateStore;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityDefinitionStore;
 
-public class NuSMVConfig implements InitialStateStore, PriorityDefinitionStore {
+public class NuSMVConfig implements NamedStateStore, PriorityDefinitionStore {
 
 	public static final int CFG_SYNC = 0;
 	public static final int CFG_ASYNC = 1;
@@ -18,8 +18,8 @@ public class NuSMVConfig implements InitialStateStore, PriorityDefinitionStore {
 
 	private RegulatoryGraph graph;
 	private LogicalModel model;
-	private Map<InitialState, Object> m_initStates;
-	private Map<InitialState, Object> m_input;
+	private Map<NamedState, Object> m_initStates;
+	private Map<NamedState, Object> m_input;
 
     private PrioritySetDefinition priorities;
 	private int updatePolicy;
@@ -28,8 +28,8 @@ public class NuSMVConfig implements InitialStateStore, PriorityDefinitionStore {
 	 * @param graph
 	 */
 	public NuSMVConfig(RegulatoryGraph graph) {
-		m_initStates = new HashMap<InitialState, Object>();
-		m_input = new HashMap<InitialState, Object>();
+		m_initStates = new HashMap<NamedState, Object>();
+		m_input = new HashMap<NamedState, Object>();
 		this.graph = graph;
 		this.model = graph.getModel();
 		updatePolicy = CFG_ASYNC; // Default update policy
@@ -59,11 +59,11 @@ public class NuSMVConfig implements InitialStateStore, PriorityDefinitionStore {
 		return updatePolicy;
 	}
 
-	public Map<InitialState, Object> getInitialState() {
+	public Map<NamedState, Object> getInitialState() {
 		return m_initStates;
 	}
 
-	public Map<InitialState, Object> getInputState() {
+	public Map<NamedState, Object> getInputState() {
 		return m_input;
 	}
 

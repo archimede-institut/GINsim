@@ -22,9 +22,9 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeValue;
@@ -193,8 +193,8 @@ public class LRGDocumentationWriter {
 	}
 	
 	private void writeInitialStates() throws IOException {
-		InitialStateList initStates = ((GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, 
-				InitialStateManager.KEY, false)).getInitialStates();
+		NamedStateList initStates = ((NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph,
+				NamedStatesManager.KEY, false)).getInitialStates();
 		if (initStates != null && initStates.size() > 0) {
 			InitStateTableModel model = new InitStateTableModel(null, initStates, false);
 			String[] t_cols = new String[len+1];

@@ -7,6 +7,8 @@ import org.ginsim.core.io.parser.GINMLWriter;
 
 /**
  * Save a STG in the GINML format.
+ *
+ * @author Aurelien Naldi
  */
 public class DynamicGINMLWriter extends GINMLWriter<DynamicGraph, DynamicNode, DynamicEdge> {
 

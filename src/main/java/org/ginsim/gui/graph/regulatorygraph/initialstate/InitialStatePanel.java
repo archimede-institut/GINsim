@@ -21,10 +21,10 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateStore;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.Label;
 import org.ginsim.gui.utils.widgets.StockButton;
@@ -38,7 +38,7 @@ public class InitialStatePanel extends JPanel {
     private StateListPanel inputPanel;
     private JLabel messageLabel = new JLabel();
     
-	public InitialStatePanel(GsInitialStateList imanager, boolean several) {
+	public InitialStatePanel(NamedStatesHandler imanager, boolean several) {
 		
 	    initPanel = new StateListPanel(this, imanager.getInitialStates(), several, Txt.t("STR_Initial_state"));
 	    inputPanel = new StateListPanel(this, imanager.getInputConfigs(), several, Txt.t("STR_Fixed_inputs"));
@@ -61,9 +61,9 @@ public class InitialStatePanel extends JPanel {
         }
 	}
     public InitialStatePanel(Graph graph, boolean several) {
-        this((GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, InitialStateManager.KEY, true), several);
+        this((NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph, NamedStatesManager.KEY, true), several);
     }
-    public void setParam(InitialStateStore currentParameter) {
+    public void setParam(NamedStateStore currentParameter) {
         initPanel.setParam(currentParameter.getInitialState());
         inputPanel.setParam(currentParameter.getInputState());
     }
@@ -86,11 +86,11 @@ class StateListPanel extends JPanel {
     private JButton buttonDown = null;
 
     Insets topInset = new Insets(20,0,0,0);
-	private InitialStateList stateList;
+	private NamedStateList stateList;
 	private InitialStatePanel panel;
 	private boolean several;
 	
-    public StateListPanel(InitialStatePanel panel, InitialStateList stateList, boolean several, String title) {
+    public StateListPanel(InitialStatePanel panel, NamedStateList stateList, boolean several, String title) {
     	this.panel = panel;
         this.several = several;
     	this.stateList = stateList;

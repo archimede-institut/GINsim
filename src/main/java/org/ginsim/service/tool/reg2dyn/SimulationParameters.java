@@ -14,8 +14,8 @@ import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateStore;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.utils.data.NamedObject;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
@@ -28,7 +28,7 @@ import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityDefinitionStore;
 /**
  * remember, save and restore a simulation parameter.
  */
-public class SimulationParameters implements XMLize, NamedObject, InitialStateStore, PriorityDefinitionStore {
+public class SimulationParameters implements XMLize, NamedObject, NamedStateStore, PriorityDefinitionStore {
 
     public static final int MUTANT = 0;
 
@@ -114,7 +114,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
         } else {
             Iterator it = m_initState.keySet().iterator();
             while (it.hasNext()) {
-                Map m_init = ((InitialState)it.next()).getMap();
+                Map m_init = ((NamedState)it.next()).getMap();
                 s += "\n      ";
                 for (int j=0 ; j<nodeOrder.size() ; j++) {
                     NodeInfo vertex = nodeOrder.get(j);
@@ -130,7 +130,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
         } else {
             Iterator it = m_input.keySet().iterator();
             while (it.hasNext()) {
-                InitialState init = (InitialState)it.next();
+                NamedState init = (NamedState)it.next();
                 if (init != null) {
                     Map m_init = init.getMap();
                     s += "\n      ";
@@ -179,7 +179,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
             Iterator it = m_initState.keySet().iterator();
             while(it.hasNext()) {
                 out.openTag("row");
-                out.addAttr("name", ((InitialState)it.next()).getName());
+                out.addAttr("name", ((NamedState)it.next()).getName());
                 out.closeTag();
             }
             out.closeTag();
@@ -189,7 +189,7 @@ public class SimulationParameters implements XMLize, NamedObject, InitialStateSt
             Iterator it = m_input.keySet().iterator();
             while(it.hasNext()) {
                 out.openTag("row");
-                out.addAttr("name", ((InitialState)it.next()).getName());
+                out.addAttr("name", ((NamedState)it.next()).getName());
                 out.closeTag();
             }
             out.closeTag();

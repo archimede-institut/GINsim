@@ -22,8 +22,8 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateStore;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.shell.actions.ExportAction;
@@ -31,7 +31,7 @@ import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.service.format.PetriNetFormatService;
 import org.ginsim.servicegui.tool.reg2dyn.PrioritySelectionPanel;
 
-public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implements InitialStateStore {
+public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implements NamedStateStore {
 
 	static final String PNFORMAT = "export.petriNet.defaultFormat";
 
@@ -54,11 +54,11 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implemen
 		byte[] initialstate = null;
 		Map<NodeInfo,List<Integer>> m_init_values = null;
 		if (m_init != null && m_init.size() == 1) {
-			InitialState istate = (InitialState)m_init.keySet().iterator().next();
+			NamedState istate = (NamedState)m_init.keySet().iterator().next();
 			m_init_values = istate.getMap();
 		}
 		if (m_input != null && m_input.size() == 1) {
-			InitialState istate = (InitialState)m_input.keySet().iterator().next();
+			NamedState istate = (NamedState)m_input.keySet().iterator().next();
 			if (m_init_values == null) {
 				m_init_values = istate.getMap();
 			} else {

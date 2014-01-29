@@ -9,10 +9,10 @@ import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
@@ -148,20 +148,20 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
 
 		
 		// initial states
-        GsInitialStateList linit = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject( graph, InitialStateManager.KEY, false);
+        NamedStatesHandler linit = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject( graph, NamedStatesManager.KEY, false);
 		if (linit != null && !linit.isEmpty()) {
-			GsInitialStateList newLinit = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, InitialStateManager.KEY, true);
-            InitialStateList[] inits = {linit.getInitialStates(), linit.getInputConfigs()};
-            InitialStateList[] newInits = {newLinit.getInitialStates(), newLinit.getInputConfigs()};
+			NamedStatesHandler newLinit = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, NamedStatesManager.KEY, true);
+            NamedStateList[] inits = {linit.getInitialStates(), linit.getInputConfigs()};
+            NamedStateList[] newInits = {newLinit.getInitialStates(), newLinit.getInputConfigs()};
 
 			for (int i=0 ; i<inits.length ; i++) {
-                InitialStateList init = inits[i];
-                InitialStateList newInit = newInits[i];
+                NamedStateList init = inits[i];
+                NamedStateList newInit = newInits[i];
     			if (init != null && init.size() > 0) {
     				for (int j=0 ; j<init.size() ; j++) {
-    					InitialState istate = (InitialState)init.get(j);
+    					NamedState istate = (NamedState)init.get(j);
     					int epos = newInit.add();
-    					InitialState newIstate = (InitialState)newInit.get(pos);
+    					NamedState newIstate = (NamedState)newInit.get(pos);
     					newIstate.setName(istate.getName());
     					m_alldata.put(istate, newIstate);
     					Map<NodeInfo, List<Integer>> m_init = newIstate.getMap();

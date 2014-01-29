@@ -5,22 +5,22 @@ import java.util.Map;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateStore;
 
-public class AvatarConfig implements InitialStateStore {
+public class AvatarConfig implements NamedStateStore {
 
 	private RegulatoryGraph graph;
 	private LogicalModel model;
-	private Map<InitialState, Object> m_initStates;
-	private Map<InitialState, Object> m_input;
+	private Map<NamedState, Object> m_initStates;
+	private Map<NamedState, Object> m_input;
 
 	/**
 	 * @param graph
 	 */
 	public AvatarConfig(RegulatoryGraph graph) {
-		m_initStates = new HashMap<InitialState, Object>();
-		m_input = new HashMap<InitialState, Object>();
+		m_initStates = new HashMap<NamedState, Object>();
+		m_input = new HashMap<NamedState, Object>();
 		this.graph = graph;
 		this.model = graph.getModel();
 	}
@@ -29,11 +29,11 @@ public class AvatarConfig implements InitialStateStore {
 		this.model = model;
 	}
 
-	public Map<InitialState, Object> getInitialState() {
+	public Map<NamedState, Object> getInitialState() {
 		return m_initStates;
 	}
 
-	public Map<InitialState, Object> getInputState() {
+	public Map<NamedState, Object> getInputState() {
 		return m_input;
 	}
 

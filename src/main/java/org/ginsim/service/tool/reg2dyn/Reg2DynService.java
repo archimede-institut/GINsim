@@ -5,7 +5,7 @@ import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
@@ -22,7 +22,7 @@ public class Reg2DynService implements Service {
     	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( RegulatoryGraph.class, PerturbationManager.KEY)){
     		ObjectAssociationManager.getInstance().registerObjectManager(RegulatoryGraph.class, new PerturbationManager());
     	}
-        ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new InitialStateManager());
+        ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new NamedStatesManager());
         ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new SimulationParametersManager());
     }
     

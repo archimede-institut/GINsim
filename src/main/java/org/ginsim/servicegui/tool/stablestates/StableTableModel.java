@@ -9,9 +9,9 @@ import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 
 /**
  * Simple table model to view stable state search results.
@@ -23,12 +23,12 @@ public class StableTableModel extends AbstractTableModel {
 	List<byte[]> result = new ArrayList<byte[]>();
 	MDDManager factory;
 	Object[] variables;
-	InitialStateList istates = null;
+	NamedStateList istates = null;
 
 	public StableTableModel() {
 	}
 	public StableTableModel(RegulatoryGraph lrg) {
-		GsInitialStateList gsistates = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(lrg, InitialStateManager.KEY, false);
+		NamedStatesHandler gsistates = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(lrg, NamedStatesManager.KEY, false);
 		if (gsistates != null) {
 			istates = gsistates.getInitialStates();
 		}

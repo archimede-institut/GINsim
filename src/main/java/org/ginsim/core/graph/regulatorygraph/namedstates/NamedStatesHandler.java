@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.regulatorygraph.initialstate;
+package org.ginsim.core.graph.regulatorygraph.namedstates;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,24 +11,28 @@ import org.ginsim.core.graph.GraphListener;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
-
-public class GsInitialStateList implements GraphListener<RegulatoryGraph> {
+/**
+ * Store all available named states for a Regulatory Graph.
+ *
+ * @author Aurelien Naldi
+ */
+public class NamedStatesHandler implements GraphListener<RegulatoryGraph> {
 	RegulatoryGraph graph;
 
     List inputNodes = new ArrayList();
     List normalNodes = new ArrayList();
 
-    final InitialStateList initialStates;
-    final InitialStateList inputConfigs;
+    final NamedStateList initialStates;
+    final NamedStateList inputConfigs;
     
-    public GsInitialStateList( Graph<?,?> graph) {
+    public NamedStatesHandler(Graph<?, ?> graph) {
     	
         this.graph = (RegulatoryGraph) graph;
         GraphManager.getInstance().addGraphListener( (RegulatoryGraph)graph, this);
         updateLists();
         
-        initialStates = new InitialStateList(normalNodes, false);
-        inputConfigs = new InitialStateList(inputNodes, true);
+        initialStates = new NamedStateList(normalNodes, false);
+        inputConfigs = new NamedStateList(inputNodes, true);
     }
 
 	private void updateLists() {
@@ -106,11 +110,11 @@ public class GsInitialStateList implements GraphListener<RegulatoryGraph> {
         return inputConfigs.size() == 0 && initialStates.size() == 0;
     }
 
-    public InitialStateList getInitialStates() {
+    public NamedStateList getInitialStates() {
         return initialStates;
     }
 
-    public InitialStateList getInputConfigs() {
+    public NamedStateList getInputConfigs() {
         return inputConfigs;
     }
 }

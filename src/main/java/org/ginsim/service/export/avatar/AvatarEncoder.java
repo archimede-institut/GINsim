@@ -12,7 +12,7 @@ import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 
 /**
  * Exports a GINsim Regulatory graph into a AVATAR model description.
@@ -195,13 +195,13 @@ public class AvatarEncoder {
 	}
 
 	private String writeStateList(NodeInfo[] t_vertex,
-			Iterator<InitialState> iter, boolean input) {
+			Iterator<NamedState> iter, boolean input) {
 		StringBuffer sb = new StringBuffer();
 		if (!iter.hasNext())
 			sb.append("-- Empty !\n");
 		else {
 			while (iter.hasNext()) {
-				InitialState iState = iter.next();
+				NamedState iState = iter.next();
 				Map<NodeInfo, List<Integer>> m_states = iState.getMap();
 				String s_init = "";
 

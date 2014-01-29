@@ -9,10 +9,10 @@ import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
@@ -35,9 +35,9 @@ public class SimulationParametersParser extends XMLHelper {
     private static final int POS_INPUTS = 4;
     
     SimulationParameterList paramLists;
-    GsInitialStateList imanager = null;
-    InitialStateList initList = null;
-    InitialStateList inputList = null;
+    NamedStatesHandler imanager = null;
+    NamedStateList initList = null;
+    NamedStateList inputList = null;
     RegulatoryGraph graph;
     List<RegulatoryNode> nodeOrder;
     String[] t_order;
@@ -55,7 +55,7 @@ public class SimulationParametersParser extends XMLHelper {
     	this.graph = graph;
         this.nodeOrder = graph.getNodeOrder();
         paramLists = new SimulationParameterList(graph);
-        imanager = (GsInitialStateList)  ObjectAssociationManager.getInstance().getObject( graph, InitialStateManager.KEY, true);
+        imanager = (NamedStatesHandler)  ObjectAssociationManager.getInstance().getObject( graph, NamedStatesManager.KEY, true);
         initList = imanager.getInitialStates();
         inputList = imanager.getInputConfigs();
     }
@@ -168,12 +168,12 @@ public class SimulationParametersParser extends XMLHelper {
                     	// old file, do some cleanup
                     	if (pos == POS_INITSTATES) {
                             int index = initList.add();
-                            InitialState istate = (InitialState)initList.get(index);
+                            NamedState istate = (NamedState)initList.get(index);
                             istate.setData(attributes.getValue("value").trim().split(" "), nodeOrder);
                     	    param.m_initState.put(istate, null);
                     	} else {
                             int index = inputList.add();
-                            InitialState istate = (InitialState)inputList.get(index);
+                            NamedState istate = (NamedState)inputList.get(index);
                             istate.setData(attributes.getValue("value").trim().split(" "), nodeOrder);
                             param.m_input.put(istate, null);
                     	}

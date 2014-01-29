@@ -25,9 +25,9 @@ import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.service.Alias;
@@ -165,7 +165,7 @@ public class ScriptLauncher {
 	@Deprecated
 	public String nameState(byte[] state, RegulatoryGraph graph) {
         // FIXME: adapt it to deal with input configs !!
-        InitialStateList init = ((GsInitialStateList)associated.getObject(graph, InitialStateManager.KEY, false)).getInitialStates();
+        NamedStateList init = ((NamedStatesHandler)associated.getObject(graph, NamedStatesManager.KEY, false)).getInitialStates();
         if (init != null) {
             List<RegulatoryNode> no = graph.getNodeOrder();
         	return init.nameState(state, no);

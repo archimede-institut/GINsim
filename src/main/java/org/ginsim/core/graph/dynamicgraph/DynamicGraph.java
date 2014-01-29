@@ -13,6 +13,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
 /**
  * the dynamic (state transition) graph.
+ *
+ * @author Aurelien Naldi
  */
 public interface DynamicGraph extends Graph<DynamicNode, DynamicEdge>, GraphAssociation<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>{
 

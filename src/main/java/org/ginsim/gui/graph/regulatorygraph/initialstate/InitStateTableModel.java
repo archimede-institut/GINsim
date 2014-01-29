@@ -9,8 +9,8 @@ import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;
 import org.ginsim.common.utils.ListTools;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 
@@ -24,7 +24,7 @@ public class InitStateTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = -1553864043658960569L;
 	private List<RegulatoryNode> nodeOrder;
     private Map m_initState = null;
-    private InitialStateList imanager;
+    private NamedStateList imanager;
 	private int nbCol;
     private InitialStatePanel panel;
     private boolean several;
@@ -38,7 +38,7 @@ public class InitStateTableModel extends AbstractTableModel {
      * @param imanager
      * @param several
 	 */	
-    public InitStateTableModel(InitialStatePanel panel, InitialStateList imanager, boolean several) {
+    public InitStateTableModel(InitialStatePanel panel, NamedStateList imanager, boolean several) {
 		super();
         this.panel = panel;
         this.imanager = imanager;
@@ -82,7 +82,7 @@ public class InitStateTableModel extends AbstractTableModel {
 			if (rowIndex >= imanager.size()) {
 				return "";
 			}
-			return ((InitialState)imanager.get(rowIndex)).getName();
+			return ((NamedState)imanager.get(rowIndex)).getName();
 		}
 		if (m_initState != null && columnIndex == 1) {
 			if ( rowIndex >= imanager.size()) {
@@ -98,7 +98,7 @@ public class InitStateTableModel extends AbstractTableModel {
 		if (imanager == null || rowIndex >= imanager.size()) {
 			return "";
 		}
-        Map m_row = ((InitialState)imanager.get(rowIndex)).getMaxValueTable();
+        Map m_row = ((NamedState)imanager.get(rowIndex)).getMaxValueTable();
         element = (List)m_row.get(nodeOrder.get(ci).getNodeInfo());
         return showValue(element, nodeOrder.get(ci).getMaxValue());
     }
@@ -201,7 +201,7 @@ public class InitStateTableModel extends AbstractTableModel {
 			if (rowIndex >= imanager.size()) {
 				return;
 			}
-			((InitialState)imanager.get(rowIndex)).setName((String)aValue);
+			((NamedState)imanager.get(rowIndex)).setName((String)aValue);
 			// FIXME: the name should be unique
 			return;
 		}
@@ -237,7 +237,7 @@ public class InitStateTableModel extends AbstractTableModel {
 		int maxvalue = nodeOrder.get(ci).getMaxValue();
         if (aValue == null || ((String)aValue).trim().equals("") || ((String)aValue).trim().equals("*")) {
             if (rowIndex >= 0 && rowIndex < getRowCount()-1) {
-                Map m_line = ((InitialState)imanager.get(rowIndex)).getMaxValueTable();
+                Map m_line = ((NamedState)imanager.get(rowIndex)).getMaxValueTable();
                 m_line.remove(nodeOrder.get(ci));
                 if (m_line.size() == 0) {
                     imanager.remove(rowIndex);
@@ -301,15 +301,15 @@ public class InitStateTableModel extends AbstractTableModel {
             		setValueAt(Boolean.TRUE, rowIndex, 1);
             	}
             }
-            Map m_line = ((InitialState)imanager.get(rowIndex)).getMaxValueTable();
+            Map m_line = ((NamedState)imanager.get(rowIndex)).getMaxValueTable();
             m_line.put(nodeOrder.get(ci).getNodeInfo(),newcell);
 			fireTableCellUpdated(rowIndex,ci+2);
 		} catch (Exception e) {}
 	}
 
 	public void copyLine(int line) {
-		Map m_line = ((InitialState)imanager.get(line)).getMaxValueTable();
-		InitialState newState = (InitialState)imanager.get(imanager.add());
+		Map m_line = ((NamedState)imanager.get(line)).getMaxValueTable();
+		NamedState newState = (NamedState)imanager.get(imanager.add());
 		newState.setMaxValueTable( new HashMap(m_line));
 		fireTableDataChanged();
 	}

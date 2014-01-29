@@ -11,8 +11,8 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.NamedList;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
@@ -27,7 +27,7 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
 	implements GraphListener<RegulatoryGraph>,  GenericListListener {
 
     public final RegulatoryGraph graph;
-    public final GsInitialStateList imanager;
+    public final NamedStatesHandler imanager;
     public final PrioritySetList pcmanager;
 
     /**
@@ -41,7 +41,7 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
     public SimulationParameterList( Graph<RegulatoryNode,RegulatoryMultiEdge> graph, SimulationParameters param) {
     	
         this.graph = (RegulatoryGraph) graph;
-        imanager = (GsInitialStateList) ObjectAssociationManager.getInstance().getObject(graph, InitialStateManager.KEY, true);
+        imanager = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph, NamedStatesManager.KEY, true);
         imanager.getInitialStates().addListListener(this);
         imanager.getInputConfigs().addListListener(this);
         pcmanager = new PrioritySetList(this.graph);

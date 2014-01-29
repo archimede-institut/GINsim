@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateStore;
 import org.ginsim.core.utils.data.ObjectStore;
 
-public class SBMLQualConfig implements InitialStateStore {
+public class SBMLQualConfig implements NamedStateStore {
 	
 	Map m_init = new HashMap();
 	Map m_input = new HashMap();

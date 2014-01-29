@@ -6,9 +6,9 @@ import java.util.Map;
 
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.document.GenericDocumentFormat;
-import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateStore;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateStore;
 
-public class DocumentExportConfig implements InitialStateStore {
+public class DocumentExportConfig implements NamedStateStore {
 
     public final Map m_init = new HashMap();
     public final Map m_input = new HashMap();

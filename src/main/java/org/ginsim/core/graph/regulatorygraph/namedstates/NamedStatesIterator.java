@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.regulatorygraph.initialstate;
+package org.ginsim.core.graph.regulatorygraph.namedstates;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -9,18 +9,23 @@ import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
 
 
-
-public class InitialStatesIterator implements Iterator {
+/**
+ * Iterator giving all states defined in a list of named states.
+ * It is mostly used to enumerate all initial states when running a simulation.
+ *
+ * @author Aurelien Naldi.
+ */
+public class NamedStatesIterator implements Iterator {
 
 	StatesIterator it_states;
 	Iterator it_input = null;
 	List nodeOrder;
 
         
-	public InitialStatesIterator(List nodeOrder, InitialStateStore store) {
+	public NamedStatesIterator(List nodeOrder, NamedStateStore store) {
 	    this(nodeOrder, store.getInputState(), store.getInitialState());
 	}
-    public InitialStatesIterator(List nodeOrder, Map m_input, Map m_init) {
+    public NamedStatesIterator(List nodeOrder, Map m_input, Map m_init) {
         it_input = new StatesIterator(nodeOrder, m_input, null);
         it_states = new StatesIterator(nodeOrder, m_init, (byte[])it_input.next());
 	}
@@ -59,15 +64,15 @@ class StatesIterator implements Iterator {
         this.refLine = refLine;
         if (m_init == null || m_init.size() < 1) {
             List v = new ArrayList();
-            v.add(new InitialState());
+            v.add(new NamedState());
             helperIterator = v.iterator();
         } else {
             helperIterator = m_init.keySet().iterator();
         }
-        InitialState next = (InitialState)helperIterator.next();
+        NamedState next = (NamedState)helperIterator.next();
         while (next == null && helperIterator.hasNext()) {
         	LogManager.trace( "Next input is null");
-            next = (InitialState)helperIterator.next();
+            next = (NamedState)helperIterator.next();
         }
         if (next != null) {
             helper = new Reg2DynStatesIterator(nodeOrder, next.getMap(), refLine);
@@ -82,7 +87,7 @@ class StatesIterator implements Iterator {
 		Object ret = helper.next();
 		if (!helper.hasNext() && helperIterator != null && helperIterator.hasNext()) {
 			helper = new Reg2DynStatesIterator(nodeOrder,
-					((InitialState)helperIterator.next()).getMap(), refLine);
+					((NamedState)helperIterator.next()).getMap(), refLine);
 		}
 		return ret;
 	}

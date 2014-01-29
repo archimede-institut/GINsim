@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.regulatorygraph.initialstate;
+package org.ginsim.core.graph.regulatorygraph.namedstates;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,13 +10,17 @@ import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.ListenableNamedList;
 
-
-public class InitialStateList extends ListenableNamedList<InitialState> {
+/**
+ * A list of named States.
+ *
+ * @author Aurelien Naldi
+ */
+public class NamedStateList extends ListenableNamedList<NamedState> {
 
 	private final List nodeOrder;
     private final String prefix;
 
-    public InitialStateList(List nodeOrder, boolean input) {
+    public NamedStateList(List nodeOrder, boolean input) {
         super();
     	prefix = input ? "input_" : "initState_";
     	this.nodeOrder = nodeOrder;
@@ -28,7 +32,7 @@ public class InitialStateList extends ListenableNamedList<InitialState> {
 	}
 
 	public int add() {
-		InitialState i = new InitialState();
+		NamedState i = new NamedState();
 		i.setName(findUniqueName(prefix));
         add(i);
         return size()-1;
@@ -36,7 +40,7 @@ public class InitialStateList extends ListenableNamedList<InitialState> {
 	
 	public void vertexRemoved(Object data, List v) {
         // remove it from initial states
-        for (InitialState is: this) {
+        for (NamedState is: this) {
         	if (is.m.containsKey(data)) {
         		is.m.remove(data);
         		v.add(is);
@@ -47,8 +51,8 @@ public class InitialStateList extends ListenableNamedList<InitialState> {
 	public void vertexUpdated(Object data, List v) {
 	    // remove unavailable values from initial states
         RegulatoryNode vertex = (RegulatoryNode)data;
-        List<InitialState> toremove = null;
-        for (InitialState is: this) {
+        List<NamedState> toremove = null;
+        for (NamedState is: this) {
             List v_val = is.m.get(data);
             if (v_val != null) {
                 for (int k=v_val.size()-1 ; k>-1 ; k--) {
@@ -59,7 +63,7 @@ public class InitialStateList extends ListenableNamedList<InitialState> {
                             is.m.remove(data);
                             if (is.m.isEmpty()) {
                                 if (toremove == null) {
-                                    toremove = new ArrayList<InitialState>();
+                                    toremove = new ArrayList<NamedState>();
                                 }
                                 toremove.add(is);
                             }
@@ -76,7 +80,7 @@ public class InitialStateList extends ListenableNamedList<InitialState> {
 	}
 
     public Object getInitState(String s) {
-        for (InitialState istate: this) {
+        for (NamedState istate: this) {
             if (istate.getName().equals(s)) {
                 return istate;
             }
@@ -84,7 +88,7 @@ public class InitialStateList extends ListenableNamedList<InitialState> {
         return null;
     }
     public void addInitState(String s, Map m) {
-        for (InitialState istate: this) {
+        for (NamedState istate: this) {
             if (istate.getName().equals(s)) {
                 m.put(istate, null);
                 return;
@@ -93,7 +97,7 @@ public class InitialStateList extends ListenableNamedList<InitialState> {
     }
 
     public void toXML(XMLWriter out, String tag) throws IOException {
-        for (InitialState is: this) {
+        for (NamedState is: this) {
             out.openTag(tag);
             out.addAttr("name", is.name);
             String s = "";
@@ -111,7 +115,7 @@ public class InitialStateList extends ListenableNamedList<InitialState> {
     }
 
 	public String nameStateInfo(byte[] state, Object[] no) {
-        for (InitialState istate: this) {
+        for (NamedState istate: this) {
             Map<NodeInfo, List<Integer>> m_istate = istate.getMap();
             boolean ok = true;
             for (int j=0 ; j<no.length ; j++) {
@@ -137,7 +141,7 @@ public class InitialStateList extends ListenableNamedList<InitialState> {
         return null;
 	}
 	public String nameState(byte[] state, List<RegulatoryNode> no) {
-        for (InitialState istate: this) {
+        for (NamedState istate: this) {
             Map<NodeInfo, List<Integer>> m_istate = istate.getMap();
             boolean ok = true;
             for (int j=0 ; j<no.size() ; j++) {

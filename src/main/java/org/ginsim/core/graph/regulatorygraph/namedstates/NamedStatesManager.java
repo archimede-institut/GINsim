@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.regulatorygraph.initialstate;
+package org.ginsim.core.graph.regulatorygraph.namedstates;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,12 +13,16 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-
-public class InitialStateManager extends BasicGraphAssociatedManager {
+/**
+ * Manager for the named states associated data.
+ *
+ * @author Aurelien Naldi
+ */
+public class NamedStatesManager extends BasicGraphAssociatedManager {
 
 	public static final String KEY = "initialState";
 	
-	public InitialStateManager() {
+	public NamedStatesManager() {
 		super(KEY, null);
 	}
 	
@@ -30,7 +34,7 @@ public class InitialStateManager extends BasicGraphAssociatedManager {
     }
 
     public void doSave(OutputStreamWriter os, Graph graph) throws GsException{
-        GsInitialStateList imanager = (GsInitialStateList) getObject(graph);
+        NamedStatesHandler imanager = (NamedStatesHandler) getObject(graph);
         try {
             XMLWriter out = new XMLWriter(os, null);
             out.openTag("initialStates");
@@ -44,21 +48,21 @@ public class InitialStateManager extends BasicGraphAssociatedManager {
 
     @Override
 	public Object doCreate( Graph graph) {
-		return new GsInitialStateList(graph);
+		return new NamedStatesHandler(graph);
 	}
 }
 
 
 class initStateParser extends XMLHelper {
 
-    GsInitialStateList imanager;
-    InitialStateList list, inputs;
+    NamedStatesHandler imanager;
+    NamedStateList list, inputs;
     
     /**
      * @param graph expected node order
      */
     public initStateParser(RegulatoryGraph graph) {
-        imanager = new GsInitialStateList( graph);
+        imanager = new NamedStatesHandler( graph);
         list = imanager.getInitialStates();
         inputs = imanager.getInputConfigs();
     }
@@ -68,13 +72,13 @@ class initStateParser extends XMLHelper {
         
         if ("initialState".equals(qName)) {
             int index = list.add();
-            InitialState istate = (InitialState)list.get(index);
+            NamedState istate = (NamedState)list.get(index);
             istate.setData(attributes.getValue("value").trim().split(" "), imanager.normalNodes);
             istate.name = attributes.getValue("name").trim();
         }
         if ("input".equals(qName)) {
             int index = inputs.add();
-            InitialState istate = (InitialState)inputs.get(index);
+            NamedState istate = (NamedState)inputs.get(index);
             istate.setData(attributes.getValue("value").trim().split(" "), imanager.inputNodes);
             istate.name = attributes.getValue("name").trim();
         }
