@@ -5,9 +5,14 @@ import java.io.IOException;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.io.parser.GINMLWriter;
 
+/**
+ * Save a HTG in the GINML format.
+ *
+ * @author Duncan Berenguier
+ * @author Aurelien Naldi
+ */
 public class HierarchicalGINMLWriter extends GINMLWriter<HierarchicalTransitionGraph, HierarchicalNode, DecisionOnEdge> {
 
-	
 	private final boolean isCompact;
 	private final String str_no;
 	private long saveEdgeID = 1;

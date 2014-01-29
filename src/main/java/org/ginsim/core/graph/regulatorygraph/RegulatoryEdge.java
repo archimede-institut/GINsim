@@ -1,6 +1,11 @@
 package org.ginsim.core.graph.regulatorygraph;
 
-
+/**
+ * An interactions between the nodes of a regulatory graph..
+ * As Regulatory Graphs support multiple interactions, the edge is further encapsulated in a RegulatoryMultiEdge.
+ *
+ * @author Aurelien Naldi
+ */
 public class RegulatoryEdge {
 	public byte threshold;
 	private RegulatoryEdgeSign sign;

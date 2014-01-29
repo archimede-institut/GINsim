@@ -25,9 +25,13 @@ import org.ginsim.core.graph.view.ViewHelper;
 import org.ginsim.core.graph.view.Bezier;
 
 
-
+/**
+ * Save a graph view as SVG.
+ *
+ * @author Frederic Cordeil
+ * @author Aurelien Naldi
+ */
 public class SVGEncoder {
-
 
     /**
      * Export the graph to a SVG file

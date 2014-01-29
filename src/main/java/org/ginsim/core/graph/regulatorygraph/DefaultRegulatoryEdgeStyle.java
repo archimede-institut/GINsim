@@ -7,7 +7,9 @@ import org.ginsim.core.graph.view.style.EdgeStyleImpl;
 import org.ginsim.core.graph.view.style.StyleProperty;
 
 /**
- * Special default edge properties for regulatory graphs.
+ * Default style for edge of regulatory graphs.
+ *
+ * Edge color and arrows denote the sign of the interactions.
  * 
  * @author Aurelien Naldi
  */

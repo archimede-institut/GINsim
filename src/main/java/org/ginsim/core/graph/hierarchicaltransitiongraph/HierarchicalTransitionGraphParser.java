@@ -18,7 +18,11 @@ import org.ginsim.core.io.parser.GsXMLHelper;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
-
+/**
+ * Parse XML files defining hierarchical graphs.
+ *
+ * @author Duncan Berenguier
+ */
 public class HierarchicalTransitionGraphParser extends GsXMLHelper {
     
     private static final int POS_OUT = 0;

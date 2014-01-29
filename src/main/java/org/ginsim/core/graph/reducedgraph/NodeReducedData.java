@@ -12,7 +12,11 @@ import org.ginsim.core.graph.Graph;
 
 
 /**
- * this object represents nodes in the reduced graph : the graph of strong connected components
+ * Nodes in the graph of the strongly connected components.
+ * Each node represent a group of nodes from the original graph, which are part of the same SCC.
+ *
+ * @author Cecile Menahem
+ * @author Aurelien Naldi
  */
 public class NodeReducedData {
 	

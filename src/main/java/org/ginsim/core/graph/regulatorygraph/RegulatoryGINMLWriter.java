@@ -6,10 +6,9 @@ import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.io.parser.GINMLWriter;
 
 /**
- * GINML Writer for Regulatory graphs
+ * Save a Regulatory Graphs in GINML.
  * 
  * @author Aurelien Naldi
- *
  */
 public class RegulatoryGINMLWriter extends GINMLWriter<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> {
 

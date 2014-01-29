@@ -8,7 +8,9 @@ import org.mangosdk.spi.ProviderFor;
 
 
 /**
- * descriptor for regulatoryGraph.
+ * Factory for the SCC graph.
+ *
+ * @author Aurelien Naldi
  */
 @ProviderFor( GraphFactory.class)
 public class ReducedGraphFactory<G extends Graph<V,E>, V, E extends Edge<V>> extends AbstractGraphFactory<ReducedGraph<G,V,E>> {

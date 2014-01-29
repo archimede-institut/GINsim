@@ -8,6 +8,8 @@ import org.mangosdk.spi.ProviderFor;
 
 /**
  * Factory for regulatory graphs.
+ *
+ * @author Aurelien Naldi
  */
 @ProviderFor( GraphFactory.class)
 public class RegulatoryGraphFactory extends AbstractGraphFactory<RegulatoryGraph> {

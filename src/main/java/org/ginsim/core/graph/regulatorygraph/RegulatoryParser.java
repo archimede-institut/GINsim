@@ -35,7 +35,9 @@ import org.xml.sax.SAXException;
 
 
 /**
- * parses a ginml regulatory graph.
+ * Load a regulatory graph from GINML.
+ *
+ * @author Aurelien Naldi.
  */
 public final class RegulatoryParser extends GsXMLHelper {
 
@@ -109,7 +111,7 @@ public final class RegulatoryParser extends GsXMLHelper {
      * create a new regulatory graph from a file.
      *
      * @param file the file to read.
-     * @param map
+     * @param set
      * @param graph the graph to fill with this data.
      */
     public void parse(File file, Set set, Graph<?,?> graph)  throws GsException{

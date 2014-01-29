@@ -12,7 +12,16 @@ import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.io.parser.GINMLWriter;
 
-
+/**
+ * Implementation of the Reduced Graph.
+ *
+ * @author Cecile Menahem
+ * @author Aurelien Naldi
+ *
+ * @param <G>   type of the original graph
+ * @param <V>   type of the original vertices
+ * @param <E>   type of the original edges
+ */
 public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  extends AbstractDerivedGraph<NodeReducedData, Edge<NodeReducedData>, G,V,E>
 	implements ReducedGraph<G,V,E>{
 

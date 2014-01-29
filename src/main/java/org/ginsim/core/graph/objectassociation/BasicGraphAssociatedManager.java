@@ -11,6 +11,9 @@ import org.ginsim.core.graph.Graph;
 
 /**
  * Base class to create managers for associated objects.
+ *
+ * @author Lionel Spinelli
+ * @author Aurelien Naldi
  */
 public abstract class BasicGraphAssociatedManager implements GraphAssociatedObjectManager {
 

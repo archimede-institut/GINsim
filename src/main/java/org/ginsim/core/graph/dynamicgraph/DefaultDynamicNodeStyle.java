@@ -4,6 +4,13 @@ import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.graph.view.style.NodeStyleImpl;
 import org.ginsim.core.graph.view.style.StyleProperty;
 
+/**
+ * Default style for nodes in the State Transition Graph.
+ * The default width depends on the number of nodes.
+ * Elliptic nodes denote stable states.
+ *
+ * @author Aurelien Naldi
+ */
 public class DefaultDynamicNodeStyle extends NodeStyleImpl<DynamicNode> {
 
 	public DefaultDynamicNodeStyle(DynamicGraph graph) {

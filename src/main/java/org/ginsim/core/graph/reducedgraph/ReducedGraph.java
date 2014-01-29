@@ -10,10 +10,16 @@ import org.ginsim.core.graph.GraphAssociation;
 
 
 /**
- * reduced Graph.
+ * Graph of the strongly connected components.
+ *
+ * @author Cecile Menahem
+ * @author Aurelien Naldi
+ *
+ * @param <AG>   type of the original graph
+ * @param <AV>   type of the original vertices
+ * @param <AE>   type of the original edges
  */
 public interface ReducedGraph<AG extends Graph<AV,AE>, AV, AE extends Edge<AV>> extends Graph<NodeReducedData, Edge<NodeReducedData>>, GraphAssociation<AG,AV,AE>{
-	
 	
 	/**
 	 * add an edge to this graph.

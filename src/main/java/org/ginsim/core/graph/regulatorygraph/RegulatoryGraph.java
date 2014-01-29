@@ -9,9 +9,10 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.Graph;
 
 
-
 /**
  * The regulatory graph
+ *
+ * @author Aurelien Naldi
  */
 public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEdge>{
 	

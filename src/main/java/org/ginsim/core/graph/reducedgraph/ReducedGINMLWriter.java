@@ -6,6 +6,11 @@ import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.io.parser.GINMLWriter;
 
+/**
+ * Save the SCC graph in GINML
+ *
+ * @author Aurelien Naldi
+ */
 public class ReducedGINMLWriter extends GINMLWriter<ReducedGraph<?,?,?>, NodeReducedData, Edge<NodeReducedData>> {
 
 	

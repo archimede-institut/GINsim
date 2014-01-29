@@ -12,7 +12,9 @@ import org.ginsim.core.graph.GraphChangeType;
 
 
 /**
- * This edge object allows to have several edges from a vertex to another
+ * Edges of the regulatory graph: provide a list of interactions.
+ *
+ * @author Aurelien Naldi
  */
 public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements ToolTipsable {
 

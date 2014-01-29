@@ -10,7 +10,10 @@ import org.mangosdk.spi.ProviderFor;
 
 
 /**
- * descriptor for hierarchical transition graphs.
+ * Factory for hierarchical transition graphs.
+ *
+ * @author Duncan Berenguier
+ * @author aurelien Naldi
  */
 @ProviderFor( GraphFactory.class)
 public class HierarchicalTransitionGraphFactory extends AbstractGraphFactory<HierarchicalTransitionGraph> {

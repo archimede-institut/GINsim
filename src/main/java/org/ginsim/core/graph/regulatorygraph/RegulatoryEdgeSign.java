@@ -1,5 +1,10 @@
 package org.ginsim.core.graph.regulatorygraph;
 
+/**
+ * Possible signs for interactions.
+ *
+ * @author Aurelien Naldi
+ */
 public enum RegulatoryEdgeSign {
 	POSITIVE("positive", "+", 0),
 	NEGATIVE("negative", "-", 1),

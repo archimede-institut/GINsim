@@ -11,6 +11,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
 /**
  * Hierarchical Transition Graphs provide a compact representation of the dynamical behaviour.
+ * Each node in this graph represent a set of states with a similar fate in the STG (cycle, linear path...)
  *
  * @author Duncan Berenguier
  */

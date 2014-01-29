@@ -8,6 +8,8 @@ import org.ginsim.core.graph.Graph;
 
 /**
  * Implement this interface to save/open objects associated to graph automatically.
+ *
+ * @author Lionel Spinelli
  */
 public interface GraphAssociatedObjectManager {
 

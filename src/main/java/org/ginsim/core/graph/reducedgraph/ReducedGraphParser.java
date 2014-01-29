@@ -19,7 +19,9 @@ import org.xml.sax.SAXException;
 
 
 /**
- * parses a ginml regulatory graph.
+ * Load a SCC graph from GINML.
+ *
+ * @author Aurelien Naldi
  */
 public class ReducedGraphParser extends GsXMLHelper {
     
@@ -47,7 +49,7 @@ public class ReducedGraphParser extends GsXMLHelper {
     private Set set;
     
     /**
-     * @param map
+     * @param set
      * @param attributes
      * @param s_dtd
      * @param s_filename
@@ -92,7 +94,7 @@ public class ReducedGraphParser extends GsXMLHelper {
      * create a new ReducedGraph from a file.
      * 
      * @param file the file to read.
-     * @param map
+     * @param set
      * @param graph the graph to fill with this data.
      */
     public void parse(File file, Set<String> set, Graph graph)  throws GsException{

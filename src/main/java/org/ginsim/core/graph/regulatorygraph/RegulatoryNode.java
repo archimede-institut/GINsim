@@ -30,19 +30,16 @@ import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.NotificationResolution;
 
 
-
-
 /**
- * the Class in which we store biological data for vertices (genes).
- *
- * a gene has:
+ * A node in the Regulatory graph, representing a regulatory component.
+ * A component has:
  * <ul>
- *		<li> a baseValue, to which it tends when no interactions is active</li>
  *		<li> a maxValue</li>
- *		<li> notes (comment and URLs)</li>
- *		<li> a list of interactions: each of them describes states to
- *			which the gene tends when some incoming edges are actives </li>
+ *		<li> an annotation (comment and URLs)</li>
+ *		<li> a dynamical behaviour defined by logical parameters or functions.</li>
  * </ul>
+ *
+ * @author Aurelien Naldi.
  */
 public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 

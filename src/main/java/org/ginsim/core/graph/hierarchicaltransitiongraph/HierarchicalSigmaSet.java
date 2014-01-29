@@ -8,7 +8,9 @@ import java.util.Map;
 
 import org.ginsim.common.application.LogManager;
 
-
+/**
+ * @author Duncan Berenguier
+ */
 public class HierarchicalSigmaSet {
 
 	/**
@@ -88,7 +90,7 @@ public class HierarchicalSigmaSet {
 	}
 
 	/**
-	 * Indicates if the SigmaSet is a signelton (contains only one element), that is, if this HierarchicalSigmaSet's parent is not the root of the factory, ie. it has a parent
+	 * Indicates if the SigmaSet is a singleton (contains only one element), that is, if this HierarchicalSigmaSet's parent is not the root of the factory, ie. it has a parent
 	 * The root is always empty.
 	 * @return
 	 */
