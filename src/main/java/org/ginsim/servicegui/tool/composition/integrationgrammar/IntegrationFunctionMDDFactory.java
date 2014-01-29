@@ -5,25 +5,31 @@ import java.util.List;
 import java.util.Set;
 
 import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDVariable;
+import org.colomoto.mddlib.operators.MDDBaseOperators;
 import org.ginsim.servicegui.tool.composition.integrationgrammar.IntegrationFunctionSpecification.IntegrationAtom;
 import org.ginsim.servicegui.tool.composition.integrationgrammar.IntegrationFunctionSpecification.IntegrationExpression;
 import org.ginsim.servicegui.tool.composition.integrationgrammar.IntegrationFunctionSpecification.IntegrationNegation;
 import org.ginsim.servicegui.tool.composition.integrationgrammar.IntegrationFunctionSpecification.IntegrationOperation;
 
-public class IntegrationFunctionDNFFactory {
+public class IntegrationFunctionMDDFactory {
 
 	private CompositionContext context = null;
+	private MDDManager manager = null;
 
-	public IntegrationFunctionDNFFactory(CompositionContext context) {
+	public IntegrationFunctionMDDFactory(CompositionContext context,
+			MDDManager manager) {
 		this.context = context;
+		this.manager = manager;
 	}
 
-	public IntegrationFunctionClauseSet getClauseSet(
-			IntegrationExpression expression, int instance) {
-		return getClauseSet(expression,instance,true);
+	public int getMDD(IntegrationExpression expression, int instance) {
+		return getMDD(expression, instance, true);
 	}
-	public IntegrationFunctionClauseSet getClauseSet(
-			IntegrationExpression expression, int instance, boolean optimize) {
+
+	public int getMDD(IntegrationExpression expression, int instance,
+			boolean optimize) {
 
 		if (expression instanceof IntegrationOperation) {
 			List<IntegrationExpression> listOperands = ((IntegrationOperation) expression)
@@ -34,32 +40,32 @@ public class IntegrationFunctionDNFFactory {
 
 			switch (operator) {
 			case AND: {
-				IntegrationFunctionClauseSet intermediate = new IntegrationFunctionClauseSet();
-				intermediate.setTautological();
+				int intermediate = 1;
 				for (IntegrationExpression operand : listOperands)
-					intermediate = intermediate.conjunctionWith(getClauseSet(
-							operand, instance));
+					if (operand != null)
+						intermediate = MDDBaseOperators.AND.combine(manager,
+								intermediate, getMDD(operand, instance));
 
 				return intermediate;
 			}
 			case OR: {
-				IntegrationFunctionClauseSet intermediate = new IntegrationFunctionClauseSet();
+				int intermediate = 0;
 				for (IntegrationExpression operand : listOperands)
-					intermediate = intermediate.disjunctionWith(getClauseSet(
-							operand, instance));
+					if (operand != null)
+						intermediate = MDDBaseOperators.OR.combine(manager,
+								intermediate, getMDD(operand, instance));
 
 				return intermediate;
 			}
 			default:
-				return new IntegrationFunctionClauseSet();
+				return 0;
 
 			}
 		} else if (expression instanceof IntegrationNegation) {
-			IntegrationFunctionClauseSet toNegate = getClauseSet(
-					((IntegrationNegation) expression).getNegatedExpression(),
-					instance, false);
 
-			return toNegate.negate();
+			return manager.not(getMDD(
+					((IntegrationNegation) expression).getNegatedExpression(),
+					instance, false));
 
 		} else if (expression instanceof IntegrationAtom) {
 			IntegrationAtom atom = (IntegrationAtom) expression;
@@ -82,32 +88,27 @@ public class IntegrationFunctionDNFFactory {
 			if (max == -1 || max > neighbours.size())
 				max = neighbours.size();
 
-			IntegrationFunctionClauseSet result = new IntegrationFunctionClauseSet();
+			int result = 0;
 
 			if (min > neighbours.size() || min > max) {
 				// condition is trivially impossible to satisfy
-				result.setImpossible();
-				return result;
+				return 0;
 			} else if (threshold == 0 && max < neighbours.size()) {
 				// condition is trivially impossible to satisfy
-				result.setImpossible();
-				return result;
+				return 0;
 			} else if (min == 0 && max == neighbours.size()) {
 				// condition is trivially tautological
-				result.setTautological();
-				return result;
+				return 1;
 			} else if (threshold == 0 && max == neighbours.size()) {
 				// condition is trivially tautological
-				result.setTautological();
-				return result;
+				return 1;
 			}
 
 			if (max == neighbours.size() && optimize) {
 				// need only guarantee the mininum number of neighbours
 				List<boolean[]> masks = generateNeighboursMask(min, nList);
 				for (boolean[] mask : masks) {
-					IntegrationFunctionClauseSet conjunction = new IntegrationFunctionClauseSet();
-					conjunction.setTautological();
+					int conjunction = 1;
 
 					for (int i = 0; i < mask.length; i++) {
 
@@ -117,25 +118,32 @@ public class IntegrationFunctionDNFFactory {
 									.getLowLevelComponentFromName(
 											atom.getComponentName(),
 											nList.get(i).intValue());
-							IntegrationFunctionClauseSet disjunction = new IntegrationFunctionClauseSet();
+							int disjunction = 0;
 
 							for (byte l = threshold; l <= node.getMax(); l++) {
 								IntegrationFunctionClause clause = new IntegrationFunctionClause();
 
 								clause.addConstraint(node, l);
-								disjunction = disjunction
-										.disjunctionWith(clause);
+								disjunction = MDDBaseOperators.OR
+										.combine(
+												manager,
+												disjunction,
+												buildMDDPath(manager, clause
+														.toByteArray(context),
+														1));
 
 							}
 
-							conjunction = conjunction
-									.conjunctionWith(disjunction);
+							conjunction = MDDBaseOperators.AND.combine(manager,
+									conjunction, disjunction);
 
 						} // else we don't care if more neighbours are
 							// habilitated
 
 					}
-					result = result.disjunctionWith(conjunction);
+
+					result = MDDBaseOperators.OR.combine(manager, result,
+							conjunction);
 				}
 
 			} else {
@@ -145,8 +153,7 @@ public class IntegrationFunctionDNFFactory {
 					List<boolean[]> masks = generateNeighboursMask(v, nList);
 
 					for (boolean[] mask : masks) {
-						IntegrationFunctionClauseSet conjunction = new IntegrationFunctionClauseSet();
-						conjunction.setTautological();
+						int conjunction = 1;
 
 						for (int i = 0; i < mask.length; i++) {
 
@@ -154,15 +161,22 @@ public class IntegrationFunctionDNFFactory {
 									.getLowLevelComponentFromName(
 											atom.getComponentName(),
 											nList.get(i).intValue());
-							IntegrationFunctionClauseSet disjunction = new IntegrationFunctionClauseSet();
+
+							int disjunction = 0;
 
 							if (mask[i]) {
 								for (byte l = threshold; l <= node.getMax(); l++) {
 									IntegrationFunctionClause clause = new IntegrationFunctionClause();
 
 									clause.addConstraint(node, l);
-									disjunction = disjunction
-											.disjunctionWith(clause);
+									disjunction = MDDBaseOperators.OR
+											.combine(
+													manager,
+													disjunction,
+													buildMDDPath(
+															manager,
+															clause.toByteArray(context),
+															1));
 
 								}
 							} else {
@@ -170,17 +184,24 @@ public class IntegrationFunctionDNFFactory {
 									IntegrationFunctionClause clause = new IntegrationFunctionClause();
 
 									clause.addConstraint(node, l);
-									disjunction = disjunction
-											.disjunctionWith(clause);
+									disjunction = MDDBaseOperators.OR
+											.combine(
+													manager,
+													disjunction,
+													buildMDDPath(
+															manager,
+															clause.toByteArray(context),
+															1));
 
 								}
 
 							}
-							conjunction = conjunction
-									.conjunctionWith(disjunction);
+							conjunction = MDDBaseOperators.AND.combine(manager,
+									conjunction, disjunction);
 
 						}
-						result = result.disjunctionWith(conjunction);
+						result = MDDBaseOperators.OR.combine(manager, result,
+								conjunction);
 					}
 
 				}
@@ -188,10 +209,23 @@ public class IntegrationFunctionDNFFactory {
 
 			return result;
 
-		} else {
-			return null; // the operand is null
+		} else { // this should never happen
+			return -1;
 		}
 
+	}
+
+	private int buildMDDPath(MDDManager ddm, byte[] state, int leaf) {
+		MDDVariable[] ddVariables = ddm.getAllVariables();
+		int mddPath = leaf;
+		for (int i = ddVariables.length - 1; i >= 0; i--) {
+			int[] children = new int[ddVariables[i].nbval];
+			if (state[i] >= 0) {
+				children[state[i]] = mddPath;
+				mddPath = ddVariables[i].getNode(children);
+			}
+		}
+		return mddPath;
 	}
 
 	private static List<boolean[]> generateNeighboursMask(int v,

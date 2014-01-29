@@ -1,8 +1,7 @@
 package org.ginsim.servicegui.tool.composition.integrationgrammar;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.colomoto.logicalmodel.NodeInfo;
@@ -22,21 +21,12 @@ public class IntegrationFunctionEvaluation {
 		this.context = context;
 	}
 
-	// Add more convenient expression evaluation procedure
-	public boolean evaluate(int instance,
-			Map<NodeInfo, List<Integer>> argumentValues) {
-		Map<String, NodeInfo> mapNameNode = new HashMap<String, NodeInfo>();
-		for (NodeInfo node : argumentValues.keySet())
-			mapNameNode.put(node.getNodeID(), node);
-
-		return traverseTreeEvaluate(instance, argumentValues, mapNameNode,
-				expression);
-
+	public boolean evaluate(int instance, byte[][] state) {
+		return traverseTreeEvaluate(instance, state, expression);
 	}
 
-	private boolean traverseTreeEvaluate(int instance,
-			Map<NodeInfo, List<Integer>> argumentValues,
-			Map<String, NodeInfo> mapNameNode, IntegrationExpression expression) {
+	private boolean traverseTreeEvaluate(int instance, byte[][] state,
+			IntegrationExpression expression) {
 
 		boolean result = false;
 
@@ -53,8 +43,7 @@ public class IntegrationFunctionEvaluation {
 				for (IntegrationExpression operand : listOperands)
 					if (operand == null)
 						continue;
-					else if (!traverseTreeEvaluate(instance, argumentValues,
-							mapNameNode, operand)) {
+					else if (!traverseTreeEvaluate(instance, state, operand)) {
 						return false;
 					}
 				break;
@@ -63,22 +52,26 @@ public class IntegrationFunctionEvaluation {
 				for (IntegrationExpression operand : listOperands)
 					if (operand == null)
 						continue;
-					else if (traverseTreeEvaluate(instance, argumentValues,
-							mapNameNode, operand)) {
+					else if (traverseTreeEvaluate(instance, state, operand)) {
 						return true;
 					}
 				break;
 			}
 		} else if (expression instanceof IntegrationNegation) {
-			return !traverseTreeEvaluate(instance, argumentValues, mapNameNode,
+			return !traverseTreeEvaluate(instance, state,
 					((IntegrationNegation) expression).getNegatedExpression());
 
 		} else if (expression instanceof IntegrationAtom) {
 			IntegrationAtom atom = (IntegrationAtom) expression;
 			String componentName = atom.getComponentName();
 
-			NodeInfo node = mapNameNode.get(componentName);
-			List<Integer> listValues = argumentValues.get(node);
+			NodeInfo node = null;
+			for (NodeInfo n : context.getLowLevelComponents())
+				if (n.getNodeID().equalsIgnoreCase(componentName))
+					node = n;
+
+			Set<Integer> neighbours = context.getNeighbourIndices(instance,
+					atom.getMinDistance(), atom.getMaxDistance());
 
 			byte threshold = atom.getThreshold();
 			if (threshold < 0)
@@ -86,16 +79,13 @@ public class IntegrationFunctionEvaluation {
 
 			int min = atom.getMinNeighbours();
 			if (min < 0)
-				min = listValues.size();
+				min = neighbours.size();
 
 			int max = atom.getMaxNeighbours();
 			if (max < 0)
-				max = listValues.size();
+				max = neighbours.size();
 
 			int habilitations = 0;
-
-			Set<Integer> neighbours = context.getNeighbourIndices(instance,
-					atom.getMinDistance(), atom.getMaxDistance());
 
 			if (min > neighbours.size() || min > max) {
 				// condition is trivially impossible to satisfy
@@ -111,8 +101,13 @@ public class IntegrationFunctionEvaluation {
 				return true;
 			}
 
-			for (Integer value : listValues)
-				if (value.intValue() >= threshold)
+			List<Byte> listValues = new ArrayList<Byte>();
+			for (Integer nindex : neighbours)
+				listValues.add(state[nindex][context.getLowLevelComponents()
+						.indexOf(node)]);
+
+			for (Byte value : listValues)
+				if (value.byteValue() >= threshold)
 					habilitations++;
 
 			if (habilitations >= min && habilitations <= max)
