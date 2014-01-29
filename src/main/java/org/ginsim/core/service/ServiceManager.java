@@ -7,6 +7,7 @@ import java.util.ServiceLoader;
 import java.util.Set;
 
 import org.ginsim.common.application.LogManager;
+import org.ginsim.common.utils.ServiceClassInfo;
 
 
 /**
@@ -23,8 +24,6 @@ import org.ginsim.common.application.LogManager;
  * @author Lionel Spinelli
  * @author Aurelien Naldi
  */
-
-
 public class ServiceManager{
 
 	// The manager singleton
@@ -109,7 +108,7 @@ public class ServiceManager{
 	/**
 	 * Give access to the service by service name 
 	 * 
-	 * @param service_class
+	 * @param name
 	 * @return the service or null if not found
 	 */
 	public Service getService( String name){
@@ -136,4 +135,13 @@ public class ServiceManager{
 	public static Service get( String name) {
 		return getManager().getService( name);
 	}
+
+    public ServiceClassInfo[] getServicesInfo() {
+        ServiceClassInfo[] ret = new ServiceClassInfo[services.size()];
+        int idx = 0;
+        for (Class<Service> cl: services.keySet()) {
+            ret[idx++] = new ServiceClassInfo(cl);
+        }
+        return ret;
+    }
 }

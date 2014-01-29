@@ -10,10 +10,13 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OSXAdapter;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.application.Txt;
+import org.ginsim.common.utils.ServiceClassInfo;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.commongui.utils.ImageLoader;
+import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.service.ServiceGUIManager;
 import org.ginsim.gui.shell.AboutDialog;
 
 
@@ -67,9 +70,12 @@ public class Launcher {
             } else if (args[i].equals("-n")) {
         		open.add(null);
         		continue;
-        	} else if (args[i].equals("--dev")) {
-        		developer_mode = true;
-        		continue;
+            } else if (args[i].equals("--dev")) {
+                developer_mode = true;
+                continue;
+            } else if (args[i].equals("--devinfo")) {
+                devInfo();
+                return;
             } else if (args[i].startsWith("-")) {
             	if (!args[i].equals("-h")) {
                     System.out.println("Unknown option: "+args[i]);
@@ -150,6 +156,22 @@ public class Launcher {
                 System.err.println("Error while loading the OSXAdapter:");
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * Print information for developers: list of loaded services
+     */
+    private static void devInfo() {
+        System.out.println("Services");
+        for (ServiceClassInfo info: ServiceManager.getManager().getServicesInfo()) {
+            System.out.println(info);
+        }
+        System.out.println();
+
+        System.out.println("GUI for services");
+        for (ServiceClassInfo info: ServiceGUIManager.getManager().getServicesInfo()) {
+            System.out.println(info);
         }
     }
  }

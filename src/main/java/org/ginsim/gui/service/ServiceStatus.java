@@ -15,6 +15,7 @@ public @interface ServiceStatus {
 	public static final int RELEASED = 1;
 	public static final int DEPRECATED = -1;
 	public static final int TOOLKIT = 2;
+    public static final int UNKNOWN = -2;
 
 	int value();
 

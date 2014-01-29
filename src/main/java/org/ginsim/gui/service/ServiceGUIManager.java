@@ -11,6 +11,7 @@ import javax.swing.Action;
 
 import org.ginsim.Launcher;
 import org.ginsim.common.application.LogManager;
+import org.ginsim.common.utils.ServiceClassInfo;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceManager;
@@ -176,4 +177,12 @@ public class ServiceGUIManager{
 		return result;
 	}
 
+    public ServiceClassInfo[] getServicesInfo() {
+        ServiceClassInfo[] ret = new ServiceClassInfo[services.size()];
+        int idx = 0;
+        for (ServiceGUI srv: services) {
+            ret[idx++] = new ServiceClassInfo(srv.getClass());
+        }
+        return ret;
+    }
 }
