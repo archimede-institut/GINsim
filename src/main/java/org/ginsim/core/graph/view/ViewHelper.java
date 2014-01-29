@@ -6,7 +6,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.Edge;
 
 /**
  * Common logics to manage bounding boxes, anchor points and related tricks for edge routing.

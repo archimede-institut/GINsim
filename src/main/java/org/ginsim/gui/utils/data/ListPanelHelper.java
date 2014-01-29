@@ -1,6 +1,6 @@
 package org.ginsim.gui.utils.data;
 
-import org.ginsim.core.utils.data.ListTools;
+import org.ginsim.common.utils.ListTools;
 import org.ginsim.core.utils.data.NamedList;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 
@@ -9,8 +9,6 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.JLabel;
 
 /**
  * Provide configuration and helper methods for a list panel.

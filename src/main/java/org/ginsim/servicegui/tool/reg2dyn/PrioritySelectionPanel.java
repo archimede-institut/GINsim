@@ -2,7 +2,7 @@ package org.ginsim.servicegui.tool.reg2dyn;
 
 import java.util.List;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.gui.utils.data.ListEditionPanel;
 import org.ginsim.gui.utils.data.ListSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
@@ -20,7 +20,7 @@ public class PrioritySelectionPanel extends ListSelectionPanel<PrioritySetDefini
     private PriorityDefinitionStore store;
 
     public PrioritySelectionPanel(StackDialog dialog, PrioritySetList pcmanager) {
-        super(dialog, Translator.getString("STR_priorityclass"));
+        super(dialog, Txt.t("STR_priorityclass"));
         this.pcmanager = pcmanager;
         initialize("", false);
 	}

@@ -2,6 +2,11 @@ package org.ginsim.common.xml;
 
 import org.xml.sax.SAXParseException;
 
+/**
+ * Describe a warning found while parsing an XML file.
+ *
+ * @author Aurelien Naldi
+ */
 public class ParsingWarning {
 
 	private final String message;

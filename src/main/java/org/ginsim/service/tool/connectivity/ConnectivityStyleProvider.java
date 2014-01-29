@@ -1,8 +1,8 @@
 package org.ginsim.service.tool.connectivity;
 
 import org.ginsim.common.utils.ColorPalette;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.view.style.*;
 

@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.common.document.DocumentStyle;
 import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.common.utils.IOUtils;
@@ -117,7 +117,7 @@ public class InteractionAnalysisReport {
 		}
 		
 		dw.startDocument();
-		dw.openHeader(1, Translator.getString("STR_interactionAnalysis"), null);
+		dw.openHeader(1, Txt.t("STR_interactionAnalysis"), null);
 		dw.openParagraph(null);
 		dw.writeTextln("Analizing interactions of "+regGraph.getGraphName()+" ("+regGraph.getNodeCount()+" vertices)");
 		dw.closeParagraph();		

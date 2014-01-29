@@ -14,7 +14,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 
 
 /**
@@ -138,7 +138,7 @@ public class AnimatorUI extends JDialog {
     private JButton getBGP() {
         if (bGP == null) {
             bGP = new JButton("gnuplot");
-            bGP.setToolTipText(Translator.getString("STR_gnuplot_descr"));
+            bGP.setToolTipText(Txt.t("STR_gnuplot_descr"));
             bGP.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     gnuplot();

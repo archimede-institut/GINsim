@@ -1,8 +1,8 @@
 package org.ginsim.service.layout;
 
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;

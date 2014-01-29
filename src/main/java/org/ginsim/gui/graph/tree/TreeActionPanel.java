@@ -13,7 +13,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeBuilder;
@@ -42,9 +42,9 @@ public class TreeActionPanel extends JPanel implements GUIEditor<Tree> {
 	private JLabel labelChooseComboBox;
 	static {
 		TREEMODES = new Vector<String>(3);
-		TREEMODES.add(Translator.getString("STR_treeviewer_diagram_with_all_leafs"));
-		TREEMODES.add(Translator.getString("STR_treeviewer_diagram"));
-		TREEMODES.add(Translator.getString("STR_treeviewer_tree"));
+		TREEMODES.add(Txt.t("STR_treeviewer_diagram_with_all_leafs"));
+		TREEMODES.add(Txt.t("STR_treeviewer_diagram"));
+		TREEMODES.add(Txt.t("STR_treeviewer_tree"));
 	}
 	
 	
@@ -75,7 +75,7 @@ public class TreeActionPanel extends JPanel implements GUIEditor<Tree> {
 		c.ipadx = 20;
 		c.gridx = 0;
 		c.gridy = 0;
-		add(new JLabel(Translator.getString("STR_treeviewer_tree_choose_mode")), c);
+		add(new JLabel(Txt.t("STR_treeviewer_tree_choose_mode")), c);
 		c.gridx++;
 		treeModeList = new JComboBox(TREEMODES);
 		treeModeList.addActionListener(new ActionListener() {
@@ -102,7 +102,7 @@ public class TreeActionPanel extends JPanel implements GUIEditor<Tree> {
 		TreeBuilder parser = tree.getParser();
 		sourceList.removeAllItems();
 		if (parser instanceof TreeBuilderFromRegulatoryGraph) {
-			labelChooseComboBox.setText(Translator.getString("STR_treeviewer_tree_choose_gene"));
+			labelChooseComboBox.setText(Txt.t("STR_treeviewer_tree_choose_gene"));
 			List<RegulatoryNode> nodeOrder = (List<RegulatoryNode>) parser.getParameter(TreeBuilder.PARAM_NODEORDER);
 			for (RegulatoryNode node : nodeOrder) {
 				sourceList.addItem(node);
@@ -111,7 +111,7 @@ public class TreeActionPanel extends JPanel implements GUIEditor<Tree> {
 				sourceList.setSelectedIndex(((Integer)parser.getParameter(TreeBuilderFromRegulatoryGraph.PARAM_INITIALVERTEXINDEX)).intValue());				
 			}
 		} else if (parser instanceof TreeBuilderFromCircuit) {
-			labelChooseComboBox.setText(Translator.getString("STR_treeviewer_tree_choose_circuit"));
+			labelChooseComboBox.setText(Txt.t("STR_treeviewer_tree_choose_circuit"));
 			List contexts = (List) parser.getParameter(TreeBuilderFromCircuit.PARAM_ALLCONTEXTS);
 			for (Object context : contexts) {
 				sourceList.addItem(context);

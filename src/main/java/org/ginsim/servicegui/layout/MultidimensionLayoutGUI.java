@@ -27,7 +27,7 @@ import javax.swing.table.TableCellRenderer;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
@@ -51,7 +51,7 @@ public class MultidimensionLayoutGUI {
     	
 		frame = new JDialog();
 		frame.setMinimumSize(new Dimension(400, 300));
-		frame.setTitle(Translator.getString("STR_multidimention_placement"));
+		frame.setTitle(Txt.t("STR_multidimention_placement"));
 		
 		List nodeOrder = graph.getNodeOrder();
     	initColorPalette(nodeOrder.size());
@@ -101,12 +101,12 @@ public class MultidimensionLayoutGUI {
 		c.gridx = 0;
 		c.gridy++;
 		c.fill = GridBagConstraints.NONE;
-		straightEdges = new JCheckBox(Translator.getString("STR_multidimention_placement_straight_edges"), false); 
+		straightEdges = new JCheckBox(Txt.t("STR_multidimention_placement_straight_edges"), false);
 		frame.add(straightEdges, c);
 		
 		c.gridy++;
 		c.anchor = GridBagConstraints.EAST;
-		JButton closeButton = new JButton(Translator.getString("STR_close"));
+		JButton closeButton = new JButton(Txt.t("STR_close"));
 		closeButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {
             	close();
@@ -114,7 +114,7 @@ public class MultidimensionLayoutGUI {
         });
 		frame.add(closeButton, c);
 		c.gridx++;
-		JButton runButton = new JButton(Translator.getString("STR_run"));
+		JButton runButton = new JButton(Txt.t("STR_run"));
 		runButton.setMnemonic(KeyEvent.VK_R);
 		runButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent e) {

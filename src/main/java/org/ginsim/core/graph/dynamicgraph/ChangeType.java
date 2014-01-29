@@ -1,5 +1,10 @@
 package org.ginsim.core.graph.dynamicgraph;
 
+/**
+ * Define the types of changes in the transition from one state to another.
+ *
+ * @author Aurelien Naldi
+ */
 public enum ChangeType {
 
 	NOCHANGE, INCREASE, DECREASE, MULTIPLE_INCREASE, MULTIPLE_DECREASE, MULTIPLE_BOTH;

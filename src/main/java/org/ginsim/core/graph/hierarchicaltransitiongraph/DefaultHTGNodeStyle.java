@@ -8,6 +8,11 @@ import org.ginsim.core.graph.view.style.NodeStyleImpl;
 import org.ginsim.core.graph.view.style.StyleProperty;
 
 
+/**
+ * Default style for the HTG.
+ *
+ * @author Aurelien Naldi
+ */
 public class DefaultHTGNodeStyle extends NodeStyleImpl<HierarchicalNode> {
 
 	private final HierarchicalTransitionGraph graph;

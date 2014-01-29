@@ -1,5 +1,4 @@
 /**
- * jgrapht-based Graph implementation.
- * This package should NOT be used directly
+ * Implementation of the graph backend.
  */
 package org.ginsim.core.graph.backend;

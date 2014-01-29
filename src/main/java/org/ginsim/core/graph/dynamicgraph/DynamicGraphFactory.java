@@ -2,8 +2,8 @@ package org.ginsim.core.graph.dynamicgraph;
 
 import java.util.List;
 
-import org.ginsim.core.graph.common.AbstractGraphFactory;
-import org.ginsim.core.graph.common.GraphFactory;
+import org.ginsim.core.graph.AbstractGraphFactory;
+import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.NodeStyle;
@@ -12,6 +12,9 @@ import org.mangosdk.spi.ProviderFor;
 
 /**
  * Factory used to create dynamical graphs (STGs).
+ *
+ * @author Lionel Spinelli
+ * @author Aurelien Naldi
  */
 @ProviderFor( GraphFactory.class)
 public class DynamicGraphFactory extends AbstractGraphFactory<DynamicGraph> {

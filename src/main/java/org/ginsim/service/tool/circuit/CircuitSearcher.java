@@ -1,7 +1,7 @@
 package org.ginsim.service.tool.circuit;
 
 import org.colomoto.common.task.AbstractTask;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;

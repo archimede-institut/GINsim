@@ -4,8 +4,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Collection;
 
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 
 public class BiolayoutEncoder {
 

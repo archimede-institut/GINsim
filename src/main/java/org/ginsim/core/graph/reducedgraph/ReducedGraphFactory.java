@@ -1,9 +1,9 @@
 package org.ginsim.core.graph.reducedgraph;
 
-import org.ginsim.core.graph.common.AbstractGraphFactory;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphFactory;
+import org.ginsim.core.graph.AbstractGraphFactory;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphFactory;
 import org.mangosdk.spi.ProviderFor;
 
 

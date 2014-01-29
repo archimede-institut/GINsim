@@ -9,13 +9,10 @@ import javax.swing.JOptionPane;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.backend.GraphBackend;
-import org.ginsim.core.graph.backend.JgraphtBackendImpl;
-import org.ginsim.core.graph.common.AbstractGraph;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.graph.GraphGUI;
@@ -196,8 +193,8 @@ public class GUIManager {
 				name = "NAME_HERE";
 			}
 			o.frame.toFront();
-            int aw = JOptionPane.showConfirmDialog(o.frame, Translator.getString("STR_saveQuestion", name),
-                    Translator.getString("STR_closeConfirm"),
+            int aw = JOptionPane.showConfirmDialog(o.frame, Txt.t("STR_saveQuestion", name),
+                    Txt.t("STR_closeConfirm"),
                     JOptionPane.YES_NO_CANCEL_OPTION);
             switch (aw) {
                 case JOptionPane.YES_OPTION:
@@ -378,7 +375,7 @@ public class GUIManager {
 		
 		// If the new graph is null, an error message is displayed
 		if( new_graph == null){
-			GUIMessageUtils.openErrorDialog( Translator.getString("STR_computedNullGraph"));
+			GUIMessageUtils.openErrorDialog( Txt.t("STR_computedNullGraph"));
 			return;
 		}
 		

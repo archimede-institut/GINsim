@@ -1,6 +1,6 @@
 package org.ginsim.service.tool.interactionanalysis;
 
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;

@@ -18,9 +18,9 @@ import org.ginsim.common.document.LaTeXDocumentWriter;
 import org.ginsim.common.document.OOoDocumentWriter;
 import org.ginsim.common.document.XHTMLDocumentWriter;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
+import org.ginsim.core.graph.backend.EdgeAttributeReaderImpl;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.backend.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -38,10 +38,12 @@ import org.python.util.PythonInterpreter;
 
 /**
  * A helper when running GINsim in script mode.
- * It provides a convenient API for common actions:
- * - open and save graphs
- * - run services
- * - create reports
+ * It provides a proxy to common actions:
+ * <ul>
+ *   <li>open and save graphs</li>
+ *   <li>run services</li>
+ *   <li>create reports</li>
+ * </ul>
  * 
  * @author Aurelien Naldi
  */
@@ -95,6 +97,17 @@ public class ScriptLauncher {
 		}
 		running = true;
 		this.args = args;
+
+        if (filename.equals("doc")) {
+            if (args == null || args.length == 0) {
+                doc("script_doc.html", "apidocs");
+            } else if (args.length == 2) {
+                doc(args[0], args[1]);
+            } else {
+                System.out.println("arguments for the doc command: [<output file> <javadoc path>]");
+            }
+            return;
+        }
 
         File f = new File(filename).getAbsoluteFile();
         if (!f.exists()) {
@@ -281,11 +294,18 @@ public class ScriptLauncher {
 	 * @param filename output filename
 	 * @param javadocbase path to the javadoc
 	 */
-	public void doc(String filename, String javadocbase) {
+	private void doc(String filename, String javadocbase) {
+        System.out.println("Generating script documentation in "+filename+".");
 		DocumentWriter doc = createReport(filename, null);
 		try {
+            doc.writeText("In a script, the ");
 			doc.addLink(getJavadocLink(javadocbase, getClass()), "Script Manager");
-			
+            doc.writeText("is used as proxy to the ");
+            doc.addLink(javadocbase+"/index.html", "GINsim API");
+            doc.writeText(". It allows to load graphs, access their associated data, and services.");
+            doc.writeText("Each graph type and service has its own API, linked below.");
+
+            writeDoc(doc, javadocbase, "Graph types", GraphManager.getInstance().getGraphFactories());
 			writeDoc(doc, javadocbase, "Services", ServiceManager.getManager().getAvailableServices());
 			// TODO: names for associated data managers
 			writeDoc(doc, javadocbase, "Associated data", getDataManagers());

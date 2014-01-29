@@ -21,10 +21,10 @@ import javax.swing.JRadioButton;
 import javax.swing.border.EmptyBorder;
 
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.GraphGUIHelperFactory;
@@ -91,21 +91,21 @@ public class WhatToDoWithGraph extends Frame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		this.setTitle( Translator.getString( "STR_whatToDo_title"));
+		this.setTitle( Txt.t("STR_whatToDo_title"));
 		
 		// Display the right message according to the graph size
 		int graph_size = graph.getNodeCount();
-		JLabel lbl_Alert = new JLabel( "<html>" + Translator.getString( "STR_whatToDo_message", "" + graph_size) + "</html>");
+		JLabel lbl_Alert = new JLabel( "<html>" + Txt.t("STR_whatToDo_message", "" + graph_size) + "</html>");
 		if( graph_size >= LIMIT_WARNING && graph_size < LIMIT_DISABLE_DISPLAY){
-			lbl_Alert.setText(  "<html>" + Translator.getString( "STR_whatToDo_alert1", "" + graph_size) + "</html>");
+			lbl_Alert.setText(  "<html>" + Txt.t("STR_whatToDo_alert1", "" + graph_size) + "</html>");
 		}
 		else if (graph_size >= LIMIT_DISABLE_DISPLAY){
-			lbl_Alert.setText(  "<html>" + Translator.getString( "STR_whatToDo_alert2", "" + graph_size) + "</html>");
+			lbl_Alert.setText(  "<html>" + Txt.t("STR_whatToDo_alert2", "" + graph_size) + "</html>");
 		}
 		lbl_Alert.setBounds(56, 12, 368, 42);
 		contentPane.add(lbl_Alert);
 		
-		JLabel lbl_MainQuestion = new JLabel( Translator.getString( "STR_whatToDo_question"));
+		JLabel lbl_MainQuestion = new JLabel( Txt.t("STR_whatToDo_question"));
 		lbl_MainQuestion.setBounds(56, 66, 368, 15);
 		contentPane.add(lbl_MainQuestion);
 
@@ -125,12 +125,12 @@ public class WhatToDoWithGraph extends Frame {
 
 
 		// Build the Layout radio button and the Layout combo box
-		rdbtn_view = new JRadioButton( Translator.getString( "STR_whatToDo_view"));
+		rdbtn_view = new JRadioButton( Txt.t("STR_whatToDo_view"));
 		buttonGroup.add(rdbtn_view);
 		rdbtn_view.setBounds(80, 95, 344, 23);
 		contentPane.add(rdbtn_view);
 		
-		rdbtn_applyLayoutAndOpen = new JRadioButton( Translator.getString( "STR_whatToDo_applyLayoutAndOpen"));
+		rdbtn_applyLayoutAndOpen = new JRadioButton( Txt.t("STR_whatToDo_applyLayoutAndOpen"));
 		buttonGroup.add(rdbtn_applyLayoutAndOpen);
 		rdbtn_applyLayoutAndOpen.setBounds(80, 127, 344, 23);
 		contentPane.add(rdbtn_applyLayoutAndOpen);
@@ -152,7 +152,7 @@ public class WhatToDoWithGraph extends Frame {
 		}
 
 		// Build the Tool radio button and the Tool combo box
-		rdbtn_ApplyATool = new JRadioButton(  Translator.getString( "STR_whatToDo_applyTool"));
+		rdbtn_ApplyATool = new JRadioButton(  Txt.t("STR_whatToDo_applyTool"));
 		buttonGroup.add(rdbtn_ApplyATool);
 		rdbtn_ApplyATool.setBounds(80, 190, 344, 23);
 		contentPane.add(rdbtn_ApplyATool);
@@ -168,7 +168,7 @@ public class WhatToDoWithGraph extends Frame {
 		contentPane.add(comboBox_Tools);
 		
 		// Build the Export radio button and the Export combo box
-		rdbtn_Export = new JRadioButton( Translator.getString( "STR_whatToDo_Export"));
+		rdbtn_Export = new JRadioButton( Txt.t("STR_whatToDo_Export"));
 		buttonGroup.add(rdbtn_Export);
 		rdbtn_Export.setBounds(80, 260, 344, 23);
 		contentPane.add(rdbtn_Export);
@@ -184,13 +184,13 @@ public class WhatToDoWithGraph extends Frame {
 		contentPane.add(comboBox_Exports);
 		
 		// Build the Save radio button
-		rdbtn_Save = new JRadioButton( Translator.getString( "STR_whatToDo_Save"));
+		rdbtn_Save = new JRadioButton( Txt.t("STR_whatToDo_Save"));
 		buttonGroup.add(rdbtn_Save);
 		rdbtn_Save.setBounds(80, 337, 344, 23);
 		contentPane.add(rdbtn_Save);
 		
 		// Build the OK button
-		JButton btn_Ok = new JButton( Translator.getString( "STR_OK"));
+		JButton btn_Ok = new JButton( Txt.t("STR_OK"));
 		btn_Ok.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -204,7 +204,7 @@ public class WhatToDoWithGraph extends Frame {
 		contentPane.add(btn_Ok);
 		
 		//Build the Cancel button 
-		JButton btn_Cancel = new JButton( Translator.getString( "STR_cancel"));
+		JButton btn_Cancel = new JButton( Txt.t("STR_cancel"));
 		btn_Cancel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -239,10 +239,10 @@ public class WhatToDoWithGraph extends Frame {
 		for (Action action: available_actions) {
 			if (action instanceof LayoutAction) {
 				availableLayoutActions.add( (LayoutAction) action);
-				comboBox_Layouts.addItem( Translator.getString( action.getValue( Action.NAME).toString()));
+				comboBox_Layouts.addItem( Txt.t(action.getValue(Action.NAME).toString()));
 			}
 		}
-		comboBox_Layouts.addItem( Translator.getString( "STR_whattodo_NoLayout"));
+		comboBox_Layouts.addItem( Txt.t("STR_whattodo_NoLayout"));
 	}
 	
 	/**
@@ -256,10 +256,10 @@ public class WhatToDoWithGraph extends Frame {
 		for (Action action: available_actions) {
 			if (action instanceof ToolAction) {
 				availableToolActions.add( (ToolAction) action);
-				comboBox_Tools.addItem( Translator.getString( action.getValue( Action.NAME).toString()));
+				comboBox_Tools.addItem( Txt.t(action.getValue(Action.NAME).toString()));
 			} else if (action instanceof GenericGraphAction) {
 				availableToolActions.add( (GenericGraphAction) action);
-				comboBox_Tools.addItem( Translator.getString( action.getValue( Action.NAME).toString()));
+				comboBox_Tools.addItem( Txt.t(action.getValue(Action.NAME).toString()));
 			}
 		}
 	}
@@ -275,7 +275,7 @@ public class WhatToDoWithGraph extends Frame {
 		for (Action action: available_actions) {
 			if (action instanceof ExportAction) {
 				availableExportActions.add( (ExportAction) action);
-				comboBox_Exports.addItem( Translator.getString( action.getValue( Action.NAME).toString()));
+				comboBox_Exports.addItem( Txt.t(action.getValue(Action.NAME).toString()));
 			}
 		}
 	}

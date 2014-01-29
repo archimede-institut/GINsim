@@ -9,7 +9,7 @@ import org.ginsim.common.application.CurrentOS;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OSXAdapter;
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.service.ServiceManager;
@@ -127,7 +127,7 @@ public class Launcher {
 	 * This method will only load all required resources, it will not create the first window.
 	 */
 	private static void initGUI() {
-		Translator.pushBundle("org.ginsim.messages");
+		Txt.push("org.ginsim.messages");
 		ImageLoader.pushSearchPath("/org/ginsim/icon");
 		ImageLoader.pushSearchPath("/org/ginsim/icon/action");
 		AboutDialog.setDOAPFile("/GINsim-about.rdf");

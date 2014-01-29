@@ -3,7 +3,7 @@ package org.ginsim.core.graph.reducedgraph;
 import java.io.IOException;
 
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.Edge;
 import org.ginsim.core.io.parser.GINMLWriter;
 
 public class ReducedGINMLWriter extends GINMLWriter<ReducedGraph<?,?,?>, NodeReducedData, Edge<NodeReducedData>> {

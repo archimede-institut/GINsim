@@ -3,7 +3,7 @@ package org.ginsim.gui.shell.actions;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.gui.service.ServiceGUI;
 
 

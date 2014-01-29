@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 
 
 /**
@@ -36,9 +36,9 @@ public class AReg2GPModel extends AbstractTableModel {
 	public String getColumnName(int columnIndex) {
 		switch (columnIndex) {
 		case 0:
-			return Translator.getString("STR_node");
+			return Txt.t("STR_node");
 		case 1:
-			return Translator.getString("STR_selected");
+			return Txt.t("STR_selected");
 		}
 		return null;
 	}

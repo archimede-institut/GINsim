@@ -8,8 +8,8 @@ import java.awt.Color;
 
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
-import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
+import org.ginsim.core.graph.backend.EdgeAttributeReaderImpl;
+import org.ginsim.core.graph.backend.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
 import org.ginsim.core.graph.regulatorygraph.BasicRegulatoryGraphTest;

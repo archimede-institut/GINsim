@@ -5,7 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.util.List;
 
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 
 /**

@@ -14,7 +14,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.NodeStyle;
 import org.ginsim.core.graph.view.style.Style;

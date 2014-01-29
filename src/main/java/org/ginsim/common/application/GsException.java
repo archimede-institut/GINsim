@@ -82,7 +82,7 @@ public class GsException extends Exception {
     	
     	if( message != null){
     		for( String text : message){
-    			result += Translator.getString( text) + ":";
+    			result += Txt.t(text) + ":";
     		}
     		result += "\n";
     	}
@@ -91,7 +91,7 @@ public class GsException extends Exception {
         	if (m == null) {
         		result += "Exception is : " + m;
         	} else {
-        		result += "Exception is : " + Translator.getString(m);
+        		result += "Exception is : " + Txt.t(m);
         	}
         }
         else{
@@ -107,7 +107,7 @@ public class GsException extends Exception {
      */
     public String getTitle() {
     	
-        return Translator.getString("STR_error");
+        return Txt.t("STR_error");
     }
     
 	public void addMessage(String message) {

@@ -1,13 +1,11 @@
 package org.ginsim.gui.shell.actions;
 
-import java.net.URL;
-
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.gui.service.ServiceGUI;
 
@@ -63,12 +61,12 @@ public abstract class BaseAction extends AbstractAction {
 		if (mnemonic != null) {
 			this.putValue(Action.MNEMONIC_KEY, mnemonic);
 		}
-		this.putValue( Action.NAME, Translator.getString(name));
+		this.putValue( Action.NAME, Txt.t(name));
 		if( icon != null ) {
 			this.putValue( Action.SMALL_ICON, icon );
 		}
 		if (tooltip != null) {
-			this.putValue( Action.SHORT_DESCRIPTION, Translator.getString(tooltip) );
+			this.putValue( Action.SHORT_DESCRIPTION, Txt.t(tooltip) );
 		}	   		 
 		if (accelerator != null) {
 			this.putValue( Action.ACCELERATOR_KEY, accelerator );

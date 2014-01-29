@@ -15,17 +15,16 @@ import javax.swing.KeyStroke;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.FrameActionManager;
 import org.ginsim.gui.shell.GsFileFilter;
-import org.ginsim.gui.utils.widgets.Frame;
 
 
 /**
@@ -43,7 +42,7 @@ public class FileCallBack {
 	 * @return a full file menu
 	 */
 	public static JMenu getFileMenu(Graph<?, ?> g, JMenu importMenu, JMenu exportMenu) {
-		JMenu menu = new JMenu( Translator.getString( "STR_File"));
+		JMenu menu = new JMenu( Txt.t("STR_File"));
 		
 		menu.add(new NewAction());
 		menu.add(new OpenAction());
@@ -61,7 +60,7 @@ public class FileCallBack {
 		for (Action a: HelpCallBack.getActions()) {
 			menu.add(a);
 		}
-		JMenu support_menu = new JMenu( Translator.getString( "STR_Help_Support"));
+		JMenu support_menu = new JMenu( Txt.t("STR_Help_Support"));
 		menu.add( support_menu);
 		for (Action a: HelpCallBack.getSupportActions()) {
 			support_menu.add(a);
@@ -97,7 +96,7 @@ public class FileCallBack {
 class RecentMenu extends JMenu {
 
 	public RecentMenu() {
-		super(Translator.getString( "STR_RecentFiles"));
+		super(Txt.t("STR_RecentFiles"));
 	}
 	
 	@Override
@@ -117,8 +116,8 @@ class RecentMenu extends JMenu {
 
 class NewAction extends AbstractAction {
 	public NewAction() {
-		super( Translator.getString( "STR_New"));
-		putValue( SHORT_DESCRIPTION, Translator.getString( "STR_New_descr"));
+		super( Txt.t("STR_New"));
+		putValue( SHORT_DESCRIPTION, Txt.t("STR_New_descr"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_N, FrameActionManager.MASK));
 	}
 	
@@ -138,7 +137,7 @@ class OpenAction extends AbstractAction {
 	private final String filename;
 	
 	public OpenAction() {
-		super( Translator.getString(  "STR_Open"));
+		super( Txt.t("STR_Open"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_O, FrameActionManager.MASK));
 		this.filename = null;
 	}
@@ -193,8 +192,8 @@ class SaveAction extends AbstractAction {
 	private final Graph<?,?> g;
 	
 	public SaveAction(Graph<?,?> g) {
-		super( Translator.getString( "STR_Save"));
-		putValue( SHORT_DESCRIPTION,  Translator.getString( "STR_Save_descr"));
+		super( Txt.t("STR_Save"));
+		putValue( SHORT_DESCRIPTION,  Txt.t("STR_Save_descr"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, FrameActionManager.MASK));
 		this.g = g;
 	}
@@ -206,7 +205,7 @@ class SaveAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		save();
-		NotificationManager.publishInformation(g, Translator.getString( "STR_Saved_msg"));
+		NotificationManager.publishInformation(g, Txt.t("STR_Saved_msg"));
 	}
 }
 
@@ -216,8 +215,8 @@ class SaveAsAction extends AbstractAction {
 	private final Graph<?,?> g;
 	
 	public SaveAsAction(Graph<?,?> g) {
-		super( Translator.getString( "STR_SaveAs"));
-		putValue( SHORT_DESCRIPTION,  Translator.getString( "STR_SaveAs_descr"));
+		super( Txt.t("STR_SaveAs"));
+		putValue( SHORT_DESCRIPTION,  Txt.t("STR_SaveAs_descr"));
 		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_S, FrameActionManager.MASK));
 		this.g = g;
 	}
@@ -237,7 +236,7 @@ class CloseAction extends AbstractAction {
 	private final Graph<?,?> g;
 	
 	public CloseAction(Graph<?,?> g) {
-		super( Translator.getString( "STR_Close"));
+		super( Txt.t("STR_Close"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_W, FrameActionManager.MASK));
 		this.g = g;
 	}

@@ -4,9 +4,9 @@ package org.ginsim.core.graph.reducedgraph;
 import java.util.Collection;
 import java.util.Set;
 
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphAssociation;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphAssociation;
 
 
 /**

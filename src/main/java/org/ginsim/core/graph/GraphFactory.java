@@ -1,11 +1,16 @@
-package org.ginsim.core.graph.common;
+package org.ginsim.core.graph;
 
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.NodeStyle;
 
 /**
- * Factory to open or create specialised gryph instances.
- * 
+ * Factory to open or create specialised graph instances.
+ * Implementations of this interface will be loaded by the GraphManager and used
+ * to create new graph or load them from file.
+ *
+ * <br/>To be properly loaded, they must use the <code>@ProviderFor( GraphFactory.class)</code> annotation.
+ *
+ * @author Lionel Spinelli
  * @author Aurelien Naldi
  *
  * @param <G>

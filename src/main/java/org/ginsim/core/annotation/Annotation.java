@@ -2,62 +2,60 @@ package org.ginsim.core.annotation;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
-import org.ginsim.core.graph.common.Graph;
-
+import org.ginsim.core.graph.Graph;
 
 /**
- * Annotation for Gene : contains text and a list of url.
+ * Generic annotation: some free text and a list of urls.
  * 
  * @author Aurelien Naldi
  */
-public class Annotation implements XMLize
-{
-    /** list of links  */
-	private List<AnnotationLink> linkList;
+public class Annotation extends ArrayList<AnnotationLink> implements XMLize {
+
 	private String comment;
 	
 	/**
 	 * create an empty annotation.
 	 */
 	public Annotation() {
-		linkList = new ArrayList<AnnotationLink>();
 		comment = "";
 	}
-	
+
+    public List<AnnotationLink> getLinkList() {
+        return this;
+    }
 	/**
 	 * get the vector of url
 	 * @return the vector of String (url).
 	 */
 	public String getLink(int index) {
-		return getLinkList().get(index).toString();
+		return get(index).toString();
 	}
 	public void openLink(int index) {
-		getLinkList().get(index).open();
+		get(index).open();
 	}
 	public void addLink(String s, Graph graph) {
-		setLink(s, getLinkList().size(), graph);
+		setLink(s, size(), graph);
 	}
 	public void delLink(String s, Graph graph) {
-		while (getLinkList().remove(new AnnotationLink(s, graph))) ;
+		while (remove(new AnnotationLink(s, graph))) ;
 	}
 	public void setLink(String s, int index, Graph graph) {
-		if (index == getLinkList().size()) {
+		if (index == size()) {
 			AnnotationLink al = new AnnotationLink(s, graph);
-			if (!containsLink(al)) getLinkList().add(al);
+			if (!containsLink(al)) add(al);
 		} else {
-			((AnnotationLink)getLinkList().get(index)).setText(s, graph);
+			(get(index)).setText(s, graph);
 		}
 	}
 	public boolean containsLink(AnnotationLink al) {
-		return getLinkList().contains(al);
+		return contains(al);
 	}
 	public boolean containsLink(String s) {
-		int nblinks = getLinkList().size();
+		int nblinks = size();
 		for (int i=0 ; i<nblinks ; i++) {
 			if (getLink(i).equals(s)) {
 				return true;
@@ -73,11 +71,7 @@ public class Annotation implements XMLize
 		return comment;
 	}
 
-	public List<AnnotationLink> getLinkList() {
-		return linkList;
-	}
 
-	
 	/**
 	 * Set the string containing the comments.
 	 * @param comment the new comment
@@ -100,15 +94,15 @@ public class Annotation implements XMLize
 
 	@Override
 	public void toXML(XMLWriter out) throws IOException {
-			if (comment.equals("") && getLinkList().size()==0) {
+			if (comment.equals("") && size()==0) {
 			    return;         
             }
 			out.openTag("annotation");
-            if (getLinkList().size() > 0) {
+            if (size() > 0) {
                 out.openTag("linklist");
-                for (int i=0 ; i<getLinkList().size() ; i++) {
+                for (int i=0 ; i<size() ; i++) {
                     out.openTag("link");
-                    out.addAttr("xlink:href", getLinkList().get(i).toString());
+                    out.addAttr("xlink:href", get(i).toString());
                     out.closeTag();
                 }
                 out.closeTag();
@@ -128,7 +122,7 @@ public class Annotation implements XMLize
 	}
 
 	public void copyFrom(Annotation other) {
-		int len = other.getLinkList().size();
+		int len = other.size();
 		for (int i=0 ; i<len ; i++) {
 			addLink(other.getLink(i), null);
 		}
@@ -139,14 +133,13 @@ public class Annotation implements XMLize
      * @return true if the annotation is empty
      */
     public boolean isEmpty() {
-        return "".equals(comment) && getLinkList().size() == 0;
+        return "".equals(comment) && size() == 0;
     }
 
 	public String getHTMLComment() {
 		StringBuffer buf = new StringBuffer();
 		boolean hasLink = false;
-		for (Iterator it = getLinkList().iterator() ; it.hasNext() ; ) {
-			AnnotationLink lnk = (AnnotationLink)it.next();
+		for (AnnotationLink lnk: this ) {
 			if (lnk.getHelper() != null) {
 				String s = lnk.getHelper().getLink(lnk.proto, lnk.value);
 				if (s != null) {

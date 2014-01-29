@@ -19,7 +19,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import org.ginsim.commongui.dialog.DefaultDialogSize;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.gui.guihelpers.GUIHelper;

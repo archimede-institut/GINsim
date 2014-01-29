@@ -5,27 +5,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.ServiceConfigurationError;
-import java.util.ServiceLoader;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.core.graph.common.AbstractGraph;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphAssociation;
-import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.common.GraphEventCascade;
-import org.ginsim.core.graph.common.GraphFactory;
-import org.ginsim.core.graph.common.GraphListener;
-import org.ginsim.core.graph.common.GraphModel;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraphImpl;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraphImpl;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
@@ -39,6 +25,10 @@ import org.ginsim.core.notification.NotificationManager;
 
 /**
  * Manage registered graph types and handles graph creation (from scratch or through a parser).
+ * It loads GraphFactory implementations annotated as services.
+ *
+ * @author Lionel Spinelli
+ * @author Aurelien Naldi
  */
 public class GraphManager {
 
@@ -110,6 +100,10 @@ public class GraphManager {
     	}
     	
     	return null;
+    }
+
+    public Collection<GraphFactory> getGraphFactories() {
+        return graphFactories.values();
     }
     
     /**
@@ -348,6 +342,7 @@ public class GraphManager {
      * @return a graph of the correct type read from the given file
      */
     public Graph open(Set set, File file) throws GsException{
+        // FIXME: do not leak implementation classes
         try {
             ZipFile f = new ZipFile(file);
             try {

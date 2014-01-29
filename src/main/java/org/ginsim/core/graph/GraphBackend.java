@@ -1,15 +1,22 @@
-package org.ginsim.core.graph.backend;
+package org.ginsim.core.graph;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-import org.ginsim.core.graph.common.Edge;
 import org.ginsim.core.graph.view.EdgeViewInfo;
 import org.ginsim.core.graph.view.NodeViewInfo;
 import org.ginsim.core.graph.view.style.EdgeStyle;
-import org.ginsim.core.graph.view.style.NodeStyle;
 
+/**
+ * Abstract definition of a graph backend to avoid leaking implementation details in the main classes.
+ *
+ * @author Lionel Spinelli
+ * @author Aurelien Naldi
+ *
+ * @param <V>
+ * @param <E>
+ */
 public interface GraphBackend<V, E extends Edge<V>> {
 
 	/**

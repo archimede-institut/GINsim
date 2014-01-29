@@ -1,7 +1,12 @@
 package org.ginsim.core.graph.dynamicgraph;
 
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.Edge;
 
+/**
+ * Edges in a state transition graph.
+ *
+ * @author Aurelien Naldi
+ */
 public class DynamicEdge extends Edge<DynamicNode> {
 
 	public final ChangeType changeType;
@@ -18,7 +23,6 @@ public class DynamicEdge extends Edge<DynamicNode> {
 	
 	/**
      * get the coordinate of the first change between the two states.
-     * @param diffstate
      * @return
      */
 	public int getFirstChangeIndex() {

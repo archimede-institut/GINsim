@@ -1,6 +1,6 @@
 package org.ginsim.servicegui.tool.reg2dyn.priorityclass;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.utils.data.ListPanel;
 import org.ginsim.gui.utils.data.ListPanelCompanion;
@@ -56,7 +56,7 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
         c.gridx = 4;
         c.gridy = 1;
         but_insert = new StockButton("go-previous.png", true);
-        but_insert.setToolTipText(Translator.getString("STR_pclass_insert"));
+        but_insert.setToolTipText(Txt.t("STR_pclass_insert"));
         but_insert.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 insert();
@@ -67,7 +67,7 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
         c.gridx = 4;
         c.gridy = 2;
         but_remove = new StockButton("go-next.png", true);
-        but_remove.setToolTipText(Translator.getString("STR_pclass_remove"));
+        but_remove.setToolTipText(Txt.t("STR_pclass_remove"));
         but_remove.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 remove();
@@ -104,8 +104,8 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
         c_scroll_av.weighty = 1;
 
 
-        add(new JLabel(Translator.getString("STR_otherClassContent")), c_availableLabel);
-        add(new JLabel(Translator.getString("STR_classContent")), c_contentLabel);
+        add(new JLabel(Txt.t("STR_otherClassContent")), c_availableLabel);
+        add(new JLabel(Txt.t("STR_classContent")), c_contentLabel);
         contentPanel = new ListPanel(LISTING_HELPER, "");
         contentPanel.setList(l_content);
         add(contentPanel, c_scroll_in);

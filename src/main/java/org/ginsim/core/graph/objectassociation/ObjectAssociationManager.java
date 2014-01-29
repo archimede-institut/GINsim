@@ -3,7 +3,7 @@ package org.ginsim.core.graph.objectassociation;
 import java.util.*;
 import java.util.Map.Entry;
 
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.common.utils.IntrospectionUtils;
 
 /**

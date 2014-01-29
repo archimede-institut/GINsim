@@ -1,5 +1,10 @@
 package org.ginsim.common.xml;
 
+/**
+ * Define how to handle a given tag while parsing an XML document with the XMLHelper.
+ *
+ * @author Aurelien Naldi
+ */
 public class CallDescription {
 	final int id;
 	final int constraint;

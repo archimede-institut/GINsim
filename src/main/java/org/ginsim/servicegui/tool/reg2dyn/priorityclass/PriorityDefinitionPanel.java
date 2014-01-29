@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.utils.data.*;
 import org.ginsim.gui.utils.widgets.StockButton;
@@ -71,16 +71,16 @@ public class PriorityDefinitionPanel extends ListEditionPanel<PriorityClass, Pri
         if (selExtended.length > 1) {
             but_group.setEnabled(true);
             but_group.setStockIcon("group.png");
-            but_group.setToolTipText(Translator.getString("STR_group_descr"));
+            but_group.setToolTipText(Txt.t("STR_group_descr"));
         } else {
             if (selExtended.length == 0 || selExtended[0][0] == selExtended[0][1]) {
                 but_group.setEnabled(false);
                 but_group.setStockIcon("group.png");
-                but_group.setToolTipText(Translator.getString("STR_group_select_descr"));
+                but_group.setToolTipText(Txt.t("STR_group_select_descr"));
             } else {
                 but_group.setEnabled(true);
                 but_group.setStockIcon("ungroup.png");
-                but_group.setToolTipText(Translator.getString("STR_ungroup_descr"));
+                but_group.setToolTipText(Txt.t("STR_ungroup_descr"));
             }
         }
     }

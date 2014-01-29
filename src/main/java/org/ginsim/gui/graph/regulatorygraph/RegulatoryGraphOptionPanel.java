@@ -9,7 +9,7 @@ import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.gui.graph.GraphOptionPanel;
 
 
@@ -81,7 +81,7 @@ public class RegulatoryGraphOptionPanel extends JPanel implements GraphOptionPan
 
     private JCheckBox getExtended() {
         if (extended == null) {
-            extended = new JCheckBox(Translator.getString("STR_extendedSave"));
+            extended = new JCheckBox(Txt.t("STR_extendedSave"));
             extended.setSelected(OptionStore.getOption("extendedSave", Boolean.FALSE).equals(Boolean.TRUE));
         }
         return extended;
@@ -89,7 +89,7 @@ public class RegulatoryGraphOptionPanel extends JPanel implements GraphOptionPan
 	
     private JCheckBox getCompressed() {
         if (compressed == null) {
-        	compressed = new JCheckBox(Translator.getString("STR_compressedSave"));
+        	compressed = new JCheckBox(Txt.t("STR_compressedSave"));
         	compressed.setSelected(OptionStore.getOption("compressedSave", Boolean.FALSE).equals(Boolean.TRUE));
         }
         return compressed;

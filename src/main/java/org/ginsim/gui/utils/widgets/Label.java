@@ -5,7 +5,7 @@ import java.awt.Color;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.utils.ImageLoader;
 
 
@@ -17,7 +17,7 @@ public class Label extends JLabel {
 	public static final int MESSAGE_ERROR = 2;
 	
 	public Label(String text, int type) {
-		setText(Translator.getString(text));
+		setText(Txt.t(text));
 		setBorder(BorderFactory.createEtchedBorder());
 		switch (type) {
 		case MESSAGE_WARNING:

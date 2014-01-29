@@ -3,19 +3,12 @@ package org.ginsim;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
 
-import java.awt.Color;
 import java.io.File;
 
 import org.ginsim.common.application.GsException;
-import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.utils.IOUtils;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
-import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
-import org.ginsim.core.graph.regulatorygraph.BasicRegulatoryGraphTest;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.view.NodeBorder;
-import org.ginsim.core.graph.view.NodeShape;
 
 public class TestFileUtils {
 

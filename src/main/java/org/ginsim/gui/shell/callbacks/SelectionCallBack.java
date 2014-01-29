@@ -7,8 +7,8 @@ import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.KeyStroke;
 
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.shell.FrameActionManager;
 import org.ginsim.gui.shell.SearchFrame;
@@ -16,19 +16,19 @@ import org.ginsim.gui.shell.SearchFrame;
 public class SelectionCallBack {
 
 	public static void fillMenu(JMenu menu, Graph graph) {
-		JMenu smenu = new JMenu(Translator.getString( "STR_SelectAll"));
+		JMenu smenu = new JMenu(Txt.t("STR_SelectAll"));
 		smenu.add(new SelectAllAction(graph));
 		smenu.add(new SelectAllNodesAction(graph));
 		smenu.add(new SelectAllEdgesAction(graph));
 		menu.add(smenu);
 		
-		smenu = new JMenu(Translator.getString( "STR_InvertSelection"));
+		smenu = new JMenu(Txt.t("STR_InvertSelection"));
 		smenu.add(new InvertSelectionAction(graph));
 		smenu.add(new InvertNodesSelectionAction(graph));
 		smenu.add(new InvertEdgesSelectionAction(graph));
 		menu.add(smenu);
 		
-		smenu = new JMenu(Translator.getString( "STR_ExtendSelection"));
+		smenu = new JMenu(Txt.t("STR_ExtendSelection"));
 		smenu.add(new ExtendSelectionToOutgoingNodesAction(graph));
 		smenu.add(new ExtendSelectionToOutgoingEdgesAction(graph));
 		smenu.add(new ExtendSelectionToIncomingNodesAction(graph));
@@ -46,8 +46,8 @@ class SearchNodeAction extends AbstractAction {
 	private final Graph<?,?> graph;
 	
 	public SearchNodeAction(Graph<?,?> graph) {
-		super( Translator.getString( "STR_SearchNode"));
-		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_SearchNode_descr"));
+		super( Txt.t("STR_SearchNode"));
+		putValue(SHORT_DESCRIPTION,  Txt.t("STR_SearchNode_descr"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_F, FrameActionManager.MASK));
 		this.graph = graph;
 	}
@@ -63,8 +63,8 @@ class SelectAllAction extends AbstractAction {
 	private final Graph<?,?> graph;
 	
 	public SelectAllAction(Graph<?,?> graph) {
-		super( Translator.getString( "STR_SelectAll"));
-		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_SelectAll_descr"));
+		super( Txt.t("STR_SelectAll"));
+		putValue(SHORT_DESCRIPTION,  Txt.t("STR_SelectAll_descr"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, FrameActionManager.MASK));
 		this.graph = graph;
 	}
@@ -84,8 +84,8 @@ class SelectAllNodesAction extends AbstractAction {
 	private final Graph<?,?> graph;
 	
 	public SelectAllNodesAction(Graph<?,?> graph) {
-		super( Translator.getString( "STR_SelectAllNodes"));
-		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_SelectAllNodes_descr"));
+		super( Txt.t("STR_SelectAllNodes"));
+		putValue(SHORT_DESCRIPTION,  Txt.t("STR_SelectAllNodes_descr"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, FrameActionManager.MASK | KeyEvent.SHIFT_MASK));
 		this.graph = graph;
 	}
@@ -105,8 +105,8 @@ class SelectAllEdgesAction extends AbstractAction {
 	private final Graph<?,?> graph;
 	
 	public SelectAllEdgesAction(Graph<?,?> graph) {
-		super( Translator.getString( "STR_SelectAllEdges"));
-		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_SelectAllEdges_descr"));
+		super( Txt.t("STR_SelectAllEdges"));
+		putValue(SHORT_DESCRIPTION,  Txt.t("STR_SelectAllEdges_descr"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, FrameActionManager.MASK | KeyEvent.SHIFT_MASK | KeyEvent.ALT_MASK));
 		this.graph = graph;
 	}
@@ -122,8 +122,8 @@ class InvertSelectionAction extends AbstractAction {
 	private final Graph<?,?> graph;
 	
 	public InvertSelectionAction(Graph<?,?> graph) {
-		super( Translator.getString( "STR_InvertSelection"));
-		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_InvertSelection_descr"));
+		super( Txt.t("STR_InvertSelection"));
+		putValue(SHORT_DESCRIPTION,  Txt.t("STR_InvertSelection_descr"));
 		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, FrameActionManager.MASK | KeyEvent.SHIFT_MASK));
 		this.graph = graph;
 	}
@@ -139,8 +139,8 @@ class InvertNodesSelectionAction extends AbstractAction {
 	private final Graph<?,?> graph;
 	
 	public InvertNodesSelectionAction(Graph<?,?> graph) {
-		super( Translator.getString( "STR_InvertNodesSelection"));
-		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_InvertNodesSelection_descr"));
+		super( Txt.t("STR_InvertNodesSelection"));
+		putValue(SHORT_DESCRIPTION,  Txt.t("STR_InvertNodesSelection_descr"));
 		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, FrameActionManager.MASK | KeyEvent.SHIFT_MASK));
 		this.graph = graph;
 	}
@@ -156,8 +156,8 @@ class InvertEdgesSelectionAction extends AbstractAction {
 	private final Graph<?,?> graph;
 	
 	public InvertEdgesSelectionAction(Graph<?,?> graph) {
-		super( Translator.getString( "STR_InvertEdgesSelection"));
-		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_InvertEdgesSelection_descr"));
+		super( Txt.t("STR_InvertEdgesSelection"));
+		putValue(SHORT_DESCRIPTION,  Txt.t("STR_InvertEdgesSelection_descr"));
 		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, FrameActionManager.MASK | KeyEvent.SHIFT_MASK));
 		this.graph = graph;
 	}
@@ -173,8 +173,8 @@ class ExtendSelectionToOutgoingNodesAction extends AbstractAction {
 	private final Graph<?,?> graph;
 	
 	public ExtendSelectionToOutgoingNodesAction(Graph<?,?> graph) {
-		super( Translator.getString( "STR_ExtendSelectionToOutgoingNodes"));
-		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_ExtendSelectionToOutgoingNodes_descr"));
+		super( Txt.t("STR_ExtendSelectionToOutgoingNodes"));
+		putValue(SHORT_DESCRIPTION,  Txt.t("STR_ExtendSelectionToOutgoingNodes_descr"));
 		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, FrameActionManager.MASK | KeyEvent.SHIFT_MASK));
 		this.graph = graph;
 	}
@@ -190,8 +190,8 @@ class ExtendSelectionToOutgoingEdgesAction extends AbstractAction {
 	private final Graph<?,?> graph;
 	
 	public ExtendSelectionToOutgoingEdgesAction(Graph<?,?> graph) {
-		super( Translator.getString( "STR_ExtendSelectionToOutgoingEdges"));
-		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_ExtendSelectionToOutgoingEdges_descr"));
+		super( Txt.t("STR_ExtendSelectionToOutgoingEdges"));
+		putValue(SHORT_DESCRIPTION,  Txt.t("STR_ExtendSelectionToOutgoingEdges_descr"));
 		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, FrameActionManager.MASK | KeyEvent.SHIFT_MASK));
 		this.graph = graph;
 	}
@@ -207,8 +207,8 @@ class ExtendSelectionToIncomingNodesAction extends AbstractAction {
 	private final Graph<?,?> graph;
 	
 	public ExtendSelectionToIncomingNodesAction(Graph<?,?> graph) {
-		super( Translator.getString( "STR_ExtendSelectionToIncomingNodes"));
-		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_ExtendSelectionToIncomingNodes_descr"));
+		super( Txt.t("STR_ExtendSelectionToIncomingNodes"));
+		putValue(SHORT_DESCRIPTION,  Txt.t("STR_ExtendSelectionToIncomingNodes_descr"));
 		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, FrameActionManager.MASK | KeyEvent.SHIFT_MASK));
 		this.graph = graph;
 	}
@@ -224,8 +224,8 @@ class ExtendSelectionToIncomingEdgesAction extends AbstractAction {
 	private final Graph<?,?> graph;
 	
 	public ExtendSelectionToIncomingEdgesAction(Graph<?,?> graph) {
-		super( Translator.getString( "STR_ExtendSelectionToIncomingEdges"));
-		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_ExtendSelectionToIncomingEdges_descr"));
+		super( Txt.t("STR_ExtendSelectionToIncomingEdges"));
+		putValue(SHORT_DESCRIPTION,  Txt.t("STR_ExtendSelectionToIncomingEdges_descr"));
 		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, FrameActionManager.MASK | KeyEvent.SHIFT_MASK));
 		this.graph = graph;
 	}
@@ -241,8 +241,8 @@ class ExtendSelectionToInternalEdgesAction extends AbstractAction {
 	private final Graph<?,?> graph;
 	
 	public ExtendSelectionToInternalEdgesAction(Graph<?,?> graph) {
-		super( Translator.getString( "STR_ExtendSelectionToInternalEdges"));
-		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_ExtendSelectionToInternalEdges_descr"));
+		super( Txt.t("STR_ExtendSelectionToInternalEdges"));
+		putValue(SHORT_DESCRIPTION,  Txt.t("STR_ExtendSelectionToInternalEdges_descr"));
 		//putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_A, FrameActionManager.MASK | KeyEvent.SHIFT_MASK));
 		this.graph = graph;
 	}

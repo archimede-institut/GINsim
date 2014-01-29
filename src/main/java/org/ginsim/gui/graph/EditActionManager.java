@@ -16,8 +16,8 @@ import javax.swing.border.Border;
 import javax.swing.border.EtchedBorder;
 
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.Edge;
 
 
 /**
@@ -31,7 +31,7 @@ import org.ginsim.core.graph.common.Edge;
  */
 public class EditActionManager {
 
-	private static final EditAction EDIT_MODE = new EditAction(EditMode.EDIT, Translator.getString( "STR_edit_select_move"), "editmode.gif");
+	private static final EditAction EDIT_MODE = new EditAction(EditMode.EDIT, Txt.t("STR_edit_select_move"), "editmode.gif");
 	
 	private EditAction selectedAction = EDIT_MODE;
 	private final List<EditAction> actions;

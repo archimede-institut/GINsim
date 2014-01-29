@@ -5,7 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
 import org.colomoto.logicalmodel.LogicalModel;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.service.export.avatar.AvatarConfig;
@@ -21,10 +21,10 @@ public class AvatarExportConfigPanel extends LogicalModelActionDialog {
 
 	public AvatarExportConfigPanel(AvatarConfig config,
 			AvatarExportAction action) {
-		super(config.getGraph(), null, Translator.getString("STR_AVATAR"), 600,
+		super(config.getGraph(), null, Txt.t("STR_AVATAR"), 600,
 				400);
-		this.setTitle(Translator.getString("STR_AVATARRunningTitle"));
-		setUserID(Translator.getString("STR_AVATAR"));
+		this.setTitle(Txt.t("STR_AVATARRunningTitle"));
+		setUserID(Txt.t("STR_AVATAR"));
 		this.config = config;
 		this.action = action;
 

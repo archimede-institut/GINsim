@@ -1,17 +1,15 @@
 package org.ginsim.core.graph.reducedgraph;
 
 import java.io.File;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.common.AbstractDerivedGraph;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.AbstractDerivedGraph;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.io.parser.GINMLWriter;
 
 

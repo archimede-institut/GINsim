@@ -9,7 +9,7 @@ import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.style.StyleManager;

@@ -8,7 +8,7 @@ import java.util.List;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;

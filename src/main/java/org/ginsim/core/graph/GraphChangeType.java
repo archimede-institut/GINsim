@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.common;
+package org.ginsim.core.graph;
 
 /**
  * possible types of graph changes (edit events), used when firing and listening for change events.

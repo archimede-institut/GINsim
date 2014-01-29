@@ -1,6 +1,6 @@
 package org.ginsim.service.tool.sccgraph;
 
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;
 

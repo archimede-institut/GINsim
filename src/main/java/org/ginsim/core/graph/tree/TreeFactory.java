@@ -1,8 +1,8 @@
 package org.ginsim.core.graph.tree;
 
 import org.ginsim.common.application.LogManager;
-import org.ginsim.core.graph.common.AbstractGraphFactory;
-import org.ginsim.core.graph.common.GraphFactory;
+import org.ginsim.core.graph.AbstractGraphFactory;
+import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.NodeStyle;
 import org.mangosdk.spi.ProviderFor;

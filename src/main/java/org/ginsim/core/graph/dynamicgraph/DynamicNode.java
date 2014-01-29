@@ -2,13 +2,15 @@ package org.ginsim.core.graph.dynamicgraph;
 
 import java.util.Collection;
 
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 
 
 /**
- * a node in a state transition graph (ie a possible state of the regulatory graph).
+ * A node in a State Transition Graph (i.e. a state of the regulatory graph).
+ *
+ * @author Aurelien Naldi
  */
 public class DynamicNode {
 	/** each int is the state of the corresponding gene in the regulatory graph (according to nodeOrder). */

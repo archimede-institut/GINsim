@@ -1,24 +1,13 @@
 package org.ginsim.core.io.parser;
 
-import java.awt.Color;
 import java.awt.Point;
-import java.awt.geom.Point2D;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.utils.ColorPalette;
-import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.commongui.dialog.GUIMessageUtils;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.EdgeEnd;
-import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.graph.view.ViewHelper;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.NodeStyle;

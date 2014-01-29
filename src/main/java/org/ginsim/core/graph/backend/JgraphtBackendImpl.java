@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphFactory;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphBackend;
+import org.ginsim.core.graph.GraphViewListener;
 import org.ginsim.core.graph.view.EdgeViewInfo;
 import org.ginsim.core.graph.view.NodeViewInfo;
 import org.ginsim.core.graph.view.style.EdgeStyle;
-import org.ginsim.core.graph.view.style.NodeStyle;
 import org.jgrapht.alg.DijkstraShortestPath;
 import org.jgrapht.alg.StrongConnectivityInspector;
 import org.jgrapht.graph.ListenableDirectedGraph;

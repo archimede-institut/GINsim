@@ -18,10 +18,10 @@ import javax.swing.JToolBar;
 import javax.swing.WindowConstants;
 
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.utils.ImageLoader;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.NotificationListener;
 import org.ginsim.gui.GUIManager;
@@ -195,7 +195,7 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 		if (b) {
 			//create second frame
 			secondaryFrame=new JDialog(this);
-			secondaryFrame.setTitle(Translator.getString("STR_Tools"));
+			secondaryFrame.setTitle(Txt.t("STR_Tools"));
 			//detach component from SplitPane_H
 			mainSplitPane.setBottomComponent(null);
 			//set tools in ContentPane

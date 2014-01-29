@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;

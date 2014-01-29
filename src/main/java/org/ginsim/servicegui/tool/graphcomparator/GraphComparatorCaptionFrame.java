@@ -22,9 +22,9 @@ import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
@@ -59,7 +59,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
         this.cs = new CascadingStyleSheetManager(false);
 
         initialize();
-        this.setTitle(Translator.getString("STR_gcmp_caption")+" ("+g.getGraphName()+")");
+        this.setTitle(Txt.t("STR_gcmp_caption")+" ("+g.getGraphName()+")");
         this.addWindowListener(new java.awt.event.WindowAdapter() { 
             public void windowClosing(java.awt.event.WindowEvent e) {
                 cancel();
@@ -108,7 +108,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		
 		c.gridy++;
 		c.anchor = GridBagConstraints.EAST;
-		automaticRoutingButton = new JButton(Translator.getString("STR_gcmp_automaticRouting"));
+		automaticRoutingButton = new JButton(Txt.t("STR_gcmp_automaticRouting"));
 		automaticRoutingButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				gcResult.setEdgeAutomatingRouting();
@@ -129,7 +129,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		c.ipadx = 8;
 		c.ipady = 8;
 		
-		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_caption")+" : "), c);
+		captionPanel.add(new JLabel(Txt.t("STR_gcmp_caption")+" : "), c);
 		
 		//COMMON_COLOR
 		c.gridy++;
@@ -139,7 +139,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		captionPanel.add(p, c);
 		
 		c.gridx++;
-		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_commonColor")), c);
+		captionPanel.add(new JLabel(Txt.t("STR_gcmp_commonColor")), c);
 		
 		//COMMON_COLOR_DIFF_MAXVALUES
 		c.gridx = 0;
@@ -150,7 +150,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		captionPanel.add(p, c);
 		
 		c.gridx++;
-		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_diffmaxvalues")), c);
+		captionPanel.add(new JLabel(Txt.t("STR_gcmp_diffmaxvalues")), c);
 
 		//COMMON_COLOR_DIFF_FUNCTIONS
 		c.gridx = 0;
@@ -161,7 +161,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		captionPanel.add(p, c);
 		
 		c.gridx++;
-		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_difffunctions")), c);
+		captionPanel.add(new JLabel(Txt.t("STR_gcmp_difffunctions")), c);
 
 		//SPECIFIC_G1_COLOR
 		c.gridx = 0;
@@ -172,7 +172,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		captionPanel.add(p, c);
 		
 		c.gridx++;
-		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_specificTo")+gcResult.getGraph1Name()), c);
+		captionPanel.add(new JLabel(Txt.t("STR_gcmp_specificTo")+gcResult.getGraph1Name()), c);
 
 		//SPECIFIC_G2_COLOR
 		c.gridx = 0;
@@ -183,7 +183,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		captionPanel.add(p, c);
 		
 		c.gridx++;
-		captionPanel.add(new JLabel(Translator.getString("STR_gcmp_specificTo")+gcResult.getGraph2Name()), c);
+		captionPanel.add(new JLabel(Txt.t("STR_gcmp_specificTo")+gcResult.getGraph2Name()), c);
 		
 		return captionPanel;
 	}
@@ -196,7 +196,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		c.gridy = 0;
 		c.ipadx = 8;
 		c.ipady = 8;		
-		resultPanel.add(new JLabel(Translator.getString("STR_function_results")+" : "), c);
+		resultPanel.add(new JLabel(Txt.t("STR_function_results")+" : "), c);
 		
 		c.gridy++;
 		c.fill = GridBagConstraints.BOTH;
@@ -214,40 +214,40 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		JPanel radioPanel = new JPanel();
 		radioPanel.setLayout(new GridLayout(0,1));
 		
-		radioPanel.add(new JLabel(Translator.getString("STR_gcmp_captionRadio")+" : "));
+		radioPanel.add(new JLabel(Txt.t("STR_gcmp_captionRadio")+" : "));
 
-		String name = Translator.getString("STR_gcmp_legendColor")+".";
+		String name = Txt.t("STR_gcmp_legendColor")+".";
 	    diffColor = new JRadioButton(name);
 	    diffColor.setActionCommand(name);
 	    diffColor.setSelected(true);
 	    radioPanel.add(diffColor);
 
-		name = Translator.getString("STR_gcmp_specificTo")+gcResult.getGraph1Name()+".";
+		name = Txt.t("STR_gcmp_specificTo")+gcResult.getGraph1Name()+".";
 	    specG1Color = new JRadioButton(name);
 	    specG1Color.setActionCommand(name);
 	    radioPanel.add(specG1Color);
 
-		name = Translator.getString("STR_gcmp_specificTo")+gcResult.getGraph2Name()+".";
+		name = Txt.t("STR_gcmp_specificTo")+gcResult.getGraph2Name()+".";
 	    specG2Color = new JRadioButton(name);
 	    specG2Color.setActionCommand(name);
 	    radioPanel.add(specG2Color);
 
-		name = Translator.getString("STR_gcmp_intersection");
+		name = Txt.t("STR_gcmp_intersection");
 	    intersectColor = new JRadioButton(name);
 	    intersectColor.setActionCommand(name);
 	    radioPanel.add(intersectColor);
 
-		name = Translator.getString("STR_gcmp_exclusion");
+		name = Txt.t("STR_gcmp_exclusion");
 		exclusionColor = new JRadioButton(name);
 		exclusionColor.setActionCommand(name);
 	    radioPanel.add(exclusionColor);
 
-		name = Translator.getString("STR_gcmp_fusion1");
+		name = Txt.t("STR_gcmp_fusion1");
 		fusionColor1 = new JRadioButton(name);
 		fusionColor1.setActionCommand(name);
 	    radioPanel.add(fusionColor1);
 
-		name = Translator.getString("STR_gcmp_fusion2");
+		name = Txt.t("STR_gcmp_fusion2");
 		fusionColor2 = new JRadioButton(name);
 		fusionColor2.setActionCommand(name);
 	    radioPanel.add(fusionColor2);

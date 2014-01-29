@@ -4,12 +4,10 @@ import java.util.List;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
-import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;

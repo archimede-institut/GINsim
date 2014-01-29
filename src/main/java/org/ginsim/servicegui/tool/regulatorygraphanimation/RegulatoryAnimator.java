@@ -1,9 +1,7 @@
 package org.ginsim.servicegui.tool.regulatorygraphanimation;
 
-import java.awt.Color;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -11,9 +9,8 @@ import javax.swing.AbstractListModel;
 import javax.swing.JFrame;
 
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.dynamicgraph.DynamicEdge;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
@@ -21,7 +18,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.GraphicalAttributesStore;
-import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;

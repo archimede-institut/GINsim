@@ -2,7 +2,7 @@ package org.ginsim.core.graph.view.style;
 
 import java.awt.Color;
 
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
 

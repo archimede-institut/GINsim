@@ -1,9 +1,9 @@
 package org.ginsim.gui.graph;
 
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.gui.GUIManager;
 
 public class DeleteAction extends EditAction {
@@ -12,7 +12,7 @@ public class DeleteAction extends EditAction {
 	GraphGUI gui = null;
 	
 	public DeleteAction(Graph<?,?> graph) {
-		super( EditMode.DELETE, Translator.getString( "STR_deleteSelection_descr"), "edit-delete.png");
+		super( EditMode.DELETE, Txt.t("STR_deleteSelection_descr"), "edit-delete.png");
 		this.graph = graph;
 		this.gui = GUIManager.getInstance().getGraphGUI(graph);
 	}

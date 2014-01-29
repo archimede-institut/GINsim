@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;

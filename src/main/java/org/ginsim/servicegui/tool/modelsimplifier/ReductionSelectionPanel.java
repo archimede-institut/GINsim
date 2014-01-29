@@ -1,7 +1,6 @@
 package org.ginsim.servicegui.tool.modelsimplifier;
 
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;

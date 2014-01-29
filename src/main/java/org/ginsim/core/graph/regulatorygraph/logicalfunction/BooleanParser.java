@@ -9,7 +9,7 @@ import java.util.Vector;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;

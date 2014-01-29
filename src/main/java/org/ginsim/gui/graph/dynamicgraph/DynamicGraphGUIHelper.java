@@ -14,7 +14,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.dynamicgraph.DynamicEdge;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
@@ -64,9 +64,9 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
 		
 		Frame graph_frame = GUIManager.getInstance().getFrame( graph);
 		
-        Object[] t_mode = { Translator.getString("STR_saveNone"),
-                    		Translator.getString("STR_savePosition"),
-                    		Translator.getString("STR_saveComplet") };
+        Object[] t_mode = { Txt.t("STR_saveNone"),
+                    		Txt.t("STR_savePosition"),
+                    		Txt.t("STR_saveComplet") };
         JPanel optionPanel = new RegulatoryGraphOptionPanel(t_mode, graph_frame != null ? 2 : 0);
 		
 		return optionPanel ;
@@ -159,7 +159,7 @@ class ViewStableAction extends AbstractAction {
 		List<NodeInfo> nodeOrder = graph.getNodeOrder();
         int width = 30*(nodeOrder.size()+1);
         int height = 30 * (stables.size() + 2);
-		JFrame frame = new JFrame(Translator.getString("Stable States in this STG"));
+		JFrame frame = new JFrame(Txt.t("Stable States in this STG"));
         frame.setSize(width, height);
         
         JScrollPane scroll = new JScrollPane();

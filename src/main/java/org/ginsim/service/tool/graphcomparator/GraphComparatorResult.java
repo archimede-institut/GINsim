@@ -3,8 +3,8 @@ package org.ginsim.service.tool.graphcomparator;
 import java.util.Collection;
 import java.util.HashMap;
 
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 
 /**

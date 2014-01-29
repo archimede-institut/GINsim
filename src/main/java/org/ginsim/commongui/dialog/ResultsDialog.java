@@ -14,7 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 
 /**
  * A small dialog to display a textarea with a close button.
@@ -28,7 +28,7 @@ public class ResultsDialog extends SimpleDialog {
 	private JTextArea resultsPane;
 
 	public ResultsDialog(Frame parent, String results) {
-		super(parent, Translator.getString("STR_results"), 300, 400);
+		super(parent, Txt.t("STR_results"), 300, 400);
 		this.results = results;
 		
         initialize();
@@ -76,8 +76,8 @@ public class ResultsDialog extends SimpleDialog {
 			mainPanel.add(resultsScrollPane, c);
 			
 			c.gridy++;
-			JButton bclose = new javax.swing.JButton(Translator.getString("STR_close"));
-        	bclose.setToolTipText(Translator.getString("STR_closedialog_descr"));
+			JButton bclose = new javax.swing.JButton(Txt.t("STR_close"));
+        	bclose.setToolTipText(Txt.t("STR_closedialog_descr"));
         	bclose.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     cancel();

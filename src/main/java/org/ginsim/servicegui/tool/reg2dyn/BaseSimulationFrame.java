@@ -1,15 +1,9 @@
 package org.ginsim.servicegui.tool.reg2dyn;
 
 import java.awt.Frame;
-import java.awt.Insets;
 
-import org.ginsim.common.callable.ProgressListener;
-import org.ginsim.core.graph.common.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
-import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
-import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
-
 
 
 public abstract class BaseSimulationFrame extends LogicalModelActionDialog {

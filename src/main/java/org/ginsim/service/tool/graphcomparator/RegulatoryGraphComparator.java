@@ -14,7 +14,7 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;

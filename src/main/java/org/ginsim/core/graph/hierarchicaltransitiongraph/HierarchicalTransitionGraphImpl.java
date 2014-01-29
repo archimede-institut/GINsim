@@ -12,16 +12,20 @@ import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDManagerFactory;
 import org.colomoto.mddlib.MDDVariableFactory;
-import org.ginsim.core.graph.common.AbstractDerivedGraph;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.common.GraphEventCascade;
+import org.ginsim.core.graph.AbstractDerivedGraph;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphChangeType;
+import org.ginsim.core.graph.GraphEventCascade;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.io.parser.GINMLWriter;
 
-
+/**
+ * Implementation of the HTG interface
+ *
+ * @author Duncan Berenguier
+ */
 public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<HierarchicalNode, DecisionOnEdge, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
 	implements HierarchicalTransitionGraph {
 

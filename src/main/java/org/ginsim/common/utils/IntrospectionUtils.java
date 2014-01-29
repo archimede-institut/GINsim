@@ -3,13 +3,20 @@ package org.ginsim.common.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 
+/**
+ * Collection of static methods for common introspection tasks.
+ * The main function is to guess the type of Graph implemented by an object.
+ *
+ * @author Lionel Spinelli
+ * @author Aurelien Naldi
+ */
 public class IntrospectionUtils {
 
 	/**
 	 * Return the deeper interface that inherits from Graph interface
-	 * 
+	 *
 	 * @param classe
 	 * @return
 	 */
@@ -35,10 +42,10 @@ public class IntrospectionUtils {
 
         return null;
     }
-    
+
     /**
      * Return the list of all the interfaces (recursively) the given class implements
-     * 
+     *
      * @param classe
      * @return
      */

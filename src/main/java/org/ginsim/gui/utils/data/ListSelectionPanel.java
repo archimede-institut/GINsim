@@ -13,7 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 
 
@@ -32,7 +32,7 @@ abstract public class ListSelectionPanel<T> extends JPanel implements ActionList
 	}
 	
 	protected void initialize(String name, boolean hasEmptyChoice) {
-		initialize(name, hasEmptyChoice, Translator.getString("STR_configure"), null);
+		initialize(name, hasEmptyChoice, Txt.t("STR_configure"), null);
 	}
 	
 	protected void initialize(String name, boolean hasEmptyChoice, String s_config, String s_config_tooltip) {

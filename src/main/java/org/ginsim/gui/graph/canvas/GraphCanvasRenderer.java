@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Set;
 
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.common.GraphEventCascade;
-import org.ginsim.core.graph.common.GraphListener;
-import org.ginsim.core.graph.common.GraphModel;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphChangeType;
+import org.ginsim.core.graph.GraphEventCascade;
+import org.ginsim.core.graph.GraphListener;
+import org.ginsim.core.graph.GraphModel;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.gui.graph.EditActionManager;

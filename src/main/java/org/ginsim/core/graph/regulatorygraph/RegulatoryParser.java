@@ -16,7 +16,7 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.BooleanParser;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;

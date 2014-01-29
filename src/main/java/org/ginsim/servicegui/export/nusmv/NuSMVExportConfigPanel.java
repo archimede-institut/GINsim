@@ -1,13 +1,11 @@
 package org.ginsim.servicegui.export.nusmv;
 
 import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 import javax.swing.JPanel;
 
 import org.colomoto.logicalmodel.LogicalModel;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
@@ -27,10 +25,10 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 	private InitialStatePanel initPanel;
 
 	public NuSMVExportConfigPanel(NuSMVConfig config, NuSMVExportAction action) {
-		super(config.getGraph(), null, Translator.getString("STR_NuSMV"), 600,
+		super(config.getGraph(), null, Txt.t("STR_NuSMV"), 600,
 				400);
-		this.setTitle(Translator.getString("STR_NuSMVRunningTitle"));
-		setUserID(Translator.getString("STR_NuSMV"));
+		this.setTitle(Txt.t("STR_NuSMVRunningTitle"));
+		setUserID(Txt.t("STR_NuSMV"));
 		this.config = config;
 		this.action = action;
 
@@ -45,7 +43,7 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 
 		initPanel = new InitialStatePanel(config.getGraph(), true);
 		initPanel.setParam(config);
-		initPanel.setMessage(Translator.getString("STR_NuSMV_Checked"));
+		initPanel.setMessage(Txt.t("STR_NuSMV_Checked"));
 		mainPanel.add(initPanel, BorderLayout.CENTER);
 		setMainPanel(mainPanel);
 	}

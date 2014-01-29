@@ -12,27 +12,13 @@ import org.ginsim.core.io.parser.Dotify;
 import org.xml.sax.SAXException;
 
 
-/*  SUMMARY
- * 
- * **************** CONSTRUCTORS ************/	
-/* **************** PILE ************/	
-/* **************** CONTAINS ************/	
-/* **************** MERGE ************/	
-/* **************** SIZE ************/	
-/* **************** EDGES, ID AND SIGMA ************/	
-/* **************** TOSTRINGS ************/	
-/* **************** TYPE GETTERS, SETTERS, TESTERS (isStable) AND CONVERSIONS ************/		
-/* **************** TO DOT (DOTIFY) ************/	
-/* **************** COMPARABLE ************/	
-
-
 /**
  * <p>Define the nodes of the Hierarchical Transition Graph.</p>
  * 
  * <p>A node has a unique id <b>uid</b>, a <b>type</b> defining the kind of Strongly Connected Component 
  * it contains and <b>statesSet</b>, the set of all the states it contains.</p>
- * 
  *
+ * @author Duncan Berenguier
  */
 public class HierarchicalNode implements Comparable<Object>, Dotify {
 

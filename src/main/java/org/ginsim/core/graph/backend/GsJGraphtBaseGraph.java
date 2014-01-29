@@ -9,10 +9,9 @@ import java.util.Map;
 import java.util.Set;
 
 import org.ginsim.common.utils.ArraySet;
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.view.NodeViewInfo;
 import org.ginsim.core.graph.view.style.NodeStyle;
-import org.ginsim.core.graph.view.style.NodeStyleImpl;
 import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
 import org.jgrapht.graph.AbstractGraph;

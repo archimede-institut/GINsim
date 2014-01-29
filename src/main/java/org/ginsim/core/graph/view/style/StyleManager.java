@@ -10,10 +10,10 @@ import java.util.Map;
 
 import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.graph.backend.GraphBackend;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphFactory;
+import org.ginsim.core.graph.GraphBackend;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.EdgeViewInfo;
 import org.ginsim.core.graph.view.NodeShape;

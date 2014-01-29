@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.EdgeStyleOverride;
 import org.ginsim.core.graph.view.style.NodeStyle;

@@ -3,8 +3,8 @@ package org.ginsim.service.export.graphviz;
 import java.io.IOException;
 import java.util.Collection;
 
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.mangosdk.spi.ProviderFor;

@@ -2,16 +2,10 @@ package org.ginsim.gui.graph.canvas.events;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.Rectangle;
 
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.gui.graph.AddNodeAction;
-import org.ginsim.gui.graph.EditAction;
-import org.ginsim.gui.graph.EditMode;
 import org.ginsim.gui.graph.canvas.CanvasEventManager;
 import org.ginsim.gui.graph.canvas.GraphCanvasRenderer;
-import org.jgrapht.event.GraphEdgeChangeEvent;
 
 abstract public class AbstractHelpCanvasEventManager implements CanvasEventManager {
 

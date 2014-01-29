@@ -24,8 +24,8 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.table.TableColumn;
 
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
@@ -275,7 +275,7 @@ public class DynamicSearchPathConfig extends JDialog {
     
     private JButton getBut_search() {
         if (but_search == null) {
-            but_search = new JButton(Translator.getString("STR_run"));
+            but_search = new JButton(Txt.t("STR_run"));
             but_search.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     search();
@@ -310,8 +310,8 @@ public class DynamicSearchPathConfig extends JDialog {
     }
     private JButton getBut_gp() {
         if (but_gp == null) {
-            but_gp = new JButton(  Translator.getString("STR_gnuplot"));
-            but_gp.setToolTipText( Translator.getString("STR_gnuplot_descr"));
+            but_gp = new JButton(  Txt.t("STR_gnuplot"));
+            but_gp.setToolTipText( Txt.t("STR_gnuplot_descr"));
             but_gp.setEnabled(false);
             but_gp.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -323,7 +323,7 @@ public class DynamicSearchPathConfig extends JDialog {
     }
     private JButton getBut_view() {
         if (but_view == null) {
-            but_view = new JButton(Translator.getString("STR_View"));
+            but_view = new JButton(Txt.t("STR_View"));
             but_view.setEnabled(false);
             but_view.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -335,7 +335,7 @@ public class DynamicSearchPathConfig extends JDialog {
     }
     private JButton getBut_close() {
         if (but_close == null) {
-            but_close = new JButton(Translator.getString("STR_close"));
+            but_close = new JButton(Txt.t("STR_close"));
             but_close.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     close();

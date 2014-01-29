@@ -1,6 +1,6 @@
 package org.ginsim.core.graph.view.css;
 
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 
 /**
  * Do some generic work to colorize properly a graph, given a selector.

@@ -12,18 +12,15 @@ import java.util.Vector;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JOptionPane;
-import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
-import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.shell.FrameActionManager;
-import org.ginsim.gui.shell.SearchFrame;
 
 /**
  * Callbacks for the "File" menu
@@ -53,8 +50,8 @@ class CopyAction extends AbstractAction {
 	private final Graph<?,?> graph;
 	
 	public CopyAction(Graph<?,?> graph) {
-		super( Translator.getString( "STR_Copy"));
-		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_Copy_descr"));
+		super( Txt.t("STR_Copy"));
+		putValue(SHORT_DESCRIPTION,  Txt.t("STR_Copy_descr"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_C, FrameActionManager.MASK));
 		this.graph = graph;
 	}
@@ -87,7 +84,7 @@ class CopyAction extends AbstractAction {
 	private int nodeFound(Collection nodes, Collection edges, Edge edge, Object node, int questionHasBeenAsked, GraphSelection graphSelection) {
 		if (! nodes.contains(node)) {
 			if (questionHasBeenAsked == -1) {//not asked
-				questionHasBeenAsked = JOptionPane.showConfirmDialog(null, Translator.getString( "STR_Copy_shouldExtend"),"",JOptionPane.YES_NO_OPTION);
+				questionHasBeenAsked = JOptionPane.showConfirmDialog(null, Txt.t("STR_Copy_shouldExtend"),"",JOptionPane.YES_NO_OPTION);
 			}
 			if (questionHasBeenAsked == 0) { //extend
 				nodes.add(node);
@@ -112,8 +109,8 @@ class PasteAction<V, E extends Edge<V>> extends AbstractAction {
 	private final Graph<V,E> graph;
 	
 	public PasteAction(Graph<V,E> graph) {
-		super( Translator.getString( "STR_Paste"));
-		putValue(SHORT_DESCRIPTION,  Translator.getString( "STR_Paste_descr"));
+		super( Txt.t("STR_Paste"));
+		putValue(SHORT_DESCRIPTION,  Txt.t("STR_Paste_descr"));
 		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_V, FrameActionManager.MASK));
 		this.graph = graph;
 	}

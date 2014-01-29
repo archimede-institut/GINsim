@@ -6,7 +6,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -59,7 +59,7 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph,
 
 	@Override
 	public String getEditingTabLabel( RegulatoryGraph graph) {
-		return Translator.getString( "STR_modelAttribute");
+		return Txt.t("STR_modelAttribute");
 	}
 
 	@Override
@@ -102,9 +102,9 @@ public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph,
 	// FIXME: option panel?
 //	private JPanel getOptionPanel() {
 //		RegulatoryGraphOptionPanel optionPanel;
-//        Object[] t_mode = { Translator.getString("STR_saveNone"),
-//                Translator.getString("STR_savePosition"),
-//                Translator.getString("STR_saveComplet") };
+//        Object[] t_mode = { Txt.t("STR_saveNone"),
+//                Txt.t("STR_savePosition"),
+//                Txt.t("STR_saveComplet") };
 //		optionPanel = new RegulatoryGraphOptionPanel(t_mode, this.saveMode);
 //		return optionPanel;
 //	}

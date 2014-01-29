@@ -3,10 +3,9 @@ package org.ginsim.service.tool.composition;
 import java.util.List;
 
 import org.colomoto.logicalmodel.NodeInfo;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.service.tool.modelsimplifier.ReductionLauncher;
-import org.ginsim.service.tool.modelsimplifier.RemovedInfo;
 
 /**
  * Implements a ReductionLauncher interface to recover the results of invoking

@@ -6,7 +6,7 @@ import javax.swing.JFrame;
 
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 
 
 public abstract class Frame extends JFrame {

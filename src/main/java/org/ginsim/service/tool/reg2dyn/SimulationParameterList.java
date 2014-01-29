@@ -3,10 +3,10 @@ package org.ginsim.service.tool.reg2dyn;
 import java.util.Collection;
 
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.common.GraphEventCascade;
-import org.ginsim.core.graph.common.GraphListener;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphChangeType;
+import org.ginsim.core.graph.GraphEventCascade;
+import org.ginsim.core.graph.GraphListener;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;

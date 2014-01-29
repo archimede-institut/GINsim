@@ -13,7 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.common.document.GenericDocumentFormat;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
@@ -70,7 +70,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 			c.gridy = 0;
 			c.fill = GridBagConstraints.BOTH;
 			c.ipadx = 10;
-			mainPanel.add(new JLabel(Translator.getString("STR_interactionAnalysis_ask")), c);
+			mainPanel.add(new JLabel(Txt.t("STR_interactionAnalysis_ask")), c);
 			
 			
 			c.gridy++;
@@ -88,7 +88,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 		    c.gridy++;
 			c.weightx = 0;
 			c.weighty = 0;
-		    saveReportButton = new JButton(Translator.getString("STR_interactionAnalysis_saveReport"));
+		    saveReportButton = new JButton(Txt.t("STR_interactionAnalysis_saveReport"));
 		    saveReportButton.setEnabled(false);
 		    mainPanel.add(saveReportButton, c);
 		    saveReportButton.addActionListener(this);

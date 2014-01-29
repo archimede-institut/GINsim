@@ -5,7 +5,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.DecisionOnEdge;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraph;
@@ -52,9 +52,9 @@ public class HierarchicalTransitionGraphGUIHelper implements GraphGUIHelper<Hier
 		
 		Frame graph_frame = GUIManager.getInstance().getFrame( graph);
 		
-		Object[] t_mode = { Translator.getString("STR_saveNone"),
-							Translator.getString("STR_savePosition"),
-							Translator.getString("STR_saveComplet") };
+		Object[] t_mode = { Txt.t("STR_saveNone"),
+							Txt.t("STR_savePosition"),
+							Txt.t("STR_saveComplet") };
 		JPanel optionPanel = new RegulatoryGraphOptionPanel(t_mode, graph_frame != null ? 2 : 0);
 		
 		return optionPanel ;

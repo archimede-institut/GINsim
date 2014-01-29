@@ -15,8 +15,8 @@ import javax.swing.event.TableModelListener;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.annotation.AnnotationLink;
-import org.ginsim.core.graph.common.AbstractGraph;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.AbstractGraph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.gui.utils.data.*;
 
 /**

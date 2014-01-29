@@ -19,8 +19,8 @@ import javax.swing.event.ListSelectionListener;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
@@ -70,7 +70,7 @@ public class StateInRegGraphFrame extends StackDialog {
 			c.gridy = 0;
 			c.fill = GridBagConstraints.BOTH;
 			c.ipadx = 10;
-			mainPanel.add(new JLabel(Translator.getString("STR_stateInRegGraph_descr")), c);
+			mainPanel.add(new JLabel(Txt.t("STR_stateInRegGraph_descr")), c);
 
 			c.gridy++;
 			c.gridx = 0;
@@ -79,9 +79,9 @@ public class StateInRegGraphFrame extends StackDialog {
 			c.weightx = 1;
 			c.weighty = 1;
 			tabbedPane = new JTabbedPane();
-			tabbedPane.add(Translator.getString("STR_stateInRegGraph_state"), new State(regGraph));
-			tabbedPane.add(Translator.getString("STR_stateInRegGraph_stablestate"), new StableState(regGraph, this));
-			tabbedPane.add(Translator.getString("STR_stateInRegGraph_maxvalues"), new MaxValues(regGraph));
+			tabbedPane.add(Txt.t("STR_stateInRegGraph_state"), new State(regGraph));
+			tabbedPane.add(Txt.t("STR_stateInRegGraph_stablestate"), new StableState(regGraph, this));
+			tabbedPane.add(Txt.t("STR_stateInRegGraph_maxvalues"), new MaxValues(regGraph));
 			mainPanel.add(tabbedPane, c);
 
 			c.gridy++;
@@ -129,7 +129,7 @@ abstract class TabComponantProvidingAState extends JPanel {
 		c.gridy = 0;
 		c.ipady = 8;
 		c.fill = GridBagConstraints.BOTH;
-		add(new JLabel(Translator.getString(desckey)), c);	
+		add(new JLabel(Txt.t(desckey)), c);
 
 		c.gridy++;
 		c.fill = GridBagConstraints.BOTH;
@@ -214,7 +214,7 @@ class StableState extends TabComponantProvidingAState {
 		c.gridy = 0;
 		c.ipady = 8;
 		c.fill = GridBagConstraints.BOTH;
-		add(new JLabel(Translator.getString("STR_stateInRegGraph_statedescr")), c);	
+		add(new JLabel(Txt.t("STR_stateInRegGraph_statedescr")), c);
 
 		c.gridy++;
 		c.ipady = 0;
@@ -243,7 +243,7 @@ class StableState extends TabComponantProvidingAState {
 		c.weightx = 0;
 		c.weighty = 0;
 		c.fill = GridBagConstraints.CENTER;
-		computeStableStateButton = new JButton(Translator.getString("STR_stateInRegGraph_computeStableState"));
+		computeStableStateButton = new JButton(Txt.t("STR_stateInRegGraph_computeStableState"));
 		add(computeStableStateButton, c);
 		computeStableStateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {

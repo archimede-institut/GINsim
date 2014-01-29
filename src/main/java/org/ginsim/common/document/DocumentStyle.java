@@ -11,6 +11,9 @@ import java.util.Map;
  * <p>DocumentStyle contains a set of constants representing the minimal set of styles a DocumentWriter should support.</p>
  * 
  * @see DocumentWriter
+ *
+ * @author Aurelien Naldi
+ * @author Duncan Berenguier
  */
 public class DocumentStyle {
 	

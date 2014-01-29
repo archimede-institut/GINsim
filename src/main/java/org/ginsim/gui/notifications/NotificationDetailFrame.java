@@ -5,13 +5,10 @@ import java.awt.Dimension;
 import javax.swing.JEditorPane;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
-import javax.swing.JLabel;
 import javax.swing.JButton;
-import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -27,7 +24,7 @@ public class NotificationDetailFrame extends JFrame {
 
 	public NotificationDetailFrame( String text) {
 		
-		super( Translator.getString( "STR_notificationDetailsTitle"));
+		super( Txt.t("STR_notificationDetailsTitle"));
 		
 		getContentPane().setLayout(null);
 		setSize( new Dimension( 500, 500));
@@ -43,7 +40,7 @@ public class NotificationDetailFrame extends JFrame {
 		scrollPane.setHorizontalScrollBarPolicy( ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 		
 		// Add the close button
-		btn_close = new JButton( Translator.getString( "STR_Close"));
+		btn_close = new JButton( Txt.t("STR_Close"));
 		btn_close.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {

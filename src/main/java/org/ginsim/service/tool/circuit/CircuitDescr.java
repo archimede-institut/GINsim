@@ -2,7 +2,7 @@ package org.ginsim.service.tool.circuit;
 import java.util.List;
 import java.util.Vector;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -22,12 +22,12 @@ public class CircuitDescr {
     public static final int DUAL = 5;
     
     public static final String[] SIGN_NAME = {
-    	Translator.getString("STR_not-functional"),
-    	Translator.getString("STR_all"),
-    	Translator.getString("STR_functional"),
-    	Translator.getString("STR_positive"), 
-    	Translator.getString("STR_negative"),
-    	Translator.getString("STR_dual")
+    	Txt.t("STR_not-functional"),
+    	Txt.t("STR_all"),
+    	Txt.t("STR_functional"),
+    	Txt.t("STR_positive"),
+    	Txt.t("STR_negative"),
+    	Txt.t("STR_dual")
     };
     
     // data on all subcircuits

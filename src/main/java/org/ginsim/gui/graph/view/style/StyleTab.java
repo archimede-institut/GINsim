@@ -6,8 +6,8 @@ import java.util.Collection;
 
 import javax.swing.JPanel;
 
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;

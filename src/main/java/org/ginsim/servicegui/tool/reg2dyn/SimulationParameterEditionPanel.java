@@ -1,7 +1,7 @@
 package org.ginsim.servicegui.tool.reg2dyn;
 
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.utils.data.ListEditionPanel;
 import org.ginsim.gui.utils.data.ListPanelCompanion;
@@ -26,7 +26,7 @@ import java.awt.event.FocusListener;
  */
 public class SimulationParameterEditionPanel extends JPanel implements ListPanelCompanion<SimulationParameters, SimulationParameterList> {
 
-    private static final String[] simulationMethodsNames = {Translator.getString("STR_STG"), Translator.getString("STR_SCCG"), Translator.getString("STR_HTG")};
+    private static final String[] simulationMethodsNames = {Txt.t("STR_STG"), Txt.t("STR_SCCG"), Txt.t("STR_HTG")};
 
     private SimulationParameterList paramList;
     private SimulationParameters currentParameter;
@@ -90,7 +90,7 @@ public class SimulationParameterEditionPanel extends JPanel implements ListPanel
     public JPanel getSimulationStrategyPanel() {
         if (simulationStrategyPanel == null) {
             simulationStrategyPanel = new JPanel( new GridBagLayout() );
-            simulationStrategyPanel.setBorder(BorderFactory.createTitledBorder(Translator.getString("STR_reg2dyn_mode")));
+            simulationStrategyPanel.setBorder(BorderFactory.createTitledBorder(Txt.t("STR_reg2dyn_mode")));
 
             GridBagConstraints c = new GridBagConstraints();
             c.weightx = 1;
@@ -113,7 +113,7 @@ public class SimulationParameterEditionPanel extends JPanel implements ListPanel
             c.gridy++;
             c.gridx = 0;
             c.gridwidth = 1;
-            labelMaxDepth = new JLabel(Translator.getString("STR_maximum_depth"));
+            labelMaxDepth = new JLabel(Txt.t("STR_maximum_depth"));
             simulationStrategyPanel.add(labelMaxDepth, c);
 
             c.gridx++;
@@ -123,7 +123,7 @@ public class SimulationParameterEditionPanel extends JPanel implements ListPanel
             c.gridx++;
             c.weightx = 0;
             c.anchor = GridBagConstraints.WEST;
-            labelMaxNodes = new JLabel(Translator.getString("STR_maximum_nodes"));
+            labelMaxNodes = new JLabel(Txt.t("STR_maximum_nodes"));
             simulationStrategyPanel.add(labelMaxNodes, c);
 
             c.gridx++;
@@ -143,7 +143,7 @@ public class SimulationParameterEditionPanel extends JPanel implements ListPanel
      */
     private JRadioButton getRadioDephtFirst() {
         if (radioDephtFirst == null) {
-            radioDephtFirst = new JRadioButton(Translator.getString("STR_depth_first"));
+            radioDephtFirst = new JRadioButton(Txt.t("STR_depth_first"));
             radioDephtFirst.setSelected(true);
             depthGrp.add(radioDephtFirst);
             radioDephtFirst.addChangeListener(getRadioChangeListener());
@@ -157,7 +157,7 @@ public class SimulationParameterEditionPanel extends JPanel implements ListPanel
      */
     private JRadioButton getRadioBreadthFirst() {
         if (radioBreadthFirst == null) {
-            radioBreadthFirst = new JRadioButton(Translator.getString("STR_breadth_first"));
+            radioBreadthFirst = new JRadioButton(Txt.t("STR_breadth_first"));
             depthGrp.add(radioBreadthFirst);
             radioBreadthFirst.addChangeListener(getRadioChangeListener());
         }

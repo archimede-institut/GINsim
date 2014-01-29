@@ -9,7 +9,7 @@ import javax.swing.JButton;
 import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.common.application.LogManager;
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.dynamicgraph.DynamicEdge;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;

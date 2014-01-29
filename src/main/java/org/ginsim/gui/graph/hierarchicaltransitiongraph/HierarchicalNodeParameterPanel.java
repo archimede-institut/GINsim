@@ -9,8 +9,8 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
@@ -56,7 +56,7 @@ public class HierarchicalNodeParameterPanel extends AbstractParameterPanel<Hiera
 	            jTable.getColumnModel().getColumn(0).setMinWidth(10);
 	            jTable.getColumnModel().getColumn(0).setPreferredWidth(10);
 	            nameLabel.setText("Name: "+node.toString()+", ID:"+node.getUniqueId());
-	            typeLabel.setText("Type: "+Translator.getString("STR_"+node.typeToString()));
+	            typeLabel.setText("Type: "+ Txt.t("STR_" + node.typeToString()));
 			}
 		}
 		

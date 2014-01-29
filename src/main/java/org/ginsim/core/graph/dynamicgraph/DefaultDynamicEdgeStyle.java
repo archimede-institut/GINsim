@@ -6,6 +6,11 @@ import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.style.EdgeStyleImpl;
 import org.ginsim.core.graph.view.style.StyleProperty;
 
+/**
+ * Default style for edges in the State Transition Graph.
+ * The color denote the type of changes in this transition.
+ * Dashed edges denote multiple changes.
+ */
 public class DefaultDynamicEdgeStyle extends EdgeStyleImpl<DynamicNode, DynamicEdge> {
 
 	private static final StyleProperty PROP_INCREASE = StyleProperty.createColorProperty("inc");

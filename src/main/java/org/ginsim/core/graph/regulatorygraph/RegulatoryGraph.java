@@ -6,7 +6,7 @@ import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 
 
 

@@ -9,8 +9,8 @@ import java.util.Set;
 
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.EdgeAttributeReaderImpl;
-import org.ginsim.core.graph.common.NodeAttributeReaderImpl;
+import org.ginsim.core.graph.backend.EdgeAttributeReaderImpl;
+import org.ginsim.core.graph.backend.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
 import org.junit.BeforeClass;

@@ -5,9 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import org.ginsim.common.utils.CollectionUtils;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.common.utils.ListTools;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 
 
 
@@ -67,7 +67,7 @@ public class NodeReducedData {
 	 */
 	public NodeReducedData (String id, String s_content) {
 		this.id = id;
-		content = CollectionUtils.getVectorFromArray(s_content.split(","));
+		content = ListTools.getListFromArray(s_content.split(","));
 	}
 	
 	public String toString() {

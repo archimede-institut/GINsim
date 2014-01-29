@@ -24,7 +24,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.ginsim.core.graph.common.AbstractGraph;
+import org.ginsim.core.graph.AbstractGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;

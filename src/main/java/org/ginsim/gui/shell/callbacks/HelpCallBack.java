@@ -9,11 +9,10 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.common.utils.OpenUtils;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.shell.AboutDialog;
 import org.ginsim.gui.shell.FileSelectionHelper;
 
 
@@ -45,7 +44,7 @@ public class HelpCallBack {
 
 class AboutAction extends AbstractAction {
 	public AboutAction() {
-		super( Translator.getString( "STR_About"));
+		super( Txt.t("STR_About"));
 	}
 	
 	@Override
@@ -74,7 +73,7 @@ class HelpAction extends AbstractAction {
 class ProvideLogAction extends AbstractAction {
 	
 	public ProvideLogAction() {
-		super(Translator.getString( "STR_Help_ExportLogs"));
+		super(Txt.t("STR_Help_ExportLogs"));
 	}
 	
 	@Override
@@ -107,7 +106,7 @@ class ToggleTraceAction extends AbstractAction{
 	
 	public ToggleTraceAction() {
 		
-		super( LogManager.getVerboseLevel() ==0?Translator.getString( "STR_Help_EnableTraces"):Translator.getString( "STR_Help_DisableTraces"));
+		super( LogManager.getVerboseLevel() ==0? Txt.t("STR_Help_EnableTraces"): Txt.t("STR_Help_DisableTraces"));
 	}
 	
 	@Override
@@ -115,11 +114,11 @@ class ToggleTraceAction extends AbstractAction{
 		
 		if( LogManager.getVerboseLevel() == 0){
 			LogManager.setVerbose( 2);
-			putValue( Action.NAME, Translator.getString( "STR_Help_DisableTraces"));
+			putValue( Action.NAME, Txt.t("STR_Help_DisableTraces"));
 		}
 		else{
 			LogManager.setVerbose( 0);
-			putValue( Action.NAME, Translator.getString( "STR_Help_EnableTraces"));
+			putValue( Action.NAME, Txt.t("STR_Help_EnableTraces"));
 		}
 	}
 }

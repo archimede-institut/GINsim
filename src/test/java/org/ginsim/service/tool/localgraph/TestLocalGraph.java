@@ -28,7 +28,7 @@ public class TestLocalGraph {
 
 	@BeforeClass
 	public static void setUp() {
-		// Translator.pushBundle("org.ginsim.messages");
+		// Txt.pushBundle("org.ginsim.messages");
 		dir = TestFileUtils.getTestFileDirectory("models");
 		saModel = new String[] { "E2F.ginml", "toymodel4d.ginml" };
 

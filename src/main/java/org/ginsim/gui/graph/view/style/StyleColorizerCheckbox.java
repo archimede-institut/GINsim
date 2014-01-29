@@ -4,8 +4,8 @@ import javax.swing.JCheckBox;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.graph.view.style.StyleProvider;
 
@@ -27,7 +27,7 @@ public class StyleColorizerCheckbox extends JCheckBox {
 	 * @param styleProvider the style to apply when the checkbox is selected
 	 */
 	public StyleColorizerCheckbox(String storeUserChoicePrefix, Graph<?, ?> graph, StyleProvider styleProvider) {
-		super(Translator.getString("STR_colorizer_panel"));
+		super(Txt.t("STR_colorizer_panel"));
 		this.styleManager = graph.getStyleManager();
 		this.styleProvider = styleProvider;
 

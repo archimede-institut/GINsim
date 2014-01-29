@@ -1,6 +1,5 @@
 package org.ginsim.gui.notifications;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -13,7 +12,7 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.core.notification.Notification;
 import org.ginsim.core.notification.detailed.DetailedNotification;
 import org.ginsim.core.notification.resolvable.ResolvableNotification;
@@ -83,7 +82,7 @@ public class NotificationPanel extends JPanel {
 		c.gridy = 0;
         c.insets = new Insets(0,10,0,0);
 		c.anchor = GridBagConstraints.EAST;
-		bcloseNotification = new JButton(Translator.getString( "STR_close"));
+		bcloseNotification = new JButton(Txt.t("STR_close"));
 		add(bcloseNotification, c);
 		bcloseNotification.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -130,12 +129,12 @@ public class NotificationPanel extends JPanel {
 		} else {
 			setBackground(notification.getType().color);
 			setVisible(true);
-			notificationMessage.setText( Translator.getString( notification.getMessage()));
+			notificationMessage.setText( Txt.t(notification.getMessage()));
             String[] t_text = null;
             if( notification instanceof ResolvableNotification){
             	String[] option_names = ((ResolvableNotification) notification).getOptionNames();
             	if( option_names!= null && option_names.length > 0){
-            		t_text = Translator.getStrings( option_names);
+            		t_text = Txt.getStrings(option_names);
             	}
             	else{
             		t_text = new String[0];
@@ -143,7 +142,7 @@ public class NotificationPanel extends JPanel {
             }
             else if( notification instanceof DetailedNotification){
             	t_text = new String[1];
-            	t_text[0] = Translator.getString( "STR_showNotificationDetails");
+            	t_text[0] = Txt.t("STR_showNotificationDetails");
             }
             else{
             	t_text = new String[0];
@@ -164,7 +163,7 @@ public class NotificationPanel extends JPanel {
                 } else {
                     cNotificationAction.setVisible(true);
                     bNotificationAction2.setVisible(false);
-                    bNotificationAction.setText( Translator.getString( "STR_OK"));
+                    bNotificationAction.setText( Txt.t("STR_OK"));
                     cNotificationAction.setModel(new DefaultComboBoxModel(t_text));
                     cNotificationAction.requestFocusInWindow();
                 }

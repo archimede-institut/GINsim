@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.ginsim.common.application.LogManager;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 

@@ -5,14 +5,13 @@ import java.awt.GridBagConstraints;
 import java.util.List;
 
 import org.ginsim.common.application.GsException;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.common.GraphEventCascade;
-import org.ginsim.core.graph.common.GraphListener;
-import org.ginsim.core.graph.regulatorygraph.NodeOrderer;
+import org.ginsim.core.graph.GraphChangeType;
+import org.ginsim.core.graph.GraphEventCascade;
+import org.ginsim.core.graph.GraphListener;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.GUIManager;
@@ -30,13 +29,13 @@ public class RegulatoryGraphEditor extends ObjectEditor<RegulatoryGraph> impleme
     private final HelpedList helped;
 
 	public RegulatoryGraphEditor(RegulatoryGraph graph) {
-		GenericPropertyInfo pinfo = new GenericPropertyInfo(this, PROP_ID, Translator.getString("STR_name"), String.class);
+		GenericPropertyInfo pinfo = new GenericPropertyInfo(this, PROP_ID, Txt.t("STR_name"), String.class);
 		v_prop.add(pinfo);
 		pinfo = new GenericPropertyInfo(this, PROP_NODEORDER, null, HelpedList.class);
 		pinfo.addPosition(0, 1, 2, 1, 1, 1, GridBagConstraints.SOUTH);
 		pinfo.data = graph.getNodeOrder();
 		v_prop.add(pinfo);
-		pinfo = new GenericPropertyInfo(this, PROP_ANNOTATION, Translator.getString("STR_notes"), Annotation.class);
+		pinfo = new GenericPropertyInfo(this, PROP_ANNOTATION, Txt.t("STR_notes"), Annotation.class);
 		pinfo.addPosition(3, 0, 1, 2, 4, 1, GridBagConstraints.SOUTH);
 		v_prop.add(pinfo);
 

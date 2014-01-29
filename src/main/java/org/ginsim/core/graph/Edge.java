@@ -1,7 +1,6 @@
-package org.ginsim.core.graph.common;
+package org.ginsim.core.graph;
 
 import org.ginsim.common.utils.ToolTipsable;
-
 
 /**
  * Base class for all edges: store the source and target nodes.

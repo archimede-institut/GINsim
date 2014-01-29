@@ -18,8 +18,8 @@ import javax.swing.JScrollPane;
 import javax.swing.table.TableColumn;
 
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.initialstate.GsInitialStateList;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
@@ -40,8 +40,8 @@ public class InitialStatePanel extends JPanel {
     
 	public InitialStatePanel(GsInitialStateList imanager, boolean several) {
 		
-	    initPanel = new StateListPanel(this, imanager.getInitialStates(), several, Translator.getString("STR_Initial_state"));
-	    inputPanel = new StateListPanel(this, imanager.getInputConfigs(), several, Translator.getString("STR_Fixed_inputs"));
+	    initPanel = new StateListPanel(this, imanager.getInitialStates(), several, Txt.t("STR_Initial_state"));
+	    inputPanel = new StateListPanel(this, imanager.getInputConfigs(), several, Txt.t("STR_Fixed_inputs"));
 	    setLayout(new GridBagLayout());
 	    GridBagConstraints c = new GridBagConstraints();
 	    c.weightx = 1;
@@ -232,7 +232,7 @@ class StateListPanel extends JPanel {
     private JButton getButtonCopyStateRow() {
         if (buttonCopyStateRow == null) {
         	buttonCopyStateRow = new StockButton("edit-copy.png", true);
-        	buttonCopyStateRow.setToolTipText(Translator.getString("STR_duplicate_rows"));
+        	buttonCopyStateRow.setToolTipText(Txt.t("STR_duplicate_rows"));
         	buttonCopyStateRow.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     copyStateRow();

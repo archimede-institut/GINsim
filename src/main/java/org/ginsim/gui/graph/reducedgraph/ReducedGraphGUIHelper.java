@@ -5,11 +5,10 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
-import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
@@ -44,9 +43,9 @@ public class ReducedGraphGUIHelper implements GraphGUIHelper<ReducedGraph<?,?,?>
 		
 		Frame graph_frame = GUIManager.getInstance().getFrame( graph);
 		
-		Object[] t_mode = { Translator.getString("STR_saveNone"), 
-                    Translator.getString("STR_savePosition"), 
-                    Translator.getString("STR_saveComplet") };
+		Object[] t_mode = { Txt.t("STR_saveNone"),
+                    Txt.t("STR_savePosition"),
+                    Txt.t("STR_saveComplet") };
         JPanel optionPanel = new RegulatoryGraphOptionPanel(t_mode, graph_frame != null ? 2 : 0);
         
 		return optionPanel;

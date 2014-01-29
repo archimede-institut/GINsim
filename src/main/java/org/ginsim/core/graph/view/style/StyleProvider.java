@@ -1,6 +1,6 @@
 package org.ginsim.core.graph.view.style;
 
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.Edge;
 
 /**
  * Define a style provider: it provides styles for nodes and edges

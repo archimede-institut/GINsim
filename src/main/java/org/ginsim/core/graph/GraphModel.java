@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.common;
+package org.ginsim.core.graph;
 
 import java.util.Collection;
 import java.util.List;
@@ -9,48 +9,28 @@ import org.ginsim.core.annotation.Annotation;
 
 
 /**
- * Interface for the main objects: graphs.
- * 
- * This should provide only the main methods to browse a graph.
- * As not all graphs can be edited, edit methods should be provided by the
- * specialised graph type only.
- * 
- * As the existing stuff did a lot of things, I'll start by putting notes about what we may want to have as well...
- * 
+ * Handle the basic structure of a graph.
+ * This provides methods to: <ul>
+ *   <li>add and remove vertices and edges</li>
+ *   <li>get the list of existing vertices and edges</li>
+ *   <li>some simple graph operations (shortest path, connected components)</li>
+ *   <li>Handle some basic metadata: graph name and annotation</li>
+ * </ul>
+ *
  * @author Aurelien Naldi
  * @author Lionel Spinelli
  *
  * @param <V> type for vertices
  * @param <E> type for edges
  */
-
 public interface GraphModel<V,E extends Edge<V>> {
 
-	/*
-	 * so, what do we want to be able to do here?
-	 * 
-	 * First some simple graph stuff, this should be fairly clear:
-	 *  * add and remove vertices and edges
-	 *  * get the list of existing vertices and edges
-	 *  * access the GraphView object
-	 * 
-	 * We used to have some extra stuff, most of it should go to specialised types:
-	 *   * store some extra information: name, annotation
-	 *   * provide save methods. remember save path
-	 *   * metadata: can this graph be edited interactively, how ?
-	 *   * GUI consistency helpers: block edition/close
-	 *   * service providers: layout, actions, exports. Should be done outside of the graph
-	 *   * copy/paste a subgraph
-	 */
-	
-    
     /**
      * Give access to the name of the graph
      * 
      * @return the name associated with this graph.
      */
     String getGraphName();
-    
     
     /**
      * changes (if success) the name associated with this graph.
@@ -60,29 +40,13 @@ public interface GraphModel<V,E extends Edge<V>> {
      * @throws GsException if the name is invalid.
      */
     void setGraphName( String graphName) throws GsException;
-    
-    
-//    //----------------------   GRAPH SAVING MANAGEMENT METHODS -------------------------------
-//    
-//    
-//    /**
-//     * Set the mode of saving the graph must used when saved
-//     * 
-//     * @param save_mode the mode of saving
-//     */
-//    void setSaveMode( int save_mode);
-//    
-//    
-//    /**
-//     * Return the mode the graph must used when saved
-//     * 
-//     * @return the mode the graph must used when saved
-//     */
-//    int getSaveMode();
-    
-	
-    //----------------------   GRAPH VERTICES AND EDGES MANAGEMENT METHODS -------------------------------
 
+    /**
+     * Give access to the annotation associated with this graph.
+     *
+     * @return the association associated with this graph
+     */
+    Annotation getAnnotation();
 
 
 	/**
@@ -212,8 +176,8 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 */
 	List<E> getShortestPath(V source, V target);
 	
-	
-    
+
+
 	/**
 	 * Return a list of set of node, each set containing a strongly connected component of the graph
 	 * 
@@ -237,19 +201,5 @@ public interface GraphModel<V,E extends Edge<V>> {
      * @param graph The graph to merge with the current graph
      */
     List<?> merge( Graph<V,E> graph);
-    
-	
-    
-    //----------------------   ANNOTATION METHODS --------------------------------------------
-
-    
-	/**
-     * Give access to the annotation associated with this graph.
-     * 
-	 * @return the association associated with this graph
-	 */
-	Annotation getAnnotation();
-
-
 
 }

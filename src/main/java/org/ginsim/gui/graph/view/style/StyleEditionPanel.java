@@ -10,7 +10,7 @@ import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.view.style.ColorProperty;
 import org.ginsim.core.graph.view.style.EnumProperty;
 import org.ginsim.core.graph.view.style.IntegerProperty;
@@ -250,7 +250,7 @@ class ColorPropertyButton extends PropertyEditor<JButton> implements ActionListe
 		if (style == null) {
 			return;
 		}
-		Color selected = JColorChooser.showDialog(null, Translator.getString("choose_color"), currentColor);
+		Color selected = JColorChooser.showDialog(null, Txt.t("choose_color"), currentColor);
 		if (selected != null) {
 			style.setProperty(property, selected);
 			styleManager.styleUpdated(style);

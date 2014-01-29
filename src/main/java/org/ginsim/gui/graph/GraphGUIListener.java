@@ -1,11 +1,8 @@
 package org.ginsim.gui.graph;
 
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.common.GraphEventCascade;
-import org.ginsim.core.graph.common.GraphListener;
-import org.ginsim.core.graph.common.GraphModel;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphChangeType;
 
 /**
  * Interface for objects which listen for Graph GUI events.

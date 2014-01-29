@@ -4,9 +4,9 @@ import java.awt.Frame;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.utils.data.*;
@@ -40,11 +40,11 @@ public class SingleSimulationFrame extends BaseSimulationFrame {
 		setUserID("reg2dyn");
 		this.regGraphFrame = regGraphFrame;
 		this.paramList = paramList;
-        this.spane = new ListEditionPanel(ListOfSimulationParametersHelper.HELPER, paramList, Translator.getString("STR_simulationSettings"), this, null);
+        this.spane = new ListEditionPanel(ListOfSimulationParametersHelper.HELPER, paramList, Txt.t("STR_simulationSettings"), this, null);
 		GUIManager.getInstance().addBlockEdit( paramList.graph, this);
         spane.setName("display.configSimulation");
         setMainPanel(spane);
-		this.setTitle(Translator.getString("STR_reg2dynRunningTitle"));
+		this.setTitle(Txt.t("STR_reg2dynRunningTitle"));
 		this.addWindowListener(new java.awt.event.WindowAdapter() { 
 			public void windowClosing(java.awt.event.WindowEvent e) {
 				cancel();
@@ -82,8 +82,8 @@ public class SingleSimulationFrame extends BaseSimulationFrame {
 			return;
 		}
 		
-		setMessage(Translator.getString("STR_wait_msg"));
-		bcancel.setText(Translator.getString("STR_abort"));
+		setMessage(Txt.t("STR_wait_msg"));
+		bcancel.setText(Txt.t("STR_abort"));
 		
 		//FIXME: nearly everything should be disabled
 //		radioBreadthFirst.setEnabled(false);

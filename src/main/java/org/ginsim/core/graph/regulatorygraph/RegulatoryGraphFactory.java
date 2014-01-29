@@ -1,7 +1,7 @@
 package org.ginsim.core.graph.regulatorygraph;
 
-import org.ginsim.core.graph.common.AbstractGraphFactory;
-import org.ginsim.core.graph.common.GraphFactory;
+import org.ginsim.core.graph.AbstractGraphFactory;
+import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.mangosdk.spi.ProviderFor;
 

@@ -3,9 +3,9 @@ package org.ginsim.service.tool.modelsimplifier;
 import java.util.*;
 
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.common.GraphEventCascade;
-import org.ginsim.core.graph.common.GraphListener;
+import org.ginsim.core.graph.GraphChangeType;
+import org.ginsim.core.graph.GraphEventCascade;
+import org.ginsim.core.graph.GraphListener;
 import org.ginsim.core.graph.objectassociation.UserSupporter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;

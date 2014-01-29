@@ -3,15 +3,17 @@ package org.ginsim.core.graph.hierarchicaltransitiongraph;
 import java.util.List;
 
 import org.colomoto.logicalmodel.NodeInfo;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.common.utils.ToolTipsable;
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.core.graph.Edge;
 
 
 /**
  * 
  * Store a label that represent the genes that are updated between two states source, and target.
  * In a HTG, to compute the label of an edge, call this function for each couple of states corresponding to the edge.
+ *
+ * @author Duncan Berenguier
  */
 public class DecisionOnEdge extends Edge<HierarchicalNode> implements ToolTipsable {
 	
@@ -66,7 +68,7 @@ public class DecisionOnEdge extends Edge<HierarchicalNode> implements ToolTipsab
 			return "";
 		}
 		StringBuffer s = new StringBuffer();
-		s.append(Translator.getString("STR_htg_decision_analysis_label"));
+		s.append(Txt.t("STR_htg_decision_analysis_label"));
 		s.append(": ");
 		for (int i = 0; i < genesUpdated.length; i++) {
 			switch (genesUpdated[i]) {

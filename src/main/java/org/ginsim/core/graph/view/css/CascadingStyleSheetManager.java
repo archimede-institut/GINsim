@@ -6,8 +6,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.view.AttributesReader;
+import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 

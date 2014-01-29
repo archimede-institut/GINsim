@@ -9,8 +9,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.graph.view.style.StyleProvider;
 
@@ -84,7 +84,7 @@ public class ColorizerPanel extends JPanel {
 	 */
 	private void init_initialColorizationCheckbox(GridBagConstraints c) {
 		if (cb_colorize == null) {
-			cb_colorize = new JCheckBox(Translator.getString("STR_colorizer_panel"));
+			cb_colorize = new JCheckBox(Txt.t("STR_colorizer_panel"));
 			cb_colorize.setSelected((OptionStore.getOption(storeUserChoicePrefix+OPTION_STORE_INITIAL_COLORIZATION, Boolean.FALSE)).booleanValue());
 			cb_colorize.addChangeListener(new ChangeListener() {
 				@Override

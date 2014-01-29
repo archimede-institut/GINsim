@@ -6,7 +6,6 @@ import java.awt.Component;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.ginsim.core.graph.common.Graph;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;

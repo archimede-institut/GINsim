@@ -8,10 +8,10 @@ import java.util.Set;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNodeSet;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalSigmaSet;
@@ -540,7 +540,7 @@ public class HTGSimulation extends Simulation {
 		    throw new GsException(GsException.GRAVITY_NORMAL, "Reached the maximum depth");
 		}
 		if (!ready) {
-		    throw new GsException(GsException.GRAVITY_NORMAL, Translator.getString("STR_interrupted"));
+		    throw new GsException(GsException.GRAVITY_NORMAL, Txt.t("STR_interrupted"));
 		}
 		if (depth > max_depth_reached) max_depth_reached = depth;
 	    if (frame != null) {

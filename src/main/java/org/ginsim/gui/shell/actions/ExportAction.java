@@ -6,7 +6,7 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.commongui.utils.FileFormatFilter;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.FileSelectionHelper;

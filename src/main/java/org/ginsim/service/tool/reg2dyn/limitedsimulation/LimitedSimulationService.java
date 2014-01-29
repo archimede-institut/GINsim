@@ -5,7 +5,7 @@ import java.util.HashMap;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.callable.BasicProgressListener;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;

@@ -55,7 +55,6 @@ import java.util.Map;
  * 
  * @author Aurelien Naldi
  * @author Duncan Berenguier
- *
  */
 public abstract class DocumentWriter {
 

@@ -1,28 +1,22 @@
-package org.ginsim.core.graph.common;
+package org.ginsim.core.graph;
 
 import java.awt.Dimension;
 import java.util.Collection;
 
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.style.StyleManager;
 
 
 /**
- * This interface layer add the access to "attribute readers" for vertices and edges.
- * When no GUI was here a fallback datastructure was used, otherwise it delegates to JGraph.
- * Copies between the two was used when displaying the graph for example.
- * 
- * These things should be moved here, with a cleaner separation, but how?
- * It should be uniform and stay in sync with the GUI without depending on it, can we do better than what we already had?
- * 
+ * The main graph object in GINsim.
+ * Beside the basic graph methods from the GraphModel interface, this provides
+ * access to the view (styles and attribute readers), and define methods to save a graph.
+ *
  * @author Aurelien Naldi
  * @author Lionel Spinelli
- *
 **/
-
 public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 
 	/**
@@ -53,15 +47,15 @@ public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 	Dimension getDimension();
 	
 	/**
-	 * Save this graph
-	 * TODO: decide if it should be called by the GraphManager or directly
+	 * Save this graph.
+     *
 	 * @param path
 	 */
 	void save(String path) throws GsException;
 	
 	/**
-	 * Save this graph
-	 * TODO: decide if it should be called by the GraphManager or directly
+	 * Save some components of this graph.
+     *
 	 * @param path
 	 */
 	void save(String path, Collection<V> nodes, Collection<E> edges) throws GsException;
@@ -75,8 +69,8 @@ public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 	void addViewListener(GraphViewListener listener);
 	
 	/**
-	 * the graph has changed, all listeners will be notified.
-	 * it will also be marked as unsaved.
+	 * The graph has changed, all listeners will be notified.
+	 * It will also be marked as unsaved.
 	 * @param type
      * @param data
 	 */

@@ -12,7 +12,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.utils.data.models.MaxSpinModel;
 import org.ginsim.gui.utils.data.models.MinMaxSpinModel;
@@ -59,12 +59,12 @@ public class CircuitConfigureSearch extends JPanel {
         GridBagConstraints c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 0;
-        add(new JLabel(Translator.getString("STR_min")), c);
+        add(new JLabel(Txt.t("STR_min")), c);
 
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 1;
-        add(new JLabel(Translator.getString("STR_max")), c);
+        add(new JLabel(Txt.t("STR_max")), c);
         
         c = new GridBagConstraints();
         c.gridx = 2;
@@ -114,7 +114,7 @@ public class CircuitConfigureSearch extends JPanel {
     
     private JButton getButtonReset() {
         if (buttonReset == null) {
-            buttonReset = new JButton(Translator.getString("STR_reset"));
+            buttonReset = new JButton(Txt.t("STR_reset"));
             buttonReset.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
                     reset();
@@ -389,10 +389,10 @@ class GsCircuitSpinModel implements MinMaxSpinModel {
     }
 
 	public String getMaxName() {
-		return Translator.getString("STR_max");
+		return Txt.t("STR_max");
 	}
 	public String getMinName() {
-		return Translator.getString("STR_min");
+		return Txt.t("STR_min");
 	}
 	public void setEditedObject(Object rawValue) {
 	}

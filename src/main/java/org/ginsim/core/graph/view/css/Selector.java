@@ -4,11 +4,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.dynamicgraph.DynamicNode;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.view.AttributesReader;
 
 

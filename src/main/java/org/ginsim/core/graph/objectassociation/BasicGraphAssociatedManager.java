@@ -6,7 +6,7 @@ import java.io.OutputStreamWriter;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 
 
 /**

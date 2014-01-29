@@ -1,7 +1,7 @@
 package org.ginsim.core.graph.tree;
 
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 
 public interface Tree extends Graph<TreeNode, TreeEdge>{
 	

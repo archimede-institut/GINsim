@@ -25,7 +25,7 @@ public class TestComposition {
 
 	@BeforeClass
 	public static void setUp() {
-		// Translator.pushBundle("org.ginsim.messages");
+		// Txt.pushBundle("org.ginsim.messages");
 		dir = TestFileUtils.getTestFileDirectory("models");
 		saModel = new String[] { "toy_composition.ginml" }; // TODO: the
 															// currently

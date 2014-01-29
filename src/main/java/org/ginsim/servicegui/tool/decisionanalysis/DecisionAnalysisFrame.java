@@ -8,7 +8,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.colomoto.logicalmodel.LogicalModel;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -44,7 +44,7 @@ public class DecisionAnalysisFrame extends LogicalModelActionDialog  {
 		
 			c.gridx = 0;
 			c.gridy = 0;
-			JLabel label = new JLabel(Translator.getString("STR_htg_decision_analysis_instructions"));
+			JLabel label = new JLabel(Txt.t("STR_htg_decision_analysis_instructions"));
 			mainPanel.add(label, c);
 			c.gridy++;
 			

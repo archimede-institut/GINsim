@@ -1,13 +1,12 @@
 package org.ginsim.gui.graph;
 
 import java.awt.Component;
-import java.util.Collection;
 
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 
 /**
  * Deal with the GUI view of a graph: get a component, provide access to selected items and view options.

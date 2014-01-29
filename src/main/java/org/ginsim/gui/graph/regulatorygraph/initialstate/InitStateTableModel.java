@@ -11,7 +11,7 @@ import javax.swing.table.AbstractTableModel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialState;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateList;
-import org.ginsim.core.utils.data.ListTools;
+import org.ginsim.common.utils.ListTools;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 
 

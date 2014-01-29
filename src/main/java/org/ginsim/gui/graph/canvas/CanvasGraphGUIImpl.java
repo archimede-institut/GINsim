@@ -4,8 +4,8 @@ import java.awt.Component;
 
 import javax.swing.JMenu;
 
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.gui.graph.BaseGraphGUI;
 import org.ginsim.gui.graph.GraphGUIHelper;
 

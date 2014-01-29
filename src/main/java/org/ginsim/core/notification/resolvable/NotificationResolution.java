@@ -1,6 +1,6 @@
 package org.ginsim.core.notification.resolvable;
 
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 
 public class NotificationResolution {
 

@@ -9,8 +9,8 @@ import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 
 import org.ginsim.Launcher;
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.ServiceGUI;
@@ -42,14 +42,14 @@ public class MainFrameActionManager implements FrameActionManager {
 		List<Action> actions = ServiceGUIManager.getManager().getAvailableActions(graph);
 
 		// add them to the right menus
-		JMenu importMenu = new JMenu( Translator.getString( "STR_Import"));
-		JMenu exportMenu = new JMenu( Translator.getString( "STR_Export"));
-		JMenu layoutMenu = new JMenu( Translator.getString( "STR_Layout"));
-		JMenu graphMenu = new JMenu( Translator.getString( "STR_Graph"));
-		JMenu toolsMenu = new JMenu( Translator.getString( "STR_Tools"));
+		JMenu importMenu = new JMenu( Txt.t("STR_Import"));
+		JMenu exportMenu = new JMenu( Txt.t("STR_Export"));
+		JMenu layoutMenu = new JMenu( Txt.t("STR_Layout"));
+		JMenu graphMenu = new JMenu( Txt.t("STR_Graph"));
+		JMenu toolsMenu = new JMenu( Txt.t("STR_Tools"));
 		JMenu toolkitsMenu = null;
 		if (Launcher.developer_mode) {
-			 toolkitsMenu = new JMenu( Translator.getString( "STR_Toolkits"));
+			 toolkitsMenu = new JMenu( Txt.t("STR_Toolkits"));
 		}
 
 		EditCallBack.addEditEntries(graphMenu, gui);

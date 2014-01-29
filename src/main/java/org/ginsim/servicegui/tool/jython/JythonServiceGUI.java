@@ -10,7 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 
 import org.ginsim.common.utils.IOUtils;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.ServiceStatus;

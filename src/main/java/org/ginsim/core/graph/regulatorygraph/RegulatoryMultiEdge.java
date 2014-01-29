@@ -6,10 +6,9 @@ import java.util.List;
 import org.ginsim.common.utils.ToolTipsable;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphChangeType;
 
 
 /**

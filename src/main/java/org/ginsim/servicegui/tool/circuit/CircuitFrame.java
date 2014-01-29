@@ -28,11 +28,11 @@ import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
@@ -119,7 +119,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
      */
     private void initialize() {
         this.setMainPanel(getJContentPane());
-        this.setTitle(Translator.getString("STR_circuit"));
+        this.setTitle(Txt.t("STR_circuit"));
         this.setVisible(true);
         this.addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
@@ -192,7 +192,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
             c.gridy++;
         	c.gridwidth = 2;
         	c.fill = GridBagConstraints.BOTH;
-        	cb_cleanup = new JCheckBox(Translator.getString("STR_do_cleanup"));
+        	cb_cleanup = new JCheckBox(Txt.t("STR_do_cleanup"));
             cb_cleanup.setSelected(true);           // FIXME: remember this as a setting
             resultPanel.add(cb_cleanup, c);
         }
@@ -201,7 +201,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
     
 	private JButton getViewContextButton() {
     	if (viewContextButton == null) {
-    		viewContextButton = new JButton(Translator.getString("STR_circuit_viewContext"));
+    		viewContextButton = new JButton(Txt.t("STR_circuit_viewContext"));
     		viewContextButton.setEnabled(false);
     		viewContextButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
@@ -301,19 +301,19 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         switch (status) {
         case STATUS_NONE:
             this.status = status;
-            setRunText(Translator.getString("STR_circuit_search"),Translator.getString("STR_circuit_search_descr"));
+            setRunText(Txt.t("STR_circuit_search"), Txt.t("STR_circuit_search_descr"));
             break;
         case STATUS_SCC:
             this.status = status;
             cards.show(jContentPane, "result");
-            setRunText(Translator.getString("STR_cancel"), null);
+            setRunText(Txt.t("STR_cancel"), null);
             break;
         case STATUS_SEARCH_CIRCUIT:
             break;
         case STATUS_SHOW_CIRCUIT:
             this.status = status;
             setProgress("Number of circuits satisfying the requirements: "+ v_circuit.size());
-            setRunText(Translator.getString("STR_circuit_analyse"), Translator.getString("STR_circuit_analyse_tooltip"));
+            setRunText(Txt.t("STR_circuit_analyse"), Txt.t("STR_circuit_analyse_tooltip"));
             break;
         }
     }

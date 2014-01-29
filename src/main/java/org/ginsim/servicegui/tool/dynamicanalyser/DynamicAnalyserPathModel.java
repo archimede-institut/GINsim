@@ -5,8 +5,6 @@ import java.util.List;
 
 import javax.swing.table.DefaultTableModel;
 
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.dynamicgraph.DynamicEdge;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 

@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
 
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 

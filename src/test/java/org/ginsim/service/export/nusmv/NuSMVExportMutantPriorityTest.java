@@ -13,7 +13,7 @@ import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
 import org.ginsim.TestFileUtils;
 import org.ginsim.common.application.GsException;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.common.utils.IOUtils;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -39,7 +39,7 @@ public class NuSMVExportMutantPriorityTest {
 	public static void setUp() {
 		// TODO: this should not be here...
 		// Should be either unnecessary or done Once before All tests
-		Translator.pushBundle("org.ginsim.messages");
+		Txt.push("org.ginsim.messages");
 		dir = TestFileUtils.getTestFileDirectory("models");
 		sModel = "toymodel4d";
 		graph = TestFileUtils

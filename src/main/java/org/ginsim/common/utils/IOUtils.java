@@ -12,7 +12,7 @@ import java.io.Reader;
 import java.net.URL;
 
 import org.ginsim.common.application.GsException;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 
 /**
  * Collection of helpers to open and parse files, or streams, 
@@ -115,23 +115,23 @@ public class IOUtils {
 
 			if (file.isDirectory()) {
 				throw new GsException(GsException.GRAVITY_ERROR,
-						Translator.getString("STR_error_isdirectory"));
+						Txt.t("STR_error_isdirectory"));
 			}
 			if (!file.canWrite()) {
 				throw new GsException(GsException.GRAVITY_ERROR,
-						Translator.getString("STR_error_notWritable"));
+						Txt.t("STR_error_notWritable"));
 			}
 
 		}
 		try {
 			if (!file.createNewFile()) {
 				throw new GsException(GsException.GRAVITY_ERROR,
-						Translator.getString("STR_error_cantcreate"));
+						Txt.t("STR_error_cantcreate"));
 			}
 			file.delete();
 			return true;
 		} catch (Exception e) {
-			throw new GsException(GsException.GRAVITY_ERROR, Translator.getString("STR_error_io"));
+			throw new GsException(GsException.GRAVITY_ERROR, Txt.t("STR_error_io"));
 		}
 	}
 	

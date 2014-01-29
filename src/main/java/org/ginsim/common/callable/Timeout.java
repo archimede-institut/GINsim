@@ -1,7 +1,9 @@
 package org.ginsim.common.callable;
 
 /**
- * Run timeouts counter and call back when elapsed
+ * Run timeouts counter and call back when elapsed.
+ *
+ * @author Aurelien Naldi
  */
 public class Timeout {
 

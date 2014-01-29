@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.swing.Action;
 
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.AbstractServiceGUI;

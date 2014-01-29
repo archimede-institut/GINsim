@@ -3,7 +3,7 @@ package org.ginsim.common.xml;
 import java.io.IOException;
 
 /**
- * object that can save themself to XML must implement this interface to let others know.
+ * Interface for object that can save themselves to XML.
  */
 public interface XMLize {
     

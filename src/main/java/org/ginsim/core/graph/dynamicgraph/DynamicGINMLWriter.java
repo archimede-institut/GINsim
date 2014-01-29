@@ -3,12 +3,11 @@ package org.ginsim.core.graph.dynamicgraph;
 import java.io.IOException;
 
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.io.parser.GINMLWriter;
 
+/**
+ * Save a STG in the GINML format.
+ */
 public class DynamicGINMLWriter extends GINMLWriter<DynamicGraph, DynamicNode, DynamicEdge> {
 
 	public DynamicGINMLWriter(DynamicGraph graph) {

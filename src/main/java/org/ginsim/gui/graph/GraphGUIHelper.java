@@ -5,8 +5,8 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 
 /**
  * GUI-side helper for a graph type.

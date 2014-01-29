@@ -21,7 +21,7 @@ import javax.swing.JTextArea;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.gui.shell.FileSelectionHelper;
@@ -70,7 +70,7 @@ public class AReg2GPConfig extends JDialog {
 
 	private void initialize() {
 		this.setSize(180, 250);
-		this.setTitle(Translator.getString("STR_pathExport"));
+		this.setTitle(Txt.t("STR_pathExport"));
 		this.setContentPane(getContentPanel());
 		setVisible(true);
 	}
@@ -321,7 +321,7 @@ public class AReg2GPConfig extends JDialog {
 
     private JButton getBut_cancel() {
         if (but_cancel == null) {
-            but_cancel = new JButton(Translator.getString("STR_cancel"));
+            but_cancel = new JButton(Txt.t("STR_cancel"));
             but_cancel.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     close();
@@ -332,7 +332,7 @@ public class AReg2GPConfig extends JDialog {
     }
     private JButton getBut_export() {
         if (but_export == null) {
-            but_export = new JButton(Translator.getString("STR_export"));
+            but_export = new JButton(Txt.t("STR_export"));
             but_export.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                 	try{

@@ -2,7 +2,7 @@ package org.ginsim.service.tool.reg2dyn;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.callable.ProgressListener;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStateManager;

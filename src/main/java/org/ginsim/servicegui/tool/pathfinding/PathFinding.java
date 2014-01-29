@@ -3,8 +3,8 @@ package org.ginsim.servicegui.tool.pathfinding;
 import java.util.List;
 import java.util.Vector;
 
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 
 /**
  * A class to find a path in any graph

@@ -11,11 +11,11 @@ import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.common.AbstractDerivedGraph;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphChangeType;
-import org.ginsim.core.graph.common.GraphEventCascade;
+import org.ginsim.core.graph.AbstractDerivedGraph;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphChangeType;
+import org.ginsim.core.graph.GraphEventCascade;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -25,7 +25,7 @@ import org.ginsim.core.io.parser.GINMLWriter;
 
 /**
  * Implementation of dynamical graphs.
- * This class should not be used directly.
+ * This class should not be used directly: instances are created by the associated factory.
  * 
  * @author Aurelien Naldi
  * @author Lionel Spinelli
@@ -54,9 +54,9 @@ public final class DynamicGraphImpl
     
 	/**
 	 * create a new DynamicGraph.
-	 * @param regGraph
+	 * @param nodeOrder
 	 */
-	public DynamicGraphImpl(List<?> nodeOrder) {
+	protected DynamicGraphImpl(List<?> nodeOrder) {
 		
 	    this( false);
 	    this.nodeOrder = new ArrayList<NodeInfo>();
@@ -75,9 +75,9 @@ public final class DynamicGraphImpl
 	}
 	
 	/**
-	 * @param filename
+	 * @param parsing
 	 */
-	public DynamicGraphImpl( boolean parsing) {
+	protected DynamicGraphImpl( boolean parsing) {
         super( DynamicGraphFactory.getInstance(), parsing);
 	}
 
@@ -89,7 +89,7 @@ public final class DynamicGraphImpl
 	}
 
 	/**
-	 * @param map
+	 * @param set
 	 * @param file
 	 */
 	public DynamicGraphImpl(Set<String> set, File file)  throws GsException{
@@ -130,7 +130,7 @@ public final class DynamicGraphImpl
 	/**
 	 * Set a list of String representing the order of node as defined by the model
 	 * 
-	 * @param list the list of String representing the order of node as defined by the model
+	 * @param node_order the list of String representing the order of node as defined by the model
 	 */
 	@Override
 	public void setNodeOrder( List<NodeInfo> node_order){

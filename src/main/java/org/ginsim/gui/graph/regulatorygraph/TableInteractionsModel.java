@@ -5,7 +5,7 @@ import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
@@ -135,9 +135,9 @@ public class TableInteractionsModel extends AbstractTableModel {
 	 */
 	public String getColumnName(int columnIndex) {
 		if (columnIndex == 0) {
-			return Translator.getString("STR_value");
+			return Txt.t("STR_value");
 		}
-		return Translator.getString("STR_ActiveInteractionEdgeList");
+		return Txt.t("STR_ActiveInteractionEdgeList");
 	}
 
 	/**

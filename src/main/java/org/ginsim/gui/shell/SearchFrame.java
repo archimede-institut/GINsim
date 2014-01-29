@@ -21,9 +21,9 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.SimpleDialog;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 
@@ -53,7 +53,7 @@ public class SearchFrame extends SimpleDialog implements ListSelectionListener {
 	private String oldFilter = null;
 	
 	public SearchFrame(GraphGUI<?, ?, ?> gui) {
-		super(GUIManager.getInstance().getFrame(gui.getGraph()), Translator.getString("STR_searchNode_title"),300,400);
+		super(GUIManager.getInstance().getFrame(gui.getGraph()), Txt.t("STR_searchNode_title"),300,400);
 		this.gui = gui;
 		this.g = gui.getGraph();
 		this.autoFillTimer = new Timer(100, new ActionListener() {
@@ -99,7 +99,7 @@ public class SearchFrame extends SimpleDialog implements ListSelectionListener {
 			c.gridx++;
 			c.weightx = 0;
 			c.weighty = 0;
-			searchButton = new JButton(Translator.getString("STR_searchNode_search"));
+			searchButton = new JButton(Txt.t("STR_searchNode_search"));
 			searchButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					search();
@@ -165,7 +165,7 @@ public class SearchFrame extends SimpleDialog implements ListSelectionListener {
 
 class MyTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = -9107751311783717887L;
-	private static Object[] tableHeaders = {Translator.getString("STR_node")};
+	private static Object[] tableHeaders = {Txt.t("STR_node")};
 
 	public List ldata;
 	

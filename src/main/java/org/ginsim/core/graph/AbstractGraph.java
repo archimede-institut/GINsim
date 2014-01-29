@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.common;
+package org.ginsim.core.graph;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -20,12 +20,10 @@ import java.util.zip.ZipOutputStream;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.backend.GraphBackend;
-import org.ginsim.core.graph.backend.GraphViewListener;
 import org.ginsim.core.graph.backend.JgraphtBackendImpl;
+import org.ginsim.core.graph.backend.EdgeAttributeReaderImpl;
+import org.ginsim.core.graph.backend.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -41,8 +39,8 @@ import org.ginsim.core.io.parser.GINMLWriter;
  * @author Lionel Spinelli
  * @author Aurelien Naldi
  *
- * @param <V>
- * @param <E>
+ * @param <V>   the type of vertices
+ * @param <E>   the type of edges
  */
 abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>, GraphViewListener {
 	

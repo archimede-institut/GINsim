@@ -1,24 +1,17 @@
 package org.ginsim.core.io.parser;
 
-import java.awt.Color;
-import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
-import java.util.List;
 
 import org.ginsim.common.application.GsException;
-import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphAssociation;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphAssociation;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.core.graph.view.ViewHelper;
 import org.ginsim.core.graph.view.style.StyleManager;
 
 /**

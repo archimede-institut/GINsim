@@ -13,11 +13,11 @@ import javax.swing.JPanel;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.DefaultDialogSize;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.commongui.dialog.SimpleDialog;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.gui.GUIManager;
 
 
@@ -156,8 +156,8 @@ abstract public class StackDialog extends SimpleDialog {
      */
     private JButton getBcancel() {
         if(bcancel == null) {
-        	bcancel = new javax.swing.JButton(Translator.getString("STR_close"));
-        	bcancel.setToolTipText(Translator.getString("STR_closedialog_descr"));
+        	bcancel = new javax.swing.JButton(Txt.t("STR_close"));
+        	bcancel.setToolTipText(Txt.t("STR_closedialog_descr"));
         	// TODO: get some nice default mnemonics everywhere 
         	bcancel.getModel().setMnemonic(KeyEvent.VK_N);
         	bcancel.addActionListener(new java.awt.event.ActionListener() { 
@@ -170,8 +170,8 @@ abstract public class StackDialog extends SimpleDialog {
     }
     private JButton getBclose() {
         if(bclose == null) {
-        	bclose = new javax.swing.JButton(Translator.getString("STR_back"));
-        	bclose.setToolTipText(Translator.getString("STR_back_descr"));
+        	bclose = new javax.swing.JButton(Txt.t("STR_back"));
+        	bclose.setToolTipText(Txt.t("STR_back_descr"));
         	bclose.getModel().setMnemonic(KeyEvent.VK_E);
         	bclose.addActionListener(new java.awt.event.ActionListener() { 
                 public void actionPerformed(java.awt.event.ActionEvent e) {
@@ -190,7 +190,7 @@ abstract public class StackDialog extends SimpleDialog {
      */
     private JButton getBrun() {
         if(brun == null) {
-        	brun = new javax.swing.JButton(Translator.getString("STR_run"));
+        	brun = new javax.swing.JButton(Txt.t("STR_run"));
         	brun.getModel().setMnemonic(KeyEvent.VK_R);
         	brun.setActionCommand("run");
         	brun.addActionListener(new java.awt.event.ActionListener() { 

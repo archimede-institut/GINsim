@@ -1,6 +1,6 @@
 package org.ginsim.core.notification.resolvable;
 
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeExpression;

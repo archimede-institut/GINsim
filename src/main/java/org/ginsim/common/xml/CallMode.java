@@ -1,5 +1,10 @@
 package org.ginsim.common.xml;
 
+/**
+ * Define when to call the handler for an XML tag.
+ *
+ * @author Aurelien Naldi
+ */
 public enum CallMode {
 	/**
 	 * No call will be made, probably useless: why would we create a callDescription for it?

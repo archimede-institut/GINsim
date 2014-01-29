@@ -1,4 +1,4 @@
 /**
- * Hierarchical Transition Graphs provide a compact representation of dynamical behaviours.
+ * Define the main Graph interfaces, and a GraphManager to handle graph types
  */
-package org.ginsim.core.graph.hierarchicaltransitiongraph;
+package org.ginsim.core.graph;

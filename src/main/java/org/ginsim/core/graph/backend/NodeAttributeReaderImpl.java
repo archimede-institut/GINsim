@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.common;
+package org.ginsim.core.graph.backend;
 
 import java.awt.Color;
 import java.awt.FontMetrics;
@@ -11,7 +11,8 @@ import java.io.IOException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.graph.backend.GraphBackend;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.GraphBackend;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;

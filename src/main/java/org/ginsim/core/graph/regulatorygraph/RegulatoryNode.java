@@ -12,13 +12,13 @@ import org.colomoto.logicalmodel.NodeInfoHolder;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
 import org.colomoto.mddlib.operators.MDDBaseOperators;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.common.utils.ToolTipsable;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.graph.common.AbstractGraph;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.AbstractGraph;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterList;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
@@ -324,9 +324,9 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	}
 
 	public String toToolTip() {
-		return    Translator.getString( S_ID) + ":" + getId() + "|"
-				+ Translator.getString( S_NAME) + ":" + name + "|"
-                + Translator.getString( S_MAX) + ":" + getMaxValue()
+		return    Txt.t(S_ID) + ":" + getId() + "|"
+				+ Txt.t(S_NAME) + ":" + name + "|"
+                + Txt.t(S_MAX) + ":" + getMaxValue()
                 + (isOutput() ? "(output)" : "");
 	}
 

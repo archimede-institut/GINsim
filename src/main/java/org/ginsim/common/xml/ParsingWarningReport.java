@@ -2,12 +2,17 @@ package org.ginsim.common.xml;
 
 import java.util.ArrayList;
 
+/**
+ * Store all warnings found while parsing an XML document.
+ *
+ * @author Aurelien Naldi
+ */
 public class ParsingWarningReport extends ArrayList<ParsingWarning> {
 
 	public String getMessage() {
 		return "Parsing warnings";
 	}
-	
+
 	public String getDetail() {
 		StringBuffer sb = new StringBuffer();
 		for (ParsingWarning w: this) {

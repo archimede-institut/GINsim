@@ -6,8 +6,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.common.Edge;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.GraphicalAttributesStore;
 import org.ginsim.core.graph.view.NodeAttributesReader;

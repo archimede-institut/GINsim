@@ -3,16 +3,19 @@ package org.ginsim.core.graph.hierarchicaltransitiongraph;
 import java.util.List;
 
 import org.colomoto.logicalmodel.NodeInfo;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphAssociation;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphAssociation;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 
-
+/**
+ * Hierarchical Transition Graphs provide a compact representation of the dynamical behaviour.
+ *
+ * @author Duncan Berenguier
+ */
 public interface HierarchicalTransitionGraph extends Graph<HierarchicalNode, DecisionOnEdge>, GraphAssociation<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>{
 
-	
 	/**
 	 * add an edge between source and target
 	 * @param source a HierarchicalNode

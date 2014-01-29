@@ -13,7 +13,7 @@ import org.ginsim.TestFileUtils;
 import org.ginsim.TestUtils;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;

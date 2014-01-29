@@ -8,11 +8,10 @@ import java.util.Map;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.initialstate.InitialStatesIterator;
 import org.ginsim.service.tool.reg2dyn.helpers.STGSimulationHelper;
 import org.ginsim.service.tool.reg2dyn.helpers.SimulationHelper;
@@ -132,7 +131,7 @@ public class Simulation implements Runnable {
 //							}
 //						}
 						if (!ready) {
-						    throw new GsException(GsException.GRAVITY_NORMAL, Translator.getString("STR_interrupted"));
+						    throw new GsException(GsException.GRAVITY_NORMAL, Txt.t("STR_interrupted"));
 						}
 
 						// run the simulation on the new node

@@ -1,4 +1,4 @@
-package org.ginsim.core.graph.common;
+package org.ginsim.core.graph.backend;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -13,7 +13,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.graph.backend.GraphBackend;
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.GraphBackend;
 import org.ginsim.core.graph.view.Bezier;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgeEnd;

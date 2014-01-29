@@ -24,10 +24,10 @@ import javax.swing.JTextField;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.shell.GsFileFilter;
@@ -56,7 +56,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 
 	
 	public GraphComparatorFrame( JFrame frame, Graph graph) {
-		super(frame, Translator.getString("STR_gcmp"), 800, 600);
+		super(frame, Txt.t("STR_gcmp"), 800, 600);
 		this.frame = frame;
 		this.frame_graph = graph;
         initialize();
@@ -79,7 +79,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 			c.fill = GridBagConstraints.HORIZONTAL;
 			c.gridwidth = 4;
 			c.ipadx = 10;
-			mainPanel.add(new JLabel(Translator.getString("STR_gcmp_ask")), c);
+			mainPanel.add(new JLabel(Txt.t("STR_gcmp_ask")), c);
 	
 			c.gridy++;
 			c.ipadx = 0;
@@ -98,7 +98,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 			mainPanel.add(g1_filepath, c);
 	
 			c.gridx = 3;
-			g1_chooseFileButton = new JButton(Translator.getString("STR_select_a_file")+"...");
+			g1_chooseFileButton = new JButton(Txt.t("STR_select_a_file")+"...");
 			mainPanel.add(g1_chooseFileButton, c);
 			g1_chooseFileButton.addActionListener(this);	
 	
@@ -116,17 +116,17 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 			mainPanel.add(g2_filepath, c);
 	
 			c.gridx = 3;
-			g2_chooseFileButton = new JButton(Translator.getString("STR_select_a_file")+"...");
+			g2_chooseFileButton = new JButton(Txt.t("STR_select_a_file")+"...");
 			mainPanel.add(g2_chooseFileButton, c);
 			g2_chooseFileButton.addActionListener(this);
 	
 			c.gridy++;
 			c.gridx = 0;
 			c.gridwidth = 3;
-			mainPanel.add(new JLabel(Translator.getString("STR_gcmp_masterGraph")), c);
+			mainPanel.add(new JLabel(Txt.t("STR_gcmp_masterGraph")), c);
 	
 			c.gridy++;
-			displayGraphCheckBox = new JCheckBox(Translator.getString("STR_gcmp_displayGraph"));
+			displayGraphCheckBox = new JCheckBox(Txt.t("STR_gcmp_displayGraph"));
 			displayGraphCheckBox.setSelected(true);
 			mainPanel.add(displayGraphCheckBox, c);
 		}
@@ -135,7 +135,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 
 	private JComboBox initComboBox() {
 		SeparatorComboBox comboBox = new SeparatorComboBox();
-		comboBox.addItem(Translator.getString("STR_gcmp_from_file")+" :");
+		comboBox.addItem(Txt.t("STR_gcmp_from_file")+" :");
 		comboBox.addItem(new JSeparator());
 		graphList = new ArrayList(GraphManager.getInstance().getAllGraphs().size());
 		HashMap graphNames = new HashMap();
@@ -151,7 +151,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 			graphList.add(graph);
 			graphNames.put(name, graph);
 			if (graphNames.containsKey(graph)) {
-				GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_gcmp_graphWithSameName"))+" : "+name, this.frame);
+				GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_INFO, Txt.t("STR_gcmp_graphWithSameName"))+" : "+name, this.frame);
 			}
 
 		}
@@ -207,10 +207,10 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 				g = GraphManager.getInstance().open(new File(filepath.getText()));
 			}
 			catch( GsException ge){
-				GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_GraphNotOpened")), this.frame);
+				GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_INFO, Txt.t("STR_GraphNotOpened")), this.frame);
 			}
 		} else if (index == 1) { //has choose blank element
-			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_INFO, Translator.getString("STR_gcmp_blankComboBox")), this.frame);
+			GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_INFO, Txt.t("STR_gcmp_blankComboBox")), this.frame);
 		} else {
 			g = (Graph) graphList.get(index-2);
 		}

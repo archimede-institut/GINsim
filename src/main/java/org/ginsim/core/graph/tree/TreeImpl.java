@@ -3,8 +3,8 @@ package org.ginsim.core.graph.tree;
 import java.util.Collection;
 import java.util.List;
 
-import org.ginsim.core.graph.common.AbstractGraph;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.AbstractGraph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 
 

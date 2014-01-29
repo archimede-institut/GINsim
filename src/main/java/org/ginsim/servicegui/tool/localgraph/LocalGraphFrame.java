@@ -22,8 +22,8 @@ import javax.swing.event.TableModelListener;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.Edge;
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -101,14 +101,14 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 			c.weighty = 0;
 			c.fill = GridBagConstraints.EAST;
 			autoUpdateCheckbox = new JCheckBox(
-					Translator.getString("STR_localGraph_autoUpdate"));
+					Txt.t("STR_localGraph_autoUpdate"));
 			autoUpdateCheckbox
 					.setSelected(config.getGraph().getNodeOrderSize() < THRESHOLD_AUTO_REFRESH);
 			mainPanel.add(autoUpdateCheckbox, c);
 
 			c.gridy++;
 			colorizeButton = new JButton(
-					Translator.getString("STR_colorize_local"));
+					Txt.t("STR_colorize_local"));
 			colorizeButton.setEnabled(false);
 			colorizeButton.addActionListener(this);
 			mainPanel.add(colorizeButton, c);
@@ -116,12 +116,12 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 			if (config.getDynamic() != null) {
 				c.gridy++;
 				addStatesButton = new JButton(
-						Translator.getString("STR_localGraph_addStates"));
+						Txt.t("STR_localGraph_addStates"));
 				addStatesButton.addActionListener(this);
 				mainPanel.add(addStatesButton, c);
 				c.gridy++;
 				replaceStatesButton = new JButton(
-						Translator.getString("STR_localGraph_getStates"));
+						Txt.t("STR_localGraph_getStates"));
 				replaceStatesButton.addActionListener(this);
 				mainPanel.add(replaceStatesButton, c);
 			}
@@ -131,7 +131,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 
 	private void undoColorize() {
 		styleManager.setStyleProvider(null);
-		colorizeButton.setText(Translator.getString("STR_colorize_local"));
+		colorizeButton.setText(Txt.t("STR_colorize_local"));
 		isColorized = false;
 	}
 
@@ -223,7 +223,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 		styleProvider = new LocalGraphStyleProvider(styleManager, functionalityMap);
 		styleManager.setStyleProvider(styleProvider);
 
-		colorizeButton.setText(Translator.getString("STR_undo_colorize"));
+		colorizeButton.setText(Txt.t("STR_undo_colorize"));
 		isColorized = true;
 	}
 
@@ -291,7 +291,7 @@ class StateSelectorTable extends JPanel {
 		c.gridy = 0;
 		c.ipady = 8;
 		c.fill = GridBagConstraints.BOTH;
-		add(new JLabel(Translator.getString(desckey)), c);
+		add(new JLabel(Txt.t(desckey)), c);
 
 		c.gridy++;
 		c.fill = GridBagConstraints.BOTH;

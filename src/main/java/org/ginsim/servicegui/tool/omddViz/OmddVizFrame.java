@@ -18,7 +18,7 @@ import javax.swing.JTextField;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDOperator;
 import org.colomoto.mddlib.operators.MDDBaseOperators;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -83,7 +83,7 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 			calcPanel = new javax.swing.JPanel();
 			calcPanel.setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints();
-			calcPanel.setBorder(BorderFactory.createTitledBorder(Translator.getString("STR_omddViz_operation")));
+			calcPanel.setBorder(BorderFactory.createTitledBorder(Txt.t("STR_omddViz_operation")));
 		
 			c.gridx = 0;
 			c.gridy = 0;
@@ -106,14 +106,14 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 			resPanel = new javax.swing.JPanel();
 			resPanel.setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints();
-			resPanel.setBorder(BorderFactory.createTitledBorder(Translator.getString("STR_omddViz_results")));
+			resPanel.setBorder(BorderFactory.createTitledBorder(Txt.t("STR_omddViz_results")));
 		
 			c.gridx = 0;
 			c.gridy = 0;
 			resultTextField = new JTextField("", 25);
 			resPanel.add(resultTextField, c);
 			c.gridy++;
-			displayTreeButton = new JButton(Translator.getString("STR_omddViz_getTree"));
+			displayTreeButton = new JButton(Txt.t("STR_omddViz_getTree"));
 			displayTreeButton.addActionListener(this);
 			resPanel.add(displayTreeButton, c);
 		}

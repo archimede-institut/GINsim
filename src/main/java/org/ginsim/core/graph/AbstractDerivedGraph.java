@@ -1,12 +1,22 @@
-package org.ginsim.core.graph.common;
+package org.ginsim.core.graph;
 
 import java.io.File;
 
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.GraphManager;
 
-
-
+/**
+ * Base class for graphs which need an associated graph.
+ * It derives from the more generic AbstractGraph class and implements method to maintain the graph association.
+ *
+ * @author Lionel Spinelli
+ * @author Aurelien Naldi
+ *
+ * @param <V>   type of vertices
+ * @param <E>   type of edges
+ * @param <AG>  type of associated graph
+ * @param <AV>  type of vertices in the associated graph
+ * @param <AE>  type of edges in the associated graph
+ */
 abstract public class AbstractDerivedGraph<V, E extends Edge<V>, AG extends Graph<AV, AE>, AV, AE extends Edge<AV>>
 			 extends AbstractGraph<V,E>
 			 implements GraphAssociation<AG, AV, AE>, GraphListener<AG> {
@@ -19,12 +29,6 @@ abstract public class AbstractDerivedGraph<V, E extends Edge<V>, AG extends Grap
     	super(factory, parsing);
     }
     
-    
-    //----------------------   ASSOCIATED GRAPH METHODS --------------------------------------------
-    //   TODO: should the associated graph move to specialised graph types?
-	//        with an intermediate class providing the common code it would make sense
-    //----------------------------------------------------------------------------------------------
-	
     
     /**
      * Associate the given graph to the current one

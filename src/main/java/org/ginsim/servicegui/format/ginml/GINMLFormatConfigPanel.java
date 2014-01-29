@@ -5,7 +5,7 @@ import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
 import org.colomoto.logicalmodel.LogicalModel;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.service.format.ginml.GINMLFormatConfig;
@@ -19,10 +19,10 @@ public class GINMLFormatConfigPanel extends LogicalModelActionDialog {
 	private JPanel mainPanel;
 
 	public GINMLFormatConfigPanel(GINMLFormatConfig config, ExportAction action) {
-		super(config.getGraph(), null, Translator.getString("STR_GINML_Title"),
+		super(config.getGraph(), null, Txt.t("STR_GINML_Title"),
 				600, 300);
-		this.setTitle(Translator.getString("STR_GINML_RunningTitle"));
-		setUserID(Translator.getString("STR_GINML_Title"));
+		this.setTitle(Txt.t("STR_GINML_RunningTitle"));
+		setUserID(Txt.t("STR_GINML_Title"));
 		this.config = config;
 		this.action = action;
 

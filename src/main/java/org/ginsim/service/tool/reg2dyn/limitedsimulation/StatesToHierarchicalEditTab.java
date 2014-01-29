@@ -16,7 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
@@ -86,7 +86,7 @@ public class StatesToHierarchicalEditTab extends AbstractParameterPanel<DynamicN
 
 	private JButton getShowInHTGButton() {
 		if (showInHTGButton == null) {
-			showInHTGButton = new JButton(Translator.getString("STR_limitedSimulation_showInHTGButton"));
+			showInHTGButton = new JButton(Txt.t("STR_limitedSimulation_showInHTGButton"));
 			showInHTGButton.addActionListener(new ActionListener() {
 				
 				@Override
@@ -164,7 +164,7 @@ public class StatesToHierarchicalEditTab extends AbstractParameterPanel<DynamicN
         jTable.getColumnModel().getColumn(0).setMinWidth(10);
         jTable.getColumnModel().getColumn(0).setPreferredWidth(10);
         nameLabel.setText("Name: "+node.toString()+", ID:"+node.getUniqueId());
-        typeLabel.setText("Type: "+Translator.getString("STR_"+node.typeToString()));
+        typeLabel.setText("Type: "+ Txt.t("STR_" + node.typeToString()));
 	}
 
 }

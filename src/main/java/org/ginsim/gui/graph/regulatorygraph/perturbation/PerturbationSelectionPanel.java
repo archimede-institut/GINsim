@@ -3,8 +3,8 @@ package org.ginsim.gui.graph.regulatorygraph.perturbation;
 import java.awt.Component;
 import java.util.List;
 
-import org.ginsim.common.application.Translator;
-import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -27,7 +27,7 @@ public class PerturbationSelectionPanel extends ListSelectionPanel<Perturbation>
 	private final PerturbationHolder holder;
 	
 	public PerturbationSelectionPanel(StackDialog dialog, RegulatoryGraph graph, PerturbationHolder holder) {
-		super(dialog, Translator.getString("STR_mutants"));
+		super(dialog, Txt.t("STR_mutants"));
 		
 		this.graph = graph;
 		this.holder = holder;
@@ -35,7 +35,7 @@ public class PerturbationSelectionPanel extends ListSelectionPanel<Perturbation>
         GraphGUI<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> gui = GUIManager.getInstance().getGraphGUI(graph);
         gui.addGraphGUIListener(this);
 
-        initialize(Translator.getString("STR_mutants"), true);
+        initialize(Txt.t("STR_mutants"), true);
 	}
 	
 	@Override

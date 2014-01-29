@@ -26,11 +26,11 @@ import javax.swing.ListSelectionModel;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.commongui.utils.ImageLoader;
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
@@ -77,12 +77,12 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 			c.fill = GridBagConstraints.HORIZONTAL;
 			c.ipadx = 10;
 			c.gridwidth = 3;
-			mainPanel.add(new JLabel(Translator.getString("STR_pathFinding")), c);
+			mainPanel.add(new JLabel(Txt.t("STR_pathFinding")), c);
 			
 			c.gridx = 0;
 			c.gridy++;			
 			c.gridwidth = 1;
-			mainPanel.add(new JLabel(Translator.getString("STR_pathFinding_start")), c);
+			mainPanel.add(new JLabel(Txt.t("STR_pathFinding_start")), c);
 			c.gridx++;
 			c.weightx = 1;
 			mainPanel.add(getStartField(), c);
@@ -93,7 +93,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 			c.gridx = 0;
 			c.gridy++;			
 			c.weightx = 0;
-			mainPanel.add(new JLabel(Translator.getString("STR_pathFinding_end")), c);
+			mainPanel.add(new JLabel(Txt.t("STR_pathFinding_end")), c);
 			c.gridx++;
 			c.weightx = 1;
 			mainPanel.add(getEndField(), c);
@@ -184,7 +184,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 
 	private Component getCopyButton() {
 		if (copyButton == null) {
-			copyButton = new JButton(Translator.getString("STR_pathFinding_copy"));
+			copyButton = new JButton(Txt.t("STR_pathFinding_copy"));
 			copyButton.addActionListener(this);
 		}
 		return copyButton;
@@ -192,7 +192,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 
 	private Component getColorizeButton() {
 		if (colorizeButton == null) {
-			colorizeButton = new JButton(Translator.getString("STR_do_colorize"));
+			colorizeButton = new JButton(Txt.t("STR_do_colorize"));
 			colorizeButton.addActionListener(this);
 		}
 		return colorizeButton;
@@ -251,10 +251,10 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 			setProgressMax(graph.getNodes().size());
 		}
 		if (startTextField.getText().length() == 0) {
-			GUIMessageUtils.openErrorDialog(Translator.getString("STR_pathFinding_start")+" "+Translator.getString("STR_isempty"), this);
+			GUIMessageUtils.openErrorDialog(Txt.t("STR_pathFinding_start")+" "+ Txt.t("STR_isempty"), this);
 			return;
 		} else if (endTextField.getText().length() == 0) {
-			GUIMessageUtils.openErrorDialog(Translator.getString("STR_pathFinding_end")+" "+Translator.getString("STR_isempty"), this);
+			GUIMessageUtils.openErrorDialog(Txt.t("STR_pathFinding_end")+" "+ Txt.t("STR_isempty"), this);
 			return;
 		}
 		Object start = getNode(startTextField); 
@@ -338,7 +338,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		String lookup = textField.getText();
 		List foundNodes = graph.searchNodes( lookup);
 		if (foundNodes == null) {
-			GUIMessageUtils.openErrorDialog(Translator.getString("STR_pathFinding_no_node")+textField.getText(), this);
+			GUIMessageUtils.openErrorDialog(Txt.t("STR_pathFinding_no_node")+textField.getText(), this);
 			return null;
 		} else if (foundNodes.size() == 1) {
 			return foundNodes.get(0);
@@ -349,10 +349,10 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 					return cur;
 				}
 			}
-			GUIMessageUtils.openErrorDialog(Translator.getString("STR_pathFinding_too_much_nodes")+textField.getText(), this);
+			GUIMessageUtils.openErrorDialog(Txt.t("STR_pathFinding_too_much_nodes")+textField.getText(), this);
 			return null;
 		} else {
-			GUIMessageUtils.openErrorDialog(Translator.getString("STR_pathFinding_no_node")+textField.getText(), this);
+			GUIMessageUtils.openErrorDialog(Txt.t("STR_pathFinding_no_node")+textField.getText(), this);
 			return null;
 		}
 	}
@@ -367,14 +367,14 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 			graph.getStyleManager().setStyleProvider(selector);
 		
 			graph.fireGraphChange(GraphChangeType.GRAPHVIEWCHANGED, null);
-			colorizeButton.setText(Translator.getString("STR_undo_colorize"));
+			colorizeButton.setText(Txt.t("STR_undo_colorize"));
 			isColorized = true;
 		}
 	}
 	
 	private void undoColorize() {
 		graph.getStyleManager().setStyleProvider(null);
-		colorizeButton.setText(Translator.getString("STR_do_colorize"));
+		colorizeButton.setText(Txt.t("STR_do_colorize"));
 		isColorized = false;
 	}
 

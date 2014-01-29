@@ -1,6 +1,5 @@
 package org.ginsim.core.graph.hierarchicaltransitiongraph;
 
-
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDOperator;
 import org.colomoto.mddlib.MDDVariable;
@@ -11,20 +10,6 @@ import org.xml.sax.SAXException;
 import java.text.ParseException;
 import java.util.LinkedList;
 import java.util.List;
-
-
-/* SUMMARY
- *
- * **************** CONSTRUCTORS ************/
-/* **************** ADD STATE ************/
-/* **************** SIZE CONSISTENCY CHECK ************/
-/* **************** CONTAINS, UPDATESTATUS, REDUCE************/
-/* **************** STATES CONSTRUCTORS ************/
-/* **************** GETTERS AND SETTERS ************/
-/* **************** STATE TO LISTS ************/
-/* **************** TO STRINGS ************/
-/* **************** PARSING ************/
-
 
 /**
  * <p>A wrapper of OMDDNode that adds the essentials methods to store states.</p>

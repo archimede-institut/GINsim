@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.swing.JTabbedPane;
 
-import org.ginsim.core.graph.common.Graph;
-import org.ginsim.core.graph.common.GraphChangeType;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.graph.GraphSelection;

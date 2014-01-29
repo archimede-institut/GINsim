@@ -2,7 +2,7 @@ package org.ginsim.gui.graph.regulatorygraph;
 
 import java.awt.GridBagConstraints;
 
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -37,35 +37,35 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
 	public RegulatoryNodeEditor(RegulatoryGraph graph) {
 		this.graph = graph;
 		master = graph;
-		GenericPropertyInfo pinfo = new GenericPropertyInfo(this, PROP_ID, Translator.getString("STR_id"), String.class);
+		GenericPropertyInfo pinfo = new GenericPropertyInfo(this, PROP_ID, Txt.t("STR_id"), String.class);
 		v_prop.add(pinfo);
-		pinfo = new GenericPropertyInfo(this, PROP_NAME, Translator.getString("STR_name"), String.class);
+		pinfo = new GenericPropertyInfo(this, PROP_NAME, Txt.t("STR_name"), String.class);
 		v_prop.add(pinfo);
-		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_max"), SpinModel.class);
+		pinfo = new GenericPropertyInfo(this, PROP_RAW, Txt.t("STR_max"), SpinModel.class);
 		pinfo.data = new NodeMaxValueSpinModel(graph);
 		pinfo.addPosition(0,3);
 		pinfo.addPosition(1, 3);
 		pinfo.addPosition(0, 2);
 		pinfo.addPosition(1, 2);
 		v_prop.add(pinfo);
-        pinfo = new GenericPropertyInfo(this, PROP_INPUT, Translator.getString("STR_Fixed_input"), Boolean.class);
+        pinfo = new GenericPropertyInfo(this, PROP_INPUT, Txt.t("STR_Fixed_input"), Boolean.class);
         v_prop.add(pinfo);
 
 		// build the group [note, parameter, function]
 		GenericPropertyInfo[] t = new GenericPropertyInfo[3];
-		pinfo = new GenericPropertyInfo(this, PROP_ANNOTATION, Translator.getString("STR_notes"), Annotation.class);
+		pinfo = new GenericPropertyInfo(this, PROP_ANNOTATION, Txt.t("STR_notes"), Annotation.class);
 		t[0] = pinfo;
-		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_parameters"), RegulatoryNode.class);
+		pinfo = new GenericPropertyInfo(this, PROP_RAW, Txt.t("STR_parameters"), RegulatoryNode.class);
 		pinfo.data = graph;
 		t[1] = pinfo;
-		pinfo = new GenericPropertyInfo(this, PROP_RAW, Translator.getString("STR_function"), LogicalFunctionPanel.class);
+		pinfo = new GenericPropertyInfo(this, PROP_RAW, Txt.t("STR_function"), LogicalFunctionPanel.class);
 		pinfo.data = graph;
 		t[2] = pinfo;
 		
 		// and add the group
 		pinfo = new GenericPropertyInfo(this, -1, null, GenericPropertyInfo[].class);
 		pinfo.data = t;
-		pinfo.name = Translator.getString("STR_parameters");
+		pinfo.name = Txt.t("STR_parameters");
 		pinfo.addPosition(0, 4, 2, 1, 0, 0, GridBagConstraints.SOUTH);
 		pinfo.addPosition(2, 0, 1, 5, 1, 1, GridBagConstraints.SOUTH);
 		v_prop.add(pinfo);

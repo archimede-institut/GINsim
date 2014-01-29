@@ -16,7 +16,7 @@ import javax.swing.event.ChangeListener;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.common.application.Translator;
+import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraph;
@@ -64,11 +64,11 @@ public class LimitedSimulationFrame extends LogicalModelActionDialog {
 		
 			c.gridx = 0;
 			c.gridy = 0;
-			JLabel label = new JLabel(Translator.getString("STR_limitedSimulation_instructions"));
+			JLabel label = new JLabel(Txt.t("STR_limitedSimulation_instructions"));
 			mainPanel.add(label, c);
 			
 			c.gridy++;
-			strategy = new JCheckBox(Translator.getString("STR_limitedSimulation_alsoIncludeFirstOutgoingStates"));
+			strategy = new JCheckBox(Txt.t("STR_limitedSimulation_alsoIncludeFirstOutgoingStates"));
 			Boolean isStrategySelected = OptionStore.getOption(OPTION_LIMITED_SIMULATION_INCLUDE_FIRST_OUTGOING_STATES, true);
 			strategy.setSelected(isStrategySelected.booleanValue());
 			strategy.addChangeListener(new ChangeListener() {

@@ -3,9 +3,7 @@ package org.ginsim.core.graph.hierarchicaltransitiongraph;
 import java.util.HashSet;
 import java.util.Iterator;
 
-
 /**
- * 
  * <p>Define a set of nodes for the Hierarchical Transition Graph.<br>
  * It is used to have an HashSet of HierarchicalNode.</p>
  * 
@@ -14,18 +12,18 @@ import java.util.Iterator;
  *
  *
  * <p><i>The java 1.5 definition should be HierarchicalNodeSet&lt;HierarchicalNode&gt;</i></p>
+ *
+ * @author Duncan Berenguier
  */
 public class HierarchicalNodeSet extends HashSet<HierarchicalNode> {
-	private static final long serialVersionUID = -6542206623359579872L;
-	
+
 	private int hashCode = 0;
 	public HierarchicalNodeSet() {
 		super();
 	}
 	
 	/**
-	 * 
-	 * <p>Iterate over all the DynamicalHierarchicalNode in the HashSet and test if it 
+	 * <p>Iterate over all the DynamicalHierarchicalNode in the HashSet and test if it
 	 * contains <b>state</b> using the function contains(state) of HierarchicalNode</p>
 	 * 
 	 * <p>The complexity is equal to the count of HierarchicalNode times the function contains. That is O(|States|x|Genes|).</p>

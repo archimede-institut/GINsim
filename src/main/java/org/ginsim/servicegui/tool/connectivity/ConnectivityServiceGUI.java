@@ -12,7 +12,7 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.common.Graph;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
 import org.ginsim.core.graph.view.style.StyleProvider;
