@@ -25,6 +25,9 @@ public class DefaultHTGNodeStyle extends NodeStyleImpl<HierarchicalNode> {
 
 	@Override
 	public Color getBackground(HierarchicalNode hnode) {
+        if (hnode == null) {
+            return Color.WHITE;
+        }
 		switch (hnode.getType()) {
 		case HierarchicalNode.TYPE_STABLE_STATE:
 			return (HierarchicalNode.TYPE_STABLE_STATE_COLOR);
@@ -48,6 +51,10 @@ public class DefaultHTGNodeStyle extends NodeStyleImpl<HierarchicalNode> {
 
 	@Override
 	public NodeShape getNodeShape(HierarchicalNode hnode) {
+        if (hnode == null) {
+            return NodeShape.RECTANGLE;
+        }
+
 		switch (hnode.getType()) {
 			case HierarchicalNode.TYPE_TRANSIENT_CYCLE:
 			case HierarchicalNode.TYPE_TERMINAL_CYCLE:

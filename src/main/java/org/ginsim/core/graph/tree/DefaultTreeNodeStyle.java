@@ -13,6 +13,10 @@ public class DefaultTreeNodeStyle extends NodeStyleImpl<TreeNode> {
 
 	@Override
 	public Color getBackground(TreeNode vertex) {
+        if (vertex == null) {
+            return ColorPalette.defaultPalette[0];
+        }
+
 		if (vertex.getType() == TreeNode.TYPE_LEAF) {
 			return ColorPalette.defaultPalette[vertex.getValue()+1];
 		}
@@ -24,6 +28,10 @@ public class DefaultTreeNodeStyle extends NodeStyleImpl<TreeNode> {
 
 	@Override
 	public Color getTextColor(TreeNode vertex) {
+        if (vertex == null) {
+            return Color.WHITE;
+        }
+
 		if (vertex.getType() == TreeNode.TYPE_LEAF) {
 			return Color.WHITE;
 		}
@@ -35,7 +43,7 @@ public class DefaultTreeNodeStyle extends NodeStyleImpl<TreeNode> {
 
 	@Override
 	public NodeShape getNodeShape(TreeNode vertex) {
-		if (vertex.getType() == TreeNode.TYPE_LEAF) {
+		if (vertex != null && vertex.getType() == TreeNode.TYPE_LEAF) {
 			return NodeShape.ELLIPSE;
 		}
 		return NodeShape.RECTANGLE;

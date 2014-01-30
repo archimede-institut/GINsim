@@ -9,7 +9,11 @@ public class DefaultTreeEdgeStyle extends EdgeStyleImpl<TreeNode, TreeEdge> {
 
 	@Override
 	public Color getColor(TreeEdge edge) {
-		return ColorPalette.defaultPalette[edge.getValue()+1];
+        int value = 0;
+        if (edge != null) {
+            value = edge.getValue();
+        }
+		return ColorPalette.defaultPalette[value+1];
 	}
 	
 }

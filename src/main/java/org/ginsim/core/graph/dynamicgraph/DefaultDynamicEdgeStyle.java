@@ -29,6 +29,10 @@ public class DefaultDynamicEdgeStyle extends EdgeStyleImpl<DynamicNode, DynamicE
 	
 	@Override
 	public EdgePattern getPattern(DynamicEdge edge) {
+        if (edge == null) {
+            return EdgePattern.SIMPLE;
+        }
+
 		switch (edge.changeType) {
 		case MULTIPLE_BOTH:
 		case MULTIPLE_INCREASE:
@@ -40,6 +44,10 @@ public class DefaultDynamicEdgeStyle extends EdgeStyleImpl<DynamicNode, DynamicE
 
 	@Override
 	public Color getColor(DynamicEdge edge) {
+        if (edge == null) {
+            return super.getColor(null);
+        }
+
 		switch (edge.changeType) {
 		case INCREASE:
 		case MULTIPLE_INCREASE:

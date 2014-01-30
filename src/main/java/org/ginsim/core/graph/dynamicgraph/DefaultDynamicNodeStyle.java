@@ -26,7 +26,7 @@ public class DefaultDynamicNodeStyle extends NodeStyleImpl<DynamicNode> {
 
 	@Override
 	public NodeShape getNodeShape(DynamicNode obj) {
-		if (obj.isStable()) {
+		if (obj != null && obj.isStable()) {
 			return NodeShape.ELLIPSE;
 		}
 		return NodeShape.RECTANGLE;
