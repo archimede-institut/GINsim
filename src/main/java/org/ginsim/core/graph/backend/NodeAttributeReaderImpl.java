@@ -27,7 +27,7 @@ import org.ginsim.core.graph.view.style.StyleManager;
  */
 public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttributesReader<V> {
 
-	public static final boolean SAVE_OLD_VS = false;
+//	public static final boolean SAVE_OLD_VS = false;
 	
 	private static char ELLIPSIS = '\u2026';
 	
@@ -83,9 +83,9 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
     private SimpleStroke stroke = new SimpleStroke();
 
     /**
-     * @param graphType
+     * @param styleManager
      * @param backend
-     * @param map
+     * @param backend
      */
     public NodeAttributeReaderImpl(StyleManager<V, E> styleManager, GraphBackend<V, E> backend) {
     	this.backend = backend;
@@ -276,7 +276,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 	 * and the graphics context has been translated to its position.
 	 * i.e. render the current node at (0,0)
 	 * 
-	 * @param node
+	 * @param text
 	 * @param g
 	 * @param moving
 	 */
@@ -346,32 +346,31 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 		writer.openTag("nodevisualsetting");
 		writer.addAttr("x", ""+getX());
 		writer.addAttr("y", ""+getY());
-		if (style != null) {
+
+        if (styleManager.isDisabled()) {
+            // write old attributes for backward compatibility
+            if (getShape() == NodeShape.ELLIPSE) {
+                writer.openTag("ellipse");
+            } else {
+                writer.openTag("rect");
+            }
+
+            writer.addAttr("x", ""+getX());
+            writer.addAttr("y", ""+getY());
+            writer.addAttr("width", ""+getWidth());
+            writer.addAttr("height", ""+getHeight());
+
+            Color bg = getBackgroundColor();
+            Color fg = getForegroundColor();
+            Color txt = getTextColor();
+            writer.addAttr("backgroundColor", bg);
+            writer.addAttr("foregroundColor", fg);
+            if (!txt.equals(fg)) {
+                writer.addAttr("textColor", txt);
+            }
+            writer.closeTag();
+        } else if (style != null) {
 			writer.addAttr("style", style.getName());
-		}
-		
-		if (SAVE_OLD_VS) {
-			// write old attributes for backward compatibility
-	        if (getShape() == NodeShape.ELLIPSE) {
-	        	writer.openTag("ellipse");
-	        } else {
-	        	writer.openTag("rect");
-	        }
-	        
-	        writer.addAttr("x", ""+getX());
-	        writer.addAttr("y", ""+getY());
-	        writer.addAttr("width", ""+getWidth());
-	        writer.addAttr("height", ""+getHeight());
-	        
-	        Color bg = getBackgroundColor();
-			Color fg = getForegroundColor();
-			Color txt = getTextColor();
-	        writer.addAttr("backgroundColor", bg);
-	        writer.addAttr("foregroundColor", fg);
-			if (!txt.equals(fg)) {
-		        writer.addAttr("textColor", txt);
-			}
-			writer.closeTag();
 		}
 		
 		writer.closeTag();

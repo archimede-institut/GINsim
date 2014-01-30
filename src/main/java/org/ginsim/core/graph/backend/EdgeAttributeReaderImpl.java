@@ -406,12 +406,9 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 		if (points != null) {
 			writer.addAttr("points", points);
 		}
-		if (style != null) {
-			writer.addAttr("style", style.getName());
-		}
-		
-		// write old attributes for backward compatibility
-		if (NodeAttributeReaderImpl.SAVE_OLD_VS) {
+
+		if (styleManager.isDisabled()) {
+            // write old attributes for backward compatibility
         	writer.openTag("polyline");
 	        
 	        writer.addAttr("points", getPointDescr( ViewHelper.getPoints(nreader, this, edge) ));
@@ -424,7 +421,9 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 	        }
 
 	        writer.closeTag();
-		}
+        } else if (style != null) {
+            writer.addAttr("style", style.getName());
+        }
 
 		writer.closeTag();
 	}

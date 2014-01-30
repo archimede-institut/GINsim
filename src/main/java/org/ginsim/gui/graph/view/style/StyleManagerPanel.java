@@ -16,7 +16,12 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.List;
 
-
+/**
+ * Panel allowing to view and edit all available styles.
+ * It is shown when no item is selected.
+ *
+ * @author Aurelien Naldi
+ */
 public class StyleManagerPanel extends JPanel implements ItemListener, ListSelectionListener, ActionListener {
 
 	private final StyleManager manager;
@@ -55,6 +60,7 @@ public class StyleManagerPanel extends JPanel implements ItemListener, ListSelec
         c.gridy++;
         c.gridx = 0;
         c.gridwidth = 2;
+        c.gridheight = 2;
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
         styleTable = new JList(nStyleModel);
@@ -64,6 +70,7 @@ public class StyleManagerPanel extends JPanel implements ItemListener, ListSelec
         // style provider reset button
         c.gridx = 2;
         c.gridy = 0;
+        c.gridheight = 1;
         c.weightx = 0;
         c.weighty = 0;
         b_removeProvider = new JButton("Remove style provider");
@@ -74,16 +81,46 @@ public class StyleManagerPanel extends JPanel implements ItemListener, ListSelec
         // style edition panel itself
         c.gridx = 2;
         c.gridy = 1;
-        c.gridwidth = 2;
+        c.gridwidth = 3;
         c.weightx = 1;
         c.weighty = 1;
         stylePanel = new StyleEditionPanel(gui, manager);
         add(stylePanel, c);
 
+        c.gridx = 2;
+        c.gridy = 2;
+        c.gridwidth = 1;
+        c.weightx = 0;
+        c.weighty = 0;
+        JButton disableButton = new JButton("Disable styles");
+        add(disableButton, c);
+        disableButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                disableStyles();
+            }
+        });
+
+        c.gridx = 3;
+        JButton enableButton = new JButton("Enable styles");
+        add(enableButton, c);
+        enableButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                enableStyles();
+            }
+        });
 
         styleTable.setSelectedIndex(0);
 	}
 
+    protected void disableStyles() {
+        manager.setEnabled(false);
+    }
+
+    protected void enableStyles() {
+        manager.setEnabled(true);
+    }
 
     @Override
     public void itemStateChanged(ItemEvent itemEvent) {

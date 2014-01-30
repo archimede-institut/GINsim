@@ -25,12 +25,14 @@ import org.xml.sax.Attributes;
  * 
  * @author Aurelien Naldi
  *
- * @param <V>
- * @param <E>
+ * @param <V>   The type of Vertices
+ * @param <E>   The type of Edges
  */
 public class StyleManager<V, E extends Edge<V>> {
 
-	private final GraphBackend<V, E> backend;
+    private boolean isDisabled = false;
+
+    private final GraphBackend<V, E> backend;
 	
 	private final NodeStyle<V> defaultNodeStyle;
 	private final EdgeStyle<V,E> defaultEdgeStyle;
@@ -39,7 +41,7 @@ public class StyleManager<V, E extends Edge<V>> {
 	private final List<EdgeStyle<V,E>> edgeStyles;
 	
 	private StyleProvider<V, E> provider;
-	
+
 	/**
 	 * Create a style manager, defining default styles.
 	 * 
@@ -60,7 +62,25 @@ public class StyleManager<V, E extends Edge<V>> {
 		backend.setDefaultEdgeStyle(defaultEdgeStyle);
 	}
 
-	/**
+    /**
+     * Check if the styles are disabled (for backward compatibility when saving).
+     * @return true if styles should not be used.
+     */
+    public boolean isDisabled() {
+        return isDisabled;
+    }
+
+    /**
+     * Enable or disable styles.
+     * @param b
+     */
+    public void setEnabled(boolean b) {
+        this.isDisabled = !b;
+        backend.damage(null);
+        backend.repaint();
+    }
+
+    /**
 	 * Retrieve the default style for nodes
 	 * @return the default style for nodes
 	 */
@@ -83,6 +103,9 @@ public class StyleManager<V, E extends Edge<V>> {
 	 * @throws IOException
 	 */
 	public void styles2ginml(XMLWriter writer) throws IOException {
+        if (isDisabled) {
+            return;
+        }
 		// save node styles
 		style2ginml(writer, defaultNodeStyle, "nodestyle");
 		for (NodeStyle<V> style: nodeStyles) {
@@ -380,6 +403,9 @@ public class StyleManager<V, E extends Edge<V>> {
 	 * @return the style for this node.
 	 */
 	public NodeStyle<V> getUsedNodeStyle(V node) {
+        if (isDisabled) {
+            return defaultNodeStyle;
+        }
 		NodeViewInfo info = backend.getNodeViewInfo(node);
 		NodeStyle<V> style = info.getStyle();
 		if (style == null) {
@@ -411,6 +437,9 @@ public class StyleManager<V, E extends Edge<V>> {
 	 * @return the style for this edge.
 	 */
 	public EdgeStyle getUsedEdgeStyle(E edge) {
+        if (isDisabled) {
+            return defaultEdgeStyle;
+        }
 		EdgeViewInfo<V, E> info = backend.getEdgeViewInfo(edge);
 		if (info == null) {
 			return defaultEdgeStyle;
