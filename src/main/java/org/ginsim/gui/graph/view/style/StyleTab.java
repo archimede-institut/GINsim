@@ -58,6 +58,7 @@ public class StyleTab extends JPanel
         this.nStyleModel = new ListTableModel(manager.getNodeStyles());
         this.eStyleModel = new ListTableModel(manager.getEdgeStyles());
         this.list = new JList(nStyleModel);
+        list.setCellRenderer(new StyleCellRenderer());
         list.addListSelectionListener(this);
 
         this.stylePanel = new StyleEditionPanel(gui, manager);
@@ -376,5 +377,85 @@ class ListTableModel extends AbstractListModel {
 
     public void refresh() {
         fireContentsChanged(this, 0, getSize());
+    }
+}
+
+class StyleCellRenderer extends JPanel implements ListCellRenderer<Style> {
+
+    private final JLabel name = new JLabel();
+
+    private NodeStyle nstyle;
+    private EdgeStyle estyle;
+
+
+
+    public StyleCellRenderer() {
+        super(new GridBagLayout());
+
+        GridBagConstraints cst = new GridBagConstraints();
+        cst.gridx = 1;
+        cst.gridy = 1;
+        cst.weightx = 1;
+        cst.anchor = GridBagConstraints.WEST;
+        cst.fill = GridBagConstraints.BOTH;
+        cst.insets = new Insets(2,45, 2, 2);
+        add(name, cst);
+    }
+
+    @Override
+    public Component getListCellRendererComponent(JList<? extends Style> jList, Style style, int i, boolean selected, boolean focused) {
+
+        if (selected) {
+            setBackground(Color.BLUE);
+            name.setForeground(Color.WHITE);
+        } else {
+            setBackground(Color.WHITE);
+            name.setForeground(Color.BLACK);
+        }
+
+        name.setText(style.toString());
+        this.nstyle = null;
+        this.estyle = null;
+        if (style instanceof NodeStyle) {
+            this.nstyle = (NodeStyle)style;
+        } else if (style instanceof EdgeStyle) {
+            this.estyle = (EdgeStyle)style;
+        }
+
+        repaint();
+
+        return this;
+    }
+
+    @Override
+    public void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+
+        int w = getSize().width;
+        int h = getSize().height;
+        g2.setColor(getBackground());
+        g2.fillRect(0,0,w,h);
+
+        w = 35;
+        g2.setColor(Color.WHITE);
+        g2.fillRect(1,1,w,h-2);
+
+        if (nstyle != null) {
+            Shape shape = nstyle.getNodeShape(null).getShape(2,2, w-4, h-4);
+            g2.setColor(nstyle.getBackground(null));
+            g2.fill(shape);
+            g2.setColor(nstyle.getForeground(null));
+            g2.draw(shape);
+
+            g2.setColor(nstyle.getTextColor(null));
+            g2.drawString("id", w/3, h-5);
+
+        } else if (estyle != null) {
+            g2.setColor(estyle.getColor(null));
+            g2.drawLine(5,h/2, w-5, h/2);
+        } else {
+            g2.setColor(Color.RED);
+            g2.drawString("?", 5, 2*h/3);
+        }
     }
 }

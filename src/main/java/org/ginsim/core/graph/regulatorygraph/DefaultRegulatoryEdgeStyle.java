@@ -36,6 +36,10 @@ public class DefaultRegulatoryEdgeStyle extends EdgeStyleImpl<RegulatoryNode, Re
 	
 	@Override
 	public Color getColor(RegulatoryMultiEdge edge) {
+        if (edge == null) {
+            return super.getColor(null);
+        }
+
 		switch (edge.getSign()) {
 		case POSITIVE:
 			return c_positive;
@@ -49,6 +53,10 @@ public class DefaultRegulatoryEdgeStyle extends EdgeStyleImpl<RegulatoryNode, Re
 
 	@Override
 	public EdgeEnd getEnding(RegulatoryMultiEdge edge) {
+        if (edge == null) {
+            return EdgeEnd.UNKNOWN;
+        }
+
 		switch (edge.getSign()) {
 		case POSITIVE:
 			return EdgeEnd.POSITIVE;
