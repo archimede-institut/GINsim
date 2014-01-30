@@ -1,63 +1,380 @@
 package org.ginsim.gui.graph.view.style;
 
-import java.awt.CardLayout;
-import java.awt.Component;
-import java.util.Collection;
-
-import javax.swing.JPanel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.util.*;
 
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
-import org.ginsim.core.graph.view.style.StyleManager;
+import org.ginsim.core.graph.view.style.*;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.shell.editpanel.EditTab;
-import org.ginsim.gui.shell.editpanel.SelectionType;
+import org.ginsim.gui.utils.widgets.StockButton;
 
-public class StyleTab extends JPanel implements EditTab {
+import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
-	private static final String ITEMPANEL = "item";
-	private static final String MANAGERPANEL = "manager";
-	
-    private final StyleItemPanel itemPanel;
-    private final StyleManagerPanel managerPanel;
-    
-    private final CardLayout cards;
-    
-	public StyleTab(GraphGUI<?, ?, ?> gui) {
-		this.cards = new CardLayout();
-		this.setLayout(cards);
+/**
+ * The style tab: forward selection to the actual Style panel.
+ *
+ * @author Aurelien Naldi
+ */
+public class StyleTab extends JPanel
+        implements ListSelectionListener, ItemListener, ActionListener, EditTab {
 
-		Graph graph = gui.getGraph();
-    	StyleManager manager = graph.getStyleManager();
-    	
-		this.itemPanel = new StyleItemPanel(gui);
-		this.managerPanel = new StyleManagerPanel(gui);
+    private final StyleManager manager;
 
-		add(itemPanel, ITEMPANEL);
-		add(managerPanel, MANAGERPANEL);
-	}
+    private final ListTableModel nStyleModel;
+    private final ListTableModel eStyleModel;
+    private final JList list;
 
-	@Override
-	public final Component getComponent() {
-		return this;
-	}
+    private final StyleEditionPanel stylePanel;
 
-	@Override
-	public String getTitle() {
-		return "Style";
-	}
+    private Collection selectedNodes = null;
+    private Collection<Edge> selectedEdges = null;
 
-	@Override
-	public boolean isActive(GraphSelection<?, ?> selection) {
+    private final JToggleButton bNodes, bEdges;
+    private final JButton b_removeProvider;
+    private final JButton b_switch;
 
-		if (selection.getSelectionType() == SelectionType.SEL_NONE) {
-			cards.show(this, MANAGERPANEL);
-		} else {
-			itemPanel.edit(selection.getSelectedNodes(), (Collection<Edge>)selection.getSelectedEdges());
-			cards.show(this, ITEMPANEL);
+    private final JLabel label = new JLabel();
+    private boolean providerMode = false;
+
+    private boolean pending = false;
+
+    private Style currentStyle = null;
+
+
+    public StyleTab(GraphGUI gui) {
+        super(new GridBagLayout());
+
+        Graph graph = gui.getGraph();
+        this.manager = graph.getStyleManager();
+        this.nStyleModel = new ListTableModel(manager.getNodeStyles());
+        this.eStyleModel = new ListTableModel(manager.getEdgeStyles());
+        this.list = new JList(nStyleModel);
+        list.addListSelectionListener(this);
+
+        this.stylePanel = new StyleEditionPanel(gui, manager);
+
+        GridBagConstraints c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.NORTHWEST;
+        c.gridx = 0;
+        c.gridy = 0;
+
+        // select node or edge styles
+        ButtonGroup group = new ButtonGroup();
+        bNodes = new JToggleButton("Nodes");
+        group.add(bNodes);
+        bEdges = new JToggleButton("Edges");
+        group.add(bEdges);
+        bNodes.setSelected(true);
+        bNodes.addItemListener(this);
+
+        add(bNodes, c);
+        c.gridx++;
+        add(bEdges, c);
+
+        // information label
+        c.gridx += 2;
+        c.fill = GridBagConstraints.NONE;
+        c.anchor = GridBagConstraints.NORTH;
+        add(label, c);
+
+        // style on/off button
+        c.gridx++;
+        c.fill = GridBagConstraints.NONE;
+        c.anchor = GridBagConstraints.NORTHEAST;
+        b_removeProvider = new JButton("Remove style provider");
+        b_removeProvider.setVisible(false);
+        b_removeProvider.addActionListener(this);
+        add(b_removeProvider, c);
+
+        // style provider reset button
+        c.gridx++;
+        b_switch = new JButton("Switch styles on/off");
+        add(b_switch, c);
+        b_switch.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                switchStyles();
+            }
+        });
+
+        c.gridy++;
+        c.gridwidth = 7;
+        c.gridx = 0;
+        c.weightx = 1;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        add(new JSeparator(), c);
+
+        // add the style list
+        GridBagConstraints cst = new GridBagConstraints();
+        cst.gridx = 0;
+        cst.gridy = 1;
+        cst.weighty = 1;
+        cst.gridwidth = 2;
+        cst.gridheight = 3;
+        cst.fill = GridBagConstraints.BOTH;
+        cst.anchor = GridBagConstraints.NORTHWEST;
+        add(list, cst);
+
+        // create and delete buttons
+        c = new GridBagConstraints();
+        c.gridx = cst.gridx+2;
+        c.gridy = cst.gridy;
+        JButton b_create = new StockButton("list-add.png", true);
+        b_create.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                createStyle();
+            }
+        });
+        add(b_create, c);
+
+        c.gridy++;
+        JButton b_del = new StockButton("list-remove.png", true);
+        b_del.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                deleteStyle();
+            }
+        });
+        add(b_del, c);
+
+
+        // add the style edition panel
+        cst.gridx += 3;
+        cst.weightx = 1;
+        cst.weighty = 1;
+        cst.gridwidth = 3;
+        cst.anchor = GridBagConstraints.CENTER;
+        add(stylePanel, cst);
+    }
+
+    public void edit(Collection nodes, Collection<Edge> edges) {
+        if (edges != null && edges.size() == 0) {
+            edges = null;
+        }
+        if (nodes != null && nodes.size() == 0) {
+            nodes = null;
+        }
+
+        this.selectedEdges = edges;
+        this.selectedNodes = nodes;
+
+        if (nodes == null && edges == null) {
+            // TODO: pick the first style
+            bNodes.setEnabled(true);
+            bEdges.setEnabled(true);
+            label.setText("");
+            return;
+        }
+
+        bNodes.setEnabled(false);
+        bEdges.setEnabled(false);
+
+        if (nodes == null) {
+            Style selected = null;
+            Edge first = null;
+            for (Edge edge: edges) {
+                if (first == null) {
+                    first = edge;
+                }
+                Style ns = manager.getUsedEdgeStyle(edge);
+                if (ns == null) {
+                    break;
+                }
+                if (selected == null) {
+                    selected = ns;
+                } else if (selected != ns) {
+                    selected = null;
+                    break;
+                }
+            }
+
+            if (edges.size() == 1) {
+                label.setText("Style for edge: "+first);
+            } else {
+                label.setText("Style for "+edges.size()+" selected edges");
+            }
+            setCurrentStyle(selected);
+            return;
+        }
+
+        Style selected = null;
+        Object first = null;
+        for (Object node: nodes) {
+            if (first == null) {
+                first = node;
+            }
+            Style ns = manager.getUsedNodeStyle(node);
+            if (ns == null) {
+                break;
+            }
+            if (selected == null) {
+                selected = ns;
+            } else if (selected != ns) {
+                selected = null;
+                break;
+            }
+        }
+
+        if (nodes.size() == 1) {
+            label.setText("Style for node: "+first);
+        } else {
+            label.setText("Style for "+nodes.size()+" selected nodes");
+        }
+        setCurrentStyle(selected);
+    }
+
+    private void setCurrentStyle(Style style) {
+        if (pending || style == currentStyle) {
+            return;
+        }
+
+        pending = true;
+
+        this.currentStyle = style;
+        stylePanel.setStyle(style);
+
+        if (style == null) {
+            list.clearSelection();
+            pending = false;
+            return;
+        }
+
+        // update the list and edit panel
+        if (style instanceof NodeStyle) {
+            list.setModel(nStyleModel);
+            manager.applyNodeStyle(selectedNodes, (NodeStyle) style);
+        } else if (style instanceof EdgeStyle) {
+            list.setModel(eStyleModel);
+            manager.applyEdgeStyle(selectedEdges, (EdgeStyle) style);
+        }
+        list.setSelectedValue(style, true);
+
+        updated();
+        pending = false;
+    }
+
+    @Override
+    public void valueChanged(ListSelectionEvent listSelectionEvent) {
+        setCurrentStyle((Style) list.getSelectedValue());
+    }
+
+    @Override
+    public void itemStateChanged(ItemEvent itemEvent) {
+        if (selectedNodes != null || selectedEdges != null) {
+            return;
+        }
+
+        if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
+            list.setModel(nStyleModel);
+        } else {
+            list.setModel(eStyleModel);
+        }
+        updated();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        manager.setStyleProvider(null);
+        updated();
+    }
+
+    protected void switchStyles() {
+        manager.setEnabled(manager.isDisabled());
+    }
+
+    private void updated() {
+        StyleProvider styleProvider = manager.getStyleProvider();
+        if (providerMode && styleProvider == null) {
+            providerMode = false;
+            b_removeProvider.setVisible(false);
+        } else if (!providerMode && styleProvider != null) {
+            providerMode = true;
+            b_removeProvider.setVisible(true);
+        }
+
+        if (currentStyle instanceof EdgeStyle && !bEdges.isSelected()) {
+            bEdges.setSelected(true);
+        } else if (currentStyle instanceof NodeStyle && !bNodes.isSelected()) {
+            bNodes.setSelected(true);
+        }
+    }
+
+    @Override
+    public final Component getComponent() {
+        return this;
+    }
+
+    @Override
+    public String getTitle() {
+        return "Style";
+    }
+
+    @Override
+    public boolean isActive(GraphSelection<?, ?> selection) {
+        Collection nodes = selection.getSelectedNodes();
+        Collection<Edge> edges = (Collection<Edge>)selection.getSelectedEdges();
+        edit(nodes, edges);
+        return true;
+    }
+
+	public void createStyle() {
+		Style newStyle = null;
+		if (selectedNodes != null ) {
+			newStyle = manager.addNodeStyle();
+            nStyleModel.refresh();
+		} else if (selectedEdges != null) {
+			newStyle = manager.addEdgeStyle();
+            eStyleModel.refresh();
 		}
-
-		return true;
+		setCurrentStyle(newStyle);
 	}
+
+	public void deleteStyle() {
+        if (currentStyle == null) {
+            return;
+        }
+
+        manager.deleteStyle(currentStyle);
+        if (currentStyle instanceof NodeStyle) {
+            setCurrentStyle(manager.getDefaultNodeStyle());
+            nStyleModel.refresh();
+        } else if (currentStyle instanceof EdgeStyle) {
+            setCurrentStyle(manager.getDefaultEdgeStyle());
+            eStyleModel.refresh();
+        }
+	}
+}
+
+
+class ListTableModel extends AbstractListModel {
+
+    private final java.util.List data;
+
+    ListTableModel(java.util.List data) {
+        this.data = data;
+    }
+
+    @Override
+    public int getSize() {
+        return data.size();
+    }
+
+    @Override
+    public Object getElementAt(int i) {
+        return data.get(i);
+    }
+
+    public void refresh() {
+        fireContentsChanged(this, 0, getSize());
+    }
 }

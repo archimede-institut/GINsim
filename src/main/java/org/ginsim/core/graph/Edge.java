@@ -47,4 +47,8 @@ public class Edge<V> implements ToolTipsable {
 	public String toToolTip() {
 		return "";
 	}
+
+    public String toString() {
+        return source+","+target;
+    }
 }

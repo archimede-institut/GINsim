@@ -458,7 +458,10 @@ public class StyleManager<V, E extends Edge<V>> {
 	 * @param style
 	 */
 	public void applyNodeStyle(Collection<V> nodes, NodeStyle<V> style) {
-		if (style == null) {
+		if (nodes == null) {
+            return;
+        }
+        if (style == null) {
 			style = defaultNodeStyle;
 		}
 		for (V node:nodes) {
@@ -491,6 +494,9 @@ public class StyleManager<V, E extends Edge<V>> {
 	 * @param style
 	 */
 	public void applyEdgeStyle(Collection<E> edges, EdgeStyle<V,E> style) {
+        if (edges == null) {
+            return;
+        }
 		for (E edge: edges) {
 			backend.damage(edge);
 			doApplyEdgeStyle(edge, style);
