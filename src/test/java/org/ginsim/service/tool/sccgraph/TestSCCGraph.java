@@ -77,10 +77,7 @@ public class TestSCCGraph {
 
 		SCCGraphService service = ServiceManager.getManager().getService(
 				SCCGraphService.class);
-		SCCGraphResult result = service.run(regGraph);
-		assertNotNull("The service didn't return any result", result);
-
-		ReducedGraph<?, ?, ?> reducedGraph = result.getReducedGraph();
+        ReducedGraph<?, ?, ?> reducedGraph = service.call(regGraph);
 		assertNotNull("The graph is null", reducedGraph);
 
 		// Count of SCC

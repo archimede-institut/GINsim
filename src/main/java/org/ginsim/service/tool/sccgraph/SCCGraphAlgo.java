@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
+import org.colomoto.common.task.AbstractTask;
 import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.Edge;
@@ -18,27 +19,28 @@ import org.ginsim.service.tool.connectivity.ConnectivityStyleProvider;
 
 
 /**
- * the class with the algorithms for strongest connected component
+ * Search for strongly connected components, and build the SCC graph.
+ *
+ * @author Cecile Menahem
+ * @author Aurelien Naldi
  */
-public class SCCGraphAlgo extends Thread {
-	private Graph graph;
-	private SCCGraphResult algoResult;
+public class SCCGraphAlgo extends AbstractTask<ReducedGraph> {
+	private final Graph graph;
 
 	/**
 	 * get ready to run.
 	 * 
 	 * @param graph
 	 */
-	public SCCGraphResult configure( Graph graph) {
+	public SCCGraphAlgo(Graph graph) {
 		this.graph = graph;
-		this.algoResult = new SCCGraphResult();
-		return algoResult;
 	}
-	
-	public void run() {
+
+    @Override
+    protected ReducedGraph doGetResult() {
 		List<NodeReducedData> components = getStronglyConnectedComponents();
 		ReducedGraph reducedGraph = constructGraph(components);
-		algoResult.setReducedGraph(reducedGraph);
+		return reducedGraph;
 	}
 
 	/**

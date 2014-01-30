@@ -19,9 +19,9 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.view.style.StyleProvider;
 
 /**
- * 
  * Search all the non functional interactions in the graph 'regGraph' and do some actions on them depending on the options (opt_*).
- * 
+ *
+ * @author Duncan Berenguier
  */
 public class InteractionAnalysisAlgo {
 	
@@ -45,7 +45,8 @@ public class InteractionAnalysisAlgo {
 	 * @param regGraph the graph where to search the non functional interactions.
 	 * @param mutant the mutant definition
 	 * @param selectedNodes the set of selected nodes to run the analysis on.
-	 * @return 
+     *
+	 * @return an object with functionality conditions for all interactions
 	 * 
 	 */
 	protected InteractionAnalysisAlgoResult run(RegulatoryGraph  regGraph, Perturbation mutant, List<RegulatoryNode> selectedNodes) {
@@ -172,6 +173,7 @@ public class InteractionAnalysisAlgo {
      * @param subtree_size
      * @param small_node_order_vertex
      * @param small_node_order_levels
+     * @return an int representing the result of the scan
      */
     private int scanMDD(MDDManager ddmanager, int omdd, int deep, byte [] leafs, int[] subtree_size, RegulatoryNode[] small_node_order_vertex, int[] small_node_order_levels) {
         if (ddmanager.isleaf(omdd)) {
@@ -221,13 +223,14 @@ public class InteractionAnalysisAlgo {
 
     /**
 	 * Compute the functionality of the 'node_index'-nth node in the omdd represented by 'leafs'.
+     * TODO: should return an enum?
 	 * 
 	 * @param count_childs the count of child above 'node_index'
 	 * @param node_index the node to consider
 	 * @param leafs a table of all the leafs of the complete omdd tree.
 	 * @param subtree_size_t the size of the subtree
 	 * @param small_node_order the node order in the subtree
-	 * @return
+	 * @return an integer denoting the functionality status
 	 */
 	private byte computeFunctionality(int count_childs, int node_index, byte[] leafs, int[] subtree_size_t, RegulatoryNode[] small_node_order) {
 		int size_of_subtree = subtree_size_t[node_index+1];

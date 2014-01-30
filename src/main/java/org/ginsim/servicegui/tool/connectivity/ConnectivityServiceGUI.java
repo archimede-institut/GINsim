@@ -8,6 +8,9 @@ import java.util.Set;
 
 import javax.swing.Action;
 
+import org.colomoto.common.task.Task;
+import org.colomoto.common.task.TaskListener;
+import org.colomoto.common.task.TaskStatus;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
@@ -28,7 +31,6 @@ import org.ginsim.gui.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.connectivity.ConnectivityResult;
 import org.ginsim.service.tool.connectivity.ConnectivityService;
-import org.ginsim.service.tool.sccgraph.SCCGraphResult;
 import org.ginsim.service.tool.sccgraph.SCCGraphService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -60,9 +62,10 @@ public class ConnectivityServiceGUI extends AbstractServiceGUI {
 }
 
 
-class SCCGraphAction extends ToolAction {
+class SCCGraphAction extends ToolAction implements TaskListener {
 	private static final long serialVersionUID = 8294301473668672512L;
-	private Graph graph;
+	private final Graph graph;
+    private Task<ReducedGraph> task = null;
 	
 	protected SCCGraphAction( Graph graph, ServiceGUI serviceGUI) {
         super( "STR_constructReducedGraph", "STR_constructReducedGraph_descr", serviceGUI);
@@ -70,11 +73,25 @@ class SCCGraphAction extends ToolAction {
 	}
 	
 	@Override
-	public void actionPerformed( ActionEvent arg0) {
+	public synchronized void actionPerformed( ActionEvent arg0) {
+        if (task != null && task.getStatus() == TaskStatus.RUNNING) {
+            return;
+        }
+        setEnabled(false);
 		SCCGraphService service = ServiceManager.getManager().getService(SCCGraphService.class);
-        SCCGraphResult result = service.run(graph);
-        GUIManager.getInstance().whatToDoWithGraph(result.getReducedGraph(), true);
+        task = service.background(graph, this);
 	}
+
+    @Override
+    public void taskUpdated(Task task) {
+        if (task != this.task) {
+            return;
+        }
+        ReducedGraph result = this.task.getResult();
+        GUIManager.getInstance().whatToDoWithGraph(result, true);
+        this.task = null;
+        setEnabled(true);
+    }
 }
 
 

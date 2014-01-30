@@ -15,8 +15,13 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 
+/**
+ * Layout State Transition Graphs: place nodes on a cube according to activity levels
+ *
+ * @author Duncan Berenguier
+ */
+public class DynamicLayout3D extends BaseSTGLayout {
 
-public class DynamicLayout3D {
 	private EdgeAttributesReader ereader;
     private NodeAttributesReader vreader;
     private Color[] colorPalette;
@@ -90,64 +95,10 @@ public class DynamicLayout3D {
 		ereader.setEdge(edge);		
 		ereader.setPoints(null);
 		
-		byte[] diffstate = getDiffStates((DynamicNode)edge.getSource(), (DynamicNode)edge.getTarget());
+		byte[] diffstate = getDiffStates(edge.getSource(), edge.getTarget());
 		int change = getChange(diffstate);
 	}
 	
-	   /**
-	* return the value of the state i according to the newNodeOrder
-	* @param state
-	* @param i
-	* @return
-	*/
-	private int getState(byte[] state, int i) {
-		if (state.length > i) return state[i];
-		else return 0;
-	}
-
-	/**
-    * return the coordinate of the first change between the two states.
-    * @param diffstate
-    * @return
-    */
-	private int getChange(byte[] diffstate) {
-	   	for (int i = 0; i < diffstate.length; i++) {
-	   		if (diffstate[i] != 0) {
-	   			return i;
-	   		}
-	   	}
-		return 0;
-	}
-
-    /**
-     * Construct the | bit operator for a table of byte.
-     * A value in the table is 0, 
-     *   if the corresponding gene (according to the newNodeOrder) did not change between the vertices.
-     *   otherwise its the absolute difference (1 normally)
-     * 
-     * @param sourceNode
-     * @param targetNode
-     * @return
-     */
-	private byte[] getDiffStates(DynamicNode sourceNode, DynamicNode targetNode) {
-		byte[] delta = new byte[sourceNode.state.length];
-		for (int i = 0; i < delta.length; i++) {
-			delta[i] = (byte) Math.abs(getState(sourceNode.state,i) - getState(targetNode.state,i));
-		}
-		return delta;
-	}
-
-    /**
-     * Get the maxvalues (the level max - 1 of each node) and return it. 
-     */
-	public byte[] getMaxValues(List<RegulatoryNode> nodeOrder) {
-    	byte[] maxValues = new byte[nodeOrder.size()];
-    	for (int i = 0; i < nodeOrder.size(); i++) {
-    		maxValues[i] = (byte) (nodeOrder.get(i).getMaxValue());
-    	}
-    	return maxValues;
-    }
-
 	/**
 	 * Create a color palette by varying the hue.
 	 * @param n the count of color in the palette

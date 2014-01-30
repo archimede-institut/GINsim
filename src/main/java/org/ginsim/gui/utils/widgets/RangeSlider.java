@@ -11,7 +11,7 @@ import javax.swing.JSlider;
  * supports an inner range defined by a value and an extent.  The upper value
  * returned by RangeSlider is simply the lower value plus the extent.</p>
  * 
- * @see https://github.com/ernieyu/Swing-range-slider/
+ * @see <a href="https://github.com/ernieyu/Swing-range-slider/">github.com/ernieyu/Swing-range-slider</a>
  */
 public class RangeSlider extends JSlider {
 

@@ -9,11 +9,12 @@ import org.ginsim.core.graph.view.AttributesReader;
 
 
 /**
- * A Selector implementation for GINsim. It intend to be have the same usage than the HTML's CSS one.
+ * A Selector implementation for GINsim. It intend to be similar to selectors in HTML's CSS.
  * 
- *
+ * @author Duncan Berenguier
  */
 public abstract class Selector {
+
 	static protected Map selectors = new HashMap();
 	protected String identifier;
 	private Map m;
@@ -216,7 +217,7 @@ public abstract class Selector {
 	 * If possible call getCategoryForNode or getCategoryForEdge, when you know the type of object
 	 * 
 	 * @param obj
-	 * @return
+	 * @return the associated category or null
 	 */
 	public final String getCategory(Object obj) {
 		if (obj instanceof Edge) {
@@ -230,7 +231,7 @@ public abstract class Selector {
 	 * 
 	 * When subclassing Selector you should use a cache system if you can't get the category for an object in a constant time. And therefore also extend the function flush() to empty this cache (set to to null).
 	 * @param obj
-	 * @return
+     * @return the associated category or null
 	 */
 	abstract protected String getCategoryForNode(Object obj);
 	/**
@@ -238,7 +239,7 @@ public abstract class Selector {
 	 * 
 	 * When subclassing Selector you should use a cache system if you can't get the category for an object in a constant time. And therefore also extend the function flush() to empty this cache (set to to null).
 	 * @param obj
-	 * @return
+     * @return the associated category or null
 	 */
 	abstract protected String getCategoryForEdge(Object obj);
 	

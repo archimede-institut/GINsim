@@ -18,8 +18,13 @@ import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.ViewHelper;
 
 
-
-public class DynamicLayoutMultidimention {
+/**
+ * Layout State Transition Graphs: place nodes according to activity levels.
+ * This layout should use a pivot to handle STG with more dimensions, but this part seems broken.
+ *
+ * @author Duncan Berenguier
+ */
+public class DynamicLayoutMultidimention extends BaseSTGLayout {
     private static final int padx = 25;
     private static final int pady = 25;
    
@@ -27,7 +32,7 @@ public class DynamicLayoutMultidimention {
 	private int height;
     
     private int pivot;
-   
+
 	private EdgeAttributesReader ereader;
     private NodeAttributesReader vreader;
 	
@@ -82,6 +87,7 @@ public class DynamicLayoutMultidimention {
 	
 	/**
 	 * Move the node to its correct position.
+     *
 	 * @param node
 	 * @param maxValues
 	 */
@@ -106,6 +112,7 @@ public class DynamicLayoutMultidimention {
 	
 	/**
 	 * Move an edge and set the proper style.
+     *
 	 * @param edge
 	 * @param maxValues
 	 */
@@ -153,36 +160,27 @@ public class DynamicLayoutMultidimention {
 	}
 
     /**
-     * Compute the gap in a complex way for straight edges
+     * Compute a gap used to place straight edges.
+     *
      * @param d_main
      * @param d_orth
      * @param size_main
      * @param size_orth
-     * @return
+     * @return a computed gap for the edge.
      */
-    private  double gap(double d_main, double d_orth, int size_main, int size_orth) {
+    private double gap(double d_main, double d_orth, int size_main, int size_orth) {
 		return size_main/1.75*(d_orth>0?1:0)+d_orth*12+d_main*3-size_orth/4;
 	}
 
-	/**
-	 * Transform the change accordingly to the number of row.
-	 * @param change
-	 * @return
-	 */
-    private int reduceChange(int change) {
-    	if (change >= pivot) {
-			return change - pivot;
-		} else {
-			return change;
-		}
-    }
-
     /**
-     * Compute a distance from "no change between two states". The change have different weights depending on their index in the newNodeOrder.
-     * @param diffstate
-     * @param maxValues
-     * @param start 
-     * @return
+     * Compute a distance from "no change between two states".
+     * The change have different weights depending on their index in the newNodeOrder.
+     *
+     * @param diffstate     represents the differences between the two states
+     * @param maxValues     the maximal levels for all components
+     * @param start         the first component to consider
+     *
+     * @return a value representing the distance between the two states.
      */
 	private double get_dx(byte[] diffstate, byte[] maxValues, int start) {
     	int dx = 0;
@@ -194,11 +192,13 @@ public class DynamicLayoutMultidimention {
 		return dx;
 	}
     /**
-     * Compute a distance from "no change between two states". The change have different weights depending on their index in the newNodeOrder.
-     * @param diffstate
-     * @param maxValues
-     * @param start 
-     * @return
+     * Compute a distance from "no change between two states".
+     * The change have different weights depending on their index in the newNodeOrder.
+     *
+     * @param diffstate     represents the differences between the two states
+     * @param maxValues     the maximal levels for all components
+     * @param start         the first component to consider
+     * @return a value representing the distance between the two states.
      */
 	private double get_dy(byte[] diffstate, byte[] maxValues, int start) {
       	int dx = 0;
@@ -210,46 +210,4 @@ public class DynamicLayoutMultidimention {
 		return dx;
 	}
 
-    /**
-     * Construct the | bit operator for a table of byte.
-     * A value in the table is 0, 
-     *   if the corresponding gene (according to the newNodeOrder) did not change between the vertices.
-     *   otherwise its the absolute difference (1 normally)
-     * 
-     * @param sourceNode
-     * @param targetNode
-     * @return
-     */
-	private byte[] getDiffStates(DynamicNode sourceNode, DynamicNode targetNode) {
-		byte[] delta = new byte[sourceNode.state.length];
-		for (int i = 0; i < delta.length; i++) {
-			delta[i] = (byte) Math.abs(getState(sourceNode.state,i) - getState(targetNode.state,i));
-		}
-		return delta;
-	}
-
-    /**
-     * return the value of the state i according to the newNodeOrder
-     * @param state
-     * @param i
-     * @return
-     */
-    private int getState(byte[] state, int i) {
-		return state[newNodeOrder[i]];
-	}
-
-    /**
-     * Get the maxvalues (the level max of each node) and return it. 
-     * The nodes are correctly indexed with newNodeOrder
-     */
-	public byte[] getMaxValues(List nodeOrder) {
-    	byte[] maxValues = new byte[nodeOrder.size()];
-    	int i = 0;
-    	for (Iterator it = nodeOrder.iterator(); it.hasNext();) {
-    		RegulatoryNode v = (RegulatoryNode) it.next();
-    		maxValues[newNodeOrder[i++]] = (byte) (v.getMaxValue()+1);
-    	}			
-    	return maxValues;
-    }
-    
 }
