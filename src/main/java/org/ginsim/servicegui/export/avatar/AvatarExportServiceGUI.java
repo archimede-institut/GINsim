@@ -11,11 +11,12 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.ExportAction;
-import org.ginsim.gui.service.ServiceStatus;
+import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.StandaloneGUI;
 import org.ginsim.service.export.avatar.AvatarConfig;
 import org.ginsim.service.export.avatar.AvatarExportService;
@@ -28,7 +29,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @StandaloneGUI
-@ServiceStatus(ServiceStatus.RELEASED)
+@ServiceStatus(EStatus.RELEASED)
 public class AvatarExportServiceGUI extends AbstractServiceGUI {
 
 	@Override

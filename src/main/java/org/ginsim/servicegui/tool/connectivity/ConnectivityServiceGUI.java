@@ -19,6 +19,7 @@ import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
 import org.ginsim.core.graph.view.style.StyleProvider;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
@@ -27,7 +28,7 @@ import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.shell.actions.GenericGraphAction;
-import org.ginsim.gui.service.ServiceStatus;
+import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.connectivity.ConnectivityResult;
 import org.ginsim.service.tool.connectivity.ConnectivityService;
@@ -40,7 +41,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(ConnectivityService.class)
-@ServiceStatus( ServiceStatus.RELEASED)
+@ServiceStatus( EStatus.RELEASED)
 public class ConnectivityServiceGUI extends AbstractServiceGUI {
 
 	@Override

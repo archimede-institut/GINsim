@@ -11,9 +11,10 @@ import javax.swing.JScrollPane;
 
 import org.ginsim.common.utils.IOUtils;
 import org.ginsim.core.graph.Graph;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
-import org.ginsim.gui.service.ServiceStatus;
+import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.StandaloneGUI;
 import org.ginsim.gui.shell.actions.ToolkitAction;
 import org.mangosdk.spi.ProviderFor;
@@ -27,7 +28,7 @@ import org.python.util.PythonInterpreter;
  * main method for the jython console
  */
 @ProviderFor(ServiceGUI.class)
-@ServiceStatus( ServiceStatus.TOOLKIT)
+@ServiceStatus( EStatus.TOOLKIT)
 @StandaloneGUI
 public class JythonServiceGUI extends AbstractServiceGUI {
 

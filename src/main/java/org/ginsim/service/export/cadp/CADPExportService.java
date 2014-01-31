@@ -9,7 +9,9 @@ import java.util.zip.ZipOutputStream;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.service.Alias;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
+import org.ginsim.core.service.ServiceStatus;
 import org.mangosdk.spi.ProviderFor;
 
 /**
@@ -22,6 +24,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(Service.class)
 @Alias("CADP")
+@ServiceStatus(EStatus.DEVELOPMENT)
 public class CADPExportService implements Service {
 
 	public void run(CADPExportConfig config, String fileheadname)

@@ -3,9 +3,7 @@ package org.ginsim.service.format.ginml;
 import java.io.IOException;
 
 import org.colomoto.logicalmodel.io.ginml.GINMLFormat;
-import org.ginsim.core.service.Alias;
-import org.ginsim.core.service.FormatSupportService;
-import org.ginsim.core.service.Service;
+import org.ginsim.core.service.*;
 import org.mangosdk.spi.ProviderFor;
 
 /**
@@ -15,6 +13,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(Service.class)
 @Alias("GINML")
+@ServiceStatus(EStatus.RELEASED)
 public class GINMLFormatService extends FormatSupportService<GINMLFormat> {
 
 	public GINMLFormatService() {

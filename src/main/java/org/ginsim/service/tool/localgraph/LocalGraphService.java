@@ -9,12 +9,15 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.service.Alias;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
+import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.tool.reg2dyn.updater.SynchronousSimulationUpdater;
 import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor(Service.class)
 @Alias("localgraph")
+@ServiceStatus(EStatus.DEVELOPMENT)
 public class LocalGraphService implements Service {
 
 	public Map<RegulatoryMultiEdge, LocalGraphCategory> run(RegulatoryGraph graph,

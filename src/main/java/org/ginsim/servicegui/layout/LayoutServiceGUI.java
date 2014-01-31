@@ -9,18 +9,19 @@ import javax.swing.Action;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.shell.actions.LayoutAction;
-import org.ginsim.gui.service.ServiceStatus;
+import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.layout.DynamicLayout3D;
 import org.ginsim.service.layout.LayoutService;
 import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor(ServiceGUI.class)
 @GUIFor(LayoutService.class)
-@ServiceStatus( ServiceStatus.RELEASED)
+@ServiceStatus( EStatus.RELEASED)
 public class LayoutServiceGUI extends AbstractServiceGUI {
 
 	@Override

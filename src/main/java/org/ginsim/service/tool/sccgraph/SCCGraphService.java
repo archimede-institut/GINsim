@@ -4,10 +4,15 @@ import org.colomoto.common.task.Task;
 import org.colomoto.common.task.TaskListener;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
+import org.ginsim.core.service.Alias;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
+import org.ginsim.core.service.ServiceStatus;
 import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor(Service.class)
+@Alias("SCC")
+@ServiceStatus(EStatus.RELEASED)
 public class SCCGraphService implements Service {
 
     /**

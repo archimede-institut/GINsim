@@ -6,7 +6,9 @@ import java.io.IOException;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.service.Alias;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
+import org.ginsim.core.service.ServiceStatus;
 import org.mangosdk.spi.ProviderFor;
 
 /**
@@ -17,6 +19,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(Service.class)
 @Alias("Avatar")
+@ServiceStatus(EStatus.UNKNOWN)
 public class AvatarExportService implements Service {
 
 	public void run(AvatarConfig config, String filename) throws IOException, GsException {

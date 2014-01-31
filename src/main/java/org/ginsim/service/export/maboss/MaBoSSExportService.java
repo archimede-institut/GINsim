@@ -5,7 +5,9 @@ import java.io.IOException;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.core.service.Alias;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
+import org.ginsim.core.service.ServiceStatus;
 import org.mangosdk.spi.ProviderFor;
 
 /**
@@ -18,6 +20,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(Service.class)
 @Alias("maboss")
+@ServiceStatus(EStatus.DEVELOPMENT)
 public class MaBoSSExportService implements Service {
 
 	public void export(LogicalModel model, String filename) throws IOException {

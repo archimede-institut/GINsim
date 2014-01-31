@@ -7,6 +7,7 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Collection;
 
 import javax.imageio.ImageIO;
 
@@ -16,23 +17,26 @@ import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.service.Alias;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
+import org.ginsim.core.service.ServiceStatus;
 import org.mangosdk.spi.ProviderFor;
 
 /**
- * export the graph to PNG
- * 
+ * Export the graph view as image (PNG or SVG).
+ *
+ * @author Aurelien Naldi
  */
 @ProviderFor( Service.class)
 @Alias("image")
+@ServiceStatus(EStatus.RELEASED)
 public class ImageExportService implements Service {
 
     /**
      * @param graph
-     * @param selectedOnly
      * @param fileName
      */
-    public static void export( Graph<?, Edge<?>> graph, String fileName) {
+    public void exportPNG( Graph<?, Edge<?>> graph, String fileName) {
 
     	Dimension dim = graph.getDimension();
     	int width = (int)dim.getWidth();
@@ -60,5 +64,20 @@ public class ImageExportService implements Service {
 			LogManager.error(e);
 		}
     }
-    
+
+    /**
+     * Export the graph to a SVG file
+     *
+     * @param graph the graph to export
+     * @param nodes the list of nodes that must be exported
+     * @param edges the list of edges that must be exported
+     * @param fileName the path to the output file
+     */
+    public void exportSVG( Graph graph, Collection nodes,  Collection<Edge> edges, String fileName) throws IOException{
+
+        SVGEncoder encoder = new SVGEncoder();
+
+        encoder.exportSVG( graph, nodes, edges, fileName);
+    }
+
 }

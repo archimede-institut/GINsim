@@ -8,11 +8,12 @@ import javax.swing.Action;
 
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.GenericGraphAction;
-import org.ginsim.gui.service.ServiceStatus;
+import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.StandaloneGUI;
 import org.mangosdk.spi.ProviderFor;
 
@@ -21,7 +22,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @StandaloneGUI
 @ProviderFor( ServiceGUI.class)
-@ServiceStatus( ServiceStatus.TOOLKIT)
+@ServiceStatus( EStatus.TOOLKIT)
 public class DynamicAnalyserServiceGUI extends AbstractServiceGUI {
     
 	@Override

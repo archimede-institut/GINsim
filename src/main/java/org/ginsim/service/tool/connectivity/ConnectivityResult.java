@@ -15,7 +15,7 @@ public class ConnectivityResult {
 	public ConnectivityResult() {
 		this.components = null;
 	}
-	
+
 	/**
 	 * define the set o components
 	 * @param components
@@ -39,7 +39,7 @@ public class ConnectivityResult {
 	protected void setAlgo(ConnectivityAlgo algo) {
 		this.algo = algo;
 	}
-	
+
 	/**
 	 * Cancel the algo if its running
 	 */

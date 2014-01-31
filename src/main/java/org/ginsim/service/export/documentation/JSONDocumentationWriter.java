@@ -14,7 +14,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.service.ServiceManager;
-import org.ginsim.service.export.svg.SVGExportService;
+import org.ginsim.service.export.image.ImageExportService;
 
 /**
  * Export the documentation of a model into an interactive web page.
@@ -114,13 +114,12 @@ public class JSONDocumentationWriter {
 	/**
 	 * Export a model as documentation data (SVG+JSON).
 	 * 
-	 * @param graph
 	 * @param export_name
 	 * @throws IOException
 	 */
 	public void exportDocumentation(String export_name) throws IOException {
-		SVGExportService SVG = ServiceManager.getManager().getService(SVGExportService.class);
-		SVG.export(graph, null, null, export_name+".svg");
+		ImageExportService service = ServiceManager.getManager().getService(ImageExportService.class);
+		service.exportSVG(graph, null, null, export_name+".svg");
 	
 		Writer f = new FileWriter(export_name+".js");
 		

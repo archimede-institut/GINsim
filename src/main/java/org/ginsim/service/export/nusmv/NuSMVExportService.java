@@ -6,7 +6,9 @@ import java.io.IOException;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.service.Alias;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
+import org.ginsim.core.service.ServiceStatus;
 import org.mangosdk.spi.ProviderFor;
 
 /**
@@ -24,6 +26,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(Service.class)
 @Alias("NuSMV")
+@ServiceStatus(EStatus.DEVELOPMENT)
 public class NuSMVExportService implements Service {
 
 	public void run(NuSMVConfig config, String filename) throws IOException, GsException {

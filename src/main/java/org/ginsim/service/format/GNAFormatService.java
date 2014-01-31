@@ -1,9 +1,7 @@
 package org.ginsim.service.format;
 
 import org.colomoto.logicalmodel.io.gna.GNAFormat;
-import org.ginsim.core.service.Alias;
-import org.ginsim.core.service.FormatSupportService;
-import org.ginsim.core.service.Service;
+import org.ginsim.core.service.*;
 import org.mangosdk.spi.ProviderFor;
 
 /**
@@ -13,6 +11,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(Service.class)
 @Alias("GNA")
+@ServiceStatus(EStatus.DEVELOPMENT)
 public class GNAFormatService extends FormatSupportService<GNAFormat> {
 
 	public GNAFormatService() {

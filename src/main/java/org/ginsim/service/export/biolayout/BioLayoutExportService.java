@@ -6,7 +6,9 @@ import java.util.Collection;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.service.Alias;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
+import org.ginsim.core.service.ServiceStatus;
 import org.mangosdk.spi.ProviderFor;
 
 /**
@@ -14,6 +16,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor( Service.class)
 @Alias("biolayout")
+@ServiceStatus(EStatus.RELEASED)
 public class BioLayoutExportService implements Service{
 
 	

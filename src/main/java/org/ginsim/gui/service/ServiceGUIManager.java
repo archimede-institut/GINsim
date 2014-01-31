@@ -13,8 +13,10 @@ import org.ginsim.Launcher;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.ServiceClassInfo;
 import org.ginsim.core.graph.Graph;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.ServiceStatus;
 
 
 /**
@@ -31,8 +33,6 @@ import org.ginsim.core.service.ServiceManager;
  * @author Lionel Spinelli
  * @author Aurelien Naldi
  */
-
-
 public class ServiceGUIManager{
 
 	// The manager singleton
@@ -60,27 +60,27 @@ public class ServiceGUIManager{
     			// Check for the service status. If service is not published, it is not
     			// provided apart in case of a development environment
     			ServiceStatus service_status = service.getClass().getAnnotation( ServiceStatus.class);
-    			int status;
+    			EStatus status;
     			if( service_status != null){
     				status = service_status.value();
     			}
     			else{
     				LogManager.error( "Service '" + service.getClass().getName() + "' does not have a declared status. Consider it deprecated.");
-    				status = ServiceStatus.DEPRECATED;
+    				status = EStatus.DEPRECATED;
     			}
     			boolean rejected;
     			switch( status) {
-    			case ServiceStatus.DEPRECATED:
+    			case DEPRECATED:
     				rejected = true;
     				break;
-    			case ServiceStatus.UNDER_DEVELOPMENT:
+    			case DEVELOPMENT:
     				rejected = !Launcher.developer_mode;
     				service.setWeight(ServiceGUI.W_UNDER_DEVELOPMENT);
     				break;
-    			case ServiceStatus.RELEASED:
+    			case RELEASED:
     				rejected = false;
     				break;
-    			case ServiceStatus.TOOLKIT:
+    			case TOOLKIT:
     				rejected = !Launcher.developer_mode;
     				break;
     			default:

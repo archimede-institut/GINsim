@@ -1,15 +1,15 @@
 package org.ginsim.common.utils;
 
-import org.ginsim.common.application.LogManager;
 import org.ginsim.core.service.Alias;
-import org.ginsim.gui.service.ServiceStatus;
+import org.ginsim.core.service.EStatus;
+import org.ginsim.core.service.ServiceStatus;
 
 public class ServiceClassInfo {
 
 
     public final Class cl;
     public final String alias;
-    public final int status;
+    public final EStatus status;
 
 
     public ServiceClassInfo(Class cl) {
@@ -26,7 +26,7 @@ public class ServiceClassInfo {
         if (service_status != null) {
             this.status = service_status.value();
         } else {
-            this.status = ServiceStatus.UNKNOWN;
+            this.status = EStatus.UNKNOWN;
         }
     }
 

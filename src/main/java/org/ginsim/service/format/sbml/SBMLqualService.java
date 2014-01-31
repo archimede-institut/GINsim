@@ -17,9 +17,7 @@ import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.service.Alias;
-import org.ginsim.core.service.FormatSupportService;
-import org.ginsim.core.service.Service;
+import org.ginsim.core.service.*;
 import org.mangosdk.spi.ProviderFor;
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.ext.layout.BoundingBox;
@@ -31,6 +29,7 @@ import org.sbml.jsbml.ext.layout.SpeciesGlyph;
 
 @ProviderFor( Service.class)
 @Alias("SBML")
+@ServiceStatus(EStatus.DEVELOPMENT)
 public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 
 	public SBMLqualService() {

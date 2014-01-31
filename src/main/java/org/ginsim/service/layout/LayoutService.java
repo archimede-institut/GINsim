@@ -5,7 +5,9 @@ import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.service.Alias;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
+import org.ginsim.core.service.ServiceStatus;
 import org.mangosdk.spi.ProviderFor;
 
 
@@ -18,6 +20,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(Service.class)
 @Alias("layout")
+@ServiceStatus(EStatus.RELEASED)
 public class LayoutService implements Service {
 
     public static final int LEVEL = 0;

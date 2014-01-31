@@ -1,8 +1,9 @@
 package org.ginsim.servicegui.export.petrinet;
 
+import org.ginsim.core.service.EStatus;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.SimpleServiceGUI;
-import org.ginsim.gui.service.ServiceStatus;
+import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.StandaloneGUI;
 import org.ginsim.service.format.PetriNetFormatService;
 import org.mangosdk.spi.ProviderFor;
@@ -14,7 +15,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @StandaloneGUI
-@ServiceStatus( ServiceStatus.RELEASED)
+@ServiceStatus( EStatus.RELEASED)
 public class PetriNetExportServiceGUI extends SimpleServiceGUI<PetriNetFormatService> {
 
 	public PetriNetExportServiceGUI() {

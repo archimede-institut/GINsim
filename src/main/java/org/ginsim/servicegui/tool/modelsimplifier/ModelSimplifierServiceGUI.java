@@ -9,10 +9,11 @@ import javax.swing.Action;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.GUIFor;
-import org.ginsim.gui.service.ServiceStatus;
+import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierService;
 import org.mangosdk.spi.ProviderFor;
@@ -22,7 +23,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(ModelSimplifierService.class)
-@ServiceStatus( ServiceStatus.RELEASED)
+@ServiceStatus( EStatus.RELEASED)
 public class ModelSimplifierServiceGUI extends AbstractServiceGUI {
 
 	@Override

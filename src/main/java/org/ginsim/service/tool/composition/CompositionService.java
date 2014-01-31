@@ -18,18 +18,21 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterLis
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.service.Alias;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
+import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.tool.modelsimplifier.ReductionTask;
 import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
 import org.ginsim.service.tool.modelsimplifier.ReconstructionTask;
 import org.mangosdk.spi.ProviderFor;
 
-@ProviderFor(Service.class)
-@Alias("composition")
 /**
  * Module composition service
  * @author Nuno D. Mendes
  */
+@ProviderFor(Service.class)
+@Alias("composition")
+@ServiceStatus(EStatus.DEVELOPMENT)
 public class CompositionService implements Service {
 
 	/**

@@ -8,12 +8,15 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.service.Alias;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
+import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.tool.reg2dyn.htg.HTGSimulation;
 import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( Service.class)
 @Alias("simulation")
+@ServiceStatus(EStatus.RELEASED)
 public class Reg2DynService implements Service {
 
 	public static final String KEY = "simulation";

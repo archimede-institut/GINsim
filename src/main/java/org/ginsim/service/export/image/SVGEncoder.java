@@ -1,4 +1,4 @@
-package org.ginsim.service.export.svg;
+package org.ginsim.service.export.image;
 
 import java.awt.Dimension;
 import java.awt.Point;

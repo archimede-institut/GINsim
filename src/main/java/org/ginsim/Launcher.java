@@ -74,6 +74,7 @@ public class Launcher {
                 developer_mode = true;
                 continue;
             } else if (args[i].equals("--devinfo")) {
+                developer_mode = true;
                 devInfo();
                 return;
             } else if (args[i].startsWith("-")) {

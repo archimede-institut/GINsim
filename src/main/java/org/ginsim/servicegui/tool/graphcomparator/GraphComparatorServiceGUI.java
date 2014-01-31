@@ -7,11 +7,12 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.ginsim.core.graph.Graph;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.GUIFor;
-import org.ginsim.gui.service.ServiceStatus;
+import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.graphcomparator.GraphComparatorService;
 import org.mangosdk.spi.ProviderFor;
@@ -19,7 +20,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( ServiceGUI.class)
 @GUIFor( GraphComparatorService.class)
-@ServiceStatus( ServiceStatus.UNDER_DEVELOPMENT)
+@ServiceStatus( EStatus.DEVELOPMENT)
 public class GraphComparatorServiceGUI extends AbstractServiceGUI{
 	
 	@Override

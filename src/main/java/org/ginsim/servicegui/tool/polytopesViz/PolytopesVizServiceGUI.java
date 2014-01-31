@@ -8,9 +8,10 @@ import javax.swing.Action;
 
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
-import org.ginsim.gui.service.ServiceStatus;
+import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.StandaloneGUI;
 import org.ginsim.gui.shell.actions.ToolkitAction;
 import org.mangosdk.spi.ProviderFor;
@@ -18,7 +19,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor(ServiceGUI.class)
 @StandaloneGUI
-@ServiceStatus( ServiceStatus.TOOLKIT)
+@ServiceStatus( EStatus.TOOLKIT)
 public class PolytopesVizServiceGUI extends AbstractServiceGUI {
 
 	@Override

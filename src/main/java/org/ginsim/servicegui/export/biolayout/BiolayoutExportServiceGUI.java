@@ -9,12 +9,13 @@ import javax.swing.Action;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.Graph;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.gui.service.GUIFor;
-import org.ginsim.gui.service.ServiceStatus;
+import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.export.biolayout.BioLayoutExportService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -25,7 +26,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor( ServiceGUI.class)
 @GUIFor( BioLayoutExportService.class)
-@ServiceStatus( ServiceStatus.RELEASED)
+@ServiceStatus( EStatus.RELEASED)
 public class BiolayoutExportServiceGUI extends AbstractServiceGUI {
 	
 

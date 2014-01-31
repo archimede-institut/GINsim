@@ -27,7 +27,7 @@ public class ConnectivityAlgo implements Runnable {
 
 	/**
 	 * get ready to run.
-	 * 
+	 *
 	 * @param graph
 	 */
 	public ConnectivityResult configure( Graph graph) {
@@ -36,7 +36,7 @@ public class ConnectivityAlgo implements Runnable {
 		this.algoResult = new ConnectivityResult();
 		return algoResult;
 	}
-	
+
 	public void run() {
 		List<NodeReducedData> components = getStronglyConnectedComponents();
 		algoResult.setComponents(components);
@@ -45,7 +45,7 @@ public class ConnectivityAlgo implements Runnable {
 	}
 
 	/**
-	 * Get the Strongly Connected Components from the backend and add them with a proper name in a list of NodeReducedData 
+	 * Get the Strongly Connected Components from the backend and add them with a proper name in a list of NodeReducedData
 	 * @return the list of components
 	 */
 	private List<NodeReducedData> getStronglyConnectedComponents() {
@@ -64,7 +64,7 @@ public class ConnectivityAlgo implements Runnable {
 		}
 		return components;
 	}
-	
+
 	/**
 	 * Construct a reducedGraph from a list of components
 	 * @param components
@@ -73,7 +73,7 @@ public class ConnectivityAlgo implements Runnable {
 	private ReducedGraph constructGraph(List<NodeReducedData> components) {
 		ReducedGraph reducedGraph = GraphManager.getInstance().getNewGraph( ReducedGraph.class, (Graph)graph);
 		HashMap<Object, NodeReducedData> nodeParentSCC = new HashMap<Object, NodeReducedData>(); //Map the a node to its parent SCC
-		
+
 		for (NodeReducedData component : components) {		//For each component
 			reducedGraph.addNode(component);
 			for (Object node : component.getContent()) {	//  for each nodes in the component
@@ -82,7 +82,7 @@ public class ConnectivityAlgo implements Runnable {
 			}
 			if (cancel) return null;
 		}
-		
+
 		for (NodeReducedData component : components) {		//For each component
 			for (Object node : component.getContent()) {	//  for each nodes in the component
 				Collection<Edge<?>> outgoingEdges = graph.getOutgoingEdges(node);
@@ -97,7 +97,7 @@ public class ConnectivityAlgo implements Runnable {
 			}
 			if (cancel) return null;
 		}
-	          
+
 		NodeAttributesReader vreader = reducedGraph.getNodeAttributeReader();
 		for (NodeReducedData component : components) {				//For each component
             if (graph.getOutgoingEdges(component).size() == 0) {	//  set the node's shape to ellipse if the node has no outgoing edges (is terminal).
@@ -109,7 +109,7 @@ public class ConnectivityAlgo implements Runnable {
 
 		return reducedGraph;
 	}
-	
+
 	public void cancel() {
 		this.cancel = true;
 	}

@@ -8,11 +8,12 @@ import javax.swing.Action;
 
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.GUIFor;
-import org.ginsim.gui.service.ServiceStatus;
+import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.interactionanalysis.InteractionAnalysisService;
 import org.mangosdk.spi.ProviderFor;
@@ -20,7 +21,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor(ServiceGUI.class)
 @GUIFor(InteractionAnalysisService.class)
-@ServiceStatus( ServiceStatus.UNDER_DEVELOPMENT)
+@ServiceStatus( EStatus.DEVELOPMENT)
 public class InteractionAnalysisServiceGUI extends AbstractServiceGUI {
 
 	@Override

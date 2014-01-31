@@ -6,10 +6,13 @@ import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.StatesSet;
 import org.ginsim.core.graph.view.css.Colorizer;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
+import org.ginsim.core.service.ServiceStatus;
 import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor(Service.class)
+@ServiceStatus(EStatus.DEVELOPMENT)
 public class PolytopesService implements Service {
 
 	

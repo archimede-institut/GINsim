@@ -12,10 +12,11 @@ import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.service.EStatus;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
-import org.ginsim.gui.service.ServiceStatus;
+import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.StandaloneGUI;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.mangosdk.spi.ProviderFor;
@@ -25,7 +26,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @StandaloneGUI
 @ProviderFor( ServiceGUI.class)
-@ServiceStatus( ServiceStatus.RELEASED)
+@ServiceStatus( EStatus.RELEASED)
 public class DecisionAnalysisServiceGUI extends AbstractServiceGUI {
 	
 	@Override
