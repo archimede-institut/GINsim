@@ -1,7 +1,6 @@
 package org.ginsim.service.tool.sccgraph;
 
 import java.awt.Color;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -15,7 +14,6 @@ import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.service.tool.connectivity.ConnectivityStyleProvider;
 
 
 /**
@@ -38,32 +36,12 @@ public class SCCGraphAlgo extends AbstractTask<ReducedGraph> {
 
     @Override
     protected ReducedGraph doGetResult() {
-		List<NodeReducedData> components = getStronglyConnectedComponents();
+        StronglyConnectedComponentTask sccTask = new StronglyConnectedComponentTask(graph);
+		List<NodeReducedData> components = sccTask.call();
 		ReducedGraph reducedGraph = constructGraph(components);
 		return reducedGraph;
 	}
 
-	/**
-	 * Get the Strongly Connected Components from the backend and add them with a proper name in a list of NodeReducedData 
-	 * @return the list of components
-	 */
-	private List<NodeReducedData> getStronglyConnectedComponents() {
-		Collection<Collection<?>> jcp = graph.getStronglyConnectedComponents();
-		List<NodeReducedData> components = new ArrayList<NodeReducedData>(jcp.size());
-		int id = 0;
-		for (Collection<?> set: jcp) {
-			String sid;
-			if (set.size() == 1) {
-				sid = null;
-			} else {
-				sid = "cc-"+id++;
-			}
-			NodeReducedData node = new NodeReducedData(sid, set);
-			components.add(node);
-		}
-		return components;
-	}
-	
 	/**
 	 * Construct a reducedGraph from a list of components
 	 * @param components

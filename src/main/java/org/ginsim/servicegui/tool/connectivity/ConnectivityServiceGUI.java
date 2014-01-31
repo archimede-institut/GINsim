@@ -30,8 +30,6 @@ import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.shell.actions.GenericGraphAction;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ToolAction;
-import org.ginsim.service.tool.connectivity.ConnectivityResult;
-import org.ginsim.service.tool.connectivity.ConnectivityService;
 import org.ginsim.service.tool.sccgraph.SCCGraphService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -40,7 +38,7 @@ import org.mangosdk.spi.ProviderFor;
  * register the connectivity service
  */
 @ProviderFor(ServiceGUI.class)
-@GUIFor(ConnectivityService.class)
+@GUIFor(SCCGraphService.class)
 @ServiceStatus( EStatus.RELEASED)
 public class ConnectivityServiceGUI extends AbstractServiceGUI {
 
@@ -80,7 +78,7 @@ class SCCGraphAction extends ToolAction implements TaskListener {
         }
         setEnabled(false);
 		SCCGraphService service = ServiceManager.getManager().getService(SCCGraphService.class);
-        task = service.background(graph, this);
+        task = service.backgroundSCCGraph(graph, this);
 	}
 
     @Override
@@ -106,9 +104,9 @@ class ConnectivityColorizeGraphAction extends GenericGraphAction {
 	
 	@Override
 	public void actionPerformed( ActionEvent arg0) {
-		ConnectivityService service = ServiceManager.getManager().getService(ConnectivityService.class);
-        ConnectivityResult result = service.run(graph);
-        styler = service.getStyleProvider(result, graph);
+		SCCGraphService service = ServiceManager.getManager().getService(SCCGraphService.class);
+        List<NodeReducedData> components = service.getComponents(graph);
+        styler = service.getStyleProvider(components, graph);
         graph.getStyleManager().setStyleProvider(styler);
         if (GUIManager.getInstance().getFrame(graph) == null) {
         		GUIManager.getInstance().whatToDoWithGraph(graph, true);

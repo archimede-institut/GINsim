@@ -1,4 +1,4 @@
-package org.ginsim.service.tool.connectivity;
+package org.ginsim.service.tool.sccgraph;
 
 import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.core.graph.Edge;
