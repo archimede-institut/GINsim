@@ -8,6 +8,9 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
+import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.mangosdk.spi.ProviderFor;
 import org.xml.sax.Attributes;
 
 /**
@@ -15,12 +18,13 @@ import org.xml.sax.Attributes;
  * 
  * @author Aurelien Naldi
  */
+@ProviderFor(GraphAssociatedObjectManager.class)
 public class BiblioManager extends BasicGraphAssociatedManager {
 
 	public static final String KEY = "biblio";
 	
 	public BiblioManager() {
-		super(KEY, null);
+		super(KEY, null, RegulatoryGraph.class);
 		AnnotationLink.addHelperClass("ref", KEY);
 	}
 

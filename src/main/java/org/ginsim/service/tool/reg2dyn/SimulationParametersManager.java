@@ -10,19 +10,22 @@ import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
+import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.mangosdk.spi.ProviderFor;
 
 
 /**
  * Save/open simulation parameters along with the model.
  */
+@ProviderFor(GraphAssociatedObjectManager.class)
 public class SimulationParametersManager extends BasicGraphAssociatedManager {
 
 	public static final String KEY = "reg2dyn_parameters";
 	
 	public SimulationParametersManager() {
-		super(KEY, null);
+		super(KEY, null, RegulatoryGraph.class);
 	}
 
 	@Override

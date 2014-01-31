@@ -45,11 +45,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 
 	private List<RegulatoryNode> nodeOrder = new ArrayList<RegulatoryNode>();
 
-    static {
-    	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new PerturbationManager());
-    	ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class,  new BiblioManager());
-    }
-
     /**
      * Create a new Regulatory graph (not for parsing)
      */

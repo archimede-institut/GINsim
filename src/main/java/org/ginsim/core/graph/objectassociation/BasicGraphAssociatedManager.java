@@ -19,10 +19,12 @@ public abstract class BasicGraphAssociatedManager implements GraphAssociatedObje
 
 	private final String key;
 	private final String[] aliases;
+    private final Class typeClass;
 	
-	public BasicGraphAssociatedManager(String key, String[] aliases) {
+	public BasicGraphAssociatedManager(String key, String[] aliases, Class typeClass) {
 		this.key = key;
 		this.aliases = aliases;
+        this.typeClass = typeClass;
 	}
 	
 	public void doSave(OutputStreamWriter os, Graph graph) throws GsException{
@@ -74,5 +76,9 @@ public abstract class BasicGraphAssociatedManager implements GraphAssociatedObje
         }
 
         return false;
+    }
+
+    public Class getGraphType() {
+        return typeClass;
     }
 }

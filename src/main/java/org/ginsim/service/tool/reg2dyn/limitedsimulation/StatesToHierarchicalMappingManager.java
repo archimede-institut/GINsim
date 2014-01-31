@@ -6,23 +6,27 @@ import java.util.HashMap;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
+import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
+import org.mangosdk.spi.ProviderFor;
 
 /**
  * An GraphAssociatedObjectManager providing an HashMap<DynamicNode, HierarchicalNode> storing a mapping between states and their corresponding HierarchicalNode
  * 
  * Usage : 
  * 	(HashMap<DynamicNode, HierarchicalNode>) ObjectAssociationManager.getInstance().getObject(dynamicGraph, StatesToHierarchicalMappingManager.key, true);
- * @author Duncan Berenguier
  *
+ * @author Duncan Berenguier
  */
+@ProviderFor(GraphAssociatedObjectManager.class)
 public class StatesToHierarchicalMappingManager extends BasicGraphAssociatedManager {
 
 	public static final String KEY = "statesToHierarchical";
 
 	public StatesToHierarchicalMappingManager() {
-		super(KEY, null);
+		super(KEY, null, DynamicGraph.class);
 	}
 	
 	@Override
@@ -43,6 +47,5 @@ public class StatesToHierarchicalMappingManager extends BasicGraphAssociatedMana
 	public Object doCreate(Graph graph) {
 		return new HashMap<byte[], HierarchicalNode>();
 	}
-
 
 }

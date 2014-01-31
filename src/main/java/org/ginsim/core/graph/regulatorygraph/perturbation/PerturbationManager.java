@@ -8,18 +8,21 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
+import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.mangosdk.spi.ProviderFor;
 
 
 /**
  * Save/open perturbation definitions along with the model.
  */
+@ProviderFor(GraphAssociatedObjectManager.class)
 public class PerturbationManager extends BasicGraphAssociatedManager {
 
 	public static final String KEY = "mutant";
 	
 	public PerturbationManager() {
-		super(KEY, new String[] {"perturbation"});
+		super(KEY, new String[] {"perturbation"}, RegulatoryGraph.class);
 	}
 	
     public Object doOpen(InputStream is, Graph graph)  throws GsException{

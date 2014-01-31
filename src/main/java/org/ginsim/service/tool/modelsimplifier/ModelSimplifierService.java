@@ -15,12 +15,6 @@ import org.mangosdk.spi.ProviderFor;
 @ServiceStatus(EStatus.RELEASED)
 public class ModelSimplifierService implements Service {
 
-    static {
-    	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( RegulatoryGraph.class, ModelSimplifierConfigManager.KEY)){
-    		ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new ModelSimplifierConfigManager());
-        }
-    }
-
     public ModelReducer getModelReducer( RegulatoryGraph graph) {
     	return getModelReducer(graph.getModel());
     }

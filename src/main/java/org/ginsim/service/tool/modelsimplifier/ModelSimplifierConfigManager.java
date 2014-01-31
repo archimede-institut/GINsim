@@ -10,21 +10,24 @@ import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
+import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.mangosdk.spi.ProviderFor;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
  * Save/open simulation parameters along with the model.
  */
+@ProviderFor(GraphAssociatedObjectManager.class)
 public class ModelSimplifierConfigManager extends BasicGraphAssociatedManager {
 
 	public static final String KEY = "modelSimplifier";
 	
 	public ModelSimplifierConfigManager() {
-		super(KEY, null);
+		super(KEY, null, RegulatoryGraph.class);
 	}
 	
     public Object doOpen(InputStream is, Graph graph) throws GsException {

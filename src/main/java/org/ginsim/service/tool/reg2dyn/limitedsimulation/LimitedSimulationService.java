@@ -19,11 +19,6 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor( Service.class)
 @Alias("htg-simulation")
 public class LimitedSimulationService implements Service {
-    static {
-    	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( DynamicGraph.class, StatesToHierarchicalMappingManager.KEY)){
-    		ObjectAssociationManager.getInstance().registerObjectManager(DynamicGraph.class, new StatesToHierarchicalMappingManager());
-    	}
-    }
 
 	private LimitedSimulation simu;
 

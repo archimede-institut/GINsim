@@ -9,7 +9,9 @@ import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
+import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.mangosdk.spi.ProviderFor;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -18,12 +20,13 @@ import org.xml.sax.SAXException;
  *
  * @author Aurelien Naldi
  */
+@ProviderFor(GraphAssociatedObjectManager.class)
 public class NamedStatesManager extends BasicGraphAssociatedManager {
 
 	public static final String KEY = "initialState";
 	
 	public NamedStatesManager() {
-		super(KEY, null);
+		super(KEY, null, RegulatoryGraph.class);
 	}
 	
     public Object doOpen(InputStream is, Graph graph)  throws GsException{

@@ -3,8 +3,10 @@ package org.ginsim.core.graph.objectassociation;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.common.utils.IntrospectionUtils;
+import org.ginsim.core.service.Service;
 
 /**
  * The association manager can be used as proxy to retrieve or create associated objects.
@@ -28,7 +30,20 @@ public class ObjectAssociationManager {
 		objectManagers = new ArrayList<GraphAssociatedObjectManager>();
 		specializedObjectManagers = new HashMap<Class, List<GraphAssociatedObjectManager>>();
 		objectsOfGraph = new HashMap<Graph, Map<String,Object>>();
-		
+
+        Iterator<GraphAssociatedObjectManager> managers = ServiceLoader.load( GraphAssociatedObjectManager.class).iterator();
+        while (managers.hasNext()) {
+            try {
+                GraphAssociatedObjectManager mgr = managers.next();
+                if (mgr != null) {
+                    registerObjectManager(mgr);
+                }
+            }
+            catch (ServiceConfigurationError e){
+                LogManager.debug(e);
+            }
+        }
+
 	}
 	
 	static public ObjectAssociationManager getInstance(){
@@ -83,36 +98,28 @@ public class ObjectAssociationManager {
      *
      * @param manager
      */
-    public void registerObjectManager( GraphAssociatedObjectManager manager) {
-    	
-    	objectManagers.add( manager);
-    }
-    
-    /**
-     * Register an object manager associated to a graph class.
-     * 
-     * @param manager
-     */
-    public void registerObjectManager( Class graph_class, GraphAssociatedObjectManager manager) {
-    	
-    	if( graph_class == null) {
-    		return;
-    	}
-    	
-    	List<GraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( graph_class);
-    	
-    	if( specialized_managers == null){
-    		specialized_managers = new Vector<GraphAssociatedObjectManager>();
-    		specializedObjectManagers.put( graph_class, specialized_managers);
-    	}
+    private void registerObjectManager( GraphAssociatedObjectManager manager) {
 
-    	for (GraphAssociatedObjectManager m: specialized_managers) {
-    		if (m.getObjectName().equals(manager.getObjectName())) {
-    			return;
-    		}            
-    	}
-    	
-    	specialized_managers.add( manager);
+        Class graph_class = manager.getGraphType();
+        if (graph_class == null) {
+            objectManagers.add( manager);
+        } else {
+
+            List<GraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( graph_class);
+
+            if( specialized_managers == null){
+                specialized_managers = new Vector<GraphAssociatedObjectManager>();
+                specializedObjectManagers.put( graph_class, specialized_managers);
+            }
+
+            for (GraphAssociatedObjectManager m: specialized_managers) {
+                if (m.getObjectName().equals(manager.getObjectName())) {
+                    return;
+                }
+            }
+
+            specialized_managers.add( manager);
+        }
     }
     
     

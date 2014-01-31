@@ -21,14 +21,6 @@ public class Reg2DynService implements Service {
 
 	public static final String KEY = "simulation";
 	
-    static {
-    	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( RegulatoryGraph.class, PerturbationManager.KEY)){
-    		ObjectAssociationManager.getInstance().registerObjectManager(RegulatoryGraph.class, new PerturbationManager());
-    	}
-        ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new NamedStatesManager());
-        ObjectAssociationManager.getInstance().registerObjectManager( RegulatoryGraph.class, new SimulationParametersManager());
-    }
-    
 	public Simulation get( LogicalModel model, ProgressListener<Graph> plist, SimulationParameters currentParameter){
 		
 		Simulation sim;
