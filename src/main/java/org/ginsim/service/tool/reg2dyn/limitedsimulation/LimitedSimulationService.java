@@ -11,11 +11,13 @@ import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( Service.class)
+@Alias("htg-simulation")
 public class LimitedSimulationService implements Service {
     static {
     	if( !ObjectAssociationManager.getInstance().isObjectManagerRegistred( DynamicGraph.class, StatesToHierarchicalMappingManager.KEY)){

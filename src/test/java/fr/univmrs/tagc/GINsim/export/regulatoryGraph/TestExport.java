@@ -9,7 +9,7 @@ import org.ginsim.TestFileUtils;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.io.parser.GinmlParser;
-import org.ginsim.service.export.cytoscape.CytoscapeEncoder;
+import org.ginsim.service.export.struct.CytoscapeEncoder;
 import org.junit.Assert;
 import org.junit.Test;
 

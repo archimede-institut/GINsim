@@ -22,7 +22,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @StandaloneGUI
 @ProviderFor( ServiceGUI.class)
-@ServiceStatus( EStatus.TOOLKIT)
+@ServiceStatus( EStatus.DEVELOPMENT)
 public class DynamicAnalyserServiceGUI extends AbstractServiceGUI {
     
 	@Override

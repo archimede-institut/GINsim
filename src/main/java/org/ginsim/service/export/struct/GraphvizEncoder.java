@@ -1,4 +1,4 @@
-package org.ginsim.service.export.graphviz;
+package org.ginsim.service.export.struct;
 
 import java.io.FileWriter;
 import java.io.IOException;

@@ -19,7 +19,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor(ServiceGUI.class)
 @StandaloneGUI
-@ServiceStatus( EStatus.TOOLKIT)
+@ServiceStatus( EStatus.DEVELOPMENT)
 public class PolytopesVizServiceGUI extends AbstractServiceGUI {
 
 	@Override

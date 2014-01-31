@@ -7,6 +7,7 @@ import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
+import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
@@ -14,6 +15,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( Service.class)
 @ServiceStatus(EStatus.DEVELOPMENT)
+@Alias("comparator")
 public class GraphComparatorService implements Service {
 
 

@@ -11,7 +11,6 @@ public enum EStatus {
     DEVELOPMENT,
     RELEASED,
     DEPRECATED,
-    TOOLKIT,
     ;
 
 }

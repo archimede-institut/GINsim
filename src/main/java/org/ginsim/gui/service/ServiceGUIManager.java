@@ -80,9 +80,6 @@ public class ServiceGUIManager{
     			case RELEASED:
     				rejected = false;
     				break;
-    			case TOOLKIT:
-    				rejected = !Launcher.developer_mode;
-    				break;
     			default:
     				rejected = true;
     				break;

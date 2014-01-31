@@ -1,4 +1,4 @@
-package org.ginsim.service.export.biolayout;
+package org.ginsim.service.export.struct;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -11,7 +11,7 @@ public class BiolayoutEncoder {
 
 
 	/**
-	 * Encode the graph to biolayout output
+	 * Encode the graph to struct output
 	 * 
 	 * @param graph the graph to encode
 	 * @param edges the list of edges that must be part of the output

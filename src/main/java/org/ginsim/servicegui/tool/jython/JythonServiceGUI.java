@@ -22,13 +22,13 @@ import org.python.core.PySystemState;
 import org.python.util.PythonInterpreter;
 
 
-
-
 /**
- * main method for the jython console
+ * Add a python console dialog.
+ *
+ * @author Aurelien Naldi
  */
 @ProviderFor(ServiceGUI.class)
-@ServiceStatus( EStatus.TOOLKIT)
+@ServiceStatus( EStatus.DEVELOPMENT)
 @StandaloneGUI
 public class JythonServiceGUI extends AbstractServiceGUI {
 
@@ -90,6 +90,7 @@ class JythonConsole extends Thread {
     	this.frame = new JythonFrame();
     	this.start();
     }
+
     public void run() {
         PythonInterpreter pyi = new PythonInterpreter();   
         pyi.exec("import sys");    

@@ -45,9 +45,10 @@ public class LimitedSimulation implements Runnable {
 	/**
 	 * Constructs an empty dynamic graph
 	 *
-	 * @param regGraph the regulatory graph on which we are working
+	 * @param model the logical model on which we are working
+     * @param htg   the hierarchical graph
+     * @param params
 	 * @param simulationManager
-	 * @param params
 	 */
     public LimitedSimulation(LogicalModel model, HierarchicalTransitionGraph htg, SimulationConstraint constraint, SimulationParameters params, ProgressListener<Graph> simulationManager) {
     	this.htg = htg;

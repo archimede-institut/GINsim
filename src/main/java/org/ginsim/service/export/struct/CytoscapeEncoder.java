@@ -1,4 +1,4 @@
-package org.ginsim.service.export.cytoscape;
+package org.ginsim.service.export.struct;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
