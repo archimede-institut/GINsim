@@ -12,6 +12,7 @@ import java.util.zip.ZipFile;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
+import org.ginsim.common.utils.ServiceClassInfo;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraphImpl;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraphImpl;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
@@ -21,6 +22,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.core.io.parser.GinmlParser;
 import org.ginsim.core.notification.NotificationManager;
+import org.ginsim.core.service.Service;
 
 
 /**
@@ -459,6 +461,14 @@ public class GraphManager {
 		}
 	}
 
+    public ServiceClassInfo[] getGraphsInfo() {
+        ServiceClassInfo[] ret = new ServiceClassInfo[graphFactories.size()];
+        int idx = 0;
+        for (GraphFactory factory: graphFactories.values()) {
+            ret[idx++] = new ServiceClassInfo(factory.getClass());
+        }
+        return ret;
+    }
 }
 
 class GraphInfo<G extends GraphModel<?, ?>> {

@@ -13,6 +13,9 @@ import org.ginsim.common.application.Txt;
 import org.ginsim.common.utils.ServiceClassInfo;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.commongui.utils.ImageLoader;
+import org.ginsim.core.graph.GraphFactory;
+import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
@@ -164,14 +167,42 @@ public class Launcher {
      * Print information for developers: list of loaded services
      */
     private static void devInfo() {
+
+        // load everything
+        GraphManager graphManager = GraphManager.getInstance();
+        ObjectAssociationManager assocManager = ObjectAssociationManager.getInstance();
+        ServiceManager srvManager = ServiceManager.getManager();
+        ServiceGUIManager srvGUIManager = ServiceGUIManager.getManager();
+
+        System.out.println("Graphs");
+        for (ServiceClassInfo info: graphManager.getGraphsInfo()) {
+            System.out.println(info);
+        }
+        System.out.println();
+
+        System.out.println("Data handlers");
+        for (GraphFactory factory: graphManager.getGraphFactories()) {
+            Class cl = factory.getGraphClass();
+            System.out.println("# "+cl.getSimpleName());
+            for (ServiceClassInfo info: assocManager.getDataManagerInfo(cl)) {
+                System.out.println(info);
+            }
+            System.out.println();
+        }
+
+        for (ServiceClassInfo info: assocManager.getDataManagerInfo(null)) {
+            System.out.println(info);
+        }
+        System.out.println();
+
         System.out.println("Services");
-        for (ServiceClassInfo info: ServiceManager.getManager().getServicesInfo()) {
+        for (ServiceClassInfo info: srvManager.getServicesInfo()) {
             System.out.println(info);
         }
         System.out.println();
 
         System.out.println("GUI for services");
-        for (ServiceClassInfo info: ServiceGUIManager.getManager().getServicesInfo()) {
+        for (ServiceClassInfo info: srvGUIManager.getServicesInfo()) {
             System.out.println(info);
         }
     }

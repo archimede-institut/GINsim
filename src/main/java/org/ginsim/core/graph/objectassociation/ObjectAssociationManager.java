@@ -4,8 +4,10 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import org.ginsim.common.application.LogManager;
+import org.ginsim.common.utils.ServiceClassInfo;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.common.utils.IntrospectionUtils;
+import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.service.Service;
 
 /**
@@ -279,7 +281,7 @@ public class ObjectAssociationManager {
      */
     public void removeAllObjects( Graph graph){
     	
-    	Map<String, Object> m_objects = objectsOfGraph.get( graph);
+    	Map<String, Object> m_objects = objectsOfGraph.get(graph);
     	
         if (m_objects != null) {
         	// is that REALLY needed? (i.e. do we have copies of this map outside of here?)
@@ -287,27 +289,23 @@ public class ObjectAssociationManager {
             m_objects = null;
         }
     }
-    
-    /**
-     * 
-     * @param key
-     * @return true if a manager with this key already exists
-     */
-    public boolean isObjectManagerRegistred( Class graph_class, String key) {
-    	
-    	Class interface_class = IntrospectionUtils.getGraphInterface( graph_class);
-    	
-    	List<GraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( interface_class);
-    	
-        if (specialized_managers == null) {
-            return false;
-        }
-        for (GraphAssociatedObjectManager mgr: specialized_managers) {
-            if (mgr.handles(key)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
+    public ServiceClassInfo[] getDataManagerInfo(Class graphType) {
+
+        List<GraphAssociatedObjectManager> managers = objectManagers;
+        if (graphType != null) {
+            managers = specializedObjectManagers.get(graphType);
+        }
+
+        if (managers == null) {
+            return new ServiceClassInfo[0];
+        }
+
+        ServiceClassInfo[] ret = new ServiceClassInfo[managers.size()];
+        int idx = 0;
+        for (GraphAssociatedObjectManager mgr: managers) {
+            ret[idx++] = new ServiceClassInfo(mgr.getClass());
+        }
+        return ret;
+    }
 }
