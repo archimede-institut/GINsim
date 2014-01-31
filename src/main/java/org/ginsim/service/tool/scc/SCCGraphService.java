@@ -1,4 +1,4 @@
-package org.ginsim.service.tool.sccgraph;
+package org.ginsim.service.tool.scc;
 
 import org.colomoto.common.task.Task;
 import org.colomoto.common.task.TaskListener;

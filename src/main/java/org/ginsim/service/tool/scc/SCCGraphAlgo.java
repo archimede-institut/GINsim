@@ -1,4 +1,4 @@
-package org.ginsim.service.tool.sccgraph;
+package org.ginsim.service.tool.scc;
 
 import java.awt.Color;
 import java.util.Collection;

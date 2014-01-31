@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.connectivity;
+package org.ginsim.servicegui.tool.scc;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
@@ -30,12 +30,12 @@ import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.shell.actions.GenericGraphAction;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ToolAction;
-import org.ginsim.service.tool.sccgraph.SCCGraphService;
+import org.ginsim.service.tool.scc.SCCGraphService;
 import org.mangosdk.spi.ProviderFor;
 
 
 /**
- * register the connectivity service
+ * register the scc service
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(SCCGraphService.class)

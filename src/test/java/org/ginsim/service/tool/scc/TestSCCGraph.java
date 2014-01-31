@@ -1,4 +1,4 @@
-package org.ginsim.service.tool.sccgraph;
+package org.ginsim.service.tool.scc;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

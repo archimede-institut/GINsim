@@ -7,7 +7,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.service.ServiceManager;
-import org.ginsim.service.tool.sccgraph.SCCGraphService;
+import org.ginsim.service.tool.scc.SCCGraphService;
 
 import java.util.ArrayList;
 import java.util.List;

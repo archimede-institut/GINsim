@@ -1,4 +1,4 @@
-package org.ginsim.service.tool.sccgraph;
+package org.ginsim.service.tool.scc;
 
 import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.core.graph.Edge;

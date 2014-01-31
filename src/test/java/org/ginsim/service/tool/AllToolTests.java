@@ -3,7 +3,7 @@ package org.ginsim.service.tool;
 import org.ginsim.service.tool.composition.TestComposition;
 import org.ginsim.service.tool.graphcomparator.TestGraphComparator;
 import org.ginsim.service.tool.localgraph.TestLocalGraph;
-import org.ginsim.service.tool.sccgraph.TestSCCGraph;
+import org.ginsim.service.tool.scc.TestSCCGraph;
 import org.ginsim.service.tool.stablestates.TestStableStates;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
