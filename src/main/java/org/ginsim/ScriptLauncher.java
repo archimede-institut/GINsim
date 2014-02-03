@@ -17,6 +17,8 @@ import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.common.document.LaTeXDocumentWriter;
 import org.ginsim.common.document.OOoDocumentWriter;
 import org.ginsim.common.document.XHTMLDocumentWriter;
+import org.ginsim.common.utils.ServiceClassInfo;
+import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.backend.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.Graph;
@@ -305,10 +307,16 @@ public class ScriptLauncher {
             doc.writeText(". It allows to load graphs, access their associated data, and services.");
             doc.writeText("Each graph type and service has its own API, linked below.");
 
-            writeDoc(doc, javadocbase, "Graph types", GraphManager.getInstance().getGraphFactories());
-			writeDoc(doc, javadocbase, "Services", ServiceManager.getManager().getAvailableServices());
+            writeDoc(doc, javadocbase, "Graph types", GraphManager.getInstance().getGraphsInfo());
+			writeDoc(doc, javadocbase, "Services", ServiceManager.getManager().getServicesInfo());
+
 			// TODO: names for associated data managers
-			writeDoc(doc, javadocbase, "Associated data", getDataManagers());
+            ObjectAssociationManager objMgr = ObjectAssociationManager.getInstance();
+            writeDoc(doc, javadocbase, "Associated data", objMgr.getDataManagerInfo(null));
+
+            for (GraphFactory factory: GraphManager.getInstance().getGraphFactories()) {
+                writeDoc(doc, javadocbase, "Associated data for "+factory.getGraphType(), objMgr.getDataManagerInfo(factory.getGraphClass()));
+            }
 			doc.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -331,37 +339,48 @@ public class ScriptLauncher {
 		return datamanagers;
 	}
 	
-	private void writeDoc(DocumentWriter doc, String javadocbase, String title, Collection<?> objects) throws IOException {
+	private void writeDoc(DocumentWriter doc, String javadocbase, String title, ServiceClassInfo[] objects) throws IOException {
 		
-		if (objects == null || objects.size() == 0) {
+		if (objects == null || objects.length == 0) {
 			return;
 		}
 		
 		doc.openHeader(1, title, null);
-		doc.openList(null);
-		for (Object o: objects) {
-			Class<?> cl;
-			if (o instanceof Class) {
-				cl = (Class<?>)o;
-			} else {
-				cl = o.getClass();
-			}
-			Alias alias = cl.getAnnotation(Alias.class);
-			String name = cl.getSimpleName();
-			if (alias != null) {
-				name = alias.value();
-			}
-			
-			// javadoc link
-			doc.openListItem("");
-			doc.addLink(getJavadocLink(javadocbase, cl), name);
+        doc.openTable("", "", new String[]{"", "", ""});
+        doc.openTableRow();
+        doc.openTableCell("Alias", true);
+        doc.openTableCell("Package", true);
+        doc.openTableCell("Class", true);
+		for (ServiceClassInfo info: objects) {
+            doc.openTableRow();
+            doc.openTableCell(info.alias);
+
+            // javadoc links
+            String pkg = info.cl.getPackage().getName();
+            String cl = info.cl.getSimpleName();
+
+            doc.openTableCell("");
+            doc.addLink(getJavadocLink(javadocbase, pkg, null), pkg);
+
+            doc.openTableCell("");
+            doc.addLink(getJavadocLink(javadocbase, pkg, cl), cl);
+
 		}
-		doc.closeList();
+		doc.closeTable();
 	}
-	
-	private String getJavadocLink(String javadocbase, Class<?> cl) {
-		String scl = cl.getCanonicalName().replace('.', '/');
-		return javadocbase+"/"+scl+".html";
+
+    private String getJavadocLink(String javadocbase, Class cl) {
+        return getJavadocLink(javadocbase, cl.getPackage().getName(), cl.getSimpleName());
+    }
+
+    private String getJavadocLink(String javadocbase, String pkg, String className) {
+		String scl = pkg.replace('.', '/');
+        if (className != null) {
+            scl += "/"+className+".html";
+        } else {
+            scl += "/package-summary.html";
+        }
+		return javadocbase+"/"+scl;
 	}
 	
 	public BasicProgressListener progressListener() {
