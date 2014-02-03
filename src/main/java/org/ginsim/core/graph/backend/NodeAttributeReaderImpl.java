@@ -347,7 +347,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 		writer.addAttr("x", ""+getX());
 		writer.addAttr("y", ""+getY());
 
-        if (styleManager.isDisabled()) {
+        if (styleManager.isCompatMode()) {
             // write old attributes for backward compatibility
             if (getShape() == NodeShape.ELLIPSE) {
                 writer.openTag("ellipse");

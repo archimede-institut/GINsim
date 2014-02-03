@@ -407,7 +407,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 			writer.addAttr("points", points);
 		}
 
-		if (styleManager.isDisabled()) {
+		if (styleManager.isCompatMode()) {
             // write old attributes for backward compatibility
         	writer.openTag("polyline");
 	        

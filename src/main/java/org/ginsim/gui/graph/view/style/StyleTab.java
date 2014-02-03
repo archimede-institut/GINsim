@@ -40,7 +40,7 @@ public class StyleTab extends JPanel
 
     private final JToggleButton bNodes, bEdges;
     private final JButton b_removeProvider;
-    private final JButton b_switch;
+    private final JCheckBox cb_compatibilityMode;
 
     private final JLabel label = new JLabel();
     private boolean providerMode = false;
@@ -87,7 +87,7 @@ public class StyleTab extends JPanel
         c.anchor = GridBagConstraints.NORTH;
         add(label, c);
 
-        // style on/off button
+        // style provider reset button
         c.gridx++;
         c.fill = GridBagConstraints.NONE;
         c.anchor = GridBagConstraints.NORTHEAST;
@@ -96,16 +96,21 @@ public class StyleTab extends JPanel
         b_removeProvider.addActionListener(this);
         add(b_removeProvider, c);
 
-        // style provider reset button
-        c.gridx++;
-        b_switch = new JButton("Switch styles on/off");
-        add(b_switch, c);
-        b_switch.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                switchStyles();
-            }
-        });
+        // compatibility mode checkbox
+        if (manager.isCompatMode()) {
+            c.gridx++;
+            cb_compatibilityMode = new JCheckBox("Compatibility mode");
+            cb_compatibilityMode.setSelected(manager.isCompatMode());
+            add(cb_compatibilityMode, c);
+            cb_compatibilityMode.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent actionEvent) {
+                    switchStyles();
+                }
+            });
+        } else {
+            cb_compatibilityMode = null;
+        }
 
         c.gridy++;
         c.gridwidth = 7;
@@ -290,7 +295,10 @@ public class StyleTab extends JPanel
     }
 
     protected void switchStyles() {
-        manager.setEnabled(manager.isDisabled());
+        if (cb_compatibilityMode == null) {
+            return;
+        }
+        manager.setCompatMode(cb_compatibilityMode.isSelected());
     }
 
     private void updated() {
@@ -307,6 +315,10 @@ public class StyleTab extends JPanel
             bEdges.setSelected(true);
         } else if (currentStyle instanceof NodeStyle && !bNodes.isSelected()) {
             bNodes.setSelected(true);
+        }
+
+        if (cb_compatibilityMode != null) {
+            cb_compatibilityMode.setSelected(manager.isCompatMode());
         }
     }
 

@@ -18,6 +18,7 @@ import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.EdgeViewInfo;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.graph.view.NodeViewInfo;
+import org.ginsim.core.notification.NotificationManager;
 import org.xml.sax.Attributes;
 
 /**
@@ -30,8 +31,10 @@ import org.xml.sax.Attributes;
  */
 public class StyleManager<V, E extends Edge<V>> {
 
-    private boolean isDisabled = false;
 
+    private boolean isCompatMode = false;
+
+    private final Graph<V, E> graph;
     private final GraphBackend<V, E> backend;
 	
 	private final NodeStyle<V> defaultNodeStyle;
@@ -51,6 +54,7 @@ public class StyleManager<V, E extends Edge<V>> {
      */
 	public StyleManager(Graph<V, E> g, GraphBackend<V, E> backend, GraphFactory factory) {
 		this.backend = backend;
+        this.graph = g;
 		this.defaultNodeStyle = factory.createDefaultNodeStyle(g);
 		this.nodeStyles = new ArrayList<NodeStyle<V>>();
 		nodeStyles.add(defaultNodeStyle);
@@ -66,18 +70,16 @@ public class StyleManager<V, E extends Edge<V>> {
      * Check if the styles are disabled (for backward compatibility when saving).
      * @return true if styles should not be used.
      */
-    public boolean isDisabled() {
-        return isDisabled;
+    public boolean isCompatMode() {
+        return isCompatMode;
     }
 
     /**
      * Enable or disable styles.
      * @param b
      */
-    public void setEnabled(boolean b) {
-        this.isDisabled = !b;
-        backend.damage(null);
-        backend.repaint();
+    public void setCompatMode(boolean b) {
+        this.isCompatMode = b;
     }
 
     /**
@@ -103,7 +105,7 @@ public class StyleManager<V, E extends Edge<V>> {
 	 * @throws IOException
 	 */
 	public void styles2ginml(XMLWriter writer) throws IOException {
-        if (isDisabled) {
+        if (isCompatMode) {
             return;
         }
 		// save node styles
@@ -281,6 +283,16 @@ public class StyleManager<V, E extends Edge<V>> {
 		return null;
 	}
 
+    /**
+     * Activate the compatibility mode and add a notification about it.
+     */
+    private void autosetCompatMode() {
+        if (!this.isCompatMode) {
+            this.isCompatMode = true;
+            NotificationManager.publishWarning(this.graph, "Styles are in compatibility mode, change it in the style tab");
+        }
+    }
+
 	/**
 	 * Find a node style corresponding to the desired attributes.
 	 * If needed, a new style will be created.
@@ -293,6 +305,7 @@ public class StyleManager<V, E extends Edge<V>> {
 	 * @return a matching style (can be a new one)
 	 */
 	public NodeStyle guessNodeStyle(String qName, Attributes attributes) {
+        autosetCompatMode();
 		NodeShape shape = null;
         if (qName.equals("rect")) {
         	shape = NodeShape.RECTANGLE;
@@ -337,6 +350,7 @@ public class StyleManager<V, E extends Edge<V>> {
 	 * @return a matching style (can be a new one)
 	 */
 	public EdgeStyle guessEdgeStyle(String qName, Attributes attributes) {
+        autosetCompatMode();
 		Color color = ColorPalette.getColorFromCode(attributes.getValue("line_color"));
 		EdgePattern pattern = EdgePattern.SIMPLE;
 		if (attributes.getValue("pattern") != null) {
@@ -403,9 +417,6 @@ public class StyleManager<V, E extends Edge<V>> {
 	 * @return the style for this node.
 	 */
 	public NodeStyle<V> getUsedNodeStyle(V node) {
-        if (isDisabled) {
-            return defaultNodeStyle;
-        }
 		NodeViewInfo info = backend.getNodeViewInfo(node);
 		NodeStyle<V> style = info.getStyle();
 		if (style == null) {
@@ -437,9 +448,6 @@ public class StyleManager<V, E extends Edge<V>> {
 	 * @return the style for this edge.
 	 */
 	public EdgeStyle getUsedEdgeStyle(E edge) {
-        if (isDisabled) {
-            return defaultEdgeStyle;
-        }
 		EdgeViewInfo<V, E> info = backend.getEdgeViewInfo(edge);
 		if (info == null) {
 			return defaultEdgeStyle;
