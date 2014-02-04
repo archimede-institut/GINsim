@@ -392,14 +392,12 @@ class ListTableModel extends AbstractListModel {
     }
 }
 
-class StyleCellRenderer extends JPanel implements ListCellRenderer<Style> {
+class StyleCellRenderer extends JPanel implements ListCellRenderer {
 
     private final JLabel name = new JLabel();
 
     private NodeStyle nstyle;
     private EdgeStyle estyle;
-
-
 
     public StyleCellRenderer() {
         super(new GridBagLayout());
@@ -415,8 +413,12 @@ class StyleCellRenderer extends JPanel implements ListCellRenderer<Style> {
     }
 
     @Override
-    public Component getListCellRendererComponent(JList<? extends Style> jList, Style style, int i, boolean selected, boolean focused) {
+    public Component getListCellRendererComponent(JList jList, Object obj, int i, boolean selected, boolean focused) {
+        if (!(obj instanceof Style)) {
+            return this;
+        }
 
+        Style style = (Style)obj;
         if (selected) {
             setBackground(Color.BLUE);
             name.setForeground(Color.WHITE);
