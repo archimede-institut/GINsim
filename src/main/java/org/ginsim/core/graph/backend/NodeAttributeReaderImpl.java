@@ -344,8 +344,6 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 		
 		// save style information
 		writer.openTag("nodevisualsetting");
-		writer.addAttr("x", ""+getX());
-		writer.addAttr("y", ""+getY());
 
         if (styleManager.isCompatMode()) {
             // write old attributes for backward compatibility
@@ -370,6 +368,8 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
             }
             writer.closeTag();
         } else if (style != null) {
+            writer.addAttr("x", ""+getX());
+            writer.addAttr("y", ""+getY());
 			writer.addAttr("style", style.getName());
 		}
 		

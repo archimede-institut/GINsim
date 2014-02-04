@@ -285,6 +285,7 @@ public class NodeStyleImpl<V> extends BaseStyle<NodeStyle<V>> implements NodeSty
 	@Override
 	public boolean matches(NodeShape shape, Color bg, Color fg, Color text, int w, int h) {
 		return
+				this.shape == shape &&
 				equals(this.bg, bg) &&
 				equals(this.fg, fg) &&
 				equals(this.txt, text) &&
