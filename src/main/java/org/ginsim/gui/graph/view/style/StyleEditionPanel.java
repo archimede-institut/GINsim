@@ -242,6 +242,8 @@ class ColorPropertyButton extends PropertyEditor<JButton> implements ActionListe
 	
 	public ColorPropertyButton(StyleManager styleManager, StyleProperty property, GraphGUI gui) {
 		super(styleManager, property, gui, 0);
+		this.component.setOpaque(true);
+		this.component.setBorderPainted(false);
 		this.component.addActionListener(this);
 	}
 
