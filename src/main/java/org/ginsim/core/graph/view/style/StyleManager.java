@@ -283,6 +283,21 @@ public class StyleManager<V, E extends Edge<V>> {
 		return null;
 	}
 
+    public boolean getEdgeCurved(E edge) {
+        EdgeViewInfo<V, E> info = backend.getEdgeViewInfo(edge);
+        if (info == null) {
+            return false;
+        }
+        return info.isCurve();
+    }
+
+    public void setEdgeCurved(E edge, boolean curved) {
+        backend.damage(edge);
+        backend.ensureEdgeViewInfo(edge).setCurve(curved);
+        backend.damage(edge);
+        backend.repaint();
+    }
+
     /**
      * Activate the compatibility mode and add a notification about it.
      */

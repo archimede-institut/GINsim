@@ -43,6 +43,7 @@ public class StyleTab extends JPanel
     private final JCheckBox cb_compatibilityMode;
 
     private final JLabel label = new JLabel();
+    private final JCheckBox curveCheckbox;
     private boolean providerMode = false;
 
     private boolean pending = false;
@@ -87,6 +88,17 @@ public class StyleTab extends JPanel
         c.anchor = GridBagConstraints.NORTH;
         add(label, c);
 
+        // curve setting for edges
+        c.gridx++;
+        curveCheckbox = new JCheckBox("curve");
+        curveCheckbox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                updateCurveFlag();
+            }
+        });
+        add(curveCheckbox, c);
+
         // style provider reset button
         c.gridx++;
         c.fill = GridBagConstraints.NONE;
@@ -113,7 +125,7 @@ public class StyleTab extends JPanel
         }
 
         c.gridy++;
-        c.gridwidth = 7;
+        c.gridwidth = 8;
         c.gridx = 0;
         c.weightx = 1;
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -158,9 +170,11 @@ public class StyleTab extends JPanel
         cst.gridx += 3;
         cst.weightx = 1;
         cst.weighty = 1;
-        cst.gridwidth = 3;
+        cst.gridwidth = 4;
         cst.anchor = GridBagConstraints.CENTER;
         add(stylePanel, cst);
+
+        edit(null, null);
     }
 
     public void edit(Collection nodes, Collection<Edge> edges) {
@@ -179,6 +193,8 @@ public class StyleTab extends JPanel
             bNodes.setEnabled(true);
             bEdges.setEnabled(true);
             label.setText("");
+            curveCheckbox.setEnabled(false);
+            curveCheckbox.setVisible(false);
             return;
         }
 
@@ -206,13 +222,20 @@ public class StyleTab extends JPanel
 
             if (edges.size() == 1) {
                 label.setText("Style for edge: "+first);
+                curveCheckbox.setEnabled(true);
+                curveCheckbox.setVisible(true);
+                curveCheckbox.setSelected(manager.getEdgeCurved(first));
             } else {
+                curveCheckbox.setEnabled(false);
+                curveCheckbox.setVisible(false);
                 label.setText("Style for "+edges.size()+" selected edges");
             }
             setCurrentStyle(selected);
             return;
         }
 
+        curveCheckbox.setEnabled(false);
+        curveCheckbox.setVisible(false);
         Style selected = null;
         Object first = null;
         for (Object node: nodes) {
@@ -299,6 +322,18 @@ public class StyleTab extends JPanel
             return;
         }
         manager.setCompatMode(cb_compatibilityMode.isSelected());
+    }
+
+    protected void updateCurveFlag() {
+        if (curveCheckbox.isEnabled() && selectedEdges != null && selectedEdges.size() == 1) {
+            Edge first = null;
+            for (Edge e: selectedEdges) {
+                first = e;
+                break;
+            }
+
+            manager.setEdgeCurved(first, curveCheckbox.isSelected());
+        }
     }
 
     private void updated() {
