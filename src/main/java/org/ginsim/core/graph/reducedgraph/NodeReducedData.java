@@ -1,9 +1,6 @@
 package org.ginsim.core.graph.reducedgraph;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
 import org.ginsim.common.utils.ListTools;
 import org.ginsim.core.graph.Edge;
@@ -21,38 +18,31 @@ import org.ginsim.core.graph.Graph;
 public class NodeReducedData {
 	
 	//all vertices that are in the strongest connected component together 
-	private List content;
-	private String id;
+	private final List content;
+	private final String id;
 	
 	public static final int SCC_TYPE_UNIQUE_NODE = 0;
 	public static final int SCC_TYPE_SIMPLE_CYCLE = 1;
 	public static final int SCC_TYPE_COMPLEX_COMPONENT = 2;
-	
+
+    public NodeReducedData(String id, Collection content) {
+        this(id, new ArrayList(content));
+    }
+
 	/**
 	 * @param id Id of the new node.
 	 * @param content list of vertices in this component.
 	 */
-	public NodeReducedData(String id, Vector content) {
-		this.id = id;
-		if (content == null) {
-			this.content = new Vector(0);
-		} else {
-			this.content = content;
-		}
-	}
-	
-	/**
-	 * @param id Id of the new node.
-	 * @param set list of vertices in this component.
-	 */
-	public NodeReducedData(String id, Collection set) {
-	    this.content = new Vector(set.size());
-	    Iterator it = set.iterator();
-	    while (it.hasNext()) {
-	        content.add(it.next());
-	    }
+	public NodeReducedData(String id, List content) {
+        if (content == null) {
+            this.content = new Vector();
+            this.id = id;
+            return;
+        }
+
+        this.content = content;
 	    if (id == null) {
-	        this.id = content.get(0).toString();
+            this.id = "i_"+content.get(0).toString();
 	    } else {
 	        this.id = id;
 	    }
@@ -62,14 +52,15 @@ public class NodeReducedData {
 	 * @param id id of the node.
 	 */
 	public NodeReducedData(String id) {
-		this(id, (Vector)null);
+		this(id, (List)null);
 	}
+
 	/**
 	 * 
 	 * @param id if of the node.
 	 * @param s_content comma (,) separated list of vertices in this component.
 	 */
-	public NodeReducedData (String id, String s_content) {
+	private NodeReducedData (String id, String s_content) {
 		this.id = id;
 		content = ListTools.getListFromArray(s_content.split(","));
 	}

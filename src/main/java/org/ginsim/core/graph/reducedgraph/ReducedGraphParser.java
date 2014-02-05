@@ -1,6 +1,8 @@
 package org.ginsim.core.graph.reducedgraph;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
@@ -41,7 +43,7 @@ public class ReducedGraphParser extends GsXMLHelper {
     
     private NodeReducedData vertex = null;
     private Edge<NodeReducedData> edge = null;
-    private Vector v_content = null;
+    private List v_content = null;
 	private StyleManager styleManager;
     private NodeAttributesReader vareader = null;
     private EdgeAttributesReader ereader = null;
@@ -181,7 +183,7 @@ public class ReducedGraphParser extends GsXMLHelper {
                     String id = attributes.getValue("id");
                     if (set == null || set.contains(id)) {
                         pos = POS_VERTEX;
-                        v_content = new Vector();
+                        v_content = new ArrayList();
                         vertex = new NodeReducedData(id, v_content);
                         graph.addNode(vertex);
                     } else {
