@@ -87,8 +87,13 @@ public class GinmlHelper {
     		loadOldVS = false;
     		ereader.setPoints( GinmlHelper.loadPoints(value) );
     	}
-    	
-    	value = attributes.getValue("style");
+
+        value = attributes.getValue("curve");
+        if (value!= null && !value.equalsIgnoreCase("false")) {
+            ereader.setCurve(true);
+        }
+
+        value = attributes.getValue("style");
     	if (value != null) {
     		loadOldVS = false;
     		ereader.setStyle( styleManager.getEdgeStyle(value) );

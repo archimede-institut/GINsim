@@ -402,10 +402,6 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 		
 		// save style information
 		writer.openTag("edgevisualsetting");
-		String points = getPointDescr(getPoints());
-		if (points != null) {
-			writer.addAttr("points", points);
-		}
 
 		if (styleManager.isCompatMode()) {
             // write old attributes for backward compatibility
@@ -422,6 +418,13 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 
 	        writer.closeTag();
         } else if (style != null) {
+            String points = getPointDescr(getPoints());
+            if (points != null) {
+                writer.addAttr("points", points);
+            }
+            if (isCurve()) {
+                writer.addAttr("curve", "true");
+            }
             writer.addAttr("style", style.getName());
         }
 
