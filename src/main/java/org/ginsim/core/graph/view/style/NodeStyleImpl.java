@@ -24,7 +24,8 @@ public class NodeStyleImpl<V> extends BaseStyle<NodeStyle<V>> implements NodeSty
 
 	public static final int DEFAULT_WIDTH = 45;
 	public static final int DEFAULT_HEIGHT = 25;
-	public static final int MAX_SIZE = 500;
+    public static final int MAX_WIDTH = 500;
+    public static final int MAX_HEIGHT = 100;
 	public static final int MIN_SIZE = 15;
 
 	private static final StyleProperty[] DEFAULT_PROPERTIES = {
@@ -261,13 +262,25 @@ public class NodeStyleImpl<V> extends BaseStyle<NodeStyle<V>> implements NodeSty
 			if (value == null) {
 				this.width = -1;
 			} else {
-				this.width = (Integer)value;
+                int w = (Integer)value;
+                if (w > MAX_WIDTH) {
+                    w = MAX_WIDTH;
+                } else if (w < MIN_SIZE) {
+                    w = MIN_SIZE;
+                }
+				this.width = w;
 			}
 		} else if (prop == StyleProperty.HEIGHT) {
 			if (value == null) {
 				this.height = -1;
 			} else {
-				this.height = (Integer)value;
+                int h = (Integer)value;
+                if (h > MAX_HEIGHT) {
+                    h = MAX_HEIGHT;
+                } else if (h < MIN_SIZE) {
+                    h = MIN_SIZE;
+                }
+				this.height = h;
 			}
 		} else if (prop == StyleProperty.BORDER) {
 			this.border = (NodeBorder)value;
