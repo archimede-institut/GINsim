@@ -259,7 +259,7 @@ public class NodeStyleImpl<V> extends BaseStyle<NodeStyle<V>> implements NodeSty
 		} else if (prop == StyleProperty.SHAPE) {
 			this.shape = (NodeShape)value;
 		} else if (prop == StyleProperty.WIDTH) {
-			if (value == null) {
+			if (value == null || (Integer)value < 0) {
 				this.width = -1;
 			} else {
                 int w = (Integer)value;
@@ -271,7 +271,7 @@ public class NodeStyleImpl<V> extends BaseStyle<NodeStyle<V>> implements NodeSty
 				this.width = w;
 			}
 		} else if (prop == StyleProperty.HEIGHT) {
-			if (value == null) {
+            if (value == null || (Integer)value < 0) {
 				this.height = -1;
 			} else {
                 int h = (Integer)value;
