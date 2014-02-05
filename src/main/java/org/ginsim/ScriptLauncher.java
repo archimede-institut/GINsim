@@ -380,7 +380,7 @@ public class ScriptLauncher {
         } else {
             scl += "/package-summary.html";
         }
-		return javadocbase+"/"+scl;
+		return javadocbase+"/?"+scl;
 	}
 	
 	public BasicProgressListener progressListener() {
