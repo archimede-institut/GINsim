@@ -18,8 +18,8 @@ public class LRGDocumentationService implements Service {
 	}
 	
 	public void export(RegulatoryGraph graph, String filename) throws Exception {
-		JSONDocumentationWriter writer = new JSONDocumentationWriter(graph);
-		writer.exportDocumentation(filename);
+		JSONDocumentationWriter writer = new JSONDocumentationWriter(graph, filename);
+		writer.call();
 	}
 
 }
