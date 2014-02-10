@@ -209,6 +209,13 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 		xmlw.addContent(content);
 		xmlw.closeTag();
 	}
+	
+	protected void doAddAnchor(String name, String content) throws IOException {
+		xmlw.openTag("a");
+		xmlw.addAttr("name", name);
+		xmlw.addContent(content);
+		xmlw.closeTag();
+	}
 
 	protected void doOpenList(String style) throws IOException {
 		boolean numbered = false;

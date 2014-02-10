@@ -161,6 +161,16 @@ public abstract class DocumentWriter {
 	}
 	
 	/**
+	 * add a new anchor into the document.
+	 * @param name the anchors location (URI)
+	 * @param content the anchors description
+	 * @throws IOException
+	 */
+	public void addAnchor(String name, String content) throws IOException {
+		doAddAnchor(name, content);
+	}
+	
+	/**
 	 * Open a new table. 
 	 * A table is made of table rows
 	 * 
@@ -380,6 +390,7 @@ public abstract class DocumentWriter {
 	protected abstract void doCloseDocument() throws IOException;
 	protected abstract void doOpenHeader(int level, String content, String style) throws IOException;
 	protected abstract void doAddLink(String href, String content) throws IOException;
+	protected abstract void doAddAnchor(String name, String content) throws IOException;
 	protected abstract void doAddImage(BufferedImage img, String name) throws IOException;
 	protected abstract void doOpenList(String style) throws IOException;
 	protected abstract void doOpenListItem() throws IOException;
