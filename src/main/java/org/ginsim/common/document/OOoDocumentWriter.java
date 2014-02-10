@@ -283,6 +283,9 @@ public class OOoDocumentWriter extends DocumentWriter {
 		xmlw.addContent(content);
 		xmlw.closeTag();
 	}
+	protected void doAddAnchor(String name, String content) throws IOException {
+		// TODO
+	}
 	protected void doOpenList(String style) throws IOException {
 		xmlw.openTag("text:list");
 		if (style != null) {

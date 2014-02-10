@@ -103,6 +103,9 @@ public class WikiDocumentWriter extends DocumentWriter {
 	protected void doAddLink(String href, String content) throws IOException {
 		writer.write("[["+href+"|"+content+"]]");
 	}
+	protected void doAddAnchor(String name, String content) throws IOException {
+		// TODO
+	}
 	protected void doOpenList(String style) throws IOException {
 		boolean numbered = false;
 		if (style != null) {

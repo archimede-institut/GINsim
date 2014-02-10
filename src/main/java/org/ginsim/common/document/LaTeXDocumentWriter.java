@@ -232,6 +232,9 @@ public class LaTeXDocumentWriter extends DocumentWriter {
 	protected void doAddLink(String href, String content) throws IOException {
 	    // TODO
 	}
+	protected void doAddAnchor(String name, String content) throws IOException {
+	    // TODO
+	}
 	protected void doOpenList(String style) throws IOException {
 		writer.write("\n\\begin{itemize}\n");
 	}
