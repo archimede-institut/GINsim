@@ -52,7 +52,6 @@ public class InteractionAnalysisAlgo {
 	protected InteractionAnalysisAlgoResult run(RegulatoryGraph  regGraph, Perturbation mutant, List<RegulatoryNode> selectedNodes) {
 		before = new Date().getTime();//measuring the time spend for this algorithm
 		
-		int total_level;		//The total number of node in a complete omdd tree. (products of levels of each interactor)
 		byte [] leafs;			//The values of all the leafs for a complete omdd from all the node to 0, to all the node to max.
 		int [] subtree_size;	//The size of all the complete subtree (tree of a child) of the current node
 		Map<RegulatoryNode, Integer> node_in_subtree;    //The level of each node in the subtree regarding the nodeOrder
@@ -62,15 +61,14 @@ public class InteractionAnalysisAlgo {
 
 		//Preparing the logical function for the right mutant
 		LogManager.info("Getting the logical functions");
-        LogicalModel lmodel = regGraph.getModel();
+		LogicalModel lmodel = regGraph.getModel();
 		if (mutant != null) {
 			LogManager.info("Preparing the mutants");
-            lmodel = mutant.apply(lmodel);
+			lmodel = mutant.apply(lmodel);
 		}
 
-        MDDManager ddmanager = lmodel.getMDDManager();
-        int[] functions = lmodel.getLogicalFunctions();
-		
+		MDDManager ddmanager = lmodel.getMDDManager();
+		int[] functions = lmodel.getLogicalFunctions();
 		
 		//Create a map associating to a regulatoryNode, its position in the nodeOrder as an Integer.
 		Map<RegulatoryNode, Integer> node_to_position = new HashMap<RegulatoryNode, Integer>((int) (regGraph.getNodeCount()*1.5));
@@ -80,36 +78,39 @@ public class InteractionAnalysisAlgo {
 		}
 		
 		//Initializing the results of the algorithm
-		
 		LogManager.info("Preparing the report");
 		InteractionAnalysisReport report =  new InteractionAnalysisReport();
 		
 		Map<RegulatoryMultiEdge, InteractionStatus> functionalityMap = new HashMap<RegulatoryMultiEdge, InteractionStatus>();
 
-		//Run the analysis on each regulatory node
+		// Run the analysis on each regulatory node
 		node_in_subtree = new HashMap<RegulatoryNode, Integer>();
 		i = -1;
-		for(RegulatoryNode target : regGraph.getNodeOrder()) { //  For each vertex target in the graph
-		    i++;
+		// For each vertex target in the graph
+		for(RegulatoryNode target : regGraph.getNodeOrder()) {
+			i++;
 			if (target.isInput() || (selectedNodes != null && !selectedNodes.contains(target))) { 	//skip the inputs or unselected nodes
-			    continue;
+				continue;
 			}
 			LogManager.info("Computing "+target.getId());
-			Collection<RegulatoryMultiEdge> l = regGraph.getIncomingEdges(target);											//  get the list l of incoming edges
-            int curMDD = functions[i];
+			// get the list l of incoming edges
+			Collection<RegulatoryMultiEdge> incomingEdges = regGraph.getIncomingEdges(target);
+			int curMDD = functions[i];
 
-			total_level = 1;																//  Compute the total number of level in the omdd tree
-			for (RegulatoryMultiEdge edge: l) {
-				RegulatoryNode source = edge.getSource();
-				total_level *= source.getMaxValue()+1;
+			// Compute the total number of level in the omdd tree
+			// (products of levels of each interactor)
+			int totalLevels = 1;
+			for (RegulatoryMultiEdge edge: incomingEdges) {
+				totalLevels *= edge.getSource().getMaxValue() + 1;
 			}
-			leafs = new byte[total_level];
+			leafs = new byte[totalLevels];
 			i_leafs = 0;
-						
-			subtree_size = new int[l.size()+1];											//Compute the size of the subtrees
-			subtree_size[0] = total_level;
-			small_node_order_vertex = new RegulatoryNode[l.size()];
-			small_node_order_level = new int[l.size()];
+
+			// Compute the size of the subtrees
+			subtree_size = new int[incomingEdges.size()+1];
+			subtree_size[0] = totalLevels;
+			small_node_order_vertex = new RegulatoryNode[incomingEdges.size()];
+			small_node_order_level = new int[incomingEdges.size()];
 			int m = 0;
 			for (RegulatoryNode source: regGraph.getNodeOrder()) {
 				if (regGraph.getEdge(source, target) != null) {
@@ -123,41 +124,43 @@ public class InteractionAnalysisAlgo {
 					m++;
 				}
 			}
-		    scanMDD(ddmanager, curMDD, 0, leafs, subtree_size, small_node_order_vertex, small_node_order_level);												//  scan the logical function of v
+			// scan the logical function of v
+			scanMDD(ddmanager, curMDD, 0, leafs, subtree_size, small_node_order_vertex, small_node_order_level);
 
-			for (RegulatoryMultiEdge me: l) {									//	For each incoming edge
+			// For each incoming edge
+			for (RegulatoryMultiEdge me: incomingEdges) {
 				RegulatoryNode source = me.getSource();
-                SourceItem sourceItem = report.reportFor(target, source);
-                currentSource = sourceItem.reportItems;
-                byte functionality = computeFunctionality(source.getMaxValue()+1, node_in_subtree.get(source).intValue(), leafs, subtree_size, small_node_order_vertex); //Compute its functionality
-                sourceItem.sign = functionality;
-                if (functionality == FUNC_POSITIVE) {
-                    if (me.getSign() == RegulatoryEdgeSign.POSITIVE) {
-                        functionalityMap.put(me, InteractionStatus.WELL_DEFINED);
-                    } else {
-                        functionalityMap.put(me, InteractionStatus.POSITIVE);
-                    }
-                } else if (functionality == FUNC_NEGATIVE) {
-                    if (me.getSign() == RegulatoryEdgeSign.NEGATIVE) {
-                        functionalityMap.put(me, InteractionStatus.WELL_DEFINED);
-                    } else {
-                        functionalityMap.put(me, InteractionStatus.NEGATIVE);
-                    }
-                } else if (functionality == FUNC_DUAL) {
-                    if (me.getSign() == RegulatoryEdgeSign.DUAL) {
-                        functionalityMap.put(me, InteractionStatus.WELL_DEFINED);
-                    } else {
-                        functionalityMap.put(me, InteractionStatus.DUAL);
-                    }
-                } else {
-                    functionalityMap.put(me, InteractionStatus.NON_FUNCTIONAL);
-                }
+				SourceItem sourceItem = report.reportFor(target, source);
+				currentSource = sourceItem.reportItems;
+				byte functionality = computeFunctionality(source.getMaxValue()+1, node_in_subtree.get(source).intValue(), leafs, subtree_size, small_node_order_vertex); //Compute its functionality
+				sourceItem.sign = functionality;
+				if (functionality == FUNC_POSITIVE) {
+					if (me.getSign() == RegulatoryEdgeSign.POSITIVE) {
+						functionalityMap.put(me, InteractionStatus.WELL_DEFINED);
+					} else {
+						functionalityMap.put(me, InteractionStatus.POSITIVE);
+					}
+				} else if (functionality == FUNC_NEGATIVE) {
+					if (me.getSign() == RegulatoryEdgeSign.NEGATIVE) {
+						functionalityMap.put(me, InteractionStatus.WELL_DEFINED);
+					} else {
+						functionalityMap.put(me, InteractionStatus.NEGATIVE);
+					}
+				} else if (functionality == FUNC_DUAL) {
+					if (me.getSign() == RegulatoryEdgeSign.DUAL) {
+						functionalityMap.put(me, InteractionStatus.WELL_DEFINED);
+					} else {
+						functionalityMap.put(me, InteractionStatus.DUAL);
+					}
+				} else {
+					functionalityMap.put(me, InteractionStatus.NON_FUNCTIONAL);
+				}
 			}
 		}
 				
 		report.timeSpent = new Date().getTime()-before;
-        StyleProvider style = new InteractionAnalysisStyleProvider(regGraph, functionalityMap);
-        InteractionAnalysisAlgoResult algoResult = new InteractionAnalysisAlgoResult(style, report);
+		StyleProvider style = new InteractionAnalysisStyleProvider(regGraph, functionalityMap);
+		InteractionAnalysisAlgoResult algoResult = new InteractionAnalysisAlgoResult(style, report);
 		LogManager.info("Done in "+report.timeSpent+"ms");
 		return algoResult;
 	}
