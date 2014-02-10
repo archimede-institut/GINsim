@@ -98,7 +98,7 @@ public class InteractionAnalysisReport {
 		
 		StringBuffer css = dw.getDocumentExtra("css");
 		if (css != null) {
-			css.append("  h2,h3,h4 {display:none;}\n" +
+			css.append("  h2,h3,h4 {display:inherit;}\n" +
 					"  th, td, tr {border: 1px solid black;}\n" +
 					"  table {width: auto; margin: 2px;}\n" +
 					"  .summary>tbody>tr>th {background-color: blue; color: white}\n" +
@@ -119,33 +119,41 @@ public class InteractionAnalysisReport {
 		dw.startDocument();
 		dw.openHeader(1, Txt.t("STR_interactionAnalysis"), null);
 		dw.openParagraph(null);
-		dw.writeTextln("Analizing interactions of "+regGraph.getGraphName()+" ("+regGraph.getNodeCount()+" vertices)");
+		dw.writeTextln("Graph name: "+regGraph.getGraphName()+" ("+regGraph.getNodeCount()+" vertices)");
 		dw.closeParagraph();		
 		
 		writeSummary(dw, regGraph);
 				
-		dw.openHeader(2, "Report", null);
+		dw.openHeader(2, "Details", null);
 		for (RegulatoryNode target : report.keySet()) {
-			dw.openHeader(3, target.getId(), null);
+			dw.openHeader(3, "Target node: " + target.getId(), null);
 
 			for (SourceItem sourceItem : report.get(target)) {
-				
-				if (sourceItem.sign == InteractionAnalysisAlgo.FUNC_NON) {
-					dw.openHeader(4,sourceItem.source.getId()+" -> "+target.getId()+" is non functional.", STYLE_NONFUNCTIONAL);
-				} else if (sourceItem.sign == InteractionAnalysisAlgo.FUNC_POSITIVE) {
-					dw.openHeader(4,sourceItem.source.getId()+" -> "+target.getId()+" is positive.", STYLE_POSITIVE);
-				} else if (sourceItem.sign == InteractionAnalysisAlgo.FUNC_NEGATIVE) {
-					dw.openHeader(4,sourceItem.source.getId()+" -> "+target.getId()+" is negative.", STYLE_NEGATIVE);
-				} else {
-					dw.openHeader(4,sourceItem.source.getId()+" -> "+target.getId()+" is dual.", STYLE_DUAL);
-				}
-				
-				dw.openTable(null, null, null);
-				dw.openTableRow();
 				if (dw.doesDocumentSupportExtra("javascript")) {
-					dw.openTableCell("Id", true);
+					dw.addAnchor(sourceItem.source.getId()+"_"+target.getId(), " ");
 				}
-				dw.openTableCell("Result", true);
+				dw.openTable(sourceItem.source.getId()+"->"+target.getId(), null, null);
+
+				dw.openTableRow();
+				if (sourceItem.sign == InteractionAnalysisAlgo.FUNC_NON) {
+					dw.openTableCell(3, 1, sourceItem.source.getId()+" -> "+target.getId()+" is non functional", STYLE_NONFUNCTIONAL, true);
+				} else if (sourceItem.sign == InteractionAnalysisAlgo.FUNC_POSITIVE) {
+					dw.openTableCell(3, 1, sourceItem.source.getId()+" -> "+target.getId()+" is positive", STYLE_POSITIVE, true);
+				} else if (sourceItem.sign == InteractionAnalysisAlgo.FUNC_NEGATIVE) {
+					dw.openTableCell(3, 1, sourceItem.source.getId()+" -> "+target.getId()+" is negative", STYLE_NEGATIVE, true);
+				} else {
+					dw.openTableCell(3, 1, sourceItem.source.getId()+" -> "+target.getId()+" is dual", STYLE_DUAL, true);
+				}
+				if (sourceItem.reportItems.get(0).path.size() > 0) {
+					dw.openTableCell(sourceItem.reportItems.size(), 1, "Context", true);
+				}
+				dw.closeTableRow();
+				
+				dw.openTableRow();
+//				if (dw.doesDocumentSupportExtra("javascript")) {
+//					dw.openTableCell("Id", true);
+//				}
+				dw.openTableCell("Sign", true);
 				dw.openTableCell("Source level", true);
 				dw.openTableCell("Target level", true);
 				ReportItem r0 = sourceItem.reportItems.get(0);
@@ -153,14 +161,14 @@ public class InteractionAnalysisReport {
 					PathItem pathItem = it_path.next();
 					dw.openTableCell(pathItem.vertex.getId(), true);
 				}
-				dw.closeTableRow();			
+				dw.closeTableRow();
 				
 				
 				int i = 0;
 				for (ReportItem reportItem : sourceItem.reportItems) {
-					if (dw.doesDocumentSupportExtra("javascript")) {
-						dw.openTableCell(""+i++);
-					}
+//					if (dw.doesDocumentSupportExtra("javascript")) {
+//						dw.openTableCell(""+i++);
+//					}
 					if (reportItem.sign == InteractionAnalysisAlgo.FUNC_NON) {
 						dw.openTableCell(1, 1, "=", STYLE_NONFUNCTIONAL, false);
 					} else if (reportItem.sign == InteractionAnalysisAlgo.FUNC_POSITIVE) {
@@ -180,6 +188,7 @@ public class InteractionAnalysisReport {
 					dw.closeTableRow();
 				}
 				dw.closeTable();
+				dw.newParagraph();
 			}
 			
 		}
@@ -195,7 +204,7 @@ public class InteractionAnalysisReport {
 		dw.openTableCell("User's sign", true);
 		dw.openTableCell("Computed sign", true);
 		if (dw.doesDocumentSupportExtra("javascript")) {
-			dw.openTableCell("View", true);
+			dw.openTableCell(" ", true);
 		}
 		dw.closeTableRow();
 		
@@ -207,18 +216,7 @@ public class InteractionAnalysisReport {
 				dw.openTableRow();
 				dw.openTableCell(sourceItem.source.getId());
 				dw.openTableCell(target.getId());
-				switch (e.getSign()) {
-				case UNKNOWN:
-					dw.openTableCell(1, 1, RegulatoryEdgeSign.UNKNOWN.getLongDesc(), STYLE_NONFUNCTIONAL, false);
-					break;
-				case POSITIVE:
-					dw.openTableCell(1, 1, RegulatoryEdgeSign.POSITIVE.getLongDesc(), STYLE_POSITIVE, false);
-					break;
-				case NEGATIVE:
-					dw.openTableCell(1, 1, RegulatoryEdgeSign.NEGATIVE.getLongDesc(), STYLE_NEGATIVE, false);
-					break;
-					
-				}
+
 				if (e.getSign() == RegulatoryEdgeSign.UNKNOWN) {
 					dw.openTableCell(1, 1, "unknown", STYLE_NONFUNCTIONAL, false);
 				} else if (e.getSign() == RegulatoryEdgeSign.POSITIVE) {
@@ -239,13 +237,13 @@ public class InteractionAnalysisReport {
 				}
 				if (dw.doesDocumentSupportExtra("javascript")) {
 					dw.openTableCell(null);
-					dw.addLink("#"+sourceItem.source.getId()+"__"+target.getId(), "view");
+					dw.addLink("#"+sourceItem.source.getId()+"_"+target.getId(), "details");
 				}
 				dw.closeTableRow();
 			}
 		}
 		
-		dw.closeTable();		
+		dw.closeTable();
 	}
 
 	
