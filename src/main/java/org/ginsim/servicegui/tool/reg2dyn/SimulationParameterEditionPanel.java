@@ -334,6 +334,7 @@ public class SimulationParameterEditionPanel extends JPanel implements ListPanel
             textMaxNodes.setEnabled(true);
             setUserID(Reg2DynService.KEY+"::"+currentParameter.getName());
         }
+        updateSimulationMethod();
         refreshing = false;
     }
 
