@@ -44,8 +44,12 @@ public class CompositionConfigDialog extends StackDialog {
 		CompositionService service = ServiceManager.getManager().getService(
 				CompositionService.class);
 
-		RegulatoryGraph composedGraph = service.run(graph, dialog.getConfig());
-		GUIManager.getInstance().whatToDoWithGraph(composedGraph, true);
+        try {
+		    RegulatoryGraph composedGraph = service.run(graph, dialog.getConfig());
+		    GUIManager.getInstance().whatToDoWithGraph(composedGraph, true);
+        } catch (Exception e) {
+            throw new GsException("Error during the composition", e);
+        }
 
 		cancel();
 	}

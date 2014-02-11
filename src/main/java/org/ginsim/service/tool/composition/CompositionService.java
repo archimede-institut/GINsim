@@ -53,14 +53,14 @@ public class CompositionService implements Service {
 	 */
 
 	public RegulatoryGraph run(RegulatoryGraph graph, CompositionConfig config)
-			throws GsException {
+			throws Exception {
 
 		return computeComposedGraph(graph, config);
 
 	}
 
 	protected RegulatoryGraph computeComposedGraph(RegulatoryGraph graph,
-			CompositionConfig config) throws GsException {
+			CompositionConfig config) throws Exception {
 
 		Topology topology = config.getTopology();
 		IntegrationFunctionMapping mapping = config.getMapping();

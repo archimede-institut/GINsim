@@ -35,7 +35,7 @@ public class SCCGraphAlgo extends AbstractTask<ReducedGraph> {
 	}
 
     @Override
-    protected ReducedGraph doGetResult() {
+    protected ReducedGraph doGetResult() throws Exception {
         StronglyConnectedComponentTask sccTask = new StronglyConnectedComponentTask(graph);
 		List<NodeReducedData> components = sccTask.call();
 		ReducedGraph reducedGraph = constructGraph(components);

@@ -75,9 +75,12 @@ public class ImageExportService implements Service {
      */
     public void exportSVG( Graph graph, Collection nodes,  Collection<Edge> edges, String fileName) throws IOException{
 
-        SVGEncoder encoder = new SVGEncoder();
-
-        encoder.exportSVG( graph, nodes, edges, fileName);
+        SVGEncoder encoder = new SVGEncoder(graph, nodes, edges, fileName);
+        try {
+            encoder.call();
+        } catch (Exception e) {
+            LogManager.error(e);
+        }
     }
 
 }

@@ -49,7 +49,7 @@ public class TestComposition {
 	}
 
 	@Test
-	public void test2_4OR() {
+	public void test2_4OR() throws Exception {
 		RegulatoryGraph graph = saGraph[0];
 		RegulatoryGraph composedGraph = null;
 
@@ -136,7 +136,7 @@ public class TestComposition {
 	}
 
 	@Test
-	public void test2_4AND() {
+	public void test2_4AND() throws Exception {
 		RegulatoryGraph graph = saGraph[0];
 		RegulatoryGraph composedGraph = null;
 
@@ -224,7 +224,7 @@ public class TestComposition {
 	}
 
 	@Test
-	public void test2_8OR() {
+	public void test2_8OR() throws Exception {
 		RegulatoryGraph graph = saGraph[0];
 		RegulatoryGraph composedGraph = null;
 
@@ -315,7 +315,7 @@ public class TestComposition {
 	}
 
 	@Test
-	public void test2_8AND() {
+	public void test2_8AND() throws Exception {
 		RegulatoryGraph graph = saGraph[0];
 		RegulatoryGraph composedGraph = null;
 

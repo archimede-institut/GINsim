@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.colomoto.common.task.AbstractTask;
 import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
@@ -31,28 +32,37 @@ import org.ginsim.core.graph.view.Bezier;
  * @author Frederic Cordeil
  * @author Aurelien Naldi
  */
-public class SVGEncoder {
+public class SVGEncoder extends AbstractTask {
 
-    /**
-     * Export the graph to a SVG file
-     * 
-     * @param graph the graph to export
-	 * @param nodes the list of nodes that must be exported
-	 * @param edges the list of edges that must be exported
-	 * @param fileName the path to the output file
-	 */
-	public void exportSVG( Graph graph, Collection nodes,  Collection<Edge> edges, String fileName) throws IOException{
+    private final Graph graph;
+    private final Collection nodes;
+    private final Collection<Edge> edges;
+    private final String fileName;
+
+
+    public SVGEncoder(Graph graph, Collection nodes,  Collection<Edge> edges, String fileName) {
+        this.graph = graph;
+        if (nodes == null) {
+            this.nodes = graph.getNodes();
+        } else {
+            this.nodes = nodes;
+        }
+        if (edges == null) {
+            this.edges = graph.getEdges();
+        } else {
+            this.edges = edges;
+        }
+        this.fileName = fileName;
+    }
+
+    @Override
+    protected Object doGetResult() throws Exception {
 
         FileWriter out = new FileWriter(fileName);
 
         NodeAttributesReader vreader = graph.getNodeAttributeReader();
         EdgeAttributesReader ereader = graph.getEdgeAttributeReader();
-        if (edges == null) {
-            edges = graph.getEdges();
-        }
-        if (nodes == null) {
-            nodes = graph.getNodes();
-        }
+
         Dimension dim = graph.getDimension();
     	int width = (int)dim.getWidth();
     	int height = (int)dim.getHeight();
@@ -84,6 +94,8 @@ public class SVGEncoder {
         
         out.write("</svg>");
         out.close();
+
+        return null;
     }
 
     /**
@@ -257,4 +269,5 @@ public class SVGEncoder {
 		}
 		return id;
 	}
+
 }

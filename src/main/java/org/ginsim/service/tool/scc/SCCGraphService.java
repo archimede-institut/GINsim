@@ -2,6 +2,7 @@ package org.ginsim.service.tool.scc;
 
 import org.colomoto.common.task.Task;
 import org.colomoto.common.task.TaskListener;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
@@ -27,7 +28,12 @@ public class SCCGraphService implements Service {
      */
     public ReducedGraph getSCCGraph(Graph graph) {
         SCCGraphAlgo algo = new SCCGraphAlgo(graph);
-        return algo.call();
+        try {
+            return algo.call();
+        } catch (Exception e) {
+            LogManager.error(e);
+            return null;
+        }
     }
 
     /**
@@ -43,7 +49,12 @@ public class SCCGraphService implements Service {
 
     public List<NodeReducedData> getComponents(Graph graph) {
         StronglyConnectedComponentTask task = new StronglyConnectedComponentTask(graph);
-        return task.call();
+        try {
+            return task.call();
+        } catch (Exception e) {
+            LogManager.error(e);
+            return null;
+        }
     }
 
     public StyleProvider getStyleProvider(List<NodeReducedData> sccs, Graph graph) {

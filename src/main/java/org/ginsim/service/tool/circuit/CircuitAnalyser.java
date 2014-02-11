@@ -37,7 +37,7 @@ public class CircuitAnalyser extends AbstractTask<List<CircuitDescrInTree>> {
     }
 
     @Override
-    protected List<CircuitDescrInTree> doGetResult() {
+    protected List<CircuitDescrInTree> doGetResult() throws Exception {
         List<CircuitDescrInTree> circuits = this.circuits;
         if (circuits == null) {
             circuits = searcher.call();

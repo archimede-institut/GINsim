@@ -69,6 +69,10 @@ public class ModelSimplifierConfig implements NamedObject, XMLize {
 
     public LogicalModel apply(LogicalModel model) {
         ReductionTask task = new ReductionTask(model, this);
-        return task.call();
+        try {
+            return task.call();
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
