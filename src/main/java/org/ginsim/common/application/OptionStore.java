@@ -193,7 +193,7 @@ public class OptionStore extends DefaultHandler {
         }
         try {
             OutputStreamWriter fos = new OutputStreamWriter(new FileOutputStream(optionFile), "UTF-8");
-            XMLWriter out = new XMLWriter(fos, null); 
+            XMLWriter out = new XMLWriter(fos);
             out.openTag("gsconfig");
             for (String recent: recents) {
                 out.openTag("recent");

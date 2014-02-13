@@ -2,6 +2,7 @@ package org.ginsim.core.graph.view.style;
 
 import java.awt.Color;
 
+import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
 
@@ -314,4 +315,36 @@ public class NodeStyleImpl<V> extends BaseStyle<NodeStyle<V>> implements NodeSty
 		}
 		return c1.equals(c2);
 	}
+
+    @Override
+    public String getCSS() {
+        StringBuffer sb = new StringBuffer();
+        String s_class = ".node"+getCSSNameSuffix();
+
+        sb.append(s_class+" .shape {\n");
+
+        if (bg != null) {
+            sb.append("fill: "+ ColorPalette.getColorCode(bg)+";\n");
+        }
+        if (fg != null) {
+            sb.append("stroke: "+ ColorPalette.getColorCode(fg)+";\n");
+        }
+        sb.append("}\n");
+
+        if (txt != null) {
+            sb.append(s_class+" text {\n");
+            sb.append("fill: "+ ColorPalette.getColorCode(txt)+";\n");
+            sb.append("}\n");
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public String getCSSClass(V node) {
+        if (parent == null) {
+            return "node";
+        }
+
+        return parent.getCSSClass(node) + " node" +getCSSNameSuffix();
+    }
 }

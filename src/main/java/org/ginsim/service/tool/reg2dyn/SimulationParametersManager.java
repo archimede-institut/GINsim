@@ -40,7 +40,7 @@ public class SimulationParametersManager extends BasicGraphAssociatedManager {
         SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, KEY, false);
         List nodeOrder = ((RegulatoryGraph)graph).getNodeOrder();
         try {
-            XMLWriter out = new XMLWriter(os, null);
+            XMLWriter out = new XMLWriter(os);
             out.openTag("simulationParameters");
             String s_nodeOrder = nodeOrder.get(0).toString();
             for (int i=1 ; i<nodeOrder.size() ; i++) {

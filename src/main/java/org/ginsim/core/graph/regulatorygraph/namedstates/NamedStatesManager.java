@@ -39,7 +39,7 @@ public class NamedStatesManager extends BasicGraphAssociatedManager {
     public void doSave(OutputStreamWriter os, Graph graph) throws GsException{
         NamedStatesHandler imanager = (NamedStatesHandler) getObject(graph);
         try {
-            XMLWriter out = new XMLWriter(os, null);
+            XMLWriter out = new XMLWriter(os);
             out.openTag("initialStates");
             imanager.getInitialStates().toXML(out, "initialState");
             imanager.getInputConfigs().toXML(out, "input");

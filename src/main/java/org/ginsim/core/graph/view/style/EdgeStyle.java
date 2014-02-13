@@ -29,4 +29,11 @@ public interface EdgeStyle<V,E extends Edge<V>> extends Style {
 
 	boolean matches(Color color, EdgePattern pattern, int width);
 
+    /**
+     * get the CSS class(es) used by a specific edge.
+     *
+     * @param edge
+     * @return a String with one or several class names.
+     */
+    String getCSSClass(E edge);
 }

@@ -165,7 +165,7 @@ public class JSONDocumentationWriter extends AbstractTask {
     }
 
     private void writeHTMLContainer(String filename) throws IOException {
-        XMLWriter writer = new XMLWriter(filename+".html", null);
+        XMLWriter writer = new XMLWriter(filename+".html");
 
         writer.openTag("html");
         writer.openTag("head");

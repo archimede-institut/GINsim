@@ -50,7 +50,7 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 
 	public void startDocument() throws IOException {
 		writer = new OutputStreamWriter(output, "UTF-8");
-		xmlw = new XMLWriter(writer, null);
+		xmlw = new XMLWriter(writer);
 	
         if (documentProperties.get(PROP_SUBDOCUMENT) == null) {
 

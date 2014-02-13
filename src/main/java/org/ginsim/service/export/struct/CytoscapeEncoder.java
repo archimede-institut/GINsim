@@ -30,7 +30,7 @@ public class CytoscapeEncoder {
 	 * @throws IOException
 	 */
 	public void encode(RegulatoryGraph graph, String filename) throws GsException, IOException {
-		XMLWriter out = new XMLWriter(filename, null);
+		XMLWriter out = new XMLWriter(filename);
 
 		out.openTag("graph");
 		out.addAttr("label", graph.getGraphName());

@@ -2,6 +2,7 @@ package org.ginsim.core.graph.regulatorygraph;
 
 import java.awt.Color;
 
+import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.style.EdgeStyleImpl;
 import org.ginsim.core.graph.view.style.StyleProperty;
@@ -104,4 +105,31 @@ public class DefaultRegulatoryEdgeStyle extends EdgeStyleImpl<RegulatoryNode, Re
 			c_dual = (Color)value;
 		}
 	}
+
+    @Override
+    public String getCSS() {
+        String parent = super.getCSS();
+
+        // add styles for signed edges
+        StringBuffer sb = new StringBuffer();
+        sb.append(".edge_"+ RegulatoryEdgeSign.POSITIVE+" {\n");
+        sb.append("stroke: "+ColorPalette.getColorCode(c_positive)+";\n");
+        sb.append("}\n");
+
+        sb.append(".edge_"+ RegulatoryEdgeSign.NEGATIVE+" {\n");
+        sb.append("stroke: "+ColorPalette.getColorCode(c_negative)+";\n");
+        sb.append("}\n");
+
+        sb.append(".edge_"+ RegulatoryEdgeSign.DUAL+" {\n");
+        sb.append("stroke: "+ColorPalette.getColorCode(c_dual)+";\n");
+        sb.append("}\n");
+
+        return parent+sb.toString();
+    }
+
+    @Override
+    public String getCSSClass(RegulatoryMultiEdge edge) {
+        return super.getCSSClass(edge) + " edge_"+edge.getSign();
+    }
+
 }

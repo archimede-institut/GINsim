@@ -70,4 +70,17 @@ public class NodeStyleOverride<V> extends BaseStyleOverride<NodeStyle<V>> implem
 	public boolean matches(NodeShape shape, Color bg, Color fg, Color text,	int w, int h) {
 		return false;
 	}
+
+    @Override
+    public String getCSS() {
+        StringBuffer sb = new StringBuffer();
+        // TODO: add CSS rules
+        return sb.toString();
+    }
+
+    @Override
+    public String getCSSClass(V node) {
+        return "node";
+    }
+
 }

@@ -40,50 +40,80 @@ public class XMLWriter {
      * Create a XMLWriter with the path to a file.
      * 
      * @param filename
-     * @param dtdFile
      * @throws IOException
      */
-    public XMLWriter(String filename, String dtdFile) throws IOException {
-    	this(new FileOutputStream(filename), dtdFile);
+    public XMLWriter(String filename) throws IOException {
+        this(filename, null);
+    }
+
+    /**
+     * Create a XMLWriter with the path to a file.
+     *
+     * @param filename
+     * @param docType
+     * @throws IOException
+     */
+    public XMLWriter(String filename, String docType) throws IOException {
+    	this(new FileOutputStream(filename), docType);
 	}
 
     /**
      * Create a XMLWriter with an existing Writer.
      * Warning: the writer should use the right encoding, otherwise we may get into troubles.
-     * 
+     *
      * @param out
-     * @param dtdFile
      * @throws IOException
      */
-    public XMLWriter(OutputStreamWriter out, String dtdFile) throws IOException {
-        this(out,dtdFile,true);
+    public XMLWriter(OutputStreamWriter out) throws IOException {
+        this(out, null);
+    }
+    /**
+     * Create a XMLWriter with an existing Writer.
+     * Warning: the writer should use the right encoding, otherwise we may get into troubles.
+     * 
+     * @param out
+     * @param docType
+     * @throws IOException
+     */
+    public XMLWriter(OutputStreamWriter out, String docType) throws IOException {
+        this(out,docType,true);
     }
     /**
      * Create a XMLWriter with an output stream.
      * It will create a Writer for this stream, using an UTF-8 encoding.
-     * 
+     *
      * @param out
-     * @param dtdFile
      * @throws IOException
      */
-    public XMLWriter(OutputStream out, String dtdFile) throws IOException {
-        this(new OutputStreamWriter(out, "UTF-8"),dtdFile,true);
+    public XMLWriter(OutputStream out) throws IOException {
+        this(new OutputStreamWriter(out, "UTF-8"),null);
+    }
+    /**
+     * Create a XMLWriter with an output stream.
+     * It will create a Writer for this stream, using an UTF-8 encoding.
+     *
+     * @param out
+     * @param docType
+     * @throws IOException
+     */
+    private XMLWriter(OutputStream out, String docType) throws IOException {
+        this(new OutputStreamWriter(out, "UTF-8"),docType,true);
     }
 
     /**
      * Create a XMLWriter with an existing Writer.
      * 
      * @param out
-     * @param dtdFile
+     * @param docType
      * @param indent
      * @throws IOException
      */
-    private XMLWriter(OutputStreamWriter out, String dtdFile, boolean indent) throws IOException {
+    private XMLWriter(OutputStreamWriter out, String docType, boolean indent) throws IOException {
         this.indent = indent;
         this.out = out;
         write("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n");
-        if (dtdFile != null) {
-            write("<!DOCTYPE gxl SYSTEM \""+dtdFile+"\">\n");
+        if (docType != null) {
+            write("<!DOCTYPE "+docType+">\n");
         }
     }
     

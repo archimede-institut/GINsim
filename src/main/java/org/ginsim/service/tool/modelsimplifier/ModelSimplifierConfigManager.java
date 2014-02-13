@@ -40,7 +40,7 @@ public class ModelSimplifierConfigManager extends BasicGraphAssociatedManager {
     public void doSave(OutputStreamWriter os, Graph graph) {
         ModelSimplifierConfigList paramList = (ModelSimplifierConfigList) getObject(graph);
         try {
-            XMLWriter out = new XMLWriter(os, null);
+            XMLWriter out = new XMLWriter(os);
             out.openTag("modelModifierConfig");
             out.openTag("modelSimplifications");
             // add the available configurations

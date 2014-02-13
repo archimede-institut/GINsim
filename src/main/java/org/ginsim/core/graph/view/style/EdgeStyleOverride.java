@@ -57,5 +57,16 @@ public class EdgeStyleOverride<V,E extends Edge<V>> extends BaseStyleOverride<Ed
 	public boolean matches(Color color, EdgePattern pattern, int width) {
 		return false;
 	}
-	
+
+    @Override
+    public String getCSS() {
+        StringBuffer sb = new StringBuffer();
+        // TODO: add CSS rules
+        return sb.toString();
+    }
+
+    @Override
+    public String getCSSClass(E edge) {
+        return "edge";
+    }
 }

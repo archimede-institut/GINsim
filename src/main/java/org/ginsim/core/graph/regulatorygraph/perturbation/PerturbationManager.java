@@ -36,7 +36,7 @@ public class PerturbationManager extends BasicGraphAssociatedManager {
     	
         ListOfPerturbations lMutant = (ListOfPerturbations) getObject(graph);
         try {
-            XMLWriter out = new XMLWriter(os, null);
+            XMLWriter out = new XMLWriter(os);
             lMutant.toXML(out);
         } catch (IOException e) {
             throw new GsException( "STR_unableToSave", e);

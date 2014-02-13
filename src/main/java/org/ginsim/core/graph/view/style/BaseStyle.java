@@ -28,4 +28,11 @@ abstract public class BaseStyle<S extends Style> implements Style {
 		}
 		return value;
 	}
+
+    protected String getCSSNameSuffix() {
+        if (name == null) {
+            return "";
+        }
+        return "_"+name.trim().toLowerCase().replaceAll(" ", "_");
+    }
 }

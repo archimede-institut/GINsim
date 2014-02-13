@@ -62,7 +62,7 @@ public class OOoDocumentWriter extends DocumentWriter {
 		zo.closeEntry();
 
 		zo.putNextEntry(new ZipEntry("content.xml"));
-		xmlw = new XMLWriter(writer, null);
+		xmlw = new XMLWriter(writer);
 		xmlw.openTag("office:document-content");
 		xmlw.addAttr("xmlns:office", "urn:oasis:names:tc:opendocument:xmlns:office:1.0");
 		xmlw.addAttr("xmlns:style","urn:oasis:names:tc:opendocument:xmlns:style:1.0");

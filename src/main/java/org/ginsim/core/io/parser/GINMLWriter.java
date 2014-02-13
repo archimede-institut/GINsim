@@ -47,7 +47,7 @@ public class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 	}
 
 	public void write(OutputStreamWriter os, Collection<V> vertices, Collection<E> edges) throws IOException {
-		XMLWriter out = new XMLWriter(os, GinmlHelper.DEFAULT_URL_DTD_FILE);
+		XMLWriter out = new XMLWriter(os, GinmlHelper.DOCTYPE);
 
 		out.openTag("gxl");
 		out.addAttr("xmlns:xlink", "http://www.w3.org/1999/xlink");

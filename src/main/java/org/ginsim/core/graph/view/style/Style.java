@@ -1,6 +1,8 @@
 package org.ginsim.core.graph.view.style;
 
 
+import org.ginsim.common.xml.XMLWriter;
+
 /**
  * Define common methods for styles.
  * 
@@ -46,4 +48,10 @@ public interface Style {
 	
 	Object getParentProperty(StyleProperty property);
 
+    /**
+     * define the style as CSS rules.
+     *
+     * @return a String with the CSS rules
+     */
+    String getCSS();
 }

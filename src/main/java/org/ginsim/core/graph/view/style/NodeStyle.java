@@ -11,7 +11,6 @@ import org.ginsim.core.graph.view.NodeShape;
  * @author Aurelien Naldi
  *
  * @param <V>
- * @param <E>
  */
 public interface NodeStyle<V> extends Style {
 
@@ -31,4 +30,12 @@ public interface NodeStyle<V> extends Style {
 	boolean enforceBorder();
 	
 	boolean matches(NodeShape shape, Color bg, Color fg, Color text, int w, int h);
+
+    /**
+     * get the CSS class(es) used by a specific node.
+     *
+     * @param node
+     * @return a String with one or several class names.
+     */
+    String getCSSClass(V node);
 }

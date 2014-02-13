@@ -32,7 +32,7 @@ public abstract class BasicGraphAssociatedManager implements GraphAssociatedObje
         Object o =  getObject(graph);
         if (o != null && o instanceof XMLize) {
         	try{
-        		XMLWriter out = new XMLWriter(os, null);
+        		XMLWriter out = new XMLWriter(os);
         		((XMLize)o).toXML(out);
         	}
         	catch( IOException ioe){

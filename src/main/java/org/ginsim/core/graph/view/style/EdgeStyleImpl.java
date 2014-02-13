@@ -2,6 +2,7 @@ package org.ginsim.core.graph.view.style;
 
 import java.awt.Color;
 
+import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
@@ -206,4 +207,43 @@ public class EdgeStyleImpl<V, E extends Edge<V>> extends BaseStyle<EdgeStyle<V, 
 				pattern == this.pattern &&
 				width == this.width;
 	}
+
+    @Override
+    public String getCSS() {
+        StringBuffer sb = new StringBuffer();
+        String s_class = ".edge"+getCSSNameSuffix();
+
+        sb.append(s_class+" {\n");
+        if (color != null) {
+            sb.append("stroke: "+ ColorPalette.getColorCode(color)+";\n");
+            sb.append("fill: none;\n");
+        }
+
+        if (width > -1) {
+            sb.append("stroke-width: "+width+";\n");
+        }
+
+        if (pattern != null) {
+            float[] dashPattern = pattern.getPattern();
+            if (dashPattern != null && dashPattern.length > 0) {
+                sb.append("stroke-dasharray:"+dashPattern[0]);
+                    for (int i=1 ; i<dashPattern.length ; i++) {
+                        sb.append(","+dashPattern[i]);
+                    }
+                sb.append(";\n");
+            }
+        }
+        sb.append("}\n");
+
+        return sb.toString();
+    }
+
+    @Override
+    public String getCSSClass(E edge) {
+        if (parent == null) {
+            return "edge";
+        }
+
+        return parent.getCSSClass(edge) + " edge" +getCSSNameSuffix();
+    }
 }
