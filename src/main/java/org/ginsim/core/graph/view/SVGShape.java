@@ -14,4 +14,5 @@ public interface SVGShape extends Shape {
 
     void toSVG(SVGWriter out) throws IOException;
 
+    void toSVG(SVGWriter out, String[] attrs) throws IOException;
 }

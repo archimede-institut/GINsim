@@ -222,28 +222,14 @@ public class SVGEncoder extends AbstractTask {
                     "id",id,
                     "viewBox", "-7 -7 12 15",
                     "orient","auto",
-                    "markerHeight", "5", "markerWidth","5"
+                    "markerHeight", "9", "markerWidth","9"
             };
             out.openTag("marker", attrs);
             attrs = new String[] {
                     "stroke", color, "fill", color
             };
-            out.openTag("path", attrs);
-			// TODO: if the lineEnd could return a shape, that can be saved in SVG it would be cleaner...
-			switch (markerType) {
-			case NEGATIVE:
-				out.addAttr("d", "M -1 -7 L 1 -7 L 1 7 L -1 7 z");
-				break;
-			case UNKNOWN:
-                out.addAttr("d", "M -3 -1 C  7,-15 7,15 -3,1");
-				break;
-			case DUAL:
-                out.addAttr("d","M -3 -7 L 3 0 L -3 7 z  M -6 -7 L -5 -7 L -5 7 L -6 7 z");
-				break;
-			default:
-                out.addAttr("d","M -5 -7 L 3 0 L -5 7 L -2 0 z");
-			}
-            out.closeTag(); // path
+            markerType.getShape().toSVG(out, attrs);
+
 			out.closeTag(); // marker
             out.closeTag(); // defs
 			m_marker.add(id);

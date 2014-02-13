@@ -257,9 +257,11 @@ public class XMLWriter {
      */
     public void openTag(String name, String[] attributes) throws IOException {
     	openTag(name);
-    	for (int i=0 ; i<attributes.length ; i+=2) {
-    		addAttr(attributes[i], attributes[i+1]);
-    	}
+        if (attributes != null) {
+            for (int i=0 ; i<attributes.length ; i+=2) {
+                addAttr(attributes[i], attributes[i+1]);
+            }
+        }
     }
     /**
      * add (i.e. open and close) a tag with specified attributes and no content.
