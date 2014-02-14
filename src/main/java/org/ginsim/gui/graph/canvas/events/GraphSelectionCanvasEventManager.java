@@ -65,7 +65,7 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 	public void pressed(Point p, boolean alternate) {
 		dragstatus = DragStatus.NODRAG;
 		startPoint = p;
-		
+
 		selectedObject = renderer.getObjectUnderPoint(p);
 		isAlternate = alternate;
 		
@@ -87,7 +87,7 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 			doubleClick = true;
 		}
 		lastclicktimestamp = timestamp;
-		
+
 		Object o = selectedObject;
 		if (alternate) {
 			if (o == null) {
@@ -203,7 +203,7 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 		} else {
 			movex = movey = 0;
 		}
-		
+
 		switch (dragstatus) {
 		case NODRAG:
 			simpleClick(p, isAlternate);
@@ -241,17 +241,17 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 		if (dragstatus == DragStatus.NODRAG) {
 			if (selectedObject == null) {
 				selection.unselectAll();
+            } else if (renderer.selectionCache.contains(selectedObject)) {
+                // clicked item is already selected: don't change anything
 			} else if (isAlternate) {
-				if (! renderer.selectionCache.contains(selectedObject) ) {
-					// add it to the selection
-					if (selectedObject instanceof Edge) {
-						selection.addEdgeToSelection((Edge)selectedObject);
-					} else {
-						selection.addNodeToSelection(selectedObject);
-					}
-				}
+                // add it to the selection
+                if (selectedObject instanceof Edge) {
+                    selection.addEdgeToSelection((Edge)selectedObject);
+                } else {
+                    selection.addNodeToSelection(selectedObject);
+                }
 			} else {
-				// reset selection
+				// reset the selection to only the clicked item
 				selection.unselectAll();
 				if (selectedObject instanceof Edge) {
 					selection.selectEdge((Edge)selectedObject);
