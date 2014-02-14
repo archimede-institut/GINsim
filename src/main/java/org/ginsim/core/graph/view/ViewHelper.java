@@ -202,16 +202,54 @@ public class ViewHelper {
 	 * @return the list of points forming the edge
 	 */
 	public static List<Point> getPoints(NodeAttributesReader nodeReader, EdgeAttributesReader edgeReader, Edge<?> edge) {
-		PointList points = doGetPoints(nodeReader, edgeReader, edge);
+        Object source = edge.getSource();
+        Object target = edge.getTarget();
+
+        List<Point> realPoints = getRealPoints(edge, edgeReader);
+
+        if (source == target) {
+            if (realPoints == null) {
+                Rectangle box = getBounds(nodeReader, source);
+                return getPoints(box);
+            }
+        }
+
+        Rectangle b1 = getBounds(nodeReader, source);
+        Rectangle b2 = getBounds(nodeReader, target);
+
+        int w = (int)edgeReader.getLineWidth();
+
+        if (realPoints == null && edgeReader.hasReverseEdge()) {
+            realPoints = getReversedShift(b1, b2);
+        }
+
+        if (realPoints == null) {
+            return getPoints(b1, b2, w);
+        }
+
+        PointList points = getPoints(b1, b2, realPoints, w);
 		points.setEdge(edgeReader, edge);
 		return points;
 	}
 
+    /**
+     * Get the routing points for an edge which is affected by a move preview.
+     * It is similar to the normal getPoint method, but some parts of the edge
+     * (the start or the end or the points) can be shifted independently.
+     *
+     * @param type
+     * @param movex
+     * @param movey
+     * @param nreader
+     * @param ereader
+     * @param edge
+     * @return
+     */
 	public static List<Point> getMovingPoints(MovingEdgeType type, int movex, int movey, NodeAttributesReader nreader, EdgeAttributesReader ereader, Edge<?> edge) {
 		Object source = edge.getSource();
 		Object target = edge.getTarget();
 		
-		List<Point> realPoints = ereader.getPoints();
+		List<Point> realPoints = getRealPoints(edge, ereader);
 
 		if (source == target && realPoints == null) {
 			Rectangle box = getBounds(nreader, source);
@@ -231,57 +269,50 @@ public class ViewHelper {
 		}
 
 		int w = (int)ereader.getLineWidth();
-		
-		if (realPoints == null || realPoints.size() == 0) {
+
+
+        if (realPoints == null && ereader.hasReverseEdge()) {
+            realPoints = getReversedShift(b1, b2);
+        }
+
+        if (realPoints == null) {
 			return getPoints(b1, b2, w);
 		}
 		
 		if (type.edge) {
-			// move points
+            realPoints = translatePoints(realPoints, movex, movey);
 		}
 		return getPoints(b1, b2, realPoints, w);
 	}
 
-	private static Rectangle translateRectangle(Rectangle box, int movex, int movey) {
-		return new Rectangle(box.x+movex, box.y+movey, box.width, box.height);
-	}
-	
-	private static PointList doGetPoints(NodeAttributesReader nodeReader, EdgeAttributesReader edgeReader, Edge<?> edge) {
-		Object source = edge.getSource();
-		Object target = edge.getTarget();
-		
-		List<Point> realPoints = edgeReader.getPoints();
+    private static List<Point> getRealPoints(Edge<?> edge, EdgeAttributesReader ereader) {
+        List<Point> realPoints = ereader.getPoints();
+        Object source = edge.getSource();
+        Object target = edge.getTarget();
 
-		if (source == target) {
-			if (realPoints != null && realPoints.size() < 3) {
-				realPoints = null;
-				edgeReader.setPoints(realPoints);
-			}
-			
-			if (realPoints == null) {
-				Rectangle box = getBounds(nodeReader, source);
-				return getPoints(box);
-			}
-		}
-		
-		Rectangle b1 = getBounds(nodeReader, source);
-		Rectangle b2 = getBounds(nodeReader, target);
-		
-		int w = (int)edgeReader.getLineWidth();
-		
-		if (realPoints == null || realPoints.size() == 0) {
-            realPoints = null;
-            if (edgeReader.hasReverseEdge()) {
-                realPoints = getReversedShift(b1, b2);
+        if (source == target) {
+            if (realPoints != null && realPoints.size() < 3) {
+                realPoints = null;
+                ereader.setPoints(realPoints);
             }
-		}
-
-        if (realPoints == null) {
-            return getPoints(b1, b2, w);
+        } else if (realPoints != null && realPoints.size() < 1) {
+            realPoints = null;
+            ereader.setPoints(realPoints);
         }
 
-		return getPoints(b1, b2, realPoints, w);
-	}
+        return realPoints;
+    }
+
+    private static Rectangle translateRectangle(Rectangle box, int movex, int movey) {
+        return new Rectangle(box.x+movex, box.y+movey, box.width, box.height);
+    }
+    private static List<Point> translatePoints(List<Point> points, int movex, int movey) {
+        List<Point> result = new ArrayList<Point>(points.size());
+        for (Point p: points) {
+            result.add(new Point(p.x+movex, p.y+movey));
+        }
+        return result;
+    }
 
     private static List<Point> getReversedShift(Rectangle b1, Rectangle b2) {
         if (b1.intersects(b2)) {
