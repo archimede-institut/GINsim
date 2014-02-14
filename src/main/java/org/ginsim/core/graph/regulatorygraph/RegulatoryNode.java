@@ -16,7 +16,6 @@ import org.ginsim.common.application.Txt;
 import org.ginsim.common.utils.ToolTipsable;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.graph.AbstractGraph;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
@@ -64,7 +63,6 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	 * @param id
 	 */
 	public RegulatoryNode(String id, RegulatoryGraph graph) {
-		super();
 		this.nodeInfo = new NodeInfo(id, (byte)1);
 		interactionsModel = new TreeInteractionsModel(graph);
 	}
@@ -138,7 +136,7 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	    				
 	    				public boolean perform( Graph graph, Object[] data, int index){
 	    					RegulatoryNode node = (RegulatoryNode) data[0];
-	    					byte max = (byte) ((Integer) data[1]).byteValue();
+	    					byte max = ((Integer) data[1]).byteValue();
 	    					List conflict = (List) data[2];
 	    					List fixable = (List) data[3];
 	    					List parameters = (List) data[4];
@@ -153,7 +151,7 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	    						}
 	    						it = parameters.iterator();
 	    						while (it.hasNext()) {
-	    							((LogicalParameter)it.next()).setValue( max, (RegulatoryGraph) graph);
+	    							((LogicalParameter)it.next()).setValue( max, graph);
 	    						}
 	    						node.setMaxValue(max, (RegulatoryGraph) graph);
 	    						return true;
@@ -176,7 +174,7 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	    		}
 	    	}
 	    	nodeInfo.setMax(max);
-    		((AbstractGraph) graph).fireGraphChange( GraphChangeType.NODEUPDATED, this);
+    		graph.fireGraphChange( GraphChangeType.NODEUPDATED, this);
     		getInteractionsModel().refreshNode();
 	    }
 	}
@@ -224,7 +222,7 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	public LogicalParameter getInteraction(int index) {
 		try
 		{
-			return (LogicalParameter)v_logicalParameters.get(index);
+			return v_logicalParameters.get(index);
 		}
 		catch (java.lang.ArrayIndexOutOfBoundsException e)
 		{
@@ -350,13 +348,6 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	}
 
 	/**
-	 * @return annotation for this node
-	 */
-	public Annotation getGsa() {
-		return gsa;
-	}
-
-	/**
 	 * @param annotation for this node.
 	 */
 	public void setGsa(Annotation annotation) {
@@ -412,9 +403,8 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
      */
     public void cleanupInteractionForNewGraph(Map copyMap) {
         RegulatoryNode myClone = (RegulatoryNode) copyMap.get(this);
-        Iterator it = v_logicalParameters.iterator();
-        while (it.hasNext()) {
-            ((LogicalParameter)it.next()).applyNewGraph(myClone, copyMap);
+        for (LogicalParameter lp: v_logicalParameters) {
+            lp.applyNewGraph(myClone, copyMap);
             // TODO: copy the logical functions as well
             // if pasted into a new graph, the "interactionModel" should be
             // recreated/updated for the new graph
