@@ -246,7 +246,7 @@ public class ViewHelper {
 		return new Rectangle(box.x+movex, box.y+movey, box.width, box.height);
 	}
 	
-	public static PointList doGetPoints(NodeAttributesReader nodeReader, EdgeAttributesReader edgeReader, Edge<?> edge) {
+	private static PointList doGetPoints(NodeAttributesReader nodeReader, EdgeAttributesReader edgeReader, Edge<?> edge) {
 		Object source = edge.getSource();
 		Object target = edge.getTarget();
 		
@@ -270,11 +270,43 @@ public class ViewHelper {
 		int w = (int)edgeReader.getLineWidth();
 		
 		if (realPoints == null || realPoints.size() == 0) {
-			return getPoints(b1, b2, w);
+            realPoints = null;
+            if (edgeReader.hasReverseEdge()) {
+                realPoints = getReversedShift(b1, b2);
+            }
 		}
-		
+
+        if (realPoints == null) {
+            return getPoints(b1, b2, w);
+        }
+
 		return getPoints(b1, b2, realPoints, w);
 	}
+
+    private static List<Point> getReversedShift(Rectangle b1, Rectangle b2) {
+        if (b1.intersects(b2)) {
+            return null;
+        }
+
+        int x1 = (int)b1.getCenterX();
+        int y1 = (int)b1.getCenterY();
+
+        int x2 = (int)b2.getCenterX();
+        int y2 = (int)b2.getCenterY();
+
+        int dx = (x2-x1)/3;
+        int dy = (y2-y1)/3;
+
+        double d = Math.sqrt(dx * dx + dy * dy) / 10;
+
+        int x = x1 + dx + (int)(dy/d);
+        int y = y1 + dy - (int)(dx/d);
+
+        List<Point> points = new ArrayList<Point>(1);
+        points.add(new Point(x,y));
+        points.add(new Point(x+dx,y+dy));
+        return points;
+    }
 
 	public static PointList getModifiedPoints(NodeAttributesReader nodeReader, EdgeAttributesReader edgeReader, Edge<?> edge, List<Point> modifiedPoints) {
 		Object source = edge.getSource();

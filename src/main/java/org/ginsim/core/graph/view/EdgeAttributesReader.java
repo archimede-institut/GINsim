@@ -78,7 +78,14 @@ public interface EdgeAttributesReader<V,E extends Edge<V>> extends AttributesRea
      * @return the lineEnd
      */
     EdgeEnd getLineEnd();
-    
+
+    /**
+     * Check if the graph also contains the reversed edge.
+     *
+     * @return true if the reverse edge is in the graph, false otherwise (or for self-loops)
+     */
+    boolean hasReverseEdge();
+
     /**
      * set the edge as dashed.
      * @return the dash motif

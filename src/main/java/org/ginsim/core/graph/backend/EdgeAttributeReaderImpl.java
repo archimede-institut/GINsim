@@ -47,7 +47,8 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
     private E edge;
     private EdgeViewInfo<V, E> viewInfo;
     private EdgeStyle<V, E> style;
-    
+
+    private boolean hasReverseEdge = false;
     private boolean selected = false;
     private boolean hasChanged = false;
     
@@ -104,7 +105,15 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
         if (obj == null) {
             viewInfo = null;
             style = null;
+            hasReverseEdge = false;
         } else {
+            V src = edge.getSource();
+            V tgt = edge.getTarget();
+            if (src == tgt) {
+                hasReverseEdge = false;
+            } else {
+                hasReverseEdge = (graph.getEdge(tgt, src) != null);
+            }
     	    viewInfo = graph.getEdgeViewInfo(edge);
 		    style = styleManager.getViewEdgeStyle(edge);
         }
@@ -170,6 +179,11 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
         cachedBounds = null;
         cachedPath = null;
         refresh();
+    }
+
+    @Override
+    public boolean hasReverseEdge() {
+        return hasReverseEdge;
     }
 
     @Override
