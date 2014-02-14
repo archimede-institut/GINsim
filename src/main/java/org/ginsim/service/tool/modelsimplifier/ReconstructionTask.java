@@ -159,9 +159,9 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
                 NamedStateList newInit = newInits[i];
     			if (init != null && init.size() > 0) {
     				for (int j=0 ; j<init.size() ; j++) {
-    					NamedState istate = (NamedState)init.get(j);
+    					NamedState istate = init.get(j);
     					int epos = newInit.add();
-    					NamedState newIstate = (NamedState)newInit.get(pos);
+    					NamedState newIstate = newInit.get(epos);
     					newIstate.setName(istate.getName());
     					m_alldata.put(istate, newIstate);
     					Map<NodeInfo, List<Integer>> m_init = newIstate.getMap();
