@@ -52,7 +52,6 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	private Annotation	gsa = new Annotation();
 
 	private TreeInteractionsModel interactionsModel;
-	private RegulatoryGraph graph;
 
     private static final String S_ID   = "STR_id";
     private static final String S_NAME = "STR_name";
@@ -67,7 +66,6 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	public RegulatoryNode(String id, RegulatoryGraph graph) {
 		super();
 		this.nodeInfo = new NodeInfo(id, (byte)1);
-		this.graph = graph;
 		interactionsModel = new TreeInteractionsModel(graph);
 	}
 
@@ -84,7 +82,7 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
     public void setInput(boolean input, Graph graph) {
         if (input != isInput()) {
             nodeInfo.setInput(input);
-            ((AbstractGraph) graph).fireGraphChange( GraphChangeType.NODEUPDATED, this);
+            graph.fireGraphChange( GraphChangeType.NODEUPDATED, this);
         }
     }
 
@@ -94,7 +92,7 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
     public void setOutput(boolean output, Graph graph) {
         if (output != this.isOutput) {
             this.isOutput = output;
-            ((AbstractGraph) graph).fireGraphChange( GraphChangeType.NODEUPDATED, this);
+            graph.fireGraphChange( GraphChangeType.NODEUPDATED, this);
         }
     }
 
@@ -374,10 +372,6 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 		return clone;
 	}
 	
-	public RegulatoryNode clone() {
-		return clone(this.graph);
-	}
-
 	/**
 	 * update logical parameters when an interaction is deleted.
 	 */

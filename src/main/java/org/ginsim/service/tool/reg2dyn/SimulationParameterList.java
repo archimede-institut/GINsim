@@ -2,11 +2,7 @@ package org.ginsim.service.tool.reg2dyn;
 
 import java.util.Collection;
 
-import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.Graph;
-import org.ginsim.core.graph.GraphChangeType;
-import org.ginsim.core.graph.GraphEventCascade;
-import org.ginsim.core.graph.GraphListener;
+import org.ginsim.core.graph.*;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -63,9 +59,13 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
 			nodeRemoved(data);
 			break;
 		case GRAPHMERGED:
-			Collection<?> nodes = (Collection<?>)data;
-			for (Object v: nodes) {
-				nodeAdded(v);
+			Collection<?> items = (Collection<?>)data;
+			for (Object item: items) {
+                if (item instanceof Edge) {
+
+                } else {
+                    nodeAdded(item);
+                }
 			}
 			break;
 
@@ -85,7 +85,7 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
         // remove it from priority classes
     	pcmanager.nodeOrder.remove(data);
         for (int i=0 ; i<pcmanager.size() ; i++) {
-        	PrioritySetDefinition pcdef = (PrioritySetDefinition)pcmanager.get(i);
+        	PrioritySetDefinition pcdef = pcmanager.get(i);
     		if (pcdef.m_elt != null) {
     			pcdef.m_elt.remove(data);
     		}
@@ -100,7 +100,7 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
 		}
 		pcmanager.nodeOrder.add(node);
         for (int i=0 ; i<pcmanager.size() ; i++) {
-        	PrioritySetDefinition pcdef = (PrioritySetDefinition)pcmanager.get(i);
+        	PrioritySetDefinition pcdef = pcmanager.get(i);
     		if (pcdef.m_elt != null) {
     			pcdef.m_elt.put(node, pcdef.get(0));
     		}

@@ -288,12 +288,10 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         }
         List ret = new ArrayList();
         HashMap copyMap = new HashMap();
-        Iterator<RegulatoryNode> it = otherGraph.getNodes().iterator();
         NodeAttributesReader vReader = getNodeAttributeReader();
         NodeAttributesReader cvreader = otherGraph.getNodeAttributeReader();
-        while (it.hasNext()) {
-            RegulatoryNode vertexOri = (RegulatoryNode)it.next();
-            RegulatoryNode vertex = (RegulatoryNode)vertexOri.clone();
+        for (RegulatoryNode vertexOri: otherGraph.getNodes()) {
+            RegulatoryNode vertex = vertexOri.clone((RegulatoryGraph)otherGraph);
             addNodeWithNewId(vertex);
             cvreader.setNode(vertexOri);
             vReader.setNode(vertex);
@@ -318,9 +316,8 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
             ret.add(edge);
         }
 
-        it = otherGraph.getNodes().iterator();
-        while (it.hasNext()) {
-            it.next().cleanupInteractionForNewGraph(copyMap);
+        for (RegulatoryNode node: otherGraph.getNodes()) {
+            node.cleanupInteractionForNewGraph(copyMap);
         }
         return ret;
     }
@@ -352,7 +349,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         HashMap copyMap = new HashMap();
         if (v_vertex != null) {
             for (RegulatoryNode vertexOri: v_vertex) {
-                RegulatoryNode vertex = (RegulatoryNode)vertexOri.clone();
+                RegulatoryNode vertex = vertexOri.clone(this);
                 ((RegulatoryGraphImpl)copiedGraph).addNodeWithNewId(vertex);
                 vReader.setNode(vertexOri);
                 cvreader.setNode(vertex);
