@@ -13,8 +13,10 @@ public abstract class AddEdgeAction<V, E extends Edge<V>> extends EditAction {
 	
 	public void addEdge( EditActionManager manager, V from, V to) {
 		E edge = getNewEdge(from, to);
-		manager.select(edge);
-		manager.actionPerformed(this);
+        if (edge != null) {
+            manager.select(edge);
+            manager.actionPerformed(this);
+        }
 	}
 	
 	abstract protected E getNewEdge(V from, V to);
