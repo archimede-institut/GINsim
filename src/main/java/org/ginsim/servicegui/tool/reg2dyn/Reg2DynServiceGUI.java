@@ -102,15 +102,17 @@ class Reg2DynAction extends ToolAction {
         }
 		
 		Frame mainFrame = GUIManager.getInstance().getFrame( graph);
+        GraphGUI<?, ?, ?> gui = null;
 		if (mainFrame != null) {
-			GraphGUI<?, ?, ?> gui = GUIManager.getInstance().getGraphGUI( graph);
+			gui = GUIManager.getInstance().getGraphGUI( graph);
 			// TODO: replace this with a mode set on the gui
 			// mainFrame.getActions().setCurrentMode( GsActions.MODE_DEFAULT, 0, false);
 		}
 
 		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, SimulationParametersManager.KEY, true);
-		new SingleSimulationFrame(mainFrame, paramList).setVisible(true);
-
+		SingleSimulationFrame simFrame = new SingleSimulationFrame(mainFrame, paramList);
+        simFrame.setAssociatedGUI(gui);
+        simFrame.setVisible(true);
 	}
 		
 }

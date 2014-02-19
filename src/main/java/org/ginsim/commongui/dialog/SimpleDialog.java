@@ -2,15 +2,14 @@ package org.ginsim.commongui.dialog;
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
+import javax.swing.*;
 
 import org.ginsim.common.application.OptionStore;
+import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.shell.FrameActionManager;
 
 /**
  * Base dialog which can remember its default size.
@@ -24,14 +23,22 @@ public abstract class SimpleDialog extends JDialog {
 	private static final long	serialVersionUID	= -460464845250055098L;
 
 	protected String id;
-	
-	Action actionListener = new AbstractAction() {
-		private static final long serialVersionUID = 448859746054492959L;
-		public void actionPerformed(ActionEvent actionEvent) {
-			closeEvent();
-		}
-	};
-      
+
+    private GraphGUI gui = null;
+
+    Action actionListener = new AbstractAction() {
+        private static final long serialVersionUID = 448859746054492959L;
+        public void actionPerformed(ActionEvent actionEvent) {
+            closeEvent();
+        }
+    };
+
+    Action saveAction = new AbstractAction() {
+        public void actionPerformed(ActionEvent actionEvent) {
+            saveEvent();
+        }
+    };
+
     /**
      * 
      * @param parent
@@ -50,21 +57,36 @@ public abstract class SimpleDialog extends JDialog {
 		});
 		
 		setLocationByPlatform(true);
-		this.setSize(((Integer)OptionStore.getOption(id+".width", new Integer(w))).intValue(),
-        		((Integer)OptionStore.getOption(id+".height", new Integer(h))).intValue());
+		this.setSize(OptionStore.getOption(id+".width", new Integer(w)).intValue(),
+        		OptionStore.getOption(id+".height", new Integer(h)).intValue());
 		
 	    JPanel content = (JPanel) getContentPane();
-	    KeyStroke stroke = KeyStroke.getKeyStroke("ESCAPE");
+        InputMap im = content.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
 
-	    content.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(stroke, "ESCAPE");
-	    content.getActionMap().put("ESCAPE", actionListener);
+        im.put(KeyStroke.getKeyStroke("ESCAPE"), "ESCAPE");
+        content.getActionMap().put("ESCAPE", actionListener);
+
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, FrameActionManager.MASK), "save");
+        content.getActionMap().put("save", saveAction);
 	}
-	
+
 	public void closeEvent() {
 		OptionStore.setOption(id+".width", new Integer(getWidth()));
 		OptionStore.setOption(id+".height", new Integer(getHeight()));
 		doClose();
 	}
-	
+
 	abstract public void doClose();
+
+    public void saveEvent() {
+        if (gui != null) {
+            gui.save();
+        } else {
+            System.out.println("no GUI to save!!");
+        }
+    }
+
+    public void setAssociatedGUI(GraphGUI gui) {
+        this.gui = gui;
+    }
 }
