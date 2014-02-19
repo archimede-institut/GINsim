@@ -63,7 +63,7 @@ public class HierarchicalTransitionGraphGUIHelper implements GraphGUIHelper<Hier
 
 	@Override
 	public GUIEditor<HierarchicalTransitionGraph> getMainEditionPanel( HierarchicalTransitionGraph graph) {
-		return null;
+		return new HierarchicalGraphEditor(graph);
 	}
 
 	@Override
