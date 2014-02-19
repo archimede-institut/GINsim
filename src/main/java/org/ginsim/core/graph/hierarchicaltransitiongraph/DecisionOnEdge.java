@@ -30,21 +30,14 @@ public class DecisionOnEdge extends Edge<HierarchicalNode> implements ToolTipsab
 	}
 
 	/**
-	 * Initialize a new label
-	 * @param geneCount the count of genes in the LRG
-	 */
-	public void init(int geneCount) {
-		if (this.genesUpdated == null) {
-			this.genesUpdated = new int[geneCount];
-		}
-    }
-
-	/**
 	 * Compute the changes of a given edge (source, target)
 	 * @param source
 	 * @param target
 	 */
 	public void computeChange(byte[] source, byte[] target) {
+        if (this.genesUpdated == null) {
+            this.genesUpdated = new int[source.length];
+        }
 		for (int i = 0; i < source.length; i++) {
 			int change = target[i] - source[i];
 			if (change != 0) {

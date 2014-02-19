@@ -25,31 +25,17 @@ public class HierarchicalEdgeParameterPanel  extends AbstractParameterPanel<Deci
         c.gridy = 0;
         c.weightx = 1;
         c.fill = GridBagConstraints.BOTH;
-        this.add(getTypeLabel(), c);
+        typeLabel = new JLabel();
+        this.add(typeLabel, c);
 	}
 	
-	/*
-	 * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
-	 */
 	@Override
-	public void setEditedItem(DecisionOnEdge obj) {
-		if (obj != null && obj instanceof DecisionOnEdge) {
-			DecisionOnEdge decisions = (DecisionOnEdge)obj;
+	public void setEditedItem(DecisionOnEdge decisions) {
+		if (decisions != null) {
 			typeLabel.setText(decisions.toString());
 		} else {
 			typeLabel.setText("");
 		}
 	}
 
-	/**
-	 * This method initializes jTable
-	 * 
-	 * @return javax.swing.JTable
-	 */
-	private JLabel getTypeLabel() {
-		if(typeLabel == null) {
-			typeLabel = new JLabel();
-		}
-		return typeLabel;
-	}
 }
