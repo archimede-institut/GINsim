@@ -2,7 +2,6 @@ package org.ginsim.service.tool.graphcomparator;
 
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -10,18 +9,13 @@ import java.util.Map;
 import org.colomoto.mddlib.MDDComparator;
 import org.colomoto.mddlib.MDDComparatorFactory;
 import org.colomoto.mddlib.MDDManager;
-import org.ginsim.common.application.GsException;
-import org.ginsim.common.application.LogManager;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.Graph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterList;
-import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.css.CSSNodeStyle;
 
 
 /**
@@ -30,7 +24,7 @@ import org.ginsim.core.graph.view.css.CSSNodeStyle;
  * @author Duncan Berenguier
  * @since January 2009
  */
-public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> {
+public class RegulatoryGraphComparator extends GraphComparator<RegulatoryNode, RegulatoryMultiEdge, RegulatoryGraph> {
 	public static final Color COMMON_COLOR_DIFF_FUNCTIONS = new Color(0, 0, 255);
 	public static final Color COMMON_COLOR_DIFF_MAXVALUES = new Color(115, 194, 220);
 	/**
@@ -44,15 +38,8 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> 
     private MDDComparator ddcomparator;
 
 
-    public RegulatoryGraphComparator( RegulatoryGraph g1,  RegulatoryGraph g2, RegulatoryGraph g) {
-		super();
-        if (g  == null)  return;
-        if (g1 == null)  return;
-        if (g2 == null)  return;
-        
-        this.graph_new = g;
-        this.graph_1 = g1;
-        this.graph_2 = g2;
+    public RegulatoryGraphComparator(RegulatoryGraph g1, RegulatoryGraph g2) {
+        super(g1, g2, GraphManager.getInstance().getNewGraph());
 
         this.ddmanager1 = g1.getMDDFactory();
         this.ddmanager2 = g2.getMDDFactory();
@@ -64,95 +51,47 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> 
 		if (!sameNodeOrder) {
 			String comment = "diff: The node order is the same for both graph";
 			log(comment+"\n");
-			g.getAnnotation().appendToComment(comment);
-			log(((RegulatoryGraph) g1).getNodeOrder()+"\n");
-			log(((RegulatoryGraph) g2).getNodeOrder()+"\n");
+			graph_new.getAnnotation().appendToComment(comment);
+			log(g1.getNodeOrder()+"\n");
+			log(g2.getNodeOrder()+"\n");
 		}
 	}
-	
-	public RegulatoryGraphComparator(RegulatoryGraph g1, RegulatoryGraph g2) {
-		this(g1, g2, GraphManager.getInstance().getNewGraph());
-	}
-	
-	public boolean isCommonNode(Object id) {
-		CSSNodeStyle style = (CSSNodeStyle)((GraphComparatorStyleStore)stylesMap.get(id)).v;
-		return style.background != SPECIFIC_G1_COLOR && style.background != SPECIFIC_G2_COLOR;
+
+
+    @Override
+	protected RegulatoryNode copyNode(RegulatoryGraph g, RegulatoryNode v1) {
+        String id = v1.getId();
+        RegulatoryNode v = graph_new.addNewNode(id, v1.getName(), v1.getMaxValue());
+        setLogicalFunction(v, v1, graph_1);
+        Annotation gsa = v.getAnnotation();
+        gsa.copyFrom(v1.getAnnotation());
+        return v;
 	}
 
-	public GraphComparatorResult buildDiffGraph() {
-		GraphComparatorResult result = super.buildDiffGraph();
-		
-		meMap = new HashMap<RegulatoryMultiEdge, RegulatoryMultiEdge>();
-		EdgeAttributesReader new_ereader = graph_new.getEdgeAttributeReader();
-		for (Iterator<RegulatoryMultiEdge> it = graph_new.getEdges().iterator(); it.hasNext();) {
-			RegulatoryMultiEdge edge_new = it.next();
-			String sid = edge_new.getSource().getId();
-			String tid = edge_new.getTarget().getId();
-			
-			RegulatoryMultiEdge edge_1 = (RegulatoryMultiEdge) graph_1.getEdge(graph_1.getNodeByName(sid), graph_1.getNodeByName(tid));
-			RegulatoryMultiEdge edge_2 = (RegulatoryMultiEdge) graph_2.getEdge(graph_2.getNodeByName(sid), graph_2.getNodeByName(tid));
-			
-			String comment = "The edge "+edge_new.toToolTip()+" ";
-			new_ereader.setEdge(edge_new);
-			Color col = new_ereader.getLineColor();
-			if (col == SPECIFIC_G1_COLOR) comment+= "is specific to g1";
-			else if (col == SPECIFIC_G2_COLOR) comment+= "is specific to g2";
-			else comment+= "is common to both graphs";
-			((RegulatoryMultiEdge) edge_new).getAnnotation().appendToComment(comment);
-			log(comment+"\n");
-			if (edge_1 != null && edge_2 != null) compareEdges((RegulatoryMultiEdge)edge_1, (RegulatoryMultiEdge)edge_2);
-			if (edge_1 != null) meMap.put(edge_1,edge_new);
-			else if (edge_2 != null) meMap.put(edge_2,edge_new);
-		}
-		setAllLogicalFunctions();
-		meMap = null;
-		logicalFunctionPending = null;
-		
-		return result;
-	}
-	
-	protected void setNodesColor() {
-		for (Iterator<String> it=verticesIdsSet.iterator() ; it.hasNext() ;) {	//For all the vertices
-			RegulatoryNode v, v1, v2;
-			String id = (String)it.next();
-			v1 = (RegulatoryNode)graph_1.getNodeByName(id);
-			v2 = (RegulatoryNode)graph_2.getNodeByName(id);
-			String comment = null;
-			
-			//Check which graph own the node, set the appropriate color to it and if it is owned by both graph, compare its attributes.
-			if (v1 == null) {
-				comment = "The node "+id+" is specific to "+graph_2.getGraphName()+"\n";
-				v = graph_new.addNewNode(id, v2.getName(), v2.getMaxValue());
-				mergeNodeAttributes(v, v2, null, graph_new.getNodeAttributeReader(), graph_2.getNodeAttributeReader(), null, SPECIFIC_G2_COLOR);
-				setLogicalFunction(v, v2, graph_2);
-			} else if (v2 == null) {
-				comment = "The node "+id+" is specific to "+graph_1.getGraphName()+"\n";
-				v = graph_new.addNewNode(id, v1.getName(), v1.getMaxValue());
-				mergeNodeAttributes(v, v1, null, graph_new.getNodeAttributeReader(), graph_1.getNodeAttributeReader(), null, SPECIFIC_G1_COLOR);
-				setLogicalFunction(v, v1, graph_1);
-			} else {
-				comment = "The node "+id+" is common to both graphs\n";
-				v = graph_new.addNewNode(id, v1.getName(), (byte) Math.max(v1.getMaxValue(), v2.getMaxValue()));
-				Color[] color = {COMMON_COLOR};
-				comment += compareNodes(v ,v1, v2, color);
-				mergeNodeAttributes(v, v1, v2, graph_new.getNodeAttributeReader(), graph_1.getNodeAttributeReader(), graph_2.getNodeAttributeReader(), color[0]);
-				setLogicalFunction(v, v1, graph_1);
-			}
-			Annotation gsa = v.getAnnotation();
-			if (v1 == null) {
-				gsa.copyFrom(v2.getAnnotation());
-			} else {
-				gsa.copyFrom(v1.getAnnotation());
-				if (v2 != null) {
-					addtoannotation(gsa, v2.getAnnotation());
-				}
-			}
-			gsa.appendToComment(comment);
-			log(comment);
-		}		
-	}
+    @Override
+    protected RegulatoryMultiEdge copyEdge(RegulatoryGraph srcGraph, RegulatoryMultiEdge e) {
+        RegulatoryNode src = graph_new.getNodeByName(e.getSource().getId());
+        RegulatoryNode tgt = graph_new.getNodeByName(e.getTarget().getId());
 
-	protected void addtoannotation(Annotation a, Annotation a1) {
+        if (src == null || tgt == null) {
+            throw new RuntimeException("Unable to find matching nodes for this edge: "+e);
+        }
+
+        RegulatoryMultiEdge newEdge = new RegulatoryMultiEdge(graph_new, src, tgt, e.getSign(0));
+        graph_new.addEdge(newEdge);
+        return newEdge;
+    }
+
+    @Override
+    protected void doSpecialisedComparison() {
+        // TODO: here comes the tricky part
+
+
+        // compare functions, maxvalues, annotations...
+    }
+
+
+    protected void addtoannotation(Annotation a, Annotation a1) {
 		if (!a.getComment().contains(a1.getComment())) {
 			a.appendToComment(a1.getComment());
 		}
@@ -165,14 +104,8 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> 
 			}
 		}
 	}
-	
-	protected void addNodesFromGraph( RegulatoryGraph gm) {
-		for (RegulatoryNode vertex: gm.getNodes()) {
-			verticesIdsSet.add(vertex.getId());
-		}
-	}
 
-	
+/*
 	protected void addEdgesFromGraph( RegulatoryGraph gm_main, RegulatoryGraph gm_aux, String id, Color vcol, Color pcol, EdgeAttributesReader ereader) {
 		RegulatoryNode v = gm_main.getNodeByName(id);
 		if (v == null) {
@@ -221,9 +154,9 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> 
 			}
 		}
 	}
+*/
 
-
-	public String compareNodes(RegulatoryNode v, RegulatoryNode v1, RegulatoryNode v2, Color[] color) {
+	private String compareNodes(RegulatoryNode v, RegulatoryNode v1, RegulatoryNode v2, Color[] color) {
 		String comment = "";
 		if (!v1.getName().equals(v2.getName())) {
 			String n1 = v1.getName();
@@ -235,13 +168,13 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> 
 			if (n2.equals("")) {
                 n2 = "no name";
             }
-			comment += "   names are differents : "+n1+" and "+n2+"\n";
+			comment += "   names are different : "+n1+" and "+n2+"\n";
 		}
 
 		if (v1.getMaxValue() != v2.getMaxValue()) {
 			byte mv1 = v1.getMaxValue();
 			byte mv2 = v2.getMaxValue();
-			comment += "   max values are differents : "+mv1+" and "+mv2+"\n";
+			comment += "   max values are different : "+mv1+" and "+mv2+"\n";
 			color[0] = COMMON_COLOR_DIFF_MAXVALUES;
 		} else if (sameNodeOrder) {
             comment += compareLogicalFunction(v1, v2, color); //Compare logical function only if they have the same maxValue.
@@ -262,7 +195,7 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryGraph> 
 
 		if (!ddcomparator.similar(mdd1, mdd2)) {
             // FIXME: print detailed MDDs ?
-			comment = "   logical functions are differents";
+			comment = "   logical functions are different\n";
 			color[0] = COMMON_COLOR_DIFF_FUNCTIONS;
 		}
 		return comment;

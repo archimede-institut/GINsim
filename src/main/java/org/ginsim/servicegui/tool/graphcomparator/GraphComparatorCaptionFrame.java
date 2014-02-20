@@ -36,7 +36,6 @@ import org.ginsim.core.graph.view.css.CSSStyle;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.service.tool.graphcomparator.GraphComparator;
 import org.ginsim.service.tool.graphcomparator.GraphComparatorResult;
-import org.ginsim.service.tool.graphcomparator.GraphComparatorStyleStore;
 import org.ginsim.service.tool.graphcomparator.RegulatoryGraphComparator;
 
 
@@ -57,6 +56,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
         this.g = gcResult.getDiffGraph();
         this.gcResult = gcResult;
         this.cs = new CascadingStyleSheetManager(false);
+        this.g.getStyleManager().setStyleProvider(gcResult.getStyleProvider());
 
         initialize();
         this.setTitle(Txt.t("STR_gcmp_caption")+" ("+g.getGraphName()+")");
@@ -279,51 +279,51 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	}
 	
     private void doColorize(JRadioButton source) {
-    	HashMap<Object, GraphComparatorStyleStore> styleMap = gcResult.getStyleMap();
-    	NodeAttributesReader vreader = g.getNodeAttributeReader();
-    	EdgeAttributesReader ereader = g.getEdgeAttributeReader();
-    	
-    	for (Iterator<Object> it = styleMap.keySet().iterator(); it.hasNext();) {
-			Object o = it.next();
-			CSSStyle style = null;
-			GraphComparatorStyleStore is = (GraphComparatorStyleStore)styleMap.get(o);
-			if (source == diffColor) {
-				style = is.v;
-			} else if (source == specG1Color) {
-				style = is.v1;
-			} else if (source == specG2Color) {
-				style = is.v2;
-			} else if (source == exclusionColor){
-				style = is.v1;
-				if (style == null) style = is.v2;
-				else if (is.v2 != null) style = null;
-			} else if (source == intersectColor){
-				if (is.v1 != null && is.v2 != null) style = is.v1;
-			} else if (source == fusionColor1) {
-				style = is.v1;
-				if (style == null) style = is.v2;
-			} else if (source == fusionColor2) {
-				style = is.v2;
-				if (style == null) style = is.v1;
-			}
-			if (o instanceof Edge) { 	//edge
-				ereader.setEdge((Edge)o);
-				if (style != null) {
-					ereader.setDash(EdgePattern.SIMPLE); //FIXME : thats dirty, but copy/paste from DynamicGraph.
-					cs.applyOnEdge((CSSEdgeStyle)style, o, ereader);
-				} else {
-					ereader.setDash(EdgePattern.DASH); //FIXME : thats dirty, but copy/paste from DynamicGraph.
-					cs.applyOnEdge(clearEdgeStyle, o, ereader);
-				}
-			} else { //vertex
-				vreader.setNode(o);
-				if (style != null) {
-					cs.applyOnNode((CSSNodeStyle)style, o, vreader);
-				} else {
-					cs.applyOnNode(clearNodeStyle, o, vreader);
-				}
-			}
-		}
+        // TODO: properly handle the style override
+//    	NodeAttributesReader vreader = g.getNodeAttributeReader();
+//    	EdgeAttributesReader ereader = g.getEdgeAttributeReader();
+//
+//    	for (Iterator<Object> it = styleMap.keySet().iterator(); it.hasNext();) {
+//			Object o = it.next();
+//			CSSStyle style = null;
+//			GraphComparatorStyleStore is = (GraphComparatorStyleStore)styleMap.get(o);
+//			if (source == diffColor) {
+//				style = is.v;
+//			} else if (source == specG1Color) {
+//				style = is.v1;
+//			} else if (source == specG2Color) {
+//				style = is.v2;
+//			} else if (source == exclusionColor){
+//				style = is.v1;
+//				if (style == null) style = is.v2;
+//				else if (is.v2 != null) style = null;
+//			} else if (source == intersectColor){
+//				if (is.v1 != null && is.v2 != null) style = is.v1;
+//			} else if (source == fusionColor1) {
+//				style = is.v1;
+//				if (style == null) style = is.v2;
+//			} else if (source == fusionColor2) {
+//				style = is.v2;
+//				if (style == null) style = is.v1;
+//			}
+//			if (o instanceof Edge) { 	//edge
+//				ereader.setEdge((Edge)o);
+//				if (style != null) {
+//					ereader.setDash(EdgePattern.SIMPLE); //FIXME : thats dirty, but copy/paste from DynamicGraph.
+//					cs.applyOnEdge((CSSEdgeStyle)style, o, ereader);
+//				} else {
+//					ereader.setDash(EdgePattern.DASH); //FIXME : thats dirty, but copy/paste from DynamicGraph.
+//					cs.applyOnEdge(clearEdgeStyle, o, ereader);
+//				}
+//			} else { //vertex
+//				vreader.setNode(o);
+//				if (style != null) {
+//					cs.applyOnNode((CSSNodeStyle)style, o, vreader);
+//				} else {
+//					cs.applyOnNode(clearNodeStyle, o, vreader);
+//				}
+//			}
+//		}
 	}
     
 	public void doClose() {

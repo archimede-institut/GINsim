@@ -86,11 +86,7 @@ public class TestGraphComparator {
 
 	public void compareGraph(GraphComparator gc, int vertexCount, int edgesCount) {
 		gc.buildDiffGraph();
-		HashMap vm = gc.getStyleMap();
 
-		
-		//printNodesMap(vm);
-		Assert.assertTrue("Wrong number of vertex in the style map. ("+vm.size()+" out of "+vertexCount+")", vm.size() == (vertexCount + edgesCount));
 		int diffNodeCount = gc.getDiffGraph().getNodeCount();
 		Assert.assertTrue("Wrong number of vertex in the diff graph.("+diffNodeCount+" out of "+vertexCount+")", diffNodeCount == vertexCount);
 		int diffEdgesCount = countEdges(gc);

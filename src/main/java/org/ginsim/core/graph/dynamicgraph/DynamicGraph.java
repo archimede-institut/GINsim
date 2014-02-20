@@ -28,7 +28,7 @@ public interface DynamicGraph extends Graph<DynamicNode, DynamicEdge>, GraphAsso
 	 * @param multiple
 	 * @return the new edge
 	 */
-	Edge<DynamicNode> addEdge(DynamicNode source, DynamicNode target, boolean multiple);
+	DynamicEdge addEdge(DynamicNode source, DynamicNode target, boolean multiple);
 	
 	
 	/**
@@ -42,7 +42,7 @@ public interface DynamicGraph extends Graph<DynamicNode, DynamicEdge>, GraphAsso
 	/**
 	 * Set a list of String representing the order of node as defined by the model
 	 * 
-	 * @param list the list of String representing the order of node as defined by the model
+	 * @param node_order the list of String representing the order of node as defined by the model
 	 */
 	void setNodeOrder( List<NodeInfo> node_order);
 	
