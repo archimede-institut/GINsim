@@ -226,6 +226,10 @@ public class TreeInteractionsModel implements TreeModel {
 		return n;
 	}
 	public void addExpression(JTree tree, byte val, RegulatoryNode currentNode, String expression) throws Exception {
+        if (currentNode.isInput()) {
+            NotificationManager.publishWarning( graph, "Can not edit the logical function for input node "+node);
+            return;
+        }
 		BooleanParser tbp = new BooleanParser(graph.getIncomingEdges(currentNode), isAutoAddEnabled());
 		if (!tbp.compile(expression, graph, currentNode)) {
 			NotificationManager.publishWarning( graph, "invalid formula in "+currentNode);
@@ -280,6 +284,10 @@ public class TreeInteractionsModel implements TreeModel {
 	}
 	
 	public boolean updateExpression(byte val, TreeExpression exp, String newExp) {
+        if (node.isInput()) {
+            NotificationManager.publishWarning( graph, "Can not edit the logical function for input node "+node);
+            return false;
+        }
 		try {
 			TBooleanTreeNode root = exp.getRoot();
 			if (newExp.equals("")) {
