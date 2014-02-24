@@ -1,5 +1,6 @@
 package org.ginsim.servicegui.tool.reg2dyn;
 
+import org.ginsim.gui.utils.data.ColumnDefinition;
 import org.ginsim.gui.utils.data.ListEditionPanel;
 import org.ginsim.gui.utils.data.ListPanelCompanion;
 import org.ginsim.gui.utils.data.ListPanelHelper;
@@ -16,6 +17,7 @@ import java.util.List;
 public class ListOfSimulationParametersHelper extends ListPanelHelper<SimulationParameters, SimulationParameterList> {
 
     public static final ListOfSimulationParametersHelper HELPER = new ListOfSimulationParametersHelper();
+    public static final ColumnDefinition[] COLUMNS = new ColumnDefinition[] { ColumnDefinition.EDITME };
 
     private ListOfSimulationParametersHelper() {
     }
@@ -39,5 +41,10 @@ public class ListOfSimulationParametersHelper extends ListPanelHelper<Simulation
     @Override
     public ListPanelCompanion getCompanion(ListEditionPanel<SimulationParameters, SimulationParameterList> editPanel) {
         return new SimulationParameterEditionPanel(editPanel, editPanel.getDialog());
+    }
+
+    @Override
+    public ColumnDefinition[] getColumns() {
+        return COLUMNS;
     }
 }

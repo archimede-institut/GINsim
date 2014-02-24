@@ -1,5 +1,6 @@
 package org.ginsim.servicegui.tool.reg2dyn.priorityclass;
 
+import org.ginsim.gui.utils.data.ColumnDefinition;
 import org.ginsim.gui.utils.data.ListEditionPanel;
 import org.ginsim.gui.utils.data.ListPanelCompanion;
 import org.ginsim.gui.utils.data.ListPanelHelper;
@@ -17,6 +18,7 @@ public class PriorityManagerHelper extends ListPanelHelper<PrioritySetDefinition
 
     public static final String FILTER_NO_SYNCHRONOUS = "[no-synchronous]";
     public static final PriorityManagerHelper HELPER = new PriorityManagerHelper();
+    public static final ColumnDefinition[] COLUMNS = new ColumnDefinition[] { ColumnDefinition.EDITME };
 
     public Object[] getCreateTypes() {
         return PrioritySetAddMode.values();
@@ -67,4 +69,8 @@ public class PriorityManagerHelper extends ListPanelHelper<PrioritySetDefinition
         return pcdef.match(filter);
     }
 
+    @Override
+    public ColumnDefinition[] getColumns() {
+        return COLUMNS;
+    }
 }
