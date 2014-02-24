@@ -40,7 +40,6 @@ import org.ginsim.service.tool.graphcomparator.GraphComparatorService;
 
 public class GraphComparatorFrame  extends StackDialog implements ActionListener {
 
-	private static final long serialVersionUID = -5166645414957087984L;
 	private JFrame frame;
 	private Graph frame_graph;
 

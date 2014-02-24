@@ -2,7 +2,6 @@ package org.ginsim.service.tool.graphcomparator;
 
 import java.util.List;
 
-import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -58,9 +57,14 @@ public class GraphComparatorService implements Service {
 			}
 			break;
 		}
+
 		if (graphComparator != null) {
-			return graphComparator.buildDiffGraph();
-		}
+            try {
+                return (GraphComparatorResult)graphComparator.call();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 		return null;
 	}
 	

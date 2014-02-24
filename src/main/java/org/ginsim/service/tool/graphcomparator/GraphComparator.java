@@ -1,7 +1,6 @@
 package org.ginsim.service.tool.graphcomparator;
 
-import java.awt.Color;
-
+import org.colomoto.common.task.AbstractTask;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
@@ -9,20 +8,22 @@ import org.ginsim.core.graph.view.NodeAttributesReader;
 
 
 /**
- * Compare 2 GsGraph
+ * Compare two Graphs.
+ * Create a new graph with all components from the two compared graphs and track
+ * components which are specific to one of them, or changes between common components.
+ * This abstract class provides the common mechanism, extensions support specific graph types.
+ *
  * @author Duncan Berenguier
+ * @author Aurelien Naldi
  * @since January 2009
  */
-public abstract class GraphComparator<V, E extends Edge<V>, G extends Graph<V,E>> {
+public abstract class GraphComparator<V, E extends Edge<V>, G extends Graph<V,E>> extends AbstractTask<GraphComparatorResult<V,E,G>> {
 	
 	public final G graph_new;
 	public final G graph_1;
 	public final G graph_2;
 
-	public static Color SPECIFIC_G1_COLOR = new Color(0, 255, 0); //green
-	public static Color SPECIFIC_G2_COLOR = new Color(255, 0, 0); //red
-	public static Color COMMON_COLOR = new Color(51, 153, 255);   //blue
-	private GraphComparatorResult result;
+	protected GraphComparatorResult<V,E,G> result;
 
 	protected GraphComparator(G g1, G g2, G g_new) {
         this.graph_1 = g1;
@@ -33,16 +34,17 @@ public abstract class GraphComparator<V, E extends Edge<V>, G extends Graph<V,E>
             throw new RuntimeException("Invalid parameters for GraphComparator");
         }
 
-		result = new GraphComparatorResult(g1, g2, g_new);
+		result = new GraphComparatorResult<V, E, G>(g1, g2, g_new);
 	}
 
-	/**
-	 * Build the basic topology for the diff graph (node+edges) by calling others functions
-	 *  1) addNodesFromGraph on both graphs
-	 *  2) setNodesColor
-	 *  3) addEdgesFromGraph on each node on both graphs
-	 */
-	public GraphComparatorResult buildDiffGraph() {
+    /**
+     * Build the basic topology for the diff graph (node+edges) by calling others functions
+     *  1) addNodesFromGraph on both graphs
+     *  2) setNodesColor
+     *  3) addEdgesFromGraph on each node on both graphs
+     */
+    @Override
+    protected GraphComparatorResult<V,E,G> doGetResult() throws Exception {
 		log("Comparing graphs : \n");
 		setDiffGraphName();
 		log("\n");
@@ -85,6 +87,9 @@ public abstract class GraphComparator<V, E extends Edge<V>, G extends Graph<V,E>
         }
 
 		log("\n");
+
+        doSpecialisedComparison();
+
 		return result;
 	}
 
@@ -194,6 +199,5 @@ public abstract class GraphComparator<V, E extends Edge<V>, G extends Graph<V,E>
 	public void log(Object o) {
 		result.getLog().append(o);
 	}
-
 
 }

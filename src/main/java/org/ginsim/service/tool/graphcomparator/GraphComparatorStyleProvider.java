@@ -18,6 +18,12 @@ public class GraphComparatorStyleProvider implements StyleProvider {
     private final ComparatorEdgeStyle edgeStyle;
     private final StyleManager manager;
 
+    public static final Color SPEC_FIRST = Color.RED;
+    public static final Color SPEC_SECOND = Color.GREEN;
+    public static final Color CHANGED = Color.CYAN;
+    public static final Color META_CHANGED = Color.BLUE;
+    public static final Color IDENTICAL = Color.WHITE;
+
     GraphComparatorStyleProvider(Graph graph, GraphComparatorResult cmpResult) {
         this.manager = graph.getStyleManager();
         this.edgeStyle = new ComparatorEdgeStyle(manager.getDefaultEdgeStyle(), cmpResult.comparedEdges);
@@ -64,14 +70,20 @@ class ComparatorNodeStyle extends NodeStyleOverride {
         }
 
         if (info.first == null) {
-            return Color.GREEN;
+            return GraphComparatorStyleProvider.SPEC_SECOND;
         }
 
         if (info.second == null) {
-            return Color.RED;
+            return GraphComparatorStyleProvider.SPEC_FIRST;
         }
 
-        // TODO: also highlight differences
+        if (info.changed) {
+            return GraphComparatorStyleProvider.CHANGED;
+        }
+
+        if (info.metaChanged) {
+            return GraphComparatorStyleProvider.META_CHANGED;
+        }
 
         return Color.WHITE;
     }
@@ -95,14 +107,20 @@ class ComparatorEdgeStyle extends EdgeStyleOverride {
         }
 
         if (info.first == null) {
-            return Color.GREEN;
+            return GraphComparatorStyleProvider.SPEC_SECOND;
         }
 
         if (info.second == null) {
-            return Color.RED;
+            return GraphComparatorStyleProvider.SPEC_FIRST;
         }
 
-        // TODO: also highlight differences
+        if (info.changed) {
+            return GraphComparatorStyleProvider.CHANGED;
+        }
+
+        if (info.metaChanged) {
+            return GraphComparatorStyleProvider.META_CHANGED;
+        }
 
         return Color.BLACK;
     }

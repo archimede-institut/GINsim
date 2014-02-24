@@ -25,8 +25,7 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterLis
  * @since January 2009
  */
 public class RegulatoryGraphComparator extends GraphComparator<RegulatoryNode, RegulatoryMultiEdge, RegulatoryGraph> {
-	public static final Color COMMON_COLOR_DIFF_FUNCTIONS = new Color(0, 0, 255);
-	public static final Color COMMON_COLOR_DIFF_MAXVALUES = new Color(115, 194, 220);
+
 	/**
 	 * indicates if the node order of both graph is the same.
 	 */
@@ -84,10 +83,38 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryNode, R
 
     @Override
     protected void doSpecialisedComparison() {
-        // TODO: here comes the tricky part
 
+        // TODO: also compare annotations
 
-        // compare functions, maxvalues, annotations...
+        for (ComparedItemInfo<RegulatoryNode> info: result.comparedNodes.values()) {
+            if (info.first == null || info.second == null) {
+                continue;
+            }
+
+            if (info.first.getMaxValue() != info.second.getMaxValue()) {
+                info.changed = true;
+            } else {
+                info.changed = compareLogicalFunction(info.first, info.second);
+            }
+        }
+
+        for (ComparedItemInfo<RegulatoryMultiEdge> info: result.comparedEdges.values()) {
+            if (info.first == null || info.second == null) {
+                continue;
+            }
+
+            if (info.first.getEdgeCount() != info.second.getEdgeCount()) {
+                info.changed = true;
+            } else {
+                for (int i=0 ; i<info.first.getEdgeCount() ; i++) {
+                    if ( (info.first.getMax(i) != info.second.getMax(i)) ||
+                         (info.first.getSign(i) != info.second.getSign(i))) {
+                        info.changed = true;
+                        break;
+                    }
+                }
+            }
+        }
     }
 
 
@@ -156,6 +183,7 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryNode, R
 	}
 */
 
+/*
 	private String compareNodes(RegulatoryNode v, RegulatoryNode v1, RegulatoryNode v2, Color[] color) {
 		String comment = "";
 		if (!v1.getName().equals(v2.getName())) {
@@ -177,28 +205,22 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryNode, R
 			comment += "   max values are different : "+mv1+" and "+mv2+"\n";
 			color[0] = COMMON_COLOR_DIFF_MAXVALUES;
 		} else if (sameNodeOrder) {
-            comment += compareLogicalFunction(v1, v2, color); //Compare logical function only if they have the same maxValue.
+            comment += compareLogicalFunction(v1, v2); //Compare logical function only if they have the same maxValue.
         }
 		return comment;
 	}
-
+*/
 	
 	/**
 	 * Compare the logical function of node 'v1' and 'v2'.
 	 * @param v1 
 	 * @param v2
 	 */
-	private String compareLogicalFunction(RegulatoryNode v1, RegulatoryNode v2, Color[] color) {
-		String comment = "";
+	private boolean compareLogicalFunction(RegulatoryNode v1, RegulatoryNode v2) {
         int mdd1 = v1.getMDD(graph_1, ddmanager1);
         int mdd2 = v2.getMDD(graph_2, ddmanager2);
 
-		if (!ddcomparator.similar(mdd1, mdd2)) {
-            // FIXME: print detailed MDDs ?
-			comment = "   logical functions are different\n";
-			color[0] = COMMON_COLOR_DIFF_FUNCTIONS;
-		}
-		return comment;
+		return !ddcomparator.similar(mdd1, mdd2);
 	}
 
 	/**

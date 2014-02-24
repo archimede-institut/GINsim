@@ -5,6 +5,8 @@ package org.ginsim.service.tool.graphcomparator;
  */
 public class ComparedItemInfo<T> {
     public final T item, first, second;
+    public boolean changed= false;
+    public boolean metaChanged = false;
 
     public ComparedItemInfo(T item, T first, T second) {
         this.item = item;

@@ -85,13 +85,16 @@ public class TestGraphComparator {
  */
 
 	public void compareGraph(GraphComparator gc, int vertexCount, int edgesCount) {
-		gc.buildDiffGraph();
+        try {
+            GraphComparatorResult result = (GraphComparatorResult)gc.call();
 
-		int diffNodeCount = gc.getDiffGraph().getNodeCount();
-		Assert.assertTrue("Wrong number of vertex in the diff graph.("+diffNodeCount+" out of "+vertexCount+")", diffNodeCount == vertexCount);
-		int diffEdgesCount = countEdges(gc);
-		Assert.assertTrue("Wrong number of edges in the diff graph.("+diffEdgesCount+" out of "+edgesCount+")", diffEdgesCount == edgesCount);
-		
+            int diffNodeCount = result.getDiffGraph().getNodeCount();
+            Assert.assertTrue("Wrong number of vertex in the diff graph.("+diffNodeCount+" out of "+vertexCount+")", diffNodeCount == vertexCount);
+            int diffEdgesCount = countEdges(gc);
+            Assert.assertTrue("Wrong number of edges in the diff graph.("+diffEdgesCount+" out of "+edgesCount+")", diffEdgesCount == edgesCount);
+        } catch (Exception e) {
+            throw new RuntimeException("Graph comparison failed");
+        }
 	}
 		
 	public void printNodesMap(HashMap vm) {

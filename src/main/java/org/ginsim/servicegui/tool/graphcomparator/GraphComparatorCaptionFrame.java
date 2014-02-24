@@ -9,8 +9,6 @@ import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.HashMap;
-import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -23,20 +21,10 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.ginsim.common.application.Txt;
-import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
-import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.EdgePattern;
-import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.graph.view.NodeBorder;
-import org.ginsim.core.graph.view.css.CascadingStyleSheetManager;
-import org.ginsim.core.graph.view.css.CSSEdgeStyle;
-import org.ginsim.core.graph.view.css.CSSNodeStyle;
-import org.ginsim.core.graph.view.css.CSSStyle;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.service.tool.graphcomparator.GraphComparator;
 import org.ginsim.service.tool.graphcomparator.GraphComparatorResult;
-import org.ginsim.service.tool.graphcomparator.RegulatoryGraphComparator;
+import org.ginsim.service.tool.graphcomparator.GraphComparatorStyleProvider;
 
 
 public class GraphComparatorCaptionFrame extends JFrame implements ActionListener {
@@ -45,17 +33,12 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 	private JPanel mainPanel;
 	private JTextArea resultsPane;
 	private JRadioButton diffColor, specG1Color, specG2Color, intersectColor, exclusionColor, fusionColor1, fusionColor2;
-	private CascadingStyleSheetManager cs;
 	private JButton automaticRoutingButton;
 	private GraphComparatorResult gcResult;
-	
-	private static final CSSEdgeStyle clearEdgeStyle = new CSSEdgeStyle(Color.black, null, CSSEdgeStyle.NULL_CURVE, 1);
-	private static final CSSNodeStyle clearNodeStyle = new CSSNodeStyle(Color.white, Color.gray, Color.gray, NodeBorder.SIMPLE, null);
 	
 	public GraphComparatorCaptionFrame(GraphComparatorResult gcResult) {
         this.g = gcResult.getDiffGraph();
         this.gcResult = gcResult;
-        this.cs = new CascadingStyleSheetManager(false);
         this.g.getStyleManager().setStyleProvider(gcResult.getStyleProvider());
 
         initialize();
@@ -134,7 +117,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		//COMMON_COLOR
 		c.gridy++;
 		JPanel p = new JPanel();
-		p.setBackground(GraphComparator.COMMON_COLOR);
+		p.setBackground(GraphComparatorStyleProvider.IDENTICAL);
 		p.setBorder(BorderFactory.createLineBorder(Color.black));
 		captionPanel.add(p, c);
 		
@@ -145,29 +128,29 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		c.gridx = 0;
 		c.gridy++;
 		p = new JPanel();
-		p.setBackground(RegulatoryGraphComparator.COMMON_COLOR_DIFF_MAXVALUES);
+		p.setBackground(GraphComparatorStyleProvider.CHANGED);
 		p.setBorder(BorderFactory.createLineBorder(Color.black));
 		captionPanel.add(p, c);
 		
 		c.gridx++;
-		captionPanel.add(new JLabel(Txt.t("STR_gcmp_diffmaxvalues")), c);
+		captionPanel.add(new JLabel(Txt.t("STR_gcmp_changed")), c);
 
 		//COMMON_COLOR_DIFF_FUNCTIONS
 		c.gridx = 0;
 		c.gridy++;
 		p = new JPanel();
-		p.setBackground(RegulatoryGraphComparator.COMMON_COLOR_DIFF_FUNCTIONS);
+		p.setBackground(GraphComparatorStyleProvider.META_CHANGED);
 		p.setBorder(BorderFactory.createLineBorder(Color.black));
 		captionPanel.add(p, c);
 		
 		c.gridx++;
-		captionPanel.add(new JLabel(Txt.t("STR_gcmp_difffunctions")), c);
+		captionPanel.add(new JLabel(Txt.t("STR_gcmp_metaChanged")), c);
 
 		//SPECIFIC_G1_COLOR
 		c.gridx = 0;
 		c.gridy++;
 		p = new JPanel();
-		p.setBackground(GraphComparator.SPECIFIC_G1_COLOR);
+		p.setBackground(GraphComparatorStyleProvider.SPEC_FIRST);
 		p.setBorder(BorderFactory.createLineBorder(Color.black));
 		captionPanel.add(p, c);
 		
@@ -178,7 +161,7 @@ public class GraphComparatorCaptionFrame extends JFrame implements ActionListene
 		c.gridx = 0;
 		c.gridy++;
 		p = new JPanel();
-		p.setBackground(GraphComparator.SPECIFIC_G2_COLOR);
+		p.setBackground(GraphComparatorStyleProvider.SPEC_SECOND);
 		p.setBorder(BorderFactory.createLineBorder(Color.black));
 		captionPanel.add(p, c);
 		
