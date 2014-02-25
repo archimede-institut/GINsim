@@ -218,6 +218,7 @@ public class GUIManager {
 		if (graphToGUIObject.size() == 0) {
 			noFrameLeft(false);
 		}
+		GraphManager.getInstance().close(graph);
 		return true;
 	}
 	
