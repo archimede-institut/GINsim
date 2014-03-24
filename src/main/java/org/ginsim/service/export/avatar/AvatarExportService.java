@@ -19,7 +19,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(Service.class)
 @Alias("Avatar")
-@ServiceStatus(EStatus.UNKNOWN)
+@ServiceStatus(EStatus.RELEASED)
 public class AvatarExportService implements Service {
 
 	public void run(AvatarConfig config, String filename) throws IOException, GsException {
