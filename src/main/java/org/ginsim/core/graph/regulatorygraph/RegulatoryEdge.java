@@ -48,7 +48,7 @@ public class RegulatoryEdge {
 		return me.getSource()+getStringThreshold(separator);
 	}
 	public String getLongInfo(String separator) {
-		return me.getSource()+separator+me.getTarget()+getStringIndex(separator);
+		return me.getSource()+separator+me.getTarget()+separator+threshold;
 	}
 	public String getShortDetail(String separator) {
 		return getShortInfo(":")+separator+getRangeAndSign();

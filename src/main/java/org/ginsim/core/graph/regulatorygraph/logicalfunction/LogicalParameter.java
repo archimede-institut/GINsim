@@ -277,7 +277,7 @@ public class LogicalParameter implements XMLize {
 		if (len != 0) {
 			String sEdges = "";
 			for (int i=0 ; i<len ; i++) {
-				RegulatoryEdge e = (RegulatoryEdge) edge_index.get(i);
+				RegulatoryEdge e = edge_index.get(i);
 				sEdges = sEdges + " " + e.getLongInfo(":");
 			}
     		out.addAttr("idActiveInteractions", sEdges);

@@ -336,9 +336,7 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 		    }	    
 		    // TODO: at some point stop saving logical parameters
 		 	LogicalParameterList lpl = this.getV_logicalParameters();
-		 	Iterator it = lpl.iterator();
-    	    while (it.hasNext()) {
-		 		LogicalParameter lp = (LogicalParameter) it.next();
+    	    for (LogicalParameter lp: lpl) {
 		 		if(lpl.isManual(lp))
 		 			 lp.toXML(out);		 			    
 		 	} 
