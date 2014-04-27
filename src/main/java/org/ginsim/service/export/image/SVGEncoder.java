@@ -123,10 +123,8 @@ public class SVGEncoder extends AbstractTask {
             out.addAttr("class", type);
         }
 
-        shape.getShape(x,y, w, h).toSVG(out);
-        out.addAttr("id", id + "_shape");
-        out.addAttr("class", "shape");
-        out.closeTag(); // shape
+        String[] attrs = {"id", id + "_shape", "class", "shape"};
+        shape.getShape(x,y, w, h).toSVG(out, attrs);
 
         out.openTag("text", new String[]{
                 " id", id + "_text",

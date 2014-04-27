@@ -1,7 +1,11 @@
 package org.ginsim;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,7 +132,28 @@ public class Launcher {
 		catch( IOException io){
 			System.out.println("TestRefactor.main() : Unable to initialize the debugger");
 		}
-		
+
+        // extend the classpath if needed
+        File extensionDir = new File(basedir, "extensions");
+        if (extensionDir.isDirectory()) {
+            FileFilter filter = new FileFilter() {
+                public boolean accept(File file) {return file.getPath().toLowerCase().endsWith(".jar");}
+            };
+            File[] files = extensionDir.listFiles();
+            try {
+                URL[] urls = new URL[files.length];
+                int i=0;
+                for (File f: files) {
+                    urls[i++] = f.toURI().toURL();
+                }
+
+                URLClassLoader ucl = new URLClassLoader(urls);
+                // TODO: pass this class loader to the service managers
+            } catch (IOException e) {
+                LogManager.error("Could not load extension files");
+            }
+        }
+
 		ServiceManager.getManager();
 	}
 	

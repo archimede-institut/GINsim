@@ -21,12 +21,11 @@ public class SVGRectangle extends Rectangle implements SVGShape {
     @Override
     public void toSVG(SVGWriter out, String[] attrs) throws IOException {
 
-        String[] myAttrs = {
-                "width", ""+width,
-                "height", ""+height,
-                "x", ""+x,
-                "y", ""+y
-        };
-        out.openTag("rect", myAttrs);
+        out.openTag("rect", attrs);
+        out.addAttr("width", ""+width);
+        out.addAttr("height", ""+height);
+        out.addAttr("x", ""+x);
+        out.addAttr("y", ""+y);
+        out.closeTag();
     }
 }
