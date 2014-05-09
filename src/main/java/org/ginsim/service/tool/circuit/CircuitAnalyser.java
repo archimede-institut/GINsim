@@ -1,6 +1,7 @@
 package org.ginsim.service.tool.circuit;
 
 import org.colomoto.common.task.AbstractTask;
+import org.colomoto.mddlib.MDDManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
@@ -50,4 +51,9 @@ public class CircuitAnalyser extends AbstractTask<List<CircuitDescrInTree>> {
 
         return circuits;
     }
+
+    public MDDManager getManager() {
+        return algo.getManager();
+    }
+
 }
