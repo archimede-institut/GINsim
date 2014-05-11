@@ -23,6 +23,7 @@ public class NuSMVConfig implements NamedStateStore, PriorityDefinitionStore {
 	private Map<NamedState, Object> m_initStates;
 	private Map<NamedState, Object> m_input;
 
+	private boolean exportStableStates;
 	private PrioritySetDefinition priorities;
 	private int updatePolicy;
 	private Set<String> setFixedInputs;
@@ -31,12 +32,13 @@ public class NuSMVConfig implements NamedStateStore, PriorityDefinitionStore {
 	 * @param graph
 	 */
 	public NuSMVConfig(RegulatoryGraph graph) {
-		m_initStates = new HashMap<NamedState, Object>();
-		m_input = new HashMap<NamedState, Object>();
+		this.m_initStates = new HashMap<NamedState, Object>();
+		this.m_input = new HashMap<NamedState, Object>();
 		this.graph = graph;
 		this.model = graph.getModel();
-		updatePolicy = CFG_ASYNC; // Default update policy
+		this.updatePolicy = CFG_ASYNC; // Default update policy
 		this.setFixedInputs = new HashSet<String>();
+		this.exportStableStates = false; 
 	}
 
 	public void setUpdatePolicy() {
@@ -61,6 +63,14 @@ public class NuSMVConfig implements NamedStateStore, PriorityDefinitionStore {
 
 	public int getUpdatePolicy() {
 		return updatePolicy;
+	}
+	
+	public void setExportStableStates(boolean export) {
+		this.exportStableStates = export;
+	}
+	
+	public boolean exportStableStates() {
+		return this.exportStableStates;
 	}
 
 	public Map<NamedState, Object> getInitialState() {

@@ -1,15 +1,15 @@
 package org.ginsim.servicegui.export.nusmv;
 
 import java.awt.BorderLayout;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.colomoto.logicalmodel.LogicalModel;
@@ -33,6 +33,8 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 	private PrioritySelectionPanel priorityPanel;
 	private InitialStatePanel initPanel;
 	private List<JCheckBox> listCTLFixedInputs;
+	private JCheckBox mcCheckBox;
+	private boolean hasInputs;
 
 	public NuSMVExportConfigPanel(NuSMVConfig config, NuSMVExportAction action) {
 		super(config.getGraph(), null, Txt.t("STR_NuSMV"), 600, 400);
@@ -40,6 +42,7 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 		setUserID(Txt.t("STR_NuSMV"));
 		this.config = config;
 		this.action = action;
+		this.hasInputs = false;
 
 		// NORTH begin
 		mainPanel = new JPanel(new BorderLayout());
@@ -53,36 +56,62 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 		// CENTER begin
 		initPanel = new InitialStatePanel(config.getGraph(), true);
 		initPanel.setParam(config);
-		initPanel.setMessage(Txt.t("STR_NuSMV_Checked"));
+		// initPanel.setMessage(Txt.t("STR_NuSMV_Checked"));
 		mainPanel.add(initPanel, BorderLayout.CENTER);
 
 		// SOUTH begin
-		JPanel bottomPanel = new JPanel();
-		bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.PAGE_AXIS));
+		JPanel bottomPanel = new JPanel(new BorderLayout());
 
-		JTextArea jtaCTL = new JTextArea();
-		jtaCTL.setBackground(mainPanel.getBackground());
-		jtaCTL.setLineWrap(true);
-		jtaCTL.setEditable(false);
-		jtaCTL.setFont(new Font("Default", Font.BOLD, 12));
-		jtaCTL.setText("Input components selected below will be: fixed during the verification; "
-				+ "part of the state description; have an initial state.\n"
-				+ "Non selected input components can only be restricted by ARCTL operators, "
-				+ "otherwise they will freely vary.");
-		bottomPanel.add(jtaCTL);
-
-		JPanel inputsPanel = new JPanel(new FlowLayout());
-		JLabel label = new JLabel("Inputs: ");
-		inputsPanel.add(label);
-		this.listCTLFixedInputs = new ArrayList<JCheckBox>();
 		for (NodeInfo node : this.config.getModel().getNodeOrder()) {
 			if (node.isInput()) {
-				JCheckBox jcb = new JCheckBox(node.getNodeID());
-				inputsPanel.add(jcb);
-				this.listCTLFixedInputs.add(jcb);
+				this.hasInputs = true;
+				break;
 			}
 		}
-		bottomPanel.add(inputsPanel);
+
+		if (this.hasInputs) {
+			JPanel stateInputsPanel = new JPanel(new BorderLayout());
+			stateInputsPanel.setBorder(BorderFactory.createCompoundBorder(
+					BorderFactory.createTitledBorder("State inputs"),
+					stateInputsPanel.getBorder()));
+
+			JTextArea jtaCTL = new JTextArea();
+			jtaCTL.setBackground(mainPanel.getBackground());
+			jtaCTL.setLineWrap(true);
+			jtaCTL.setEditable(false);
+			jtaCTL.setFont(new Font("Default", Font.BOLD, 12));
+			jtaCTL.setText("Selected inputs will be part of the state, fixed with a user defined initial state.\n"
+					+ "Non selected input components will freely vary, unless restricted by ARCTL operators.");
+			stateInputsPanel.add(jtaCTL, BorderLayout.NORTH);
+
+			JPanel fixInputsPanel = new JPanel();
+			fixInputsPanel.setLayout(new BoxLayout(fixInputsPanel,
+					BoxLayout.LINE_AXIS));
+			this.listCTLFixedInputs = new ArrayList<JCheckBox>();
+			for (NodeInfo node : this.config.getModel().getNodeOrder()) {
+				if (node.isInput()) {
+					JCheckBox jcb = new JCheckBox(node.getNodeID());
+					fixInputsPanel.add(jcb);
+					this.listCTLFixedInputs.add(jcb);
+				}
+			}
+			JScrollPane fixInputsScroll = new JScrollPane(fixInputsPanel,
+					JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+					JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
+			stateInputsPanel.add(fixInputsScroll, BorderLayout.SOUTH);
+			fixInputsScroll.setBorder(BorderFactory.createEmptyBorder());
+
+			bottomPanel.add(stateInputsPanel, BorderLayout.NORTH);
+		}
+
+		JPanel ssPanel = new JPanel(new BorderLayout());
+		ssPanel.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createTitledBorder("Stable states"),
+				ssPanel.getBorder()));
+		mcCheckBox = new JCheckBox(
+				"Compute the stable states and include them in the export (can take some time!)");
+		ssPanel.add(mcCheckBox, BorderLayout.LINE_START);
+		bottomPanel.add(ssPanel, BorderLayout.SOUTH);
 
 		mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 		setMainPanel(mainPanel);
@@ -91,11 +120,14 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 	@Override
 	public void run(LogicalModel model) {
 		config.updateModel(model);
-		for (JCheckBox jcb : this.listCTLFixedInputs) {
-			if (jcb.isSelected()) {
-				config.addFixedInput(jcb.getText());
+		if (this.hasInputs) {
+			for (JCheckBox jcb : this.listCTLFixedInputs) {
+				if (jcb.isSelected()) {
+					config.addFixedInput(jcb.getText());
+				}
 			}
 		}
+		config.setExportStableStates(this.mcCheckBox.isSelected());
 		action.selectFile();
 		cancel();
 	}

@@ -80,7 +80,7 @@ public class NuSMVEncoder {
 		out.write("-- NuSMV implicit representation of a logical model exported by GINsim\n");
 		out.write("-- Requires NuSMV v2.1+ for CTL properties\n");
 		out.write("-- Requires NuSMV-ARCTL for ARCTL properties\n");
-		out.write("   -- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE\n");
+		out.write("-- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE\n");
 		out.write("\n\nMODULE main\n");
 
 		LogicalModel model = config.getModel();
@@ -143,7 +143,7 @@ public class NuSMVEncoder {
 				PriorityClass pc = (PriorityClass) priorities.get(i);
 				if (i > 0)
 					out.write(", ");
-				sTmp = "PC_" + pc.getName();
+				sTmp = "PC_" + pc.getName().replaceAll("\\s+", "");
 				out.write(sTmp);
 				tmPcNum2Name.put(i + 1, sTmp);
 			}
@@ -158,9 +158,9 @@ public class NuSMVEncoder {
 				switch (iaTmp[i][1]) {
 				case 0: // Synchronous
 					for (int j = 2; j < iaTmp[i].length; j += 2) {
-						sTmp += "_"
-								+ avoidNuSMVNames(aNodeOrder[iaTmp[i][j]]
-										.getNodeID());
+						int f = iaTmp[i][j];
+						String s = aNodeOrder[f].getNodeID();
+						sTmp += "_" + avoidNuSMVNames(s);
 						Integer[] aiSplits = (tmVarNum2PcNum
 								.containsKey(iaTmp[i][j])) ? tmVarNum2PcNum
 								.get(iaTmp[i][j]) : new Integer[] { 0, 0, 0 };
@@ -236,17 +236,21 @@ public class NuSMVEncoder {
 			break;
 		}
 
-		out.write("\n-- Input variables declaration\n");
-		for (int i = 0; i < coreNodes.size(); i++) {
-			if (coreNodes.get(i).isInput()
-					&& !config.hasFixedInput(coreNodes.get(i).getNodeID())) {
-				String s_levels = "0";
-				for (int j = 1; j <= coreNodes.get(i).getMax(); j++)
-					s_levels += ", " + j;
-				out.write("  " + avoidNuSMVNames(coreNodes.get(i).getNodeID())
-						+ " : { " + s_levels + "};\n");
+		if (hasInputVars) {
+			out.write("\n-- Input variables declaration\n");
+			for (int i = 0; i < coreNodes.size(); i++) {
+				if (coreNodes.get(i).isInput()
+						&& !config.hasFixedInput(coreNodes.get(i).getNodeID())) {
+					String s_levels = "0";
+					for (int j = 1; j <= coreNodes.get(i).getMax(); j++)
+						s_levels += ", " + j;
+					out.write("  "
+							+ avoidNuSMVNames(coreNodes.get(i).getNodeID())
+							+ " : { " + s_levels + "};\n");
+				}
 			}
 		}
+		
 		out.write("\nVAR\n");
 		for (int i = 0; i < coreNodes.size(); i++) {
 			if (!coreNodes.get(i).isInput()
@@ -457,9 +461,15 @@ public class NuSMVEncoder {
 		out.write("\n-- DISCLAIMER: There are no INput nor OUTput variables ");
 		out.write("in the weak/strong stable states description\n");
 		out.write("stableStates := weakSS | strongSS;\n\n");
-		out.write("-- Weak stable states differing only on input variables ");
-		out.write("will not be distinguished !!");
-		out.write(writeStableStates(model));
+		if (config.exportStableStates()) {
+			out.write("-- Weak stable states differing only on input variables ");
+			out.write("will not be distinguished !!");
+			out.write(writeStableStates(model));
+		} else {
+			out.write("-- ATTENTION: This export does not include the stable states enumeration");
+			out.write("\nweakSS := FALSE;");
+			out.write("\nstrongSS := FALSE;\n");
+		}
 
 		out.write("\n");
 		out.write("-- Declaration of output variables\n");
