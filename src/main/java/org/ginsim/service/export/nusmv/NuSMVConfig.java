@@ -1,7 +1,9 @@
 package org.ginsim.service.export.nusmv;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -21,18 +23,22 @@ public class NuSMVConfig implements NamedStateStore, PriorityDefinitionStore {
 	private Map<NamedState, Object> m_initStates;
 	private Map<NamedState, Object> m_input;
 
-    private PrioritySetDefinition priorities;
+	private boolean exportStableStates;
+	private PrioritySetDefinition priorities;
 	private int updatePolicy;
+	private Set<String> setFixedInputs;
 
 	/**
 	 * @param graph
 	 */
 	public NuSMVConfig(RegulatoryGraph graph) {
-		m_initStates = new HashMap<NamedState, Object>();
-		m_input = new HashMap<NamedState, Object>();
+		this.m_initStates = new HashMap<NamedState, Object>();
+		this.m_input = new HashMap<NamedState, Object>();
 		this.graph = graph;
 		this.model = graph.getModel();
-		updatePolicy = CFG_ASYNC; // Default update policy
+		this.updatePolicy = CFG_ASYNC; // Default update policy
+		this.setFixedInputs = new HashSet<String>();
+		this.exportStableStates = false; 
 	}
 
 	public void setUpdatePolicy() {
@@ -58,6 +64,14 @@ public class NuSMVConfig implements NamedStateStore, PriorityDefinitionStore {
 	public int getUpdatePolicy() {
 		return updatePolicy;
 	}
+	
+	public void setExportStableStates(boolean export) {
+		this.exportStableStates = export;
+	}
+	
+	public boolean exportStableStates() {
+		return this.exportStableStates;
+	}
 
 	public Map<NamedState, Object> getInitialState() {
 		return m_initStates;
@@ -75,14 +89,22 @@ public class NuSMVConfig implements NamedStateStore, PriorityDefinitionStore {
 		return model;
 	}
 
-    @Override
-    public PrioritySetDefinition getPriorityDefinition() {
-        return priorities;
-    }
+	public void addFixedInput(String nodeID) {
+		this.setFixedInputs.add(nodeID);
+	}
 
-    @Override
-    public void setPriorityDefinition(PrioritySetDefinition pcdef) {
-        this.priorities = pcdef;
-        setUpdatePolicy();
-    }
+	public boolean hasFixedInput(String nodeID) {
+		return this.setFixedInputs.contains(nodeID);
+	}
+
+	@Override
+	public PrioritySetDefinition getPriorityDefinition() {
+		return priorities;
+	}
+
+	@Override
+	public void setPriorityDefinition(PrioritySetDefinition pcdef) {
+		this.priorities = pcdef;
+		setUpdatePolicy();
+	}
 }

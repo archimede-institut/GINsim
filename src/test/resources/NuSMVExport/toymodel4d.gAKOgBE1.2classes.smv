@@ -1,5 +1,5 @@
--- October 30, 2012 3:56:56 PM WET
--- GINsim implicit representation for NuSMV
+-- May 12, 2014 12:27:23 AM WEST
+-- NuSMV implicit representation of a logical model exported by GINsim
 -- Requires NuSMV v2.1+ for CTL properties
 -- Requires NuSMV-ARCTL for ARCTL properties
 -- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE
@@ -15,6 +15,7 @@ IVAR
   PC_class_2_vars : { PC_class_2_gC, PC_class_2_gD };
 
 VAR
+
 -- Priority definition
   PCrank : { rank1_PC_class_1, rank2_PC_class_2 };
 
@@ -107,12 +108,9 @@ update_gD_OK := (PCs = PC_class_2) & (PC_class_2_vars = PC_class_2_gD) & (PCrank
 -- DISCLAIMER: There are no INput nor OUTput variables in the weak/strong stable states description
 stableStates := weakSS | strongSS;
 
--- Weak stable states differing only on input variables will not be distinguished !!
+-- ATTENTION: This export does not include the stable states enumeration
 weakSS := FALSE;
-
--- Strong stable states - for every valuation of input variables
-strongSS := strongSS1;
-strongSS1 := gA=0 & gB=1 & gC=0 & gD=-1;
+strongSS := FALSE;
 
 -- Declaration of output variables
 -- Empty !

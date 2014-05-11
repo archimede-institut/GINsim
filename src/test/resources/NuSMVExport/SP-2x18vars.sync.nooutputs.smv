@@ -1,5 +1,5 @@
--- November 22, 2012 11:58:32 AM WET
--- GINsim implicit representation for NuSMV
+-- May 12, 2014 12:34:39 AM WEST
+-- NuSMV implicit representation of a logical model exported by GINsim
 -- Requires NuSMV v2.1+ for CTL properties
 -- Requires NuSMV-ARCTL for ARCTL properties
 -- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE
@@ -14,6 +14,7 @@ IVAR
   PC_c1_vars : { PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_p_Dsh_a_Slp_p_Slp_a_Nkd_p_Nkd_a_Zw3_p_Zw3_a_Arm_p_Arm_a_En_p_En_a_Hh_p_Hh_a_Ci_p_Ci_a_Ciact_p_Ciact_a_Cirep_p_Cirep_a_Ptc_p_Ptc_a_Smo_p_Smo_a_Pka_p_Pka_a_Fu_p_Fu_a_SuFu_p_SuFu_a_Cos2_p_Cos2_a };
 
 VAR
+
 -- State variables declaration
   Pka_a : {0, 1, 2};
   Pka_p : {0, 1, 2};
@@ -684,14 +685,9 @@ update_Cos2_a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_Wg_p_Wg_a_Fz_p_Fz_a_Dsh_
 -- DISCLAIMER: There are no INput nor OUTput variables in the weak/strong stable states description
 stableStates := weakSS | strongSS;
 
--- Weak stable states differing only on input variables will not be distinguished !!
+-- ATTENTION: This export does not include the stable states enumeration
 weakSS := FALSE;
-
--- Strong stable states - for every valuation of input variables
-strongSS := strongSS1 | strongSS2 | strongSS3;
-strongSS1 := Wg_p=0 & Wg_a=2 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=0 & Slp_a=1 & Nkd_p=0 & Nkd_a=2 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=1 & En_a=0 & Hh_p=2 & Hh_a=2 & Ci_p=0 & Ci_a=1 & Ciact_p=0 & Ciact_a=2 & Cirep_p=0 & Cirep_a=0 & Ptc_p=0 & Ptc_a=2 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
-strongSS2 := Wg_p=2 & Wg_a=0 & Fz_p=1 & Fz_a=1 & Dsh_p=1 & Dsh_a=1 & Slp_p=1 & Slp_a=0 & Nkd_p=2 & Nkd_a=0 & Zw3_p=0 & Zw3_a=0 & Arm_p=1 & Arm_a=1 & En_p=0 & En_a=1 & Hh_p=2 & Hh_a=2 & Ci_p=1 & Ci_a=0 & Ciact_p=2 & Ciact_a=0 & Cirep_p=0 & Cirep_a=0 & Ptc_p=2 & Ptc_a=0 & Smo_p=2 & Smo_a=2 & Pka_p=0 & Pka_a=0 & Fu_p=1 & Fu_a=1 & SuFu_p=0 & SuFu_a=0 & Cos2_p=0 & Cos2_a=0;
-strongSS3 := Wg_p=0 & Wg_a=0 & Fz_p=0 & Fz_a=0 & Dsh_p=0 & Dsh_a=0 & Slp_p=0 & Slp_a=0 & Nkd_p=1 & Nkd_a=1 & Zw3_p=1 & Zw3_a=1 & Arm_p=0 & Arm_a=0 & En_p=0 & En_a=0 & Hh_p=0 & Hh_a=0 & Ci_p=1 & Ci_a=1 & Ciact_p=0 & Ciact_a=0 & Cirep_p=1 & Cirep_a=1 & Ptc_p=1 & Ptc_a=1 & Smo_p=0 & Smo_a=0 & Pka_p=2 & Pka_a=2 & Fu_p=0 & Fu_a=0 & SuFu_p=1 & SuFu_a=1 & Cos2_p=1 & Cos2_a=1;
+strongSS := FALSE;
 
 -- Declaration of output variables
 -- Empty !

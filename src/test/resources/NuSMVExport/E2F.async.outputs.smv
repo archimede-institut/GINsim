@@ -1,5 +1,5 @@
--- October 24, 2012 6:54:38 PM WEST
--- GINsim implicit representation for NuSMV
+-- May 11, 2014 10:35:37 PM WEST
+-- NuSMV implicit representation of a logical model exported by GINsim
 -- Requires NuSMV v2.1+ for CTL properties
 -- Requires NuSMV-ARCTL for ARCTL properties
 -- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE
@@ -10,23 +10,27 @@ MODULE main
 IVAR
 -- Simulation mode declaration --
 -- Asynchronous
-  PCs : { PC_c4, PC_c5, PC_c6, PC_c7, PC_c8, PC_c9, PC_c10, PC_c11, PC_c12, PC_c13, PC_c14, PC_c15, PC_c16, PC_c17, PC_c18, PC_c19 };
-  PC_c4_vars : { PC_c4_HRAS };
-  PC_c5_vars : { PC_c5_E2F1 };
-  PC_c6_vars : { PC_c6_E2F3 };
-  PC_c7_vars : { PC_c7_CyclinD1 };
-  PC_c8_vars : { PC_c8_CyclinE1 };
-  PC_c9_vars : { PC_c9_CyclinA };
-  PC_c10_vars : { PC_c10_CDC25A };
-  PC_c11_vars : { PC_c11_p16INK4a };
-  PC_c12_vars : { PC_c12_RB1 };
-  PC_c13_vars : { PC_c13_RBL2 };
-  PC_c14_vars : { PC_c14_p21CIP };
-  PC_c15_vars : { PC_c15_ATM };
-  PC_c16_vars : { PC_c16_CHEK1 };
-  PC_c17_vars : { PC_c17_MDM2 };
-  PC_c18_vars : { PC_c18_TP53 };
-  PC_c19_vars : { PC_c19_p14ARF };
+  PCs : { PC_c4, PC_c5, PC_c6, PC_c7, PC_c8, PC_c9, PC_c10, PC_c11, PC_c12, PC_c13, PC_c14, PC_c15, PC_c16, PC_c17, PC_c18, PC_c19, PC_c20, PC_c21, PC_c22, PC_c23 };
+  PC_c4_vars : { PC_c4_E2F1_Apoptosis };
+  PC_c5_vars : { PC_c5_Proliferation };
+  PC_c6_vars : { PC_c6_Growth_Arrest };
+  PC_c7_vars : { PC_c7_Senescence };
+  PC_c8_vars : { PC_c8_HRAS };
+  PC_c9_vars : { PC_c9_E2F1 };
+  PC_c10_vars : { PC_c10_E2F3 };
+  PC_c11_vars : { PC_c11_CyclinD1 };
+  PC_c12_vars : { PC_c12_CyclinE1 };
+  PC_c13_vars : { PC_c13_CyclinA };
+  PC_c14_vars : { PC_c14_CDC25A };
+  PC_c15_vars : { PC_c15_p16INK4a };
+  PC_c16_vars : { PC_c16_RB1 };
+  PC_c17_vars : { PC_c17_RBL2 };
+  PC_c18_vars : { PC_c18_p21CIP };
+  PC_c19_vars : { PC_c19_ATM };
+  PC_c20_vars : { PC_c20_CHEK1 };
+  PC_c21_vars : { PC_c21_MDM2 };
+  PC_c22_vars : { PC_c22_TP53 };
+  PC_c23_vars : { PC_c23_p14ARF };
 
 -- Input variables declaration
   DNAdamage : { 0, 1};
@@ -34,19 +38,24 @@ IVAR
   GrowthInhibitors : { 0, 1};
 
 VAR
+
 -- State variables declaration
   HRAS : {0, 1};
   p14ARF : {0, 1};
   ATM : {0, 1};
   CHEK1 : {0, 1};
+  E2F1_Apoptosis : {0, 1};
+  Proliferation : {0, 1};
   RBL2 : {0, 1};
   p16INK4a : {0, 1};
   CyclinD1 : {0, 1};
   E2F3 : {0, 1, 2};
+  Growth_Arrest : {0, 1};
   MDM2 : {0, 1};
   p21CIP : {0, 1};
   CDC25A : {0, 1};
   RB1 : {0, 1, 2};
+  Senescence : {0, 1};
   TP53 : {0, 1};
   CyclinA : {0, 1};
   CyclinE1 : {0, 1};
@@ -54,6 +63,30 @@ VAR
 
 ASSIGN
 -- Variable update if conditions are met
+next(E2F1_Apoptosis) := 
+  case
+    update_E2F1_Apoptosis_OK & (E2F1_Apoptosis_inc) : 1;
+    update_E2F1_Apoptosis_OK & (E2F1_Apoptosis_dec) : 0;
+    TRUE : E2F1_Apoptosis;
+  esac;
+next(Proliferation) := 
+  case
+    update_Proliferation_OK & (Proliferation_inc) : 1;
+    update_Proliferation_OK & (Proliferation_dec) : 0;
+    TRUE : Proliferation;
+  esac;
+next(Growth_Arrest) := 
+  case
+    update_Growth_Arrest_OK & (Growth_Arrest_inc) : 1;
+    update_Growth_Arrest_OK & (Growth_Arrest_dec) : 0;
+    TRUE : Growth_Arrest;
+  esac;
+next(Senescence) := 
+  case
+    update_Senescence_OK & (Senescence_inc) : 1;
+    update_Senescence_OK & (Senescence_dec) : 0;
+    TRUE : Senescence;
+  esac;
 next(HRAS) := 
   case
     update_HRAS_OK & (HRAS_inc) : 1;
@@ -153,6 +186,32 @@ next(p14ARF) :=
 
 DEFINE
 -- Variable next level regulation
+E2F1_Apoptosis_focal :=
+  case
+    (E2F1 = 2) & (TP53 = 1) : 1;
+    TRUE : 0;
+  esac;
+Proliferation_focal :=
+  case
+    (CyclinE1 = 0) & (CyclinA = 1) : 1;
+    (CyclinE1 = 1) : 1;
+    TRUE : 0;
+  esac;
+Growth_Arrest_focal :=
+  case
+    (RB1 = 0) & (RBL2 = 0) & (p21CIP = 1) : 1;
+    (RB1 = 0) & (RBL2 = 1) : 1;
+    (RB1 = 1) & (RBL2 = 0) & (p21CIP = 1) : 1;
+    (RB1 = 1) & (RBL2 = 1) : 1;
+    (RB1 = 2) : 1;
+    TRUE : 0;
+  esac;
+Senescence_focal :=
+  case
+    (p16INK4a = 0) & (RBL2 = 1) & (p21CIP = 1) & (TP53 = 1) : 1;
+    (p16INK4a = 1) & (p21CIP = 1) : 1;
+    TRUE : 0;
+  esac;
 HRAS_focal :=
   case
     (GrowthFactors = 1) : 1;
@@ -269,6 +328,22 @@ p14ARF_focal :=
     TRUE : 0;
   esac;
 
+E2F1_Apoptosis_inc := E2F1_Apoptosis_focal > E2F1_Apoptosis;
+E2F1_Apoptosis_dec := E2F1_Apoptosis_focal < E2F1_Apoptosis;
+E2F1_Apoptosis_std := E2F1_Apoptosis_focal = E2F1_Apoptosis;
+
+Proliferation_inc := Proliferation_focal > Proliferation;
+Proliferation_dec := Proliferation_focal < Proliferation;
+Proliferation_std := Proliferation_focal = Proliferation;
+
+Growth_Arrest_inc := Growth_Arrest_focal > Growth_Arrest;
+Growth_Arrest_dec := Growth_Arrest_focal < Growth_Arrest;
+Growth_Arrest_std := Growth_Arrest_focal = Growth_Arrest;
+
+Senescence_inc := Senescence_focal > Senescence;
+Senescence_dec := Senescence_focal < Senescence;
+Senescence_std := Senescence_focal = Senescence;
+
 HRAS_inc := HRAS_focal > HRAS;
 HRAS_dec := HRAS_focal < HRAS;
 HRAS_std := HRAS_focal = HRAS;
@@ -333,69 +408,43 @@ p14ARF_inc := p14ARF_focal > p14ARF;
 p14ARF_dec := p14ARF_focal < p14ARF;
 p14ARF_std := p14ARF_focal = p14ARF;
 
-update_HRAS_OK := (PCs = PC_c4) & (PC_c4_vars = PC_c4_HRAS);
-update_E2F1_OK := (PCs = PC_c5) & (PC_c5_vars = PC_c5_E2F1);
-update_E2F3_OK := (PCs = PC_c6) & (PC_c6_vars = PC_c6_E2F3);
-update_CyclinD1_OK := (PCs = PC_c7) & (PC_c7_vars = PC_c7_CyclinD1);
-update_CyclinE1_OK := (PCs = PC_c8) & (PC_c8_vars = PC_c8_CyclinE1);
-update_CyclinA_OK := (PCs = PC_c9) & (PC_c9_vars = PC_c9_CyclinA);
-update_CDC25A_OK := (PCs = PC_c10) & (PC_c10_vars = PC_c10_CDC25A);
-update_p16INK4a_OK := (PCs = PC_c11) & (PC_c11_vars = PC_c11_p16INK4a);
-update_RB1_OK := (PCs = PC_c12) & (PC_c12_vars = PC_c12_RB1);
-update_RBL2_OK := (PCs = PC_c13) & (PC_c13_vars = PC_c13_RBL2);
-update_p21CIP_OK := (PCs = PC_c14) & (PC_c14_vars = PC_c14_p21CIP);
-update_ATM_OK := (PCs = PC_c15) & (PC_c15_vars = PC_c15_ATM);
-update_CHEK1_OK := (PCs = PC_c16) & (PC_c16_vars = PC_c16_CHEK1);
-update_MDM2_OK := (PCs = PC_c17) & (PC_c17_vars = PC_c17_MDM2);
-update_TP53_OK := (PCs = PC_c18) & (PC_c18_vars = PC_c18_TP53);
-update_p14ARF_OK := (PCs = PC_c19) & (PC_c19_vars = PC_c19_p14ARF);
+update_E2F1_Apoptosis_OK := (PCs = PC_c4) & (PC_c4_vars = PC_c4_E2F1_Apoptosis);
+update_Proliferation_OK := (PCs = PC_c5) & (PC_c5_vars = PC_c5_Proliferation);
+update_Growth_Arrest_OK := (PCs = PC_c6) & (PC_c6_vars = PC_c6_Growth_Arrest);
+update_Senescence_OK := (PCs = PC_c7) & (PC_c7_vars = PC_c7_Senescence);
+update_HRAS_OK := (PCs = PC_c8) & (PC_c8_vars = PC_c8_HRAS);
+update_E2F1_OK := (PCs = PC_c9) & (PC_c9_vars = PC_c9_E2F1);
+update_E2F3_OK := (PCs = PC_c10) & (PC_c10_vars = PC_c10_E2F3);
+update_CyclinD1_OK := (PCs = PC_c11) & (PC_c11_vars = PC_c11_CyclinD1);
+update_CyclinE1_OK := (PCs = PC_c12) & (PC_c12_vars = PC_c12_CyclinE1);
+update_CyclinA_OK := (PCs = PC_c13) & (PC_c13_vars = PC_c13_CyclinA);
+update_CDC25A_OK := (PCs = PC_c14) & (PC_c14_vars = PC_c14_CDC25A);
+update_p16INK4a_OK := (PCs = PC_c15) & (PC_c15_vars = PC_c15_p16INK4a);
+update_RB1_OK := (PCs = PC_c16) & (PC_c16_vars = PC_c16_RB1);
+update_RBL2_OK := (PCs = PC_c17) & (PC_c17_vars = PC_c17_RBL2);
+update_p21CIP_OK := (PCs = PC_c18) & (PC_c18_vars = PC_c18_p21CIP);
+update_ATM_OK := (PCs = PC_c19) & (PC_c19_vars = PC_c19_ATM);
+update_CHEK1_OK := (PCs = PC_c20) & (PC_c20_vars = PC_c20_CHEK1);
+update_MDM2_OK := (PCs = PC_c21) & (PC_c21_vars = PC_c21_MDM2);
+update_TP53_OK := (PCs = PC_c22) & (PC_c22_vars = PC_c22_TP53);
+update_p14ARF_OK := (PCs = PC_c23) & (PC_c23_vars = PC_c23_p14ARF);
 
 -- DISCLAIMER: There are no INput nor OUTput variables in the weak/strong stable states description
 stableStates := weakSS | strongSS;
 
--- Weak stable states differing only on input variables will not be distinguished !!
-weakSS := weakSS1 | weakSS2 | weakSS3 | weakSS4 | weakSS5 | weakSS6 | weakSS7;
-weakSS1 := HRAS=1 & E2F1=0 & E2F3=1 & CyclinD1=0 & CyclinE1=0 & CyclinA=0 & CDC25A=0 & p16INK4a=1 & RB1=0 & RBL2=1 & p21CIP=1 & ATM=0 & CHEK1=0 & MDM2=0 & TP53=0 & p14ARF=0;
-weakSS2 := HRAS=1 & E2F1=1 & E2F3=1 & CyclinD1=1 & CyclinE1=1 & CyclinA=1 & CDC25A=1 & p16INK4a=0 & RB1=0 & RBL2=0 & p21CIP=0 & ATM=0 & CHEK1=0 & MDM2=0 & TP53=0 & p14ARF=1;
-weakSS3 := HRAS=0 & E2F1=0 & E2F3=0 & CyclinD1=0 & CyclinE1=0 & CyclinA=0 & CDC25A=0 & p16INK4a=0 & RB1=2 & RBL2=1 & p21CIP=0 & ATM=0 & CHEK1=0 & MDM2=0 & TP53=0 & p14ARF=0;
-weakSS4 := HRAS=1 & E2F1=1 & E2F3=1 & CyclinD1=0 & CyclinE1=1 & CyclinA=1 & CDC25A=1 & p16INK4a=1 & RB1=0 & RBL2=0 & p21CIP=0 & ATM=0 & CHEK1=0 & MDM2=0 & TP53=0 & p14ARF=1;
-weakSS5 := HRAS=0 & E2F1=0 & E2F3=0 & CyclinD1=0 & CyclinE1=0 & CyclinA=0 & CDC25A=0 & p16INK4a=0 & RB1=2 & RBL2=1 & p21CIP=1 & ATM=0 & CHEK1=0 & MDM2=0 & TP53=0 & p14ARF=0;
-weakSS6 := HRAS=0 & E2F1=0 & E2F3=0 & CyclinD1=0 & CyclinE1=0 & CyclinA=0 & CDC25A=0 & p16INK4a=1 & RB1=0 & RBL2=1 & p21CIP=1 & ATM=0 & CHEK1=0 & MDM2=0 & TP53=0 & p14ARF=0;
-weakSS7 := HRAS=1 & E2F1=0 & E2F3=0 & CyclinD1=0 & CyclinE1=0 & CyclinA=0 & CDC25A=0 & p16INK4a=0 & RB1=2 & RBL2=1 & p21CIP=1 & ATM=0 & CHEK1=0 & MDM2=0 & TP53=0 & p14ARF=0;
-
--- Strong stable states - for every valuation of input variables
+-- ATTENTION: This export does not include the stable states enumeration
+weakSS := FALSE;
 strongSS := FALSE;
 
 -- Declaration of output variables
-E2F1_Apoptosis :=
-  case
-    (E2F1 = 2) & (TP53 = 1) : 1;
-    TRUE : 0;
-  esac;
-Proliferation :=
-  case
-    (CyclinE1 = 0) & (CyclinA = 1) : 1;
-    (CyclinE1 = 1) : 1;
-    TRUE : 0;
-  esac;
-Growth_Arrest :=
-  case
-    (RB1 = 0) & (RBL2 = 0) & (p21CIP = 1) : 1;
-    (RB1 = 0) & (RBL2 = 1) : 1;
-    (RB1 = 1) & (RBL2 = 0) & (p21CIP = 1) : 1;
-    (RB1 = 1) & (RBL2 = 1) : 1;
-    (RB1 = 2) : 1;
-    TRUE : 0;
-  esac;
-Senescence :=
-  case
-    (p16INK4a = 0) & (RBL2 = 1) & (p21CIP = 1) & (TP53 = 1) : 1;
-    (p16INK4a = 1) & (p21CIP = 1) : 1;
-    TRUE : 0;
-  esac;
+-- Empty !
 
 -- Authorized NuSMV transitions
 TRANS
+next(E2F1_Apoptosis) != E2F1_Apoptosis |
+next(Proliferation) != Proliferation |
+next(Growth_Arrest) != Growth_Arrest |
+next(Senescence) != Senescence |
 next(HRAS) != HRAS |
 next(E2F1) != E2F1 |
 next(E2F3) != E2F3 |
