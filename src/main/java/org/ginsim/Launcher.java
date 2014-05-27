@@ -6,6 +6,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -114,7 +115,7 @@ public class Launcher {
 	 * Initialise GINsim core: detect the current directory, load services
 	 */
 	private static void init() {
-		String basedir = System.getProperty("user.dir");
+		String basedir = null;
 		
 		Class<?> cl = Launcher.class;
 		String clname = cl.getName().replace(".",	"/") + ".class";
@@ -124,8 +125,20 @@ public class Launcher {
 		} else if (path.startsWith("jar:file:")) {
 			File jar = new File(path.substring(9,  path.length() - clname.length() - 2));
 			basedir = jar.getParent();
-		}
-		
+        }
+
+        if (basedir != null) {
+            try {
+                basedir = URLDecoder.decode(basedir, "UTF-8");
+            } catch (Exception e) {
+                basedir = null;
+            }
+        }
+
+        if (basedir == null) {
+            basedir = System.getProperty("user.dir");
+        }
+
 		try{
 			LogManager.init( basedir, 2, false);
 		}
