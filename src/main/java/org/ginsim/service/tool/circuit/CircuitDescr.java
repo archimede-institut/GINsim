@@ -119,6 +119,8 @@ public class CircuitDescr {
             v_all.add(cdtree);
             if (algo.do_cleanup) {
             	t_context[sub] = algo.cleanupContext(context, t_circuit);
+            } else {
+                t_context[sub] = context;
             }
             t_mark[sub] = algo.score(t_context[sub]);
             t_sub[sub] = t_pos.clone();
