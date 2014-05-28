@@ -6,6 +6,7 @@ import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 import java.util.Set;
 
+import org.colomoto.logicalmodel.services.ExtensionLoader;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.ServiceClassInfo;
 
@@ -55,7 +56,7 @@ public class ServiceManager{
 	private ServiceManager(){
 		
 		
-        Iterator<Service> service_list = ServiceLoader.load( Service.class).iterator(); 
+        Iterator<Service> service_list = ExtensionLoader.iterator( Service.class);
         while (service_list.hasNext()) {
             try {
             	Service service = service_list.next();

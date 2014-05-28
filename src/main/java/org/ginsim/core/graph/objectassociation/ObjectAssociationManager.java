@@ -3,12 +3,11 @@ package org.ginsim.core.graph.objectassociation;
 import java.util.*;
 import java.util.Map.Entry;
 
+import org.colomoto.logicalmodel.services.ExtensionLoader;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.ServiceClassInfo;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.common.utils.IntrospectionUtils;
-import org.ginsim.core.graph.GraphFactory;
-import org.ginsim.core.service.Service;
 
 /**
  * The association manager can be used as proxy to retrieve or create associated objects.
@@ -33,7 +32,7 @@ public class ObjectAssociationManager {
 		specializedObjectManagers = new HashMap<Class, List<GraphAssociatedObjectManager>>();
 		objectsOfGraph = new HashMap<Graph, Map<String,Object>>();
 
-        Iterator<GraphAssociatedObjectManager> managers = ServiceLoader.load( GraphAssociatedObjectManager.class).iterator();
+        Iterator<GraphAssociatedObjectManager> managers = ExtensionLoader.iterator(GraphAssociatedObjectManager.class);
         while (managers.hasNext()) {
             try {
                 GraphAssociatedObjectManager mgr = managers.next();

@@ -9,6 +9,7 @@ import java.util.Set;
 
 import javax.swing.Action;
 
+import org.colomoto.logicalmodel.services.ExtensionLoader;
 import org.ginsim.Launcher;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.ServiceClassInfo;
@@ -48,7 +49,7 @@ public class ServiceGUIManager{
 	 */
 	private ServiceGUIManager(){
         
-        Iterator<ServiceGUI> service_list = ServiceLoader.load( ServiceGUI.class).iterator(); 
+        Iterator<ServiceGUI> service_list = ExtensionLoader.iterator(ServiceGUI.class);
         while (service_list.hasNext()) {
             try {
             	ServiceGUI service = service_list.next();

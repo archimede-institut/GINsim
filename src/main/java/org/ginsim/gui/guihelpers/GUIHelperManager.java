@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
+import org.colomoto.logicalmodel.services.ExtensionLoader;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.gui.service.GUIFor;
 
@@ -24,7 +25,7 @@ public class GUIHelperManager {
 	
 	private GUIHelperManager() {
 		
-        Iterator<GUIHelper> it_helpers = ServiceLoader.load( GUIHelper.class).iterator(); 
+        Iterator<GUIHelper> it_helpers = ExtensionLoader.iterator(GUIHelper.class);
         while (it_helpers.hasNext()) {
             try {
             	GUIHelper helper = it_helpers.next();

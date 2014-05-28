@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
+import org.colomoto.logicalmodel.services.ExtensionLoader;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.ServiceClassInfo;
@@ -22,7 +23,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.core.io.parser.GinmlParser;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.core.service.Service;
 
 
 /**
@@ -47,7 +47,7 @@ public class GraphManager {
      */
     private GraphManager(){
     	
-        Iterator<GraphFactory> factory_list = ServiceLoader.load( GraphFactory.class).iterator(); 
+        Iterator<GraphFactory> factory_list = ExtensionLoader.iterator(GraphFactory.class);
         while (factory_list.hasNext()) {
             try {
             	GraphFactory factory = factory_list.next();

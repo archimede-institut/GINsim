@@ -5,6 +5,7 @@ import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
+import org.colomoto.logicalmodel.services.ExtensionLoader;
 import org.ginsim.core.graph.Graph;
 
 /**
@@ -40,7 +41,7 @@ public class GraphGUIHelperFactory {
 	 */
 	private GraphGUIHelperFactory(){
 		
-        Iterator<GraphGUIHelper> helpers = ServiceLoader.load( GraphGUIHelper.class).iterator();
+        Iterator<GraphGUIHelper> helpers = ExtensionLoader.iterator(GraphGUIHelper.class);
         while (helpers.hasNext()) {
             try {
             	GraphGUIHelper<?,?,?> helper = helpers.next();
