@@ -25,7 +25,7 @@ import org.ginsim.service.tool.modelreduction.ReductionConfig;
 import org.ginsim.service.tool.modelreduction.ModelSimplifierConfigList;
 import org.ginsim.service.tool.modelreduction.ReductionConfigManager;
 import org.ginsim.service.tool.modelreduction.ReductionHolder;
-import org.ginsim.servicegui.tool.modelsimplifier.ReductionSelectionPanel;
+import org.ginsim.servicegui.tool.modelreduction.ReductionSelectionPanel;
 
 abstract public class LogicalModelActionDialog extends StackDialog implements ProgressListener, PerturbationHolder, ReductionHolder, ChangeListener {
 

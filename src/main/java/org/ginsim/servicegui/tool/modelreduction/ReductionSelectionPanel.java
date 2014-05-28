@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.modelsimplifier;
+package org.ginsim.servicegui.tool.modelreduction;
 
 import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;

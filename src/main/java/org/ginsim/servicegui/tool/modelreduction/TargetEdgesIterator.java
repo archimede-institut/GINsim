@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.modelsimplifier;
+package org.ginsim.servicegui.tool.modelreduction;
 
 import java.util.Collection;
 import java.util.HashSet;

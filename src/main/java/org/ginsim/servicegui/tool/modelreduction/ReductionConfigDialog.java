@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.modelsimplifier;
+package org.ginsim.servicegui.tool.modelreduction;
 
 import java.util.AbstractList;
 import java.util.List;
@@ -19,7 +19,7 @@ import org.ginsim.service.tool.modelreduction.ReconstructionTask;
 import org.ginsim.service.tool.modelreduction.ReductionLauncher;
 
 
-public class ModelSimplifierConfigDialog extends StackDialog implements ReductionLauncher, TaskListener {
+public class ReductionConfigDialog extends StackDialog implements ReductionLauncher, TaskListener {
 	private static final long	serialVersionUID	= 3618855894072951620L;
 
 	private final RegulatoryGraph graph;
@@ -31,7 +31,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements Reductio
 
     private boolean isRunning = false;
 	
-	ModelSimplifierConfigDialog(RegulatoryGraph graph) {
+	ReductionConfigDialog(RegulatoryGraph graph) {
 		super(graph, "modelSimplifier", 600, 500);
 		this.graph = graph;
 		setTitle("select nodes to remove");
@@ -90,12 +90,12 @@ public class ModelSimplifierConfigDialog extends StackDialog implements Reductio
 }
 
 
-class SimplifierConfigContentList extends AbstractList<NodeInfo> {
+class ReductionConfigContentList extends AbstractList<NodeInfo> {
 
     private final List<RegulatoryNode> nodeOrder;
     private ReductionConfig config;
 
-	SimplifierConfigContentList(List<RegulatoryNode> nodeOrder) {
+	ReductionConfigContentList(List<RegulatoryNode> nodeOrder) {
 		this.nodeOrder = nodeOrder;
 	}
 

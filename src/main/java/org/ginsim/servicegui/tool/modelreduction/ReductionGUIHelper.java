@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.modelsimplifier;
+package org.ginsim.servicegui.tool.modelreduction;
 
 import org.ginsim.gui.guihelpers.GUIHelper;
 import org.ginsim.gui.service.GUIFor;

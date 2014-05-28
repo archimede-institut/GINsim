@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.modelsimplifier;
+package org.ginsim.servicegui.tool.modelreduction;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
@@ -76,7 +76,7 @@ class ReductionPanelCompanion implements ListPanelCompanion<ReductionConfig, Mod
     private static final String EDIT = "edit";
     private static final String EMPTY = "empty";
 
-    private SimplifierConfigContentList ctlist = null;
+    private ReductionConfigContentList ctlist = null;
     private final ListEditionPanel<ReductionConfig, ModelSimplifierConfigList> editPanel;
     private final SimplifierConfigConfigurePanel panel;
 
@@ -90,7 +90,7 @@ class ReductionPanelCompanion implements ListPanelCompanion<ReductionConfig, Mod
 
     @Override
     public void setParentList(ModelSimplifierConfigList reductions) {
-        this.ctlist = new SimplifierConfigContentList(reductions.getNodeOrder());
+        this.ctlist = new ReductionConfigContentList(reductions.getNodeOrder());
         panel.setList(ctlist);
     }
 
@@ -109,7 +109,7 @@ class ReductionPanelCompanion implements ListPanelCompanion<ReductionConfig, Mod
 }
 
 
-class SimplifierConfigConfigurePanel extends ListPanel<NodeInfo, SimplifierConfigContentList> implements ChangeListener {
+class SimplifierConfigConfigurePanel extends ListPanel<NodeInfo, ReductionConfigContentList> implements ChangeListener {
 
 	private final JCheckBox checkbox;
     private ReductionConfig config;
@@ -142,7 +142,7 @@ class SimplifierConfigConfigurePanel extends ListPanel<NodeInfo, SimplifierConfi
 	}
 }
 
-class ReductionConfigHelper extends ListPanelHelper<NodeInfo, SimplifierConfigContentList> {
+class ReductionConfigHelper extends ListPanelHelper<NodeInfo, ReductionConfigContentList> {
 
     public static final ReductionConfigHelper HELPER = new ReductionConfigHelper();
 
@@ -161,7 +161,7 @@ class ReductionConfigHelper extends ListPanelHelper<NodeInfo, SimplifierConfigCo
     }
 
     @Override
-    public Object getValue(SimplifierConfigContentList list, NodeInfo node, int column) {
+    public Object getValue(ReductionConfigContentList list, NodeInfo node, int column) {
         if (column == 0) {
             return node;
         }
@@ -173,7 +173,7 @@ class ReductionConfigHelper extends ListPanelHelper<NodeInfo, SimplifierConfigCo
         return null;
     }
 
-    public boolean setValue(SimplifierConfigContentList list, int row, int column, Object value) {
+    public boolean setValue(ReductionConfigContentList list, int row, int column, Object value) {
         if (column != 1) {
             return false;
         }
