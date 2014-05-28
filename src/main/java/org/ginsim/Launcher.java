@@ -9,6 +9,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.colomoto.logicalmodel.services.Colomoto;
 import org.colomoto.logicalmodel.services.ExtensionLoader;
 import org.ginsim.common.application.CurrentOS;
 import org.ginsim.common.application.LogManager;
@@ -60,7 +61,12 @@ public class Launcher {
          *  - help
          */
         for (int i = 0; i < args.length; i++) {
-        	if (args[i].equals("-s")) {
+            if (args[i].equals("-lm")) {
+                String[] lmargs = new String[args.length-(i+1)];
+                System.arraycopy(args, i+1, lmargs, 0, lmargs.length);
+                Colomoto.main(lmargs);
+                return;
+            } else if (args[i].equals("-s")) {
         		ScriptLauncher script = new ScriptLauncher();
                 if (args.length == i+1) {
                 	script.help();
@@ -96,6 +102,7 @@ public class Launcher {
                 System.out.println("\t-s <file>: run \"script\" from <file>. Extra arguments are script arguments.");
                 System.out.println("\t-h:  display this message.");
                 System.out.println("\t--dev : enable the developer's options.");
+                System.out.println("\t-lm: LogicalModel mode: takes the same arguments as the LogicalModel conversion tool.");
                 return;
             }
         	

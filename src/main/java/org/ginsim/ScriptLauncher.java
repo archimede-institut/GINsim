@@ -129,6 +129,7 @@ public class ScriptLauncher {
             Py.getSystemState().path.add(0, dir.getAbsolutePath());
             PythonInterpreter pi = new PythonInterpreter();
             pi.set("gs", this);
+            pi.set("lm", new org.colomoto.logicalmodel.services.ScriptLauncher());
             pi.execfile(filename);
         } else {
 
@@ -137,6 +138,7 @@ public class ScriptLauncher {
             try {
                 ScriptEngine engine = ScriptEngineLoader.loadEngine(filename);
                 engine.put("gs", this);
+                engine.put("lm", new org.colomoto.logicalmodel.services.ScriptLauncher());
 
                 engine.eval(new java.io.FileReader(filename));
             } catch (Exception e) {
