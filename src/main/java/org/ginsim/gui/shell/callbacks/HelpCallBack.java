@@ -60,7 +60,7 @@ class HelpAction extends AbstractAction {
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		OpenUtils.openURI("http://www.ginsim.org/documentation");
+		OpenUtils.openURI("http://doc.ginsim.org/");
 	}
 }
 

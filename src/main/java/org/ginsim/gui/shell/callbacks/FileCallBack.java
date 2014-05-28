@@ -56,24 +56,31 @@ public class FileCallBack {
 		menu.add(new SaveAsAction(g));
 		menu.add(exportMenu);
 
-		menu.add(new JSeparator());
-		for (Action a: HelpCallBack.getActions()) {
-			menu.add(a);
-		}
-		JMenu support_menu = new JMenu( Txt.t("STR_Help_Support"));
-		menu.add( support_menu);
-		for (Action a: HelpCallBack.getSupportActions()) {
-			support_menu.add(a);
-		}
-		menu.add(support_menu);
-		
-		menu.add(new JSeparator());
-		menu.add(new CloseAction(g));
-		menu.add(new QuitAction());
-		
+        menu.add(new JSeparator());
+        menu.add(new CloseAction(g));
+
 		return menu;
 	}
-	
+
+    public static JMenu getMainMenu() {
+        JMenu menu = new JMenu( "GINsim");
+
+        for (Action a: HelpCallBack.getActions()) {
+            menu.add(a);
+        }
+        JMenu support_menu = new JMenu( Txt.t("STR_Help_Support"));
+        menu.add( support_menu);
+        for (Action a: HelpCallBack.getSupportActions()) {
+            support_menu.add(a);
+        }
+        menu.add(support_menu);
+
+        menu.add(new JSeparator());
+        menu.add(new QuitAction());
+
+        return menu;
+    }
+
 	public static Action getActionNew() {
 		return new NewAction();
 	}

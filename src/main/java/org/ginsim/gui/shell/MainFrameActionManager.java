@@ -87,6 +87,7 @@ public class MainFrameActionManager implements FrameActionManager {
 		// fill the menu bar
 		menubar.removeAll();
 		toolbar.removeAll();
+        menubar.add(FileCallBack.getMainMenu());
 		menubar.add( FileCallBack.getFileMenu(graph, importMenu, exportMenu));
 		// TODO: the file menu should add some stuff to the toolbar as well
 
