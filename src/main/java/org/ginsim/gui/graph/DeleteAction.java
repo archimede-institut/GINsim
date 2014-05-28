@@ -48,6 +48,7 @@ public class DeleteAction extends EditAction {
 		}
 		
 		selection.unselectAll();
+        gui.repaint();
 	}
 
 }

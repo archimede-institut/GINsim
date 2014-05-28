@@ -197,8 +197,12 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
      */ 
 	@Override
 	public boolean removeNode(V node) {
-		
-		return graphBackend.removeNode(node);
+        graphBackend.damage(node);
+        boolean ret = graphBackend.removeNode(node);
+        if (ret) {
+            fireGraphChange(GraphChangeType.NODEREMOVED, node);
+        }
+        return ret;
 	}
 
 	
