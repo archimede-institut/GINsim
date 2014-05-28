@@ -20,7 +20,6 @@ import org.ginsim.core.graph.view.style.StyleProperty;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.utils.data.GenericPropertyInfo;
 import org.ginsim.gui.utils.widgets.StatusTextField;
-import org.python.modules.math;
 
 public class StyleEditionPanel extends JPanel {
 
@@ -278,7 +277,7 @@ class ColorPropertyButton extends PropertyEditor<JButton> implements ActionListe
 		int g = c.getGreen();
 		int b = c.getBlue();
 		double brightness = r*r*.241  +  g*g*.691 + b*b*.068;
-		brightness = math.sqrt(brightness);
+		brightness = Math.sqrt(brightness);
 		
 		if (brightness > 200) {
 			component.setForeground(Color.BLACK);
