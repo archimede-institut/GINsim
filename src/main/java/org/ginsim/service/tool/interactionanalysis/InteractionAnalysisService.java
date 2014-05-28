@@ -13,7 +13,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor( Service.class)
 @Alias("interactions-analysis")
-@ServiceStatus(EStatus.DEVELOPMENT)
+@ServiceStatus(EStatus.RELEASED)
 public class InteractionAnalysisService implements Service {
 	
 	/**

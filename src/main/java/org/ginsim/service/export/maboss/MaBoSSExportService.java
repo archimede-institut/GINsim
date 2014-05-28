@@ -20,7 +20,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(Service.class)
 @Alias("maboss")
-@ServiceStatus(EStatus.DEVELOPMENT)
+@ServiceStatus(EStatus.RELEASED)
 public class MaBoSSExportService implements Service {
 
 	public void export(LogicalModel model, String filename) throws IOException {

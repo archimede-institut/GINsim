@@ -26,7 +26,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(MaBoSSExportService.class)
-@ServiceStatus( EStatus.DEVELOPMENT)
+@ServiceStatus( EStatus.RELEASED)
 public class MaBoSSExportServiceGUI extends AbstractServiceGUI {
 
 	@Override

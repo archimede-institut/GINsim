@@ -21,7 +21,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor(ServiceGUI.class)
 @GUIFor(InteractionAnalysisService.class)
-@ServiceStatus( EStatus.DEVELOPMENT)
+@ServiceStatus( EStatus.RELEASED)
 public class InteractionAnalysisServiceGUI extends AbstractServiceGUI {
 
 	@Override
