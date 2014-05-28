@@ -1,6 +1,5 @@
 package org.ginsim;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.colomoto.logicalmodel.services.ScriptEngineLoader;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
@@ -20,9 +20,7 @@ import org.ginsim.common.document.XHTMLDocumentWriter;
 import org.ginsim.common.utils.ServiceClassInfo;
 import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.GraphManager;
-import org.ginsim.core.graph.backend.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.Graph;
-import org.ginsim.core.graph.backend.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -30,13 +28,13 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
-import org.ginsim.core.graph.view.NodeBorder;
-import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceManager;
 import org.python.core.Py;
 import org.python.util.PythonInterpreter;
+
+import javax.script.ScriptEngine;
 
 /**
  * A helper when running GINsim in script mode.
@@ -75,13 +73,6 @@ public class ScriptLauncher {
         // init the option store
 		try {
 			OptionStore.init( ScriptLauncher.class.getPackage().getName());
-	    	OptionStore.getOption( EdgeAttributeReaderImpl.EDGE_COLOR, new Integer(-13395457));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_BG, new Integer(-26368));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_FG, new Integer(Color.WHITE.getRGB()));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_HEIGHT, new Integer(30));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_WIDTH, new Integer(55));
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_SHAPE, NodeShape.RECTANGLE.name());
-	    	OptionStore.getOption( NodeAttributeReaderImpl.VERTEX_BORDER, NodeBorder.SIMPLE.name());
 		} catch (Exception e) {
 			LogManager.error("Could not init the Option Store");
 		}
@@ -118,28 +109,41 @@ public class ScriptLauncher {
         }
 		
         initOptionStore();
+        if (filename.endsWith(".py")) {
+            // Explicit Jython support
 
-        // select a base directory for script files:
-        // the first parent of the selected script without a __init__.py file
-        File dir = f.getParentFile();
-        while (true) {
-        	File finit = new File(dir, "__init__.py");
-        	if (!finit.exists()) {
-        		break;
-        	}
-        	dir = dir.getParentFile();
+            // select a base directory for script files:
+            // the first parent of the selected script without a __init__.py file
+            File dir = f.getParentFile();
+            while (true) {
+                File finit = new File(dir, "__init__.py");
+                if (!finit.exists()) {
+                    break;
+                }
+                dir = dir.getParentFile();
+            }
+
+            // Create and set up python interpreter:
+            //  * add the selected folder to the classpath
+            //  * add a "gs" object pointing to this script launcher
+            Py.getSystemState().path.add(0, dir.getAbsolutePath());
+            PythonInterpreter pi = new PythonInterpreter();
+            pi.set("gs", this);
+            pi.execfile(filename);
+        } else {
+
+            // Generic scripting support through ScriptEngine
+            // This method also supports python scripts, but is slower and allows less tweaks
+            try {
+                ScriptEngine engine = ScriptEngineLoader.loadEngine(filename);
+                engine.put("gs", this);
+
+                engine.eval(new java.io.FileReader(filename));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
-        
-        // Create and set up python interpreter:
-        //  * add the selected folder to the classpath
-        //  * add a "gs" object pointing to this script launcher
-        Py.getSystemState().path.add(0, dir.getAbsolutePath());
-        PythonInterpreter pi = new PythonInterpreter();
-		pi.set("gs", this);
-		
-        // actually run the script
-        pi.execfile(filename);
-        
+
         // reset the running status: should not be needed but may be convenient later
         running = false;
 	}

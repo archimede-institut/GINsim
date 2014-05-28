@@ -2,7 +2,6 @@ package org.ginsim;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -10,6 +9,7 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.colomoto.logicalmodel.services.ExtensionLoader;
 import org.ginsim.common.application.CurrentOS;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OSXAdapter;
@@ -21,7 +21,6 @@ import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.ServiceGUIManager;
@@ -49,7 +48,8 @@ public class Launcher {
 	 * @throws ClassNotFoundException 
 	 */
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-		init();
+        ExtensionLoader.loadExtensions("extensions", Launcher.class);
+        init();
 		
         List<String> open = new ArrayList<String>();
 
