@@ -5,7 +5,7 @@ import java.util.List;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.service.tool.modelsimplifier.ReductionLauncher;
+import org.ginsim.service.tool.modelreduction.ReductionLauncher;
 
 /**
  * Implements a ReductionLauncher interface to recover the results of invoking
@@ -31,7 +31,7 @@ public class ReductionStub implements ReductionLauncher {
 	 * 
 	 *            (non-Javadoc)
 	 * 
-	 * @see org.ginsim.service.tool.modelsimplifier.ReductionLauncher#endSimu(org
+	 * @see org.ginsim.service.tool.modelreduction.ReductionLauncher#endSimu(org
 	 *      .ginsim.core.graph.common.Graph, java.lang.Exception)
 	 */
 	public void endSimu(Graph graph, Exception e) {
@@ -46,7 +46,7 @@ public class ReductionStub implements ReductionLauncher {
 	 * 
 	 * (non-Javadoc)
 	 * 
-	 * @see org.ginsim.service.tool.modelsimplifier.ReductionLauncher#
+	 * @see org.ginsim.service.tool.modelreduction.ReductionLauncher#
 	 *      showPartialReduction(java.util.List)
 	 */
 	@Override

@@ -15,7 +15,7 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ToolAction;
-import org.ginsim.service.tool.modelsimplifier.ModelSimplifierService;
+import org.ginsim.service.tool.modelreduction.ModelSimplifierService;
 import org.mangosdk.spi.ProviderFor;
 
 /**

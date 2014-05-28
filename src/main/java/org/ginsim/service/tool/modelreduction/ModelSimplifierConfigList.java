@@ -1,4 +1,4 @@
-package org.ginsim.service.tool.modelsimplifier;
+package org.ginsim.service.tool.modelreduction;
 
 import java.util.*;
 
@@ -16,13 +16,13 @@ import org.ginsim.core.utils.data.NamedList;
  * store all simplification parameters and offer a mean to access them.
  * Also deals with updating them when the graph is changed
  */
-public class ModelSimplifierConfigList extends NamedList<ModelSimplifierConfig>
+public class ModelSimplifierConfigList extends NamedList<ReductionConfig>
 	implements GraphListener<RegulatoryGraph>, UserSupporter {
 
     private String s_current;
     private RegulatoryGraph graph;
     private Set<String> outputStrippers = new HashSet<String>();
-    private Map<String, ModelSimplifierConfig> users = new HashMap<String, ModelSimplifierConfig>();
+    private Map<String, ReductionConfig> users = new HashMap<String, ReductionConfig>();
     
     public ModelSimplifierConfigList( RegulatoryGraph graph) {
     	
@@ -37,8 +37,8 @@ public class ModelSimplifierConfigList extends NamedList<ModelSimplifierConfig>
         GraphManager.getInstance().addGraphListener( this.graph, this);
     }
 
-	protected ModelSimplifierConfig doCreate(String name, int pos) {
-		ModelSimplifierConfig config = new ModelSimplifierConfig();
+	protected ReductionConfig doCreate(String name, int pos) {
+		ReductionConfig config = new ReductionConfig();
 		config.setName(name);
 		return config;
 	}
@@ -47,7 +47,7 @@ public class ModelSimplifierConfigList extends NamedList<ModelSimplifierConfig>
 	public GraphEventCascade graphChanged(RegulatoryGraph g,
 			GraphChangeType type, Object data) {
 		if (type == GraphChangeType.NODEREMOVED) {
-	    	for (ModelSimplifierConfig cfg: this) {
+	    	for (ReductionConfig cfg: this) {
 	    		cfg.m_removed.remove(data);
 	    	}
 		}
@@ -66,7 +66,7 @@ public class ModelSimplifierConfigList extends NamedList<ModelSimplifierConfig>
         return outputStrippers.contains(key);
     }
 
-    public void useReduction(String key, ModelSimplifierConfig reduction) {
+    public void useReduction(String key, ReductionConfig reduction) {
         if (reduction == null) {
             users.remove(key);
         } else {
@@ -74,7 +74,7 @@ public class ModelSimplifierConfigList extends NamedList<ModelSimplifierConfig>
         }
     }
 
-    public ModelSimplifierConfig getUsedReduction(String key) {
+    public ReductionConfig getUsedReduction(String key) {
         return users.get(key);
     }
 
@@ -95,7 +95,7 @@ public class ModelSimplifierConfigList extends NamedList<ModelSimplifierConfig>
     }
 
     public int create() {
-        ModelSimplifierConfig cfg = new ModelSimplifierConfig();
+        ReductionConfig cfg = new ReductionConfig();
         cfg.setName(findUniqueName("Reduction "));
 
         int pos = size();

@@ -1,4 +1,4 @@
-package org.ginsim.service.tool.modelsimplifier;
+package org.ginsim.service.tool.modelreduction;
 
 public enum RewiringAction {
 

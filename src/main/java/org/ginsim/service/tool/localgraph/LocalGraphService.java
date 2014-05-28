@@ -17,7 +17,7 @@ import org.mangosdk.spi.ProviderFor;
 
 @ProviderFor(Service.class)
 @Alias("localgraph")
-@ServiceStatus(EStatus.DEVELOPMENT)
+@ServiceStatus(EStatus.RELEASED)
 public class LocalGraphService implements Service {
 
 	public Map<RegulatoryMultiEdge, LocalGraphCategory> run(RegulatoryGraph graph,

@@ -13,10 +13,10 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
-import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
-import org.ginsim.service.tool.modelsimplifier.ReductionTask;
-import org.ginsim.service.tool.modelsimplifier.ReconstructionTask;
-import org.ginsim.service.tool.modelsimplifier.ReductionLauncher;
+import org.ginsim.service.tool.modelreduction.ReductionConfig;
+import org.ginsim.service.tool.modelreduction.ReductionTask;
+import org.ginsim.service.tool.modelreduction.ReconstructionTask;
+import org.ginsim.service.tool.modelreduction.ReductionLauncher;
 
 
 public class ModelSimplifierConfigDialog extends StackDialog implements ReductionLauncher, TaskListener {
@@ -27,7 +27,7 @@ public class ModelSimplifierConfigDialog extends StackDialog implements Reductio
 
     ReductionTask simplifier = null;
     ReconstructionTask reconstructionTask = null;
-    ModelSimplifierConfig config = null;
+    ReductionConfig config = null;
 
     private boolean isRunning = false;
 	
@@ -93,13 +93,13 @@ public class ModelSimplifierConfigDialog extends StackDialog implements Reductio
 class SimplifierConfigContentList extends AbstractList<NodeInfo> {
 
     private final List<RegulatoryNode> nodeOrder;
-    private ModelSimplifierConfig config;
+    private ReductionConfig config;
 
 	SimplifierConfigContentList(List<RegulatoryNode> nodeOrder) {
 		this.nodeOrder = nodeOrder;
 	}
 
-    public void setConfig(ModelSimplifierConfig config) {
+    public void setConfig(ReductionConfig config) {
         this.config = config;
     }
 

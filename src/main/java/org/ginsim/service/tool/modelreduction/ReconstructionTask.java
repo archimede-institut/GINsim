@@ -1,4 +1,4 @@
-package org.ginsim.service.tool.modelsimplifier;
+package org.ginsim.service.tool.modelreduction;
 
 import org.colomoto.common.task.AbstractTask;
 import org.colomoto.logicalmodel.LogicalModel;
@@ -48,7 +48,7 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
         this(reducedModel, graph, null);
     }
 
-	public ReconstructionTask(LogicalModel reducedModel, RegulatoryGraph graph, ModelSimplifierConfig config) {
+	public ReconstructionTask(LogicalModel reducedModel, RegulatoryGraph graph, ReductionConfig config) {
         this.graph = graph;
         this.newModel = reducedModel;
         if (config == null) {

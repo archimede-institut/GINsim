@@ -15,14 +15,14 @@ import org.mangosdk.spi.ProviderFor;
 @ServiceStatus(EStatus.DEVELOPMENT)
 public class PolytopesService implements Service {
 
-	
+
 	private Colorizer colorizer;
 	private DynamicGraph graph;
 
 	public PolytopesService() {
         setColorizer(new Colorizer(new PolytopesSelector()));
 	}
-	
+
 
 	public void run(DynamicGraph graph, String logical_formulae) throws ParseException {
         // FIXME: restore the polytope service
@@ -33,14 +33,14 @@ public class PolytopesService implements Service {
 		}
 	}
 
-	
+
 	private byte[] getChildCount(DynamicGraph graph) {
 		byte[] childsCount = new byte[graph.getNodeOrder().size()];
 		int i = 0;
 		for (NodeInfo v: graph.getNodeOrder()) {
 			childsCount[i++] = (byte) ( v.getMax()+1 );
-			
-		}	
+
+		}
 		return childsCount;
 	}
 
@@ -50,7 +50,7 @@ public class PolytopesService implements Service {
 		((PolytopesSelector)getColorizer().getSelector()).setCache(polytope);
         getColorizer().doColorize(graph);
 	}
-	
+
 	public void undoColorize() {
 		if (getColorizer() != null) getColorizer().undoColorize(graph);
 	}

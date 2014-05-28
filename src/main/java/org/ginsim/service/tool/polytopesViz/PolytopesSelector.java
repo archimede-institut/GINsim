@@ -14,16 +14,16 @@ public class PolytopesSelector extends Selector {
 	public static final String CAT_IN = "transient-trivial";
 	private static final String CAT_OUT = "terminal-trivial";
 	public static final String CAT_COMPLEX = "complex";
-	
+
 	public static final CSSNodeStyle STYLE_IN	= new CSSNodeStyle(Color.green.darker(), Color.black, Color.white, NodeBorder.SIMPLE, null);
 	public static final CSSNodeStyle STYLE_OUT	= new CSSNodeStyle(Color.red.darker(),   Color.black, Color.white, NodeBorder.SIMPLE, null);
-	
+
 	private StatesSet polytope;
-	
+
 	public PolytopesSelector() {
 		super(IDENTIFIER);
 	}
-	
+
 	@Override
 	public void resetDefaultStyle() {
 		addCategory(CAT_IN, (CSSStyle)STYLE_IN.clone());
@@ -39,21 +39,21 @@ public class PolytopesSelector extends Selector {
 		}
 		return "";
 	}
-	
+
 	@Override
 	public String getCategoryForEdge(Object obj) {
 		return null;
 	}
-	
+
 	@Override
 	public boolean respondToEdges() {
 		return false;
 	}
-	
+
 	public void setCache(StatesSet polytope) {
 		this.polytope = polytope;
 	}
-	
+
 	public void flushCache() {
 		this.polytope = null;
 	}

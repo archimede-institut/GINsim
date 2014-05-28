@@ -10,16 +10,16 @@ import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.utils.data.ListSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
-import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
-import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
-import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigManager;
-import org.ginsim.service.tool.modelsimplifier.ReductionHolder;
+import org.ginsim.service.tool.modelreduction.ReductionConfig;
+import org.ginsim.service.tool.modelreduction.ModelSimplifierConfigList;
+import org.ginsim.service.tool.modelreduction.ReductionConfigManager;
+import org.ginsim.service.tool.modelreduction.ReductionHolder;
 
 import java.awt.*;
 import java.util.List;
 
 
-public class ReductionSelectionPanel extends ListSelectionPanel<ModelSimplifierConfig> implements GraphGUIListener<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> {
+public class ReductionSelectionPanel extends ListSelectionPanel<ReductionConfig> implements GraphGUIListener<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> {
 	private static final long serialVersionUID = 1213902700181873169L;
 
 	private final RegulatoryGraph graph;
@@ -43,11 +43,11 @@ public class ReductionSelectionPanel extends ListSelectionPanel<ModelSimplifierC
         dialog.addTempPanel(panel);
 	}
 
-	public ModelSimplifierConfig getSelected() {
+	public ReductionConfig getSelected() {
 		return holder.getReduction();
 	}
 	
-	public void setSelected(ModelSimplifierConfig r) {
+	public void setSelected(ReductionConfig r) {
 		holder.setReduction(r);
 	}
 
@@ -67,11 +67,11 @@ public class ReductionSelectionPanel extends ListSelectionPanel<ModelSimplifierC
 	}
 
 	private ModelSimplifierConfigList getPerturbationsObject(boolean force) {
-		return (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, ModelSimplifierConfigManager.KEY, force);
+		return (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, ReductionConfigManager.KEY, force);
 	}
 	
 	@Override
-	protected List<ModelSimplifierConfig> getList() {
+	protected List<ReductionConfig> getList() {
         return getPerturbationsObject(false);
 	}
 }

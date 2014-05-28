@@ -1,4 +1,4 @@
-package org.ginsim.service.tool.modelsimplifier;
+package org.ginsim.service.tool.modelreduction;
 
 import java.io.IOException;
 import java.util.*;
@@ -13,7 +13,7 @@ import org.ginsim.core.utils.data.NamedObject;
 
 
 
-public class ModelSimplifierConfig implements NamedObject, XMLize {
+public class ReductionConfig implements NamedObject, XMLize {
 	private String name;
 	Annotation note = new Annotation();
 	Set<NodeInfo> m_removed = new HashSet<NodeInfo>();

@@ -11,8 +11,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.LogicalModelModifier;
-import org.colomoto.logicalmodel.perturbation.LogicalModelPerturbation;
 import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.callable.ProgressListener;
@@ -22,13 +20,11 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
-import org.ginsim.core.utils.data.ObjectStore;
 import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
-import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
-import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
-import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigManager;
-import org.ginsim.service.tool.modelsimplifier.ReductionHolder;
-import org.ginsim.servicegui.tool.modelsimplifier.ReductionGUIHelper;
+import org.ginsim.service.tool.modelreduction.ReductionConfig;
+import org.ginsim.service.tool.modelreduction.ModelSimplifierConfigList;
+import org.ginsim.service.tool.modelreduction.ReductionConfigManager;
+import org.ginsim.service.tool.modelreduction.ReductionHolder;
 import org.ginsim.servicegui.tool.modelsimplifier.ReductionSelectionPanel;
 
 abstract public class LogicalModelActionDialog extends StackDialog implements ProgressListener, PerturbationHolder, ReductionHolder, ChangeListener {
@@ -42,7 +38,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
     private final ReductionSelectionPanel reductionPanel;
 
 	private Perturbation perturbation = null;
-    private ModelSimplifierConfig reduction = null;
+    private ReductionConfig reduction = null;
 	private String userID = null;
 
 	private JPanel mainPanel = new JPanel(new GridBagLayout());
@@ -52,7 +48,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         super(parent, id, w, h);
         this.lrg = lrg;
         this.perturbations = (ListOfPerturbations)OManager.getObject(lrg, PerturbationManager.KEY, true);
-        this.reductions = (ModelSimplifierConfigList)OManager.getObject(lrg, ModelSimplifierConfigManager.KEY, true);
+        this.reductions = (ModelSimplifierConfigList)OManager.getObject(lrg, ReductionConfigManager.KEY, true);
         perturbationPanel = new PerturbationSelectionPanel(this, lrg, this);
         reductionPanel = new ReductionSelectionPanel(this, lrg, this);
         super.setMainPanel(getMainPanel());
@@ -132,7 +128,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	}
 
     @Override
-    public ModelSimplifierConfig getReduction() {
+    public ReductionConfig getReduction() {
         if (userID != null) {
             return reductions.getUsedReduction(userID);
         }
@@ -140,7 +136,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
     }
 
     @Override
-    public void setReduction(ModelSimplifierConfig reduction) {
+    public void setReduction(ReductionConfig reduction) {
         if (userID != null) {
             reductions.useReduction(userID, reduction);
         } else {

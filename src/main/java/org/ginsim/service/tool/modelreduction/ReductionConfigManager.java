@@ -1,4 +1,4 @@
-package org.ginsim.service.tool.modelsimplifier;
+package org.ginsim.service.tool.modelreduction;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -22,17 +22,17 @@ import org.xml.sax.SAXException;
  * Save/open simulation parameters along with the model.
  */
 @ProviderFor(GraphAssociatedObjectManager.class)
-public class ModelSimplifierConfigManager extends BasicGraphAssociatedManager {
+public class ReductionConfigManager extends BasicGraphAssociatedManager {
 
 	public static final String KEY = "modelSimplifier";
 	
-	public ModelSimplifierConfigManager() {
+	public ReductionConfigManager() {
 		super(KEY, null, RegulatoryGraph.class);
 	}
 	
     public Object doOpen(InputStream is, Graph graph) throws GsException {
     	
-        ModelSimplifierConfigParser parser = new ModelSimplifierConfigParser((RegulatoryGraph)graph);
+        ReductionConfigParser parser = new ReductionConfigParser((RegulatoryGraph)graph);
         parser.startParsing(is, false);
         return parser.getParameters();
     }
@@ -44,7 +44,7 @@ public class ModelSimplifierConfigManager extends BasicGraphAssociatedManager {
             out.openTag("modelModifierConfig");
             out.openTag("modelSimplifications");
             // add the available configurations
-            for (ModelSimplifierConfig cfg: paramList) {
+            for (ReductionConfig cfg: paramList) {
                 cfg.toXML(out);
             }
             out.closeTag();
@@ -71,7 +71,7 @@ public class ModelSimplifierConfigManager extends BasicGraphAssociatedManager {
 /**
  * parser for simulation parameters file
  */
-class ModelSimplifierConfigParser extends XMLHelper {
+class ReductionConfigParser extends XMLHelper {
 
     List<RegulatoryNode> nodeOrder;
     ModelSimplifierConfigList paramList;
@@ -79,15 +79,15 @@ class ModelSimplifierConfigParser extends XMLHelper {
     /**
      * @param graph expected node order
      */
-    public ModelSimplifierConfigParser(RegulatoryGraph graph) {
+    public ReductionConfigParser(RegulatoryGraph graph) {
     	this.nodeOrder = graph.getNodeOrder();
-        this.paramList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, ModelSimplifierConfigManager.KEY, true);
+        this.paramList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, ReductionConfigManager.KEY, true);
     }
     
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
         if (qName.equals("simplificationConfig")) {
-        	ModelSimplifierConfig cfg = paramList.get(paramList.create());
+        	ReductionConfig cfg = paramList.get(paramList.create());
         	cfg.setName(attributes.getValue("name"));
         	String s_strict = attributes.getValue("strict");
         	if (s_strict != null) {

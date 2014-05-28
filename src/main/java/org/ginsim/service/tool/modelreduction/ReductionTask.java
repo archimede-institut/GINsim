@@ -1,4 +1,4 @@
-package org.ginsim.service.tool.modelsimplifier;
+package org.ginsim.service.tool.modelreduction;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,19 +34,19 @@ public class ReductionTask extends AbstractTask<LogicalModel> {
     private final Collection<NodeInfo> to_remove;
     private final Collection<NodeInfo> l_removed;
 
-    public ReductionTask(RegulatoryGraph graph, ModelSimplifierConfig config) {
+    public ReductionTask(RegulatoryGraph graph, ReductionConfig config) {
         this(graph.getModel(), config, null);
     }
 
-    public ReductionTask(LogicalModel model, ModelSimplifierConfig config) {
+    public ReductionTask(LogicalModel model, ReductionConfig config) {
         this(model, config, null);
     }
 
-    public ReductionTask(RegulatoryGraph graph, ModelSimplifierConfig config, ReductionLauncher launcher) {
+    public ReductionTask(RegulatoryGraph graph, ReductionConfig config, ReductionLauncher launcher) {
         this(graph.getModel(), config, launcher);
     }
 
-	public ReductionTask(LogicalModel model, ModelSimplifierConfig config, ReductionLauncher launcher) {
+	public ReductionTask(LogicalModel model, ReductionConfig config, ReductionLauncher launcher) {
         this.nodeOrder = model.getNodeOrder();
         this.reducer = new ModelReducer(model);
         this.to_remove = new ArrayList<NodeInfo>(config.m_removed);

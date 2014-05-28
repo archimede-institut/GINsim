@@ -21,9 +21,9 @@ import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
-import org.ginsim.service.tool.modelsimplifier.ReductionTask;
-import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
-import org.ginsim.service.tool.modelsimplifier.ReconstructionTask;
+import org.ginsim.service.tool.modelreduction.ReductionConfig;
+import org.ginsim.service.tool.modelreduction.ReductionTask;
+import org.ginsim.service.tool.modelreduction.ReconstructionTask;
 import org.mangosdk.spi.ProviderFor;
 
 /**
@@ -32,7 +32,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(Service.class)
 @Alias("composition")
-@ServiceStatus(EStatus.DEVELOPMENT)
+@ServiceStatus(EStatus.RELEASED)
 public class CompositionService implements Service {
 
 	/**
@@ -406,8 +406,8 @@ public class CompositionService implements Service {
 		// Reduce the graph
 
 		if (reduce) {
-			// Build a ModelSimplifierConfig object
-			ModelSimplifierConfig simplifierConfig = new ModelSimplifierConfig();
+			// Build a ReductionConfig object
+			ReductionConfig simplifierConfig = new ReductionConfig();
 			for (RegulatoryNode input : newMappedInputs) 
 				simplifierConfig.remove(input);
 			

@@ -1,4 +1,4 @@
-package org.ginsim.service.tool.modelsimplifier;
+package org.ginsim.service.tool.modelreduction;
 
 /**
  * An interface for configuration objects which store a selected reduction.
@@ -13,11 +13,11 @@ public interface ReductionHolder {
 	 * 
 	 * @return the selected reduction
 	 */
-	ModelSimplifierConfig getReduction();
+	ReductionConfig getReduction();
 	
 	/**
 	 * Select a reduction.
 	 * @param reduction
 	 */
-	void setReduction(ModelSimplifierConfig reduction);
+	void setReduction(ReductionConfig reduction);
 }

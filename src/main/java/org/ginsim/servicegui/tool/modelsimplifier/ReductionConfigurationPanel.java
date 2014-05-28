@@ -4,9 +4,9 @@ import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.utils.data.*;
-import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfig;
-import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigList;
-import org.ginsim.service.tool.modelsimplifier.ModelSimplifierConfigManager;
+import org.ginsim.service.tool.modelreduction.ReductionConfig;
+import org.ginsim.service.tool.modelreduction.ModelSimplifierConfigList;
+import org.ginsim.service.tool.modelreduction.ReductionConfigManager;
 
 import java.awt.*;
 
@@ -20,12 +20,12 @@ import javax.swing.event.ChangeListener;
  *
  * @author Aurelien Naldi
  */
-public class ReductionConfigurationPanel extends ListEditionPanel<ModelSimplifierConfig, ModelSimplifierConfigList> {
+public class ReductionConfigurationPanel extends ListEditionPanel<ReductionConfig, ModelSimplifierConfigList> {
 
     private static final ReductionListHelper HELPER = new ReductionListHelper();
 
     public ReductionConfigurationPanel(RegulatoryGraph graph) {
-        this((ModelSimplifierConfigList)ObjectAssociationManager.getInstance().getObject(graph, ModelSimplifierConfigManager.KEY, true));
+        this((ModelSimplifierConfigList)ObjectAssociationManager.getInstance().getObject(graph, ReductionConfigManager.KEY, true));
     }
 
     public ReductionConfigurationPanel(ModelSimplifierConfigList cfgList) {
@@ -34,7 +34,7 @@ public class ReductionConfigurationPanel extends ListEditionPanel<ModelSimplifie
 }
 
 
-class ReductionListHelper extends ListPanelHelper<ModelSimplifierConfig, ModelSimplifierConfigList> {
+class ReductionListHelper extends ListPanelHelper<ReductionConfig, ModelSimplifierConfigList> {
 
     public static final ColumnDefinition[] COLUMNS = {
             new ColumnDefinition(null,String.class, true),
@@ -66,21 +66,21 @@ class ReductionListHelper extends ListPanelHelper<ModelSimplifierConfig, ModelSi
     }
 
     @Override
-    public ReductionPanelCompanion getCompanion(ListEditionPanel<ModelSimplifierConfig, ModelSimplifierConfigList> editPanel) {
+    public ReductionPanelCompanion getCompanion(ListEditionPanel<ReductionConfig, ModelSimplifierConfigList> editPanel) {
         return new ReductionPanelCompanion(editPanel);
     }
 }
 
-class ReductionPanelCompanion implements ListPanelCompanion<ModelSimplifierConfig, ModelSimplifierConfigList> {
+class ReductionPanelCompanion implements ListPanelCompanion<ReductionConfig, ModelSimplifierConfigList> {
 
     private static final String EDIT = "edit";
     private static final String EMPTY = "empty";
 
     private SimplifierConfigContentList ctlist = null;
-    private final ListEditionPanel<ModelSimplifierConfig, ModelSimplifierConfigList> editPanel;
+    private final ListEditionPanel<ReductionConfig, ModelSimplifierConfigList> editPanel;
     private final SimplifierConfigConfigurePanel panel;
 
-    public ReductionPanelCompanion(ListEditionPanel<ModelSimplifierConfig, ModelSimplifierConfigList> editPanel) {
+    public ReductionPanelCompanion(ListEditionPanel<ReductionConfig, ModelSimplifierConfigList> editPanel) {
         this.editPanel = editPanel;
         panel = new SimplifierConfigConfigurePanel();
         editPanel.addPanel(panel, EDIT);
@@ -112,7 +112,7 @@ class ReductionPanelCompanion implements ListPanelCompanion<ModelSimplifierConfi
 class SimplifierConfigConfigurePanel extends ListPanel<NodeInfo, SimplifierConfigContentList> implements ChangeListener {
 
 	private final JCheckBox checkbox;
-    private ModelSimplifierConfig config;
+    private ReductionConfig config;
 
 	SimplifierConfigConfigurePanel() {
         super(ReductionConfigHelper.HELPER, "Selected");
@@ -126,7 +126,7 @@ class SimplifierConfigConfigurePanel extends ListPanel<NodeInfo, SimplifierConfi
 		this.checkbox.addChangeListener(this);
 	}
 
-    public void setConfig(ModelSimplifierConfig config) {
+    public void setConfig(ReductionConfig config) {
         this.config = config;
         if (list != null) {
             list.setConfig(config);
