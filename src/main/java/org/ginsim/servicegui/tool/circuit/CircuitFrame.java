@@ -423,11 +423,11 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
                     if (first) {
                         first = false;
                     } else {
-                        sb.append(" && ");
+                        sb.append(" & ");
                     }
                     int m = max[i];
                     if (m == -1) {
-                        sb.append(variables[i].key+">"+cst);
+                        sb.append(variables[i].key+">="+cst);
                     } else if (m > cst) {
                         sb.append(variables[i].key+"=["+cst+","+m+"]");
                     } else {
@@ -666,7 +666,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
     }
 
     public Object getChild(Object parent, int index) {
-        List v = (List) m_parent.get(parent);
+        List v = m_parent.get(parent);
         if (v != null && v.size() > index) {
             return v.get(index);
         }
@@ -674,7 +674,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
     }
 
     public int getChildCount(Object parent) {
-        List v = (List) m_parent.get(parent);
+        List v = m_parent.get(parent);
         if (v != null) {
             return v.size();
         }
@@ -686,7 +686,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
     }
 
     public int getIndexOfChild(Object parent, Object child) {
-        List v = (List) m_parent.get(parent);
+        List v = m_parent.get(parent);
         if (v != null) {
             return v.indexOf(child);
         }
