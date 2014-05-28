@@ -19,6 +19,8 @@ import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromCircuit;
 import org.ginsim.core.graph.tree.TreeBuilderFromRegulatoryGraph;
+import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.service.tool.circuit.MDDContext;
 import org.ginsim.gui.graph.GUIEditor;
 
@@ -35,6 +37,7 @@ public class TreeActionPanel extends JPanel implements GUIEditor<Tree> {
 	private JComboBox sourceList;
 	private JComboBox treeModeList;
 	private Tree tree = null;
+    private GraphGUI gui = null;
 	private boolean hasSelectionChanged = false;
 	
 	private static Vector<String> TREEMODES;
@@ -55,6 +58,7 @@ public class TreeActionPanel extends JPanel implements GUIEditor<Tree> {
 	@Override
 	public void setEditedItem(Tree tree) {
 		this.tree = tree;
+        this.gui = GUIManager.getInstance().getGraphGUI(tree);
 		updateComboBox();
 	}
 
@@ -140,6 +144,9 @@ public class TreeActionPanel extends JPanel implements GUIEditor<Tree> {
 			tree.getParser().setParameter(TreeBuilderFromCircuit.PARAM_INITIALCIRCUITDESC, fcontext.getContext());
 		}
 		tree.getParser().run(treeMode);
+        if (gui != null) {
+            gui.repaint();
+        }
 	}
 
 
