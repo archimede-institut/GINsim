@@ -48,6 +48,10 @@ public class RegulatoryEdge {
 		return me.getSource()+getStringThreshold(separator);
 	}
 	public String getLongInfo(String separator) {
+        if (me.getEdgeCount() < 2) {
+            return me.getSource()+separator+me.getTarget();
+        }
+
 		return me.getSource()+separator+me.getTarget()+separator+threshold;
 	}
 	public String getShortDetail(String separator) {
@@ -58,9 +62,6 @@ public class RegulatoryEdge {
 	}
 	public String getShortInfo() {
 		return me.getSource() + ":" + threshold;
-	}
-	public String getLongDetail(String separator) {
-		return getLongInfo(separator)+separator+getRangeAndSign();
 	}
 	private String getStringIndex(String prefix) {
 		if (me.getEdgeCount() == 1) {
