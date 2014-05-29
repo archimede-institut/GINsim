@@ -433,11 +433,29 @@ public final class RegulatoryParser extends GsXMLHelper {
 	    		String[] t_interactions = s_interactions.split(" ");
 
 	    		for (int j=0 ; j<t_interactions.length ; j++) {
-	    			RegulatoryEdge e = (RegulatoryEdge) m_edges.get(t_interactions[j]);
-	    			if (e == null) {
-	    				// we have a problem
+                    String s_interaction = t_interactions[j].trim();
+                    if (s_interaction.length() == 0) {
+                        continue;
+                    }
+	    			RegulatoryEdge e = m_edges.get(s_interaction);
+
+                    if (e == null) {
+                        int idx = s_interaction.lastIndexOf(':');
+                        if (idx > 0) {
+                            e = m_edges.get(s_interaction.substring(0, idx));
+                        }
+                    }
+                    if (e == null) {
+                        int idx = s_interaction.lastIndexOf('#');
+                        if (idx > 0) {
+                            e = m_edges.get(s_interaction.substring(0, idx));
+                        }
+                    }
+
+	    			if (e != null) {
+                        gsi.addEdge(e);
 	    			} else {
-	    				gsi.addEdge(e);
+                        LogManager.error("Failed to find a matching interaction for "+t_interactions[j]);
 	    			}
 	    		}
     		}
