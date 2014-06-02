@@ -21,7 +21,7 @@ import org.xml.sax.SAXException;
  * @author Aurelien Naldi
  */
 @ProviderFor(GraphAssociatedObjectManager.class)
-public class NamedStatesManager extends BasicGraphAssociatedManager {
+public class NamedStatesManager extends BasicGraphAssociatedManager<NamedStatesHandler> {
 
 	public static final String KEY = "initialState";
 	
@@ -29,7 +29,7 @@ public class NamedStatesManager extends BasicGraphAssociatedManager {
 		super(KEY, null, RegulatoryGraph.class);
 	}
 	
-    public Object doOpen(InputStream is, Graph graph)  throws GsException{
+    public NamedStatesHandler doOpen(InputStream is, Graph graph)  throws GsException{
     	
         initStateParser parser = new initStateParser((RegulatoryGraph)graph);
         parser.startParsing(is, false);
@@ -50,7 +50,7 @@ public class NamedStatesManager extends BasicGraphAssociatedManager {
     }
 
     @Override
-	public Object doCreate( Graph graph) {
+	public NamedStatesHandler doCreate( Graph graph) {
 		return new NamedStatesHandler(graph);
 	}
 }
@@ -88,9 +88,9 @@ class initStateParser extends XMLHelper {
     }
     
     /**
-     * @return the list of parameters read by this parser.
+     * @return the list of named states read by this parser.
      */
-	public Object getParameters() {
+	public NamedStatesHandler getParameters() {
 		return imanager;
 	}
 }

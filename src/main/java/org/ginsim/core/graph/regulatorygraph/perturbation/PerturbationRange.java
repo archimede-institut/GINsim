@@ -35,9 +35,4 @@ public class PerturbationRange extends RangePerturbation implements Perturbation
 		}
 		return null;
 	}
-
-    @Override
-    public boolean isMultiple() {
-        return false;
-    }
 }

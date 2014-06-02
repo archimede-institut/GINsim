@@ -19,7 +19,7 @@ import org.xml.sax.Attributes;
  * @author Aurelien Naldi
  */
 @ProviderFor(GraphAssociatedObjectManager.class)
-public class BiblioManager extends BasicGraphAssociatedManager {
+public class BiblioManager extends BasicGraphAssociatedManager<BiblioList> {
 
 	public static final String KEY = "biblio";
 	
@@ -29,12 +29,12 @@ public class BiblioManager extends BasicGraphAssociatedManager {
 	}
 
 	@Override
-	public Object doCreate( Graph graph) {
+	public BiblioList doCreate( Graph graph) {
 		return new BiblioList( graph, false);
 	}
 
 	@Override
-	public Object doOpen(InputStream is, Graph graph) throws GsException{
+	public BiblioList doOpen(InputStream is, Graph graph) throws GsException{
 		BiblioList bibList = (BiblioList) getObject(graph);
 		BiblioParser parser = new BiblioParser(bibList);
 		parser.startParsing(is, false);
@@ -44,7 +44,6 @@ public class BiblioManager extends BasicGraphAssociatedManager {
 
 class BiblioParser extends XMLHelper {
 
-	String baseDir;
 	BiblioList bibList;
 	
 	static final int FILE = 0;
@@ -58,9 +57,6 @@ class BiblioParser extends XMLHelper {
 		addCall("link", LINK, CALLMAP, STARTONLY, true);
 	}
 	
-    /**
-     * @param graph expected node order
-     */
     public BiblioParser(BiblioList bibList) {
     	this.bibList = bibList;
     	this.m_call = CALLMAP;

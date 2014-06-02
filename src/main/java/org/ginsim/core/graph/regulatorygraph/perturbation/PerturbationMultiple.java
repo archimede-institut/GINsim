@@ -82,9 +82,4 @@ public class PerturbationMultiple extends MultiplePerturbation<Perturbation> imp
         }
         return false;
     }
-
-    @Override
-    public boolean isMultiple() {
-        return true;
-    }
 }

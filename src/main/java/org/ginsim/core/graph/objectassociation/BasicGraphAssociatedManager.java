@@ -15,7 +15,7 @@ import org.ginsim.core.graph.Graph;
  * @author Lionel Spinelli
  * @author Aurelien Naldi
  */
-public abstract class BasicGraphAssociatedManager implements GraphAssociatedObjectManager {
+public abstract class BasicGraphAssociatedManager<T> implements GraphAssociatedObjectManager<T> {
 
 	private final String key;
 	private final String[] aliases;
@@ -53,8 +53,8 @@ public abstract class BasicGraphAssociatedManager implements GraphAssociatedObje
 		return getObject(graph) != null;
 	}
 
-	public Object getObject( Graph graph) {
-		return ObjectAssociationManager.getInstance().getObject(graph, key, false);
+	public T getObject( Graph graph) {
+		return (T)ObjectAssociationManager.getInstance().getObject(graph, key, false);
 	}
 
     @Override

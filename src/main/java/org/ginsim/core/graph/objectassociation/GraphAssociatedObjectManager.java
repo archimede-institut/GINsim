@@ -11,7 +11,7 @@ import org.ginsim.core.graph.Graph;
  *
  * @author Lionel Spinelli
  */
-public interface GraphAssociatedObjectManager {
+public interface GraphAssociatedObjectManager<T> {
 
     /**
      * @return the name of the object (for the zip entry)
@@ -47,13 +47,13 @@ public interface GraphAssociatedObjectManager {
      * @param graph
      * @throws GsException 
      */
-    Object doOpen(InputStream is, Graph graph) throws GsException;
+    T doOpen(InputStream is, Graph graph) throws GsException;
 
     /**
      * create the associated object for a graph
      * @param graph
      */
-	Object doCreate( Graph graph);
+	T doCreate( Graph graph);
 	
 	/**
 	 * get the existing associated object for a graph
@@ -61,7 +61,7 @@ public interface GraphAssociatedObjectManager {
 	 * @param graph
 	 * @return the existing object, or null if not created
 	 */
-	Object getObject( Graph graph);
+	T getObject( Graph graph);
 
     /**
      * Test if the key is a valid name for this data manager

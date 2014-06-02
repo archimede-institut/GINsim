@@ -220,7 +220,7 @@ public class SimulationParametersParser extends XMLHelper {
     /**
      * @return the list of parameters read by this parser.
      */
-	public Object getParameters() {
+	public SimulationParameterList getParameters() {
 		return paramLists;
 	}
 	

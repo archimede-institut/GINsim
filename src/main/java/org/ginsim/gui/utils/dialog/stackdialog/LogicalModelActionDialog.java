@@ -21,8 +21,8 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
+import org.ginsim.service.tool.modelreduction.ListOfReductionConfigs;
 import org.ginsim.service.tool.modelreduction.ReductionConfig;
-import org.ginsim.service.tool.modelreduction.ModelSimplifierConfigList;
 import org.ginsim.service.tool.modelreduction.ReductionConfigManager;
 import org.ginsim.service.tool.modelreduction.ReductionHolder;
 import org.ginsim.servicegui.tool.modelreduction.ReductionSelectionPanel;
@@ -33,7 +33,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	
 	protected final RegulatoryGraph lrg;
 	private final ListOfPerturbations perturbations;
-	private final ModelSimplifierConfigList reductions;
+	private final ListOfReductionConfigs reductions;
     private final PerturbationSelectionPanel perturbationPanel;
     private final ReductionSelectionPanel reductionPanel;
 
@@ -48,7 +48,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         super(parent, id, w, h);
         this.lrg = lrg;
         this.perturbations = (ListOfPerturbations)OManager.getObject(lrg, PerturbationManager.KEY, true);
-        this.reductions = (ModelSimplifierConfigList)OManager.getObject(lrg, ReductionConfigManager.KEY, true);
+        this.reductions = (ListOfReductionConfigs)OManager.getObject(lrg, ReductionConfigManager.KEY, true);
         perturbationPanel = new PerturbationSelectionPanel(this, lrg, this);
         reductionPanel = new ReductionSelectionPanel(this, lrg, this);
         super.setMainPanel(getMainPanel());

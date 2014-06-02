@@ -36,9 +36,4 @@ public class PerturbationRegulator extends InteractionPerturbation implements Pe
 		}
 		return null;
 	}
-
-    @Override
-    public boolean isMultiple() {
-        return false;
-    }
 }

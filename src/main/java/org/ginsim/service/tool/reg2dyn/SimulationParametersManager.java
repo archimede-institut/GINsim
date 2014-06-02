@@ -20,7 +20,7 @@ import org.mangosdk.spi.ProviderFor;
  * Save/open simulation parameters along with the model.
  */
 @ProviderFor(GraphAssociatedObjectManager.class)
-public class SimulationParametersManager extends BasicGraphAssociatedManager {
+public class SimulationParametersManager extends BasicGraphAssociatedManager<SimulationParameterList> {
 
 	public static final String KEY = "reg2dyn_parameters";
 	
@@ -29,7 +29,7 @@ public class SimulationParametersManager extends BasicGraphAssociatedManager {
 	}
 
 	@Override
-	public Object doOpen(InputStream is, Graph graph)  throws GsException{
+	public SimulationParameterList doOpen(InputStream is, Graph graph)  throws GsException{
         SimulationParametersParser parser = new SimulationParametersParser((RegulatoryGraph)graph);
         parser.startParsing(is, false);
         return parser.getParameters();
@@ -64,7 +64,7 @@ public class SimulationParametersManager extends BasicGraphAssociatedManager {
     }
 
     @Override
-	public Object doCreate( Graph graph) {
+	public SimulationParameterList doCreate( Graph graph) {
 		return new SimulationParameterList( graph);
 	}
 }

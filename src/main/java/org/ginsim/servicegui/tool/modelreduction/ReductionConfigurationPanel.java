@@ -4,8 +4,8 @@ import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.utils.data.*;
+import org.ginsim.service.tool.modelreduction.ListOfReductionConfigs;
 import org.ginsim.service.tool.modelreduction.ReductionConfig;
-import org.ginsim.service.tool.modelreduction.ModelSimplifierConfigList;
 import org.ginsim.service.tool.modelreduction.ReductionConfigManager;
 
 import java.awt.*;
@@ -20,21 +20,21 @@ import javax.swing.event.ChangeListener;
  *
  * @author Aurelien Naldi
  */
-public class ReductionConfigurationPanel extends ListEditionPanel<ReductionConfig, ModelSimplifierConfigList> {
+public class ReductionConfigurationPanel extends ListEditionPanel<ReductionConfig, ListOfReductionConfigs> {
 
     private static final ReductionListHelper HELPER = new ReductionListHelper();
 
     public ReductionConfigurationPanel(RegulatoryGraph graph) {
-        this((ModelSimplifierConfigList)ObjectAssociationManager.getInstance().getObject(graph, ReductionConfigManager.KEY, true));
+        this((ListOfReductionConfigs)ObjectAssociationManager.getInstance().getObject(graph, ReductionConfigManager.KEY, true));
     }
 
-    public ReductionConfigurationPanel(ModelSimplifierConfigList cfgList) {
+    public ReductionConfigurationPanel(ListOfReductionConfigs cfgList) {
         super(HELPER, cfgList, "modelSimplifier", null, null);
     }
 }
 
 
-class ReductionListHelper extends ListPanelHelper<ReductionConfig, ModelSimplifierConfigList> {
+class ReductionListHelper extends ListPanelHelper<ReductionConfig, ListOfReductionConfigs> {
 
     public static final ColumnDefinition[] COLUMNS = {
             new ColumnDefinition(null,String.class, true),
@@ -49,12 +49,12 @@ class ReductionListHelper extends ListPanelHelper<ReductionConfig, ModelSimplifi
     }
 
     @Override
-    public int doCreate(ModelSimplifierConfigList reductions, Object arg) {
+    public int doCreate(ListOfReductionConfigs reductions, Object arg) {
         return reductions.create();
     }
 
     @Override
-    public boolean doRemove(ModelSimplifierConfigList reductions, int[] sel) {
+    public boolean doRemove(ListOfReductionConfigs reductions, int[] sel) {
         if (sel == null || sel.length < 1) {
             return false;
         }
@@ -66,21 +66,21 @@ class ReductionListHelper extends ListPanelHelper<ReductionConfig, ModelSimplifi
     }
 
     @Override
-    public ReductionPanelCompanion getCompanion(ListEditionPanel<ReductionConfig, ModelSimplifierConfigList> editPanel) {
+    public ReductionPanelCompanion getCompanion(ListEditionPanel<ReductionConfig, ListOfReductionConfigs> editPanel) {
         return new ReductionPanelCompanion(editPanel);
     }
 }
 
-class ReductionPanelCompanion implements ListPanelCompanion<ReductionConfig, ModelSimplifierConfigList> {
+class ReductionPanelCompanion implements ListPanelCompanion<ReductionConfig, ListOfReductionConfigs> {
 
     private static final String EDIT = "edit";
     private static final String EMPTY = "empty";
 
     private ReductionConfigContentList ctlist = null;
-    private final ListEditionPanel<ReductionConfig, ModelSimplifierConfigList> editPanel;
+    private final ListEditionPanel<ReductionConfig, ListOfReductionConfigs> editPanel;
     private final SimplifierConfigConfigurePanel panel;
 
-    public ReductionPanelCompanion(ListEditionPanel<ReductionConfig, ModelSimplifierConfigList> editPanel) {
+    public ReductionPanelCompanion(ListEditionPanel<ReductionConfig, ListOfReductionConfigs> editPanel) {
         this.editPanel = editPanel;
         panel = new SimplifierConfigConfigurePanel();
         editPanel.addPanel(panel, EDIT);
@@ -89,7 +89,7 @@ class ReductionPanelCompanion implements ListPanelCompanion<ReductionConfig, Mod
     }
 
     @Override
-    public void setParentList(ModelSimplifierConfigList reductions) {
+    public void setParentList(ListOfReductionConfigs reductions) {
         this.ctlist = new ReductionConfigContentList(reductions.getNodeOrder());
         panel.setList(ctlist);
     }

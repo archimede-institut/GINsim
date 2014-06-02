@@ -35,13 +35,6 @@ public interface Perturbation extends LogicalModelPerturbation {
 	boolean affectsNode(NodeInfo node);
 
     /**
-     * Is this a simple perturbation or a multiple one?
-     *
-     * @return true for multiple perturbations, false for simple ones.
-     */
-    boolean isMultiple();
-
-    /**
      * Copy the perturbation to a new graph (in particular to a reduced version of the current graph)
      *
      * @param manager

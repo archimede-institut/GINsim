@@ -10,8 +10,8 @@ import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.utils.data.ListSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.service.tool.modelreduction.ListOfReductionConfigs;
 import org.ginsim.service.tool.modelreduction.ReductionConfig;
-import org.ginsim.service.tool.modelreduction.ModelSimplifierConfigList;
 import org.ginsim.service.tool.modelreduction.ReductionConfigManager;
 import org.ginsim.service.tool.modelreduction.ReductionHolder;
 
@@ -66,8 +66,8 @@ public class ReductionSelectionPanel extends ListSelectionPanel<ReductionConfig>
 		}
 	}
 
-	private ModelSimplifierConfigList getPerturbationsObject(boolean force) {
-		return (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, ReductionConfigManager.KEY, force);
+	private ListOfReductionConfigs getPerturbationsObject(boolean force) {
+		return (ListOfReductionConfigs) ObjectAssociationManager.getInstance().getObject( graph, ReductionConfigManager.KEY, force);
 	}
 	
 	@Override

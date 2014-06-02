@@ -166,9 +166,9 @@ public class PerturbationParser extends XMLHelper {
 	}
 
 	/**
-     * @return the list of parameters read by this parser.
+     * @return the list of perturbations read by this parser.
      */
-	public Object getParameters() {
+	public ListOfPerturbations getParameters() {
 		return mutantList;
 	}
 }

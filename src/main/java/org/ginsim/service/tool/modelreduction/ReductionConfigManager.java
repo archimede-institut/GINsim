@@ -22,7 +22,7 @@ import org.xml.sax.SAXException;
  * Save/open simulation parameters along with the model.
  */
 @ProviderFor(GraphAssociatedObjectManager.class)
-public class ReductionConfigManager extends BasicGraphAssociatedManager {
+public class ReductionConfigManager extends BasicGraphAssociatedManager<ListOfReductionConfigs> {
 
 	public static final String KEY = "modelSimplifier";
 	
@@ -30,7 +30,7 @@ public class ReductionConfigManager extends BasicGraphAssociatedManager {
 		super(KEY, null, RegulatoryGraph.class);
 	}
 	
-    public Object doOpen(InputStream is, Graph graph) throws GsException {
+    public ListOfReductionConfigs doOpen(InputStream is, Graph graph) throws GsException {
     	
         ReductionConfigParser parser = new ReductionConfigParser((RegulatoryGraph)graph);
         parser.startParsing(is, false);
@@ -38,7 +38,7 @@ public class ReductionConfigManager extends BasicGraphAssociatedManager {
     }
 
     public void doSave(OutputStreamWriter os, Graph graph) {
-        ModelSimplifierConfigList paramList = (ModelSimplifierConfigList) getObject(graph);
+        ListOfReductionConfigs paramList = (ListOfReductionConfigs) getObject(graph);
         try {
             XMLWriter out = new XMLWriter(os);
             out.openTag("modelModifierConfig");
@@ -63,8 +63,8 @@ public class ReductionConfigManager extends BasicGraphAssociatedManager {
         }
     }
 
-	public Object doCreate( Graph graph) {
-		return new ModelSimplifierConfigList( (RegulatoryGraph)graph);
+	public ListOfReductionConfigs doCreate( Graph graph) {
+		return new ListOfReductionConfigs( (RegulatoryGraph)graph);
 	}
 }
 
@@ -74,14 +74,14 @@ public class ReductionConfigManager extends BasicGraphAssociatedManager {
 class ReductionConfigParser extends XMLHelper {
 
     List<RegulatoryNode> nodeOrder;
-    ModelSimplifierConfigList paramList;
+    ListOfReductionConfigs paramList;
     
     /**
      * @param graph expected node order
      */
     public ReductionConfigParser(RegulatoryGraph graph) {
     	this.nodeOrder = graph.getNodeOrder();
-        this.paramList = (ModelSimplifierConfigList) ObjectAssociationManager.getInstance().getObject( graph, ReductionConfigManager.KEY, true);
+        this.paramList = (ListOfReductionConfigs) ObjectAssociationManager.getInstance().getObject( graph, ReductionConfigManager.KEY, true);
     }
     
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
@@ -114,9 +114,9 @@ class ReductionConfigParser extends XMLHelper {
     }
 
     /**
-     * @return the list of parameters read by this parser.
+     * @return the list of reduction parameters read by this parser.
      */
-	public Object getParameters() {
+	public ListOfReductionConfigs getParameters() {
 		return paramList;
 	}
 }

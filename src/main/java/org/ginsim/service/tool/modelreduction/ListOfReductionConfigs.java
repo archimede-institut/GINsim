@@ -16,7 +16,7 @@ import org.ginsim.core.utils.data.NamedList;
  * store all simplification parameters and offer a mean to access them.
  * Also deals with updating them when the graph is changed
  */
-public class ModelSimplifierConfigList extends NamedList<ReductionConfig>
+public class ListOfReductionConfigs extends NamedList<ReductionConfig>
 	implements GraphListener<RegulatoryGraph>, UserSupporter {
 
     private String s_current;
@@ -24,7 +24,7 @@ public class ModelSimplifierConfigList extends NamedList<ReductionConfig>
     private Set<String> outputStrippers = new HashSet<String>();
     private Map<String, ReductionConfig> users = new HashMap<String, ReductionConfig>();
     
-    public ModelSimplifierConfigList( RegulatoryGraph graph) {
+    public ListOfReductionConfigs(RegulatoryGraph graph) {
     	
         this.graph = graph;
 /*

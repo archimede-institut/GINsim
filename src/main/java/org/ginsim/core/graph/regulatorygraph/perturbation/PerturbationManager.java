@@ -17,7 +17,7 @@ import org.mangosdk.spi.ProviderFor;
  * Save/open perturbation definitions along with the model.
  */
 @ProviderFor(GraphAssociatedObjectManager.class)
-public class PerturbationManager extends BasicGraphAssociatedManager {
+public class PerturbationManager extends BasicGraphAssociatedManager<ListOfPerturbations> {
 
 	public static final String KEY = "mutant";
 	
@@ -25,7 +25,7 @@ public class PerturbationManager extends BasicGraphAssociatedManager {
 		super(KEY, new String[] {"perturbation"}, RegulatoryGraph.class);
 	}
 	
-    public Object doOpen(InputStream is, Graph graph)  throws GsException{
+    public ListOfPerturbations doOpen(InputStream is, Graph graph)  throws GsException{
     	
         PerturbationParser parser = new PerturbationParser((RegulatoryGraph) graph);
         parser.startParsing(is, false);
@@ -44,7 +44,7 @@ public class PerturbationManager extends BasicGraphAssociatedManager {
     }
 
     @Override
-	public Object doCreate( Graph graph) {
+	public ListOfPerturbations doCreate( Graph graph) {
     	if (graph instanceof RegulatoryGraph) {
     		return new ListOfPerturbations((RegulatoryGraph)graph);
     	}
