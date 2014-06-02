@@ -12,7 +12,7 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor(Service.class)
 @Alias("reduction")
 @ServiceStatus(EStatus.RELEASED)
-public class ModelSimplifierService implements Service {
+public class ModelReductionService implements Service {
 
     public ModelReducer getModelReducer( RegulatoryGraph graph) {
     	return getModelReducer(graph.getModel());
@@ -20,5 +20,17 @@ public class ModelSimplifierService implements Service {
 
     public ModelReducer getModelReducer( LogicalModel model) {
     	return new ModelReducer(model);
+    }
+
+    /**
+     * Rebuild a regulatory graph from a reduced model.
+     * The reconstructor will restore node position and metadata based on the content of the original graph.
+     *
+     * @param reducedModel
+     * @param originalGraph
+     * @return a new LRG based on the original one
+     */
+    public ReconstructionTask getReconstructionTask( LogicalModel reducedModel, RegulatoryGraph originalGraph) {
+        return new ReconstructionTask( reducedModel, originalGraph);
     }
 }

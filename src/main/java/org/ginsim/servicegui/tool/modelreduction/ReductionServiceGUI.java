@@ -15,14 +15,14 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ToolAction;
-import org.ginsim.service.tool.modelreduction.ModelSimplifierService;
+import org.ginsim.service.tool.modelreduction.ModelReductionService;
 import org.mangosdk.spi.ProviderFor;
 
 /**
  * main method for the model simplification plugin
  */
 @ProviderFor(ServiceGUI.class)
-@GUIFor(ModelSimplifierService.class)
+@GUIFor(ModelReductionService.class)
 @ServiceStatus( EStatus.RELEASED)
 public class ReductionServiceGUI extends AbstractServiceGUI {
 
