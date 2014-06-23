@@ -60,14 +60,10 @@ public class NuSMVEncoder {
 	}
 
 	/**
-	 * Export the graph to a SVG file
+	 * Export the graph to a NUSMV model description
 	 * 
-	 * @param graph
-	 *            the regulatory graph to export
-	 * @param nodes
-	 *            the list of nodes that must be exported
-	 * @param edges
-	 *            the list of edges that must be exported
+	 * @param config
+	 *            the user defined parameters with the model
 	 * @param out
 	 *            the writer receiving the encoded model description
 	 */
