@@ -6,13 +6,9 @@ import javax.swing.JPanel;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.ginsim.common.application.Txt;
-import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.service.export.prism.PRISMConfig;
-import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
-import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
-import org.ginsim.servicegui.tool.reg2dyn.PrioritySelectionPanel;
 
 public class PRISMExportConfigPanel extends LogicalModelActionDialog {
 	private static final long serialVersionUID = -7398674287463858306L;
@@ -21,7 +17,6 @@ public class PRISMExportConfigPanel extends LogicalModelActionDialog {
 	private final PRISMExportAction action;
 
 	private JPanel mainPanel;
-	private PrioritySelectionPanel priorityPanel;
 	private InitialStatePanel initPanel;
 
 	public PRISMExportConfigPanel(PRISMConfig config, PRISMExportAction action) {
@@ -33,15 +28,9 @@ public class PRISMExportConfigPanel extends LogicalModelActionDialog {
 
 		// NORTH begin
 		mainPanel = new JPanel(new BorderLayout());
-		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager
-				.getInstance().getObject(config.getGraph(),
-						SimulationParametersManager.KEY, true);
-		priorityPanel = new PrioritySelectionPanel(this, paramList.pcmanager);
-		priorityPanel.setStore(config);
-		mainPanel.add(priorityPanel, BorderLayout.NORTH);
 
 		// CENTER begin
-		initPanel = new InitialStatePanel(config.getGraph(), true);
+		initPanel = new InitialStatePanel(config.getGraph(), false);
 		initPanel.setParam(config);
 		// initPanel.setMessage(Txt.t("STR_NuSMV_Checked"));
 		mainPanel.add(initPanel, BorderLayout.CENTER);

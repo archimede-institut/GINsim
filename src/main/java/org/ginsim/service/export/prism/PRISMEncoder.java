@@ -57,13 +57,12 @@ public class PRISMEncoder {
 
 		LogicalModel model = config.getModel();
 		List<NodeInfo> coreNodes = model.getNodeOrder();
-		List<NodeInfo> outputNodes = model.getExtraComponents();
 
 		// Nodes actual logical rules
 		int[] kMDDs = model.getLogicalFunctions();
 		for (int i = 0; i < coreNodes.size(); i++) {
 			NodeInfo node = coreNodes.get(i);
-			out.write("\nmodule M" + (i + 1));
+			out.write("\nmodule M_" + node.getNodeID());
 			if (node.isInput()) out.write(" // Input variable");
 			out.write("\n");
 			out.write("  " + node.getNodeID() + " : [0.." + node.getMax()
