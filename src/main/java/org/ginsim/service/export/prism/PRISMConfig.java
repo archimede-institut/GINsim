@@ -10,9 +10,6 @@ import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateStore;
 
 public class PRISMConfig implements NamedStateStore {
 
-	public static final int CFG_SYNC = 0;
-	public static final int CFG_ASYNC = 1;
-
 	private RegulatoryGraph graph;
 	private LogicalModel model;
 	private Map<NamedState, Object> m_initStates;

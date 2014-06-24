@@ -3,11 +3,14 @@ package org.ginsim.service.export.prism;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 
 /**
  * Exports a Regulatory graph into a PRISM model description.
@@ -53,20 +56,21 @@ public class PRISMEncoder {
 	public void write(PRISMConfig config, Writer out) throws IOException,
 			GsException {
 
-		out.write("dtmc\n");
-
 		LogicalModel model = config.getModel();
 		List<NodeInfo> coreNodes = model.getNodeOrder();
-
 		// Nodes actual logical rules
 		int[] kMDDs = model.getLogicalFunctions();
+
+		out.write("dtmc\n");
 		for (int i = 0; i < coreNodes.size(); i++) {
 			NodeInfo node = coreNodes.get(i);
 			out.write("\nmodule M_" + node.getNodeID());
-			if (node.isInput()) out.write(" // Input variable");
+			if (node.isInput())
+				out.write(" // Input variable");
 			out.write("\n");
 			out.write("  " + node.getNodeID() + " : [0.." + node.getMax()
 					+ "];\n");
+
 			// TODO init x!
 			out.write("\n");
 			out.write("  [] " + node.getNodeID() + "_focal>" + node.getNodeID()
@@ -78,6 +82,41 @@ public class PRISMEncoder {
 			out.write("endmodule\n");
 			nodeRules2PRISM(out, model, kMDDs[i], coreNodes, node);
 		}
+
+		Set<NamedState> sInputState = config.getInputState().keySet();
+		Set<NamedState> sInitialState = config.getInitialState().keySet();
+		if (sInputState != null && sInputState.iterator().hasNext()
+				|| sInitialState != null && sInitialState.iterator().hasNext()) {
+			boolean first = true;
+			out.write("\n// Initial states\ninit");
+			first = this.writeInitialConds(out, sInputState, first);
+			first = this.writeInitialConds(out, sInitialState, first);
+			out.write("\nendinit\n");
+		}
+	}
+
+	private boolean writeInitialConds(Writer out, Set<NamedState> sNamedState,
+			boolean first) throws IOException {
+		if (sNamedState != null && sNamedState.iterator().hasNext()) {
+			Map<NodeInfo, List<Integer>> mStateComp = sNamedState.iterator()
+					.next().getMap();
+			for (NodeInfo node : mStateComp.keySet()) {
+				if (!first)
+					out.write(" &");
+				List<Integer> vList = mStateComp.get(node);
+				if (vList != null && vList.size() > 0) {
+					out.write("\n  (");
+					for (int j = 0; j < vList.size(); j++) {
+						if (j > 0)
+							out.write(" | ");
+						out.write(node.getNodeID() + "=" + vList.get(j));
+					}
+					out.write(")");
+					first = false;
+				}
+			}
+		}
+		return first;
 	}
 
 	private void nodeRules2PRISM(Writer out, LogicalModel model, int nodeMDD,

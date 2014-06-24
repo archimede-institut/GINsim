@@ -32,7 +32,6 @@ public class PRISMExportConfigPanel extends LogicalModelActionDialog {
 		// CENTER begin
 		initPanel = new InitialStatePanel(config.getGraph(), false);
 		initPanel.setParam(config);
-		// initPanel.setMessage(Txt.t("STR_NuSMV_Checked"));
 		mainPanel.add(initPanel, BorderLayout.CENTER);
 
 		setMainPanel(mainPanel);
