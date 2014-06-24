@@ -2,6 +2,7 @@ package org.ginsim.service.export.prism;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -42,7 +43,8 @@ public class PRISMEncoder {
 				return "_" + keyword;
 			}
 		}
-		return keyword;
+		// PRISM does not like "-" on keywords
+		return keyword.replace("-", "_");
 	}
 
 	/**
@@ -64,25 +66,23 @@ public class PRISMEncoder {
 		out.write("dtmc\n");
 		for (int i = 0; i < coreNodes.size(); i++) {
 			NodeInfo node = coreNodes.get(i);
-			out.write("\nmodule M_" + node.getNodeID());
+			String nodeID = this.avoidPRISMNames(node.getNodeID());
+			out.write("\nmodule M_" + nodeID);
 			if (node.isInput())
 				out.write(" // Input variable");
 			out.write("\n");
-			out.write("  " + node.getNodeID() + " : [0.." + node.getMax()
-					+ "];\n");
-
-			// TODO init x!
+			out.write("  " + nodeID + " : [0.." + node.getMax() + "];\n");
 			out.write("\n");
-			out.write("  [] " + node.getNodeID() + "_focal>" + node.getNodeID()
-					+ " & " + node.getNodeID() + "<" + +node.getMax() + " -> ("
-					+ node.getNodeID() + "'=" + node.getNodeID() + "+1);\n");
-			out.write("  [] " + node.getNodeID() + "_focal<" + node.getNodeID()
-					+ " & " + node.getNodeID() + ">0 -> (" + node.getNodeID()
-					+ "'=" + node.getNodeID() + "-1);\n");
+			out.write("  [] " + nodeID + "_focal>" + nodeID + " & " + nodeID
+					+ "<" + +node.getMax() + " -> (" + nodeID + "'=" + nodeID
+					+ "+1);\n");
+			out.write("  [] " + nodeID + "_focal<" + nodeID + " & " + nodeID
+					+ ">0 -> (" + nodeID + "'=" + nodeID + "-1);\n");
 			out.write("endmodule\n");
 			nodeRules2PRISM(out, model, kMDDs[i], coreNodes, node);
 		}
 
+		// Write selected initial state
 		Set<NamedState> sInputState = config.getInputState().keySet();
 		Set<NamedState> sInitialState = config.getInitialState().keySet();
 		if (sInputState != null && sInputState.iterator().hasNext()
@@ -92,6 +92,38 @@ public class PRISMEncoder {
 			first = this.writeInitialConds(out, sInputState, first);
 			first = this.writeInitialConds(out, sInitialState, first);
 			out.write("\nendinit\n");
+		}
+		out.write("\n");
+
+		// Write all defined states as labels
+		this.writeLabels(out, sInputState.iterator());
+		this.writeLabels(out, sInitialState.iterator());
+	}
+
+	private void writeLabels(Writer out, Iterator<NamedState> iter)
+			throws IOException {
+		while (iter.hasNext()) {
+			NamedState iState = iter.next();
+			Map<NodeInfo, List<Integer>> m_states = iState.getMap();
+			String s_init = "";
+
+			for (NodeInfo node : m_states.keySet()) {
+				List<Integer> v = m_states.get(node);
+				if (v != null && v.size() > 0) {
+					if (!s_init.isEmpty())
+						s_init += " & ";
+					s_init += "(";
+					for (int j = 0; j < v.size(); j++) {
+						if (j > 0)
+							s_init += " | ";
+						s_init += avoidPRISMNames(node.getNodeID()) + "="
+								+ v.get(j);
+					}
+					s_init += ")";
+				}
+			}
+			out.write("label \"" + avoidPRISMNames(iState.getName()) + "\" = "
+					+ s_init + ";\n");
 		}
 	}
 
@@ -109,7 +141,8 @@ public class PRISMEncoder {
 					for (int j = 0; j < vList.size(); j++) {
 						if (j > 0)
 							out.write(" | ");
-						out.write(node.getNodeID() + "=" + vList.get(j));
+						out.write(this.avoidPRISMNames(node.getNodeID()) + "="
+								+ vList.get(j));
 					}
 					out.write(")");
 					first = false;
@@ -127,7 +160,8 @@ public class PRISMEncoder {
 		searcher.setNode(nodeMDD);
 
 		int leafValue = 0;
-		out.write("formula " + node.getNodeID() + "_focal = \n");
+		out.write("formula " + avoidPRISMNames(node.getNodeID())
+				+ "_focal = \n");
 		String s = "";
 		for (int l : searcher) {
 			boolean bWrite = false;
