@@ -1,8 +1,6 @@
 package org.ginsim.service.export.image;
 
-import java.awt.Dimension;
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.Collection;
@@ -60,17 +58,23 @@ public class SVGEncoder extends AbstractTask {
 
         Dimension dim = graph.getDimension();
         SVGWriter out = new SVGWriter(fileName, dim);
+        Font font = ViewHelper.GRAPHFONT;
 
         // write CSS code for the styles
         out.openTag("style", new String[] {"type", "text/css"});
-        out.addContent("");
+        // set the default font
+        out.addContent("\ntext {\n");
+        out.addContent("  font-family: '"+font.getFamily()+"';\n");
+        out.addContent("  font-size: "+font.getSize()+"px;\n");
+        out.addContent("}\n");
+
         List<NodeStyle> nstyles = manager.getNodeStyles();
         for (NodeStyle style: nstyles) {
-            out.write(style.getCSS());
+            out.addContent(style.getCSS());
         }
         List<EdgeStyle> estyles = manager.getEdgeStyles();
         for (EdgeStyle style: estyles) {
-            out.write(style.getCSS());
+            out.addContent(style.getCSS());
         }
         out.closeTag(); // style
 

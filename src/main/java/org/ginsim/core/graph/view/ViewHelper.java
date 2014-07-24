@@ -1,7 +1,6 @@
 package org.ginsim.core.graph.view;
 
-import java.awt.Point;
-import java.awt.Rectangle;
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,7 +16,15 @@ import org.ginsim.core.graph.Edge;
  */
 public class ViewHelper {
 
-	/**
+    public static final Font GRAPHFONT;
+
+    static {
+        // TODO: pick a better font??
+        GRAPHFONT = new Font( "SansSerif", Font.PLAIN, 12 );
+    }
+
+
+    /**
 	 * Construct intermediate points for loops.
 	 * 
 	 * @param bounds the bounds of the item with the loop

@@ -1,5 +1,7 @@
 package org.ginsim.gui.graph.canvas;
 
+import org.ginsim.core.graph.view.ViewHelper;
+
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Component;
@@ -113,6 +115,7 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 
     	Graphics2D g = img.createGraphics();
     	g.setRenderingHints(RENDER_HINTS);
+        g.setFont(ViewHelper.GRAPHFONT);
 
 		// Erase the whole area
 		g.setColor(backgroundColor);
