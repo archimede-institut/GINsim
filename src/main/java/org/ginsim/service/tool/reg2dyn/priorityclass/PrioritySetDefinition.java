@@ -113,8 +113,8 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
 		}
 		for (int i = t_index.length - 1 ; i > -1 ; i--) {
 			int index = t_index[i];
-			
-            PriorityClass c = remove(index);
+
+            PriorityClass c = super.remove(index);
             if (index < size()) {
             	// update rank of the next priority classes
             	if ( index == 0 || ( get(index-1)).rank != c.rank) {
