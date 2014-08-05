@@ -11,7 +11,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(Service.class)
 @Alias("TruthTable")
-@ServiceStatus(EStatus.DEVELOPMENT)
+@ServiceStatus(EStatus.RELEASED)
 public class TruthTableFormatService extends FormatSupportService<TruthTableFormat> {
 
 	public TruthTableFormatService() {
