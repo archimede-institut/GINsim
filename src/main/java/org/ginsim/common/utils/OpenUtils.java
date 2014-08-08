@@ -2,6 +2,7 @@ package org.ginsim.common.utils;
 
 import java.awt.Desktop;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
@@ -101,9 +102,15 @@ public class OpenUtils {
 			Desktop.getDesktop().browse( new URI(uri));
 			return true;
 		} catch (Exception e) {
-			LogManager.error( "OpenURI failed : " + uri);
-			LogManager.error( e);
-			return false;
+			try {
+				// If java.awt.Desktop class is not supported tries xdg-open
+				Runtime.getRuntime().exec("xdg-open " + uri);
+				return true;
+			} catch (IOException e1) {
+				LogManager.error( "OpenURI failed : " + uri);
+				LogManager.error( e);
+				return false;
+			}
 		}
 	}
 	
