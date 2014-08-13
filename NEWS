@@ -1,4 +1,4 @@
-Version 3.0. 
+Version 2.9.2.
 Changes since version 2.4:
 
 General Changes:
@@ -17,6 +17,7 @@ Simulation module:
 
 Exports:
 * SBML qual (using LogicalModel)
+* Truth Table
 
 Imports:
 * SBML qual
