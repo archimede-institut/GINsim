@@ -241,6 +241,10 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 		visibleAreaUpdated = true;
 		repaint();
 	}
+
+    public double getZoomLevel() {
+        return zoom;
+    }
 	
 
 	@Override

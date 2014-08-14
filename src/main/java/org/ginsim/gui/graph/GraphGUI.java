@@ -123,4 +123,5 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 */
 	void repaint();
 
+    double getZoomLevel();
 }

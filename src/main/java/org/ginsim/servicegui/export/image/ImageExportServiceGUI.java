@@ -11,6 +11,8 @@ import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.ServiceManager;
+import org.ginsim.gui.GUIManager;
+import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.ExportAction;
@@ -69,7 +71,12 @@ class ExportImageAction extends ExportAction {
 	@Override
 	protected void doExport(String filename) throws GsException, IOException {
         ImageExportService service = ServiceManager.getManager().getService( ImageExportService.class);
-        service.exportPNG(graph, filename);
+        GraphGUI gui = GUIManager.getInstance().getGraphGUI(graph);
+        int f = 4;
+        if (gui != null) {
+            f = (int)Math.ceil(2*gui.getZoomLevel());
+        }
+        service.exportPNG(graph, filename, f);
 	}
 }
 

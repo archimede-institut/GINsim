@@ -53,6 +53,10 @@ public class CanvasGraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> exte
 		canvas.zoom(direction);
 	}
 
+    public double getZoomLevel() {
+        return canvas.getZoomLevel();
+    }
+
 	@Override
 	public JMenu getViewMenu(JMenu layout) {
 		JMenu menu = super.getViewMenu(layout);

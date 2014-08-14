@@ -60,13 +60,25 @@ public class ImageExportService implements Service {
     }
 
     /**
+     * Export a model view as PNG image.
+     *
      * @param graph
      * @param fileName
      */
     public void exportPNG( Graph<?, Edge<?>> graph, String fileName) {
+        exportPNG(graph, fileName, 4);
+    }
+
+    /**
+     * Export a model view as PNG image.
+     *
+     * @param graph
+     * @param fileName
+     * @param f the zoom factor
+     */
+    public void exportPNG( Graph<?, Edge<?>> graph, String fileName, int f) {
 
     	Dimension dim = graph.getDimension();
-        int f = 4;
     	int width = f*(int)dim.getWidth();
     	int height = f*(int)dim.getHeight();
     	
