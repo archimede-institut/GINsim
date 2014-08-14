@@ -82,7 +82,7 @@ public class InitStateTableModel extends AbstractTableModel {
 			if (rowIndex >= imanager.size()) {
 				return "";
 			}
-			return ((NamedState)imanager.get(rowIndex)).getName();
+			return imanager.get(rowIndex).getName();
 		}
 		if (m_initState != null && columnIndex == 1) {
 			if ( rowIndex >= imanager.size()) {
@@ -98,7 +98,7 @@ public class InitStateTableModel extends AbstractTableModel {
 		if (imanager == null || rowIndex >= imanager.size()) {
 			return "";
 		}
-        Map m_row = ((NamedState)imanager.get(rowIndex)).getMaxValueTable();
+        Map m_row = imanager.get(rowIndex).getMaxValueTable();
         element = (List)m_row.get(nodeOrder.get(ci).getNodeInfo());
         return showValue(element, nodeOrder.get(ci).getMaxValue());
     }
