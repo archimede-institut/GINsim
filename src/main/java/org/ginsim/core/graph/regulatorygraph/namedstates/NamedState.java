@@ -127,4 +127,12 @@ public class NamedState implements NamedObject {
 		}
 		return MDDBaseOperators.AND.combine(factory, nodes);
 	}
+
+    public byte getFirstValue(NodeInfo ni) {
+        List<Integer> values = m.get(ni);
+        if (values == null || values.size()< 1) {
+            return 0;
+        }
+        return values.get(0).byteValue();
+    }
 }

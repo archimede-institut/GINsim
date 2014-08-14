@@ -45,24 +45,34 @@ public abstract class ExportAction<G extends Graph> extends BaseAction {
 	/**
 	 * The action was launched, show a GUI if needed, select a file and if all went fine, call the backend
 	 * 
-	 * @param config
 	 * @throws GsException
 	 */
 	public void selectFile() {
 		// TODO: restore file filters
-		String filename = FileSelectionHelper.selectSaveFilename( null, new FileFormatFilter(getFileFilter()));
+		String filename = getSelectedFile();
 		if (filename == null) {
 			return;
 		}
 		try {
 			doExport(filename);
-			NotificationManager.publishInformation( graph, "Export finished");
+            notifySuccess();
 		} catch (Exception e) {
-			LogManager.error("Error in export "+getID());
-			LogManager.error(e);
-			NotificationManager.publishError( graph, "Export failed: " + e.getLocalizedMessage() + ". See logs for details");
+            notifyFailure(e);
 		}
 	}
+
+    public String getSelectedFile() {
+        return FileSelectionHelper.selectSaveFilename( null, new FileFormatFilter(getFileFilter()));
+    }
+
+    public void notifySuccess() {
+        NotificationManager.publishInformation( graph, "Export finished");
+    }
+    public void notifyFailure(Exception e) {
+        LogManager.error("Error in export "+getID());
+        LogManager.error(e);
+        NotificationManager.publishError( graph, "Export failed: " + e.getLocalizedMessage() + ". See logs for details");
+    }
 
 	public StackDialogHandler getConfigPanel() {
 		return null;

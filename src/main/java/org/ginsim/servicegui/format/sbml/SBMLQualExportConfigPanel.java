@@ -4,10 +4,13 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.notification.NotificationManager;
+import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
 import org.ginsim.service.format.sbml.SBMLQualConfig;
+import org.ginsim.service.format.sbml.SBMLqualService;
 
 public class SBMLQualExportConfigPanel extends AbstractStackDialogHandler {
 	
@@ -42,7 +45,19 @@ public class SBMLQualExportConfigPanel extends AbstractStackDialogHandler {
 
 	@Override
 	public boolean run() {
-		action.selectFile();
+        String filename = action.getSelectedFile();
+        if (filename == null) {
+            return true;
+        }
+
+        try {
+            SBMLqualService srv = ServiceManager.getManager().getService(SBMLqualService.class);
+            srv.export(config, filename);
+            action.notifySuccess();
+        } catch (Exception e) {
+            action.notifyFailure(e);
+        }
+
 		return true;
 	}	
 }

@@ -9,6 +9,7 @@ import java.util.List;
 import javax.xml.stream.XMLStreamException;
 
 import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.io.sbml.SBMLFormat;
 import org.colomoto.logicalmodel.io.sbml.SBMLQualBundle;
 import org.colomoto.logicalmodel.io.sbml.SBMLqualExport;
@@ -16,6 +17,7 @@ import org.colomoto.logicalmodel.io.sbml.SBMLqualImport;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.service.*;
 import org.mangosdk.spi.ProviderFor;
@@ -93,26 +95,47 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 	 * @param filename
 	 * @throws IOException
 	 */
+    @Override
 	public void export( RegulatoryGraph graph, String filename) throws IOException {
-		export(graph, new SBMLQualConfig(graph), filename);
+		export(new SBMLQualConfig(graph), filename);
 	}
 
 	
 	/**
 	 * Perform the SBML export, using the JSBML-based encoder from LogicalModel.
 	 * 
-	 * @param graph the graph to export
 	 * @param config the configuration structure
 	 * @param filename the path to the target file
 	 * @throws IOException
 	 */
-	public void export( RegulatoryGraph graph, SBMLQualConfig config, String filename) throws IOException{
+	public void export( SBMLQualConfig config, String filename) throws IOException{
+        RegulatoryGraph graph = config.getGraph();
 		LogicalModel model = graph.getModel();
 		OutputStream out = new FileOutputStream(new File(filename));
 		try {
 			SBMLqualExport sExport = new SBMLqualExport(model);
 			SBMLQualBundle qbundle = sExport.getSBMLBundle();
-			
+
+
+            // set the initial state
+            List<NodeInfo> nodes = model.getNodeOrder();
+            byte[] state = new byte[nodes.size()];
+            NamedState initState = config.getSelectedInitialState();
+            NamedState inputState = config.getSelectedInputState();
+            for (int idx=0 ; idx<state.length ; idx++) {
+                NodeInfo ni = nodes.get(idx);
+                byte v = -1;
+                if (ni.isInput()) {
+                    if (inputState != null) {
+                        v = inputState.getFirstValue(ni);
+                    }
+                } else if (initState != null) {
+                    v = initState.getFirstValue(ni);
+                }
+                state[idx] = v;
+            }
+            sExport.setInitialCondition(state);
+
 			// add basic layout information
 			if (qbundle.lmodel != null) {
 				Layout layout = new Layout();
