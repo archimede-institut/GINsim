@@ -2,12 +2,14 @@ Version 2.9.2.
 Changes since version 2.4:
 
 General Changes:
-* large refactoring, now require java6 and external libs
+* large refactoring, now require java6
+* due to size of external libs: versions with/without libraries included
 * styles for graphical settings
 * some features were moved to the LogicalModel lib
 * semi-official script-mode (using jython)
 * Welcome screen
 * Local Graph
+* PNG export resolution is now proportional to Zoom
 
 Definition of the regulatory graph:
 * new (simpler) definition of perturbations
@@ -17,11 +19,18 @@ Simulation module:
 
 Exports:
 * SBML qual (using LogicalModel)
-* Truth Table
+* Truth Table (using LogicalModel)
+* New NuSMV format using a single module, with support for:
+ . Updating modes: Sync, async, priorities
+ . Output nodes reduced as macros
+ . Input nodes can be: projected on the transitions, be fixed or be varying.
+* Avatar/Firefront for stochastic quantification of attractors
+* PRISM model checker
+* MaBoSS
 
 Imports:
 * SBML qual
-* Truth table
+* Truth table (using LogicalModel)
 
 
 ---------------------------------------------------------------------------------------------------------------------
