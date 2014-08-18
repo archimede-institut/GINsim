@@ -72,14 +72,4 @@ public class PerturbationMultiple extends MultiplePerturbation<Perturbation> imp
 		
 		return manager.addMultiplePerturbation(newPerturbations);
 	}
-
-    public boolean equals(Object o) {
-        if (o instanceof PerturbationMultiple) {
-            PerturbationMultiple other = (PerturbationMultiple)o;
-            if (perturbations.size() == other.perturbations.size() && perturbations.containsAll(other.perturbations)) {
-                return true;
-            }
-        }
-        return false;
-    }
 }
