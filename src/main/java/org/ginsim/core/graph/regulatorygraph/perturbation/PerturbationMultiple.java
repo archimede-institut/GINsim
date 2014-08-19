@@ -50,16 +50,6 @@ public class PerturbationMultiple extends MultiplePerturbation<Perturbation> imp
 	}
 
 	@Override
-	public boolean affectsNode(NodeInfo node) {
-		for (Perturbation p: perturbations) {
-			if (p.affectsNode(node)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
 	public Perturbation clone(ListOfPerturbations manager, Map<NodeInfo, NodeInfo> m_nodes, Map<Perturbation, Perturbation> m_perturbations) {
 		List<Perturbation> newPerturbations = new ArrayList<Perturbation>();
 		for (Perturbation perturbation: perturbations) {

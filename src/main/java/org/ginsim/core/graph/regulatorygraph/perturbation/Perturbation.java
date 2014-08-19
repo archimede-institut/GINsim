@@ -27,14 +27,6 @@ public interface Perturbation extends LogicalModelPerturbation {
 	void toXML(XMLWriter out) throws IOException;
 
     /**
-     * Test if the perturbation affects the function of a specific node
-     *
-     * @param node
-     * @return
-     */
-	boolean affectsNode(NodeInfo node);
-
-    /**
      * Copy the perturbation to a new graph (in particular to a reduced version of the current graph)
      *
      * @param manager

@@ -23,11 +23,6 @@ public class PerturbationFixed extends FixedValuePerturbation implements Perturb
 	}
 
 	@Override
-	public boolean affectsNode(NodeInfo node) {
-		return component.equals(node);
-	}
-
-	@Override
 	public Perturbation clone(ListOfPerturbations manager, Map<NodeInfo, NodeInfo> m_nodes, Map<Perturbation, Perturbation> m_perturbations) {
 		NodeInfo newComponent = m_nodes.get(component);
 		if (newComponent != null) {

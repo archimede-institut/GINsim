@@ -23,11 +23,6 @@ public class PerturbationRegulator extends InteractionPerturbation implements Pe
 	}
 
 	@Override
-	public boolean affectsNode(NodeInfo node) {
-		return target.equals(node);
-	}
-
-	@Override
 	public Perturbation clone(ListOfPerturbations manager, Map<NodeInfo, NodeInfo> m_nodes, Map<Perturbation, Perturbation> m_perturbations) {
 		NodeInfo newTarget = m_nodes.get(target);
 		NodeInfo newRegulator = m_nodes.get(regulator);
