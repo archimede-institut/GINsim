@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.io.LogicalModelFormat;
 import org.colomoto.logicalmodel.services.ServiceManager;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
@@ -95,4 +96,22 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 	public boolean canImport() {
 		return format.canImport();
 	}
+
+    public boolean canExportModel(RegulatoryGraph graph) {
+        if (!canExport()) {
+            return false;
+        }
+
+        if (!format.supportsMultivalued()) {
+            // check that the model is Boolean
+            for (NodeInfo ni: graph.getNodeInfos()) {
+                if (ni.getMax() > 1) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
+
 }

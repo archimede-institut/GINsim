@@ -1,5 +1,6 @@
 package org.ginsim.gui.service;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,7 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.service.FormatSupportService;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.shell.actions.ExportAction;
@@ -90,6 +92,10 @@ public class FormatSupportServiceGUI<S extends FormatSupportService> extends Abs
 		return format;
 	}
 
+    protected boolean canExport(RegulatoryGraph lrg) {
+        return service.canExportModel(lrg);
+    }
+
 }
 
 
@@ -136,4 +142,13 @@ class FormatExportAction extends ExportAction<RegulatoryGraph> {
 	public StackDialogHandler getConfigPanel() {
 		return serviceGUI.getConfigPanel(this, graph);
 	}
+
+    public void actionPerformed(ActionEvent arg0) {
+        if (!serviceGUI.canExport(graph)) {
+            NotificationManager.publishError(graph, "Graph not supported by this format (is it multivalued?");
+            return;
+        }
+        super.actionPerformed(arg0);
+    }
+
 }
