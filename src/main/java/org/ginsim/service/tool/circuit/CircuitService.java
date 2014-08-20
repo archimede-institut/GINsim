@@ -23,8 +23,8 @@ public class CircuitService implements Service {
         return new CircuitAnalyser(graph, perturbation, doCleanup);
     }
 
-    public CircuitSearcher getCircuitSearcher(RegulatoryGraph graph) {
-        return new CircuitSearcher(graph);
+    public CircuitSearcher getCircuitSearcher(RegulatoryGraph graph, CircuitSearchStoreConfig config) {
+        return new CircuitSearcher(graph, config);
     }
 
 }

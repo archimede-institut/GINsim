@@ -267,7 +267,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
     protected void run() {
         switch (status) {
         case STATUS_NONE:
-            cSearcher = CIRCUITS.getCircuitSearcher(graph);
+            cSearcher = CIRCUITS.getCircuitSearcher(graph, config);
             cSearcher.background(this);
             updateStatus(STATUS_SCC);
             break;
@@ -351,7 +351,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 
     protected void showInfo() {
         CircuitDescrInTree cdtree = getSelectedContextFromTreeTable();
-        if (cdtree == null) {
+        if (cdtree == null || mddPaths == null) {
             jta.setText("no data");
             return;
         }

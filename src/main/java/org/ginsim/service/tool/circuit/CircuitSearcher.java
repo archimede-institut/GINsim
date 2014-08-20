@@ -25,8 +25,16 @@ public class CircuitSearcher extends AbstractTask<List<CircuitDescrInTree>> {
     private final CircuitSearchStoreConfig config;
 
     public CircuitSearcher(RegulatoryGraph graph) {
+        this(graph, null);
+    }
+
+    public CircuitSearcher(RegulatoryGraph graph, CircuitSearchStoreConfig config) {
         this.graph = graph;
-        config = new CircuitSearchStoreConfig(graph.getNodeOrder());
+        if (config == null) {
+            this.config = new CircuitSearchStoreConfig(graph.getNodeOrder());
+        } else {
+            this.config = config;
+        }
         config.setReady();
     }
 
