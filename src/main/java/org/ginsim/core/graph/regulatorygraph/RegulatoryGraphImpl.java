@@ -525,4 +525,9 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 		return v;
 	}
 
+    @Override
+    public Collection<RegulatoryNode> getNodes() {
+        return nodeOrder;
+    }
+
 }
