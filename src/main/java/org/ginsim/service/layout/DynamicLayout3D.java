@@ -38,8 +38,8 @@ public class DynamicLayout3D extends BaseSTGLayout {
     }
     
     public void layout(DynamicGraph graph) throws GsException {
-		Iterator it = graph.getNodes().iterator();
-		Object v = it.next();
+		Iterator<DynamicNode> it = graph.getNodes().iterator();
+        DynamicNode v = it.next();
 	    if (v == null || !(v instanceof DynamicNode)) {
 	    	LogManager.error( "Wrong type of graph for this layout");
 	    	return;
@@ -52,14 +52,14 @@ public class DynamicLayout3D extends BaseSTGLayout {
         initColorPalette(maxValues.length);
         
 	    // move the nodes
-	    DynamicNode vertex = (DynamicNode)v;
+	    DynamicNode vertex = v;
 	    vreader.setNode(vertex);
 	    stateWidth = vreader.getWidth()+MARGIN;
         initDecal(maxValues);
 	    
 	    do {
 	    	moveNode(vertex, maxValues);
-		    vertex = (DynamicNode)it.next();
+		    vertex = it.next();
 		} while (it.hasNext());
     	moveNode(vertex, maxValues);
     	

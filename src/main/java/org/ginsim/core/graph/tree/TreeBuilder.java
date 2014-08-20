@@ -100,8 +100,7 @@ public abstract class TreeBuilder {
 	 */
 	public void updateNodeLayout() {
 		NodeAttributesReader vreader = tree.getNodeAttributeReader();
-		for (Iterator<TreeNode> it = tree.getNodes().iterator(); it.hasNext();) {
-			TreeNode vertex = it.next();
+		for (TreeNode vertex: tree.getNodes()) {
 			updateLayout(vreader, vertex);
 		}		
 	}
@@ -148,8 +147,7 @@ public abstract class TreeBuilder {
 	 */
 	public void clearTree() {
 		Vector<TreeNode> tmp = new Vector<TreeNode>( tree.getNodeCount());
-		for (Iterator<TreeNode> it = tree.getNodes().iterator(); it.hasNext();) {
-			TreeNode vertex = it.next();
+		for (TreeNode vertex: tree.getNodes()) {
 			tmp.add(vertex);
 		}
 		for (Iterator<TreeNode> it = tmp.iterator(); it.hasNext();) {
@@ -232,7 +230,6 @@ public abstract class TreeBuilder {
 	 * @param source
 	 * @param target
 	 * @param colorIndex
-	 * @param ereader
 	 */
 	protected void linkNode(TreeNode source, TreeNode target, int colorIndex) {
 		Edge<?> e = tree.addEdge(source, target, colorIndex);
