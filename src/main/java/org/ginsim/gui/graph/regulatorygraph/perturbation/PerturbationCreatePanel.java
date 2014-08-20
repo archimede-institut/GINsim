@@ -5,21 +5,20 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
-import javax.swing.AbstractAction;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JSlider;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.gui.utils.widgets.RangeSlider;
 
@@ -32,6 +31,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 	private static final boolean SHOWTYPECOMBO = PerturbationType.values().length > 1 ? true : false;
 	
 	private final JComboBox selectNode;
+    private final RegulatorModel regulatorModel;
 	private final JComboBox selectRegulator;
 	private final JComboBox selectType;
 	private NodeInfo selected = null;
@@ -97,7 +97,9 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		
 		// fill the setup panel
 		cst = new GridBagConstraints();
-		selectRegulator = new JComboBox(perturbations.getNodes());
+        regulatorModel = new RegulatorModel( perturbations.getGraph());
+		selectRegulator = new JComboBox( regulatorModel);
+        new JComboBox();
 		selectRegulator.addActionListener(this);
 		setupPanel.add(selectRegulator, cst);
 		
@@ -308,6 +310,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		case REGULATOR:
 			// show GUI for regulator perturbation
 			setupPanel.setBorder(BorderFactory.createTitledBorder("Fix a regulator for this component"));
+            regulatorModel.setNode(selected);
 			selectRegulator.setVisible(true);
 			rangeSlider.setVisible(false);
 
@@ -350,4 +353,43 @@ class CreateAction extends AbstractAction {
 	public void actionPerformed(ActionEvent e) {
 		panel.create();
 	}
+}
+
+class RegulatorModel extends DefaultComboBoxModel<NodeInfo> implements MutableComboBoxModel<NodeInfo> {
+
+    private final RegulatoryGraph lrg;
+    private NodeInfo node = null;
+
+    public RegulatorModel(RegulatoryGraph lrg) {
+        this.lrg = lrg;
+    }
+
+    public void setNode( NodeInfo ni) {
+        if (ni == this.node) {
+            return;
+        }
+
+        this.node = ni;
+        int n = getSize();
+        removeAllElements();
+        fireIntervalRemoved(this, 0, n);
+        if (ni == null) {
+            setSelectedItem(null);
+            return;
+        }
+
+        RegulatoryNode node = lrg.getNodeByName(ni.getNodeID());
+        Collection<RegulatoryMultiEdge> regulators = lrg.getIncomingEdges(node);
+        NodeInfo reg = null;
+        for (RegulatoryMultiEdge e: regulators) {
+            NodeInfo next = e.getSource().getNodeInfo();
+            addElement(next);
+            if (reg == null) {
+                reg = next;
+            }
+        }
+
+        fireIntervalAdded(this, 0, getSize());
+        setSelectedItem(reg);
+    }
 }

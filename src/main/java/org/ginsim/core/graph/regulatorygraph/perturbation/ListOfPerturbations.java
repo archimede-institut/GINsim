@@ -213,6 +213,10 @@ public class ListOfPerturbations extends ArrayList<Perturbation> implements Grap
 		return ret;
 	}
 
+    public RegulatoryGraph getGraph() {
+        return lrg;
+    }
+
 	@Override
 	public GraphEventCascade graphChanged(RegulatoryGraph g, GraphChangeType type, Object data) {
 		switch (type) {
