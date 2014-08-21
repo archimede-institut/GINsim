@@ -2,7 +2,7 @@ package org.ginsim.core.graph.view.shapes;
 
 
 import org.ginsim.core.graph.view.SVGShape;
-import org.ginsim.service.export.image.SVGWriter;
+import org.ginsim.common.xml.SVGWriter;
 
 import java.awt.*;
 import java.io.IOException;

@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.colomoto.common.task.AbstractTask;
 import org.ginsim.common.utils.ColorPalette;
+import org.ginsim.common.xml.SVGWriter;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.view.*;

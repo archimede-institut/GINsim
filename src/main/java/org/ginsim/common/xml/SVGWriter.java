@@ -1,7 +1,4 @@
-package org.ginsim.service.export.image;
-
-import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.graph.view.NodeShape;
+package org.ginsim.common.xml;
 
 import java.awt.*;
 import java.io.IOException;
