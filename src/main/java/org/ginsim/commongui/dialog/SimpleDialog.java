@@ -2,14 +2,13 @@ package org.ginsim.commongui.dialog;
 
 import java.awt.Frame;
 import java.awt.event.ActionEvent;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 import javax.swing.*;
 
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.gui.graph.GraphGUI;
-import org.ginsim.gui.shell.FrameActionManager;
+import org.ginsim.commongui.SavingGUI;
+import org.ginsim.commongui.utils.GUIInfo;
 
 /**
  * Base dialog which can remember its default size.
@@ -24,7 +23,7 @@ public abstract class SimpleDialog extends JDialog {
 
 	protected String id;
 
-    private GraphGUI gui = null;
+    private SavingGUI gui = null;
 
     Action actionListener = new AbstractAction() {
         private static final long serialVersionUID = 448859746054492959L;
@@ -66,7 +65,7 @@ public abstract class SimpleDialog extends JDialog {
         im.put(KeyStroke.getKeyStroke("ESCAPE"), "ESCAPE");
         content.getActionMap().put("ESCAPE", actionListener);
 
-        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, FrameActionManager.MASK), "save");
+        im.put(KeyStroke.getKeyStroke(KeyEvent.VK_S, GUIInfo.MASK), "save");
         content.getActionMap().put("save", saveAction);
 	}
 
@@ -86,7 +85,7 @@ public abstract class SimpleDialog extends JDialog {
         }
     }
 
-    public void setAssociatedGUI(GraphGUI gui) {
+    public void setAssociatedGUI(SavingGUI gui) {
         this.gui = gui;
     }
 }

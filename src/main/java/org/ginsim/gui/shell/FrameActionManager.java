@@ -5,6 +5,7 @@ import java.awt.Toolkit;
 import javax.swing.JMenuBar;
 import javax.swing.JToolBar;
 
+import org.ginsim.commongui.utils.GUIInfo;
 import org.ginsim.gui.graph.GraphGUI;
 
 /**
@@ -14,7 +15,7 @@ import org.ginsim.gui.graph.GraphGUI;
  */
 public interface FrameActionManager {
 
-	public static final int MASK = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+	public static final int MASK = GUIInfo.MASK;
 	
 	public void buildActions(GraphGUI<?, ?, ?> graph, JMenuBar menubar, JToolBar toolbar);
 }

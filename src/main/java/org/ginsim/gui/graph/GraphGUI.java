@@ -5,6 +5,7 @@ import java.awt.Component;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 
+import org.ginsim.commongui.SavingGUI;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 
@@ -16,7 +17,7 @@ import org.ginsim.core.graph.Graph;
  * @param <V>
  * @param <E>
  */
-public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
+public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> extends SavingGUI {
 
 	/**
 	 * @return the underlying graph
@@ -72,13 +73,6 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> {
 	 * @return true if the type of graph associated to the GraphGUI can be saved, false if not
 	 */
 	boolean canBeSaved();
-	
-	/**
-	 * Save the graph.
-	 * 
-	 * @return true, unless save failed
-	 */
-	boolean save();
 	
 	/**
 	 * Pick a destination and save the graph.
