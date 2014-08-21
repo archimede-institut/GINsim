@@ -1,6 +1,8 @@
 package org.ginsim.service.tool.circuit;
 
 
+import org.ginsim.core.graph.regulatorygraph.MDDContext;
+
 public class FunctionalityContext implements MDDContext {
 
 	public CircuitDescr circuitDesc;

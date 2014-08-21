@@ -1,4 +1,4 @@
-package org.ginsim.servicegui.tool.stablestates;
+package org.ginsim.gui.graph.dynamicgraph;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.ginsim.service.tool.circuit;
+package org.ginsim.core.graph.regulatorygraph;
 
 public interface MDDContext {
 

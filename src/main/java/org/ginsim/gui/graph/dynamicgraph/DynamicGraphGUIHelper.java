@@ -29,7 +29,6 @@ import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.data.GenericPropertyEditorPanel;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.Frame;
-import org.ginsim.servicegui.tool.stablestates.StableTableModel;
 import org.mangosdk.spi.ProviderFor;
 
 

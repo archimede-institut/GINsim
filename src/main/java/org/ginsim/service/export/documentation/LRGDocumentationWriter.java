@@ -34,7 +34,7 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
 import org.ginsim.service.tool.stablestates.StableStatesService;
-import org.ginsim.servicegui.tool.stablestates.StableTableModel;
+import org.ginsim.gui.graph.dynamicgraph.StableTableModel;
 
 /**
  * GenericDocumentExport is a plugin to export the documentation of a model into multiples document format.

@@ -32,7 +32,7 @@ import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.ginsim.servicegui.tool.regulatorygraphanimation.LRGStateStyleProvider;
-import org.ginsim.servicegui.tool.stablestates.StableTableModel;
+import org.ginsim.gui.graph.dynamicgraph.StableTableModel;
 
 
 /**
