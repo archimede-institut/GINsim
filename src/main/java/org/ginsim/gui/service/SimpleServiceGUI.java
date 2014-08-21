@@ -55,12 +55,12 @@ public abstract class SimpleServiceGUI<S extends Service> extends AbstractServic
 		// desired constructor according to the context
 		if( service == null){
 			parameter_types = new Class[1];
-			parameter_types[0] = IntrospectionUtils.getGraphInterface( graph.getClass());
+			parameter_types[0] = IntrospectionUtils.getChildInterface( graph.getClass(), Graph.class);
 			parameters = new Object[1];
 			parameters[0] = graph;
 		} else{
 			parameter_types = new Class[2];
-			parameter_types[0] = IntrospectionUtils.getGraphInterface( graph.getClass());
+			parameter_types[0] = IntrospectionUtils.getChildInterface( graph.getClass(), Graph.class);
 			parameter_types[1] = service.getClass();
 			parameters = new Object[2];
 			parameters[0] = graph;

@@ -13,7 +13,7 @@ import java.util.zip.ZipFile;
 import org.colomoto.logicalmodel.services.ExtensionLoader;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.utils.ServiceClassInfo;
+import org.ginsim.core.service.ServiceClassInfo;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraphImpl;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraphImpl;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;

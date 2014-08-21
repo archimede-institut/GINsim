@@ -5,7 +5,7 @@ import java.util.Map.Entry;
 
 import org.colomoto.logicalmodel.services.ExtensionLoader;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.utils.ServiceClassInfo;
+import org.ginsim.core.service.ServiceClassInfo;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.common.utils.IntrospectionUtils;
 
@@ -150,7 +150,7 @@ public class ObjectAssociationManager {
      */
     public List<GraphAssociatedObjectManager> getObjectManagerList( Class graph_class) {
     	
-    	Class interface_class = IntrospectionUtils.getGraphInterface( graph_class);
+    	Class interface_class = IntrospectionUtils.getChildInterface(graph_class, Graph.class);
     	
         return specializedObjectManagers.get( interface_class);
     }
@@ -182,7 +182,7 @@ public class ObjectAssociationManager {
      */
     public GraphAssociatedObjectManager getObjectManager( Class graph_class, String key) {
     	
-    	Class interface_class = IntrospectionUtils.getGraphInterface( graph_class);
+    	Class interface_class = IntrospectionUtils.getChildInterface(graph_class, Graph.class);
     	
     	List<GraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( interface_class);
     	

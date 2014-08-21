@@ -17,7 +17,7 @@ import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.common.document.LaTeXDocumentWriter;
 import org.ginsim.common.document.OOoDocumentWriter;
 import org.ginsim.common.document.XHTMLDocumentWriter;
-import org.ginsim.common.utils.ServiceClassInfo;
+import org.ginsim.core.service.ServiceClassInfo;
 import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.Graph;

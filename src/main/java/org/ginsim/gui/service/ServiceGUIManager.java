@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ServiceConfigurationError;
-import java.util.ServiceLoader;
 import java.util.Set;
 
 import javax.swing.Action;
@@ -12,7 +11,7 @@ import javax.swing.Action;
 import org.colomoto.logicalmodel.services.ExtensionLoader;
 import org.ginsim.Launcher;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.utils.ServiceClassInfo;
+import org.ginsim.core.service.ServiceClassInfo;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;

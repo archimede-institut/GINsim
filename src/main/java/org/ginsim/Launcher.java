@@ -16,7 +16,7 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OSXAdapter;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.application.Txt;
-import org.ginsim.common.utils.ServiceClassInfo;
+import org.ginsim.core.service.ServiceClassInfo;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.GraphFactory;

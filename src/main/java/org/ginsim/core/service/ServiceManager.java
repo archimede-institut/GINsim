@@ -3,12 +3,10 @@ package org.ginsim.core.service;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ServiceConfigurationError;
-import java.util.ServiceLoader;
 import java.util.Set;
 
 import org.colomoto.logicalmodel.services.ExtensionLoader;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.utils.ServiceClassInfo;
 
 
 /**

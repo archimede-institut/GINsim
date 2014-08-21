@@ -3,8 +3,6 @@ package org.ginsim.common.utils;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ginsim.core.graph.Graph;
-
 /**
  * Collection of static methods for common introspection tasks.
  * The main function is to guess the type of Graph implemented by an object.
@@ -15,12 +13,12 @@ import org.ginsim.core.graph.Graph;
 public class IntrospectionUtils {
 
 	/**
-	 * Return the deeper interface that inherits from Graph interface
+	 * Return the deeper interface that inherits from the base interface
 	 *
 	 * @param classe
 	 * @return
 	 */
-    public static Class getGraphInterface( Class classe) {
+    public static Class getChildInterface( Class classe, Class baseclass) {
 
         Class[] interfaces = classe.getInterfaces();
         if( interfaces.length != 0){
@@ -28,7 +26,7 @@ public class IntrospectionUtils {
 	            List<Class> all_interfaces = new ArrayList<Class>();
 	            all_interfaces.add( interfaces[i]);
 	            all_interfaces.addAll( getSuperInterfaces( interfaces[i]));
-	            if( all_interfaces.contains( Graph.class)){
+	            if( all_interfaces.contains( baseclass)){
 	            	return interfaces[i];
 	            }
 	        }
@@ -36,7 +34,7 @@ public class IntrospectionUtils {
 
     	Class super_class =  classe.getSuperclass();
     	if( super_class != null){
-    		return getGraphInterface( super_class);
+    		return getChildInterface( super_class, baseclass);
     	}
 
 

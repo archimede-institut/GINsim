@@ -1,11 +1,6 @@
-package org.ginsim.common.utils;
-
-import org.ginsim.core.service.Alias;
-import org.ginsim.core.service.EStatus;
-import org.ginsim.core.service.ServiceStatus;
+package org.ginsim.core.service;
 
 public class ServiceClassInfo {
-
 
     public final Class cl;
     public final String alias;
