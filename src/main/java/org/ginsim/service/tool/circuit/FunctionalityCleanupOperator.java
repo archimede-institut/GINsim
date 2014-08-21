@@ -18,6 +18,7 @@ public class FunctionalityCleanupOperator extends AbstractOperator {
     @Override
     public int combine(MDDManager ddmanager, int first, int other) {
         if (first == other) {
+            ddmanager.use(first);
             return first;
         }
 
