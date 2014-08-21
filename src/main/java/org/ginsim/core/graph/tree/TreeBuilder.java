@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.ginsim.commongui.dialog.GUIMessageUtils;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -159,7 +159,7 @@ public abstract class TreeBuilder {
 	public Object getParameter(String key) {
 		Object value = this.parameters.get(key);
 		if (value == null) {
-			GUIMessageUtils.openErrorDialog("expected parameter '"+key+"' not found or null");
+            LogManager.debug("expected parameter '" + key + "' not found or null");
 		}
 		return value;
 	}

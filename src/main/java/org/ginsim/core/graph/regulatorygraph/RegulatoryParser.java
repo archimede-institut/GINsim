@@ -13,7 +13,6 @@ import java.util.Vector;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.Graph;
@@ -493,7 +492,7 @@ public final class RegulatoryParser extends GsXMLHelper {
     		}
     		if (!ok || v_order.size() != graph.getNodeCount()) {
     			// error
-    			GUIMessageUtils.openErrorDialog("incoherent nodeOrder, not restoring it");
+                LogManager.debug("incoherent nodeOrder, not restoring it");
     		} else {
     			graph.setNodeOrder(v_order);
     		}
