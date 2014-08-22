@@ -33,6 +33,7 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
+import org.ginsim.service.export.image.ImageExportService;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.ginsim.gui.graph.dynamicgraph.StableTableModel;
 
@@ -44,6 +45,8 @@ import org.ginsim.gui.graph.dynamicgraph.StableTableModel;
  * @see DocumentWriter
  */
 public class LRGDocumentationWriter {
+
+    private static ImageExportService SRV_IMAGE = ServiceManager.getManager().getService(ImageExportService.class);
 
 	private DocumentWriter doc;
 
@@ -77,14 +80,14 @@ public class LRGDocumentationWriter {
 	private void writeDocument() throws Exception {
 		doc.startDocument();
 		doc.openHeader(1, "Description of the model \"" + graph.getGraphName() + "\"", null);
-				
-		//Graph annotation
+
+        // add model image
+        doc.addImage(SRV_IMAGE.getPNG(graph, 1), "model.png");
+
+        //Graph annotation
 		doc.openHeader(2, "Annotation", null);
 		writeAnnotation(graph.getAnnotation());
 		doc.openParagraph(null);
-		
-		// FIXME: add back image to the documentation
-		// doc.addImage(graph.getGraphManager().getImage(), "model.png");
 		
 		doc.closeParagraph();
 		

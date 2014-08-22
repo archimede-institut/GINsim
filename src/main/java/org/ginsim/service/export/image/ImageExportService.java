@@ -77,6 +77,17 @@ public class ImageExportService implements Service {
      * @param f the zoom factor
      */
     public void exportPNG( Graph<?, Edge<?>> graph, String fileName, int f) {
+        BufferedImage img = getPNG(graph, f);
+
+        try {
+            saveImage(img, f, fileName);
+        } catch (IOException e) {
+            LogManager.error(e);
+        }
+    }
+
+
+    public BufferedImage getPNG( Graph<?, ?> graph, int f) {
 
     	Dimension dim = graph.getDimension();
     	int width = f*(int)dim.getWidth();
@@ -99,13 +110,10 @@ public class ImageExportService implements Service {
     		nreader.setNode(node);
     		nreader.render(g);
     	}
-    	
-    	try {
-            saveImage(img, f, fileName);
-		} catch (IOException e) {
-			LogManager.error(e);
-		}
+
+        return img;
     }
+
 
     private void saveImage(BufferedImage img, String filename) throws  IOException {
         ImageIO.write(img, "png", new File(filename));
