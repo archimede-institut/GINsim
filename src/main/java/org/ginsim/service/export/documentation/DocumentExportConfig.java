@@ -15,7 +15,6 @@ public class DocumentExportConfig implements NamedStateStore {
 
 	public boolean exportInitStates = OptionStore.getOption("export.doc.init",  true);
 	public boolean exportMutants = OptionStore.getOption("export.doc.perturbations",  true);;
-	public boolean searchStableStates = OptionStore.getOption("export.doc.stable",  true);;
 	public boolean putComment = OptionStore.getOption("export.doc.comment",  true);;
 	
 	public GenericDocumentFormat format = getSubFormat().get(0);
@@ -45,7 +44,6 @@ public class DocumentExportConfig implements NamedStateStore {
 	public void saveDefaults() {
 		OptionStore.setOption("export.doc.init", exportInitStates);
 		OptionStore.setOption("export.doc.perturbations", exportMutants);
-		OptionStore.setOption("export.doc.stable", searchStableStates);
 		OptionStore.setOption("export.doc.comment", putComment);
 	}
 

@@ -33,6 +33,7 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
+import org.ginsim.service.export.image.ImageExportService;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.ginsim.gui.graph.dynamicgraph.StableTableModel;
 
@@ -45,10 +46,12 @@ import org.ginsim.gui.graph.dynamicgraph.StableTableModel;
  */
 public class LRGDocumentationWriter {
 
+    private static ImageExportService SRV_IMAGE = ServiceManager.getManager().getService(ImageExportService.class);
+
 	private DocumentWriter doc;
 
 	private final RegulatoryGraph graph;
-	private List nodeOrder;
+	private List<RegulatoryNode> nodeOrder;
 	private int len;
 	private final StableStatesService sss = ServiceManager.get(StableStatesService.class);
 
@@ -77,14 +80,14 @@ public class LRGDocumentationWriter {
 	private void writeDocument() throws Exception {
 		doc.startDocument();
 		doc.openHeader(1, "Description of the model \"" + graph.getGraphName() + "\"", null);
-				
-		//Graph annotation
+
+        // add model image
+        doc.addImage(SRV_IMAGE.getPNG(graph, 1), "model.png");
+
+        //Graph annotation
 		doc.openHeader(2, "Annotation", null);
 		writeAnnotation(graph.getAnnotation());
 		doc.openParagraph(null);
-		
-		// FIXME: add back image to the documentation
-		// doc.addImage(graph.getGraphManager().getImage(), "model.png");
 		
 		doc.closeParagraph();
 		
@@ -96,12 +99,10 @@ public class LRGDocumentationWriter {
 		
 		// initial states
 		if (config.exportInitStates) {
-			doc.openHeader(2, "Initial States", null);
 			writeInitialStates();
 		}
 		// mutant description
 		if (config.exportMutants) {
-			doc.openHeader(2, "Mutants and Dynamical Behaviour", null);
 			writePerturbations();
 		}
 
@@ -109,113 +110,69 @@ public class LRGDocumentationWriter {
 	}
 
 	private void writePerturbations() throws Exception {
-		ListOfPerturbations mutantList = (ListOfPerturbations) ObjectAssociationManager.getInstance().getObject(graph, PerturbationManager.KEY, true);
-		
-		String[] cols;
-		if (config.searchStableStates){
-			cols = new String[] {"", ""};
-		} else {
-			cols = new String[] {""};
-		}
+		ListOfPerturbations mutantList = (ListOfPerturbations) ObjectAssociationManager.getInstance().getObject(graph, PerturbationManager.KEY, false);
 
-		doc.openTable("perturbations", "table", cols);
-		doc.openTableRow(null);
-		doc.openTableCell("Perturbation", true);
-		if (config.searchStableStates) {
-			doc.openTableCell("Stable States", true);
-		}
+        if (mutantList == null || mutantList.size() < 1) {
+            return;
+        }
 
-		StableTableModel model = new StableTableModel();
-		LogicalModel lmodel = null;
-		if (config.searchStableStates) {
-			lmodel = graph.getModel();
-		}
+        doc.openHeader(2, "Perturbations", null);
 
-		doc.openTableRow(null);
-		doc.openTableCell(1, (model.getRowCount() > 0?2:1), "Wild Type", true);
-        
-        if (config.searchStableStates) {
-			findStableStates(lmodel, model);
-		}
-
+        doc.openList("L1");
 		for (Perturbation mutant: mutantList) {
-			
-			doc.openTableRow(null);
-			doc.openTableCell(1, (model.getRowCount() > 0?2:1), ""+mutant, true);
-			
-			if (config.searchStableStates) {
-				findStableStates(mutant.apply(lmodel), model);
-			}
-		}
-		doc.closeTable();
-	}
-
-	private int findStableStates(LogicalModel lmodel, StableTableModel model) throws Exception {
-		int stable = sss.getStableStateSearcher(lmodel).getResult();
-		model.setResult(lmodel.getMDDManager(), stable);
-		int nbrow = model.getRowCount();
-		if (nbrow > 0) {
-			doc.openTableCell(1, 1, model.getRowCount()+" Stable states", false);
-			writeStableStates( model);
-		} else {
-			doc.openTableCell(1, nbrow, "", false);
-		}
-		return nbrow;
-	}
-	
-	
-
-	
-	private void writeStableStates( StableTableModel model) throws Exception {
-		doc.openList("L1");
-		for (int k=0 ; k<model.getRowCount() ; k++) {
-			doc.openListItem(null);
-			boolean needPrev=false;
-			String name = (String)model.getValueAt(k,0);
-			if (name != null) {
-				doc.writeText(name+": ");
-			}
-			for (int j=1 ; j<=len ; j++) {
-				Object val = model.getValueAt(k,j);
-				if (!val.toString().equals("0")) {
-					String s = needPrev ? " ; " : "";
-					needPrev = true;
-					if (val.toString().equals("1")) {
-						doc.writeText(s+nodeOrder.get(j-1));
-					} else {
-						doc.writeText(s+nodeOrder.get(j-1)+"="+val);
-					}
-				}
-			}
-			doc.closeListItem();
+            doc.openListItem(mutant.toString());
+            doc.closeListItem();
 		}
 		doc.closeList();
 	}
-	
+
 	private void writeInitialStates() throws IOException {
-		NamedStateList initStates = ((NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph,
-				NamedStatesManager.KEY, false)).getInitialStates();
-		if (initStates != null && initStates.size() > 0) {
-			InitStateTableModel model = new InitStateTableModel(null, initStates, false);
-			String[] t_cols = new String[len+1];
-			for (int i=0 ; i<=len ; i++) {
-				t_cols[i] = "";
-			}
-			doc.openTable("initialStates", "table", t_cols);
-			doc.openTableRow(null);
-			doc.openTableCell("Name");
-			for (int i = 0; i < len; i++) {
-				doc.openTableCell(""+nodeOrder.get(i));
-			}
-			for ( int i=0 ; i< initStates.size() ; i++ ) {
-				doc.openTableRow(null);
-				doc.openTableCell(""+model.getValueAt(i, 0));
-				for (int j = 2; j < model.getColumnCount(); j++) {
-					doc.openTableCell(""+model.getValueAt(i, j));
-				}
-			}
-			doc.closeTable();
-		}
+        NamedStatesHandler handler = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph,
+                NamedStatesManager.KEY, false);
+
+        if (handler == null) {
+            return;
+        }
+        NamedStateList initStates = handler.getInitialStates();
+        NamedStateList inputStates = handler.getInputConfigs();
+
+        if (initStates.size() < 1 && inputStates.size() < 1) {
+            return;
+        }
+
+        doc.openHeader(2, "Initial States", null);
+        writeInitTable(inputStates, "Input nodes");
+        writeInitTable(initStates, "Core nodes");
+    }
+
+    private void writeInitTable(NamedStateList initStates, String title) throws IOException {
+        if (initStates == null || initStates.size() < 1) {
+            return;
+        }
+
+        doc.openHeader(3, title, null);
+
+        InitStateTableModel model = new InitStateTableModel(null, initStates, false);
+        String[] t_cols = new String[len+1];
+        for (int i=0 ; i<=len ; i++) {
+            t_cols[i] = "";
+        }
+
+        doc.openTable("initialStates", "table", t_cols);
+        doc.openTableRow(null);
+        doc.openTableCell("Name");
+        int nbcols = model.getColumnCount();
+        for (int j = 1; j < nbcols; j++) {
+            doc.openTableCell(model.getColumnName(j));
+        }
+        for ( int i=0 ; i< initStates.size() ; i++ ) {
+            doc.openTableRow(null);
+            doc.openTableCell(""+model.getValueAt(i, 0));
+            for (int j = 1; j < nbcols; j++) {
+                doc.openTableCell(""+model.getValueAt(i, j));
+            }
+        }
+        doc.closeTable();
 	}
 
 	private void writeLogicalFunctionsTable(boolean putcomment) throws IOException {
@@ -348,47 +305,48 @@ public class LRGDocumentationWriter {
 	}
 	
 	private void writeAnnotation(Annotation annotation) throws IOException {
-		boolean hasLink = false;
-		List<AnnotationLink> links = annotation.getLinkList();
-		if (links.size() > 0) {
-			hasLink = true;
-			doc.openList("L1");
+
+        doc.openParagraph(null);
+        String[] t = annotation.getComment().split("\n");
+        for (int i = 0; i < t.length-1; i++) {
+            doc.writeTextln(t[i]);
+        }
+        if (t.length > 0) {
+            doc.writeText(t[t.length-1]);
+        }
+        doc.closeParagraph();
+        writeLinkList(annotation.getLinkList());
+    }
+
+    private void writeLinkList(List<AnnotationLink> links) throws IOException {
+        if (links == null || links.size() < 1) {
+            return;
+        }
+        doc.openList("L1");
+        for (AnnotationLink lnk: links) {
+            String s_link;
+            if (lnk.getHelper() != null) {
+                s_link = lnk.getHelper().getLink(lnk.getProto(), lnk.getValue());
+            } else {
+                s_link = OpenUtils.getLink(lnk.getProto(), lnk.getValue());
+            }
+            if (s_link == null) {
+                doc.openListItem(null);
+                doc.writeText(lnk.toString());
+                doc.closeListItem();
+            } else {
+                if (s_link == lnk.toString() && s_link.length() >= 50) {
+                    doc.openListItem(null);
+                    doc.addLink(s_link, s_link.substring(0, 45) + "...");
+                    doc.closeListItem();
+                } else {
+                    doc.openListItem(null);
+                    doc.addLink(s_link, lnk.toString());
+                    doc.closeListItem();
+                }
+            }
 		}
-		for (AnnotationLink lnk: links) {
-			String s_link;
-			if (lnk.getHelper() != null) {
-				s_link = lnk.getHelper().getLink(lnk.getProto(), lnk.getValue());
-			} else {
-				s_link = OpenUtils.getLink(lnk.getProto(), lnk.getValue());
-			}
-			if (s_link == null) {
-				doc.openListItem(null);
-				doc.writeText(lnk.toString());
-				doc.closeListItem();
-			} else {
-				if (s_link == lnk.toString() && s_link.length() >= 50) {
-					doc.openListItem(null);
-					doc.addLink(s_link, s_link.substring(0, 45) + "...");
-					doc.closeListItem();
-				} else {
-					doc.openListItem(null);
-					doc.addLink(s_link, lnk.toString());
-					doc.closeListItem();
-				}
-			}
-		}
-		if (hasLink) {
-			doc.closeList();
-		}
-		doc.openParagraph(null);
-		String[] t = annotation.getComment().split("\n");
-		for (int i = 0; i < t.length-1; i++) {
-			doc.writeTextln(t[i]);
-		}
-		if (t.length > 0) {
-			doc.writeText(t[t.length-1]);
-		}
-		doc.closeParagraph();
+        doc.closeList();
 	}
 
 	/**

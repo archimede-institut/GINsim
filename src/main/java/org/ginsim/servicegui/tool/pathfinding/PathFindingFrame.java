@@ -9,29 +9,16 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
 
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JTextField;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingConstants;
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 
 import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphChangeType;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
@@ -40,11 +27,9 @@ import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 public class PathFindingFrame extends StackDialog implements ActionListener, ResultHandler {
 	private static final long serialVersionUID = -7430762236435581864L;
 	private Graph graph;
-	private Container mainPanel, resultsPanel, progressionPanel;
+	private Container resultsPanel, progressionPanel;
 	private JProgressBar progressBar;
 	private JLabel progressionLabel;
-	private JTextField startTextField;
-	private JTextField endTextField;
 	private JList pathList;
 	private JButton colorizeButton;
 	private JButton copyButton;
@@ -52,73 +37,56 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	private boolean isColorized = false;
 	private List path;
 	private PathStyleProvider selector;
-	private JButton selectionForEndButton, selectionForStartButton;
+	private JButton b_selectFromGraph;
+
+    private JTable constraintTable;
+    private ConstraintSelectionModel constraintModel;
 	
 	
 	public PathFindingFrame( Graph graph) {
 		super(GUIManager.getInstance().getFrame(graph), "pathFinding", 420, 260);
+        setTitle("Search a path");
 		this.setMinimumSize(new Dimension(300, 300));
 		this.graph = graph;
-        initialize();
-    }
+        constraintModel = new ConstraintSelectionModel(graph);
 
-	public void initialize() {
-		setMainPanel(getMainPanel());
-	}
-	
-	private Container getMainPanel() {
-		if (mainPanel == null) {
-			mainPanel = new javax.swing.JPanel();
-			mainPanel.setLayout(new GridBagLayout());
-			GridBagConstraints c = new GridBagConstraints();
-		
-			c.gridx = 0;
-			c.gridy = 0;
-			c.fill = GridBagConstraints.HORIZONTAL;
-			c.ipadx = 10;
-			c.gridwidth = 3;
-			mainPanel.add(new JLabel(Txt.t("STR_pathFinding")), c);
-			
-			c.gridx = 0;
-			c.gridy++;			
-			c.gridwidth = 1;
-			mainPanel.add(new JLabel(Txt.t("STR_pathFinding_start")), c);
-			c.gridx++;
-			c.weightx = 1;
-			mainPanel.add(getStartField(), c);
-			c.gridx++;
-			c.weightx = 0;
-			mainPanel.add(getGetSelectionForStartButton(), c);
-			
-			c.gridx = 0;
-			c.gridy++;			
-			c.weightx = 0;
-			mainPanel.add(new JLabel(Txt.t("STR_pathFinding_end")), c);
-			c.gridx++;
-			c.weightx = 1;
-			mainPanel.add(getEndField(), c);
-			c.gridx++;
-			c.weightx = 0;
-			mainPanel.add(getGetSelectionForEndButton(), c);
-			
-			c.gridx = 0;
-			c.gridy++;			
-			c.gridwidth = 3;
-			c.weightx = 1;
-			mainPanel.add(new JSeparator(SwingConstants.HORIZONTAL), c);
+        JPanel mainPanel = new javax.swing.JPanel();
+        mainPanel.setLayout(new GridBagLayout());
+        GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
+        c.weightx = 0;
+        c.weighty = 0;
+        c.anchor = GridBagConstraints.NORTHWEST;
+        mainPanel.add(getGetSelectFromGraphButton(), c);
 
-			c.gridx = 0;
-			c.gridy++;
-			mainPanel.add(getProgressionPanel(), c);
+        c.gridy++;
+        c.weightx = 1;
+        c.weighty = 1;
+        c.gridwidth = 5;
+        c.fill = GridBagConstraints.BOTH;
+        mainPanel.add(getNodeTable(), c);
 
-			c.gridx = 0;
-			c.gridy++;
-			c.fill = GridBagConstraints.BOTH;
-			c.weightx = 1;
-			c.weighty = 1;
-			mainPanel.add(getResultPanel(), c);
-		}
-		return mainPanel;
+        c.gridx = 0;
+        c.gridy++;
+        c.gridwidth = 5;
+        c.weightx = 1;
+        c.weighty = 0;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        mainPanel.add(new JSeparator(SwingConstants.HORIZONTAL), c);
+
+        c.gridx = 0;
+        c.gridy++;
+        mainPanel.add(getProgressionPanel(), c);
+
+        c.gridx = 0;
+        c.gridy++;
+        c.fill = GridBagConstraints.BOTH;
+        c.weightx = 1;
+        c.weighty = 1;
+        mainPanel.add(getResultPanel(), c);
+
+        setMainPanel(mainPanel);
 	}
 
 	private Component getProgressionPanel() {
@@ -164,23 +132,21 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		return resultsPanel;
 	}
 
-	private Component getGetSelectionForEndButton() {
-		if (selectionForEndButton == null) {
-			selectionForEndButton = new JButton(ImageLoader.getImageIcon("undo.gif"));
-			selectionForEndButton.addActionListener(this);
-			selectionForEndButton.setToolTipText("get the selected node");
+	private Component getGetSelectFromGraphButton() {
+		if (b_selectFromGraph == null) {
+            b_selectFromGraph = new JButton(ImageLoader.getImageIcon("undo.gif"));
+            b_selectFromGraph.addActionListener(this);
+            b_selectFromGraph.setToolTipText("get the selected node");
 		}
-		return selectionForEndButton;
+		return b_selectFromGraph;
 	}
 
-	private Component getGetSelectionForStartButton() {
-		if (selectionForStartButton == null) {
-			selectionForStartButton = new JButton(ImageLoader.getImageIcon("undo.gif"));
-			selectionForStartButton.addActionListener(this);
-			selectionForStartButton.setToolTipText("get the selected node");
-		}
-		return selectionForStartButton;
-	}
+    private Component getNodeTable() {
+        if (constraintTable == null) {
+            constraintTable = new JTable(constraintModel);
+        }
+        return constraintTable;
+    }
 
 	private Component getCopyButton() {
 		if (copyButton == null) {
@@ -209,20 +175,6 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		return pathListScrollPane;
 	}
 
-	private Component getEndField() {
-		if (endTextField == null) {
-			endTextField = new JTextField();
-		}
-		return endTextField;
-	}
-
-	private Component getStartField() {
-		if (startTextField == null) {
-			startTextField = new JTextField();
-		}
-		return startTextField;
-	}
-
 	private JLabel getProgressionLabel() {
 		if (progressionLabel == null) {
 			progressionLabel = new JLabel("");
@@ -241,29 +193,25 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		if (isColorized  ) {
 			undoColorize();
 		}
-		progressionPanel.setVisible(true);
+
+        progressionPanel.setVisible(true);
+        List nodes = constraintModel.getNodes();
+
+        if (nodes == null) {
+            setProgressionText("Search could not start! Invalid selection?");
+            return;
+        }
+
 		setProgressionText("searching...");
 		setProgress(0);
-		
-		if (graph instanceof RegulatoryGraph) {
-			setProgressMax(graph.getNodeOrderSize());
-		} else {
-			setProgressMax(graph.getNodes().size());
-		}
-		if (startTextField.getText().length() == 0) {
-			GUIMessageUtils.openErrorDialog(Txt.t("STR_pathFinding_start")+" "+ Txt.t("STR_isempty"), this);
-			return;
-		} else if (endTextField.getText().length() == 0) {
-			GUIMessageUtils.openErrorDialog(Txt.t("STR_pathFinding_end")+" "+ Txt.t("STR_isempty"), this);
-			return;
-		}
-		Object start = getNode(startTextField); 
-		Object end = getNode(endTextField);
-		if (start == null || end == null) {
-			return;
-		}
+        setProgressMax(graph.getNodes().size());
+
+        // TODO: support intermediate nodes
+		Object start = nodes.get(0);
+		Object end = nodes.get(nodes.size()-1);
 		Thread thread = new PathFinding(this, graph, start, end);
 		thread.start();
+
 	}
 	
 	public void setProgress(int progress) {
@@ -295,20 +243,20 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 			Clipboard clipboard = getToolkit().getSystemClipboard();
 			StringSelection data = new StringSelection(getPathAsText());
 			clipboard.setContents(data, data);
-		} else if (e.getSource() == selectionForStartButton) {
-			getSelectionFromGraph(startTextField);
-		} else if (e.getSource() == selectionForEndButton) {
-			getSelectionFromGraph(endTextField);
+		} else if (e.getSource() == b_selectFromGraph) {
+			getSelectionFromGraph();
 		}
 	}
 	
-	private void getSelectionFromGraph(JTextField textField) {
+	private void getSelectionFromGraph() {
 		GraphGUI<?, ?, ?> gui = GUIManager.getInstance().getGraphGUI(graph);
 		Collection<?> selected = gui.getSelection().getSelectedNodes();
 		if (selected == null || selected.size() < 1) {
 			return;
 		}
-		textField.setText(selected.iterator().next().toString());
+
+        // apply the selection
+        constraintModel.setNode(selected.iterator().next(), constraintTable.getSelectedRows());
 	}
 
 	/**
@@ -387,4 +335,113 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		undoColorize();
 		super.cancel();
 	}
+}
+
+class ConstraintSelectionModel extends AbstractTableModel {
+
+    private final Graph graph;
+    private final List<String> constraints = new ArrayList<String>(2);
+    private final Map<String, Object> m_constraint2node = new HashMap<String, Object>();
+
+    public ConstraintSelectionModel(Graph graph) {
+        this.graph = graph;
+        constraints.add("");
+        constraints.add("");
+    }
+
+    @Override
+    public int getRowCount() {
+        return constraints.size();
+    }
+
+    @Override
+    public int getColumnCount() {
+        return 2;
+    }
+
+    @Override
+    public Object getValueAt(int row, int col) {
+        if (row >= getRowCount()) {
+            return null;
+        }
+
+        if (col == 0) {
+            if (row == 0) {
+                return "start";
+            }
+            if (row == getRowCount()-1) {
+                return "target";
+            }
+            return "through";
+        }
+
+        return constraints.get(row);
+    }
+
+    @Override
+    public boolean isCellEditable(int row, int col) {
+        if (col == 0) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void setValueAt(Object aValue, int row, int col) {
+        if (row >= getRowCount()) {
+            return;
+        }
+        if (col == 0) {
+            return;
+        }
+
+        String old = constraints.get(row);
+        String lookup = aValue.toString();
+        constraints.set(row, lookup);
+
+        if (!constraints.contains(old)) {
+            m_constraint2node.remove(old);
+        }
+        findInGraph(lookup);
+
+    }
+
+    private void findInGraph(String lookup) {
+        if (m_constraint2node.containsKey(lookup)) {
+            return;
+        }
+
+        List foundNodes = graph.searchNodes( lookup);
+        if (foundNodes == null || foundNodes.size() < 1) {
+            return;
+        }
+
+        m_constraint2node.put(lookup, foundNodes.get(0));
+    }
+
+    public List getNodes() {
+
+        List nodes = new ArrayList();
+        for (String s:constraints) {
+            Object n = m_constraint2node.get(s);
+            if (n == null) {
+                return null;
+            }
+            nodes.add(n);
+        }
+
+        if (nodes.size() < 2) {
+            return null;
+        }
+
+        return nodes;
+    }
+
+    public void setNode(Object node, int[] selectedRows) {
+        String txt = node.toString();
+        for (int i: selectedRows) {
+            setValueAt(txt, i, 1);
+        }
+        fireTableDataChanged();
+    }
 }

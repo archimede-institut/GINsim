@@ -53,7 +53,7 @@ class GDExportConfigPanel extends AbstractStackDialogHandler {
     private final LRGDocumentationAction action;
 	private final RegulatoryGraph graph;
 
-	JCheckBox cb_stable, cb_init, cb_mutants, cb_multicellular, cb_comment;
+	JCheckBox cb_init, cb_mutants, cb_multicellular, cb_comment;
 
 	ValueList<GenericDocumentFormat> format;
     
@@ -67,7 +67,6 @@ class GDExportConfigPanel extends AbstractStackDialogHandler {
 	@Override
 	public boolean run() {
 		// read the current status
-        cfg.searchStableStates = cb_stable.isSelected();
         cfg.putComment = cb_comment.isSelected();
         cfg.multicellular = cb_multicellular.isSelected();
         cfg.exportInitStates = cb_init.isSelected();
@@ -109,10 +108,6 @@ class GDExportConfigPanel extends AbstractStackDialogHandler {
         
         c.weightx = c.weighty = 0;
 
-        cb_stable = new JCheckBox("stable");
-        cb_stable.setSelected(cfg.searchStableStates);
-        c.gridy++;
-        add(cb_stable, c);
         cb_init = new JCheckBox("initial states");
         cb_init.setSelected(cfg.exportInitStates);
         c.gridy++;
