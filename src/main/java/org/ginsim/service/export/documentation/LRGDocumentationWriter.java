@@ -48,7 +48,7 @@ public class LRGDocumentationWriter {
 	private DocumentWriter doc;
 
 	private final RegulatoryGraph graph;
-	private List nodeOrder;
+	private List<RegulatoryNode> nodeOrder;
 	private int len;
 	private final StableStatesService sss = ServiceManager.get(StableStatesService.class);
 
@@ -101,7 +101,6 @@ public class LRGDocumentationWriter {
 		}
 		// mutant description
 		if (config.exportMutants) {
-			doc.openHeader(2, "Mutants and Dynamical Behaviour", null);
 			writePerturbations();
 		}
 
@@ -109,89 +108,22 @@ public class LRGDocumentationWriter {
 	}
 
 	private void writePerturbations() throws Exception {
-		ListOfPerturbations mutantList = (ListOfPerturbations) ObjectAssociationManager.getInstance().getObject(graph, PerturbationManager.KEY, true);
-		
-		String[] cols;
-		if (config.searchStableStates){
-			cols = new String[] {"", ""};
-		} else {
-			cols = new String[] {""};
-		}
+		ListOfPerturbations mutantList = (ListOfPerturbations) ObjectAssociationManager.getInstance().getObject(graph, PerturbationManager.KEY, false);
 
-		doc.openTable("perturbations", "table", cols);
-		doc.openTableRow(null);
-		doc.openTableCell("Perturbation", true);
-		if (config.searchStableStates) {
-			doc.openTableCell("Stable States", true);
-		}
+        if (mutantList == null || mutantList.size() < 1) {
+            return;
+        }
 
-		StableTableModel model = new StableTableModel();
-		LogicalModel lmodel = null;
-		if (config.searchStableStates) {
-			lmodel = graph.getModel();
-		}
+        doc.openHeader(2, "Perturbations", null);
 
-		doc.openTableRow(null);
-		doc.openTableCell(1, (model.getRowCount() > 0?2:1), "Wild Type", true);
-        
-        if (config.searchStableStates) {
-			findStableStates(lmodel, model);
-		}
-
+        doc.openList("L1");
 		for (Perturbation mutant: mutantList) {
-			
-			doc.openTableRow(null);
-			doc.openTableCell(1, (model.getRowCount() > 0?2:1), ""+mutant, true);
-			
-			if (config.searchStableStates) {
-				findStableStates(mutant.apply(lmodel), model);
-			}
-		}
-		doc.closeTable();
-	}
-
-	private int findStableStates(LogicalModel lmodel, StableTableModel model) throws Exception {
-		int stable = sss.getStableStateSearcher(lmodel).getResult();
-		model.setResult(lmodel.getMDDManager(), stable);
-		int nbrow = model.getRowCount();
-		if (nbrow > 0) {
-			doc.openTableCell(1, 1, model.getRowCount()+" Stable states", false);
-			writeStableStates( model);
-		} else {
-			doc.openTableCell(1, nbrow, "", false);
-		}
-		return nbrow;
-	}
-	
-	
-
-	
-	private void writeStableStates( StableTableModel model) throws Exception {
-		doc.openList("L1");
-		for (int k=0 ; k<model.getRowCount() ; k++) {
-			doc.openListItem(null);
-			boolean needPrev=false;
-			String name = (String)model.getValueAt(k,0);
-			if (name != null) {
-				doc.writeText(name+": ");
-			}
-			for (int j=1 ; j<=len ; j++) {
-				Object val = model.getValueAt(k,j);
-				if (!val.toString().equals("0")) {
-					String s = needPrev ? " ; " : "";
-					needPrev = true;
-					if (val.toString().equals("1")) {
-						doc.writeText(s+nodeOrder.get(j-1));
-					} else {
-						doc.writeText(s+nodeOrder.get(j-1)+"="+val);
-					}
-				}
-			}
-			doc.closeListItem();
+            doc.openListItem(mutant.toString());
+            doc.closeListItem();
 		}
 		doc.closeList();
 	}
-	
+
 	private void writeInitialStates() throws IOException {
 		NamedStateList initStates = ((NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph,
 				NamedStatesManager.KEY, false)).getInitialStates();
@@ -204,13 +136,13 @@ public class LRGDocumentationWriter {
 			doc.openTable("initialStates", "table", t_cols);
 			doc.openTableRow(null);
 			doc.openTableCell("Name");
-			for (int i = 0; i < len; i++) {
-				doc.openTableCell(""+nodeOrder.get(i));
+			for (RegulatoryNode n: nodeOrder) {
+				doc.openTableCell(""+n);
 			}
 			for ( int i=0 ; i< initStates.size() ; i++ ) {
 				doc.openTableRow(null);
 				doc.openTableCell(""+model.getValueAt(i, 0));
-				for (int j = 2; j < model.getColumnCount(); j++) {
+				for (int j = 1; j < model.getColumnCount(); j++) {
 					doc.openTableCell(""+model.getValueAt(i, j));
 				}
 			}
@@ -348,47 +280,48 @@ public class LRGDocumentationWriter {
 	}
 	
 	private void writeAnnotation(Annotation annotation) throws IOException {
-		boolean hasLink = false;
-		List<AnnotationLink> links = annotation.getLinkList();
-		if (links.size() > 0) {
-			hasLink = true;
-			doc.openList("L1");
+
+        doc.openParagraph(null);
+        String[] t = annotation.getComment().split("\n");
+        for (int i = 0; i < t.length-1; i++) {
+            doc.writeTextln(t[i]);
+        }
+        if (t.length > 0) {
+            doc.writeText(t[t.length-1]);
+        }
+        doc.closeParagraph();
+        writeLinkList(annotation.getLinkList());
+    }
+
+    private void writeLinkList(List<AnnotationLink> links) throws IOException {
+        if (links == null || links.size() < 1) {
+            return;
+        }
+        doc.openList("L1");
+        for (AnnotationLink lnk: links) {
+            String s_link;
+            if (lnk.getHelper() != null) {
+                s_link = lnk.getHelper().getLink(lnk.getProto(), lnk.getValue());
+            } else {
+                s_link = OpenUtils.getLink(lnk.getProto(), lnk.getValue());
+            }
+            if (s_link == null) {
+                doc.openListItem(null);
+                doc.writeText(lnk.toString());
+                doc.closeListItem();
+            } else {
+                if (s_link == lnk.toString() && s_link.length() >= 50) {
+                    doc.openListItem(null);
+                    doc.addLink(s_link, s_link.substring(0, 45) + "...");
+                    doc.closeListItem();
+                } else {
+                    doc.openListItem(null);
+                    doc.addLink(s_link, lnk.toString());
+                    doc.closeListItem();
+                }
+            }
 		}
-		for (AnnotationLink lnk: links) {
-			String s_link;
-			if (lnk.getHelper() != null) {
-				s_link = lnk.getHelper().getLink(lnk.getProto(), lnk.getValue());
-			} else {
-				s_link = OpenUtils.getLink(lnk.getProto(), lnk.getValue());
-			}
-			if (s_link == null) {
-				doc.openListItem(null);
-				doc.writeText(lnk.toString());
-				doc.closeListItem();
-			} else {
-				if (s_link == lnk.toString() && s_link.length() >= 50) {
-					doc.openListItem(null);
-					doc.addLink(s_link, s_link.substring(0, 45) + "...");
-					doc.closeListItem();
-				} else {
-					doc.openListItem(null);
-					doc.addLink(s_link, lnk.toString());
-					doc.closeListItem();
-				}
-			}
-		}
-		if (hasLink) {
-			doc.closeList();
-		}
-		doc.openParagraph(null);
-		String[] t = annotation.getComment().split("\n");
-		for (int i = 0; i < t.length-1; i++) {
-			doc.writeTextln(t[i]);
-		}
-		if (t.length > 0) {
-			doc.writeText(t[t.length-1]);
-		}
-		doc.closeParagraph();
+        doc.closeList();
 	}
 
 	/**
