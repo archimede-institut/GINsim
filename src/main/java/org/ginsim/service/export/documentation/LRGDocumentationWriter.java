@@ -96,7 +96,6 @@ public class LRGDocumentationWriter {
 		
 		// initial states
 		if (config.exportInitStates) {
-			doc.openHeader(2, "Initial States", null);
 			writeInitialStates();
 		}
 		// mutant description
@@ -125,29 +124,52 @@ public class LRGDocumentationWriter {
 	}
 
 	private void writeInitialStates() throws IOException {
-		NamedStateList initStates = ((NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph,
-				NamedStatesManager.KEY, false)).getInitialStates();
-		if (initStates != null && initStates.size() > 0) {
-			InitStateTableModel model = new InitStateTableModel(null, initStates, false);
-			String[] t_cols = new String[len+1];
-			for (int i=0 ; i<=len ; i++) {
-				t_cols[i] = "";
-			}
-			doc.openTable("initialStates", "table", t_cols);
-			doc.openTableRow(null);
-			doc.openTableCell("Name");
-			for (RegulatoryNode n: nodeOrder) {
-				doc.openTableCell(""+n);
-			}
-			for ( int i=0 ; i< initStates.size() ; i++ ) {
-				doc.openTableRow(null);
-				doc.openTableCell(""+model.getValueAt(i, 0));
-				for (int j = 1; j < model.getColumnCount(); j++) {
-					doc.openTableCell(""+model.getValueAt(i, j));
-				}
-			}
-			doc.closeTable();
-		}
+        NamedStatesHandler handler = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph,
+                NamedStatesManager.KEY, false);
+
+        if (handler == null) {
+            return;
+        }
+        NamedStateList initStates = handler.getInitialStates();
+        NamedStateList inputStates = handler.getInputConfigs();
+
+        if (initStates.size() < 1 && inputStates.size() < 1) {
+            return;
+        }
+
+        doc.openHeader(2, "Initial States", null);
+        writeInitTable(inputStates, "Input nodes");
+        writeInitTable(initStates, "Core nodes");
+    }
+
+    private void writeInitTable(NamedStateList initStates, String title) throws IOException {
+        if (initStates == null || initStates.size() < 1) {
+            return;
+        }
+
+        doc.openHeader(3, title, null);
+
+        InitStateTableModel model = new InitStateTableModel(null, initStates, false);
+        String[] t_cols = new String[len+1];
+        for (int i=0 ; i<=len ; i++) {
+            t_cols[i] = "";
+        }
+
+        doc.openTable("initialStates", "table", t_cols);
+        doc.openTableRow(null);
+        doc.openTableCell("Name");
+        int nbcols = model.getColumnCount();
+        for (int j = 1; j < nbcols; j++) {
+            doc.openTableCell(model.getColumnName(j));
+        }
+        for ( int i=0 ; i< initStates.size() ; i++ ) {
+            doc.openTableRow(null);
+            doc.openTableCell(""+model.getValueAt(i, 0));
+            for (int j = 1; j < nbcols; j++) {
+                doc.openTableCell(""+model.getValueAt(i, j));
+            }
+        }
+        doc.closeTable();
 	}
 
 	private void writeLogicalFunctionsTable(boolean putcomment) throws IOException {
