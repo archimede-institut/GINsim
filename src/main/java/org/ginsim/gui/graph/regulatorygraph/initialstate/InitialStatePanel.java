@@ -9,12 +9,7 @@ import java.awt.event.ActionListener;
 import java.util.Enumeration;
 import java.util.Map;
 
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListSelectionModel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
+import javax.swing.*;
 import javax.swing.table.TableColumn;
 
 import org.ginsim.common.application.LogManager;
@@ -84,6 +79,7 @@ class StateListPanel extends JPanel {
     private JButton buttonCopyStateRow = null;
     private JButton buttonUp = null;
     private JButton buttonDown = null;
+    private JButton buttonSelect = null;
 
     Insets topInset = new Insets(20,0,0,0);
 	private NamedStateList stateList;
@@ -132,10 +128,18 @@ class StateListPanel extends JPanel {
         c.anchor = GridBagConstraints.WEST;
         add(getButtonDown(), c);
 
+        if (several) {
+            c = new GridBagConstraints();
+            c.gridx = 4;
+            c.gridy = 1;
+            c.anchor = GridBagConstraints.WEST;
+            add(getButtonSelect(), c);
+        }
+
         c = new GridBagConstraints();
         c.gridx = 0;
         c.gridy = 2;
-        c.gridwidth = 4;
+        c.gridwidth = 5;
         c.fill = GridBagConstraints.BOTH;
         c.weightx = 1;
         c.weighty = 1;
@@ -147,7 +151,7 @@ class StateListPanel extends JPanel {
      * 
      * @return javax.swing.JTable
      */
-    private javax.swing.JTable getTableInitStates() {
+    private JTable getTableInitStates() {
         if(tableInitStates == null) {
         	tableInitStates = new EnhancedJTable();
         	
@@ -182,9 +186,9 @@ class StateListPanel extends JPanel {
      * 
      * @return javax.swing.JScrollPane
      */
-    private javax.swing.JScrollPane getJScrollPane() {
+    private JScrollPane getJScrollPane() {
         if(jScrollPane == null) {
-            jScrollPane = new javax.swing.JScrollPane();
+            jScrollPane = new JScrollPane();
             jScrollPane.setViewportView(getTableInitStates());
         }
         return jScrollPane;
@@ -216,6 +220,10 @@ class StateListPanel extends JPanel {
         	}
             selectionModel.addSelectionInterval(index, index);
         }
+    }
+
+    protected void selectAll() {
+        model.toggleSelectAll();
     }
     
     private JButton getButtonDelStateRow() {
@@ -256,8 +264,8 @@ class StateListPanel extends JPanel {
 
     private JButton getButtonDown() {
         if (buttonDown == null) {
-        	buttonDown = new StockButton("go-down.png", true);
-        	buttonDown.addActionListener(new ActionListener() {
+            buttonDown = new StockButton("go-down.png", true);
+            buttonDown.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     move(1);
                 }
@@ -266,7 +274,20 @@ class StateListPanel extends JPanel {
         return buttonDown;
     }
 
-	public void setParam(Map currentParameter) {
+    private JButton getButtonSelect() {
+        if (buttonSelect == null) {
+            buttonSelect = new StockButton("edit-select-all.png", true);
+            buttonSelect.setToolTipText("(un)select all patterns");
+            buttonSelect.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent e) {
+                    selectAll();
+                }
+            });
+        }
+        return buttonSelect;
+    }
+
+    public void setParam(Map currentParameter) {
 		model.setParam(currentParameter);
 	}
 }

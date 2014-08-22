@@ -201,7 +201,7 @@ public class InitStateTableModel extends AbstractTableModel {
 			if (rowIndex >= imanager.size()) {
 				return;
 			}
-			((NamedState)imanager.get(rowIndex)).setName((String)aValue);
+			imanager.get(rowIndex).setName((String)aValue);
 			// FIXME: the name should be unique
 			return;
 		}
@@ -301,15 +301,15 @@ public class InitStateTableModel extends AbstractTableModel {
             		setValueAt(Boolean.TRUE, rowIndex, 1);
             	}
             }
-            Map m_line = ((NamedState)imanager.get(rowIndex)).getMaxValueTable();
+            Map m_line = imanager.get(rowIndex).getMaxValueTable();
             m_line.put(nodeOrder.get(ci).getNodeInfo(),newcell);
 			fireTableCellUpdated(rowIndex,ci+2);
 		} catch (Exception e) {}
 	}
 
 	public void copyLine(int line) {
-		Map m_line = ((NamedState)imanager.get(line)).getMaxValueTable();
-		NamedState newState = (NamedState)imanager.get(imanager.add());
+		Map m_line = imanager.get(line).getMaxValueTable();
+		NamedState newState = imanager.get(imanager.add());
 		newState.setMaxValueTable( new HashMap(m_line));
 		fireTableDataChanged();
 	}
@@ -387,4 +387,20 @@ public class InitStateTableModel extends AbstractTableModel {
 	public void setTable(EnhancedJTable tableInitStates) {
 		theTable = tableInitStates;
 	}
+
+    public void toggleSelectAll() {
+        if (m_initState == null) {
+            return;
+        }
+
+        if (m_initState.size() > 0) {
+            m_initState.clear();
+            fireTableDataChanged();
+        } else {
+            for (int i=0 ; i<getRowCount() ; i++) {
+                setValueAt(Boolean.TRUE, i, 1);
+            }
+            fireTableDataChanged();
+        }
+    }
 }
