@@ -355,7 +355,7 @@ class CreateAction extends AbstractAction {
 	}
 }
 
-class RegulatorModel extends DefaultComboBoxModel<NodeInfo> implements MutableComboBoxModel<NodeInfo> {
+class RegulatorModel extends DefaultComboBoxModel implements MutableComboBoxModel {
 
     private final RegulatoryGraph lrg;
     private NodeInfo node = null;
