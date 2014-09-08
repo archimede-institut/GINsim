@@ -23,6 +23,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.core.graph.regulatorygraph.MDDContext;
 import org.ginsim.gui.graph.GUIEditor;
+import org.ginsim.service.tool.circuit.FunctionalityContext;
 
 
 /**
@@ -121,7 +122,15 @@ public class TreeActionPanel extends JPanel implements GUIEditor<Tree> {
 				sourceList.addItem(context);
 			}
 			if (sourceList.getItemCount() > 0) {
-				sourceList.setSelectedIndex(0);
+                FunctionalityContext fc = (FunctionalityContext)tree.getParser().getParameter(TreeBuilderFromCircuit.PARAM_OPENCIRCUITDESC);
+                int selidx = 0;
+                if (fc != null) {
+                    selidx = contexts.indexOf(fc);
+                    if (selidx < 0) {
+                        selidx = 0;
+                    }
+                }
+                sourceList.setSelectedIndex( selidx );
 			}
 		}
 	}

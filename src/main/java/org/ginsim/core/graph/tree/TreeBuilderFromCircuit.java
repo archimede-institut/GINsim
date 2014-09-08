@@ -19,8 +19,9 @@ public class TreeBuilderFromCircuit extends TreeBuilder {
 	
 	private MDDManager ddmanager;
 	private int root;
-	
-	public static final String PARAM_INITIALCIRCUITDESC = "pcirc_initialCircuitDescr";
+
+    public static final String PARAM_INITIALCIRCUITDESC = "pcirc_initialCircuitDescr";
+    public static final String PARAM_OPENCIRCUITDESC = "pcirc_openCircuitDescr";
     public static final String PARAM_ALLCONTEXTS = "pcirc_allCircuits";
     public static final String PARAM_MANAGER = "pcirc_manager";
 

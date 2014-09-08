@@ -486,34 +486,34 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
      */
 	private void viewContext() {
         TreeBuilderFromCircuit parser = new TreeBuilderFromCircuit();
-		Tree tree = GraphManager.getInstance().getNewGraph( Tree.class, parser);
-
         parser.setParameter(TreeBuilder.PARAM_NODEORDER, graph.getNodeOrder());
         parser.setParameter(TreeBuilderFromCircuit.PARAM_MANAGER, ddmanager);
-		parser.setParameter(TreeBuilderFromCircuit.PARAM_INITIALCIRCUITDESC, getSelectedContextFromTreeTable().getCircuit());
-		parser.setParameter(TreeBuilderFromCircuit.PARAM_ALLCONTEXTS, getCircuitDescriptors());
+
+        // construct the list of circuits (to allow selecting it)
+        CircuitDescr cd_sel = getSelectedContextFromTreeTable().getCircuit();
+        List contexts = new ArrayList(v_circuit.size());
+        for (Iterator it = v_circuit.iterator(); it.hasNext();) {
+            CircuitDescrInTree cdit = (CircuitDescrInTree) it.next();
+            CircuitDescr cd = cdit.getCircuit();
+            int[] context = cd.getContext();
+            for (int i = 0; i < context.length; i++) {
+                int o = context[i];
+                if (o != 0) {
+                    FunctionalityContext fc = new FunctionalityContext(cd, i);
+                    contexts.add(fc);
+                    if (cd == cd_sel) {
+                        parser.setParameter(TreeBuilderFromCircuit.PARAM_OPENCIRCUITDESC, fc);
+                        cd_sel = null;
+                    }
+                }
+            }
+        }
+		parser.setParameter(TreeBuilderFromCircuit.PARAM_ALLCONTEXTS, contexts);
+
+        Tree tree = GraphManager.getInstance().getNewGraph( Tree.class, parser);
 		GUIManager.getInstance().newFrame(tree,false);
 	}
 	
-	/**
-	 * Return a vector of FunctionalityContext for each functional context of functionality.
-	 */
-	private Vector getCircuitDescriptors() {
-		Vector contexts = new Vector(v_circuit.size());
-		for (Iterator it = v_circuit.iterator(); it.hasNext();) {
-			CircuitDescrInTree cdit = (CircuitDescrInTree) it.next();
-			CircuitDescr cd = cdit.getCircuit();
-			int[] context = cd.getContext();
-			LogManager.debug_collection(context);
-			for (int i = 0; i < context.length; i++) {
-				int o = context[i];
-				if (o != 0) {
-					contexts.add(new FunctionalityContext(cd, i));
-				}
-			}
-		}
-		return contexts;
-	}
 	/**
 	 * Return the selected context from the treeTable
 	 * if none is selected, then return the first circuit in v_circuit
