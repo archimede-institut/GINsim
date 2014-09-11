@@ -4,6 +4,8 @@ import java.awt.Component;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -11,7 +13,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
+import org.colomoto.logicalmodel.LogicalModelModifier;
+import org.colomoto.logicalmodel.tool.reduction.FixedComponentRemover;
+import org.colomoto.logicalmodel.tool.reduction.OutputSimplifier;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
@@ -42,8 +46,9 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	private String userID = null;
 
 	private JPanel mainPanel = new JPanel(new GridBagLayout());
-	private JCheckBox cb_simplify = new JCheckBox("Strip (pseudo-)outputs");
-	
+    private JCheckBox cb_propagate = new JCheckBox("Propagate fixed values");
+    private JCheckBox cb_simplify = new JCheckBox("Strip (pseudo-)outputs");
+
     public LogicalModelActionDialog(RegulatoryGraph lrg, Frame parent, String id, int w, int h) {
         super(parent, id, w, h);
         this.lrg = lrg;
@@ -54,7 +59,8 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         super.setMainPanel(getMainPanel());
 
         cb_simplify.addChangeListener(this);
-        
+        cb_propagate.addChangeListener(this);
+
 		this.addWindowListener(new java.awt.event.WindowAdapter() { 
 			public void windowClosing(java.awt.event.WindowEvent e) {
 				cancel();
@@ -70,7 +76,8 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
     	this.userID = userID;
     	perturbationPanel.refresh();
         reductionPanel.refresh();
-    	cb_simplify.setSelected(reductions.isStrippingOutput(userID));
+        cb_simplify.setSelected(reductions.isStrippingOutput(userID));
+        cb_propagate.setSelected(reductions.isPropagatingFixed(userID));
     }
     
     private JPanel getMainPanel() {
@@ -87,12 +94,15 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         c.gridy = 1;
 		c.weightx = 1;
         c.gridwidth = 1;
-		c.fill = GridBagConstraints.HORIZONTAL;
+//        c.gridheight = 2;
+		c.fill = GridBagConstraints.BOTH;
 		mainPanel.add(reductionPanel, c);
 
-        // simplification checkbox
+        // simplification checkboxes
         c.gridx = 1;
         c.weightx = 0;
+//        mainPanel.add(cb_propagate, c);
+//        c.gridx++; // TODO: adapt layout!
         mainPanel.add(cb_simplify, c);
 
         return mainPanel;
@@ -149,6 +159,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	public void stateChanged(ChangeEvent e) {
 		if (userID != null) {
             reductions.setStrippingOutput(userID, cb_simplify.isSelected());
+            reductions.setPropagateFixed(userID, cb_propagate.isSelected());
 		}
 	}
 	
@@ -178,21 +189,25 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	
 	@Override
 	protected void run() throws GsException {
-		LogicalModel model = lrg.getModel();
 
-        if (getPerturbation() != null) {
-            model = getPerturbation().apply(model);
+        // collect all modifiers to apply
+        List<LogicalModelModifier> modifiers = new ArrayList<LogicalModelModifier>();
+        modifiers.add(getPerturbation());
+        modifiers.add(getReduction());
+        if (cb_propagate.isSelected()) {
+            modifiers.add( new FixedComponentRemover() );
+        }
+        if (cb_simplify.isSelected()) {
+            modifiers.add( new OutputSimplifier() );
         }
 
-        if (getReduction() != null) {
-            model = getReduction().apply(model);
+        // retrieve the model and apply modifiers
+        LogicalModel model = lrg.getModel();
+        for (LogicalModelModifier modifier: modifiers) {
+            if (modifier != null) {
+                model = modifier.apply(model);
+            }
         }
-
-		if (cb_simplify.isSelected()) {
-			ModelReducer reducer = new ModelReducer(model);
-			reducer.removePseudoOutputs();
-			model = reducer.getModel(); 
-		}
 
 		run(model);
 	}

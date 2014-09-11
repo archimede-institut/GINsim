@@ -51,10 +51,12 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
 	public ReconstructionTask(LogicalModel reducedModel, RegulatoryGraph graph, ReductionConfig config) {
         this.graph = graph;
         this.newModel = reducedModel;
-        if (config == null) {
-            this.to_remove = new ArrayList<NodeInfo>();
-        } else {
-            this.to_remove = config.m_removed;
+        this.to_remove = new ArrayList<NodeInfo>();
+        if (config != null) {
+            to_remove.addAll( config.m_removed );
+            if (config.outputs) {
+                to_remove.addAll( reducedModel.getExtraComponents() );
+            }
         }
 	}
 	
@@ -125,7 +127,7 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
 
 		// get as much of the associated data as possible
 		Map m_alldata = new HashMap();
-		
+
 		// adapt perturbations which do not affect the removed components
 		ListOfPerturbations perturbations = (ListOfPerturbations) ObjectAssociationManager.getInstance().getObject( graph, PerturbationManager.KEY, false);
 		if (perturbations != null && perturbations.size() > 0) {
@@ -146,7 +148,7 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
 			}
 		}
 
-		
+
 		// initial states
         NamedStatesHandler linit = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject( graph, NamedStatesManager.KEY, false);
 		if (linit != null && !linit.isEmpty()) {
@@ -175,7 +177,7 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
     			}
 			}
 		}
-		
+
 		// priority classes definition and simulation parameters
 		SimulationParameterList params = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, SimulationParametersManager.KEY, false);
 		if (params != null) {
@@ -201,7 +203,7 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
 					new_pc.setMode(pc.getMode());
 					m_pclass.put(pc, new_pc);
 				}
-				
+
 				// properly place nodes
 				for (Entry<?,?> e: pcdef.m_elt.entrySet()) {
 					RegulatoryNode vertex = (RegulatoryNode)copyMap.get(e.getKey());
@@ -212,7 +214,7 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
 			}
 			int[] t_index = {0};
 			new_pcman.remove(t_index);
-			
+
 			// simulation parameters
 			for (SimulationParameters param: params) {
 			    SimulationParameters new_param = new_params.add();

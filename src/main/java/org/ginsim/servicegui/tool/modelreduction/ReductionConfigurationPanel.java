@@ -111,19 +111,35 @@ class ReductionPanelCompanion implements ListPanelCompanion<ReductionConfig, Lis
 
 class SimplifierConfigConfigurePanel extends ListPanel<NodeInfo, ReductionConfigContentList> implements ChangeListener {
 
-	private final JCheckBox checkbox;
+    private final JCheckBox checkbox;
+    private final JCheckBox cb_propagate;
+    private final JCheckBox cb_outputs;
     private ReductionConfig config;
 
 	SimplifierConfigConfigurePanel() {
         super(ReductionConfigHelper.HELPER, "Selected");
 
+        JPanel optionPanel = new JPanel( new GridBagLayout() );
 		GridBagConstraints c = new GridBagConstraints();
 		c.gridx = 1;
 		c.gridy = 0;
 		c.fill = GridBagConstraints.HORIZONTAL;
+        this.cb_propagate = new JCheckBox("Propagate fixed values");
+        this.cb_outputs  = new JCheckBox("Strip (pseudo-)outputs");
 		this.checkbox = new JCheckBox("Strict (do not try to remove self-regulated nodes)");
-		add(this.checkbox, c);
-		this.checkbox.addChangeListener(this);
+        optionPanel.add(this.cb_propagate, c);
+        c.gridy++;
+        optionPanel.add(this.cb_outputs, c);
+        c.gridy++;
+        optionPanel.add(this.checkbox, c);
+
+        c.gridy = 0;
+        add(optionPanel, c);
+
+        this.cb_propagate.addChangeListener(this);
+        this.cb_outputs.addChangeListener(this);
+        this.checkbox.addChangeListener(this);
+
 	}
 
     public void setConfig(ReductionConfig config) {
@@ -131,12 +147,24 @@ class SimplifierConfigConfigurePanel extends ListPanel<NodeInfo, ReductionConfig
         if (list != null) {
             list.setConfig(config);
         }
-        checkbox.setSelected(config != null && config.strict);
+        if (config == null) {
+            return;
+        }
+
+        boolean propagate = config.propagate;
+        boolean outputs = config.outputs;
+        boolean strict = config.strict;
+
+        cb_propagate.setSelected( propagate );
+        cb_outputs.setSelected( outputs );
+        checkbox.setSelected( strict );
     }
 
     @Override
 	public void stateChanged(ChangeEvent e) {
         if (config != null) {
+            config.propagate = cb_propagate.isSelected();
+            config.outputs = cb_outputs.isSelected();
             config.strict = checkbox.isSelected();
         }
 	}

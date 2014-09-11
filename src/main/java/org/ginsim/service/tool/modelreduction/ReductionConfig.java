@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.util.*;
 
 import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.logicalmodel.LogicalModelModifier;
 import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.tool.reduction.FixedComponentRemover;
+import org.colomoto.logicalmodel.tool.reduction.OutputSimplifier;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.annotation.Annotation;
@@ -13,11 +16,14 @@ import org.ginsim.core.utils.data.NamedObject;
 
 
 
-public class ReductionConfig implements NamedObject, XMLize {
+public class ReductionConfig implements LogicalModelModifier, NamedObject, XMLize {
+
 	private String name;
 	Annotation note = new Annotation();
 	Set<NodeInfo> m_removed = new HashSet<NodeInfo>();
 	public boolean strict = true;
+    public boolean propagate = false;
+    public boolean outputs = false;
 
 	@Override
 	public String getName() {
@@ -70,7 +76,7 @@ public class ReductionConfig implements NamedObject, XMLize {
     public LogicalModel apply(LogicalModel model) {
         ReductionTask task = new ReductionTask(model, this);
         try {
-            return task.call();
+            return  task.call();
         } catch (Exception e) {
             return null;
         }

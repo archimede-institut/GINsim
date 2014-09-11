@@ -51,9 +51,14 @@ public class ReductionConfigManager extends BasicGraphAssociatedManager<ListOfRe
             
             out.openTag("listOfUsers");
             for (String key: paramList.getOutputStrippingUsers()) {
-            	out.openTag("stripOutput");
-            	out.addAttr("key", key);
-            	out.closeTag();
+                out.openTag("stripOutput");
+                out.addAttr("key", key);
+                out.closeTag();
+            }
+            for (String key: paramList.getFixedPropagationUsers()) {
+                out.openTag("propagateFixed");
+                out.addAttr("key", key);
+                out.closeTag();
             }
             out.closeTag();
             
@@ -104,8 +109,11 @@ class ReductionConfigParser extends XMLHelper {
         		}
         	}
         } else if (qName.equals("stripOutput")) {
-        	String key = attributes.getValue("key");
-        	paramList.setStrippingOutput(key, true);
+            String key = attributes.getValue("key");
+            paramList.setStrippingOutput(key, true);
+        } else if (qName.equals("propagateFixed")) {
+            String key = attributes.getValue("key");
+            paramList.setPropagateFixed(key, true);
         }
     }
     

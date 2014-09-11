@@ -22,6 +22,7 @@ public class ListOfReductionConfigs extends NamedList<ReductionConfig>
     private String s_current;
     private RegulatoryGraph graph;
     private Set<String> outputStrippers = new HashSet<String>();
+    private Set<String> fixedPropagaters = new HashSet<String>();
     private Map<String, ReductionConfig> users = new HashMap<String, ReductionConfig>();
     
     public ListOfReductionConfigs(RegulatoryGraph graph) {
@@ -62,8 +63,20 @@ public class ListOfReductionConfigs extends NamedList<ReductionConfig>
         }
     }
 
+    public void setPropagateFixed(String key, boolean use) {
+        if (!use) {
+            fixedPropagaters.remove(key);
+        } else {
+            fixedPropagaters.add(key);
+        }
+    }
+
     public boolean isStrippingOutput(String key) {
         return outputStrippers.contains(key);
+    }
+
+    public boolean isPropagatingFixed(String key) {
+        return fixedPropagaters.contains(key);
     }
 
     public void useReduction(String key, ReductionConfig reduction) {
@@ -80,14 +93,21 @@ public class ListOfReductionConfigs extends NamedList<ReductionConfig>
 
 
     protected Collection<String> getOutputStrippingUsers() {
-		return outputStrippers;
-	}
+        return outputStrippers;
+    }
+
+    protected Collection<String> getFixedPropagationUsers() {
+        return fixedPropagaters;
+    }
 
 	@Override
 	public void update(String oldID, String newID) {
-		if (outputStrippers.remove(oldID) && newID != null) {
-			outputStrippers.add(newID);
-		}
+        if (outputStrippers.remove(oldID) && newID != null) {
+            outputStrippers.add(newID);
+        }
+        if (fixedPropagaters.remove(oldID) && newID != null) {
+            fixedPropagaters.add(newID);
+        }
 	}
 
     public List<RegulatoryNode> getNodeOrder() {

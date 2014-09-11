@@ -7,7 +7,9 @@ import java.util.List;
 import org.colomoto.common.task.AbstractTask;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.tool.reduction.FixedComponentRemover;
 import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
+import org.colomoto.logicalmodel.tool.reduction.OutputSimplifier;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 
@@ -28,11 +30,16 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
  */
 public class ReductionTask extends AbstractTask<LogicalModel> {
 
+    private static final FixedComponentRemover fixedPropagater = new FixedComponentRemover();
+    private static final OutputSimplifier outputSimplifier = new OutputSimplifier();
+
     private final List<NodeInfo> nodeOrder;
     private final ReductionLauncher launcher;
     private final ModelReducer reducer;
     private final Collection<NodeInfo> to_remove;
     private final Collection<NodeInfo> l_removed;
+
+    private final boolean propagate, outputs;
 
     public ReductionTask(RegulatoryGraph graph, ReductionConfig config) {
         this(graph.getModel(), config, null);
@@ -48,10 +55,15 @@ public class ReductionTask extends AbstractTask<LogicalModel> {
 
 	public ReductionTask(LogicalModel model, ReductionConfig config, ReductionLauncher launcher) {
         this.nodeOrder = model.getNodeOrder();
+        if (config.propagate) {
+            model = fixedPropagater.apply(model);
+        }
         this.reducer = new ModelReducer(model);
         this.to_remove = new ArrayList<NodeInfo>(config.m_removed);
         this.l_removed = new ArrayList<NodeInfo>();
         this.launcher = launcher;
+        this.propagate = config.propagate;
+        this.outputs = config.outputs;
 	}
 	
     @Override
@@ -87,7 +99,13 @@ public class ReductionTask extends AbstractTask<LogicalModel> {
 			}
 		}
 
-        return reducer.getModel(false, true);
+        if (outputs) {
+            reducer.removePseudoOutputs();
+        }
+
+        LogicalModel result = reducer.getModel(false, true);
+
+        return result;
     }
     
     private List<NodeInfo> remove_all(List<NodeInfo> l_todo) {
