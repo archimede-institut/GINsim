@@ -142,23 +142,27 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
     }
 
     /**
-     * remove genes from the selected class: they will go back to the default one.
+     * Remove genes from the selected class: they will go to the next class (cycling from last to first).
      */
     protected void remove() {
         int[] t = contentPanel.getSelection();
+        int idx = pcdef.indexOf( currentClass) + 1;
+        if (idx >= pcdef.size()) {
+            idx = 0;
+        }
+        PriorityClass nextClass = pcdef.get( idx);
         for (int i=0 ; i<t.length ; i++) {
             int index = t[i];
             PriorityMember k = l_content.get(index);
-            Object lastClass = pcdef.get(pcdef.size()-1);
             if (k.type != NONE) { // +1 and -1 are separated, don't move everything
                 Object[] tk = (Object[])pcdef.m_elt.get(k.vertex);
                 if (k.type == UP) {
-                    tk[0] = lastClass;
+                    tk[0] = nextClass;
                 } else {
-                    tk[1] = lastClass;
+                    tk[1] = nextClass;
                 }
             } else { // simple case
-                pcdef.m_elt.put(k.vertex, lastClass);
+                pcdef.m_elt.put(k.vertex, nextClass);
             }
         }
         refresh();
