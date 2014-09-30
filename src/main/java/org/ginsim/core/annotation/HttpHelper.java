@@ -24,7 +24,6 @@ public class HttpHelper implements OpenHelper {
   }
 
   public static void setup() {
-    m_proto.put("http", "http://");
     m_proto.put("wp", "http://en.wikipedia.org/wiki/");
 
     HttpHelper h = new HttpHelper();
