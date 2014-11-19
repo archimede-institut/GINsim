@@ -35,7 +35,7 @@ public class CircuitSearcher extends AbstractTask<List<CircuitDescrInTree>> {
         } else {
             this.config = config;
         }
-        config.setReady();
+        this.config.setReady();
     }
 
     @Override
