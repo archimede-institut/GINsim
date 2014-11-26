@@ -151,11 +151,11 @@ public class LogicalParameter implements XMLize {
      * @param node
      * @return the t_ac
      */
-	private byte[][] buildTac(RegulatoryGraph regGraph, RegulatoryNode node, List<RegulatoryNode> nodeOrder) {
+	private int[][] buildTac(RegulatoryGraph regGraph, RegulatoryNode node, List<RegulatoryNode> nodeOrder) {
 		
 	    Collection<RegulatoryMultiEdge> incEdges = regGraph.getIncomingEdges(node);
-        byte[][] t_ac = new byte[incEdges.size()+1][];
-        t_ac[0] = new byte[1];
+        int[][] t_ac = new int[incEdges.size()+1][];
+        t_ac[0] = new int[1];
         t_ac[0][0] = (byte)value;
         if (incEdges.size() == 0 && edge_index.size() == 0) {
         	// special case for the old "basal value"
@@ -167,8 +167,8 @@ public class LogicalParameter implements XMLize {
         	i++;
             RegulatoryNode vertex = me.getSource();
             int max = vertex.getMaxValue();
-            byte[] t_val = new byte[max+2];
-            t_val[0] = (byte)nodeOrder.indexOf(vertex);
+            int[] t_val = new int[max+2];
+            t_val[0] = nodeOrder.indexOf(vertex);
             t_ac[i] = t_val;
             int nbedges = me.getEdgeCount();
             for (int j=0 ; j<nbedges ; j++) {
@@ -232,10 +232,10 @@ public class LogicalParameter implements XMLize {
 		}
 		
 		List<RegulatoryNode> nodeOrder = graph.getNodeOrder();
-        byte[][] t_ac = buildTac(graph, node, nodeOrder);
+        int[][] t_ac = buildTac(graph, node, nodeOrder);
 		int[] constraints = new int[t_ac.length-1];
 		for ( int i=1 ; i< t_ac.length ; i++) {
-			byte[] curCst = t_ac[i];
+			int[] curCst = t_ac[i];
 			RegulatoryNode src = nodeOrder.get(curCst[0]);
 			int[] allowed = new int[curCst.length-1];
 			for (int j=0 ; j < allowed.length ; j++) {
