@@ -70,14 +70,18 @@ public class NuSMVEncoder {
 	public void write(NuSMVConfig config, Writer out) throws IOException,
 			GsException {
 
+		out.write("-- NuSMV implicit representation of a logical model exported by GINsim\n");
+		out.write("--\n");
+		out.write("-- Requires NuSMV v2.1+ for CTL properties\n");
+		out.write("--\n");
+		out.write("-- Requires NuSMV-ARCTL for ARCTL properties\n");
+		out.write("-- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE\n");
+		out.write("--\n");
 		DateFormat dateformat = DateFormat.getDateTimeInstance(DateFormat.LONG,
 				DateFormat.LONG);
 		out.write("-- " + dateformat.format(new Date()) + "\n");
-		out.write("-- NuSMV implicit representation of a logical model exported by GINsim\n");
-		out.write("-- Requires NuSMV v2.1+ for CTL properties\n");
-		out.write("-- Requires NuSMV-ARCTL for ARCTL properties\n");
-		out.write("-- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE\n");
-		out.write("\n\nMODULE main\n");
+
+		out.write("\nMODULE main\n");
 
 		LogicalModel model = config.getModel();
 		List<NodeInfo> coreNodes = model.getNodeOrder();
@@ -486,15 +490,27 @@ public class NuSMVEncoder {
 		out.write("-- Authorized NuSMV transitions");
 		out.write("\nTRANS\n");
 		for (int i = 0; i < coreNodes.size(); i++) {
-			if (coreNodes.get(i).isInput()
-					&& !config.hasFixedInput(coreNodes.get(i).getNodeID())) {
+			if (coreNodes.get(i).isInput()){
+//					&& !config.hasFixedInput(coreNodes.get(i).getNodeID())) {
 				continue;
 			}
 			out.write("next(" + avoidNuSMVNames(coreNodes.get(i).getNodeID())
 					+ ") != ");
 			out.write(avoidNuSMVNames(coreNodes.get(i).getNodeID()) + " |\n");
 		}
-		out.write("stableStates;\n");
+		// out.write("stableStates;\n");
+		out.write("(");
+		sTmp = "";
+		for (int i = 0; i < coreNodes.size(); i++) {
+			if (coreNodes.get(i).isInput()) {
+				continue;
+			}
+			if (!sTmp.isEmpty())
+				sTmp += " & ";
+			sTmp += avoidNuSMVNames(coreNodes.get(i).getNodeID()) + "_std";
+		}
+		out.write(sTmp + "); -- or it is a steady state\n");
+
 
 		// Initial States Macro definition
 		out.write("\nDEFINE\n");

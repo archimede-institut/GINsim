@@ -109,7 +109,7 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 				BorderFactory.createTitledBorder("Stable states"),
 				ssPanel.getBorder()));
 		mcCheckBox = new JCheckBox(
-				"Compute the stable states and include them in the export (can take some time!)");
+				"Compute & include the stable states in the export?");
 		ssPanel.add(mcCheckBox, BorderLayout.LINE_START);
 		bottomPanel.add(ssPanel, BorderLayout.SOUTH);
 
