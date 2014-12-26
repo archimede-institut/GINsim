@@ -1,9 +1,11 @@
 -- May 12, 2014 12:33:04 AM WEST
+--
 -- NuSMV implicit representation of a logical model exported by GINsim
+--
 -- Requires NuSMV v2.1+ for CTL properties
+--
 -- Requires NuSMV-ARCTL for ARCTL properties
 -- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE
-
 
 MODULE main
 
@@ -115,7 +117,7 @@ next(gA) != gA |
 next(gB) != gB |
 next(gC) != gC |
 next(gD) != gD |
-stableStates;
+(gA_std & gB_std & gC_std & gD_std); -- or it is a steady state
 
 DEFINE
 -- Declaration of core variables restriction list

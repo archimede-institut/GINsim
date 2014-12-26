@@ -1,9 +1,11 @@
 -- May 12, 2014 12:34:25 AM WEST
+--
 -- NuSMV implicit representation of a logical model exported by GINsim
+--
 -- Requires NuSMV v2.1+ for CTL properties
+--
 -- Requires NuSMV-ARCTL for ARCTL properties
 -- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE
-
 
 MODULE main
 
@@ -730,7 +732,7 @@ next(SuFu_p) != SuFu_p |
 next(SuFu_a) != SuFu_a |
 next(Cos2_p) != Cos2_p |
 next(Cos2_a) != Cos2_a |
-stableStates;
+(Wg_p_std & Wg_a_std & Fz_p_std & Fz_a_std & Dsh_p_std & Dsh_a_std & Slp_p_std & Slp_a_std & Nkd_p_std & Nkd_a_std & Zw3_p_std & Zw3_a_std & Arm_p_std & Arm_a_std & En_p_std & En_a_std & Hh_p_std & Hh_a_std & Ci_p_std & Ci_a_std & Ciact_p_std & Ciact_a_std & Cirep_p_std & Cirep_a_std & Ptc_p_std & Ptc_a_std & Smo_p_std & Smo_a_std & Pka_p_std & Pka_a_std & Fu_p_std & Fu_a_std & SuFu_p_std & SuFu_a_std & Cos2_p_std & Cos2_a_std); -- or it is a steady state
 
 DEFINE
 -- Declaration of core variables restriction list

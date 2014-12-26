@@ -1,9 +1,11 @@
 -- May 11, 2014 10:25:56 PM WEST
+--
 -- NuSMV implicit representation of a logical model exported by GINsim
+--
 -- Requires NuSMV v2.1+ for CTL properties
+--
 -- Requires NuSMV-ARCTL for ARCTL properties
 -- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE
-
 
 MODULE main
 
@@ -442,7 +444,7 @@ next(CHEK1) != CHEK1 |
 next(MDM2) != MDM2 |
 next(TP53) != TP53 |
 next(p14ARF) != p14ARF |
-stableStates;
+(E2F1_Apoptosis_std & Proliferation_std & Growth_Arrest_std & Senescence_std & HRAS_std & E2F1_std & E2F3_std & CyclinD1_std & CyclinE1_std & CyclinA_std & CDC25A_std & p16INK4a_std & RB1_std & RBL2_std & p21CIP_std & ATM_std & CHEK1_std & MDM2_std & TP53_std & p14ARF_std); -- or it is a steady state
 
 DEFINE
 -- Declaration of core variables restriction list

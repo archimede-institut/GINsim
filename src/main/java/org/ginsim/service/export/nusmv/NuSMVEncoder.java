@@ -70,16 +70,16 @@ public class NuSMVEncoder {
 	public void write(NuSMVConfig config, Writer out) throws IOException,
 			GsException {
 
+		DateFormat dateformat = DateFormat.getDateTimeInstance(DateFormat.LONG,
+				DateFormat.LONG);
+		out.write("-- " + dateformat.format(new Date()) + "\n");
+		out.write("--\n");
 		out.write("-- NuSMV implicit representation of a logical model exported by GINsim\n");
 		out.write("--\n");
 		out.write("-- Requires NuSMV v2.1+ for CTL properties\n");
 		out.write("--\n");
 		out.write("-- Requires NuSMV-ARCTL for ARCTL properties\n");
 		out.write("-- http://lvl.info.ucl.ac.be/Tools/NuSMV-ARCTL-TLACE\n");
-		out.write("--\n");
-		DateFormat dateformat = DateFormat.getDateTimeInstance(DateFormat.LONG,
-				DateFormat.LONG);
-		out.write("-- " + dateformat.format(new Date()) + "\n");
 
 		out.write("\nMODULE main\n");
 
