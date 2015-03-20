@@ -57,7 +57,7 @@ class SATExportAction extends ExportAction<RegulatoryGraph> {
 
 	private static final long serialVersionUID = -3615904375655037276L;
 	private static final FileFormatDescription FORMAT = new FileFormatDescription(
-			"SAT", "sat");
+			"SAT", "cnf");
 
 	private SATConfig config;
 

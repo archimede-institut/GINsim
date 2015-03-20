@@ -84,7 +84,7 @@ public class SATEncoder {
 			nSATrules++;
 			sb.append(s + " 0\n");
 		}
-//		sb.append("\n");
+		// sb.append("\n");
 		return nSATrules;
 	}
 }

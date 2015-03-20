@@ -11,6 +11,11 @@ import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
 import org.mangosdk.spi.ProviderFor;
 
+/**
+ * GINsim export service capable of encoding the working model into a SAT
+ * specification in CNF.
+ * @author Pedro T. Monteiro
+ */
 @ProviderFor(Service.class)
 @Alias("SAT")
 @ServiceStatus(EStatus.DEVELOPMENT)
