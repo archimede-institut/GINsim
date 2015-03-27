@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.tool.booleanize.Booleanizer;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
 import org.colomoto.mddlib.PathSearcher;
@@ -30,7 +31,9 @@ public class SATEncoder {
 	public void write(SATConfig config, Writer out) throws IOException,
 			GsException {
 
-		LogicalModel model = config.getModel();
+		LogicalModel multiValueModel = config.getModel();
+		LogicalModel model = Booleanizer.booleanize(multiValueModel);
+		
 		List<NodeInfo> coreNodes = model.getNodeOrder();
 		// Nodes actual logical rules
 		int[] kMDDs = model.getLogicalFunctions();
@@ -42,9 +45,6 @@ public class SATEncoder {
 		int nSATrules = 0;
 		for (int i = 0; i < coreNodes.size(); i++) {
 			NodeInfo node = coreNodes.get(i);
-			if (node.getMax() > 1)
-				throw new GsException(GsException.GRAVITY_ERROR,
-						"This SAT encoding does not support non-Boolean components!");
 			if (node.isInput())
 				continue;
 
