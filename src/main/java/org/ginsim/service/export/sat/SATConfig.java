@@ -14,6 +14,7 @@ public class SATConfig implements NamedStateStore {
 	private LogicalModel model;
 	private Map<NamedState, Object> m_initStates;
 	private Map<NamedState, Object> m_input;
+	private boolean isIntervention;
 
 	/**
 	 * @param graph
@@ -23,6 +24,7 @@ public class SATConfig implements NamedStateStore {
 		this.m_input = new HashMap<NamedState, Object>();
 		this.graph = graph;
 		this.model = graph.getModel();
+		this.isIntervention = true;
 	}
 
 	public void updateModel(LogicalModel model) {
@@ -30,18 +32,26 @@ public class SATConfig implements NamedStateStore {
 	}
 
 	public Map<NamedState, Object> getInitialState() {
-		return m_initStates;
+		return this.m_initStates;
 	}
 
 	public Map<NamedState, Object> getInputState() {
-		return m_input;
+		return this.m_input;
 	}
 
 	public RegulatoryGraph getGraph() {
-		return graph;
+		return this.graph;
 	}
 
 	public LogicalModel getModel() {
-		return model;
+		return this.model;
+	}
+
+	public void setIsIntervention(boolean isIntervention) {
+		this.isIntervention = isIntervention;
+	}
+
+	public boolean isIntervention() {
+		return this.isIntervention;
 	}
 }
