@@ -60,11 +60,11 @@ public class HTGSimulation extends Simulation {
 	protected HierarchicalTransitionGraph htg;
 	
 	/**
-	 * An array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
+	 * An array indicating for each node in the nodeOrder their count of children. (ie. their max value)
 	 */
-	protected byte[] childsCount;
+	protected byte[] childrenCount;
 	/**
-	 * A HashSet&lt;HierarchicalNode&gt; containg all the masters nodes.
+	 * A HashSet&lt;HierarchicalNode&gt; containing all the masters nodes.
 	 */
 	protected HierarchicalNodeSet nodeSet;
 	/**
@@ -194,7 +194,7 @@ public class HTGSimulation extends Simulation {
 	 */
 	private void runSimulationOnInitialStates() throws Exception {
 		nodeSet = new HierarchicalNodeSet();
-		childsCount = htg.getChildsCount();
+		childrenCount = htg.getChildrenCount();
 		index = 0;
 
 		max_depth_reached = -1;
