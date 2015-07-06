@@ -84,7 +84,8 @@ public class SATEncoder {
 					.getInitialState().keySet().iterator(), sb);
 		}
 
-		out.write("c CNF representation of a logical model exported by GINsim\n");
+		out.write("c CNF representation of the stability conditions\n");
+		out.write("of a logical model exported by GINsim\n");
 		// for Intervention exports, add the number of "core" variables
 		out.write("p cnf "
 				+ (coreNodes.size() + (config.isIntervention() ? iNonInputs : 0))
