@@ -56,7 +56,7 @@ class ReversionAction extends ToolAction {
 	private final RegulatoryGraph graph;
 
 	public ReversionAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
-		super("STR_revert", "STR_revert_descr", serviceGUI);
+		super("STR_reverse", "STR_reverse_descr", serviceGUI);
 		this.graph = graph;
 	}
 
@@ -71,9 +71,13 @@ class ReversionAction extends ToolAction {
 		RegulatoryGraph gReversed = LogicalModel2RegulatoryGraph
 				.importModel(modelReverser.getModel());
 
+		// Copy all the (edge & node) styles from the original graph to the reversed one
+		service.copyNodeStyles(this.graph, gReversed);
+
+		// Show the reversed graph
 		GUIManager.getInstance().whatToDoWithGraph(gReversed, true);
 		if (!origModel.isBoolean()) {
-			GUIMessageUtils.openErrorDialog("STR_revert_multivalue");
+			GUIMessageUtils.openErrorDialog("STR_reverse_multivalue");
 		}
 
 	}
