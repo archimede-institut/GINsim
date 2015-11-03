@@ -30,4 +30,9 @@ public class PerturbationRange extends RangePerturbation implements Perturbation
 		}
 		return null;
 	}
+
+	@Override
+	public String getDescription() {
+		return "The component "+ component.getNodeID() + " will be pushed into the range [" + min+","+max+"]";
+	}
 }

@@ -4,11 +4,7 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
@@ -50,7 +46,7 @@ class PerturbationPanelCompanion implements ListPanelCompanion<Perturbation, Lis
     private static final String CREATE = "CREATE";
     private static final String SELECTION = "SELECTION";
 
-    private ListOfPerturbations perturbations = null;
+    protected ListOfPerturbations perturbations = null;
 
     private final ListEditionPanel<Perturbation, ListOfPerturbations> editPanel;
 
@@ -143,11 +139,14 @@ class MultipleSelectionPanel extends JPanel {
 
 	private final PerturbationPanelCompanion companion;
 	JButton btn = new JButton();
-	JLabel label = new JLabel();
+	JTextArea label = new JTextArea(6,70);
+
 	
 	public MultipleSelectionPanel(PerturbationPanelCompanion companion) {
 		this.companion = companion;
-		add(label);
+        JScrollPane sp = new JScrollPane();
+        sp.setViewportView(label);
+		add(sp);
 		add(btn);
 		select(-1);
 	}
@@ -158,16 +157,33 @@ class MultipleSelectionPanel extends JPanel {
 		if (index < 0) {
 			label.setText("No selection");
 		} else {
-			label.setText("Selected: "+index + ". TODO: show info");
+            Perturbation p = companion.perturbations.get(index);
+            if (p != null) {
+                label.setText(p.getDescription());
+            }
 		}
 	}
 
 	public void select(ListOfPerturbations perturbations, int[] indices) {
-		label.setText("Selected: "+indices.length + " perturbations. TODO: show info");
+        StringBuffer sb = new StringBuffer(indices.length + " perturbations are selected:");
+        for (int index: indices) {
+            String description = companion.perturbations.get(index).getDescription();
+            boolean firstline = true;
+            for (String line: description.split("\n")) {
+                if (firstline) {
+                    sb.append("\n* ");
+                    firstline = false;
+                } else {
+                    sb.append("\n  ");
+                }
+                sb.append(line);
+            }
+        }
+		label.setText(sb.toString());
 		Action createAction = new AddMultiplePerturbationAction(companion, indices);
 		btn.setAction(createAction);
 		btn.setEnabled(true);
-		btn.setVisible(true);
+        btn.setVisible(true);
 	}
 }
 

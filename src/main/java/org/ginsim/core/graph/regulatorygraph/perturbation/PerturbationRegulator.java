@@ -31,4 +31,9 @@ public class PerturbationRegulator extends InteractionPerturbation implements Pe
 		}
 		return null;
 	}
+
+	@Override
+	public String getDescription() {
+		return "The component "+ target.getNodeID() + " will behave as if its regulator " + regulator +" was fixed at value " + regValue;
+	}
 }

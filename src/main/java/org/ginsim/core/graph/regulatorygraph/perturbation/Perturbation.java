@@ -35,4 +35,11 @@ public interface Perturbation extends LogicalModelPerturbation {
      * @return
      */
 	Perturbation clone(ListOfPerturbations manager, Map<NodeInfo, NodeInfo> m_nodes, Map<Perturbation, Perturbation> m_perturbations);
+
+    /**
+     * Get a human-readable description of the perturbation
+     *
+     * @return a string describing the changes
+     */
+    String getDescription();
 }

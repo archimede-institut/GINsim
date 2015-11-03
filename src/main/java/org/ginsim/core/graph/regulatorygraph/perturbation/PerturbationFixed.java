@@ -30,4 +30,9 @@ public class PerturbationFixed extends FixedValuePerturbation implements Perturb
 		}
 		return null;
 	}
+
+	@Override
+	public String getDescription() {
+		return "The component "+ component.getNodeID() + " will be fixed at value " + value;
+	}
 }

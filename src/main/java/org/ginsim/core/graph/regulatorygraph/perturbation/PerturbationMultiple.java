@@ -62,4 +62,14 @@ public class PerturbationMultiple extends MultiplePerturbation<Perturbation> imp
 		
 		return manager.addMultiplePerturbation(newPerturbations);
 	}
+
+	@Override
+	public String getDescription() {
+		StringBuffer sb = new StringBuffer("Group of perturbations:");
+		for (Perturbation p: perturbations) {
+			sb.append("\n* ");
+			sb.append(p.getDescription());
+		}
+		return  sb.toString();
+	}
 }
