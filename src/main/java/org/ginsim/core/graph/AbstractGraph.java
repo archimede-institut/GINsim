@@ -430,10 +430,19 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		}
 		
 		EdgeAttributesReader ereader = getEdgeAttributeReader();
-        for (Edge e: getEdges()) {
+        for (Edge<V> e: getEdges()) {
             ereader.setEdge(e);
             List<Point> points = ereader.getPoints();
             if (points == null) {
+				V node = e.getSource();
+				if (node == e.getTarget()) {
+					// TODO: need a cleaner way to account for self-loop in the bounding box
+					nreader.setNode(node);
+					int x = nreader.getX() + nreader.getWidth() + 20;
+					if (x > width) {
+						width = x;
+					}
+				}
                 continue;
             }
             for (Point2D pt: points ) {
