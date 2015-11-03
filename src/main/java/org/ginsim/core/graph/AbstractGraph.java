@@ -1,7 +1,6 @@
 package org.ginsim.core.graph;
 
-import java.awt.Dimension;
-import java.awt.Point;
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -434,13 +433,16 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
             ereader.setEdge(e);
             List<Point> points = ereader.getPoints();
             if (points == null) {
-				V node = e.getSource();
-				if (node == e.getTarget()) {
-					// TODO: need a cleaner way to account for self-loop in the bounding box
-					nreader.setNode(node);
-					int x = nreader.getX() + nreader.getWidth() + 20;
+				// Make sure to include self-loops in the bounding box
+				if (e.getSource() == e.getTarget()) {
+					Rectangle bounds = ereader.getBounds();
+					int x = (int)(bounds.getX() + bounds.getWidth());
 					if (x > width) {
 						width = x;
+					}
+					int y = (int)(bounds.getY() + bounds.getHeight());
+					if (y > height) {
+						height = y;
 					}
 				}
                 continue;
