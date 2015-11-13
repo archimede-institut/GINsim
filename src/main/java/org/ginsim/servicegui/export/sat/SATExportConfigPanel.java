@@ -15,6 +15,7 @@ import org.ginsim.common.application.Txt;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.service.export.sat.SATConfig;
+import org.ginsim.service.export.sat.SATExportType;
 
 public class SATExportConfigPanel extends LogicalModelActionDialog {
 	private static final long serialVersionUID = -7398674287463858306L;
@@ -24,7 +25,7 @@ public class SATExportConfigPanel extends LogicalModelActionDialog {
 
 	private JPanel mainPanel;
 	private InitialStatePanel initPanel;
-	private boolean isInterv;
+	private SATExportType type;
 
 	public SATExportConfigPanel(SATConfig config, SATExportAction action) {
 		super(config.getGraph(), null, Txt.t("STR_SAT"), 600, 400);
@@ -32,7 +33,7 @@ public class SATExportConfigPanel extends LogicalModelActionDialog {
 		setUserID(Txt.t("STR_SAT"));
 		this.config = config;
 		this.action = action;
-		this.isInterv = false;
+		this.type = SATExportType.STABILITY_CONDITION;
 
 		mainPanel = new JPanel(new BorderLayout());
 
@@ -46,25 +47,32 @@ public class SATExportConfigPanel extends LogicalModelActionDialog {
 		typePanel.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createTitledBorder(Txt.t("STR_SAT_Type")),
 				typePanel.getBorder()));
+		JRadioButton jrbSCs = new JRadioButton(Txt.t("STR_SAT_Type_SCs"), true);
+		jrbSCs.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				type = SATExportType.STABILITY_CONDITION;
+			}
+		});
 		JRadioButton jrbSSs = new JRadioButton(Txt.t("STR_SAT_Type_SSs"), true);
 		jrbSSs.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JRadioButton jb = (JRadioButton) e.getSource();
-				isInterv = !jb.isSelected();
+				type = SATExportType.STABLE_STATE;
 			}
 		});
 		JRadioButton jrbInterv = new JRadioButton(Txt.t("STR_SAT_Type_Interv"));
 		jrbInterv.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				JRadioButton jb = (JRadioButton) e.getSource();
-				isInterv = jb.isSelected();
+				type = SATExportType.INTERVENTION;
 			}
 		});
 		ButtonGroup bg = new ButtonGroup();
+		bg.add(jrbSCs);
 		bg.add(jrbSSs);
 		bg.add(jrbInterv);
+		typePanel.add(jrbSCs);
 		typePanel.add(jrbSSs);
 		typePanel.add(jrbInterv);
 		mainPanel.add(typePanel, BorderLayout.NORTH);
@@ -80,7 +88,7 @@ public class SATExportConfigPanel extends LogicalModelActionDialog {
 	@Override
 	public void run(LogicalModel model) {
 		config.updateModel(model);
-		config.setIsIntervention(this.isInterv);
+		config.setExportType(this.type);
 		action.selectFile();
 		cancel();
 	}

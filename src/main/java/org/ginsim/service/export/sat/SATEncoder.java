@@ -9,12 +9,15 @@ import java.util.Map;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.tool.booleanize.Booleanizer;
+import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
 import org.colomoto.mddlib.PathSearcher;
 import org.colomoto.mddlib.operators.MDDBaseOperators;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
+import org.ginsim.core.service.ServiceManager;
+import org.ginsim.service.tool.stablestates.StableStatesService;
 
 /**
  * Exports a Regulatory graph into a SAT model description.
@@ -36,42 +39,61 @@ public class SATEncoder {
 
 		LogicalModel multiValueModel = config.getModel();
 		LogicalModel model = Booleanizer.booleanize(multiValueModel);
-
 		List<NodeInfo> coreNodes = model.getNodeOrder();
-		// Nodes actual logical rules
-		int[] kMDDs = model.getLogicalFunctions();
-		MDDManager manager = model.getMDDManager();
-		MDDVariable[] MDDVars = manager.getAllVariables();
-
 		StringBuffer sb = new StringBuffer();
-
-		int iNonInputs = 0;
 		int nSATrules = 0;
-		for (int i = 0; i < coreNodes.size(); i++) {
-			NodeInfo node = coreNodes.get(i);
-			sb.append("c " + (node.isInput() ? "input" : "core") + " var["
-					+ (i + 1) + "] " + node.getNodeID() + "\n");
-			if (node.isInput())
-				continue;
-			else
-				iNonInputs++;
-			
-			int varTrue = MDDVars[i].getNode(0, 1);
-			int varFalse = MDDVars[i].getNode(1, 0);
-			int kVtrue = kMDDs[i];
-			int kVfalse = manager.not(kVtrue);
+		int iNonInputs = 0;
 
-			// (Ka -> A) »» not (~Ka | A) »» ~A.Ka
-			int combinedMDD = MDDBaseOperators.AND.combine(manager, varFalse,
-					kVtrue);
-			nSATrules += nodeRules2SAT(config, sb, model, combinedMDD,
-					coreNodes, i + 1, coreNodes.size() + iNonInputs);
+		if (config.getExportType() == SATExportType.STABLE_STATE) {
+			try {
+				for (int i = 0; i < coreNodes.size(); i++) {
+					NodeInfo node = coreNodes.get(i);
+					this.printNodeComment2CNF(sb, node, i + 1);
+				}
+				StableStateSearcher stableStateSearcher = ServiceManager.get(
+						StableStatesService.class)
+						.getStableStateSearcher(model);
+				int root = stableStateSearcher.call();
+				MDDManager manager = stableStateSearcher.getMDDManager();
+				PathSearcher searcher = new PathSearcher(manager, 1);
+				int[] path = searcher.getPath();
+				nSATrules += this.writeDNFBDD2CNF(config, sb, manager,
+						searcher, path, root, 0);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-			// (~Ka -> ~A) »» not (Ka | ~A) »» A.~Ka
-			combinedMDD = MDDBaseOperators.AND.combine(manager, varTrue,
-					kVfalse);
-			nSATrules += nodeRules2SAT(config, sb, model, combinedMDD,
-					coreNodes, i + 1, coreNodes.size() + iNonInputs);
+		} else {
+
+			// Nodes actual logical rules
+			int[] kMDDs = model.getLogicalFunctions();
+			MDDManager manager = model.getMDDManager();
+			MDDVariable[] MDDVars = manager.getAllVariables();
+
+			for (int i = 0; i < coreNodes.size(); i++) {
+				NodeInfo node = coreNodes.get(i);
+				this.printNodeComment2CNF(sb, node, i + 1);
+				if (node.isInput())
+					continue;
+				else
+					iNonInputs++;
+
+				int varTrue = MDDVars[i].getNode(0, 1);
+				int varFalse = MDDVars[i].getNode(1, 0);
+				int kVtrue = kMDDs[i];
+				int kVfalse = manager.not(kVtrue);
+
+				int mdd = MDDBaseOperators.OR.combine(manager,
+						MDDBaseOperators.AND
+								.combine(manager, varFalse, kVfalse),
+						MDDBaseOperators.AND.combine(manager, varTrue, kVtrue));
+
+				PathSearcher searcher = new PathSearcher(manager, 1, 1);
+				int[] path = searcher.getPath();
+				nSATrules += this.writeDNFBDD2CNF(config, sb, manager,
+						searcher, path, mdd, coreNodes.size() + iNonInputs);
+			}
 		}
 
 		// Write individual variable restrictions
@@ -84,13 +106,20 @@ public class SATEncoder {
 					.getInitialState().keySet().iterator(), sb);
 		}
 
-		out.write("c CNF representation of the stability conditions\n");
+		out.write("c CNF representation of the "
+				+ config.getExportType().toString() + "\n");
 		out.write("of a logical model exported by GINsim\n");
 		// for Intervention exports, add the number of "core" variables
 		out.write("p cnf "
-				+ (coreNodes.size() + (config.isIntervention() ? iNonInputs : 0))
-				+ " " + nSATrules + "\n");
+				+ (coreNodes.size() + (config.getExportType() == SATExportType.INTERVENTION ? iNonInputs
+						: 0)) + " " + nSATrules + "\n");
 		out.write(sb.toString());
+	}
+
+	private void printNodeComment2CNF(StringBuffer sb, NodeInfo node,
+			int varIndex) {
+		sb.append("c " + (node.isInput() ? "input" : "core") + " var["
+				+ varIndex + "] " + node.getNodeID() + "\n");
 	}
 
 	private int varRestr2SAT(List<NodeInfo> nodeOrder,
@@ -112,21 +141,27 @@ public class SATEncoder {
 		return nSATrules;
 	}
 
-	private int nodeRules2SAT(SATConfig config, StringBuffer sb,
-			LogicalModel model, int nodeMDD, List<NodeInfo> coreNodeOrder,
-			int satVar, int intervVar) throws IOException {
-		PathSearcher searcher = new PathSearcher(model.getMDDManager(), 1, 1);
-		int[] path = searcher.getPath();
-		searcher.setNode(nodeMDD);
-
+	/*
+	 * DNF 2 CNF implemented is described in
+	 * http://mathforum.org/library/drmath/view/51857.html
+	 */
+	private int writeDNFBDD2CNF(SATConfig config, StringBuffer sb,
+			MDDManager manager, PathSearcher searcher, int[] path, int bdd,
+			int intervVar) throws IOException {
+		// Negate the whole DNF MDD
+		searcher.setNode(manager.not(bdd));
 		int nSATrules = 0;
-		for (int l : searcher) {
+		for (@SuppressWarnings("unused")
+		int l : searcher) {
 			boolean bWrite = false;
-			String s = config.isIntervention() ? intervVar + " " : "";
+			String s = config.getExportType() == SATExportType.INTERVENTION ? intervVar
+					+ " "
+					: "";
 			for (int i = 0; i < path.length; i++) {
 				if (path[i] != -1) {
 					if (bWrite)
 						s += " ";
+					// Invert 0s to 1s and vice-versa
 					s += ((path[i] == 1) ? "-" : "") + (i + 1);
 					bWrite = true;
 				}
@@ -134,7 +169,6 @@ public class SATEncoder {
 			nSATrules++;
 			sb.append(s + " 0\n");
 		}
-		// sb.append("\n");
 		return nSATrules;
 	}
 }

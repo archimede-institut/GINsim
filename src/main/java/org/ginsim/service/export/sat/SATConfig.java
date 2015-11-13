@@ -14,7 +14,7 @@ public class SATConfig implements NamedStateStore {
 	private LogicalModel model;
 	private Map<NamedState, Object> m_initStates;
 	private Map<NamedState, Object> m_input;
-	private boolean isIntervention;
+	private SATExportType type;
 
 	/**
 	 * @param graph
@@ -24,7 +24,7 @@ public class SATConfig implements NamedStateStore {
 		this.m_input = new HashMap<NamedState, Object>();
 		this.graph = graph;
 		this.model = graph.getModel();
-		this.isIntervention = true;
+		this.type = SATExportType.STABILITY_CONDITION;
 	}
 
 	public void updateModel(LogicalModel model) {
@@ -47,11 +47,11 @@ public class SATConfig implements NamedStateStore {
 		return this.model;
 	}
 
-	public void setIsIntervention(boolean isIntervention) {
-		this.isIntervention = isIntervention;
+	public void setExportType(SATExportType type) {
+		this.type = type;
 	}
 
-	public boolean isIntervention() {
-		return this.isIntervention;
+	public SATExportType getExportType() {
+		return this.type;
 	}
 }
