@@ -108,7 +108,7 @@ public class SATEncoder {
 
 		out.write("c CNF representation of the "
 				+ config.getExportType().toString() + "\n");
-		out.write("of a logical model exported by GINsim\n");
+		out.write("c of a logical model exported by GINsim\n");
 		// for Intervention exports, add the number of "core" variables
 		out.write("p cnf "
 				+ (coreNodes.size() + (config.getExportType() == SATExportType.INTERVENTION ? iNonInputs
