@@ -152,6 +152,16 @@ class LinkListHelper extends ListPanelHelper<AnnotationLink, List<AnnotationLink
     }
 
     @Override
+    public boolean setValue(List<AnnotationLink> list, int row, int column, Object value) {
+        if (row <0 || row >= list.size() || column != 0) {
+            return false;
+        }
+        AnnotationLink link = list.get(row);
+        link.setText(value.toString(), graph);
+        return true;
+    }
+
+    @Override
     public void runAction(List<AnnotationLink> list, int row, int col) {
         list.get(row).open();
     }
