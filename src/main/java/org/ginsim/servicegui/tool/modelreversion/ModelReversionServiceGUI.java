@@ -7,7 +7,6 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.tool.booleanize.Booleanizer;
 import org.colomoto.logicalmodel.tool.reverse.ModelReverser;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.Graph;
@@ -21,6 +20,7 @@ import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.ToolAction;
+import org.ginsim.service.tool.modelbooleanizer.ModelBooleanizerService;
 import org.ginsim.service.tool.modelreversion.ModelReversionService;
 import org.mangosdk.spi.ProviderFor;
 
@@ -62,17 +62,22 @@ class ReversionAction extends ToolAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		ModelReversionService service = ServiceManager.getManager().getService(
+		ModelReversionService revService = ServiceManager.getManager().getService(
 				ModelReversionService.class);
+		ModelBooleanizerService boolService = ServiceManager.getManager().getService(
+				ModelBooleanizerService.class);
+		
 		LogicalModel origModel = this.graph.getModel();
-		ModelReverser modelReverser = service.getModelReverser(origModel
-				.isBoolean() ? origModel : Booleanizer.booleanize(origModel));
+		LogicalModel booleanModel = boolService.booleanize(origModel);
+		
+		// Model reverser
+		ModelReverser modelReverser = revService.getModelReverser(booleanModel);
 		modelReverser.reverse();
 		RegulatoryGraph gReversed = LogicalModel2RegulatoryGraph
 				.importModel(modelReverser.getModel());
 
 		// Copy all the (edge & node) styles from the original graph to the reversed one
-		service.copyNodeStyles(this.graph, gReversed);
+		boolService.copyNodeStyles(this.graph, gReversed);
 
 		// Show the reversed graph
 		GUIManager.getInstance().whatToDoWithGraph(gReversed, true);
