@@ -1,3 +1,18 @@
+Version 2.9.4.
+Changes since version 2.9.3:
+
+Analysis of the regulatory graph:
+* Model Booleanizer
+* Model reverter
+
+Exports:
+* NuSMV format detects stable states through the Var_std condition instead of explicitly computing all stable states
+* Added a SAT export that writes a CNF file of the model: stability conditions or stable states
+
+Other:
+* small bug fixes
+
+---------------------------------------------------------------------------------------------------------------------
 Version 2.9.3.
 Changes since version 2.9.2:
 
