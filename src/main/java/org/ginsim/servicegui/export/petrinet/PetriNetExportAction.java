@@ -3,7 +3,6 @@ package org.ginsim.servicegui.export.petrinet;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +17,7 @@ import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.io.petrinet.PNConfig;
 import org.colomoto.logicalmodel.io.petrinet.PetriNetSubformats;
+import org.colomoto.logicalmodel.io.OutputStreamProvider;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.utils.FileFormatDescription;
@@ -84,7 +84,7 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implemen
 
 		// call the selected export method to do the job
 		try {
-			format.getEncoder( model).export(config, new FileOutputStream(filename));
+			format.getEncoder( model).export(config, new OutputStreamProvider(filename));
 		} catch (IOException e) {
 			LogManager.error(e);
 		}

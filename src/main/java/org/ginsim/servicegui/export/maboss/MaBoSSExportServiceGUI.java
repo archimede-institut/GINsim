@@ -16,7 +16,7 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.core.service.ServiceStatus;
-import org.ginsim.service.export.maboss.MaBoSSExportService;
+import org.ginsim.service.format.MaBoSSExportService;
 import org.mangosdk.spi.ProviderFor;
 
 /**
