@@ -10,6 +10,7 @@ import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.io.LogicalModelFormat;
 import org.colomoto.logicalmodel.io.OutputStreamProvider;
 import org.colomoto.logicalmodel.services.ServiceManager;
+import org.colomoto.logicalmodel.tool.booleanize.Booleanizer;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 
@@ -72,6 +73,9 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 	}
 	
 	public void export(LogicalModel model, OutputStreamProvider out) throws IOException {
+		if (!model.isBoolean() && format.getMultivaluedSupport() == LogicalModelFormat.MultivaluedSupport.BOOLEANIZED) {
+			model = Booleanizer.booleanize(model);
+		}
 		format.export(model, out);
 	}
 	
@@ -101,7 +105,8 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
             return false;
         }
 
-        if (!format.supportsMultivalued()) {
+		LogicalModelFormat.MultivaluedSupport mvs = format.getMultivaluedSupport();
+        if (mvs != LogicalModelFormat.MultivaluedSupport.BOOLEAN_STRICT) {
             // check that the model is Boolean
             for (NodeInfo ni: graph.getNodeInfos()) {
                 if (ni.getMax() > 1) {
