@@ -24,10 +24,8 @@ public class StableRegionsService implements Service {
 		try {
 			PNGraph pnGraph = ptg.getPnGraph();
 			pnGraph.printPnGraph();
-			sccs = pnGraph.getOscillations();
-			for (Set<String> s: sccs){
-					System.out.println(s);
-			}
+			sccs = pnGraph.getStableMotifs();
+			pnGraph.printAttractors(sccs);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

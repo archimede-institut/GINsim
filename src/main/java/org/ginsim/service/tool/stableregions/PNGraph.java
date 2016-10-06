@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Stack;
 
+import org.ginsim.johnsonCycles.ElementaryCyclesSearch;
+
 public class PNGraph {
 	private List<List<Integer>> adj = new LinkedList<List<Integer>>();
 	private int size; //num of nodes
@@ -14,7 +16,8 @@ public class PNGraph {
 	private HashMap<Integer, String> nodesNames = new HashMap<Integer, String>();
 	private Set<String> transitions = new HashSet<String>();
 	private Set<String> places = new HashSet<String>();
-	private HashMap<String, Set<String>> inputNodesMap = new HashMap<String, Set<String>>();
+	private HashMap<String, List<String>> transitionsInputs = new HashMap<String, List<String>>();
+	private HashMap<String, String> transitionsOutputs = new HashMap<String, String>();
 	private HashMap<String, String> complementaryNodes = new HashMap<String, String>();
 	private HashMap<String, Boolean> isSourceNode = new HashMap<String, Boolean>();
 	
@@ -28,12 +31,17 @@ public class PNGraph {
 //		size++;
 //	}
 //	
-	public void addNode(String node){ //transition (composite node) or place (+ or -)
+	public void addNode(String node, String placeTransition){ //transition (composite node) or place (+ or -)
 		nodesMap.put(node, this.size); //the index of the new node in the adj list
 		nodesNames.put(this.size, node);
 		List<Integer> list = new LinkedList<Integer>();
 		this.adj.add(list);
 		size++;
+		
+		if(placeTransition == "transition")
+			this.transitions.add(node);
+		else if(placeTransition == "place")
+			this.places.add(node);
 	}
 	
 	public void addSourceNode(String node){
@@ -48,8 +56,14 @@ public class PNGraph {
 		this.complementaryNodes.put(node, complement);
 	}
 	
-	public void addPlace(String s){
-		this.places.add(s);
+	public String getomplementaryNode(String node){
+		return this.complementaryNodes.get(node);
+	}
+	
+	public void removeTransition(String transition){
+		this.transitions.remove(transition);
+		this.transitionsInputs.remove(transition);
+		this.transitionsOutputs.remove(transition);
 	}
 	
 	public void addTransition(String t){
@@ -74,17 +88,29 @@ public class PNGraph {
 			return false;
 	}
 	
-	public void addInputToTransition(String s, String t){
-		Set<String> inputNodesSet = inputNodesMap.get(t);
+	public String getTransitionOutput(String t){
+		return this.transitionsOutputs.get(t);
+	}
+	
+	public List<String> getTransitionInputs(String t){
+		return this.transitionsInputs.get(t);
+	}
+	
+	public void addInputToTransition(String s, String t){							
+		List<String> inputNodesSet = transitionsInputs.get(t);
 		if (inputNodesSet != null){
 			inputNodesSet.add(s);
-			inputNodesMap.put(t, inputNodesSet);
+			transitionsInputs.put(t, inputNodesSet);
 		}
 		else{
-			inputNodesSet = new HashSet<String>();
+			inputNodesSet = new LinkedList<String>();
 			inputNodesSet.add(s);
-			inputNodesMap.put(t, inputNodesSet);
+			transitionsInputs.put(t, inputNodesSet);
 		}
+	}
+	
+	public void addOutputToTransition(String t, String s){
+		this.transitionsOutputs.put(t, s);
 	}
 	
 	public void addEdge(String node1, String node2){
@@ -117,8 +143,8 @@ public class PNGraph {
 					return false;
 			}
 			else if(isTransition(node)){
-				for(String inputNode : this.inputNodesMap.get(node))
-					if ((! set.contains(inputNode)) && (!isSourceNode.get(inputNode)))
+				for(String inputNode : this.transitionsInputs.get(node))
+					if (! set.contains(inputNode)) 
 						return false;
 			}
 				
@@ -127,9 +153,209 @@ public class PNGraph {
 	}
 	
 	
+	public boolean isStableMotif(Set<String> set){
+		for(String node: set){
+			if(isPlace(node)){
+				if (set.contains(complementaryNodes.get(node)))
+					return false;
+			}
+			else if(isTransition(node)){
+				for(String inputNode : this.transitionsInputs.get(node))
+					if (! set.contains(inputNode)) 
+						return false;
+			}
+				
+		}
+		return true;
+	}
+	
+	
+	public void printAttractors(List<Set<String>> sccs){
+		for(Set<String> scc: sccs){
+			Set<String> toPrintScc = new HashSet<String>();
+			for(String node: scc)
+				if(isPlace(node)){
+					toPrintScc.add(node.substring(0, node.length()-1));
+				}
+			System.out.println(toPrintScc);
+		}
+		
+	}
+	
+	
 	public List<Set<String>> getOscillations(){
 		SccTarjan tarjan = new SccTarjan();
-		return tarjan.getSCCs();
+		List<Set<String>> sccs = tarjan.getSCCs();
+		List<Set<String>> oscillations = new LinkedList<Set<String>>();
+		for(Set<String> scc: sccs)
+			if(isOscillation(scc))
+				oscillations.add(scc);
+		return oscillations;
+	}
+	
+	private List<Integer> compositeCycles = new LinkedList<Integer>(); //cycles which contain at least one composite node
+	private HashMap<String, List<Integer>> compositeCyclesMap = new HashMap<String, List<Integer>> ();
+	//contains for each composite node all the cycles which contain this composite node
+	private List<List<Integer>> numberCompositeInCycles = new LinkedList<List<Integer>> ();
+	//contains for each number the list of cycles which contain this number of composite nodes
+	private HashMap<Integer, List<String>> cycleNumsMap = new HashMap<Integer, List<String>>();
+	private HashMap<Integer, Set<String>> compNodesIncycles = new HashMap<Integer, Set<String>>();
+	//contains for each cycleNumber the composite nodes in the respective cycle
+	
+	private List<String> getCycleByNum(int cycleNum){
+		return this.cycleNumsMap.get(cycleNum);
+	}
+	
+	private Set<String> getCompNodesInCycleByNum (int cycleNum){
+		return this.compNodesIncycles.get(cycleNum);
+	}
+	
+	Set<Integer> markedCycles = new HashSet<Integer>();
+	
+	public List<Set<String>> getStableMotifs(){
+		List<Set<String>> stableMotifs = new LinkedList<Set<String>>();
+		List<List<String>> cycles = getCycles();
+		List<List<String>> cyclesToRemove = new LinkedList<List<String>>();
+		
+		int numOfCompInCycle = 0;
+		int cycleNum = 0;
+		
+		for(List<String> cycle: cycles){
+			numOfCompInCycle = 0;
+			for(String node: cycle){
+				if(isPlace(node))
+					if(cycle.contains(getomplementaryNode(node))){ //remove cycles which contain both a node and its complementary
+						cyclesToRemove.add(cycle);
+						break;
+					}
+					else if(isTransition(node))
+						for(String inputNode: getTransitionInputs(node))
+							if(cycle.contains(getomplementaryNode(inputNode))){
+								cyclesToRemove.add(cycle); //remove cycles which contains a composite node and the complementary of one of its inputs
+								break;
+							}
+			}
+		}
+		
+		cycles.removeAll(cyclesToRemove);
+		
+		for(List<String> cycle: cycles){
+			numOfCompInCycle = 0;
+			cycleNum++;
+			cycleNumsMap.put(cycleNum, cycle);
+			for(String node: cycle){
+				if(isTransition(node)){
+					numOfCompInCycle++;
+					
+					//initialize
+					List<Integer> compcycl = new LinkedList<Integer>();
+					compositeCyclesMap.put(node, compcycl);
+					
+					Set<String> compnodes = compNodesIncycles.get(node);
+					if(compnodes == null)
+						compnodes = new HashSet<String>();
+					compnodes.add(node);
+					compNodesIncycles.put(cycleNum, compnodes);
+				}
+				
+				List<Integer> list;
+				if(numberCompositeInCycles.size() <= numOfCompInCycle){
+					list = new LinkedList<Integer>();
+					numberCompositeInCycles.add(numOfCompInCycle, list);
+				}
+				
+				if(numOfCompInCycle == 0){
+					list = numberCompositeInCycles.get(0);
+					list.add(cycleNum);
+					numberCompositeInCycles.add(0, list);
+				}
+				
+				else{
+					//compositeCycles.add(cycleNum);
+					list = numberCompositeInCycles.get(numOfCompInCycle);
+					list.add(cycleNum);
+					numberCompositeInCycles.add(numOfCompInCycle, list);
+				}	
+			}
+		}
+		
+		//sort the cycles regarding the number of composite nodes
+		//cycles = new LinkedList<List<String>>();
+		
+		for(List<Integer> cyclesItr: numberCompositeInCycles){
+			for(int cycleItr: cyclesItr){
+				compositeCycles.add(cycleItr);
+				//cycles.add(cycleNumsMap.get(cycleItr));
+				if(compNodesIncycles.get(cycleItr) != null)
+				for(String node: compNodesIncycles.get(cycleItr)){
+					List<Integer> compcycl= compositeCyclesMap.get(node);
+					compcycl.add(cycleItr);
+					compositeCyclesMap.put(node, compcycl);
+				}	
+			}
+		}
+		Set<Integer> markedCycles = new HashSet<Integer>();
+		
+		for(int cycleNumItr: compositeCycles)
+			if(!markedCycles.contains(cycleNumItr)){
+				boolean b = true;
+				Set<String> scc = new HashSet<String>();
+				scc.addAll(cycleNumsMap.get(cycleNumItr));
+				for (String compnode: compNodesIncycles.get(cycleNumItr)){
+					b = recComposeCycles(compnode, scc);
+					if(b == false)
+						break;
+				}
+				if(b)
+					stableMotifs.add(scc);
+			}
+		
+		if(numberCompositeInCycles.size() > 0)
+		for (int cycNum: numberCompositeInCycles.get(0)) {   //add all the cycles without composite nodes
+			Set<String> set = new HashSet<String>();
+			for(String node: cycleNumsMap.get(cycNum))
+				set.add(node);
+			stableMotifs.add(set);
+		}
+		return stableMotifs;
+	}
+	
+	private boolean recComposeCycles(String compNode, Set<String> scc){
+		for(String input: transitionsInputs.get(compNode))
+			if(! scc.contains(input)){
+				for(int compcycleNum: compositeCyclesMap.get(compNode)){
+					if(cycleNumsMap.get(compcycleNum).contains(input)){
+						scc.addAll(cycleNumsMap.get(compcycleNum));
+						if(compNodesIncycles.get(1).contains(compcycleNum)){
+							markedCycles.add(compcycleNum);
+							break;
+						}
+						else{
+							for(String newCompNode: compNodesIncycles.get(compcycleNum)){
+								markedCycles.add(compcycleNum);
+								return recComposeCycles(newCompNode, scc);
+							}
+						}
+					}
+				}
+				return false;
+			}
+		return true;
+	}
+	
+	public List<List<String>> getCycles(){
+		String[] nodes = new String[this.size];
+		boolean[][] adjMatrix = new boolean[this.size][this.size];
+		for(String node: nodesMap.keySet())
+			nodes[nodesMap.get(node)] = node;
+		for(int i=0; i<adj.size(); i++){
+			List<Integer> list = adj.get(i);
+			for (int j: list)
+				adjMatrix[i][j] = true;
+		}
+		ElementaryCyclesSearch ecs = new ElementaryCyclesSearch(adjMatrix, nodes);
+		//System.out.println(ecs.getElementaryCycles());
+		return ecs.getElementaryCycles();
 	}
 	
 
@@ -163,7 +389,7 @@ class SccTarjan{
 		stack.push(v);
 		for(int w: adj.get(v)){
 			if(index[w] == -1){
-				strongConnect(w);;
+				strongConnect(w);
 				lowlink[v] = Math.min(lowlink[v], lowlink[w]);
 			}
 			else if(stack.contains(w))
@@ -177,8 +403,8 @@ class SccTarjan{
 				w = (Integer) stack.pop();
 				sc.add(nodesNames.get(w));
 			}while (w !=v);
-			if(isOscillation(sc))
-				sccs.add(sc);
+			System.out.println(sc);
+			sccs.add(sc);
 		}
 	}
 }
