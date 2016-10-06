@@ -68,10 +68,9 @@ class ReversionAction extends ToolAction {
 				ModelBooleanizerService.class);
 		
 		LogicalModel origModel = this.graph.getModel();
-		LogicalModel booleanModel = boolService.booleanize(origModel);
-		
+
 		// Model reverser
-		ModelReverser modelReverser = revService.getModelReverser(booleanModel);
+		ModelReverser modelReverser = revService.getModelReverser(origModel);
 		modelReverser.reverse();
 		RegulatoryGraph gReversed = LogicalModel2RegulatoryGraph
 				.importModel(modelReverser.getModel());
