@@ -1,5 +1,7 @@
 package org.ginsim.service.tool.stableregions;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -170,13 +172,13 @@ public class PNGraph {
 	}
 	
 	
-	public void printAttractors(List<Set<String>> sccs){
+	public void printAttractors(Set<Set<String>> sccs){
 		for(Set<String> scc: sccs){
 			Set<String> toPrintScc = new HashSet<String>();
 			for(String node: scc)
-				if(isPlace(node)){
-					toPrintScc.add(node.substring(0, node.length()-1));
-				}
+				//if(isPlace(node)){
+					toPrintScc.add(node/*.substring(0, node.length()-1)*/);
+				//}
 			System.out.println(toPrintScc);
 		}
 		
@@ -196,44 +198,37 @@ public class PNGraph {
 	private List<Integer> compositeCycles = new LinkedList<Integer>(); //cycles which contain at least one composite node
 	private HashMap<String, List<Integer>> compositeCyclesMap = new HashMap<String, List<Integer>> ();
 	//contains for each composite node all the cycles which contain this composite node
-	private List<List<Integer>> numberCompositeInCycles = new LinkedList<List<Integer>> ();
+	private HashMap<Integer, List<Integer>> numberCompositeInCycles = new HashMap<Integer, List<Integer>>();
 	//contains for each number the list of cycles which contain this number of composite nodes
 	private HashMap<Integer, List<String>> cycleNumsMap = new HashMap<Integer, List<String>>();
 	private HashMap<Integer, Set<String>> compNodesIncycles = new HashMap<Integer, Set<String>>();
 	//contains for each cycleNumber the composite nodes in the respective cycle
 	
-	private List<String> getCycleByNum(int cycleNum){
-		return this.cycleNumsMap.get(cycleNum);
-	}
+
+	Set<Integer> markedCycles = new HashSet<Integer>(); //cycles which are already in a scc
 	
-	private Set<String> getCompNodesInCycleByNum (int cycleNum){
-		return this.compNodesIncycles.get(cycleNum);
-	}
-	
-	Set<Integer> markedCycles = new HashSet<Integer>();
-	
-	public List<Set<String>> getStableMotifs(){
-		List<Set<String>> stableMotifs = new LinkedList<Set<String>>();
+	public Set<Set<String>> getStableMotifs(){
+		Set<Set<String>> stableMotifs = new HashSet<Set<String>>();
 		List<List<String>> cycles = getCycles();
 		List<List<String>> cyclesToRemove = new LinkedList<List<String>>();
 		
-		int numOfCompInCycle = 0;
+		int numOfCompInCycle = 0; //The number of composite nodes in the cycle 
 		int cycleNum = 0;
 		
 		for(List<String> cycle: cycles){
-			numOfCompInCycle = 0;
 			for(String node: cycle){
-				if(isPlace(node))
+				if(isPlace(node)){
 					if(cycle.contains(getomplementaryNode(node))){ //remove cycles which contain both a node and its complementary
 						cyclesToRemove.add(cycle);
 						break;
 					}
-					else if(isTransition(node))
-						for(String inputNode: getTransitionInputs(node))
-							if(cycle.contains(getomplementaryNode(inputNode))){
-								cyclesToRemove.add(cycle); //remove cycles which contains a composite node and the complementary of one of its inputs
-								break;
-							}
+				}
+				else if(isTransition(node))
+					for(String inputNode: getTransitionInputs(node))
+						if(cycle.contains(getomplementaryNode(inputNode))){
+							cyclesToRemove.add(cycle); //remove cycles which contains a composite node and the complementary of one of its inputs
+							break;
+						}
 			}
 		}
 		
@@ -257,35 +252,24 @@ public class PNGraph {
 					compnodes.add(node);
 					compNodesIncycles.put(cycleNum, compnodes);
 				}
-				
-				List<Integer> list;
-				if(numberCompositeInCycles.size() <= numOfCompInCycle){
-					list = new LinkedList<Integer>();
-					numberCompositeInCycles.add(numOfCompInCycle, list);
-				}
-				
-				if(numOfCompInCycle == 0){
-					list = numberCompositeInCycles.get(0);
-					list.add(cycleNum);
-					numberCompositeInCycles.add(0, list);
-				}
-				
-				else{
-					//compositeCycles.add(cycleNum);
-					list = numberCompositeInCycles.get(numOfCompInCycle);
-					list.add(cycleNum);
-					numberCompositeInCycles.add(numOfCompInCycle, list);
-				}	
 			}
-		}
+			
+			List<Integer> list = numberCompositeInCycles.get(numOfCompInCycle);
+			if(list == null)
+				list = new LinkedList<Integer>();
+			list.add(cycleNum);
+			numberCompositeInCycles.put(numOfCompInCycle, list);
+			}
+		
 		
 		//sort the cycles regarding the number of composite nodes
-		//cycles = new LinkedList<List<String>>();
-		
-		for(List<Integer> cyclesItr: numberCompositeInCycles){
+		List<Integer> keys = new LinkedList<Integer>(numberCompositeInCycles.keySet());
+		Collections.sort(keys);
+		for(int numOfCompItr: keys) if(numOfCompItr > 0){
+			List<Integer> cyclesItr = numberCompositeInCycles.get(numOfCompItr);
 			for(int cycleItr: cyclesItr){
-				compositeCycles.add(cycleItr);
-				//cycles.add(cycleNumsMap.get(cycleItr));
+				if(!compositeCycles.contains(cycleItr))
+					compositeCycles.add(cycleItr);
 				if(compNodesIncycles.get(cycleItr) != null)
 				for(String node: compNodesIncycles.get(cycleItr)){
 					List<Integer> compcycl= compositeCyclesMap.get(node);
@@ -294,7 +278,6 @@ public class PNGraph {
 				}	
 			}
 		}
-		Set<Integer> markedCycles = new HashSet<Integer>();
 		
 		for(int cycleNumItr: compositeCycles)
 			if(!markedCycles.contains(cycleNumItr)){
@@ -303,6 +286,7 @@ public class PNGraph {
 				scc.addAll(cycleNumsMap.get(cycleNumItr));
 				for (String compnode: compNodesIncycles.get(cycleNumItr)){
 					b = recComposeCycles(compnode, scc);
+					markedCycles.add(cycleNumItr);
 					if(b == false)
 						break;
 				}
@@ -310,7 +294,7 @@ public class PNGraph {
 					stableMotifs.add(scc);
 			}
 		
-		if(numberCompositeInCycles.size() > 0)
+		if(numberCompositeInCycles.get(0) != null)
 		for (int cycNum: numberCompositeInCycles.get(0)) {   //add all the cycles without composite nodes
 			Set<String> set = new HashSet<String>();
 			for(String node: cycleNumsMap.get(cycNum))
@@ -326,7 +310,7 @@ public class PNGraph {
 				for(int compcycleNum: compositeCyclesMap.get(compNode)){
 					if(cycleNumsMap.get(compcycleNum).contains(input)){
 						scc.addAll(cycleNumsMap.get(compcycleNum));
-						if(compNodesIncycles.get(1).contains(compcycleNum)){
+						if(numberCompositeInCycles.get(1).contains(compcycleNum)){
 							markedCycles.add(compcycleNum);
 							break;
 						}

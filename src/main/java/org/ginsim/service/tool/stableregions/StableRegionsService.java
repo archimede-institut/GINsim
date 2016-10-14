@@ -1,6 +1,7 @@
 package org.ginsim.service.tool.stableregions;
 
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -17,8 +18,8 @@ import org.mangosdk.spi.ProviderFor;
 @Alias("stableregions")
 @ServiceStatus(EStatus.DEVELOPMENT)
 public class StableRegionsService implements Service {
-	public List<Set<String>> getSCCs(RegulatoryGraph regGraph){
-		List<Set<String>> sccs = new LinkedList<Set<String>>();
+	public Set<Set<String>> getSCCs(RegulatoryGraph regGraph){
+		Set<Set<String>> sccs = new HashSet<Set<String>>();
 		LogicalModel model = regGraph.getModel();
 		PNtoGraph ptg = new PNtoGraph(model);
 		try {

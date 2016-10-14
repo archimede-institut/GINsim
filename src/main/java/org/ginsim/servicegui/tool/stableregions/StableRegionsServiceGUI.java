@@ -50,7 +50,6 @@ class StableRegionsAction extends ToolAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
 		StableRegionsService srService = ServiceManager.getManager().getService(
 				StableRegionsService.class);
 		srService.getSCCs(graph);
