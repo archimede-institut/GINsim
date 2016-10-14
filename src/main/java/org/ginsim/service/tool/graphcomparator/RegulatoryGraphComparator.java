@@ -61,6 +61,7 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryNode, R
 	protected RegulatoryNode copyNode(RegulatoryGraph g, RegulatoryNode v1) {
         String id = v1.getId();
         RegulatoryNode v = graph_new.addNewNode(id, v1.getName(), v1.getMaxValue());
+		v.setInput(v.isInput(), graph_new);
         setLogicalFunction(v, v1, graph_1);
         Annotation gsa = v.getAnnotation();
         gsa.copyFrom(v1.getAnnotation());
@@ -77,6 +78,8 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryNode, R
         }
 
         RegulatoryMultiEdge newEdge = new RegulatoryMultiEdge(graph_new, src, tgt, e.getSign(0));
+		Annotation gsa = newEdge.getAnnotation();
+		gsa.copyFrom(e.getAnnotation());
         graph_new.addEdge(newEdge);
         return newEdge;
     }
@@ -115,6 +118,8 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryNode, R
                 }
             }
         }
+
+		setAllLogicalFunctions();
     }
 
 
@@ -240,7 +245,11 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryNode, R
 	private void setAllLogicalFunctions() {
 		for (RegulatoryNode[] t: logicalFunctionPending) {
 			LogicalParameterList lpl = t[1].getV_logicalParameters();
-			lpl.applyNewGraph(t[0], meMap);			
+			try {
+				lpl.applyNewGraph(t[0], meMap);
+			} catch (Exception e) {
+				// TODO: why does copy of logical parameters fail?
+			}
 		}
 	}
 	
