@@ -1,6 +1,7 @@
 package org.ginsim.service.tool.stableregions;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -206,11 +207,12 @@ public class PNGraph {
 	
 
 	Set<Integer> markedCycles = new HashSet<Integer>(); //cycles which are already in a scc
-	Set<Set<String>> stableMotifs = new HashSet<Set<String>>();
 	
-	public Set<Set<String>> getStableMotifs(){
+	
+/*	public Set<Set<String>> getStableMotifs(){
 		List<List<String>> cycles = getCycles();
 		List<List<String>> cyclesToRemove = new LinkedList<List<String>>();
+		Set<Set<String>> stableMotifs = new HashSet<Set<String>>();
 		
 		int numOfCompInCycle = 0; //The number of composite nodes in the cycle 
 		int cycleNum = 0;
@@ -279,8 +281,7 @@ public class PNGraph {
 			}
 		}
 		
-		for(int cycleNumItr: compositeCycles)
-			/*if(!markedCycles.contains(cycleNumItr))*/{
+		for(int cycleNumItr: compositeCycles){
 				boolean b = true;
 				Set<String> scc = new HashSet<String>();
 				scc.addAll(cycleNumsMap.get(cycleNumItr));
@@ -304,34 +305,10 @@ public class PNGraph {
 			stableMotifs.add(set);
 		}
 		return stableMotifs;
-	}
-	
-	/*private boolean recComposeCycles(String compNode, Set<String> scc){
-		for(String input: transitionsInputs.get(compNode))
-			if(! scc.contains(input)){
-				for(int compcycleNum: compositeCyclesMap.get(compNode)){
-					if(cycleNumsMap.get(compcycleNum).contains(input)){
-						scc.addAll(cycleNumsMap.get(compcycleNum));
-						if(numberCompositeInCycles.get(1).contains(compcycleNum)){
-							markedCycles.add(compcycleNum);
-							break;
-						}
-						else{
-							for(String newCompNode: compNodesIncycles.get(compcycleNum)) 
-								if (! newCompNode.equals(compNode)){
-									markedCycles.add(compcycleNum);
-									return recComposeCycles(newCompNode, scc);
-							}
-						}
-						break;
-					}
-				}
-				return false;
-			}
-		return true;
 	}*/
-
-	private boolean recComposeCycles(String compNode, Set<String> scc, Set<String> toCheckComp){
+	
+	
+	/*private boolean recComposeCycles(String compNode, Set<String> scc, Set<String> toCheckComp){
 		for(String input: transitionsInputs.get(compNode))
 			if(! scc.contains(input)){
 				for(int compcycleNum: compositeCyclesMap.get(compNode)){
@@ -349,71 +326,187 @@ public class PNGraph {
 						}
 					}
 				}
-				return false;
+				return false; //no cycle found, which contains this input
 			}
 		toCheckComp.remove(compNode);
 		if(toCheckComp.isEmpty())
 			return true;
 		else
 			return recComposeCycles(toCheckComp.iterator().next(), scc, toCheckComp);
+	}*/
+	
+	
+	private boolean property2satisfied(Set<String> scc){
+		for(String node: scc)
+			if(isTransition(node))
+				for(String input: transitionsInputs.get(node))
+					if(! scc.contains(input))
+						return false;
+		return true;
 	}
 	
-	private boolean compatibleCycle (int compcycleNum, Set<String> scc) {
-		for(String node: cycleNumsMap.get(compcycleNum))
-			if(isPlace(node)){
-				if(scc.contains(complementaryNodes.get(node))){
-					return false;   //if the new cycle contains a complementary node of a node in the scc
-				}
-			}
+	private boolean compatibleCycle(Set<String> scc, Set<String> scc2){
+		for(String node: scc)
+			if(isPlace(node))
+				if(scc2.contains(complementaryNodes.get(node)))
+					return false;
 		return true;
 	}
 
-	/*private void recComposeCycles(String compNode, Set<String> scc, Set<String> compNodesRec){
-		if(compNodesRec.isEmpty())
-			return;
-		for(String input: transitionsInputs.get(compNode)){
-			if(scc.contains(complementaryNodes.get(input)))
-				return;
-			else if(! scc.contains(input)){
-				for(int compcycleNum: compositeCyclesMap.get(compNode)){
-					if(cycleNumsMap.get(compcycleNum).contains(input)){
-						boolean cycleBool = true;
-						for(String node: cycleNumsMap.get(compcycleNum))
-							if(isPlace(node)){
-								String compNodeProhib = complementaryNodes.get(node);
-								if(scc.contains(compNodeProhib)){
-									cycleBool = false;
-									break;    //if the new cycle contains a complementary node of a node in the scc
-								}
-							}
-
-						if (cycleBool){
-							compNodesRec.addAll(compNodesIncycles.get(compcycleNum));
-							for(String newCompNode: compNodesIncycles.get(compcycleNum)){ 
-								if (! newCompNode.equals(compNode)){
-									recComposeCycles(newCompNode, scc, compNodesRec);
-									if(compNodesRec.contains(newCompNode)){
-										cycleBool = false;
-										break;
-									}
-								}
-							}
-							if(cycleBool){
-								scc.addAll(cycleNumsMap.get(compcycleNum));
-								return;
-							}
-						}
+	
+	public Set<Set<String>> getStableMotifs(){
+		List<List<String>> cycles = getCycles();
+		List<List<String>> cyclesToRemove = new LinkedList<List<String>>();
+		Set<Set<String>> stableMotifs = new HashSet<Set<String>>();
+		Set<String> allCompositeNodesInCycles = new HashSet<String>();
+		int cycleNum = 0;
+		
+		for(List<String> cycle: cycles){
+			Set<String> compNodesInThisCycle = new HashSet<String>();
+			boolean toRemove = false;
+			for(String node: cycle){
+				if(isPlace(node)){
+					if(cycle.contains(getomplementaryNode(node))){ //remove cycles which contain both a node and its complementary
+						cyclesToRemove.add(cycle);
+						break;
 					}
 				}
-				return;
+				else if(isTransition(node)){
+					for(String inputNode: getTransitionInputs(node))
+						if(cycle.contains(getomplementaryNode(inputNode))){
+							cyclesToRemove.add(cycle); //remove cycles which contains a composite node and the complementary of one of its inputs
+							toRemove =  true;
+							break;
+						}
+					if(toRemove){
+						cyclesToRemove.add(cycle);
+						break;
+					}
+					compNodesInThisCycle.add(node);
+				}
+				
 			}
+			
+			if(! toRemove){
+				if(compNodesInThisCycle.size() == 0){
+					Set<String> newStableMotif = new HashSet<String>();
+					newStableMotif.addAll(cycle);
+					stableMotifs.add(newStableMotif);
+				}
+				cycleNum++;
+				cycleNumsMap.put(cycleNum, cycle);
+				allCompositeNodesInCycles.addAll(compNodesInThisCycle);
+				for(String node: compNodesInThisCycle){
+					List<Integer> cyclesList = compositeCyclesMap.get(node);
+					if(cyclesList == null)
+						cyclesList = new LinkedList<Integer>();
+					cyclesList.add(cycleNum);
+					compositeCyclesMap.put(node, cyclesList);
+				}
+			}
+		}
+		
+		cycles.removeAll(cyclesToRemove);
+		Set<String> compNodesToRemove = new HashSet<String>();
+		
+		//for each composite node comp, check if the union of all the cycles which contain comp contain all the inputs of comp
+		for(String comp: allCompositeNodesInCycles){
+			Set<String> unionCycles = new HashSet<String>();
+			for(int cycNum: compositeCyclesMap.get(comp))
+				unionCycles.addAll(cycleNumsMap.get(cycNum));
+			if(! unionCycles.containsAll(transitionsInputs.get(comp))){
+				compNodesToRemove.add(comp);
+				for(int cycNumToRemove: compositeCyclesMap.get(comp)){
+					cyclesToRemove.add(cycleNumsMap.get(cycNumToRemove));
+					cycleNumsMap.remove(cycNumToRemove);
+				}
+				compositeCyclesMap.remove(comp);
+			}
+		}
+		
+		cycles.removeAll(cyclesToRemove);
+		allCompositeNodesInCycles.removeAll(compNodesToRemove);
+		
+		Set<Set<String>> sccs = new HashSet<Set<String>>();
+		for(List<String>cycle: cycles){
+			Set<String> scc = new HashSet<String>();
+			scc.addAll(cycle);
+			sccs.add(scc);
+		}
+		
+		Set<String> unionSccs = new HashSet<String>();
+		
+		for(String comp: allCompositeNodesInCycles){
+			Set<Set<String>> sccs1 = new HashSet<Set<String>>(); //all the sccs which contain input1
+			Set<Set<String>> sccsToRemove = new HashSet<Set<String>>();
+			List<String> inputs = transitionsInputs.get(comp);
+			
+			String input1 = inputs.get(0);
+			for(Set<String> scc:sccs)
+				if(scc.contains(input1))
+					sccs1.add(scc);
+			
+			//sccs will contain in the first step all the cycles which contain input1
+			
+			for(int i = 1; i<inputs.size(); i++){
+				Set<Set<String>> newSccs = new HashSet<Set<String>>();
+				String inputi = inputs.get(i);
+				for(Set<String> scc:sccs)
+					if(scc.contains(inputi))
+						for(Set<String> scc2 : sccs)
+							if(compatibleCycle(scc, scc2)){
+								scc.addAll(scc2);
+								newSccs.add(scc);
+								unionSccs.addAll(scc);
+							}
+								
+				sccs = newSccs;
+			}
+			
+			for(Set<String> scc: sccs){
+				if(property2satisfied(scc)){
+					stableMotifs.add(scc);
+				}
+				else{
+					boolean toRemove = false;
+					for(String node: scc){
+						if(isTransition(node))
+							for(String inputNode: getTransitionInputs(node))
+								if(scc.contains(getomplementaryNode(inputNode))){
+									sccsToRemove.add(scc);
+									unionSccs.removeAll(scc);
+									toRemove =true;
+									break;
+								}
+						if(toRemove)
+							break;
+					}
+				}
+			}
+			
+			sccs.removeAll(sccsToRemove);
+			
+			for(String node: unionSccs){
+				if(isTransition(node)){
+					Set<String> unionSccsContainComp = new HashSet<String>();
+					Set<Set<String>> sccsContainComp = new HashSet<Set<String>>();
+					for(Set<String> scc: sccs)
+						if(scc.contains(node)){
+							unionSccsContainComp.addAll(scc);
+							sccsContainComp.add(scc);
+						}
+					if(!unionSccsContainComp.containsAll(transitionsInputs.get(node))){
+						sccs.removeAll(sccsContainComp);
+						unionSccs.removeAll(unionSccsContainComp);
+					}	
+				}
+			}
+		}
+		
+		stableMotifs.addAll(sccs);
+		
+		return stableMotifs;
 	}
-
-		compNodesRec.remove(compNode);
-		
-		return;
-		
-	}*/
 	
 	
 	public List<List<String>> getCycles(){
