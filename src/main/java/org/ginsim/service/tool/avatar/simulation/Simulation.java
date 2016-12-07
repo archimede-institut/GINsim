@@ -3,12 +3,16 @@ package org.ginsim.service.tool.avatar.simulation;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.swing.JLabel;
+import javax.swing.JTextPane;
+
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.StatefulLogicalModel;
 import org.ginsim.service.tool.avatar.domain.CompactStateSet;
 import org.ginsim.service.tool.avatar.domain.Dictionary;
 import org.ginsim.service.tool.avatar.domain.Result;
+import org.ginsim.service.tool.avatar.domain.StateSet;
 import org.ginsim.service.tool.avatar.utils.ChartGNUPlot;
 
 
@@ -27,17 +31,16 @@ public abstract class Simulation {
     public boolean isGUI = false;
 	/** whether detailed logs of the behavior of the simulation are to be printed (true is suggested to not hamper efficiency) */
     public boolean quiet = true;
+	/** whether charts should be created and plotted */
+	public boolean plots = true;
     
 	protected StatefulLogicalModel model;
 	protected List<CompactStateSet> oracle;
     protected String resultLog="";
 	protected ChartGNUPlot chart = new ChartGNUPlot();  
-	
-	/**
-	 * Creates the context of a simulation given a (stateful) logical model
-	 * @param _model a stateful logical model possibly defining a set of initial states and oracles
-	 */
-	public Simulation(StatefulLogicalModel _model) {
+    protected int memory;
+		
+	public void addModel(StatefulLogicalModel _model) {
 		model = _model;
 		List<NodeInfo> components = model.getNodeOrder(); 
 		oracle = new ArrayList<CompactStateSet>();
@@ -56,7 +59,7 @@ public abstract class Simulation {
 		List<List<byte[]>> os = model.getOracles();
 		if(os!=null) {
 			for(List<byte[]> o : os)
-				oracle.add(new CompactStateSet("oracle_"+(i++),o));
+				oracle.add(new CompactStateSet("oracle_"+(i++),model.getNodeOrder(),o));
 		}
 	}
 
@@ -65,8 +68,44 @@ public abstract class Simulation {
 	 * @return the discovered attractors, their reachability, and remaining contextual information
 	 * @throws Exception
 	 */
-	public abstract Result runSimulation() throws Exception;
-	
+	public Result runSimulation() throws Exception {
+  		long time = System.currentTimeMillis();
+		Result res = runSim();
+		for(String key : res.complexAttractors.keySet()){
+			if(res.complexAttractors.get(key) instanceof StateSet)
+				res.complexAttractorPatterns.put(key,MDDUtils.getStatePatterns(model.getNodeOrder(),(StateSet)res.complexAttractors.get(key)));
+			else if(res.complexAttractors.get(key) instanceof CompactStateSet)
+				res.complexAttractorPatterns.put(key,((CompactStateSet)res.complexAttractors.get(key)).getStates());
+		}
+
+		res.time = (System.currentTimeMillis()-time);
+		res.name = getName();
+		res.nodes = getNodes();
+		res.parameters = parametersToString();
+		res.iconditions = model.getInitialStates();
+		return res;
+	}
+
+	/**
+	 * Performs the simulation
+	 * @return the discovered attractors, their reachability, and remaining contextual information
+	 * @throws Exception
+	 */
+	public abstract Result runSim() throws Exception;
+
+	/**
+	 * Prints the current parameters
+	 * @return a String describing the parameters
+	 */
+	public abstract String parametersToString();
+	public abstract String getName();
+
+	private String getNodes() {
+		String result = "";
+		for(NodeInfo node : model.getNodeOrder()) result+=node.getNodeID()+",";
+		return result.substring(0,result.length()-1);
+	}
+
 	/**
 	 * Updates a simulation with parameterizations dynamically fixed based on the properties of the input model
 	 * @return simulation with updated parameters (values dynamically selected based on the input model)
@@ -74,7 +113,7 @@ public abstract class Simulation {
 	public abstract void dynamicUpdateValues();
 
 	protected void output(String s){
-		if(isGUI) resultLog+=s;
+		if(isGUI) resultLog+=s+"\n";
 		else System.out.println(s);
 	}
 	
@@ -89,7 +128,7 @@ public abstract class Simulation {
 	
     protected boolean exit = false;
 	protected Thread t1; //used for heavy tasks from external libraries
-	private JLabel progress;
+	private JTextPane progress;
 
     public void exit(){
     	if(t1!=null && t1.isAlive()) t1.stop();
@@ -104,7 +143,7 @@ public abstract class Simulation {
 	        	try {
 					res[0]=runSimulation();
 				} catch (Exception e) {
-					e.printStackTrace();
+					//e.printStackTrace();
 					es[0]=e;
 					ok[0]=false;
 				}
@@ -117,17 +156,19 @@ public abstract class Simulation {
 		return res[0];
     }
     
-    public void setComponents(JLabel _progress){
+    public void setComponents(JTextPane _progress){
     	progress = _progress;
     }   
     
     protected void publish(String note){
+      //System.out.println(note);
   	  if(note.startsWith("It")) progress.setText(note);
-  	  else if(note.startsWith(" It")) progress.setText("<html>"+note+"</html>");
+  	  else if(note.startsWith(" It")) progress.setText(note);
   	  else {
-  		  if(!progress.getText().startsWith("<html>")) progress.setText("<html>"+progress.getText()+"</html>");
-  		  progress.setText(progress.getText().replace("</","<br>"+note+"</"));
+  		  //System.out.println(progress.getText().replace("</","<br>"+note+"</")+"\n============================");
+  		  //if(!progress.getText().startsWith("<html>")) progress.setText("<html>"+progress.getText()+"</html>");
+  		  progress.setText(progress.getText().replace("</body>","<br>"+note+"</body>"));
   	  }
-  	  progress.updateUI();
+  	  //progress.updateUI();
     }
 }

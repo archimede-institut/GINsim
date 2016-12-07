@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
-
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
@@ -16,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.TableColumn;
-
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
@@ -64,6 +62,10 @@ public class StateListPanel extends JPanel {
 		return stateList;
 	}
 		
+	public void setDisabling(boolean disabling) {
+		model.setDisabling(disabling);
+	}
+
 	/**
 	 * Get a list with the selected states
 	 * @param input whether the states are from input or normal variables
@@ -76,29 +78,18 @@ public class StateListPanel extends JPanel {
 		return selected;
 	}
 	
-	/**
+	/*
 	 * Get a list with the selected oracle-patterns
 	 * @param input whether the oracles are from input or normal variables
 	 * @return list of selected oracles
-	 */
+	 *
 	public NamedStateList getSelectedOracleStateList(boolean input) {
 		NamedStateList selected = new NamedStateList(stateList.getNodeOrder(),input); 
         for (int i=0 ; i<model.getRowCount() ; i++)
         	if((Boolean)model.getValueAt(i,2)) selected.add(stateList.get(i));
 		return selected;
-	}
-	
-	/**
-	 * Get a boolean array defining the indexes of the selected oracles
-	 * @return array with true entries on the indexes of the selected oracles
-	 */
-	public boolean[] getOracleSelection() {
-		boolean[] res = new boolean[model.getRowCount()];
-		for (int i=0 ; i<model.getRowCount() ; i++) 
-			res[i]=(Boolean)model.getValueAt(i,2);
-		return res;
-	}
-	
+	}*/
+		
 	/**
 	 * Get a boolean array defining the indexes of the selected states
 	 * @return array with true entries on the indexes of the selected states
@@ -109,6 +100,22 @@ public class StateListPanel extends JPanel {
 			res[i]=(Boolean)model.getValueAt(i,1);
 		return res;
 	}
+	
+	/*
+	 * Get a boolean array defining the indexes of the selected oracles
+	 * @return array with true entries on the indexes of the selected oracles
+	 *
+	public boolean[] getOracleSelection() {
+		boolean[] res = new boolean[model.getRowCount()];
+		for (int i=0 ; i<model.getRowCount() ; i++) 
+			res[i]=(Boolean)model.getValueAt(i,2);
+		return res;
+	}
+	
+	public boolean[] getDisabledEdition() {
+		return model.getEdition();
+	} */
+
 
 	/*****************/
 	/**** SETTERS ****/
@@ -122,10 +129,10 @@ public class StateListPanel extends JPanel {
     public void setParam(Map currentParameter, List<String> names) {
 		model.setParam(currentParameter);
         for (int i=0 ; i<model.getRowCount() ; i++) {
-        	if(i==names.size()) model.setValueAt("states_", i, 0);
-        	else model.setValueAt(names.get(i), i, 0);
+        	if(i<names.size()) model.setValueAt(names.get(i), i, 0);
+        	else model.setValueAt("state_", i, 0);
         	model.setValueAt(Boolean.TRUE, i, 1);
-            model.setValueAt(Boolean.FALSE, i, 2);
+            //if(oracle) model.setValueAt(Boolean.FALSE, i, 2);
         }
 	}
     
@@ -135,24 +142,13 @@ public class StateListPanel extends JPanel {
      */
     public void setParam(Map currentParameter) {
 		model.setParam(currentParameter);
-        for (int i=0 ; i<model.getRowCount() ; i++) {
-            model.setValueAt("states_"+i, i, 0);
-            model.setValueAt(Boolean.TRUE, i, 1);
-            model.setValueAt(Boolean.FALSE, i, 2);
-        }
+        /*for (int i=0 ; i<model.getRowCount() ; i++) {
+            //model.setValueAt("states_"+i, i, 0);
+            //model.setValueAt(Boolean.TRUE, i, 1);
+            if(oracle) model.setValueAt(Boolean.FALSE, i, 2);
+        }*/
 	}
 
-	/**
-	 * Sets the selected oracles based on a boolean array
-	 * @param selection array with true entries on the indexes to be selected
-	 */
-	public void setOracleSelection(boolean[] selection){
-		for (int i=0, l=model.getRowCount(); i<l; i++)
-        	model.setValueAt(false,i,2);
-		for (int i=0, l=Math.min(selection.length, model.getRowCount()); i<l; i++)
-        	model.setValueAt(selection[i],i,2);
-	}
-	
 	/**
 	 * Sets the selected states based on a boolean array
 	 * @param selection array with true entries on the indexes to be selected
@@ -164,20 +160,28 @@ public class StateListPanel extends JPanel {
         	model.setValueAt(selection[i],i,1);
 	}
 
+	/*
+	 * Sets the selected oracles based on a boolean array
+	 * @param selection array with true entries on the indexes to be selected
+	 *
+	public void setOracleSelection(boolean[] selection){
+		for (int i=0, l=model.getRowCount(); i<l; i++)
+        	model.setValueAt(false,i,2);
+		for (int i=0, l=Math.min(selection.length, model.getRowCount()); i<l; i++)
+        	model.setValueAt(selection[i],i,2);
+	}
+	
 	public void setDisabledEdition(boolean[] selection) {
 		model.setEdition(selection);
-	}
-	public boolean[] getDisabledEdition() {
-		return model.getEdition();
-	}
-
-	/**
+	}*/
+	
+	/*
 	 * Disables the selection of the given set of patterns
 	 * @param patterns to affect selection
-	 */
+	 *
 	public void addDisabledEdition(List<NamedState> states) {
 		model.disabledEdition(states);
-	}
+	}*/
 	
 	
 	/************************************/
@@ -195,9 +199,11 @@ public class StateListPanel extends JPanel {
     	this.panel = panel;
         this.several = several;
     	this.stateList = stateList;
+    	//this.oracle = oracle;
         setBorder(BorderFactory.createTitledBorder(title));
     	initialize();
     }
+    
 	private void initialize() {
 		setLayout(new GridBagLayout());
         GridBagConstraints c;
@@ -273,7 +279,6 @@ public class StateListPanel extends JPanel {
      * the table structure change may not be applied yet in the column model
      */
     public void updateTable() {
-    	//System.out.println("Update tabble");
         Enumeration e_col = tableInitStates.getColumnModel().getColumns();
         while (e_col.hasMoreElements()) {
             TableColumn col = (TableColumn)e_col.nextElement();
@@ -294,6 +299,7 @@ public class StateListPanel extends JPanel {
         }
         return jScrollPane;
     }
+    
     protected void deleteStateRow() {
     	int[] t = tableInitStates.getSelectedRows();
     	for (int i=t.length-1 ; i>=0 ; i--) {
@@ -388,5 +394,4 @@ public class StateListPanel extends JPanel {
         }
         return buttonSelect;
     }
-
 }

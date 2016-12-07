@@ -62,7 +62,7 @@ abstract public class AvatarLogicalModelActionDialog extends LogicalModelActionD
     	String graphChangesVar = "Applicable perturbations and reductions to the inputted model";
     	
         if(flexible){
-        	JLabel title = new JLabel("      Graph changes");
+        	JLabel title = new JLabel("      Model modifications");
         	title.setIcon(new ImageIcon(getClass().getResource("/greyQuestionMark.png")));
             topPanel.setBorder(new MyTitledBorder(new LineBorder(blue,2),title, TitledBorder.LEADING, TitledBorder.TOP, null, black));
             topPanel.setToolTipText(graphChangesVar);

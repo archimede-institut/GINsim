@@ -48,7 +48,7 @@ public class ApproximateFinalPaths implements FinalPaths {
 	/* (non-Javadoc)
 	 * @see org.ginsim.service.tool.avatar.domain.FinalPaths#addOutputPaths(java.util.Collection, java.util.Collection, double[][])
 	 */
-	public void addOutputPaths(Collection<String> states, Collection<String> exits, double[][] prob){
+	public void addOutputPaths(Collection<String> states, Collection<String> exits, double[][] prob) throws AvatarLogicalModelException{
 		throw new AvatarLogicalModelException("Approximate search not compatible with matrices of probabilities");
 	}
 	

@@ -5,6 +5,7 @@ import java.util.*;
 import org.colomoto.logicalmodel.ConnectivityMatrix;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.StatefulLogicalModel;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.PathSearcher;
 import org.colomoto.mddlib.VariableEffect;
@@ -25,15 +26,20 @@ public class LogicalModel2RegulatoryGraph {
 	private final Map<NodeInfo, RegulatoryNode> node2node;
 
 	/**
-	 * Create a new Regulatory graph, based on an existing logical model.
-	 * 
-	 * @param model
-	 * @return
+	 * Creates a new Regulatory graph, based on an existing logical model
+	 * @param model the (possibly stateful) logical model
+	 * @return the derived regulatory graph
 	 */
     public static RegulatoryGraph importModel(LogicalModel model) {
         return new LogicalModel2RegulatoryGraph(model).getRegulatoryGraph();
     }
 
+    /**
+	 * Creates a new Regulatory graph, based on an existing logical model
+	 * @param model the (possibly stateful) logical model
+     * @param to_remove the nodes to remove
+	 * @return the derived regulatory graph
+     */
     public static RegulatoryGraph importModel(LogicalModel model, Collection<NodeInfo> to_remove) {
         return new LogicalModel2RegulatoryGraph(model, to_remove).getRegulatoryGraph();
     }
@@ -60,6 +66,12 @@ public class LogicalModel2RegulatoryGraph {
 		// import the logical functions
 		addRegulators(model.getLogicalFunctions(), coreNodes, false);
 		addRegulators(model.getExtraLogicalFunctions(), model.getExtraComponents(), true);
+		
+		// add initial state
+		if(model instanceof StatefulLogicalModel){
+			lrg.setStates(((StatefulLogicalModel)model).getInitialStates());
+			lrg.setOracles(((StatefulLogicalModel)model).getOracles());
+		}
 	}
 	
 	private RegulatoryGraph getRegulatoryGraph() {

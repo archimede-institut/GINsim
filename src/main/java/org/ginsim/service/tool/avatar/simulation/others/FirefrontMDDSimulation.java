@@ -1,4 +1,4 @@
-package org.ginsim.service.tool.avatar.simulation;
+package org.ginsim.service.tool.avatar.simulation.others;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -13,10 +13,12 @@ import java.util.Map;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.StatefulLogicalModel;
-import org.colomoto.logicalmodel.tool.simulation.avatar.FirefrontUpdater;
 import org.ginsim.service.tool.avatar.domain.Result;
 import org.ginsim.service.tool.avatar.domain.State;
 import org.ginsim.service.tool.avatar.domain.MDDStateSet;
+import org.ginsim.service.tool.avatar.simulation.FirefrontSimulation;
+import org.ginsim.service.tool.avatar.simulation.MDDUtils;
+import org.ginsim.service.tool.avatar.simulation.SimulationUtils;
 import org.ginsim.service.tool.avatar.utils.AvaException;
 import org.ginsim.service.tool.avatar.utils.ChartGNUPlot;
 import org.ginsim.service.tool.avatar.utils.StateProbComparator;
@@ -37,9 +39,8 @@ public class FirefrontMDDSimulation extends FirefrontSimulation {
 	 * Instantiates a Firefront simulation based on a logical model
 	 * @param _model a stateful logical model possibly defining a set of initial states and oracles
 	 */
-	public FirefrontMDDSimulation(StatefulLogicalModel _model) {
-		super(_model);
-	}
+	public FirefrontMDDSimulation(){}
+	
 	
 	@Override
 	public Result runSimulation() throws IOException {
@@ -219,7 +220,7 @@ public class FirefrontMDDSimulation extends FirefrontSimulation {
 	    result.strategy = "FireFront";
 		for(String key : result.complexAttractors.keySet()){
 			if(result.complexAttractors.get(key) instanceof MDDStateSet)
-				result.complexAttractorPatterns.put(key,SimulationUtils.getStatePatterns(model.getNodeOrder(),(MDDStateSet)result.complexAttractors.get(key)));
+				result.complexAttractorPatterns.put(key,MDDUtils.getStatePatterns(model.getNodeOrder(),(MDDStateSet)result.complexAttractors.get(key)));
 				//result.complexAttractorPatterns.put(key,((MDDStateSet)result.complexAttractors.get(key)).getCompactStates());
 		}
 	    //result.runs = maxRuns;

@@ -24,7 +24,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
     List<RegulatoryNode> getNodeOrder();
     
     List<NodeInfo> getNodeInfos();
-    
+
     /**
      * add a node from textual parameters (for the parser).
      *
@@ -143,5 +143,47 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
 	 * @return a model matching this RegulatoryGraph
 	 */
 	LogicalModel getModel(NodeOrderer orderer);
+
+
+
+	/***********************/
+	/*** STATEFUL GRAPHS ***/
+	/***********************/
+	
+	/**
+	 * Checks whether the graph has states associated
+	 * @return true if the graph maintains a set of initial states
+	 */
+	boolean isStateful();
+	
+	/**
+	 * Checks whether the graph has oracles associated
+	 * @return true if the graph has oracles defined
+	 */
+	boolean hasOracles();
+	
+    /**
+     * Accesses the initial states associated with the graph
+     * @return a list of states
+     */
+    List<byte[]> getStates();
     
+    /**
+     * Accesses the oracles associated with the graph
+     * @return a list of oracles
+     */
+    List<List<byte[]>> getOracles();
+    
+	/**
+	 * Associates a set of initial states to the graph
+	 * @param list the list of states
+	 */
+	void setStates(List<byte[]> list);
+	
+	/**
+	 * Associates a set of oracles to the graph
+	 * @param list the list of oracles
+	 */
+	void setOracles(List<List<byte[]>> list);
+
 }

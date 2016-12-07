@@ -36,7 +36,7 @@ public class DecisionAnalysisFrame extends LogicalModelActionDialog  {
 		setMainPanel(getMainPanel());			
     }
 	
-	private JPanel getMainPanel() {
+	protected JPanel getMainPanel() {
 		if (mainPanel == null) {
 			mainPanel = new JPanel();
 			mainPanel.setLayout(new GridBagLayout());

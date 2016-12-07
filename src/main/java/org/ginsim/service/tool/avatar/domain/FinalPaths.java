@@ -3,6 +3,8 @@ package org.ginsim.service.tool.avatar.domain;
 import java.util.Collection;
 import java.util.Map;
 
+import org.colomoto.logicalmodel.io.avatar.AvatarLogicalModelException;
+
 /**
  * Interface for the storage transitions within and going-out of a state-set<br>
  * Transitions can be represented in multiple ways (e.g. sparse structures, arrays, etc.)<br>
@@ -26,8 +28,9 @@ public interface FinalPaths {
 	 * @param states the states within the cycle
 	 * @param exits the states accessible from the states within the cycle
 	 * @param probs a matrix specifying the probabilities of the transitions from the all the states of the cycle towards all the exit states
+	 * @throws AvatarLogicalModelException 
 	 */
-	public void addOutputPaths(Collection<String> states, Collection<String> exits, double[][] probs);
+	public void addOutputPaths(Collection<String> states, Collection<String> exits, double[][] probs) throws AvatarLogicalModelException;
 	
 	/**
 	 * Returns the transitions to reachable exit states from a given state in the cycle

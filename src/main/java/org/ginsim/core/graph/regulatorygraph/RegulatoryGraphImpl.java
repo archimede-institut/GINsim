@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.LogicalModelImpl;
 import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.StatefulLogicalModelImpl;
+import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDManagerFactory;
 import org.colomoto.mddlib.MDDVariableFactory;
@@ -44,6 +46,8 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 	private int nextid=0;
 
 	private List<RegulatoryNode> nodeOrder = new ArrayList<RegulatoryNode>();
+    private List<byte[]> initialStates = null;
+    private List<List<byte[]>> oracles = null;
 
     /**
      * Create a new Regulatory graph (not for parsing)
@@ -466,6 +470,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 
 	@Override
 	public LogicalModel getModel(NodeOrderer orderer) {
+        //System.out.println(">>I3:"+AvatarUtils.toString(getState()));
 		List<NodeInfo> order = null;
 		if (orderer == null) {
 			order = new ArrayList<NodeInfo>();
@@ -478,6 +483,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 		
 		MDDManager factory = getMDDFactory(order);
 		int[] functions = getMDDs(factory);
+		if(isStateful()) return new StatefulLogicalModelImpl(order, factory, functions, initialStates, graphName);
 		return new LogicalModelImpl(order, factory, functions);
 	}
 
@@ -530,4 +536,38 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         return nodeOrder;
     }
 
+    
+	/**********************/
+	/*** STATEFUL GRAPH ***/
+	/**********************/
+    
+    @Override
+	public List<byte[]> getStates() {
+		return initialStates;
+	}
+	
+    @Override
+	public void setStates(List<byte[]> states) {
+		initialStates = states;
+	}
+    
+    @Override
+	public boolean isStateful() {
+		return initialStates != null;
+	}
+    
+    @Override
+	public List<List<byte[]>> getOracles() {
+		return oracles;
+	}
+    
+    @Override
+	public void setOracles(List<List<byte[]>> _oracles) {
+		oracles = _oracles;
+	}
+    
+    @Override
+	public boolean hasOracles() {
+		return oracles != null;
+	}
 }

@@ -1,6 +1,5 @@
 package org.ginsim.servicegui.tool.avatar.parameters;
 
-import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
 import org.ginsim.core.utils.data.NamedList;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.CompleteStatePanel;
 import org.ginsim.gui.utils.data.ColumnDefinition;
@@ -10,7 +9,6 @@ import org.ginsim.gui.utils.data.ListPanelHelper;
 import org.ginsim.service.tool.avatar.params.AvatarParameterList;
 import org.ginsim.service.tool.avatar.params.AvatarParameters;
 import org.ginsim.servicegui.tool.avatar.AvatarConfigFrame;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,9 +39,9 @@ public class AvatarParametersHelper extends ListPanelHelper<AvatarParameters, Av
     	acf.plots.setSelected(param.plots);
     	acf.quiet.setSelected(param.quiet);
 		acf.statestore = param.statestore;
-		acf.states = new CompleteStatePanel(acf.statestore.nstates,acf.statestore.instates,true);
+		acf.states = new CompleteStatePanel(acf.statestore.nstates,acf.statestore.instates,acf.statestore.oracles,true);
 		acf.states.setParam(acf.statestore);
-		acf.states.setSelection(param.statesSelected, param.istatesSelected, param.oraclesSelected, param.ioraclesSelected, param.enabled, param.ienabled);
+		acf.states.setSelection(param.statesSelected, param.istatesSelected); //param.oraclesSelected, param.ioraclesSelected, param.enabled, param.ienabled);
     	acf.panelAvatar.unload(param);
     	acf.panelFF.unload(param);
     	acf.panelMC.unload(param);
@@ -61,13 +59,12 @@ public class AvatarParametersHelper extends ListPanelHelper<AvatarParameters, Av
     	p.quiet = main.quiet.isSelected();
     	
     	p.statestore = main.statestore;
-    	p.statesSelected = main.states.getSelection(false); 
+    	p.statesSelected = main.states.getSelection(false);
     	p.istatesSelected = main.states.getSelection(true);
-    	p.oraclesSelected = main.states.getOracleSelection(false);
+    	/*p.oraclesSelected = main.states.getOracleSelection(false);
     	p.ioraclesSelected = main.states.getOracleSelection(true);
-		//System.out.println("One call!");
     	p.enabled = main.states.getDisabledEdition(false);
-    	p.ienabled = main.states.getDisabledEdition(true);
+    	p.ienabled = main.states.getDisabledEdition(true);*/
     	//if(p.enabled!=null) System.out.println(">>"+AvatarUtils.toString(p.enabled));
     	
     	main.panelAvatar.load(p);

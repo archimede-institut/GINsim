@@ -1,19 +1,22 @@
 package org.ginsim.service.tool.avatar.service;
 
-import java.io.File;
 import org.colomoto.logicalmodel.StatefulLogicalModel;
-import org.colomoto.logicalmodel.io.avatar.AvatarImport;
+import org.colomoto.logicalmodel.StatefulLogicalModelImpl;
+import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.tool.avatar.domain.Result;
-import org.ginsim.service.tool.avatar.domain.State;
+import org.ginsim.service.tool.avatar.simulation.MDDUtils;
 import org.ginsim.service.tool.avatar.simulation.MonteCarloSimulation;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
 import org.ginsim.service.tool.avatar.utils.AvaException;
 import org.ginsim.service.tool.avatar.utils.AvaOptions;
-import org.ginsim.service.tool.avatar.utils.ConfidenceInterval;
 import org.mangosdk.spi.ProviderFor;
 
 
@@ -36,20 +39,21 @@ public class MonteCarloServiceFacade implements Service {
 	 * @throws Exception thrown due to errors while reading and writing files, conflicting parameters and unexpected behavior of the simulation
 	 */
 	public static Result run(String[] args) throws Exception{
-		MonteCarloSimulation sim = (MonteCarloSimulation)getSimulation(args);
-		long time = System.currentTimeMillis();
+		return run((MonteCarloSimulation)getSimulation(args));
+	}
+	public static Result run(MonteCarloSimulation sim) throws Exception{
 		Result results = sim.runSimulation();
-		
-		/** C: print results **/
-
-		for(State attractor : results.pointAttractors.values()){
-			System.out.println(attractor.toString());
-			double count = results.attractorsCount.get(attractor.key); 
-			double prob = count/(double)(sim.runs);
-			System.out.println("\tProbability:"+ConfidenceInterval.getConfidenceInterval(sim.runs,prob));
-		}
-		System.out.println("Elapsed time: "+(System.currentTimeMillis()-time)+"\n");
 		return results;
+	}
+
+	/**
+	 * Creates a montecarlo simulation from a string command 
+	 * @param args command specifying the input model and the parameters of the montecarlo simulation	 
+	 * @return the montecarlo simulation to be executed
+	 * @throws Exception thrown due to errors while reading and writing files, conflicting parameters and unexpected behavior of the simulation
+	 */
+	public static Simulation getSimulation(String args) throws Exception {
+		return getSimulation(args.split("( --)|=|--"));
 	}
 	
 	/**
@@ -62,22 +66,34 @@ public class MonteCarloServiceFacade implements Service {
 
 		/** A: resolve inputted parameters **/
 
-		if(args.length<2) throw new AvaException("Usage: model runs [random_init [max_steps]]");
+		MonteCarloSimulation sim = new MonteCarloSimulation();
+		//if(args.length<2) throw new AvaException("Usage: model runs [random_init [max_steps]]");
 		String filename = AvaOptions.getStringValue("input",args);
-		if(filename==null) throw new AvaException("A model file is required"); 
-		AvatarImport avaImport = new AvatarImport(new File(filename));
-		StatefulLogicalModel model = avaImport.getModel(); //model.fromNuSMV(filename);
-		MonteCarloSimulation sim = new MonteCarloSimulation(model);
+		if(filename!=null) sim = (MonteCarloSimulation) addModel(sim,filename);
 		
-		sim.maxSteps = AvaOptions.getIntValue("maxsteps",args); 
+		sim.maxSteps = AvaOptions.getIntValue("maxDepth",args); 
 		sim.runs = AvaOptions.getIntValue("runs",args);
 		if(sim.runs<0) throw new AvaException("The number of runs is required");
 		
 		/** B: run montecarlo simulation **/
 
-		System.out.println("MonteCarlo\n"+"Model: "+model.getName());
+		//System.out.println("MonteCarlo\n"+"Model: "+model.getName());
 		//System.out.println("Initial state(s):"+sim.istates+"\n");
-		System.out.println("Number of simulations = "+sim.runs);
+		//System.out.println("Number of simulations = "+sim.runs);
+		return sim;
+	}
+
+	public static Simulation addModel(Simulation sim, String filename) throws Exception{
+		StatefulLogicalModel model = null;
+		if(filename.contains(".avatar")){
+			//AvatarImport avaImport = new AvatarImport(new File(filename));
+			//model = avaImport.getModel(); //model.fromNuSMV(filename);
+		} else {
+			RegulatoryGraph graph = (RegulatoryGraph)GraphManager.getInstance().open(filename);
+	        NamedStatesHandler nstatesHandler = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph, NamedStatesManager.KEY, true);
+			model = new StatefulLogicalModelImpl(graph.getModel(),MDDUtils.getStates(nstatesHandler,graph.getNodeInfos()));
+		}
+		sim.addModel(model);
 		return sim;
 	}
 

@@ -27,7 +27,6 @@ public class NamedStateList extends ListenableNamedList<NamedState> {
     }
     
     public List getNodeOrder() {
-    	
 		return nodeOrder;
 	}
 
@@ -165,5 +164,11 @@ public class NamedStateList extends ListenableNamedList<NamedState> {
             }
         }
         return null;
+	}
+	
+	public String toString(){
+		String result="";
+		for(int i=0, l=size(); i<l; i++) result+=get(i).toString()+"\n";
+		return result;
 	}
 }

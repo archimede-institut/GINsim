@@ -1,10 +1,15 @@
 package org.ginsim.service.tool.avatar.params;
 
 import java.util.Collection;
+
 import org.ginsim.core.graph.*;
+import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
+import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.NamedList;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
@@ -14,24 +19,24 @@ import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
  * @author Rui Henriques
  * @version 1.0
  */
-public class AvatarParameterList extends NamedList<AvatarParameters> implements GraphListener<RegulatoryGraph> {
+public class AvatarParameterList extends NamedList<AvatarParameters> implements GraphListener<RegulatoryGraph>, GenericListListener {
 	
 	private static final long serialVersionUID = 1L;
 	private final RegulatoryGraph graph;
     private final PrioritySetList pcmanager;
-    //private final NamedStatesHandler imanager;
+    private final NamedStatesHandler imanager;
 
     /**
      * @param graph
      */
     public AvatarParameterList(Graph<RegulatoryNode,RegulatoryMultiEdge> graph, AvatarParameters param) {
         this.graph = (RegulatoryGraph) graph;
+        imanager = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph, NamedStatesManager.KEY, true);
+        imanager.getInitialStates().addListListener(this);
+        imanager.getInputConfigs().addListListener(this);
         pcmanager = new PrioritySetList(this.graph);
         GraphManager.getInstance().addGraphListener(this.graph, this);
         if(param!=null) add(param);
-        /*imanager = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph, NamedStatesManager.KEY, true);
-        imanager.getInitialStates().addListListener(this);
-        imanager.getInputConfigs().addListListener(this);*/
     }
 	
 	@Override
@@ -84,4 +89,13 @@ public class AvatarParameterList extends NamedList<AvatarParameters> implements 
     		if (pcdef.m_elt != null) pcdef.m_elt.put(node, pcdef.get(0));
         }
 	}
+
+	@Override
+	public void itemAdded(Object item, int pos) {}
+	@Override
+	public void itemRemoved(Object item, int pos) {}
+	@Override
+	public void contentChanged() {}
+	@Override
+	public void structureChanged() {}
 }

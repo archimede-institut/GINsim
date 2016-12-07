@@ -4,10 +4,10 @@ import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.MatrixUtils;
 import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
 import org.ejml.simple.SimpleMatrix;
-import org.la4j.LinearAlgebra.InverterFactory;
+/*import org.la4j.LinearAlgebra.InverterFactory;
 import org.la4j.Matrix;
 import org.la4j.inversion.MatrixInverter;
-import org.la4j.matrix.dense.Basic2DMatrix;
+import org.la4j.matrix.dense.Basic2DMatrix;*/
 
 /** 
  * Facilities to manipulate matrices (focus on the inversion procedure)
@@ -23,12 +23,12 @@ public class AvaMatrix {
      * @return the inverted matrix
      */
     public static double[][] inverseLa4J(double[][] matrix){
-    	Matrix result = new Basic2DMatrix(matrix);
+    	/*Matrix result = new Basic2DMatrix(matrix);
     	MatrixInverter inverter = result.withInverter(InverterFactory.GAUSS_JORDAN);
     		//InverterFactory.NO_PIVOT_GAUSS, InverterFactory.SMART
         Matrix e = inverter.inverse();
         for(int i=0, l1=e.rows(); i<l1; i++)
-            for(int j=0, l2=e.columns(); j<l2; j++) matrix[i][j]=e.get(i,j);
+            for(int j=0, l2=e.columns(); j<l2; j++) matrix[i][j]=e.get(i,j);*/
         return matrix;
     }
     

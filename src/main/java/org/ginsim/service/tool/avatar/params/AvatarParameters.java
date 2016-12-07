@@ -27,7 +27,7 @@ public class AvatarParameters implements XMLize, NamedObject {
 
 	public String name = "new_parameter";
 	public AvatarStateStore statestore;
-	public boolean[] statesSelected, istatesSelected, oraclesSelected, ioraclesSelected, enabled, ienabled;
+	public boolean[] statesSelected, istatesSelected; //oraclesSelected, ioraclesSelected, enabled, ienabled;
 	public boolean plots, quiet, avaKeepTrans;
 	public int algorithm, avaStrategy;
 	public String avaRuns, avaTau, avaDepth, avaAproxDepth, avaMinTran, avaMinCycle, avaMaxPSize, avaMaxRewiringSize;
@@ -91,21 +91,28 @@ public class AvatarParameters implements XMLize, NamedObject {
     }
 	
 	private String printStates(){
-		String result="states=", names="namestates=[";
-    	for(int i=0, l=statestore.nstates.size(); i<l; i++){ 
-    		result+=statestore.nstates.get(i).getMap().toString()+",";
-    		names+=statestore.nstates.get(i).getName()+",";
-    	}
-    	result = result.substring(0,result.length()-1)+"\nistates=";
-    	names = names.substring(0,names.length()-1)+"]\ninamestates=[";
-    	for(int i=0, l=statestore.instates.size(); i<l; i++){
-    		result+=statestore.instates.get(i).getMap().toString()+",";
-    		names+=statestore.instates.get(i).getName()+",";
-    	}
-    	result = names.substring(0,names.length()-1)+"]\n"+result.substring(0,result.length()-1);
-    	result += "\nstatesselection="+AvatarUtils.toString(statesSelected)+"\nistatesselection="+AvatarUtils.toString(istatesSelected);
-    	result +="\noracleselection="+AvatarUtils.toString(oraclesSelected)+"\nioracleselection="+AvatarUtils.toString(ioraclesSelected);
-    	return result+"\nenabled="+AvatarUtils.toString(enabled)+"\nienabled="+AvatarUtils.toString(ienabled);
+		int l1=statestore.nstates.size(), l2=statestore.instates.size(), l3=statestore.oracles.size();
+		String result="states="; 
+    	for(int i=0; i<l1; i++) result+=statestore.nstates.get(i).getMap().toString()+",";
+    	if(l1>0) result = result.substring(0,result.length()-1); 
+    	result+="\nnamestates=[";
+    	for(int i=0; i<l1; i++) result+=statestore.nstates.get(i).getName()+",";
+    	if(l1>0) result = result.substring(0,result.length()-1); 
+    	result+="]\nistates=";
+    	for(int i=0; i<l2; i++) result+=statestore.instates.get(i).getMap().toString()+",";
+    	if(l2>0) result = result.substring(0,result.length()-1); 
+    	result+="\ninamestates=[";
+    	for(int i=0; i<l2; i++) result+=statestore.instates.get(i).getName()+",";
+    	if(l2>0) result = result.substring(0,result.length()-1); 
+    	result+="]\nostates=";
+    	for(int i=0; i<l3; i++) result+=statestore.oracles.get(i).getMap().toString()+",";
+    	if(l3>0) result = result.substring(0,result.length()-1); 
+    	result+="\nonamestates=[";
+    	for(int i=0; i<l3; i++) result+=statestore.oracles.get(i).getName()+",";
+    	if(l3>0) result = result.substring(0,result.length()-1); 
+    	return result+"]\nstatesselection="+AvatarUtils.toString(statesSelected)+"\nistatesselection="+AvatarUtils.toString(istatesSelected);
+    	//result +="\noracleselection="+AvatarUtils.toString(oraclesSelected)+"\nioracleselection="+AvatarUtils.toString(ioraclesSelected);
+    	//result+"\nenabled="+AvatarUtils.toString(enabled)+"\nienabled="+AvatarUtils.toString(ienabled);
 	}
 
 	@Override

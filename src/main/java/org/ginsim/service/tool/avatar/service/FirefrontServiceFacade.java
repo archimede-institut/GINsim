@@ -1,16 +1,20 @@
 package org.ginsim.service.tool.avatar.service;
 
 import java.io.File;
-
 import org.colomoto.logicalmodel.StatefulLogicalModel;
-import org.colomoto.logicalmodel.io.avatar.AvatarImport;
+import org.colomoto.logicalmodel.StatefulLogicalModelImpl;
+import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.tool.avatar.domain.Result;
-import org.ginsim.service.tool.avatar.domain.State;
 import org.ginsim.service.tool.avatar.simulation.FirefrontSimulation;
+import org.ginsim.service.tool.avatar.simulation.MDDUtils;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
 import org.ginsim.service.tool.avatar.utils.AvaException;
 import org.ginsim.service.tool.avatar.utils.AvaOptions;
@@ -35,14 +39,12 @@ public class FirefrontServiceFacade implements Service {
 	 * @throws Exception thrown due to errors while reading and writing files, conflicting parameters and unexpected behavior of the simulation
 	 */
 	public static Result run(FirefrontSimulation sim) throws Exception {
-		
-		long time = System.currentTimeMillis();
 		Result result = sim.runSimulation();//other args
 		//if(result.errors()) System.out.println("The magnitude of alpha/beta is too small -- numerical errors might have occurred!");
-		result.time = (System.currentTimeMillis()-time);
-		System.out.println("Elapsed time: "+result.time+"ms\n");
-		for(State attractor : result.pointAttractors.values()) 
-		    System.out.println("Point attractor "+attractor.toString()+" with probability bounds=["+result.attractorsLowerBound.get(attractor.key)+","+result.attractorsUpperBound.get(attractor.key)+"]");
+		//System.out.println("Elapsed time: "+result.time+"ms\n\n");
+	    //System.out.println(">> Results <<\n"+result.toString());
+		//for(State attractor : result.pointAttractors.values()) 
+		    //System.out.println("Point attractor "+attractor.toString()+" with probability bounds=["+result.attractorsLowerBound.get(attractor.key)+","+result.attractorsUpperBound.get(attractor.key)+"]");
 		return result;
 	}
 	
@@ -58,42 +60,62 @@ public class FirefrontServiceFacade implements Service {
 	}
 
 	/**
+	 * Creates a firefront simulation from a string command 
+	 * @param args command specifying the input model and the parameters of the firefront simulation	 
+	 * @return the firefront simulation to be executed
+	 * @throws Exception thrown due to errors while reading and writing files, conflicting parameters and unexpected behavior of the simulation
+	 */
+	public static Simulation getSimulation(String args) throws Exception {
+		return getSimulation(args.split("( --)|=|--"));
+	}
+
+	/**
 	 * Creates a firefront simulation from a given set of arguments
 	 * @param args textual arguments specifying the input model and the parameters of the firefront simulation
 	 * @return the firefront simulation to be executed
 	 * @throws Exception thrown due to errors while reading and writing files, conflicting parameters and unexpected behavior of the simulation
 	 */
 	public static Simulation getSimulation(String[] args) throws Exception {
-		String filename = AvaOptions.getStringValue("input",args);
-		System.out.println("FILENAME:"+filename);
-		if(filename==null) throw new AvaException("A model file is required"); 
-		AvatarImport avaImport = new AvatarImport(new File(filename));
-		StatefulLogicalModel model = avaImport.getModel(); //model.fromNuSMV(filename);
-		FirefrontSimulation sim = new FirefrontSimulation(model);
-		sim.maxExpand = AvaOptions.getIntValue("max-expand",args);
-		//if(sim.maxExpand<0) throw new AvaException("'max-expand' option not inputted yet mandatory\n");
 		
+		FirefrontSimulation sim = new FirefrontSimulation();
+		String filename = AvaOptions.getStringValue("input",args);
+		//System.out.println("FILENAME:"+filename);
+		if(filename!=null) sim = (FirefrontSimulation) addModel(sim,filename);
 		double alpha = AvaOptions.getDoubleValue("alpha",args);
 		double beta = AvaOptions.getDoubleValue("beta",args); 
-		int depth = AvaOptions.getIntValue("depth",args); //-1 if undefined
+		int depth = AvaOptions.getIntValue("maxDepth",args); //-1 if undefined
+		sim.maxExpand = AvaOptions.getIntValue("maxExpand",args);
 		if(alpha>0) sim.alpha=alpha; //optional
 		if(beta>0) sim.beta=beta; //optional
-		//if(maxRuns>0) sim.maxRuns=maxRuns; //optional
 		if(depth>0) sim.maxDepth=depth; //optional
+		//if(maxRuns>0) sim.maxRuns=maxRuns; //optional
 
 		sim.quiet = AvaOptions.getBoolValue("quiet",args);
 		sim.plots = AvaOptions.getBoolValue("plots",args); 
 		sim.outputDir = AvaOptions.getStringValue("output-dir",args);
 		if(sim.outputDir == null) sim.outputDir = new File("").getAbsolutePath(); 		
 		
-		System.out.println("FIREFRONT\n"+"Model: "+model.getName());
-		System.out.println("Initial states:");
-		for(byte[] state : model.getInitialStates()) System.out.println("  "+new State(state));
-		System.out.println("Alpha threshold:"+ alpha + "\nBeta threshold:"+beta);
+		//System.out.println("FIREFRONT\n"+"Model: "+model.getName());
+		//System.out.println("Initial states:");
+		//for(byte[] state : model.getInitialStates()) System.out.println("  "+new State(state));
+		//System.out.println("Alpha threshold:"+ alpha + "\nBeta threshold:"+beta);
 		
 		return sim;
     }
 
+	public static Simulation addModel(Simulation sim, String filename) throws Exception{
+		StatefulLogicalModel model = null;
+		if(filename.contains(".avatar")){
+			//AvatarImport avaImport = new AvatarImport(new File(filename));
+			//model = avaImport.getModel(); //model.fromNuSMV(filename);
+		} else {
+			RegulatoryGraph graph = (RegulatoryGraph)GraphManager.getInstance().open(filename);
+	        NamedStatesHandler nstatesHandler = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph, NamedStatesManager.KEY, true);
+			model = new StatefulLogicalModelImpl(graph.getModel(),MDDUtils.getStates(nstatesHandler,graph.getNodeInfos()));
+		}
+		sim.addModel(model);
+		return sim;
+	}
 
 	/**
 	 * Testing class for running a firefront simulation

@@ -10,6 +10,7 @@ import java.util.Set;
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.io.LogicalModelFormat;
+import org.colomoto.logicalmodel.io.OutputStreamProvider;
 import org.colomoto.logicalmodel.services.ServiceManager;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -68,11 +69,11 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 	}
 
 	public void export(LogicalModel model, String filename) throws IOException {
-		OutputStream out = new FileOutputStream(filename);
+		OutputStreamProvider out = new OutputStreamProvider(filename);
 		export(model, out);
 	}
 	
-	public void export(LogicalModel model, OutputStream out) throws IOException {
+	public void export(LogicalModel model, OutputStreamProvider out) throws IOException {
 		format.export(model, out);
 	}
 	

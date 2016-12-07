@@ -3,11 +3,14 @@ package org.ginsim.gui.graph.regulatorygraph.initialstate;
 import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+
 import javax.swing.*;
+
 import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
 import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateStore;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;

@@ -38,16 +38,16 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	protected final RegulatoryGraph lrg;
 	private final ListOfPerturbations perturbations;
 	private final ListOfReductionConfigs reductions;
-    private final PerturbationSelectionPanel perturbationPanel;
-    private final ReductionSelectionPanel reductionPanel;
+    protected final PerturbationSelectionPanel perturbationPanel;
+    protected final ReductionSelectionPanel reductionPanel;
 
 	private Perturbation perturbation = null;
     private ReductionConfig reduction = null;
 	private String userID = null;
 
-	private JPanel mainPanel = new JPanel(new GridBagLayout());
+	protected JPanel mainPanel = new JPanel(new GridBagLayout());
     private JCheckBox cb_propagate = new JCheckBox("Propagate fixed values");
-    private JCheckBox cb_simplify = new JCheckBox("Strip (pseudo-)outputs");
+    protected JCheckBox cb_simplify = new JCheckBox("Strip (pseudo-)outputs");
 
     public LogicalModelActionDialog(RegulatoryGraph lrg, Frame parent, String id, int w, int h) {
         super(parent, id, w, h);
@@ -80,7 +80,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         cb_propagate.setSelected(reductions.isPropagatingFixed(userID));
     }
     
-    private JPanel getMainPanel() {
+    protected JPanel getMainPanel() {
 
         GridBagConstraints c = new GridBagConstraints();
 

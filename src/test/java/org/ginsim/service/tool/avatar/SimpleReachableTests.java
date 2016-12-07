@@ -6,15 +6,15 @@ import java.util.Arrays;
 import java.util.List;
 import junit.framework.TestCase;
 import org.colomoto.logicalmodel.StatefulLogicalModel;
-import org.colomoto.logicalmodel.io.avatar.AvatarImport;
+//import org.colomoto.logicalmodel.io.avatar.AvatarImport;
 import org.ginsim.service.tool.avatar.simulation.Reachable;
 
 public class SimpleReachableTests extends TestCase {
 
 	public void testReachableStates() {
-		List<StatefulLogicalModel> models = importAvatar(getAvatarInputFiles());
+		/*List<StatefulLogicalModel> models = importAvatar(getAvatarInputFiles());
 		for(StatefulLogicalModel model : models)
-			System.out.println(Reachable.computeReachableStates(model));
+			System.out.println(Reachable.computeReachableStates(model));*/
 	}
 
 	private List<String> getAvatarInputFiles() {
@@ -26,7 +26,7 @@ public class SimpleReachableTests extends TestCase {
 				dir+"synthetic_1.avatar",dir+"synthetic_2.avatar",dir+"th-reduced.avatar");*/
 	}
 
-	private List<StatefulLogicalModel> importAvatar(List<String> filenames) {
+	/*private List<StatefulLogicalModel> importAvatar(List<String> filenames) {
 		List<StatefulLogicalModel> result = new ArrayList<StatefulLogicalModel>();
 		for(String filename : filenames){
 			System.out.println("FILE:"+filename);
@@ -40,5 +40,5 @@ public class SimpleReachableTests extends TestCase {
 			} 
 		}
 		return result;
-	}
+	}*/
 }

@@ -25,6 +25,8 @@ import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
 import org.ginsim.service.tool.avatar.domain.AbstractStateSet;
 import org.ginsim.service.tool.avatar.domain.CompactStateSet;
 import org.ginsim.service.tool.avatar.domain.Dictionary;
@@ -150,140 +152,7 @@ public final class SimulationUtils {
 		return true;
 	}
 
-	/**
-	 * Maps an oracle (set of state patterns) into a set of specific states
-	 * @param oracle the oracle (set of state patterns) to be unfolded
-	 * @param nodes knowledge of the states of the components within a state pattern
-	 * @return the set of specific states associated with the given state patterns
-	 */
-	public static StateSet toStateSet(List<byte[]> oracle, List<NodeInfo> nodes) {
-		List<byte[]> all = new ArrayList<byte[]>();
-		while(!oracle.isEmpty()){
-			byte[] state = oracle.remove(0);
-			int index = firstMultiple(state);
-			if(index==-1) all.add(state);
-			else {
-				for(int i=0, l=nodes.get(index).getMax(); i<=l; i++){ 
-					byte[] newstate = Arrays.copyOf(state,state.length);
-					newstate[index] = (byte)i;
-					oracle.add(newstate);
-				}
-			}
-		}
-		return new StateSet(all);
-	}
-	
-	private static int firstMultiple(byte[] state) {
-		for(int i=0, l=state.length; i<l; i++) if(state[i]==-1) return i;
-		return -1;
-	}
-
-	/**
-	 * Infers a set of state patterns from a given set of states
-	 * @param model the logical model to facilitate the generation of the MDD for the extraction of pattern
-	 * @param stateset the set of states to be compacted
-	 * @return the set of state patterns associated with the given states 
-	 */
-	public static List<byte[]> getStatePatterns(List<NodeInfo> vars, AbstractStateSet stateset) {
-		MDDVariableFactory mvf = new MDDVariableFactory();
-		for(NodeInfo ni : vars) mvf.add(ni,(byte)(ni.getMax()+1));
-		List<Set<Integer>> statesPerComponent = new ArrayList<Set<Integer>>();
-		for(int i=0, l=vars.size(); i<l; i++) statesPerComponent.add(new HashSet<Integer>());
-		MDDManager ddmanager = MDDManagerFactory.getManager(mvf,10);
-
-		List<byte[]> states = new ArrayList<byte[]>();
-		if(stateset instanceof StateSet)
-			for(State s : ((StateSet)stateset).getStates()) states.add(s.state);
-		else if(stateset instanceof MDDStateSet)
-			for(State s : ((MDDStateSet)stateset).getStates()) states.add(s.state);
-		int mdd = ddmanager.nodeFromStates(states,1);
-		
-		PathSearcher searcher = new PathSearcher(ddmanager,1);
-		int[] path = searcher.setNode(mdd);
-		List<byte[]> result = new ArrayList<byte[]>();
-		for (int p : searcher) result.add(AvatarUtils.toByteArray(path));
-		for(byte[] s : result) System.out.println(">>"+AvatarUtils.toString(s));
-		return result;
-	}
-
-	//mdd = getMDD(states.get(1),ddmanager);
-	/*for(State s : stateset.getStates()){
-		if(mdd==0) mdd=getMDD(s.state,ddmanager);
-		else mdd = MDDBaseOperators.OR.combine(
-				ddmanager, mdd, getMDD(s.state,ddmanager));
-		for(int i=0, l=vars.size(); i<l; i++) statesPerComponent.get(i).add((int)s.state[i]);
-	}*/
-
-	private static int getMDD(byte[] state, MDDManager ddmanager) {
-		return ddmanager.nodeFromState(state,1);
-		/*int mdd=1, i=0;
-		for(MDDVariable var : ddmanager.getAllVariables()){
-			byte s=state[i++]; 
-			if(s==-1) continue;
-			if(var.nbval>2){
-				int[] children = AvatarUtils.getChildrenWithSingleNode(var.nbval, s);
-				mdd = MDDBaseOperators.AND.combine(ddmanager,mdd,var.getNode(children));
-			} else { 
-				mdd = MDDBaseOperators.AND.combine(ddmanager,mdd,s==0 ? var.getNode(1,0) : var.getNode(0,1));
-			}
-		}
-		return mdd;*/
-	}
-	
-	/**
-	 * Illustrative class to test the simulation utils
-	 * @param args to be ignored
-	 * @throws Exception
-	 */
-	public static void main(String[] args) throws Exception{
-		//reduceStates();
-		removeMDDPaths();
-	}
-
-	private static void removeMDDPaths() {
-		List<byte[]> additions = Arrays.asList(
-				new byte[]{1,0,1,0},
-				new byte[]{1,0,0,1},
-				new byte[]{1,1,1,1});
-		byte[] removal = new byte[]{1,0,0,1};
-		
-		MDDVariableFactory mvf = new MDDVariableFactory();
-		List<NodeInfo> vars = Arrays.asList(
-				new NodeInfo("A",(byte)1),
-				new NodeInfo("B",(byte)1),
-				new NodeInfo("C",(byte)1),
-				new NodeInfo("D",(byte)1));
-		for(NodeInfo ni : vars) mvf.add(ni,(byte)(ni.getMax()+1));
-		MDDManager mdd = MDDManagerFactory.getManager(mvf,500);
-		
-		int mddNode1 = mdd.nodeFromStates(additions,499);
-		System.out.println(mdd.dumpMDD(mddNode1));
-		int mddNode2 = mdd.not(mdd.nodeFromState(removal,1));
-		System.out.println(mdd.dumpMDD(mddNode2));
-		int mddNode = MDDBaseOperators.AND.combine(mdd,mddNode1,mddNode2);
-		System.out.println(mdd.dumpMDD(mddNode));
-		
-		/*List<Integer> nodes = new ArrayList<Integer>();
-		nodes.add(mddNode);
-		int node = mddNode;
-		while(!mdd.isleaf(node)){
-			MDDVariable curVar = mdd.getNodeVariable(node);
-			int index =	mdd.getVariableIndex(curVar);
-			node = mdd.getChild(node,removal[index]);
-			nodes.add(node);
-		}*/
-		
-		/*System.out.println("nodes:"+nodes);
-		for(int i=nodes.size()-2; i>=0; i--){
-			if(mdd.isleaf(nodes.get(i+1))){
-				System.out.println("HERE!");
-				int removenode = mdd.use(nodes.get(i-1));
-				System.out.println(mdd.dumpMDD(removenode));
-			} else break;
-		}*/
-	}
-
-	private static void reduceStates() {
+	/*private static void reduceStates() {
 		List<NodeInfo> order = new ArrayList<NodeInfo>();
 		for(int i=0;i<30;i++) order.add(new NodeInfo("N"+i,(byte)1));
 		long[] factors = new long[order.size()];
@@ -327,7 +196,7 @@ public final class SimulationUtils {
 					List<byte[]> reduced = getStatePatterns(sim.model,(StateSet)complex);
 				}
 			}
-		}*/
-	}
+		}
+	}*/
 
 }

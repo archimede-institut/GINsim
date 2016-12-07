@@ -9,9 +9,9 @@ import javax.swing.JTextField;
 import org.colomoto.logicalmodel.StatefulLogicalModel;
 import org.ginsim.service.tool.avatar.domain.State;
 import org.ginsim.service.tool.avatar.params.AvatarParameters;
-import org.ginsim.service.tool.avatar.simulation.FirefrontMDDSimulation;
 import org.ginsim.service.tool.avatar.simulation.FirefrontSimulation;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
+import org.ginsim.service.tool.avatar.simulation.others.FirefrontMDDSimulation;
 
 /**
  * Class for managing the panel for Firefront simulations
@@ -26,11 +26,11 @@ public class FirefrontPanel extends SimulationPanel {
 	private JTextField alphaB = new JTextField(), betaB = new JTextField();
 	
 	private String open = "<html><div style=\"width:265px;\">", end = "</div></html>";
-	private String runsffVar =open+"Specifies the maximum number of iterations performed by the program (should be less than the square size of the state space) [default: 1000]"+end;
-	private String alphaVar =open+"Specifies the minimum probability required for a state to be explored (be included the firefront set of probable states) [default: 10^-5]"+end;
-	private String betaVar =open+"Specifies the maximum residual probability in the firefront state-set (probable states) in order to stop the algorithm [default: 10^-5]"+end;
-	private String maxExpandVar =open+"Specifices the maximum number of states to be analyzed in the firefront state-set (probable states) [default: 10000]. The states with lower probability will transition to the set of neglected states."+end;
-	private String depthffVar =open+"Specifies the limit depth (number of visited states) within each simulation [default: 10000]"+end;
+	private String runsffVar =open+"Maximum number of iterations performed by the program (should be less than the square size of the state space) [default: 1E3]"+end;
+	private String alphaVar =open+"Minimum probability required for a state to be explored (be included the firefront set) [default: 10E-5]"+end;
+	private String betaVar =open+"Maximum residual probability in the firefront set to stop the algorithm [default: 10E5]"+end;
+	private String maxExpandVar =open+"Maximum number of states to be analyzed in the firefront set (probable states) [default: 1E3]. States with lower probability are put in the neglected set."+end;
+	private String depthffVar =open+"Maximum depth (number of visited states) [default: 1E4]"+end;
 
 	/**
 	 * Instantiates the context of a simulation panel
@@ -40,7 +40,7 @@ public class FirefrontPanel extends SimulationPanel {
 	public FirefrontPanel(Icon img, boolean flex){
 		super(img,flex);
 		JLabel alphaL = new JLabel("Alpha"), betaL = new JLabel("Beta");
-		JLabel maxExpandffL = new JLabel("Max.Expand   "), depthffL = new JLabel("Max.Depth");
+		JLabel maxExpandffL = new JLabel("Max expansion  "), depthffL = new JLabel("Max depth");
 		JLabel[] ffquestions = new JLabel[]{new JLabel(""), new JLabel(""), new JLabel(""), new JLabel("")};
 		for(JLabel question : ffquestions) question.setIcon(helpImg);
 
@@ -77,10 +77,10 @@ public class FirefrontPanel extends SimulationPanel {
 				question.setBounds(startX2+width2+width0+5, startY2+height2*(shift++), 15, 15);
 			for(JLabel question : ffquestions) add(question);
 		}
-		depthffB.setText("10000");
-		alphaB.setText("0.00001");
-		betaB.setText("0.00001");
-		maxExpandffB.setText("1000");
+		depthffB.setText("1E4");
+		alphaB.setText("1E-5");
+		betaB.setText("1E-5");
+		maxExpandffB.setText("1E3");
 		add(depthffL);
 		add(depthffB);
 		add(alphaL);
@@ -93,15 +93,17 @@ public class FirefrontPanel extends SimulationPanel {
 
 	@Override
 	public Simulation getSimulation(StatefulLogicalModel model, boolean plots, boolean quiet) throws Exception{
-		int depth = Integer.valueOf(depthffB.getText());
-		double alpha = Double.valueOf(alphaB.getText()), beta = Double.valueOf(betaB.getText());
-		FirefrontSimulation sim = new FirefrontSimulation(model);
+		int depth = (int)Double.parseDouble(depthffB.getText());
+		double alpha = Double.parseDouble(alphaB.getText());
+		double beta = Double.parseDouble(betaB.getText());
+		FirefrontSimulation sim = new FirefrontSimulation();
+		sim.addModel(model);
 		sim.isGUI = true;
 		//sim.maxRuns=Integer.valueOf(runsffB.getText());
 		if(alpha>0) sim.alpha=alpha; //optional
 		if(beta>0) sim.beta=beta; //optional
 		if(depth>0) sim.maxDepth=depth; //optional
-		sim.maxExpand = Integer.valueOf(maxExpandffB.getText());
+		sim.maxExpand = (int)Double.parseDouble(maxExpandffB.getText());
 		sim.quiet = quiet;
 		sim.plots = plots; 
 		

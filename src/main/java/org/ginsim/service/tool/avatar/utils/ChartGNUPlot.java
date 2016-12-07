@@ -5,12 +5,17 @@ import com.panayotis.gnuplot.plot.DataSetPlot;
 import com.panayotis.gnuplot.style.PlotStyle;
 import com.panayotis.gnuplot.style.Style;
 import com.panayotis.gnuplot.terminal.ImageTerminal;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+
 import javax.imageio.ImageIO;
+
+import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
+import org.ginsim.service.tool.avatar.domain.State;
 
 
 /**
@@ -39,19 +44,20 @@ public class ChartGNUPlot {
 	 */
 	public static void writePNGFile(BufferedImage img, File file) throws IOException{
 		//System.out.println("File:"+new File("").getAbsolutePath()+file.toString());
-        //file.createNewFile();
-		//ImageIO.write(img, "png", file);
+        file.createNewFile();
+		ImageIO.write(img, "png", file);
 	}
 	
 	/**
 	 * Creates a chart with statistics on the depth for a list of attractors
 	 * @param depths the list of depths at which an attractor was found
+	 * @param pointAttractors 
 	 * @param title the title of the plot
 	 * @param xaxis the x-axis label
 	 * @param yaxis the y-axis label
 	 * @return the associated plot with the mean depth and error bars associated with the list of attractors 
 	 */
-	public static JavaPlot getErrorBars(Map<String,List<Integer>> depths, String title, String xaxis, String yaxis) {
+	public static JavaPlot getErrorBars(Map<String,List<Integer>> depths, Map<String,String> names, String title, String xaxis, String yaxis) {
         JavaPlot p = new JavaPlot();
         p.setTitle(title);
         p.setKey(JavaPlot.Key.TOP_RIGHT);
@@ -65,14 +71,14 @@ public class ChartGNUPlot {
         	double mean=AvaMath.mean(depths.get(att)), std=AvaMath.std(depths.get(att));
         	double min=AvaMath.min(depths.get(att)), max=AvaMath.max(depths.get(att));
         	overallMax = Math.max(max,overallMax);
-       		datapoints[k][0]=it;
+       		datapoints[k][0]=it++;
        		datapoints[k][1]=Math.max(min, mean-std);
        		datapoints[k][2]=min;
        		datapoints[k][3]=max;
        		datapoints[k][4]=Math.min(max, mean+std);
        		datapoints[k][5]=0.4;
             DataSetPlot s = new DataSetPlot(datapoints);
-            s.setTitle("Att:"+it++);
+            s.setTitle(names.get(att));
             s.setPlotStyle(myPlotStyle);
             p.addPlot(s);
        	}
@@ -86,13 +92,14 @@ public class ChartGNUPlot {
 	/**
 	 * Creates a chart based on the convergence of probabilities per attractor
 	 * @param dataset the evolution of probabilities per attractor as the number of iterations increases
+	 * @param names 
 	 * @param space number of iterations between two measured points
 	 * @param title the title of the plot
 	 * @param xaxis the x-axis label
 	 * @param yaxis the y-axis label
 	 * @return the associated plot with the convergence of probabilities per attractor across iterations 
 	 */
-	public static JavaPlot getConvergence(double[][] dataset, int space, String title, String xaxis, String yaxis) {
+	public static JavaPlot getConvergence(double[][] dataset, List<String> names, int space, String title, String xaxis, String yaxis) {
         JavaPlot p = new JavaPlot();
         p.setTitle(title);
         p.getAxis("x").setLabel(xaxis);
@@ -109,7 +116,7 @@ public class ChartGNUPlot {
         		datapoints[j][1]=dataset[i][j];
         	}
             DataSetPlot s = new DataSetPlot(datapoints);
-            s.setTitle("Att:"+i);
+            s.setTitle(names.get(i));
             s.setPlotStyle(myPlotStyle);
             p.addPlot(s);
         }

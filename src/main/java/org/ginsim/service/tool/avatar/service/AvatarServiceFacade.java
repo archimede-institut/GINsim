@@ -1,8 +1,14 @@
 package org.ginsim.service.tool.avatar.service;
 
 import java.io.File;
+import java.io.IOException;
 import org.colomoto.logicalmodel.StatefulLogicalModel;
-import org.colomoto.logicalmodel.io.avatar.AvatarImport;
+import org.colomoto.logicalmodel.StatefulLogicalModelImpl;
+import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
@@ -10,7 +16,9 @@ import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.tool.avatar.domain.Result;
 import org.ginsim.service.tool.avatar.simulation.AvatarSimulation;
 import org.ginsim.service.tool.avatar.simulation.AvatarSimulation.AvatarStrategy;
+import org.ginsim.service.tool.avatar.simulation.MDDUtils;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
+import org.ginsim.service.tool.avatar.simulation.SimulationUtils;
 import org.ginsim.service.tool.avatar.utils.AvaException;
 import org.ginsim.service.tool.avatar.utils.AvaOptions;
 import org.mangosdk.spi.ProviderFor;
@@ -41,11 +49,8 @@ public class AvatarServiceFacade implements Service {
 	 * @throws Exception thrown due to errors while reading and writing files, conflicting parameters and unexpected behavior of the simulation
 	 */
 	public static Result run(AvatarSimulation sim) throws Exception {
-		long time = System.currentTimeMillis();
 		Result result = sim.runSimulation();
-		result.time = (System.currentTimeMillis()-time);
-		System.out.println("Elapsed time: "+result.time+"ms\n");
-	    System.out.println(">> Results <<\n"+result.toString());
+	    //System.out.println(">> Results <<\n"+result.toString());
 		return result;
     }
 	
@@ -61,72 +66,68 @@ public class AvatarServiceFacade implements Service {
 	}
 	
 	/**
+	 * Creates an avatar simulation from a string command
+	 * @param args command specifying the input model and the parameters of the avatar simulation
+	 * @return the avatar simulation to be executed
+	 * @throws Exception thrown due to errors while reading and writing files, conflicting parameters and unexpected behavior of the simulation
+	 */
+	public static Simulation getSimulation(String args) throws Exception {
+		return getSimulation(args.split("( --)|=|--"));
+	}
+
+	/**
 	 * Creates an avatar simulation from a given set of arguments
 	 * @param args textual arguments specifying the input model and the parameters of the avatar simulation
 	 * @return the avatar simulation to be executed
 	 * @throws Exception thrown due to errors while reading and writing files, conflicting parameters and unexpected behavior of the simulation
 	 */
 	public static Simulation getSimulation(String[] args) throws Exception {
-		String filename = AvaOptions.getStringValue("input",args);
-		if(filename==null) throw new AvaException("A model file is required");
-		
-		AvatarImport avaImport = new AvatarImport(new File(filename));
-		StatefulLogicalModel model = avaImport.getModel(); //model.fromNuSMV(filename);
-		AvatarSimulation sim = new AvatarSimulation(model); 
-		
+		AvatarSimulation sim = new AvatarSimulation(); 
 		sim.runs = AvaOptions.getIntValue("runs",args);
 		sim.tauInit = AvaOptions.getIntValue("tau",args);
-		sim.maxSteps = AvaOptions.getIntValue("max-steps",args);		
-		sim.minCSize = AvaOptions.getIntValue("min-cycle-size",args);
-		sim.maxPSize = (int)AvaOptions.getDoubleValue("max-psize",args);
-		sim.minTransientSize = AvaOptions.getIntValue("min-transient-size",args);
+		sim.maxSteps = AvaOptions.getIntValue("maxDepth",args);		
+		sim.minCSize = AvaOptions.getIntValue("minCycleSize",args);
+		sim.maxPSize = AvaOptions.getIntValue("maxGrowthSize",args);
+		sim.maxRewiringSize = AvaOptions.getIntValue("maxRewiringSize",args);
+		sim.minTransientSize = AvaOptions.getIntValue("minTransientSize",args);
+		sim.smallStateSpace = SMALL_STATE_SPACE;
+		sim.keepTransients = AvaOptions.getBoolValue("keepTransients",args);
+		sim.keepOracle = true; //AvaOptions.getBoolValue("keepAttractors",args);
+		sim.plots = AvaOptions.getBoolValue("plots",args);
+		sim.quiet = AvaOptions.getBoolValue("quiet",args);
+		String strategy = AvaOptions.getStringValue("strategy",args); 
+		if(strategy.contains("Matrix")) sim.strategy = AvatarStrategy.MatrixInversion;
+		else sim.strategy = AvatarStrategy.RandomExit;
 		if(AvaOptions.getBoolValue("no-extension",args)){
 			if(sim.minCSize>2){
 		    	System.out.println("Minimum cycle size for rewrite was reset to 2");
 		    	sim.minCSize = 2;
 		    }
 		}
-		sim.keepTransients = AvaOptions.getBoolValue("keep-transients",args);
-		sim.keepOracle = AvaOptions.getBoolValue("keep-oracle",args);
-		sim.plots = AvaOptions.getBoolValue("plots",args);
-		sim.quiet = AvaOptions.getBoolValue("quiet",args);
-		if(AvaOptions.getBoolValue("matrix",args))
-			sim.strategy = AvatarStrategy.MatrixInversion;
-		else if(AvaOptions.getBoolValue("approx",args))
-			sim.strategy = AvatarStrategy.Approximate;
-		else sim.strategy = AvatarStrategy.RandomExit;
-		sim.outputDir = AvaOptions.getStringValue("output-dir",args);
+		sim.outputDir = AvaOptions.getStringValue("outputDir",args);
 		//sim.init = AvaOptions.getStringValue("state",args);
-		sim.smallStateSpace = SMALL_STATE_SPACE;
-		System.out.println("AVATAR\nModel: "+model.getName()+"\n"+parametersToString(sim));
+		//System.out.println("AVATAR\nModel: "+model.getName()+"\n"+parametersToString(sim));
+		String filename = AvaOptions.getStringValue("input",args);
+		if(filename!=null) sim=(AvatarSimulation)addModel(sim,filename);
 		return sim;
 	}
-
-	/*public static Simulation clone(AvatarSimulation sim) {
-		AvatarSimulation clone = new AvatarSimulation(sim.model);
-		sim.model = null;
-		clone.runs = sim.runs;
-		clone.tauInit = sim.tauInit;
-		clone.maxSteps = sim.maxSteps;		
-		clone.minCSize = sim.minCSize;
-		clone.maxPSize = sim.maxPSize;
-		clone.minTransientSize = sim.minTransientSize;
-		clone.keepTransients = sim.keepTransients;
-		clone.keepOracle = sim.keepOracle;
-		clone.plots = sim.plots;
-		clone.quiet = sim.quiet;
-		clone.strategy = sim.strategy;
-		clone.outputDir = sim.outputDir;
-		clone.smallStateSpace = sim.smallStateSpace;
-		return clone;
-	}*/
-
+	
+	public static Simulation addModel(Simulation sim, String filename) throws Exception{
+		StatefulLogicalModel model = null;
+		if(filename.contains(".avatar")){
+			//AvatarImport avaImport = new AvatarImport(new File(filename));
+			//model = avaImport.getModel(); //model.fromNuSMV(filename);
+		} else {
+			RegulatoryGraph graph = (RegulatoryGraph)GraphManager.getInstance().open(filename);
+	        NamedStatesHandler nstatesHandler = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph, NamedStatesManager.KEY, true);
+			model = new StatefulLogicalModelImpl(graph.getModel(),MDDUtils.getStates(nstatesHandler,graph.getNodeInfos()));
+		}
+		sim.addModel(model);
+		return sim;
+	}
+	
 	private static String parametersToString(AvatarSimulation sim) {
-		return "Parameters:\n\tRuns="+sim.runs+"\n\tMaximum depth="+ (sim.maxSteps>0 ? sim.maxSteps : "unbounded")
-			+ "\n\tTau="+sim.tauInit+"\n\tMinimum size for re-write: "+sim.minCSize+" states\n\t"
-			+ "Inflationary mode threshold="+sim.maxPSize+" explicit transitions"
-			+ "\n\tKeep transients="+sim.keepTransients+" and oracles="+sim.keepOracle
-			+ "\n\tLow exit ratio transient threshold="+sim.minTransientSize+" states\n";
+		return sim.parametersToString();
 	}
 	
 	/**

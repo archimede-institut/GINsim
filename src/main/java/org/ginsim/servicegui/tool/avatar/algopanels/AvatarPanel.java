@@ -19,10 +19,10 @@ import javax.swing.border.TitledBorder;
 
 import org.colomoto.logicalmodel.StatefulLogicalModel;
 import org.ginsim.service.tool.avatar.params.AvatarParameters;
-import org.ginsim.service.tool.avatar.simulation.AvatarMDDSimulation;
 import org.ginsim.service.tool.avatar.simulation.AvatarSimulation;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
 import org.ginsim.service.tool.avatar.simulation.AvatarSimulation.AvatarStrategy;
+import org.ginsim.service.tool.avatar.simulation.others.AvatarMDDSimulation;
 
 /**
  * Class for managing the panel for Avatar simulations
@@ -34,23 +34,24 @@ public class AvatarPanel extends SimulationPanel {
 	private static final long serialVersionUID = 1L;
 	private JTextField runsB = new JTextField(), tauB = new JTextField(), depthB = new JTextField(), aproxDepth = new JTextField();
 	private JTextField minTranB = new JTextField(), minCycleB = new JTextField(), maxPsizeB = new JTextField(), maxRewiringSizeB = new JTextField();
-	private JCheckBox keepTransB = new JCheckBox("Keep Transients");
-	private JCheckBox keepOraclesB = new JCheckBox("Keep Oracles");
-	private JComboBox strategy = new JComboBox(new DefaultComboBoxModel(new String[] {"Matrix Inversion","Approximate","Uniform Exits"}));
+	private JCheckBox keepTransB = new JCheckBox("Keep transients");
+	private JCheckBox keepOraclesB = new JCheckBox("Keep oracles");
+	private JComboBox strategy = new JComboBox(new DefaultComboBoxModel(new String[] {"Exact exit probabilities","Uniform exit probabilities"}));
 
 	private String open = "<html><div style=\"width:265px;\">", end = "</div></html>";
-	private String runsVar =open+"Specifies the number of simulations to perform (default: 1000)"+end;
-	private String tauVar =open+"Indicates the degree of cycle extension: n->2n->4n->8n->16n (default: n=3)"+end;
-	private String depthVar =open+"Specifies the maximum number of visited states per simulation"+end;
-	private String keepTransVar =open+"Preserves the knowledge regarding the discovered transient cycles for upcoming simulations/runs"+end;
+	private String runsVar =open+"Number of simulations to perform (default: 1000)"+end;
+	private String tauVar =open+"Degree of SCC expansion (default: n=3)"+end;
+	private String depthVar =open+"Maximum depth of the search per simulation"+end;
+	private String keepTransVar =open+"Check this book to keep in memory the discovered transient SCCs for upcoming simulations"+end;
 	private String keepAttractorsVar = open+"Preserves the knowledge regarding the discovered terminal cycles (attractors) for upcoming simulations/runs"+end;
-	private String strategyVar =open+"Algorithm for rewiring cycles: 1) 'Matrix Inversion' computes the prob of paths in an optimal manner (prone to memory bottlenecks),"+
-			"2)'Approximate' strategy computes the path probabilities up to a maximum depth (memory-efficient yet can lead to time overhead), 3) 'Uniform Exists' creates paths within a transient cycle to its exit state with uniform probabilities (heihgtened memory and time efficiency)."+end;
-	private String aproxDepthVar = open+"Defines the minimum depth from which to compute exit probabilities within a cycle"+end;
-	private String minTransVar =open+"Specifies the mininum size of a transient cycle in order to be kept for subsequent simulation runs (default: 200)"+end;
-	private String minCycleVar =open+"Specifies the minimum number of elements in a cycle required to trigger a graph rewiring operation (default: 4)"+end;
-	private String maxPSizeVar =open+"Specifies the maximum number of states within a cycle to allow expansion (default: 10000)"+end;
-	private String maxRewiringSizeVar =open+"Maximum number of states within a cycle to be rewired"+end;
+	private String strategyVar =open+"Method for SCC rewiring:<br>1) 'Exact exit probabilities' computes the exact probability of exit paths"
+			//+"2)'Approximate' strategy computes the path probabilities up to a maximum depth (memory-efficient yet can lead to time overhead)," 
+			+"<br>2) 'Uniform exit probabilities' creates transitions from all SCC states to all exit states with uniform probabilities"+end;
+	private String aproxDepthVar = open+"Minimum depth from which to compute exit probabilities within a cycle"+end;
+	private String minTransVar =open+"Mininum size of a transient SCC to be kept for subsequent simulations (default: 200)"+end;
+	private String minCycleVar =open+"Minimum number of states in a SCC to trigger rewiring (default: 4)"+end;
+	private String maxPSizeVar =open+"Minimum number of states in a SCC to stop expansion (default: 10000)"+end;
+	private String maxRewiringSizeVar =open+"Maximum number of states to be rewired at a time"+end;
 	private JPanel panelAvatarP1, panelAvatarP2;
 	private JPanel p1c = new JPanel(new GridLayout(1,3)); 
 	private JLabel[] questions = new JLabel[]{new JLabel(""), new JLabel(""), new JLabel(""), new JLabel(""), new JLabel(""), new JLabel(""), new JLabel(""), new JLabel(""), new JLabel("")};
@@ -62,25 +63,30 @@ public class AvatarPanel extends SimulationPanel {
 	 */
 	public AvatarPanel(Icon img, boolean flex){
 		super(img,flex);
-		setBorder(new TitledBorder(new LineBorder(purple,2), "Avatar", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		//setBorder(new TitledBorder(new LineBorder(purple,2), "Avatar", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		runsB.setText("1000");
 		tauB.setText("3");
-		depthB.setText("1000");
+		depthB.setText("1E6");
 		keepTransB.setSelected(true);
 		aproxDepth.setText("7");
 		minTranB.setText("200");
 		minCycleB.setText("4");
-		maxPsizeB.setText("10000");
-		maxRewiringSizeB.setText("400");
+		maxPsizeB.setText("5E5");
+		maxRewiringSizeB.setText("5E3");
 		refresh();
 
 		strategy.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
-				if(strategy.getSelectedIndex()==0) keepTransB.setSelected(true);
-				else keepTransB.setSelected(false);
-				if(strategy.getSelectedIndex()==1) p1c.setVisible(true);
-				else p1c.setVisible(false);
+				if(strategy.getSelectedIndex()==0){
+					keepTransB.setSelected(true);
+					maxRewiringSizeB.setText("5E3");
+				} else {
+					keepTransB.setSelected(false);
+					maxRewiringSizeB.setText("5E5");
+				}
+				//if(strategy.getSelectedIndex()==1) p1c.setVisible(true);
+				//else p1c.setVisible(false);
 				repaint();//refresh();
 			}
 		});
@@ -96,29 +102,36 @@ public class AvatarPanel extends SimulationPanel {
 		}
 		
 		panelAvatarP1 = new JPanel();
-		panelAvatarP1.setBorder(new TitledBorder(new LineBorder(purple,2), "Main Parameters", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		JLabel runsL = new JLabel("#Runs"), tauL = new JLabel("Tau"), depthL = new JLabel("Max.Depth"), strategyL = new JLabel("Rewiring"), aproxDepthL = new JLabel("with depth ", JLabel.RIGHT);
-		int width0=40, width1=70, height1=19, startX1=10, startY1=20;
+		panelAvatarP1.setBorder(new TitledBorder(new LineBorder(purple,2), "Avatar parameters", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+		
+		JLabel runsL = new JLabel("#Runs"), tauL = new JLabel("Tau"), depthL = new JLabel("Max depth"), strategyL = new JLabel("Rewiring "), aproxDepthL = new JLabel("with depth ", JLabel.RIGHT);
+		JLabel minTranL = new JLabel("Min transient size"), minCycleL = new JLabel("Min states to rewire ");
+		JLabel maxPsizeL = new JLabel("Expansion limit "), maxRewiringSizeL = new JLabel("Rewiring limit ");
+		
+		int width0=50, width1=60, height1=19, startX1=10, startY1=20;
 		GridBagConstraints g = new GridBagConstraints();
 		if(flexible){
-			runsL.setToolTipText(runsVar);
-			tauL.setToolTipText(tauVar);
-			depthL.setToolTipText(depthVar);
-			strategyL.setToolTipText(strategyVar);
 			keepTransB.setToolTipText(keepTransVar);
 			runsL.setIcon(helpImg);
-			tauL.setIcon(helpImg);
-			depthL.setIcon(helpImg);
 			strategyL.setIcon(helpImg);
-			//keepTransB.setIcon(helpImg);
+			maxPsizeL.setIcon(helpImg);
+			maxRewiringSizeL.setIcon(helpImg);
+			minTranL.setIcon(helpImg);
+			runsL.setToolTipText(runsVar);
+			strategyL.setToolTipText(strategyVar);
+			maxPsizeL.setToolTipText(maxPSizeVar);
+			maxRewiringSizeL.setToolTipText(maxRewiringSizeVar);			
+			minTranL.setToolTipText(minTransVar);
+
 			JPanel p1a = new JPanel(new GridLayout(3,2)); 
 			panelAvatarP1.setLayout(new GridBagLayout());
 			p1a.add(runsL);
 			p1a.add(runsB);
-			p1a.add(tauL);
-			p1a.add(tauB);
-			p1a.add(depthL);
-			p1a.add(depthB);
+			p1a.add(maxPsizeL);
+			p1a.add(maxPsizeB);
+			p1a.add(maxRewiringSizeL);
+			p1a.add(maxRewiringSizeB);
+
 			JPanel p1b = new JPanel(new GridLayout(1,2)); 
 			p1b.add(strategyL);
 			p1b.add(strategy);
@@ -128,6 +141,10 @@ public class AvatarPanel extends SimulationPanel {
 			p1c.setVisible(false);
 			JPanel p1d = new JPanel(new GridLayout(1,1)); 
 			p1d.add(keepTransB);
+			JPanel p1e = new JPanel(new GridLayout(1,1)); 
+			p1e.add(minTranL);
+			p1e.add(minTranB);
+			
 			GridBagConstraints c = new GridBagConstraints();
             c.fill = GridBagConstraints.HORIZONTAL;
             c.weightx = 1;
@@ -139,6 +156,8 @@ public class AvatarPanel extends SimulationPanel {
 			panelAvatarP1.add(p1c,c);
 			c.gridy=3;
 			panelAvatarP1.add(p1d,c);
+			//c.gridy=4;
+			//panelAvatarP1.add(p1e,c);
 
 			g.weightx=1;
 			g.gridwidth=1;
@@ -164,12 +183,13 @@ public class AvatarPanel extends SimulationPanel {
 			depthB.setBounds(startX1+width1, startY1+height1*2, width0, height1);
 			strategyL.setBounds(startX1, startY1+height1*3+1, width1, height1);
 			strategy.setBounds(startX1+width1, startY1+height1*3+1, width0+83, height1);
-			if(strategy.getSelectedIndex()==1){
+			/*if(strategy.getSelectedIndex()==1){
 				aproxDepthL.setBounds(startX1+width1, startY1+height1*4+3, 68, height1);
 				aproxDepth.setBounds(startX1+width1+70, startY1+height1*4+3, 54, height1);
 				questions[5].setBounds(startX1+width1+126,startY1+height1*4+3,15,15);
 				questions[5].setVisible(true);
-			} else questions[5].setVisible(false);
+			} else */
+			questions[5].setVisible(false);
 			keepTransB.setBounds(startX1, startY1+height1*4+3+getExtraHeight(), width1+width0+10, height1);
 			//keepOraclesB.setBounds(startX1, startY1+height1*5, width1+width0+10, height1);
 			questions[0].setBounds(startX1+width1+width0+3,startY1+height1*0+2,15,15);
@@ -196,34 +216,32 @@ public class AvatarPanel extends SimulationPanel {
 			add(panelAvatarP1);
 			
 			//panelAvatarP1.add(keepOraclesB);
-			if(strategy.getSelectedIndex()==1){
+			/*if(strategy.getSelectedIndex()==1){
 				panelAvatarP1.add(aproxDepthL);
 				panelAvatarP1.add(aproxDepth);
-			}
+			}*/
 		}		
 		panelAvatarP2 = new JPanel();
-		panelAvatarP2.setBorder(new TitledBorder(new LineBorder(purple,2), "Optional Parameters", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		JLabel minTranL = new JLabel("Min.Transient Size"), minCycleL = new JLabel("Min.States to Rewire ");
-		JLabel maxPsizeL = new JLabel("Expansion Max.#States"), maxRewiringSizeL = new JLabel("Rewiring Max.#States");
+		panelAvatarP2.setBorder(new TitledBorder(new LineBorder(purple,2), "Expert parameters", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		int width2=140, height2=19, startX2=10, startY2=20;
 		if(flexible){
 			minTranL.setIcon(helpImg);
 			minCycleL.setIcon(helpImg);
-			maxPsizeL.setIcon(helpImg);
-			maxRewiringSizeL.setIcon(helpImg);
 			minTranL.setToolTipText(minTransVar);
 			minCycleL.setToolTipText(minCycleVar);
-			maxPsizeL.setToolTipText(maxPSizeVar);
-			maxRewiringSizeL.setToolTipText(maxRewiringSizeVar);
+			tauL.setToolTipText(tauVar);
+			depthL.setToolTipText(depthVar);
+			tauL.setIcon(helpImg);
+			depthL.setIcon(helpImg);
 			panelAvatarP2.setLayout(new GridLayout(4,2));
 			panelAvatarP2.add(minTranL);
 			panelAvatarP2.add(minTranB);
 			panelAvatarP2.add(minCycleL);
 			panelAvatarP2.add(minCycleB);
-			panelAvatarP2.add(maxPsizeL);
-			panelAvatarP2.add(maxPsizeB);
-			panelAvatarP2.add(maxRewiringSizeL);
-			panelAvatarP2.add(maxRewiringSizeB);
+			panelAvatarP2.add(tauL);
+			panelAvatarP2.add(tauB);
+			panelAvatarP2.add(depthL);
+			panelAvatarP2.add(depthB);
 			g.gridy=1;
 			add(panelAvatarP2,g);
 		} else {
@@ -255,33 +273,35 @@ public class AvatarPanel extends SimulationPanel {
 	}
 
 	private int getExtraHeight(){
-		if(strategy.getSelectedIndex()==1) return 20;
+		//if(strategy.getSelectedIndex()==1) return 20;
 		return 0;
 	}
 	
 	@Override
 	public Simulation getSimulation(StatefulLogicalModel model, boolean plots, boolean quiet) throws Exception{
-		AvatarSimulation sim = new AvatarSimulation(model); 
+		AvatarSimulation sim = new AvatarSimulation();
+		sim.addModel(model);
 		sim.isGUI = true;
-		sim.runs = Integer.valueOf(runsB.getText());
-		sim.tauInit = Integer.valueOf(tauB.getText());
-		sim.maxSteps = Integer.valueOf(depthB.getText());		
-		sim.minCSize = Integer.valueOf(minCycleB.getText());
-		sim.maxPSize = Integer.valueOf(maxPsizeB.getText());
-		sim.maxRewiringSize = Integer.valueOf(maxRewiringSizeB.getText());
-		sim.minTransientSize = Integer.valueOf(minTranB.getText());
+		sim.runs = (int)Double.parseDouble(runsB.getText());
+		sim.tauInit = (int)Double.parseDouble(tauB.getText());
+		sim.maxSteps = (int)Double.parseDouble(depthB.getText());		
+		sim.minCSize = (int)Double.parseDouble(minCycleB.getText());
+		sim.maxPSize = (int)Double.parseDouble(maxPsizeB.getText());
+		sim.maxRewiringSize = (int)Double.parseDouble(maxRewiringSizeB.getText());
+		sim.minTransientSize = (int)Double.parseDouble(minTranB.getText());
 		sim.keepTransients = keepTransB.isSelected();
 		sim.keepOracle = true;
 		sim.plots = plots;
 		sim.quiet = quiet;
 		String stg = (String) strategy.getSelectedItem();
-		if(stg.contains("Matrix")) sim.strategy = AvatarStrategy.MatrixInversion;
-		else if(stg.contains("Approx")){
+		if(stg.contains("xact")) sim.strategy = AvatarStrategy.MatrixInversion;
+		/*else if(stg.contains("Approx")){
 			try {
 				sim.approxDepth = Integer.parseInt(aproxDepth.getText());
 		    } catch (NumberFormatException nfe) { sim.approxDepth=-1; }
 			sim.strategy = AvatarStrategy.Approximate;
-		} else sim.strategy = AvatarStrategy.RandomExit;
+		}*/
+		else sim.strategy = AvatarStrategy.RandomExit;
 		sim.smallStateSpace = (int)Math.pow(2,10);
 		return sim;
 	}

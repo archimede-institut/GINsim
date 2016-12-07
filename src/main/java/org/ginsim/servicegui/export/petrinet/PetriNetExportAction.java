@@ -16,6 +16,7 @@ import javax.swing.JPanel;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.io.OutputStreamProvider;
 import org.colomoto.logicalmodel.io.petrinet.PNConfig;
 import org.colomoto.logicalmodel.io.petrinet.PetriNetSubformats;
 import org.ginsim.common.application.LogManager;
@@ -84,7 +85,7 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implemen
 
 		// call the selected export method to do the job
 		try {
-			format.getEncoder( model).export(config, new FileOutputStream(filename));
+			format.getEncoder( model).export(config, new OutputStreamProvider(filename));
 		} catch (IOException e) {
 			LogManager.error(e);
 		}

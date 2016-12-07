@@ -6,11 +6,13 @@ import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,21 +27,19 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
-import javax.swing.SwingWorker;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import org.colomoto.logicalmodel.StatefulLogicalModel;
+import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
-import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
-import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.WhatToDoWithGraph;
 import org.ginsim.service.tool.avatar.domain.AbstractStateSet;
 import org.ginsim.service.tool.avatar.domain.Result;
 import org.ginsim.service.tool.avatar.params.AvatarParameters;
+import org.ginsim.service.tool.avatar.simulation.MDDUtils;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
 import org.ginsim.service.tool.avatar.simulation.SimulationUtils;
 import org.ginsim.servicegui.tool.avatar.others.FixedSizePanel;
@@ -55,11 +55,11 @@ import org.ginsim.servicegui.tool.avatar.parameters.AvatarParametersHelper;
 public class AvatarResults {
 
   private Simulation sim;
-  private JLabel progress;
+  private JTextPane progress;
   private boolean quiet, flexible;
   private final AvatarConfigFrame parent;
   private final StatefulLogicalModel model;
-  private File memFile, logFile;
+  private File memFile, logFile, resFile, csvFile;
   private JButton brun, stop;
   
   /**
@@ -73,7 +73,7 @@ public class AvatarResults {
    * @param _memFile the directory or file to save plots
    * @param _logFile the file to print logs
    */
-  public AvatarResults(Simulation _sim, boolean flex, JLabel _progress, final AvatarConfigFrame _parent, boolean _quiet, final StatefulLogicalModel _model, File _memFile, File _logFile, JButton _brun, JButton _stop){
+  public AvatarResults(Simulation _sim, boolean flex, JTextPane _progress, final AvatarConfigFrame _parent, boolean _quiet, final StatefulLogicalModel _model, File _memFile, File _logFile, File _resFile, File _csvFile, JButton _brun, JButton _stop){
 	  sim = _sim;
 	  flexible = flex;
 	  progress = _progress;
@@ -82,6 +82,8 @@ public class AvatarResults {
 	  model = _model;
 	  memFile = _memFile;
 	  logFile = _logFile;
+	  resFile = _resFile;
+	  csvFile = _csvFile;
 	  brun = _brun;
 	  stop = _stop;
   }
@@ -96,15 +98,17 @@ public class AvatarResults {
 		        @Override
 		        public void run() {
 		          try {
-		      		long time = System.currentTimeMillis();
 		           	Result res = sim.run();
 		    		if(res!=null){
-		    			res.time = (System.currentTimeMillis()-time);
 			           	progress.setText("Simulation successfully computed!");
 			           	progress.updateUI();
+			           	
+			           	if(parent.getPerturbation()!=null) res.perturbation=parent.getPerturbation().getDescription();
+			           	if(parent.getReduction()!=null) res.reduction=parent.getReduction().toString();
+			           	
 			        	showOutputFrame(res);
 		    		} else {
-			           	progress.setText("Simulation was successfully terminated!");
+			           	progress.setText("Simulation was interrupted!");
 			           	progress.updateUI();
 				 		stop.setEnabled(false);
 				 		brun.setEnabled(true);
@@ -112,11 +116,14 @@ public class AvatarResults {
 				    	System.runFinalization();
 		    		}
 				  } catch (Exception e) {
-				 		String fileErrorMessage = "Unfortunately we were not able to finish your request.<br><em>Reason:</em> Exception while running the algorithm.";
+				 		String fileErrorMessage = e.getMessage();
+				 		if(!fileErrorMessage.contains("FireFront requests")) {
+				 			fileErrorMessage = "Unfortunately we were not able to finish your request.<br>Exception while running the algorithm.<br><em>Reason:</em> "+fileErrorMessage;
+				 			e.printStackTrace();
+				 		}
 				 		errorDisplay(fileErrorMessage,e);
 				 		stop.setEnabled(false);
 				 		brun.setEnabled(true);
-				 		e.printStackTrace();
 				  }
 		        }
 		    });
@@ -143,7 +150,7 @@ public class AvatarResults {
 	brun.setEnabled(true);
 	  
 	/** B: CREATE OUTPUT **/ 	 
-	JFrame output = new JFrame();
+	final JFrame output = new JFrame();
 	Color purple = new Color(204,153,255);
 	if(flexible){
 		output.setLayout(new GridBagLayout());
@@ -154,12 +161,14 @@ public class AvatarResults {
 	}
  	GridBagConstraints g = new GridBagConstraints();  
 	int yshift = 7, mheight = (int) Math.round(((double)res.charts.size())/2.0)*19+1;
-
+	final String htmlResult;
+	
 	try {
 	 	/** C: plot results */
 	 	JTextPane outText = new JTextPane();
 	 	outText.setContentType("text/html");
-	 	outText.setText("<html>"+res.toHTMLString()+"</html>");
+	 	htmlResult = "<html>"+res.toHTMLString()+"</html>";
+	 	outText.setText(htmlResult);
 	 	//System.out.println(res.toHTMLString());
 	 	//System.out.println("DONE");
 	 	//outText.setAutoscrolls(true);
@@ -194,7 +203,7 @@ public class AvatarResults {
 	 		button.addActionListener(new IndexableActionListener(title,parent) {
 	 			public void actionPerformed(ActionEvent arg0) {
 	 				JLabel picLabel = new JLabel(new ImageIcon(res.charts.get(this.getKey())));
-	 				int dialogResult = JOptionPane.showOptionDialog(this.getDialog(), picLabel, "Plotted chart", JOptionPane.YES_OPTION, 
+	 				int dialogResult = JOptionPane.showOptionDialog(output, picLabel, "Plotted chart", JOptionPane.YES_OPTION, 
 	 						JOptionPane.INFORMATION_MESSAGE, null, new String[]{"SAVE","CLOSE"}, "default");
 	 				if(dialogResult == JOptionPane.YES_OPTION){
 	 					JFileChooser fcnet = new JFileChooser();
@@ -206,9 +215,9 @@ public class AvatarResults {
 	 						if(returnVal == 0)
 	 						try {
 	 							ImageIO.write(res.charts.get(this.getKey()), "png", memFile);
-	 							JOptionPane.showMessageDialog(this.getDialog(), new JLabel("Your chart was successfully saved"),"Saving chart...",JOptionPane.PLAIN_MESSAGE);
+	 							JOptionPane.showMessageDialog(output, new JLabel("Your chart was successfully saved"),"Saving chart...",JOptionPane.PLAIN_MESSAGE);
 	 						} catch (IOException e) {
-	 							JOptionPane.showMessageDialog(this.getDialog(), new JLabel("Ops! We were not able to save your chart. Please contact the GINsim team!"),"Saving chart...",JOptionPane.ERROR_MESSAGE);
+	 							JOptionPane.showMessageDialog(output, new JLabel("Ops! We were not able to save your chart. Please contact the GINsim team!"),"Saving chart...",JOptionPane.ERROR_MESSAGE);
 	 							e.printStackTrace();
 	 						}
 	 						//System.out.println(">>"+memorizedFile.getAbsolutePath());
@@ -226,12 +235,13 @@ public class AvatarResults {
 	 		panelPlot.add(label);
 	 	}
 	 	if(flexible){
+	 		g.insets = new Insets(3,3,3,3);
 	 		g.gridx=0;
 	 		g.gridy=1;
 	 		g.weightx=1;
 	 		g.gridheight=1;
 	 		//plots.setPreferredSize(new Dimension(560, 60));
-	 		panelPlot.setBorder(new TitledBorder(new LineBorder(purple,2), "Plotted charts", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+	 		panelPlot.setBorder(new LineBorder(purple,2));//new TitledBorder(new LineBorder(purple,2), "Plotted charts", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		 	output.add(panelPlot,g);
 	 	} else {
 		 	JScrollPane plots = new JScrollPane(panelPlot);
@@ -260,9 +270,8 @@ public class AvatarResults {
 	 	if(flexible) panelAtt = new JPanel(new GridLayout(Math.max(1,complexAttractors.size()),1));
 	 	else panelAtt = new FixedSizePanel(10,mheight);
 	 	
-	 	int i=0;
 	 	for(String key : complexAttractors.keySet()){
-	 		JButton button = new JButton("Attractor "+(i++));
+	 		JButton button = new JButton("Process "+key+" graph");
 	 		button.addActionListener(new IndexableActionListener(key,parent) {
 	 			public void actionPerformed(ActionEvent arg0) {
 	 		        //HierarchicalTransitionGraph graph = GraphManager.getInstance().getNewGraph(HierarchicalTransitionGraph.class,model.getNodeOrder());
@@ -284,20 +293,31 @@ public class AvatarResults {
 	 		if(!flexible) label.setBounds(5, 10, 300, 22);
 	 		panelAtt.add(label);
 	 	} else {
+	 		
+		 	/** F: Save complex attractors **/ 
 	 		//for(List<byte[]> att : res.complexAttractorPatterns.values()) System.out.println(">>"+AvatarUtils.toString(att));
-	    	Map<Boolean,List<NamedState>> oracles = parent.statestore.addOracle(res.complexAttractorPatterns);
-	    	parent.states.updateParam(parent.statestore,oracles);
-	    	AvatarParameters p = AvatarParametersHelper.load(parent);
-	    	parent.setCurrent(p);
-	 		parent.refresh(p);
+	 		Map<String,List<byte[]>> newCAttractors = new HashMap<String,List<byte[]>>();
+ 	 		for(String ckey : res.complexAttractorPatterns.keySet()){
+ 	 			List<byte[]> catt = res.complexAttractorPatterns.get(ckey);
+	 			boolean newAttractor = !MDDUtils.contained(parent.statestore.oracles, catt);
+	 			if(newAttractor) newCAttractors.put(ckey,res.complexAttractorPatterns.get(ckey));
+	 		}
+	 		parent.statestore.addOracle(newCAttractors);
+	    	if(newCAttractors.size()>0){
+		    	parent.states.updateParam(parent.statestore);
+		    	AvatarParameters p = AvatarParametersHelper.load(parent);
+		    	parent.setCurrent(p);
+		 		parent.refresh(p);
+	    	}
 	 	}
 	 	if(flexible){
+	 		g.insets = new Insets(3,3,3,3);
 	 		g.gridx=0;
 	 		g.gridy=2;
 	 		g.weightx=1;
 	 		g.gridheight=1;
 	 		//attractors.setPreferredSize(new Dimension(560, 80));
-	 		panelAtt.setBorder(new TitledBorder(new LineBorder(purple,2), "Draw complex attractors", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+	 		panelAtt.setBorder(new LineBorder(purple,2));//, "Draw complex attractors ", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
 		 	output.add(panelAtt,g);
 	 	} else {
 		 	JScrollPane attractors = new JScrollPane(panelAtt);
@@ -315,10 +335,21 @@ public class AvatarResults {
 	 		e.printStackTrace();
 	 		return;
 	 }   
+	 
+	 JPanel panelOthers = null;
+	 panelOthers = new JPanel(new GridLayout(1,(!quiet||res.strategy.equals("Avatar"))?3:2));
+	 panelOthers.setBorder(new LineBorder(purple,2));//new TitledBorder(new LineBorder(purple,2), "Others", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+	 if(flexible){
+		 g.gridx=0;
+		 g.gridy=3;
+		 g.weightx=1;
+		 g.gridheight=1;
+		 output.add(panelOthers,g);
+	 }
 	 try {
 	 	/** F: View Log **/
 	 	JButton logButton = new JButton("View Log");
-	 	if(!quiet){
+	 	if(!quiet || res.strategy.equals("Avatar")){
 	 		logButton.addActionListener(new IndexableActionListener("",parent) {
 	 			public void actionPerformed(ActionEvent arg0) {
 	 				JTextPane logText = new JTextPane();
@@ -331,7 +362,7 @@ public class AvatarResults {
 	 				scrollLog.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	 				scrollLog.setPreferredSize(new Dimension(700,500));
 	 				//scrollLog.setBorder(new TitledBorder(new LineBorder(purple,2), "Output", TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-	 				int dialogResult = JOptionPane.showOptionDialog(this.getDialog(), scrollLog,"Log Messages", JOptionPane.YES_OPTION, 
+	 				int dialogResult = JOptionPane.showOptionDialog(output, scrollLog,"Log Messages", JOptionPane.YES_OPTION, 
 	 						JOptionPane.INFORMATION_MESSAGE, null, new String[]{"SAVE","CLOSE"}, "default");
 	 				if(dialogResult == JOptionPane.YES_OPTION){
 	 					JFileChooser fcnet = new JFileChooser();
@@ -345,9 +376,9 @@ public class AvatarResults {
 	 							BufferedWriter writer = new BufferedWriter(new FileWriter(logFile));
 	 						    writer.write(res.log);
 	 							writer.close();
-	 							JOptionPane.showMessageDialog(this.getDialog(), new JLabel("Your log was successfully saved"),"Saving log...",JOptionPane.PLAIN_MESSAGE);
+	 							JOptionPane.showMessageDialog(output, new JLabel("Your log was successfully saved"),"Saving log...",JOptionPane.PLAIN_MESSAGE);
 	 						} catch (IOException e) {
-	 							JOptionPane.showMessageDialog(this.getDialog(), new JLabel("Ops! We were not able to save your log. Please contact the GINsim team!"),"Saving log...",JOptionPane.ERROR_MESSAGE);
+	 							JOptionPane.showMessageDialog(output, new JLabel("Ops! We were not able to save your log. Please contact the GINsim team!"),"Saving log...",JOptionPane.ERROR_MESSAGE);
 	 							e.printStackTrace();
 	 						}
 	 						//System.out.println(">>"+memorizedFile.getAbsolutePath());
@@ -356,15 +387,9 @@ public class AvatarResults {
 	 			}
 	 		});
 	 	}
-	 	if(!quiet){
-	 		if(flexible){
-		 		g.gridx=0;
-		 		g.gridy=5;
-		 		g.weightx=0;
-		 		g.gridheight=0;
-		 		g.weighty=0;
-			 	output.add(logButton,g);
-	 		} else {
+	 	if(!quiet || res.strategy.equals("Avatar")){
+	 		if(flexible) panelOthers.add(logButton);
+	 		else {
 		 		logButton.setBounds(8, 500, 100, 20);
 			 	output.add(logButton);
 	 		}
@@ -377,7 +402,72 @@ public class AvatarResults {
 	 		e.printStackTrace();
 	 		return;
 	 }
-	 	
+
+	 try {
+		 /** SAVING **/
+	 	JButton saveButton1 = new JButton("Save Results as .HTML");
+	 	JButton saveButton2 = new JButton("Save Results as .CSV");
+ 		if(flexible){ 
+ 			panelOthers.add(saveButton1);
+ 			panelOthers.add(saveButton2);
+ 		} else {
+ 			saveButton1.setBounds(8, 500, 100, 20);
+ 			saveButton2.setBounds(8, 500, 100, 20);
+		 	output.add(saveButton1);
+		 	output.add(saveButton2);
+ 		}
+ 		saveButton1.addActionListener(new IndexableActionListener("",parent) {
+	 		public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fcnet = new JFileChooser();
+				fcnet.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fcnet.setSelectedFile(resFile);
+				int returnVal = fcnet.showSaveDialog(parent);
+				if(returnVal == JFileChooser.APPROVE_OPTION){
+					resFile = fcnet.getSelectedFile();
+					if(returnVal == 0)
+					try {
+						BufferedWriter writer = new BufferedWriter(new FileWriter(resFile));
+					    writer.write(htmlResult);
+						writer.close();
+						JOptionPane.showMessageDialog(output, new JLabel("Your results was successfully saved"),"Saving results...",JOptionPane.PLAIN_MESSAGE);
+					} catch (IOException e) {
+						JOptionPane.showMessageDialog(output, new JLabel("Ops! We were not able to save your results. Please contact the GINsim team!"),"Saving results...",JOptionPane.ERROR_MESSAGE);
+						e.printStackTrace();
+					}
+		 		}
+	 		}
+	 	});
+		final String csvResult = res.toCSVString();
+ 		saveButton2.addActionListener(new IndexableActionListener("",parent) {
+	 		public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fcnet = new JFileChooser();
+				fcnet.setFileSelectionMode(JFileChooser.FILES_ONLY);
+				fcnet.setSelectedFile(csvFile);
+				int returnVal = fcnet.showSaveDialog(parent);
+				if(returnVal == JFileChooser.APPROVE_OPTION){
+					csvFile = fcnet.getSelectedFile();
+					if(returnVal == 0)
+					try {
+						BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile));
+					    writer.write(csvResult);
+						writer.close();
+						JOptionPane.showMessageDialog(output, new JLabel("Your results was successfully saved"),"Saving results...",JOptionPane.PLAIN_MESSAGE);
+					} catch (IOException e) {
+						JOptionPane.showMessageDialog(output, new JLabel("Ops! We were not able to save your results. Please contact the GINsim team!"),"Saving results...",JOptionPane.ERROR_MESSAGE);
+						e.printStackTrace();
+					}
+		 		}
+	 		}
+	 	});
+	 } catch(Exception e){
+	 		String fileErrorMessage = "Unfortunately we were not able to finish your request.<br><em>Reason:</em> Exception while gathering or displaying the log.";
+	 		errorDisplay(fileErrorMessage,e);
+	 		stop.setEnabled(false);
+	 		brun.setEnabled(true);
+	 		e.printStackTrace();
+	 		return;
+	 }
+
 	 /** D: Sizes and so forth **/
 	 //JOptionPane.showMessageDialog(this, output);
 	 JButton jButton1 = new JButton("Close");
@@ -387,7 +477,7 @@ public class AvatarResults {
 	 	    }
 	 	});
 	  if(flexible){
-	 		g.gridy=6;
+	 		g.gridy=7;
 	 		g.weightx=0;
 	 		g.gridheight=0;
 	 		g.ipadx=10;
@@ -399,6 +489,7 @@ public class AvatarResults {
 		  output.add(jButton1);
 	  }
       output.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+      output.setAlwaysOnTop(false);
 	  output.setVisible(true);	  
       //for(Frame f : Frame.getFrames()) System.out.println("#"+f.toString());
    }
@@ -414,10 +505,12 @@ public class AvatarResults {
 		String errorFull = errorMessage+"\nException:\n"+e.getMessage()+"\n\n";
 		for(StackTraceElement el : e.getStackTrace()) errorFull += el.toString()+"\n";
 		output.setText("<html>"+errorMessage+"</html>");//"<html>"+text+"</html>");
-		LogManager.debug(errorFull);
-		LogManager.error(errorFull);
-		LogManager.info(errorFull);
-		LogManager.trace(errorFull);
+		if(!errorMessage.startsWith("FireFront")){
+			LogManager.debug(errorFull);
+			LogManager.error(errorFull);
+			LogManager.info(errorFull);
+			LogManager.trace(errorFull);
+		}
 		output.setEditable(false);
 		output.setCaretPosition(0);
 		JScrollPane scrollPaneoutput = new JScrollPane(output);

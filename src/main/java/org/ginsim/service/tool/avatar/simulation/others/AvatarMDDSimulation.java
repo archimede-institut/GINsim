@@ -1,4 +1,4 @@
-package org.ginsim.service.tool.avatar.simulation;
+package org.ginsim.service.tool.avatar.simulation.others;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -26,6 +26,10 @@ import org.ginsim.service.tool.avatar.domain.Result;
 import org.ginsim.service.tool.avatar.domain.State;
 import org.ginsim.service.tool.avatar.domain.MDDStateSet;
 import org.ginsim.service.tool.avatar.domain.StateSet;
+import org.ginsim.service.tool.avatar.simulation.AvatarSimulation;
+import org.ginsim.service.tool.avatar.simulation.MDDUtils;
+import org.ginsim.service.tool.avatar.simulation.SimulationUtils;
+import org.ginsim.service.tool.avatar.simulation.AvatarSimulation.AvatarStrategy;
 import org.ginsim.service.tool.avatar.utils.AvaException;
 import org.ginsim.service.tool.avatar.utils.AvaMath;
 import org.ginsim.service.tool.avatar.utils.ChartGNUPlot;
@@ -46,9 +50,7 @@ public class AvatarMDDSimulation extends AvatarSimulation {
 	 * Instantiates an Avatar simulation based on a logical model
 	 * @param _model a stateful logical model possibly defining a set of initial states and oracles
 	 */
-	public AvatarMDDSimulation(StatefulLogicalModel _model) {
-		super(_model);
-	}
+	public AvatarMDDSimulation(){}
 
 	/***************/
 	/** MAIN CODE **/
@@ -271,7 +273,7 @@ public class AvatarMDDSimulation extends AvatarSimulation {
 		    	i++;
 		    }
 		    String title = "Convergence of probability estimates";
-	    	JavaPlot chart = ChartGNUPlot.getConvergence(AvaMath.normalizeColumns(dataset), space, title, "#Iterations", "Attractors");
+	    	JavaPlot chart = ChartGNUPlot.getConvergence(AvaMath.normalizeColumns(dataset), null, space, title, "#Iterations", "Attractors");
 	    	BufferedImage img = ChartGNUPlot.getImage(chart);
 	    	result.addPlot(title,img);
 	    	if(!isGUI){
@@ -284,7 +286,7 @@ public class AvatarMDDSimulation extends AvatarSimulation {
 	    		if(result.attractorsDepths.get(key).size()==0) depthRemovals.add(key);
 	    	for(String key : depthRemovals) result.attractorsDepths.remove(key);
 	    	
-	    	if(result.attractorsDepths.size()>0){
+	    	/*if(result.attractorsDepths.size()>0){
 		    	//System.out.println("::"+result.attractorsDepths);
 		    	title = "Depth of attractors";
 		    	System.out.println(result.attractorsDepths);
@@ -295,7 +297,7 @@ public class AvatarMDDSimulation extends AvatarSimulation {
 			    	String filename = outputDir+"0"+model.getName()+"_depths.png";
 		    		ChartGNUPlot.writePNGFile(img2, new File(filename));
 		    	}
-	    	}
+	    	}*/
 	    }
 	    	    
 	    /** I: update results **/
@@ -303,12 +305,12 @@ public class AvatarMDDSimulation extends AvatarSimulation {
 	    if(isGUI) publish("Creating compact patterns of the found attractors");
 		for(String key : result.complexAttractors.keySet()){
 			if(result.complexAttractors.get(key) instanceof MDDStateSet)
-				result.complexAttractorPatterns.put(key,SimulationUtils.getStatePatterns(model.getNodeOrder(),(MDDStateSet)result.complexAttractors.get(key)));
+				result.complexAttractorPatterns.put(key,MDDUtils.getStatePatterns(model.getNodeOrder(),(MDDStateSet)result.complexAttractors.get(key)));
 				//result.complexAttractorPatterns.put(key,((MDDStateSet)result.complexAttractors.get(key)).getCompactStates());
 		}
 	    result.strategy = "Avatar";
 	    result.transientMinSize = minTransientSize; 
-	    result.transients = savedTransients;
+	    //result.transients = savedTransients;
 	    if(!quiet) output("Simulations asked: "+runs+", performed: "+performed+", truncated: "+truncated);
 	    result.log = "AVATAR\nModel: "+model.getName()+"\n"+saveOutput();
 		return result;

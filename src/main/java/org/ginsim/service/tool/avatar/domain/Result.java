@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
 import org.ginsim.service.tool.avatar.utils.AvaMath;
 
@@ -24,8 +25,9 @@ public class Result {
 	public Map<String,Double> attractorsLowerBound;
 	/** Upper probability bound of attractors **/
 	public Map<String,Double> attractorsUpperBound;
-	/** Transient cycles **/
-	public List<AbstractStateSet> transients; 
+	/** Transient cycles *
+	public List<AbstractStateSet> transients;*/
+	public int maxTransientSize = -1;
 	/** Depth of attractors (from a well-defined portion of the state space) **/
 	public Map<String,List<Integer>> attractorsDepths; 
 	/** Charts to be plotted **/
@@ -42,6 +44,22 @@ public class Result {
 	public int performed=-1;
 	/** Simulation time (miliseconds) **/
 	public long time;
+	/** Simulation memory (Mbytes) **/
+	public int memory;
+	/** FireFront residual probability **/
+	public double residual;
+	/** Simulation name **/
+	public String name;
+	/** Parameters description **/
+	public String parameters;
+	/** Names of components **/
+	public String nodes;
+	/** Initial states associated with these results **/
+	public List<byte[]> iconditions;
+	/** Applied perturbations **/
+	public String perturbation = null;
+	/** Applied reductions **/
+	public String reduction = null;
 	
 	private int complexAttID = 0;
 
@@ -71,11 +89,11 @@ public class Result {
 	 * @param s complex attractor to be added
 	 */
 	public void add(AbstractStateSet s) {
-		s.setKey("Att_"+(complexAttID++));
+		s.setKey("C.Att."+(complexAttID++));
 		complexAttractors.put(s.getKey(),s);
 		attractorsCount.put(s.getKey(),1);
 		attractorsDepths.put(s.getKey(), new ArrayList<Integer>());
-		System.out.println("ADDED to:"+complexAttractors.keySet());
+		//System.out.println("ADDED to:"+complexAttractors.keySet());
 	}
 	
 	/**
@@ -122,10 +140,10 @@ public class Result {
 	 * Checks whether a complex attractor is stored
 	 * @param s complex attractor to be checked
 	 * @return true if the attractor is stored
-	 */
 	public boolean contains(AbstractStateSet s) {
 		return complexAttractors.containsKey(s.getKey());
 	}
+	 */
 	
 	/**
 	 * Increments the number of occurrences for a point attractor (assumes the results contain the attractor)
@@ -167,15 +185,7 @@ public class Result {
 	 * @see java.lang.Object#toString()
 	 */
 	public String toString(){
-		String result = 
-				"\nPoint attractors:\n\t"+pointAttractors+
-				//"\nComplex attractors:\n\t"+complexAttractors+
-				"\nAttractors numerosity:\n\t"+attractorsCount+ 
-				"\nProbs and depths per attractor::\n";
-		int sum=AvaMath.sumCollection(attractorsCount.values());
-		for(String key : attractorsDepths.keySet()) 
-			result += key+"\t"+String.format("%.5f",((double)attractorsCount.get(key))/(double)sum)+"\t"+String.format("%.2f",AvaMath.mean(attractorsDepths.get(key)))+"\t"+String.format("%.2f",AvaMath.std(attractorsDepths.get(key)))+"\n";
-		return result;
+		return "\n"+toHTMLString().replace("<br>","\n").replace("<b>","").replace("</b>","").replace("&nbsp;","  ").replace("&plusmn;","+/-"); 
 	}
 	
 	/**
@@ -184,66 +194,77 @@ public class Result {
 	 */
 	public String toHTMLString(){
 		
-		String result = "<b>Time</b>="+(((double)time)/1000.0)+"s<br>";
+		String result = "<b>"+name+"</b><br><br><b>Parameters</b><br>"+parameters.replace("\n","<br>").replace("\t","&nbsp;&nbsp;")+"<br>";
+		if(perturbation==null) result += "<br>No perturbations applied<br>";
+		else result += "<br>Applied perturbation: "+perturbation+"<br>";
+		if(perturbation==null) result += "No reductions applied<br>";
+		else result += "Name of the selected reduction: "+reduction+"<br>";
 		
+		result += "<br><b>Nodes</b>=["+nodes+"]<br>";
+		if(iconditions!=null){
+			result += "<br><b>Initial conditions</b><br>";
+			for(byte[] s : iconditions) result+="&nbsp;&nbsp;&nbsp;"+AvatarUtils.toString(s).replace("-1","*")+"<br>";
+		}
+
+		int sum=AvaMath.sumCollection(attractorsCount.values());
+		result += "<br><b>Time</b>="+(((double)time)/1000.0)+"s";
+		if(strategy.contains("vatar")) result+="<br><b>Successful runs</b>="+sum+"<br>";		
+		else {
+			if(strategy.contains("ront")){
+				if(performed==0) result+="<br><b>WARNING</b>: firefront could not converge before reaching the maximum specified depth. Please increase the maximum depth for a more precise analysis of point attractors.<br>";
+				else result+="<br>Success: the simulation converged before reaching the maximum depth.<br>";
+			} else result+="<br><b>Support</b>: "+performed+" successful runs (below max depth) out of "+runs+"</br>";
+		}
+
 		/** A: print the discovered attractors */
 		if(pointAttractors.size()>0){
 			result+="<br><b>Point attractors</b>:<br>";
 			for(String key : pointAttractors.keySet()){
-				String mstate = strategy.contains("ront") ? 
-						pointAttractors.get(key).toShortString() : 
-						AvatarUtils.toString(pointAttractors.get(key).state);
-				result+="&nbsp;&nbsp;&nbsp;"+key+"&nbsp;=>&nbsp;"+mstate;
+				result+="&nbsp;&nbsp;&nbsp;"+ AvatarUtils.toString(pointAttractors.get(key).state);
 				if(!strategy.contains("ront")){
-					int sum=AvaMath.sumCollection(attractorsCount.values());
-					result+="&nbsp;prob="+String.format("%.5f",((double)attractorsCount.get(key))/(double)sum);
-					result+="&nbsp;depth="+String.format("%.1f",AvaMath.mean(attractorsDepths.get(key)))+"&plusmn;"+String.format("%.1f",AvaMath.std(attractorsDepths.get(key)))+"<br>";
-				} 
-				else result+="&nbsp;depth="+((int)AvaMath.mean(attractorsDepths.get(key)))+"<br>";
+					result+="&nbsp;prob="+format("%.5f",((double)attractorsCount.get(key))/(double)sum);
+					//result+="&nbsp;counts="+attractorsCount.get(key);
+					if(!strategy.contains("vatar")) result+="&nbsp;depth="+format("%.1f",AvaMath.mean(attractorsDepths.get(key)))+"&plusmn;"+format("%.1f",AvaMath.std(attractorsDepths.get(key)))+"<br>";
+					else result+="<br>";
+				} else {
+					result += "&nbsp;&nbsp;prob=["+format("%.5f",attractorsLowerBound.get(key))+","+format("%.5f",attractorsUpperBound.get(key))+"]";
+					result+="&nbsp;depth="+((int)AvaMath.mean(attractorsDepths.get(key)))+"<br>";
+				}
 			}
 		}
 		if(complexAttractors.size()>0){
 			result+="<br><b>Complex attractors</b>:<br>";
-			int i=0;
+			//int i=0;
 			for(String key : complexAttractors.keySet()){
 				if(complexAttractorPatterns.size()==0) result+="&nbsp;&nbsp;&nbsp;"+key+"&nbsp;=>&nbsp;"+complexAttractors.get(key).toString();
-				else result+="&nbsp;&nbsp;&nbsp;att_"+(i++)+"&nbsp;=>&nbsp;"+AvatarUtils.toString(complexAttractorPatterns.get(key)).replace("-1","*");
-				int sum=AvaMath.sumCollection(attractorsCount.values());
+				else result+="&nbsp;&nbsp;&nbsp;"+key+"&nbsp;=>&nbsp;"+AvatarUtils.toString(complexAttractorPatterns.get(key)).replace("-1","*");
 				if(strategy.contains("ront")){
+					result += "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prob=["+format("%.5f",attractorsLowerBound.get(key))+","+format("%.5f",attractorsUpperBound.get(key))+"]";
 					result+="&nbsp;depth="+(int)AvaMath.mean(attractorsDepths.get(key))+"<br>";
 				} else {
-					result+="<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prob="+String.format("%.5f",((double)attractorsCount.get(key))/(double)sum);
-					if(attractorsDepths.containsKey(key))
-						result+="&nbsp;depth="+String.format("%.1f",AvaMath.mean(attractorsDepths.get(key)))+"&plusmn;"+String.format("%.1f",AvaMath.std(attractorsDepths.get(key)))+"<br>";
+					result+="<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prob="+format("%.5f",((double)attractorsCount.get(key))/(double)sum);
+					result+="&nbsp;size="+complexAttractors.get(key).size();
+					if(!strategy.contains("vatar")&&attractorsDepths.containsKey(key)) result+="&nbsp;depth="+format("%.1f",AvaMath.mean(attractorsDepths.get(key)))+"&plusmn;"+format("%.1f",AvaMath.std(attractorsDepths.get(key)))+"<br>";
+					else result+="<br>";
 				}
 			}
 		}
 		
 		/** B: prints statistics */
 		if(strategy.contains("vatar")){
-			result+="<br><b>Countings</b>:&nbsp;{";
+			/*result+="<br><b>Countings</b>:&nbsp;{";
 			for(String k : attractorsCount.keySet()) 
 				result+=k+"="+attractorsCount.get(k)+",";
-			if(attractorsCount.size()>0) result=result.substring(0,result.length()-1);
-			result+="}<br><b>Transients</b> (more than #"+transientMinSize+" states): #"+transients.size();
-			if(transients.size()>0){ 
+			if(attractorsCount.size()>0) result=result.substring(0,result.length()-1);*/
+			if(maxTransientSize>0) result+="<br>Largest SCC transient found: #"+maxTransientSize+" states";
+			/*if(transients.size()>0){ 
 				result+=" with sizes {";
 				for(AbstractStateSet s : transients) result+=s.size()+",";
 				result=result.substring(0,result.length()-1)+"}";
-			}
-			result+="<br>";
-		} else {
-			if(strategy.contains("ront")){
-				if(performed==0) result+="<br><b>WARNING</b>: firefront could not converge before reaching the maximum specified depth. Please increase the maximum depth for a more precise analysis of point attractors.<br>";
-				else result+="<br>Success: the simulation converged before reaching the inputted maximum depth.";
-			} else result+="<br><b>Support</b>: "+(performed-truncated)+" successful runs (below max depth) out of "+performed+" (max="+runs+")</br>";
-			//result+="<br>Runs:"+runs+" truncated:"+truncated+" performed:"+performed+"</br>";
-			result+="<br><b>Probability bounds</b> per attractor:<br>";
-			for(String key : pointAttractors.keySet()) 
-				result += "&nbsp;&nbsp;"+key+" => Prob=["+attractorsLowerBound.get(key)+","+attractorsUpperBound.get(key)+"]<br>";
-			for(String key : complexAttractors.keySet()) 
-				result += "&nbsp;&nbsp;"+key+" => Prob=["+attractorsLowerBound.get(key)+","+attractorsUpperBound.get(key)+"]<br>";
+			}*/
 		}
+		//result+="<br>Runs:"+runs+" truncated:"+truncated+" performed:"+performed+"</br>";
+		//result+="<br><b>Probability bounds</b> per attractor:<br>";
 		return result;
 	}
 		
@@ -253,5 +274,84 @@ public class Result {
 	 */
 	public String logToHTMLString() {
 		return log.replace("\n","<br>").replace("\t","&nbsp;&nbsp;&nbsp;&nbsp;");
+	}
+
+	public String toCSVString() {
+		String result = name+"\n\n,Parameters\n"+parameters.replace("\t",",,").replace("=","=,")+"\n\n";
+		if(perturbation==null) result += ",No perturbations applied\n";
+		else result += ",Applied perturbation: "+perturbation+"\n";
+		if(perturbation==null) result += ",No reductions applied\n";
+		else result += ",Name of the selected reduction: "+reduction+"\n";
+
+		result += "\n,Time,"+(((double)time)/1000.0)+",secs\n\n";
+		
+		/** A: print the discovered attractors */
+		
+		int sum=AvaMath.sumCollection(attractorsCount.values());
+		if(pointAttractors.size()>0){
+			result+=",Point attractors\n,,"+nodes;
+			if(strategy.contains("vatar")) result+=",prob\n";
+			else if(strategy.contains("ront")) result+= ",lowerbound,upperbound,depth\n";
+			else result+=",prob,depth\n";
+			for(String key : pointAttractors.keySet()){
+				result+=",,"+ AvatarUtils.toOpenString(pointAttractors.get(key).state);
+				if(!strategy.contains("ront")){
+					result+=","+format("%.5f",((double)attractorsCount.get(key))/(double)sum);
+					//result+=","+attractorsCount.get(key);
+					if(!strategy.contains("vatar")) result+=","+format("%.1f",AvaMath.mean(attractorsDepths.get(key)))+"+-"+format("%.1f",AvaMath.std(attractorsDepths.get(key)))+"\n";
+					else result+="\n";
+				} else {
+					result+=","+format("%.5f",attractorsLowerBound.get(key))+","+format("%.5f",attractorsUpperBound.get(key));
+					result+=","+((int)AvaMath.mean(attractorsDepths.get(key)))+"\n";
+				}
+			}
+		}
+		if(complexAttractors.size()>0){
+			result+="\n,Complex attractors\n,,"+nodes+"\n";
+			if(strategy.contains("vatar")) result+=",prob,size\n";
+			else if(strategy.contains("ront")) result+= ",lowerbound,upperbound,depth\n";
+			else result+=",prob,depth\n";
+			int i=0;
+			for(String key : complexAttractors.keySet()){
+				if(complexAttractorPatterns.size()==0) result+=","+key+","+complexAttractors.get(key).toString();
+				else result+=",Att_"+(i++)+",";
+				boolean first=true;
+				for(byte[] s : complexAttractorPatterns.get(key)){
+					result+=AvatarUtils.toOpenString(s).replace("-1","*");
+					if(first){
+						first = false;
+						if(strategy.contains("ront")){
+							result+=","+format("%.5f",attractorsLowerBound.get(key))+","+format("%.5f",attractorsUpperBound.get(key))+","+(int)AvaMath.mean(attractorsDepths.get(key));
+						} else {
+							result+=","+format("%.5f",((double)attractorsCount.get(key))/(double)sum);//+","+attractorsCount.get(key);
+							if(!strategy.contains("vatar") && attractorsDepths.containsKey(key)) 
+								result+=","+format("%.1f",AvaMath.mean(attractorsDepths.get(key)))+"+-"+format("%.1f",AvaMath.std(attractorsDepths.get(key)))+"\n";
+							else result+="\n";
+						}
+					} 
+					result+="\n,,,";
+				}
+			}
+		}
+		
+		/** B: prints statistics */
+		if(strategy.contains("vatar")){
+			if(maxTransientSize>0) result+="\n,Largest SCC transient found=,"+maxTransientSize;
+			/*if(transients.size()>0){ 
+				for(AbstractStateSet s : transients) result+=s.size()+";";
+				result=result.substring(0,result.length()-1)+";";
+			}*/
+			result+="\n,Successful runs=,"+sum+"\n";
+		} else {
+			if(strategy.contains("ront")){
+				if(performed==0) result+="\n,WARNING:;firefront could not converge before reaching the maximum specified depth. Please increase the maximum depth for a more precise analysis of point attractors.\n";
+				//else result+="\n;Success:;the simulation converged before reaching the inputted maximum depth.\n";
+			} else result+="\n,Support:,successful runs=,"+performed+",total runs=,"+runs+"\n";
+		}
+		return result;
+	}
+	
+	private String format(String pattern, double value){
+		return String.format(pattern,value).replace(",",".");
 	}
 }

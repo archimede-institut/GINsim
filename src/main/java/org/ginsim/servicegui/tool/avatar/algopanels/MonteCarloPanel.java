@@ -24,8 +24,8 @@ public class MonteCarloPanel extends SimulationPanel {
 	private JTextField runs = new JTextField(), depth = new JTextField();
 
 	private String open = "<html><div style=\"width:265px;\">", end = "</div></html>";
-	private String runsVar =open+"Specifies the maximum number of iterations performed by the program (should be less than the square size of the state space) [default: 1000]"+end;
-	private String depthVar =open+"Specifies the limit depth (number of visited states) within each simulation [default: 1000]"+end;
+	private String runsVar =open+"Maximum number of iterations [default: 1000]"+end;
+	private String depthVar =open+"Maximum depth for each simulation [default: 1000]"+end;
 
 	/**
 	 * Instantiates the context of a simulation panel
@@ -35,9 +35,9 @@ public class MonteCarloPanel extends SimulationPanel {
 	public MonteCarloPanel(Icon helpImg, boolean flex){
 		super(helpImg,flex);
 		flexible = flex;
-		JLabel runsL = new JLabel("#Runs"), depthL = new JLabel("Max.Depth     ");
-		runs.setText("1000");
-		depth.setText("1000");
+		JLabel runsL = new JLabel("#Runs"), depthL = new JLabel("Max depth    ");
+		runs.setText("1E3");
+		depth.setText("1E3");
 
 		if(flexible){
 			setLayout(new GridLayout(2,2));
@@ -70,10 +70,11 @@ public class MonteCarloPanel extends SimulationPanel {
 
 	@Override
 	public Simulation getSimulation(StatefulLogicalModel model, boolean plots, boolean quiet) throws Exception{
-		MonteCarloSimulation sim = new MonteCarloSimulation(model);
+		MonteCarloSimulation sim = new MonteCarloSimulation();
+		sim.addModel(model);
 		sim.isGUI = true;
-		sim.runs = Integer.valueOf(runs.getText());
-		sim.maxSteps=Integer.valueOf(depth.getText()); //optional
+		sim.runs = (int)Double.parseDouble(runs.getText());
+		sim.maxSteps=(int)Double.parseDouble(depth.getText()); //optional
 		sim.quiet = quiet;
 			
 		System.out.println("MonteCarlo\n"+"Model: "+model.getName());

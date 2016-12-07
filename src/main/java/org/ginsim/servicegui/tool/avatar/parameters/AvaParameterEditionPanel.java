@@ -26,7 +26,7 @@ public class AvaParameterEditionPanel extends JPanel implements ListPanelCompani
     
     private ListEditionPanel<AvatarParameters, AvatarParameterList> paramPanel;
     private RegulatoryGraph graph;
-    private int[] currentParam = new int[0];
+    private int[] currentParam = new int[]{0};
     
     /**
      * Creates the left panel to manage parameterizations
@@ -82,9 +82,8 @@ public class AvaParameterEditionPanel extends JPanel implements ListPanelCompani
 		if(currentParam.length==0) paramList.set(0,p);
 		else paramList.set(currentParam[0], p); 
 		update();
-		System.out.println("HERE1");
-		for(AvatarParameters pi : paramList)
-			System.out.println("LONG\n"+pi.toFullString());
+		//for(AvatarParameters pi : paramList)
+			//System.out.println("LONG\n"+pi.toFullString());
 	}
 
 	@Override
