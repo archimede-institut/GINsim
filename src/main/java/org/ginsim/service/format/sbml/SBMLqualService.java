@@ -26,7 +26,6 @@ import org.sbml.jsbml.ext.layout.BoundingBox;
 import org.sbml.jsbml.ext.layout.Dimensions;
 import org.sbml.jsbml.ext.layout.Layout;
 import org.sbml.jsbml.ext.layout.Point;
-import org.sbml.jsbml.ext.layout.Position;
 import org.sbml.jsbml.ext.layout.SpeciesGlyph;
 
 @ProviderFor( Service.class)
@@ -146,7 +145,7 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 					SpeciesGlyph glyph = new SpeciesGlyph();
 					glyph.setSpecies(sExport.getSpecies(node.getNodeInfo()).getId());
 					BoundingBox bb = new BoundingBox();
-					Position pos = bb.createPosition();
+					Point pos = bb.createPosition();
 					pos.setX(nreader.getX());
 					pos.setY(nreader.getY());
 					Dimensions dim = bb.createDimensions();

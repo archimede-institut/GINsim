@@ -27,12 +27,6 @@
        <name>GINsim snapshot repository</name>
        <url>http://ginsim.org/maven/snapshot</url>
     </repository>
-	<repository>
-		<id>project_lib</id>
-		<name>Repository in project's lib dir</name>
-		<layout>default</layout>
-		<url>file:///${project.basedir}/lib</url>
-	</repository>
     <repository>
        <id>ginsim_stable</id>
        <snapshots><enabled>false</enabled></snapshots>
@@ -91,6 +85,7 @@
     <dependency>
       <groupId>org.colomoto</groupId>
       <artifactId>LogicalModel</artifactId>
+      <version>0.3-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -99,43 +94,35 @@
       <version>2.0.26</version>
     </dependency>
 
-	<dependency>
-    <groupId>org.apache.commons</groupId>
-    <artifactId>commons-math3</artifactId>
-    <version>3.6.1</version>
-    <!--<systemPath>${project.basedir}/lib/commons-math3-3.6.1.jar</systemPath>
-    <scope>compile</scope>-->
-	</dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-math3</artifactId>
+      <version>3.6.1</version>
+    </dependency>
 
-	<dependency>
-    <groupId>com.panayotis.gnuplot</groupId>
-    <artifactId>JavaPlot</artifactId>
-    <version>1.0</version>
-	</dependency>
+		<dependency>
+			<groupId>com.panayotis.gnuplot</groupId>
+			<artifactId>JavaPlot</artifactId>
+			<version>1.0</version>
+		</dependency>
 
-	<dependency>
-    <groupId>org.ejml</groupId>
-    <artifactId>simple</artifactId>
-    <version>0.29</version>
-    <!--<systemPath>${project.basedir}/lib/EJML-simple-0.29.jar</systemPath>
-    <scope>compile</scope>-->
-	</dependency>
+    <dependency>
+      <groupId>org.ejml</groupId>
+      <artifactId>simple</artifactId>
+      <version>0.29</version>
+    </dependency>
 
-	<dependency>
-    <groupId>org.ejml</groupId>
-    <artifactId>dense64</artifactId>
-    <version>0.29</version>
-    <!--<systemPath>${project.basedir}/lib/EJML-dense64-0.29.jar</systemPath>
-    <scope>compile</scope>-->
-	</dependency>
+    <dependency>
+      <groupId>org.ejml</groupId>
+      <artifactId>dense64</artifactId>
+      <version>0.29</version>
+    </dependency>
 
-	<dependency>
-    <groupId>org.ejml</groupId>
-    <artifactId>core</artifactId>
-    <version>0.29</version>
-    <!--<systemPath>${project.basedir}/lib/EJML-core-0.29.jar</systemPath>
-    <scope>compile</scope>-->
-	</dependency>
+    <dependency>
+      <groupId>org.ejml</groupId>
+      <artifactId>core</artifactId>
+      <version>0.29</version>
+    </dependency>
 	
   </dependencies>
 
@@ -167,21 +154,18 @@
       </plugin>
 
       <plugin>
-	  <groupId>org.apache.maven.plugins</groupId>
+        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
         <executions>
           <execution>
-			<phase>package</phase>
+            <phase>package</phase>
             <goals>
               <goal>copy-dependencies</goal>
             </goals>
             <configuration>
               <includeScope>runtime</includeScope>
-              <!-- includeScope>system</includeScope -->
               <excludeScope>provided</excludeScope>
-               <!-- overWriteIfNewer>true</overWriteIfNewer>
-			   <outputDirectory>${project.build.directory}/classes/lib/</outputDirectory-->
-			   <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
             </configuration>
           </execution>
         </executions>
@@ -195,12 +179,11 @@
           <archive>
             <manifest>
               <addClasspath>true</addClasspath>
-			  <classpathPrefix>lib/</classpathPrefix>
-              <!-- classpathPrefix>lib/</classpathPrefix -->
+              <classpathPrefix>lib/</classpathPrefix>
               <useUniqueVersions>false</useUniqueVersions>
               <mainClass>org.ginsim.Launcher</mainClass>
             </manifest>
-		</archive>
+          </archive>
         </configuration>
        </plugin>
 
@@ -221,10 +204,8 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <version>2.12</version>
         <configuration>
-        <!-- argLine>-Xmx4096M</argLine -->
-		<includes>
+          <includes>
              <include>org/ginsim/AllTests.java</include>
-             <!-- include>org/ginsim/service/tool/avatar/AllTests.java</include -->
          </includes>
         </configuration>
       </plugin>
