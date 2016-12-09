@@ -15,6 +15,7 @@ import javax.swing.JPanel;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.io.OutputStreamProvider;
 import org.colomoto.logicalmodel.io.petrinet.PNConfig;
 import org.colomoto.logicalmodel.io.petrinet.PetriNetSubformats;
 import org.colomoto.logicalmodel.io.OutputStreamProvider;

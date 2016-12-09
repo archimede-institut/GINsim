@@ -22,8 +22,8 @@ public class NamedStatesHandler implements GraphListener<RegulatoryGraph> {
     List inputNodes = new ArrayList();
     List normalNodes = new ArrayList();
 
-    final NamedStateList initialStates;
-    final NamedStateList inputConfigs;
+    NamedStateList initialStates;
+    NamedStateList inputConfigs;
     
     public NamedStatesHandler(Graph<?, ?> graph) {
     	
@@ -34,6 +34,9 @@ public class NamedStatesHandler implements GraphListener<RegulatoryGraph> {
         initialStates = new NamedStateList(normalNodes, false);
         inputConfigs = new NamedStateList(inputNodes, true);
     }
+    
+    public void setNormalStates(NamedStateList nstates){initialStates=nstates;}
+    public void setInputStates(NamedStateList instates){inputConfigs=instates;}
 
 	private void updateLists() {
 	    inputNodes.clear();

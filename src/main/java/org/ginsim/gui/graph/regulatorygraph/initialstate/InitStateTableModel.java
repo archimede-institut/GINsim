@@ -1,13 +1,20 @@
 package org.ginsim.gui.graph.regulatorygraph.initialstate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
+import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;
@@ -24,13 +31,14 @@ public class InitStateTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = -1553864043658960569L;
 	private List<RegulatoryNode> nodeOrder;
     private Map m_initState = null;
+    private Set<NamedState> m_selection = null;
     private NamedStateList imanager;
-	private int nbCol;
     private InitialStatePanel panel;
     private boolean several;
     private int columnShift = 1;
     private JTable theTable;
-	
+    //private List<Boolean> enabledEdition;
+
 	/**
 	 * simple constructor
 	 * 
@@ -43,28 +51,61 @@ public class InitStateTableModel extends AbstractTableModel {
         this.panel = panel;
         this.imanager = imanager;
         this.several = several;
+        //if(oracle) this.m_oracle = new HashSet<NamedState>();
+        this.m_selection = new HashSet<NamedState>();
         nodeOrder = imanager.getNodeOrder();
-		nbCol = nodeOrder.size();
+        //enabledEdition = new ArrayList<Boolean>();
+        //for(int i=0,l=getRowCount(); i<l; i++) enabledEdition.add(true);
 	}
 
 	public int getRowCount() {
-        if (imanager == null ) {
-            return 0;
-        }
+        if (imanager == null ) return 0;
 		return imanager.size()+1;
 	}
-
+	
+	boolean disabled = false;
+	
+	public void setDisabling(boolean disabling) {
+		disabled = disabling;
+	}
+	
+	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		if (columnIndex < columnShift && rowIndex >= imanager.size()) {
+		//System.out.println("selection["+rowIndex+","+columnIndex+"]");
+		/*if(columnShift==3 && columnIndex==2){
+			if(rowIndex<imanager.size()){
+				System.out.println(imanager.get(rowIndex));
+				System.out.println(m_selection);
+				if(m_selection.contains(imanager.get(rowIndex))) return true;
+			}
 			return false;
 		}
+		if(columnShift==3 && columnIndex>=3){
+			if(rowIndex<imanager.size()){
+				//System.out.println("OK!");
+				System.out.println(imanager.get(rowIndex));
+				System.out.println(m_selection);
+				if(m_selection.contains(imanager.get(rowIndex))){
+					//System.out.println("YYYEEEESSS!");
+					return false;
+				}
+			}
+			return true;
+		}*/
+			/*if(rowIndex<enabledEdition.size()) return enabledEdition.get(rowIndex);
+			else return true;*/
+		if(columnIndex<columnShift && rowIndex>=imanager.size()) return false;
+		if(disabled && columnIndex>=2) return false;
 		return true;
 	}
-
+	
 	public Class getColumnClass(int columnIndex) {
 		if (columnIndex == 1 && m_initState != null) {
 			return Boolean.class;
 		}
+		/*if (columnIndex == 2 && m_oracle != null) {
+			return Boolean.class;
+		}*/
 		return String.class;
 	}
 	
@@ -93,6 +134,15 @@ public class InitStateTableModel extends AbstractTableModel {
 			}
 			return Boolean.FALSE;
 		}
+		/*if (m_oracle != null && columnIndex == 2) {
+			if ( rowIndex >= imanager.size()) {
+				return Boolean.FALSE;
+			}
+			if (m_oracle.contains(imanager.get(rowIndex))) {
+				return Boolean.TRUE;
+			}
+			return Boolean.FALSE;
+		}*/
 		
 		int ci = columnIndex - columnShift;
 		if (imanager == null || rowIndex >= imanager.size()) {
@@ -193,7 +243,7 @@ public class InitStateTableModel extends AbstractTableModel {
 	 */
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
 		panel.setMessage("");
-		if (rowIndex > getRowCount() || columnIndex > nbCol+1) {
+		if (rowIndex > getRowCount() || (columnIndex-columnShift)>=nodeOrder.size()) {
 			return;
 		}
 		
@@ -222,6 +272,16 @@ public class InitStateTableModel extends AbstractTableModel {
 			}
 			return;
 		}
+		/*if (columnIndex == 2 && m_oracle != null) {
+			if (rowIndex >= imanager.size()) return;
+			if (aValue == Boolean.TRUE) {
+				if (!several) m_oracle.clear();
+				m_oracle.add(imanager.get(rowIndex));
+			} else {
+				m_oracle.remove(imanager.get(rowIndex)); //set it to null if empty ? probably _not_ a good idea
+			}
+			return;
+		}*/
 		
 		int[] r_sel = theTable.getSelectedRows();
 		int[] c_sel = theTable.getSelectedColumns();
@@ -300,6 +360,9 @@ public class InitStateTableModel extends AbstractTableModel {
             	if (m_initState != null) {
             		setValueAt(Boolean.TRUE, rowIndex, 1);
             	}
+            	/*if (m_oracle != null) {
+            		setValueAt(Boolean.FALSE, rowIndex, 2);
+            	}*/
             }
             Map m_line = imanager.get(rowIndex).getMaxValueTable();
             m_line.put(nodeOrder.get(ci).getNodeInfo(),newcell);
@@ -326,7 +389,7 @@ public class InitStateTableModel extends AbstractTableModel {
 	}
 	
 	public String getColumnName(int columnIndex) {
-		if (columnIndex > nodeOrder.size()+1) {
+		if ((columnIndex-columnShift)>=nodeOrder.size()) {
 			return null;
 		}
 		if (columnIndex == 0) {
@@ -335,6 +398,9 @@ public class InitStateTableModel extends AbstractTableModel {
 		if (columnIndex == 1 && m_initState != null) {
 			return "use";
 		}
+		/*if (columnIndex == 2 && m_oracle != null) {
+			return "oracle";
+		}*/
 		RegulatoryNode node = nodeOrder.get(columnIndex-columnShift);
 		if (node.isOutput()) {
 			return "[O] "+node.toString();
@@ -351,11 +417,9 @@ public class InitStateTableModel extends AbstractTableModel {
 	 *
 	 */
 	public void reset() {
-        if (m_initState == null) {
-            return;
-        }
-        m_initState.clear();
-	    fireTableStructureChanged();
+        if(m_initState != null) m_initState.clear();
+        //if(m_oracle != null) m_oracle.clear();
+	    //if(m_initState != null || m_oracle != null) fireTableStructureChanged();
 	}
 	
 	/**
@@ -376,13 +440,29 @@ public class InitStateTableModel extends AbstractTableModel {
      */
     public void setParam(Map param) {
         this.m_initState = param;
-        if (param == null) {
-        	columnShift = 1;
-        } else {
-        	columnShift = 2;
-        }
+        if (param == null)  columnShift = 1;
+        //else if(m_oracle!=null) columnShift = 3;
+        else columnShift = 2;
         fireTableStructureChanged();
     }
+    
+	public void disabledEdition(List<NamedState> states) {
+		for(NamedState s : states) m_selection.add(s);
+	}
+	
+	public void setEdition(boolean[] s) {
+		//System.out.println("#"+AvatarUtils.toString(s));
+		if(imanager==null || imanager.size()==0) return;
+		for(int i=0, l=s.length; i<l; i++) 
+			if(s[i]) m_selection.add(imanager.get(i));
+		//System.out.println(m_selection);
+	}
+	public boolean[] getEdition() {
+		//System.out.println("Call:"+imanager.size());
+		boolean[] selection = new boolean[imanager.size()];
+		for(NamedState s : m_selection) selection[imanager.indexOf(s)]=true;
+		return selection;
+	}
 
 	public void setTable(EnhancedJTable tableInitStates) {
 		theTable = tableInitStates;
@@ -403,4 +483,6 @@ public class InitStateTableModel extends AbstractTableModel {
             fireTableDataChanged();
         }
     }
+
+
 }

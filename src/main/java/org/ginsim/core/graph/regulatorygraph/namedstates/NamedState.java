@@ -22,6 +22,10 @@ public class NamedState implements NamedObject {
 	String name;
 	Map<NodeInfo, List<Integer>> m = new HashMap<NodeInfo, List<Integer>>();
 	
+	public String toString(){
+		return name+m.toString();
+	}
+	
     public void setState(int[] state, List<RegulatoryNode> nodeOrder) {
         setState(state, nodeOrder, false);
     }
@@ -34,6 +38,14 @@ public class NamedState implements NamedObject {
             } else {
                 t_s[i] = "";
             }
+        }
+        setData(t_s, nodeOrder);
+    }
+    public void setStateAll(int[] state, List<RegulatoryNode> nodeOrder) {
+        String[] t_s = new String[state.length];
+        for (int i=0 ; i<t_s.length ; i++) {
+            RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(i);
+            t_s[i] = vertex + ";" + state[i];
         }
         setData(t_s, nodeOrder);
     }
