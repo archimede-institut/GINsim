@@ -144,6 +144,10 @@ class MultipleSelectionPanel extends JPanel {
 	
 	public MultipleSelectionPanel(PerturbationPanelCompanion companion) {
 		this.companion = companion;
+
+        PerturbationPanelHeader header = new PerturbationPanelHeader(companion);
+        add(header);
+
         JScrollPane sp = new JScrollPane();
         sp.setViewportView(label);
 		add(sp);

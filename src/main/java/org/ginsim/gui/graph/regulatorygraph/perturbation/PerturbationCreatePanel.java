@@ -5,9 +5,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -15,7 +13,6 @@ import javax.swing.event.ChangeListener;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -28,7 +25,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 	private final PerturbationPanelCompanion helper;
 	private PerturbationType type = null;
 	
-	private static final boolean SHOWTYPECOMBO = PerturbationType.values().length > 1 ? true : false;
+	private static final boolean SHOWTYPECOMBO = PerturbationType.values().length > 1;
 	
 	private final JComboBox selectNode;
     private final RegulatorModel regulatorModel;
@@ -62,7 +59,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 			cst.gridy = 1;
 			cst.weightx = 1;
 			cst.fill = GridBagConstraints.HORIZONTAL;
-			selectType = new JComboBox(PerturbationType.values());
+			selectType = new JComboBox<PerturbationType>(PerturbationType.values());
 			selectType.addActionListener(this);
 			add(selectType, cst);
 
@@ -80,7 +77,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		cst.gridx = 1;
 		cst.weightx = 1;
 		cst.fill = GridBagConstraints.HORIZONTAL;
-		selectNode = new JComboBox(perturbations.getNodes());
+		selectNode = new JComboBox<NodeInfo>(perturbations.getNodes());
 		selectNode.addActionListener(this);
 		add(selectNode, cst);
 
@@ -340,6 +337,21 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 	}
 
 }
+
+
+/**
+ * Fix header holding buttons to add new perturbations
+ */
+class PerturbationPanelHeader extends JPanel {
+
+	private final PerturbationPanelCompanion companion;
+
+	public PerturbationPanelHeader(PerturbationPanelCompanion companion) {
+		this.companion = companion;
+		add(new JLabel("TODO: always show add buttons"));
+	}
+}
+
 
 class CreateAction extends AbstractAction {
 	private final PerturbationCreatePanel panel;
