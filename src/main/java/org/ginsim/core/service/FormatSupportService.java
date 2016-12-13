@@ -10,7 +10,7 @@ import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.io.LogicalModelFormat;
 import org.colomoto.logicalmodel.io.OutputStreamProvider;
 import org.colomoto.logicalmodel.services.ServiceManager;
-import org.colomoto.logicalmodel.tool.booleanize.Booleanizer;
+import org.colomoto.logicalmodel.modifier.booleanize.Booleanizer;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 

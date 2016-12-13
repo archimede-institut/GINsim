@@ -1,7 +1,7 @@
 package org.ginsim.service.tool.modelreversion;
 
 import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.tool.reverse.ModelReverser;
+import org.colomoto.logicalmodel.modifier.reverse.ModelReverser;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
@@ -19,11 +19,8 @@ import org.mangosdk.spi.ProviderFor;
 @ServiceStatus(EStatus.DEVELOPMENT)
 public class ModelReversionService implements Service {
 
-	public ModelReverser getModelReverser(RegulatoryGraph graph) {
-		return getModelReverser(graph.getModel());
+	public ModelReverser getModelReverser() {
+		return new ModelReverser();
 	}
 
-	public ModelReverser getModelReverser(LogicalModel model) {
-		return new ModelReverser(model);
-	}
 }
