@@ -106,7 +106,7 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
         }
 
 		LogicalModelFormat.MultivaluedSupport mvs = format.getMultivaluedSupport();
-        if (mvs != LogicalModelFormat.MultivaluedSupport.BOOLEAN_STRICT) {
+        if (mvs == LogicalModelFormat.MultivaluedSupport.BOOLEAN_STRICT) {
             // check that the model is Boolean
             for (NodeInfo ni: graph.getNodeInfos()) {
                 if (ni.getMax() > 1) {

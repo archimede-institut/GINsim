@@ -7,7 +7,7 @@ import java.util.List;
 import javax.swing.Action;
 
 import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.modifier.reverse.ModelReverser;
+import org.colomoto.logicalmodel.LogicalModelModifier;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
@@ -70,7 +70,7 @@ class ReversionAction extends ToolAction {
 		LogicalModel origModel = this.graph.getModel();
 
 		// Model reverser
-		ModelReverser modelReverser = revService.getModelReverser();
+		LogicalModelModifier modelReverser = revService.getModelReverser();
 		RegulatoryGraph gReversed = LogicalModel2RegulatoryGraph
 				.importModel(modelReverser.apply(origModel));
 
