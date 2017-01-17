@@ -1,35 +1,21 @@
 package org.ginsim.service.tool.avatar.simulation;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.Set;
 
 import org.colomoto.logicalmodel.LogicalModel;
 import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
-import org.colomoto.logicalmodel.tool.simulation.avatar.AvatarUpdater;
-import org.colomoto.logicalmodel.tool.simulation.avatar.FirefrontUpdater;
-import org.colomoto.mddlib.MDDManager;
-import org.colomoto.mddlib.MDDManagerFactory;
-import org.colomoto.mddlib.MDDVariable;
-import org.colomoto.mddlib.MDDVariableFactory;
-import org.colomoto.mddlib.PathSearcher;
-import org.colomoto.mddlib.internal.MDDStore;
-import org.colomoto.mddlib.operators.MDDBaseOperators;
+import org.colomoto.logicalmodel.tool.simulation.updater.AsynchronousUpdater;
+import org.colomoto.logicalmodel.tool.simulation.updater.SequentialUpdater;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
-import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
-import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
 import org.ginsim.service.tool.avatar.domain.AbstractStateSet;
 import org.ginsim.service.tool.avatar.domain.CompactStateSet;
-import org.ginsim.service.tool.avatar.domain.Dictionary;
 import org.ginsim.service.tool.avatar.domain.MDDStateSet;
 import org.ginsim.service.tool.avatar.domain.State;
 import org.ginsim.service.tool.avatar.domain.StateSet;
@@ -53,7 +39,7 @@ public final class SimulationUtils {
 	 * @return
 	 */
 	public static State getRandomState(LogicalModel model, List<byte[]> states, boolean hasSuccessors) {
-		AvatarUpdater updater = new AvatarUpdater(model);
+		SequentialUpdater updater = new SequentialUpdater(model);
 		List<NodeInfo> nodes = model.getNodeOrder();
 		Random r = new Random();
 
@@ -84,7 +70,7 @@ public final class SimulationUtils {
 	 * @return the dynamic graph mapped from the given complex attractor
 	 */
 	public static DynamicGraph getGraphFromAttractor(DynamicGraph graph, AbstractStateSet attractor, LogicalModel model) {
-        FirefrontUpdater updater = new FirefrontUpdater(model);
+        AsynchronousUpdater updater = new AsynchronousUpdater(model);
         Map<String,DynamicNode> nodes = new HashMap<String,DynamicNode>();
         
         if(attractor instanceof StateSet){
@@ -130,7 +116,7 @@ public final class SimulationUtils {
 	 * @return the reduced graph mapped from the given complex attractor
 	 */
 	public static ReducedGraph getGraphFromAttractor(ReducedGraph graph, StateSet attractor, LogicalModel model) {
-        FirefrontUpdater updater = new FirefrontUpdater(model);
+		AsynchronousUpdater updater = new AsynchronousUpdater(model);
         Map<String,NodeReducedData> nodes = new HashMap<String,NodeReducedData>();
         for(State s : attractor.getStates()){
         	NodeReducedData node = new NodeReducedData(s.key,Arrays.asList(s.state)); 

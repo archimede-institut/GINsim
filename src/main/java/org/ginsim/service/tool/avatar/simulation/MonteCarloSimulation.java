@@ -11,13 +11,11 @@ import java.util.Map;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.StatefulLogicalModel;
 import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
-import org.colomoto.logicalmodel.tool.simulation.avatar.FirefrontUpdater;
-import org.colomoto.logicalmodel.tool.simulation.avatar.MonteCarloUpdater;
+import org.colomoto.logicalmodel.tool.simulation.updater.RandomUpdaterWithRates;
 import org.ginsim.service.tool.avatar.domain.AbstractStateSet;
 import org.ginsim.service.tool.avatar.domain.CompactStateSet;
 import org.ginsim.service.tool.avatar.domain.Result;
 import org.ginsim.service.tool.avatar.domain.State;
-import org.ginsim.service.tool.avatar.domain.StateSet;
 import org.ginsim.service.tool.avatar.utils.AvaMath;
 import org.ginsim.service.tool.avatar.utils.ChartGNUPlot;
 import org.ginsim.service.tool.avatar.utils.ConfidenceInterval;
@@ -37,16 +35,15 @@ public class MonteCarloSimulation extends Simulation {
 	/** maximum depth */
 	public int maxSteps;
 	
-	private MonteCarloUpdater updater;
+	private RandomUpdaterWithRates updater;
 	
 	/**
-	 * Instantiates a Monte Carlo simulation based on a logical model
-	 * @param _model a stateful logical model possibly defining a set of initial states and oracles
+	 * Instantiates a Monte Carlo simulation
 	 */
 	public MonteCarloSimulation(){}
 	public void addModel(StatefulLogicalModel _model) {
 		super.addModel(_model);
-		updater = new MonteCarloUpdater(model);
+		updater = new RandomUpdaterWithRates(model);
 	}
 
 	/* (non-Javadoc)

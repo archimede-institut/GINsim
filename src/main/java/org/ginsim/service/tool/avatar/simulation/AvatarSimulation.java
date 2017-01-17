@@ -16,7 +16,7 @@ import org.apache.commons.math3.linear.RealMatrix;
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.StatefulLogicalModel;
 import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
-import org.colomoto.logicalmodel.tool.simulation.avatar.FirefrontUpdater;
+import org.colomoto.logicalmodel.tool.simulation.updater.AsynchronousUpdater;
 import org.ejml.simple.SimpleMatrix;
 import org.ginsim.service.tool.avatar.domain.AbstractStateSet;
 import org.ginsim.service.tool.avatar.domain.ApproximateFinalPaths;
@@ -76,17 +76,16 @@ public class AvatarSimulation extends Simulation {
 	/** maximum depth for the approximate rewiring strategy */
     public int approxDepth = -1;
 	
-	protected FirefrontUpdater exhaustiveUpdater;
+	protected AsynchronousUpdater exhaustiveUpdater;
 	//public AvatarUpdater sequentialUpdater;
 
 	/**
-	 * Instantiates an Avatar simulation based on a logical model
-	 * @param _model a stateful logical model possibly defining a set of initial states and oracles
+	 * Instantiates an Avatar simulation
 	 */
 	public AvatarSimulation(){}	
 	public void addModel(StatefulLogicalModel _model) {
 		super.addModel(_model);
-		exhaustiveUpdater = new FirefrontUpdater(model);
+		exhaustiveUpdater = new AsynchronousUpdater(model);
 	}
 
 	/***************/

@@ -13,7 +13,7 @@ import java.util.Map;
 
 import org.colomoto.logicalmodel.NodeInfo;
 import org.colomoto.logicalmodel.StatefulLogicalModel;
-import org.colomoto.logicalmodel.tool.simulation.avatar.FirefrontUpdater;
+import org.colomoto.logicalmodel.tool.simulation.updater.AsynchronousUpdater;
 import org.ginsim.service.tool.avatar.domain.AbstractStateSet;
 import org.ginsim.service.tool.avatar.domain.CompactStateSet;
 import org.ginsim.service.tool.avatar.domain.Result;
@@ -47,16 +47,15 @@ public class FirefrontSimulation extends Simulation {
 	/** maximum number of states to expand per iteration */
 	public int maxExpand = -1;
 	
-	protected FirefrontUpdater updater;
+	protected AsynchronousUpdater updater;
 	
 	/**
-	 * Instantiates a Firefront simulation based on a logical model
-	 * @param _model a stateful logical model possibly defining a set of initial states and oracles
+	 * Instantiates a Firefront simulation
 	 */
 	public FirefrontSimulation(){}
 	public void addModel(StatefulLogicalModel _model) {
 		super.addModel(_model);
-		updater = new FirefrontUpdater(model);
+		updater = new AsynchronousUpdater(model);
 	}
 	
 	@Override
