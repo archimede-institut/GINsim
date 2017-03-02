@@ -24,7 +24,7 @@ import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.graph.view.style.StyleColorizerCheckbox;
 import org.ginsim.gui.utils.data.SimpleStateListTableModel;
@@ -258,7 +258,7 @@ class StableState extends TabComponantProvidingAState {
 		if (p != null) {
 			p.update(model);
 		}
-		sss = ServiceManager.getManager().getService(StableStatesService.class).getStableStateSearcher(model);
+		sss = GSServiceManager.getService(StableStatesService.class).getStableStateSearcher(model);
 		int stable;
 		try {
 			stable = sss.getResult();

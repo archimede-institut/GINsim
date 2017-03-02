@@ -11,7 +11,7 @@ import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.EStatus;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.ExportAction;
@@ -73,7 +73,7 @@ class ExportBioLayoutAction extends ExportAction {
 	@Override
 	protected void doExport(String filename) throws GsException, IOException {
 		
-		GraphStructureExportService service = ServiceManager.getManager().getService( GraphStructureExportService.class);
+		GraphStructureExportService service = GSServiceManager.getService( GraphStructureExportService.class);
 		
 		if( service != null){
 			service.biolayoutExport( graph, null, filename);
@@ -101,7 +101,7 @@ class CytoscapeExportAction<G extends Graph> extends ExportAction {
     @Override
     protected void doExport(String filename) throws GsException, IOException {
 
-        GraphStructureExportService service = ServiceManager.getManager().getService( GraphStructureExportService.class);
+        GraphStructureExportService service = GSServiceManager.getService( GraphStructureExportService.class);
 
         if( service != null){
             service.cytoscapeExport( (RegulatoryGraph)graph, filename);
@@ -131,7 +131,7 @@ class ExportGraphVizAction extends ExportAction {
     @Override
     protected void doExport(String filename) throws IOException {
 
-        GraphStructureExportService service = ServiceManager.getManager().getService( GraphStructureExportService.class);
+        GraphStructureExportService service = GSServiceManager.getService( GraphStructureExportService.class);
         service.graphvizExport(graph, null, null, filename);
     }
 

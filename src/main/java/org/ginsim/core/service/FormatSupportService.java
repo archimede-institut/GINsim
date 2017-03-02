@@ -9,7 +9,7 @@ import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.io.LogicalModelFormat;
 import org.colomoto.biolqm.io.OutputStreamProvider;
-import org.colomoto.biolqm.services.ServiceManager;
+import org.colomoto.biolqm.services.LQMServiceManager;
 import org.colomoto.biolqm.modifier.booleanize.Booleanizer;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -48,8 +48,7 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 	 * Formats that have a custom service or have been blacklisted will be skipped.
 	 */
 	public static void addMissingFormats() {
-		ServiceManager manager = ServiceManager.getManager();
-		for (LogicalModelFormat format: manager.getFormats()) {
+		for (LogicalModelFormat format: LQMServiceManager.getFormats()) {
 			if (!knownFormats.contains(format)) {
 				System.out.println("Should create wrapper format for: "+format);
 			}

@@ -2,7 +2,7 @@ package org.ginsim.servicegui.format;
 
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.service.EStatus;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.service.FormatSupportServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.GUIFor;
@@ -21,8 +21,7 @@ import org.mangosdk.spi.ProviderFor;
 public class GNAFormatServiceGUI extends
 		FormatSupportServiceGUI<GNAFormatService> {
 
-	private static GNAFormatService SERVICE = ServiceManager.getManager()
-			.getService(GNAFormatService.class);
+	private static GNAFormatService SERVICE = GSServiceManager.getService(GNAFormatService.class);
 	private static FileFormatDescription FORMAT = new FileFormatDescription(
 			"GNA", "gna");
 

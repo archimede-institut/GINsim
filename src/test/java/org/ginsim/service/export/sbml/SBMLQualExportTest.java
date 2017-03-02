@@ -11,7 +11,7 @@ import java.io.IOException;
 import org.ginsim.TestFileUtils;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.backend.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.backend.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.regulatorygraph.BasicRegulatoryGraphTest;
@@ -105,7 +105,7 @@ public class SBMLQualExportTest {
 	private RegulatoryGraph createTrivialGraph(){
 		
 		// Create a new RegulatoryGraph
-		RegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
+		RegulatoryGraph graph = GSGraphManager.getInstance().getNewGraph();
 		assertNotNull( "Create graph : the created graph is null: creation failed.", graph);
 		try {
 			graph.setGraphName( "saveGraphTest");
@@ -182,7 +182,7 @@ public class SBMLQualExportTest {
 	private RegulatoryGraph loadGraph( File file){
 		
 		try{
-			RegulatoryGraph graph = (RegulatoryGraph) GraphManager.getInstance().open( file);
+			RegulatoryGraph graph = (RegulatoryGraph) GSGraphManager.getInstance().open( file);
 			
 			assertNotNull( "Load graph : graph is null", graph);
 			assertEquals( "Load graph : Graph node number is not correct", 4, graph.getNodeCount());

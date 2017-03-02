@@ -7,7 +7,7 @@ import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 
 import org.colomoto.biolqm.tool.simulation.SimulationStrategy;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 
@@ -30,7 +30,7 @@ public class STGSimulation extends MultipleSuccessorSimulation {
 		super(updater, strategy);
 		
 		List<NodeInfo> nodes = model.getNodeOrder();
-		stateTransitionGraph = GraphManager.getInstance().getNewGraph( DynamicGraph.class, nodes);
+		stateTransitionGraph = GSGraphManager.getInstance().getNewGraph( DynamicGraph.class, nodes);
 		stateTransitionGraph.setLogicalModel(model);
 	}
 

@@ -31,7 +31,7 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeVal
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
 import org.ginsim.service.export.image.ImageExportService;
 import org.ginsim.service.tool.stablestates.StableStatesService;
@@ -46,14 +46,14 @@ import org.ginsim.gui.graph.dynamicgraph.StableTableModel;
  */
 public class LRGDocumentationWriter {
 
-    private static ImageExportService SRV_IMAGE = ServiceManager.getManager().getService(ImageExportService.class);
+    private static ImageExportService SRV_IMAGE = GSServiceManager.getService(ImageExportService.class);
 
 	private DocumentWriter doc;
 
 	private final RegulatoryGraph graph;
 	private List<RegulatoryNode> nodeOrder;
 	private int len;
-	private final StableStatesService sss = ServiceManager.get(StableStatesService.class);
+	private final StableStatesService sss = GSServiceManager.get(StableStatesService.class);
 
 	private DocumentExportConfig config;
 	

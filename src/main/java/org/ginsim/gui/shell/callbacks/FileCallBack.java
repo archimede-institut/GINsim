@@ -17,7 +17,7 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
@@ -173,7 +173,7 @@ class OpenAction extends AbstractAction {
 		}
 		if (path != null) {
 			try {
-				Graph g = GraphManager.getInstance().open(path);
+				Graph g = GSGraphManager.getInstance().open(path);
 				if( g != null){
 					OptionStore.addRecentFile(path);
 					GUIManager.getInstance().newFrame( g);

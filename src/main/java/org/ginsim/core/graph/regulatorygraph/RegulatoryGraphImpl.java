@@ -20,7 +20,7 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.annotation.AnnotationLink;
 import org.ginsim.core.annotation.BiblioManager;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.AbstractGraph;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphChangeType;
@@ -347,7 +347,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     @Override
     public Graph getSubgraph(Collection<RegulatoryNode> v_vertex, Collection<RegulatoryMultiEdge> v_edges) {
     	
-        RegulatoryGraph copiedGraph = GraphManager.getInstance().getNewGraph();
+        RegulatoryGraph copiedGraph = GSGraphManager.getInstance().getNewGraph();
         NodeAttributesReader vReader = getNodeAttributeReader();
         NodeAttributesReader cvreader = copiedGraph.getNodeAttributeReader();
         HashMap copyMap = new HashMap();

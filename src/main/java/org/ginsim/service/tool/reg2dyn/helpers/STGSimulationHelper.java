@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
@@ -26,7 +26,7 @@ public class STGSimulationHelper implements SimulationHelper {
 	
 	public STGSimulationHelper(LogicalModel model, SimulationParameters params) {
 		List<NodeInfo> nodes = model.getNodeOrder();
-		stateTransitionGraph = GraphManager.getInstance().getNewGraph( DynamicGraph.class, nodes);
+		stateTransitionGraph = GSGraphManager.getInstance().getNewGraph( DynamicGraph.class, nodes);
 		// FIXME: associated graph in the new simulation
 		stateTransitionGraph.setAssociatedGraph(params.param_list.graph);
 		stateTransitionGraph.setLogicalModel(model);

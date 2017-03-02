@@ -19,7 +19,7 @@ import org.colomoto.biolqm.tool.stablestate.StableStateSearcher;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.graph.dynamicgraph.StableTableModel;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
@@ -35,7 +35,7 @@ import org.ginsim.service.tool.stablestates.StableStatesService;
 @SuppressWarnings("serial")
 public class StableStateSwingUI extends LogicalModelActionDialog implements TaskListener {
 
-	private static StableStatesService sss = ServiceManager.getManager().getService(StableStatesService.class);
+	private static StableStatesService sss = GSServiceManager.getService(StableStatesService.class);
 	
 	StableTableModel model;
 	JTable tresult;

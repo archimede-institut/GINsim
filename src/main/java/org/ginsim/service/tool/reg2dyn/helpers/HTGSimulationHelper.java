@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraph;
@@ -28,7 +28,7 @@ public class HTGSimulationHelper  implements SimulationHelper {
 			compacted = true;
 		}
 		List<NodeInfo> nodes = model.getNodeOrder();
-		this.htg = GraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, nodes, compacted);
+		this.htg = GSGraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, nodes, compacted);
 		
 		// FIXME: associated graph based on LogicalModel
 		htg.setAssociatedGraph(params.param_list.graph);

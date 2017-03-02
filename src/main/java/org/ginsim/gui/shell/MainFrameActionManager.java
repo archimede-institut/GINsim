@@ -14,7 +14,7 @@ import org.ginsim.core.graph.Graph;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.ServiceGUI;
-import org.ginsim.gui.service.ServiceGUIManager;
+import org.ginsim.gui.service.GSServiceGUIManager;
 import org.ginsim.gui.shell.actions.BaseAction;
 import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.gui.shell.actions.GenericGraphAction;
@@ -39,7 +39,7 @@ public class MainFrameActionManager implements FrameActionManager {
 		Graph<?,?> graph = gui.getGraph();
 		
 		// get Service-related actions
-		List<Action> actions = ServiceGUIManager.getManager().getAvailableActions(graph);
+		List<Action> actions = GSServiceGUIManager.getAvailableActions(graph);
 
 		// add them to the right menus
 		JMenu importMenu = new JMenu( Txt.t("STR_Import"));

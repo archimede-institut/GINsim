@@ -23,7 +23,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
@@ -113,7 +113,7 @@ public class InteractionAnalysisFrame extends StackDialog implements ActionListe
 		} else {
 			selectedNodes = selection.getSelectedNodes();
 		}
-		iaService = ServiceManager.getManager().getService( InteractionAnalysisService.class);
+		iaService = GSServiceManager.getService( InteractionAnalysisService.class);
 		algoResult = iaService.run(regGraph, mutantStore.getPerturbation(), selectedNodes);
 	    saveReportButton.setEnabled(true);
 	    colorizerPanel.setStyle(algoResult.getStyle());

@@ -20,11 +20,11 @@ import org.ginsim.core.service.ServiceClassInfo;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.GraphFactory;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.service.ServiceGUIManager;
+import org.ginsim.gui.service.GSServiceGUIManager;
 import org.ginsim.gui.shell.AboutDialog;
 
 
@@ -173,8 +173,6 @@ public class Launcher {
                 LogManager.error("Could not load extension files");
             }
         }
-
-		ServiceManager.getManager();
 	}
 	
 	/**
@@ -214,10 +212,8 @@ public class Launcher {
     private static void devInfo() {
 
         // load everything
-        GraphManager graphManager = GraphManager.getInstance();
+        GSGraphManager graphManager = GSGraphManager.getInstance();
         ObjectAssociationManager assocManager = ObjectAssociationManager.getInstance();
-        ServiceManager srvManager = ServiceManager.getManager();
-        ServiceGUIManager srvGUIManager = ServiceGUIManager.getManager();
 
         System.out.println("Graphs");
         for (ServiceClassInfo info: graphManager.getGraphsInfo()) {
@@ -241,13 +237,13 @@ public class Launcher {
         System.out.println();
 
         System.out.println("Services");
-        for (ServiceClassInfo info: srvManager.getServicesInfo()) {
+        for (ServiceClassInfo info: GSServiceManager.getServicesInfo()) {
             System.out.println(info);
         }
         System.out.println();
 
         System.out.println("GUI for services");
-        for (ServiceClassInfo info: srvGUIManager.getServicesInfo()) {
+        for (ServiceClassInfo info: GSServiceGUIManager.getServicesInfo()) {
             System.out.println(info);
         }
     }

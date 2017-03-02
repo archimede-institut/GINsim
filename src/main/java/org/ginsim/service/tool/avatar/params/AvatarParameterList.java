@@ -35,7 +35,7 @@ public class AvatarParameterList extends NamedList<AvatarParameters> implements 
         imanager.getInitialStates().addListListener(this);
         imanager.getInputConfigs().addListListener(this);
         pcmanager = new PrioritySetList(this.graph);
-        GraphManager.getInstance().addGraphListener(this.graph, this);
+        GSGraphManager.getInstance().addGraphListener(this.graph, this);
         if(param!=null) add(param);
     }
 	

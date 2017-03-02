@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -66,7 +66,7 @@ public class CompositionService implements Service {
 		IntegrationFunctionMapping mapping = config.getMapping();
 		boolean reduce = config.isReduce();
 
-		RegulatoryGraph composedGraph = GraphManager.getInstance().getNewGraph(
+		RegulatoryGraph composedGraph = GSGraphManager.getInstance().getNewGraph(
 				RegulatoryGraph.class);
 
 		NodeAttributesReader oldNodeReader = graph.getNodeAttributeReader();

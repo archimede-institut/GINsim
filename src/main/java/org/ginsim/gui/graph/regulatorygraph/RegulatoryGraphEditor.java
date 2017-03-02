@@ -8,7 +8,7 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.Txt;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.GraphEventCascade;
 import org.ginsim.core.graph.GraphListener;
@@ -47,12 +47,12 @@ public class RegulatoryGraphEditor extends ObjectEditor<RegulatoryGraph> impleme
 	private void setEditedObject(RegulatoryGraph g) {
 		if (g != this.graph) {
 			if (this.graph != null) {
-		        GraphManager.getInstance().removeGraphListener( this.graph, this);
+		        GSGraphManager.getInstance().removeGraphListener( this.graph, this);
                 helped.list = null;
 			}
 			this.graph = g;
 			if (this.graph != null) {
-		        GraphManager.getInstance().addGraphListener( this.graph, this);
+		        GSGraphManager.getInstance().addGraphListener( this.graph, this);
                 helped.list = this.graph.getNodeOrder();
 			}
 		}

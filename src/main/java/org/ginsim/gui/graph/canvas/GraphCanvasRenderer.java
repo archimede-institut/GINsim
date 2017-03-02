@@ -10,7 +10,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphChangeType;
@@ -60,7 +60,7 @@ public class GraphCanvasRenderer implements CanvasRenderer, GraphListener {
     	this.selection = selection;
     	
     	canvas.setRenderer(this);
-    	GraphManager.getInstance().addGraphListener(graph, this);
+    	GSGraphManager.getInstance().addGraphListener(graph, this);
 
     	this.amanager = amanager;
     	selectEventManager = new GraphSelectionCanvasEventManager(graph, this, selection);

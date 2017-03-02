@@ -13,7 +13,7 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.Txt;
 import org.ginsim.common.utils.IOUtils;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -43,8 +43,7 @@ public class NuSMVExportTest {
 			saModel[i] = saModel[i].substring(0, saModel[i].indexOf('.'));
 		}
 
-		service = ServiceManager.getManager().getService(
-				NuSMVExportService.class);
+		service = GSServiceManager.getService(NuSMVExportService.class);
 		assertNotNull("NuSMVExportService service is not available", service);
 	}
 

@@ -7,7 +7,7 @@ import static org.junit.Assert.fail;
 import java.awt.Color;
 
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.backend.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.backend.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
@@ -18,7 +18,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -28,7 +28,7 @@ public class TestSCCGraph {
 
 	@BeforeClass
 	public static void setUp() {
-		regGraph = GraphManager.getInstance().getNewGraph();
+		regGraph = GSGraphManager.getInstance().getNewGraph();
 		try {
 			OptionStore.init(BasicRegulatoryGraphTest.class.getPackage()
 					.getName());
@@ -46,7 +46,7 @@ public class TestSCCGraph {
 
 	@AfterClass
 	public static void tearDown() {
-		GraphManager.getInstance().close(regGraph);
+		GSGraphManager.getInstance().close(regGraph);
 	}
 
 	@Test
@@ -75,8 +75,7 @@ public class TestSCCGraph {
 					RegulatoryEdgeSign.POSITIVE);
 		}
 
-		SCCGraphService service = ServiceManager.getManager().getService(
-				SCCGraphService.class);
+		SCCGraphService service = GSServiceManager.get(SCCGraphService.class);
         ReducedGraph<?, ?, ?> reducedGraph = service.getSCCGraph(regGraph);
 		assertNotNull("The graph is null", reducedGraph);
 

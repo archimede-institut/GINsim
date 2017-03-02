@@ -551,7 +551,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 			f = new File( save_path);
 		}
 		else {
-			String save_filepath = GraphManager.getInstance().getGraphPath( this);
+			String save_filepath = GSGraphManager.getInstance().getGraphPath( this);
 			if ( save_filepath != null){
 				f = new File( save_filepath);
 			}
@@ -687,7 +687,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 
 	@Override
 	public void fireGraphChange(GraphChangeType type, Object data) {
-		GraphManager.getInstance().fireGraphChange(this, type, data);
+		GSGraphManager.getInstance().fireGraphChange(this, type, data);
 	}
 
     /**

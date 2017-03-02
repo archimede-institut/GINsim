@@ -6,7 +6,7 @@ import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.service.tool.scc.SCCGraphService;
 
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class CircuitSearcher extends AbstractTask<List<CircuitDescrInTree>> {
 
-    private final SCCGraphService connectivity = ServiceManager.getManager().getService(SCCGraphService.class);
+    private final SCCGraphService connectivity = GSServiceManager.getService(SCCGraphService.class);
 
     private final RegulatoryGraph graph;
     private final CircuitSearchStoreConfig config;

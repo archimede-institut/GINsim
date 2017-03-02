@@ -7,7 +7,7 @@ import java.util.Vector;
 import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -58,7 +58,7 @@ public final class DynamicParser extends GsXMLHelper {
      */
     public DynamicParser(Set<String> set, Attributes attributes, String s_dtd) throws GsException {
     	
-        this.graph = GraphManager.getInstance().getNewGraph( DynamicGraph.class, true);
+        this.graph = GSGraphManager.getInstance().getNewGraph( DynamicGraph.class, true);
     	this.set = set;
 		styleManager = graph.getStyleManager();
 		vareader = graph.getNodeAttributeReader();

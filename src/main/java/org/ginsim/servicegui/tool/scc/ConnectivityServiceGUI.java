@@ -14,13 +14,13 @@ import org.colomoto.common.task.TaskStatus;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
 import org.ginsim.core.graph.view.style.StyleProvider;
 import org.ginsim.core.service.EStatus;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
@@ -77,7 +77,7 @@ class SCCGraphAction extends ToolAction implements TaskListener {
             return;
         }
         setEnabled(false);
-		SCCGraphService service = ServiceManager.getManager().getService(SCCGraphService.class);
+		SCCGraphService service = GSServiceManager.getService(SCCGraphService.class);
         task = service.backgroundSCCGraph(graph, this);
 	}
 
@@ -104,7 +104,7 @@ class ConnectivityColorizeGraphAction extends GenericGraphAction {
 	
 	@Override
 	public void actionPerformed( ActionEvent arg0) {
-		SCCGraphService service = ServiceManager.getManager().getService(SCCGraphService.class);
+		SCCGraphService service = GSServiceManager.getService(SCCGraphService.class);
         List<NodeReducedData> components = service.getComponents(graph);
         styler = service.getStyleProvider(components, graph);
         graph.getStyleManager().setStyleProvider(styler);
@@ -174,7 +174,7 @@ class ExtractFromSCCGraphAction extends GenericGraphAction {
 	    Graph subgraph = null;
 	    try {
 			Set<?> set = g.getSelectedSet( selection.getSelectedNodes());
-			subgraph = GraphManager.getInstance().open(set, f);
+			subgraph = GSGraphManager.getInstance().open(set, f);
 		} catch (GsException e) {
 			e.printStackTrace();
 		}

@@ -16,7 +16,7 @@ import org.ginsim.core.annotation.AnnotationLink;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.service.export.image.ImageExportService;
 
 /**
@@ -223,7 +223,7 @@ public class JSONDocumentationWriter extends AbstractTask {
     @Override
     public Object doGetResult() {
         try {
-            ImageExportService service = ServiceManager.getManager().getService(ImageExportService.class);
+            ImageExportService service = GSServiceManager.getService(ImageExportService.class);
             service.exportSVG(graph, null, null, export_name+".svg");
             writeJSON(export_name + ".js");
             writeHTMLContainer(export_name);

@@ -4,7 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import org.colomoto.biolqm.StatefulLogicalModel;
 import org.colomoto.biolqm.StatefulLogicalModelImpl;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
@@ -118,7 +118,7 @@ public class AvatarServiceFacade implements Service {
 			//AvatarImport avaImport = new AvatarImport(new File(filename));
 			//model = avaImport.getModel(); //model.fromNuSMV(filename);
 		} else {
-			RegulatoryGraph graph = (RegulatoryGraph)GraphManager.getInstance().open(filename);
+			RegulatoryGraph graph = (RegulatoryGraph)GSGraphManager.getInstance().open(filename);
 	        NamedStatesHandler nstatesHandler = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph, NamedStatesManager.KEY, true);
 			model = new StatefulLogicalModelImpl(graph.getModel(),MDDUtils.getStates(nstatesHandler,graph.getNodeInfos()));
 		}

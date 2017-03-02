@@ -6,7 +6,7 @@ import java.util.*;
 import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.GraphEventCascade;
 import org.ginsim.core.graph.GraphListener;
@@ -33,7 +33,7 @@ public class ListOfPerturbations extends ArrayList<Perturbation> implements Grap
 	
 	public ListOfPerturbations(RegulatoryGraph lrg) {
 		this.lrg = lrg;
-		GraphManager.getInstance().addGraphListener(lrg, this);
+		GSGraphManager.getInstance().addGraphListener(lrg, this);
 	}
 	
 	/**

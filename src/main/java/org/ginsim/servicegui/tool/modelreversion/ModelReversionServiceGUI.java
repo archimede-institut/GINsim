@@ -13,7 +13,7 @@ import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.EStatus;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
@@ -62,10 +62,8 @@ class ReversionAction extends ToolAction {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		ModelReversionService revService = ServiceManager.getManager().getService(
-				ModelReversionService.class);
-		ModelBooleanizerService boolService = ServiceManager.getManager().getService(
-				ModelBooleanizerService.class);
+		ModelReversionService revService = GSServiceManager.getService( ModelReversionService.class);
+		ModelBooleanizerService boolService = GSServiceManager.getService( ModelBooleanizerService.class);
 		
 		LogicalModel origModel = this.graph.getModel();
 

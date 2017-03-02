@@ -10,7 +10,7 @@ import org.colomoto.mddlib.MDDComparator;
 import org.colomoto.mddlib.MDDComparatorFactory;
 import org.colomoto.mddlib.MDDManager;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -38,7 +38,7 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryNode, R
 
 
     public RegulatoryGraphComparator(RegulatoryGraph g1, RegulatoryGraph g2) {
-        super(g1, g2, GraphManager.getInstance().getNewGraph());
+        super(g1, g2, GSGraphManager.getInstance().getNewGraph());
 
         this.ddmanager1 = g1.getMDDFactory();
         this.ddmanager2 = g2.getMDDFactory();

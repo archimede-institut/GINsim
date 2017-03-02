@@ -5,7 +5,7 @@ import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.GraphEventCascade;
 import org.ginsim.core.graph.GraphListener;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.gui.annotation.AnnotationPanel;
 import org.ginsim.gui.graph.GUIEditor;
@@ -61,7 +61,7 @@ public class HierarchicalGraphEditor extends JPanel implements TextProperty, GUI
         annotationPanel.setAnnotation(graph.getAnnotation());
         add(annotationPanel, cst);
 
-        GraphManager.getInstance().addGraphListener( this.graph, this);
+        GSGraphManager.getInstance().addGraphListener( this.graph, this);
 	}
 
     @Override

@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import org.ginsim.TestFileUtils;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.service.export.documentation.DocumentExportConfig;
 import org.ginsim.service.export.documentation.LRGDocumentationService;
 import org.junit.Assert;
@@ -25,7 +25,7 @@ public class TestGenericDocumentExport {
 	
 	@Test
 	public void testGenericDocument() {
-		LRGDocumentationService export =  ServiceManager.get(LRGDocumentationService.class);
+		LRGDocumentationService export =  GSServiceManager.get(LRGDocumentationService.class);
 		String filename = tmpDir.getAbsolutePath()+File.separator+"graph.html";
 		
 		DocumentExportConfig config = new DocumentExportConfig();

@@ -7,7 +7,7 @@ import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.Graph;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.utils.data.*;
 import org.ginsim.service.tool.reg2dyn.Reg2DynService;
@@ -97,7 +97,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame {
         brun.setEnabled(false);
 
 		isrunning = true;
-		Reg2DynService service = ServiceManager.getManager().getService( Reg2DynService.class);
+		Reg2DynService service = GSServiceManager.getService( Reg2DynService.class);
 		sim = service.get( model, this, currentParameter);
 		new Thread(sim).start();
 	}

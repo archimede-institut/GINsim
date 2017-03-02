@@ -23,45 +23,19 @@ import org.ginsim.common.application.LogManager;
  * @author Lionel Spinelli
  * @author Aurelien Naldi
  */
-public class ServiceManager{
+public class GSServiceManager {
 
 	// The manager singleton
-	private static ServiceManager manager = null;
+	private static GSServiceManager manager = null;
 	
 	// The map establishing the correspondence between graph class and GraphGUIHelper instance
-	private HashMap<Class<Service>, Service> services = new HashMap<Class<Service>, Service>();
-	private HashMap<String, Service> serviceNames = new HashMap<String, Service>();
+	private static HashMap<Class<Service>, Service> services = new HashMap<Class<Service>, Service>();
+	private static HashMap<String, Service> serviceNames = new HashMap<String, Service>();
 	
-	
-	/**
-	 * Method providing access to the manager instance
-	 * 
-	 * @return the ServiceManager singleton 
-	 */
-	public static ServiceManager getManager(){
-		
-		if( manager == null){
-			manager = new ServiceManager();
-		}
-		
-		return manager;
-	}
-
-	/**
-	 * Method providing access to the LQM manager instance
-	 * 
-	 * @return the ServiceManager singleton 
-	 */
-	public static org.colomoto.biolqm.services.ServiceManager getLQMManager(){
-		return org.colomoto.biolqm.services.ServiceManager.getManager();
-	}
-
 	/**
 	 * Factory creator. Instantiate the manager and ask the ServiceLoader to load the Service list.
-	 * 
 	 */
-	private ServiceManager(){
-		
+	static {
 		
         Iterator<Service> service_list = ExtensionLoader.iterator( Service.class);
         while (service_list.hasNext()) {
@@ -96,8 +70,7 @@ public class ServiceManager{
 	 * 
 	 * @return a List of available GsServices
 	 */
-	public Set<Class<Service>> getAvailableServices(){
-		
+	public static Set<Class<Service>> getAvailableServices(){
 		return services.keySet();
 	}
 	
@@ -108,8 +81,7 @@ public class ServiceManager{
 	 * @param service_class
 	 * @return the service or null if not found
 	 */
-	public <S extends Service> S getService( Class<S> service_class){
-		
+	public static <S extends Service> S getService( Class<S> service_class){
 		return (S)services.get( service_class);
 	}
 
@@ -119,8 +91,7 @@ public class ServiceManager{
 	 * @param name
 	 * @return the service or null if not found
 	 */
-	public Service getService( String name){
-		
+	public static Service getService( String name){
 		return serviceNames.get( name);
 	}
 
@@ -131,7 +102,7 @@ public class ServiceManager{
 	 * @return the service or null if not found
 	 */
 	public static <S extends Service> S get( Class<S> service_class) {
-		return getManager().getService( service_class);
+		return getService( service_class);
 	}
 	
 	/**
@@ -141,10 +112,10 @@ public class ServiceManager{
 	 * @return the service or null if not found
 	 */
 	public static Service get( String name) {
-		return getManager().getService( name);
+		return getService( name);
 	}
 
-    public ServiceClassInfo[] getServicesInfo() {
+    public static ServiceClassInfo[] getServicesInfo() {
         ServiceClassInfo[] ret = new ServiceClassInfo[services.size()];
         int idx = 0;
         for (Class<Service> cl: services.keySet()) {

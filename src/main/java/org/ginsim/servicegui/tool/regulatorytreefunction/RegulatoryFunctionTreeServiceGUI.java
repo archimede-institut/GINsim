@@ -8,7 +8,7 @@ import java.util.List;
 
 import javax.swing.Action;
 
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -66,7 +66,7 @@ class RegulatoryFunctionTreeAction extends ToolkitAction {
 	public void actionPerformed(ActionEvent e) {
 		
 		TreeBuilder parser = new TreeBuilderFromRegulatoryGraph();
-		Tree tree = GraphManager.getInstance().getNewGraph( Tree.class, parser);
+		Tree tree = GSGraphManager.getInstance().getNewGraph( Tree.class, parser);
 			
 		parser.setParameter(TreeBuilderFromRegulatoryGraph.PARAM_NODEORDER, graph.getNodeOrder());
 		parser.setParameter(TreeBuilderFromRegulatoryGraph.PARAM_REGGRAPH, graph);

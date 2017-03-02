@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.colomoto.common.task.AbstractTask;
 import org.ginsim.common.utils.ColorPalette;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
@@ -48,7 +48,7 @@ public class SCCGraphAlgo extends AbstractTask<ReducedGraph> {
 	 * @return the reducedGraph
 	 */
 	private ReducedGraph constructGraph(List<NodeReducedData> components) {
-		ReducedGraph reducedGraph = GraphManager.getInstance().getNewGraph( ReducedGraph.class, (Graph)graph);
+		ReducedGraph reducedGraph = GSGraphManager.getInstance().getNewGraph( ReducedGraph.class, (Graph)graph);
 		HashMap<Object, NodeReducedData> nodeParentSCC = new HashMap<Object, NodeReducedData>(); //Map the a node to its parent SCC
 		
 		int totalComplexComponents = 0;

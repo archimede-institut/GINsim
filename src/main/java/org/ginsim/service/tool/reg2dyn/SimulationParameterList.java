@@ -41,7 +41,7 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
         imanager.getInitialStates().addListListener(this);
         imanager.getInputConfigs().addListListener(this);
         pcmanager = new PrioritySetList(this.graph);
-        GraphManager.getInstance().addGraphListener( this.graph, this);
+        GSGraphManager.getInstance().addGraphListener( this.graph, this);
         if (param == null) {
         	add();
         } else {

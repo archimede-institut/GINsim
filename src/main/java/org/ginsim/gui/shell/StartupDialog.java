@@ -23,7 +23,7 @@ import javax.swing.JPopupMenu;
 
 import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.service.ServiceGUIManager;
+import org.ginsim.gui.service.GSServiceGUIManager;
 import org.ginsim.gui.shell.actions.ImportAction;
 import org.ginsim.gui.shell.callbacks.FileCallBack;
 import org.ginsim.gui.shell.callbacks.HelpCallBack;
@@ -180,7 +180,7 @@ class ActionImport extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		JPopupMenu importMenu = new JPopupMenu();
-		List<Action> actions = ServiceGUIManager.getManager().getAvailableActions(null);
+		List<Action> actions = GSServiceGUIManager.getAvailableActions(null);
 		for (Action action: actions) {
 			if (action instanceof ImportAction) {
 				importMenu.add(action);

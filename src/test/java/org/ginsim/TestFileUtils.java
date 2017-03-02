@@ -7,7 +7,7 @@ import java.io.File;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.utils.IOUtils;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 
 public class TestFileUtils {
@@ -79,7 +79,7 @@ public class TestFileUtils {
 		
 		TestUtils.initOptionStore();
 		try{
-			RegulatoryGraph graph = (RegulatoryGraph) GraphManager.getInstance().open( file);
+			RegulatoryGraph graph = (RegulatoryGraph) GSGraphManager.getInstance().open( file);
 			
 			assertNotNull( "Load graph : graph is null", graph);
 			return graph;

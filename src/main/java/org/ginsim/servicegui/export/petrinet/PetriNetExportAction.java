@@ -22,7 +22,7 @@ import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateStore;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
@@ -122,7 +122,7 @@ class PetriNetExportFrame extends LogicalModelActionDialog {
 
 	private static final String FORMATOPTIONKEY = "PNformat";
 	
-	private PetriNetINAFormatService service = ServiceManager.getManager().getService(PetriNetINAFormatService.class);
+	private PetriNetINAFormatService service = GSServiceManager.getService(PetriNetINAFormatService.class);
 	private final PetriNetExportAction action;
 	private PrioritySelectionPanel priorityPanel = null;
 	private InitialStatePanel initStatePanel = null;

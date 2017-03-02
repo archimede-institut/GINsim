@@ -15,7 +15,7 @@ import org.ginsim.core.service.ServiceClassInfo;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.core.service.ServiceStatus;
 
 
@@ -33,20 +33,17 @@ import org.ginsim.core.service.ServiceStatus;
  * @author Lionel Spinelli
  * @author Aurelien Naldi
  */
-public class ServiceGUIManager{
+public class GSServiceGUIManager{
 
-	// The manager singleton
-	private static ServiceGUIManager manager = null;
-	
 	// The map establishing the correspondence between graph class and GraphGUIHelper instance
-	private List<ServiceGUI> services = new ArrayList<ServiceGUI>();
+	private static List<ServiceGUI> services = new ArrayList<ServiceGUI>();
 	
 
 	/**
 	 * Factory creator. Instantiate the manager and ask the ServiceLoader to load the ServiceGUI list.
 	 * 
 	 */
-	private ServiceGUIManager(){
+	static {
         
         Iterator<ServiceGUI> service_list = ExtensionLoader.iterator(ServiceGUI.class);
         while (service_list.hasNext()) {
@@ -107,31 +104,18 @@ public class ServiceGUIManager{
 	
 	
 	/**
-	 * Method providing access to the manager instance
-	 * 
-	 * @return the ServiceGUIManager singleton 
-	 */
-	public static ServiceGUIManager getManager() {
-
-		if( manager == null){
-			manager = new ServiceGUIManager();
-		}
-		return manager;
-	}
-	
-	/**
 	 * Give access to the list of GUI actions provided by the available services for the given graph type
 	 * 
 	 * 
 	 * @param graph The graph for which the available services are providing actions
 	 * @return a List of Action that can be performed.
 	 */
-	public List<Action> getAvailableActions( Graph<?,?> graph) {
+	public static List<Action> getAvailableActions( Graph<?,?> graph) {
 
 		List<Action> result = new ArrayList<Action>();
 
 		//Retrieve the available service on server side
-		Set<Class<Service>> server_services = ServiceManager.getManager().getAvailableServices();
+		Set<Class<Service>> server_services = GSServiceManager.getAvailableServices();
 
 		// Parse the existing serviceGUI to detect the ones that must be used
 		for( ServiceGUI service: services) {
@@ -174,7 +158,7 @@ public class ServiceGUIManager{
 		return result;
 	}
 
-    public ServiceClassInfo[] getServicesInfo() {
+    public static ServiceClassInfo[] getServicesInfo() {
         ServiceClassInfo[] ret = new ServiceClassInfo[services.size()];
         int idx = 0;
         for (ServiceGUI srv: services) {

@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.colomoto.biolqm.NodeInfo;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.dynamicgraph.DynamicEdge;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
@@ -20,7 +20,7 @@ import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 public class DynamicGraphComparator extends GraphComparator<DynamicNode, DynamicEdge, DynamicGraph> {
 
     public DynamicGraphComparator( DynamicGraph g1, DynamicGraph g2) {
-        super(g1, g2, GraphManager.getInstance().getNewGraph( DynamicGraph.class));
+        super(g1, g2, GSGraphManager.getInstance().getNewGraph( DynamicGraph.class));
 	}
 
     @Override

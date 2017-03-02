@@ -32,7 +32,7 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
@@ -147,8 +147,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 			this.undoColorize();
 		}
 
-		LocalGraphService service = ServiceManager.getManager().getService(
-				LocalGraphService.class);
+		LocalGraphService service = GSServiceManager.getService(LocalGraphService.class);
 
 		try {
 			functionalityMap = service.run(config.getGraph(), sst.getStates(),

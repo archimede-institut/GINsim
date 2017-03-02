@@ -8,7 +8,7 @@ import java.util.Vector;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -58,7 +58,7 @@ public class ReducedGraphParser extends GsXMLHelper {
      */
     public ReducedGraphParser(Set<String> set, Attributes attributes, String s_dtd, String s_filename) throws GsException{
     	
-    	this.graph = GraphManager.getInstance().getNewGraph( ReducedGraph.class, true);
+    	this.graph = GSGraphManager.getInstance().getNewGraph( ReducedGraph.class, true);
     	this.set = set;
     	styleManager = graph.getStyleManager();
 		vareader = graph.getNodeAttributeReader();
@@ -72,7 +72,7 @@ public class ReducedGraphParser extends GsXMLHelper {
     }
     
     public ReducedGraphParser(Set<String> set, Attributes attributes, String s_dtd) throws GsException {
-    	this.graph = GraphManager.getInstance().getNewGraph( ReducedGraph.class, true);
+    	this.graph = GSGraphManager.getInstance().getNewGraph( ReducedGraph.class, true);
     	this.set = set;
     	styleManager = graph.getStyleManager();
 		vareader = graph.getNodeAttributeReader();

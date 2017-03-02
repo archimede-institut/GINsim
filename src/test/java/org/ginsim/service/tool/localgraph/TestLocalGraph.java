@@ -15,7 +15,7 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -40,8 +40,7 @@ public class TestLocalGraph {
 			saModel[i] = saModel[i].substring(0, saModel[i].indexOf('.'));
 		}
 
-		service = ServiceManager.getManager().getService(
-				LocalGraphService.class);
+		service = GSServiceManager.getService(LocalGraphService.class);
 		assertNotNull("LocalGraphService service is not available", service);
 	}
 

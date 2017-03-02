@@ -2,7 +2,7 @@ package org.ginsim.servicegui.tool.composition;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.service.tool.composition.CompositionService;
@@ -41,8 +41,7 @@ public class CompositionConfigDialog extends StackDialog {
 		setRunning(true);
 		brun.setEnabled(false);
 
-		CompositionService service = ServiceManager.getManager().getService(
-				CompositionService.class);
+		CompositionService service = GSServiceManager.getService(CompositionService.class);
 
         try {
 		    RegulatoryGraph composedGraph = service.run(graph, dialog.getConfig());

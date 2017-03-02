@@ -3,7 +3,7 @@ package org.ginsim.core.graph.regulatorygraph.namedstates;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.GraphEventCascade;
@@ -28,7 +28,7 @@ public class NamedStatesHandler implements GraphListener<RegulatoryGraph> {
     public NamedStatesHandler(Graph<?, ?> graph) {
     	
         this.graph = (RegulatoryGraph) graph;
-        GraphManager.getInstance().addGraphListener( (RegulatoryGraph)graph, this);
+        GSGraphManager.getInstance().addGraphListener( (RegulatoryGraph)graph, this);
         updateLists();
         
         initialStates = new NamedStateList(normalNodes, false);

@@ -5,7 +5,7 @@ import java.awt.event.WindowAdapter;
 import javax.swing.JFrame;
 
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 
 
@@ -44,7 +44,7 @@ public abstract class Frame extends JFrame {
 		
 		String title = "GINsim - " + graph.getGraphName();
 		
-		String savePath = GraphManager.getInstance().getGraphPath( graph);
+		String savePath = GSGraphManager.getInstance().getGraphPath( graph);
 		if (savePath != null) {
 			title += " ["+savePath+"]";
 		}

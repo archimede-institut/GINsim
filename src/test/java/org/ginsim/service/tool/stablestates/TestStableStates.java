@@ -12,7 +12,7 @@ import org.colomoto.biolqm.tool.stablestate.StableStateSearcher;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.backend.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.backend.NodeAttributeReaderImpl;
@@ -24,7 +24,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -64,13 +64,13 @@ public class TestStableStates {
 	@After
 	public void afterEachTest() {
 
-		Vector<Graph> graph_list = new Vector(GraphManager.getInstance()
+		Vector<Graph> graph_list = new Vector(GSGraphManager.getInstance()
 				.getAllGraphs());
 
 		if (graph_list != null && !graph_list.isEmpty()) {
 
 			for (Graph graph : graph_list) {
-				GraphManager.getInstance().close(graph);
+				GSGraphManager.getInstance().close(graph);
 			}
 		}
 	}
@@ -78,7 +78,7 @@ public class TestStableStates {
 	@Test
 	public void SimpleExampleTest() throws Exception {
 		// Create a new RegulatoryGraph
-		RegulatoryGraph regGraph = GraphManager.getInstance().getNewGraph();
+		RegulatoryGraph regGraph = GSGraphManager.getInstance().getNewGraph();
 		assertNotNull("Create graph : the graph is null.", regGraph);
 
 		// Add a node
@@ -122,7 +122,7 @@ public class TestStableStates {
 		node_g1.addLogicalParameter(lp, true);
 
 		// Get the stable states
-		StableStateSearcher stableStateSearcher = ServiceManager.get(
+		StableStateSearcher stableStateSearcher = GSServiceManager.get(
 				StableStatesService.class).getSearcher(regGraph);
 		assertNotNull("The service didn't return any result",
 				stableStateSearcher);
@@ -147,7 +147,7 @@ public class TestStableStates {
 		// no other path leads to 1
 		assertEquals(false, it.hasNext());
 
-		GraphManager.getInstance().close(regGraph);
+		GSGraphManager.getInstance().close(regGraph);
 	}
 
 }

@@ -12,7 +12,7 @@ import javax.swing.event.DocumentListener;
 
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.view.style.ColorizerPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
@@ -60,7 +60,7 @@ public class PolytopesVizFrame extends StackDialog {
 				@Override
 				public void changedUpdate(DocumentEvent e) {
 					try {
-						ServiceManager.getManager().getService(PolytopesService.class).run(graph, polytopeTextField.getText());
+						GSServiceManager.getService(PolytopesService.class).run(graph, polytopeTextField.getText());
 					} catch (ParseException msg) {
 						LogManager.error(msg);
 					}
@@ -82,7 +82,7 @@ public class PolytopesVizFrame extends StackDialog {
 
 	protected void run() {
 		try {
-			ServiceManager.getManager().getService(PolytopesService.class).run(graph, polytopeTextField.getText());
+			GSServiceManager.getService(PolytopesService.class).run(graph, polytopeTextField.getText());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

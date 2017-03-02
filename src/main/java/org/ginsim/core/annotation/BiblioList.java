@@ -23,7 +23,7 @@ import org.ginsim.common.utils.OpenUtils;
 import org.ginsim.common.xml.XMLHelper;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.GraphEventCascade;
@@ -56,7 +56,7 @@ public class BiblioList implements XMLize, OpenHelper, GraphListener<GraphModel<
 	public BiblioList( Graph<?,?> graph, boolean parsing) {
 		this.graph = graph;
 		this.parsing = parsing;
-		GraphManager.getInstance().addGraphListener(graph, this);
+		GSGraphManager.getInstance().addGraphListener(graph, this);
 	}
 
 	@Override

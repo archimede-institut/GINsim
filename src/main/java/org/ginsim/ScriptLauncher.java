@@ -19,7 +19,7 @@ import org.ginsim.common.document.OOoDocumentWriter;
 import org.ginsim.common.document.XHTMLDocumentWriter;
 import org.ginsim.core.service.ServiceClassInfo;
 import org.ginsim.core.graph.GraphFactory;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
@@ -30,7 +30,7 @@ import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.python.core.Py;
 import org.python.util.PythonInterpreter;
 
@@ -52,10 +52,9 @@ public class ScriptLauncher {
 	private static boolean isInit = false;
 	private boolean running = false;
 	
-	private final ServiceManager services = ServiceManager.getManager();
+	private final GSServiceManager services = new GSServiceManager();
 	private final ObjectAssociationManager associated = ObjectAssociationManager.getInstance();
 	
-
 	/**
 	 * Arguments passed to the script
 	 */
@@ -163,7 +162,7 @@ public class ScriptLauncher {
 	 */
 	public Graph<?, ?> open(String filename) throws GsException {
 		File file = new File(filename);
-		return GraphManager.getInstance().open( file);
+		return GSGraphManager.getInstance().open( file);
 	}
 	
 	/**
@@ -266,7 +265,7 @@ public class ScriptLauncher {
 	 */
 	public void help() {
 		System.out.println("Available services:");
-		for (Class<Service> srv: ServiceManager.getManager().getAvailableServices()) {
+		for (Class<Service> srv: GSServiceManager.getAvailableServices()) {
 			System.out.print("   * ");
 			Alias alias = srv.getAnnotation(Alias.class);
 			if (alias != null) {
@@ -317,14 +316,14 @@ public class ScriptLauncher {
             doc.writeText(". It allows to load graphs, access their associated data, and services.");
             doc.writeText("Each graph type and service has its own API, linked below.");
 
-            writeDoc(doc, javadocbase, "Graph types", GraphManager.getInstance().getGraphsInfo());
-			writeDoc(doc, javadocbase, "Services", ServiceManager.getManager().getServicesInfo());
+            writeDoc(doc, javadocbase, "Graph types", GSGraphManager.getInstance().getGraphsInfo());
+			writeDoc(doc, javadocbase, "Services", GSServiceManager.getServicesInfo());
 
 			// TODO: names for associated data managers
             ObjectAssociationManager objMgr = ObjectAssociationManager.getInstance();
             writeDoc(doc, javadocbase, "Associated data", objMgr.getDataManagerInfo(null));
 
-            for (GraphFactory factory: GraphManager.getInstance().getGraphFactories()) {
+            for (GraphFactory factory: GSGraphManager.getInstance().getGraphFactories()) {
                 writeDoc(doc, javadocbase, "Associated data for "+factory.getGraphType(), objMgr.getDataManagerInfo(factory.getGraphClass()));
             }
 			doc.close();

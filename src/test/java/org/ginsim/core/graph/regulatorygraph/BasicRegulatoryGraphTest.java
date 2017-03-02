@@ -12,7 +12,7 @@ import java.util.Set;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.backend.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.backend.NodeAttributeReaderImpl;
@@ -48,12 +48,12 @@ public class BasicRegulatoryGraphTest {
 	@After
 	public void afterEachTest(){
 		
-		Set<Graph> graph_list = GraphManager.getInstance().getAllGraphs();
+		Set<Graph> graph_list = GSGraphManager.getInstance().getAllGraphs();
 		
 		if( graph_list != null && !graph_list.isEmpty()){
 			
 			for( Graph graph : graph_list){
-				GraphManager.getInstance().close( graph);
+				GSGraphManager.getInstance().close( graph);
 			}
 		}
 	}
@@ -66,17 +66,17 @@ public class BasicRegulatoryGraphTest {
 	public void createAndCloseGraphWithDefaultMethodTest() {
 		
 		// Create a new RegulatoryGraph
-		int old_graph_list_count = GraphManager.getInstance().getAllGraphs().size();
-		RegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
+		int old_graph_list_count = GSGraphManager.getInstance().getAllGraphs().size();
+		RegulatoryGraph graph = GSGraphManager.getInstance().getNewGraph();
 		assertNotNull( "Create graph : the graph is null.", graph);
 		
-		int graph_list_count = GraphManager.getInstance().getAllGraphs().size();
+		int graph_list_count = GSGraphManager.getInstance().getAllGraphs().size();
 		assertEquals( "Registering graph : graph was not unregistered.", old_graph_list_count+1, graph_list_count);
 		
 		// Close the graph
-		GraphManager.getInstance().close( graph);
+		GSGraphManager.getInstance().close( graph);
 		
-		graph_list_count = GraphManager.getInstance().getAllGraphs().size();
+		graph_list_count = GSGraphManager.getInstance().getAllGraphs().size();
 		assertEquals( "Unregistering graph : graph was not unregistered.", old_graph_list_count, graph_list_count);	
 		
 	}
@@ -89,16 +89,16 @@ public class BasicRegulatoryGraphTest {
 	public void createAndCloseGraphWithClassMethodTest() {
 		
 		// Create a new RegulatoryGraph
-		RegulatoryGraph graph = GraphManager.getInstance().getNewGraph( RegulatoryGraph.class);
+		RegulatoryGraph graph = GSGraphManager.getInstance().getNewGraph( RegulatoryGraph.class);
 		assertNotNull( "Create graph : the graph is null.", graph);
 		
-		int graph_list_count = GraphManager.getInstance().getAllGraphs().size();
+		int graph_list_count = GSGraphManager.getInstance().getAllGraphs().size();
 		assertEquals( "Registering graph : graph was not unregistered.", 1, graph_list_count);
 		
 		// Close the graph
-		GraphManager.getInstance().close( graph);
+		GSGraphManager.getInstance().close( graph);
 		
-		graph_list_count = GraphManager.getInstance().getAllGraphs().size();
+		graph_list_count = GSGraphManager.getInstance().getAllGraphs().size();
 		assertEquals( "Unregistering graph : graph was not unregistered.", 0, graph_list_count);
 		
 	}
@@ -111,7 +111,7 @@ public class BasicRegulatoryGraphTest {
 	public void addAndRemoveNodeWithDefaultMethodTest() {
 		
 		// Create a new RegulatoryGraph
-		RegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
+		RegulatoryGraph graph = GSGraphManager.getInstance().getNewGraph();
 		assertNotNull( "Create graph : the graph is null.", graph);
 		
 		// Add a node
@@ -137,7 +137,7 @@ public class BasicRegulatoryGraphTest {
 	public void addAndRemoveNodeWithClassMethodTest() {
 		
 		// Create a new RegulatoryGraph
-		RegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
+		RegulatoryGraph graph = GSGraphManager.getInstance().getNewGraph();
 		assertNotNull( "Create graph : the graph is null.", graph);
 		
 		// Add a node
@@ -162,7 +162,7 @@ public class BasicRegulatoryGraphTest {
 	@Test public void addAndRemoveEdgeWithEndpointsTest() {
 		
 		// Create a new RegulatoryGraph
-		RegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
+		RegulatoryGraph graph = GSGraphManager.getInstance().getNewGraph();
 		assertNotNull( "Create graph : the created graph is null: creation failed.", graph);
 		
 		// Add nodes
@@ -207,7 +207,7 @@ public class BasicRegulatoryGraphTest {
 	@Test public void addLogicalParametersTest() {
 		
 		// Create a new RegulatoryGraph
-		RegulatoryGraph regGraph = GraphManager.getInstance().getNewGraph();
+		RegulatoryGraph regGraph = GSGraphManager.getInstance().getNewGraph();
 		assertNotNull( "Create graph : the created graph is null: creation failed.", regGraph);
 		
 		// Add nodes G0 and G1
@@ -259,7 +259,7 @@ public class BasicRegulatoryGraphTest {
         // ((N[0]=0 && 0) ; (N[0]=1 && ((N[1]=0 && 1) ; (N[1]=1 && 1) ; (N[1]=2 && 0))))
 
 		
-		GraphManager.getInstance().close( regGraph);
+		GSGraphManager.getInstance().close( regGraph);
 	}
 
 }

@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.GraphEventCascade;
 import org.ginsim.core.graph.GraphListener;
@@ -62,7 +62,7 @@ public class StateTransitionGraphEditor extends JPanel implements TextProperty, 
         annotationPanel.setAnnotation(graph.getAnnotation());
         add(annotationPanel, cst);
 
-        GraphManager.getInstance().addGraphListener( this.graph, this);
+        GSGraphManager.getInstance().addGraphListener( this.graph, this);
 	}
 
     @Override

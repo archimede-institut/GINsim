@@ -10,7 +10,7 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.service.EStatus;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.AbstractServiceGUI;
@@ -70,7 +70,7 @@ class ExportImageAction extends ExportAction {
 
 	@Override
 	protected void doExport(String filename) throws GsException, IOException {
-        ImageExportService service = ServiceManager.getManager().getService( ImageExportService.class);
+        ImageExportService service = GSServiceManager.getService( ImageExportService.class);
         GraphGUI gui = GUIManager.getInstance().getGraphGUI(graph);
         int f = 4;
         if (gui != null) {
@@ -103,7 +103,7 @@ class ExportSVGAction extends ExportAction {
     @Override
     protected void doExport(String filename) throws GsException, IOException {
 
-        ImageExportService service = ServiceManager.getManager().getService( ImageExportService.class);
+        ImageExportService service = GSServiceManager.getService( ImageExportService.class);
 
         if( service != null){
             service.exportSVG(graph, null, null, filename);

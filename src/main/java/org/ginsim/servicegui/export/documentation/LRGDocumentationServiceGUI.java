@@ -7,7 +7,7 @@ import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.EStatus;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.GUIFor;
@@ -37,7 +37,7 @@ public class LRGDocumentationServiceGUI extends AbstractServiceGUI {
     private final LRGDocumentationService service;
 
 	public LRGDocumentationServiceGUI() {
-        service = ServiceManager.getManager().getService(LRGDocumentationService.class);
+        service = GSServiceManager.getService(LRGDocumentationService.class);
 	}
 
 
@@ -82,7 +82,7 @@ class JSONDocumentationAction extends ExportAction<RegulatoryGraph> {
     @Override
     protected void doExport(String filename) throws GsException, IOException, Exception {
 
-        LRGDocumentationService service = ServiceManager.getManager().getService( LRGDocumentationService.class);
+        LRGDocumentationService service = GSServiceManager.getService( LRGDocumentationService.class);
 
         if( service != null){
             service.export(graph, filename);

@@ -7,7 +7,7 @@ import org.colomoto.biolqm.StatefulLogicalModelImpl;
 import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.Graph;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -615,7 +615,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 			public void run() {
 				try {
 					String dir = "C:\\Users\\Rui\\Documents\\00 Avatar\\Avatar Material\\table-models\\";
-					Graph<?,?> graph = GraphManager.getInstance().open(dir+"Bladder_Model_Stateful.zginml");
+					Graph<?,?> graph = GSGraphManager.getInstance().open(dir+"Bladder_Model_Stateful.zginml");
 
 					/*AvatarImport avaImport = new AvatarImport(new File(dir+"random_002_v010_k2.avatar"));
 					StatefulLogicalModel _model = avaImport.getModel(); //model.fromNuSMV(filename);

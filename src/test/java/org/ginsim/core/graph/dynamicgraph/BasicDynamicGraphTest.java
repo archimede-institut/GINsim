@@ -8,7 +8,7 @@ import java.awt.Color;
 import java.util.Set;
 
 import org.ginsim.common.application.OptionStore;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.backend.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.backend.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.view.NodeBorder;
@@ -43,18 +43,18 @@ public class BasicDynamicGraphTest {
 	public void createAndCloseGraphTest() {
 		
 		// Create a new DynamicGraph
-		DynamicGraph graph = GraphManager.getInstance().getNewGraph( DynamicGraph.class);
+		DynamicGraph graph = GSGraphManager.getInstance().getNewGraph( DynamicGraph.class);
 		assertNotNull( "Create graph : the graph is null.", graph);
 		
-		Set graph_list = GraphManager.getInstance().getAllGraphs();
+		Set graph_list = GSGraphManager.getInstance().getAllGraphs();
 		if( !graph_list.contains( graph)){
 			fail( "Registering graph : graph was not registered.");
 		}
 		
 		// Close the graph
-		GraphManager.getInstance().close( graph);
+		GSGraphManager.getInstance().close( graph);
 		
-		graph_list = GraphManager.getInstance().getAllGraphs();
+		graph_list = GSGraphManager.getInstance().getAllGraphs();
 		if( graph_list.contains( graph)){
 			fail( "Unregistering graph : graph was not unregistered.");
 		}
@@ -69,7 +69,7 @@ public class BasicDynamicGraphTest {
 	public void addAndRemoveNodeTest() {
 		
 		// Create a new DynamicGraph
-		DynamicGraph graph = GraphManager.getInstance().getNewGraph( DynamicGraph.class);
+		DynamicGraph graph = GSGraphManager.getInstance().getNewGraph( DynamicGraph.class);
 		assertNotNull( "Create graph : the graph is null", graph);
 		
 		// Add a node
@@ -94,7 +94,7 @@ public class BasicDynamicGraphTest {
 	public void addEdgeWithEndpointsTest() {
 		
 		// Create a new RegulatoryGraph
-		DynamicGraph graph = GraphManager.getInstance().getNewGraph( DynamicGraph.class);
+		DynamicGraph graph = GSGraphManager.getInstance().getNewGraph( DynamicGraph.class);
 		assertNotNull( "Create graph : the created graph is null: creation failed.", graph);
 		
 		// Add nodes

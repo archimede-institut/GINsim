@@ -11,7 +11,7 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
@@ -63,7 +63,7 @@ public class GUIManager {
 	 */
 	public void loadGINMLfile(String filename) {
 		try {
-			Graph<?,?> graph = GraphManager.getInstance().open(filename);
+			Graph<?,?> graph = GSGraphManager.getInstance().open(filename);
 			newFrame( graph);
 		} catch (GsException e) {
 			LogManager.error(e);
@@ -77,7 +77,7 @@ public class GUIManager {
 	 * @return the new regulatory graph
 	 */
 	public RegulatoryGraph newFrame() {
-		RegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
+		RegulatoryGraph graph = GSGraphManager.getInstance().getNewGraph();
 		newFrame(graph);
 		return graph;
 	}
@@ -188,7 +188,7 @@ public class GUIManager {
 		GUIObject o = graphToGUIObject.get(graph);
 		if (!o.graphGUI.isSaved()) {
 			// FIXME: better name
-			String name = GraphManager.getInstance().getGraphPath( graph);
+			String name = GSGraphManager.getInstance().getGraphPath( graph);
 			if( name == null){
 				name = "NAME_HERE";
 			}
@@ -218,7 +218,7 @@ public class GUIManager {
 		if (graphToGUIObject.size() == 0) {
 			noFrameLeft(false);
 		}
-		GraphManager.getInstance().close(graph);
+		GSGraphManager.getInstance().close(graph);
 		return true;
 	}
 	
@@ -515,10 +515,10 @@ public class GUIManager {
 			for (String filename: open) {
 				Graph graph = null;
 				if (filename == null) {
-					graph = GraphManager.getInstance().getNewGraph();
+					graph = GSGraphManager.getInstance().getNewGraph();
 				} else {
 					try {
-						graph = GraphManager.getInstance().open(filename);
+						graph = GSGraphManager.getInstance().open(filename);
 					} catch (GsException e) {
 						LogManager.error(e);
 						graph = null;

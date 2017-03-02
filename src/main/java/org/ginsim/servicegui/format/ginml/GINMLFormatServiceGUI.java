@@ -12,7 +12,7 @@ import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.EStatus;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.ExportAction;
@@ -88,8 +88,7 @@ class GINMLFormatAction extends ExportAction<RegulatoryGraph> {
 					"Nothing to export: The graph is empty");
 		}
 
-		GINMLFormatService service = ServiceManager.getManager().getService(
-				GINMLFormatService.class);
+		GINMLFormatService service = GSServiceManager.getService(GINMLFormatService.class);
 		if (service == null) {
 			throw new GsException(GsException.GRAVITY_ERROR,
 					"GINMLFormatService service is not available");

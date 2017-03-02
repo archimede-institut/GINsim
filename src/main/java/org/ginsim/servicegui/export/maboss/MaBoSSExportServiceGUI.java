@@ -10,7 +10,7 @@ import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.EStatus;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.ExportAction;
@@ -62,7 +62,7 @@ class MaBoSSExportAction extends ExportAction<RegulatoryGraph> {
 	@Override
 	protected void doExport(String filename) throws IOException {
 
-		MaBoSSExportService service = ServiceManager.getManager().getService(
+		MaBoSSExportService service = GSServiceManager.getService(
 				MaBoSSExportService.class);
 		service.export(graph.getModel(), filename);
 	}

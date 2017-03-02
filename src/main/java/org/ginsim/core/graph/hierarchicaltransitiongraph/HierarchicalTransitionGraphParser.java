@@ -8,7 +8,7 @@ import java.util.Vector;
 import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
@@ -60,7 +60,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
      */
     public HierarchicalTransitionGraphParser(Set<String> nodeToParse, Attributes attributes, String s_dtd) throws GsException{
     	
-    	this.htg = GraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, true);
+    	this.htg = GSGraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, true);
     	this.nodeToParse = nodeToParse;
 		styleManager = htg.getStyleManager();
 		vareader = htg.getNodeAttributeReader();

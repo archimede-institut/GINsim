@@ -5,7 +5,7 @@ import java.awt.GridBagLayout;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.gui.utils.dialog.stackdialog.AbstractStackDialogHandler;
@@ -51,7 +51,7 @@ public class SBMLQualExportConfigPanel extends AbstractStackDialogHandler {
         }
 
         try {
-            SBMLqualService srv = ServiceManager.getManager().getService(SBMLqualService.class);
+            SBMLqualService srv = GSServiceManager.getService(SBMLqualService.class);
             srv.export(config, filename);
             action.notifySuccess();
         } catch (Exception e) {

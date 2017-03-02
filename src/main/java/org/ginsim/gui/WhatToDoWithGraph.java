@@ -23,12 +23,12 @@ import javax.swing.border.EmptyBorder;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.GraphGUIHelperFactory;
-import org.ginsim.gui.service.ServiceGUIManager;
+import org.ginsim.gui.service.GSServiceGUIManager;
 import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.gui.shell.actions.GenericGraphAction;
 import org.ginsim.gui.shell.actions.LayoutAction;
@@ -85,7 +85,7 @@ public class WhatToDoWithGraph extends Frame {
 		super("whattodo", 400, 450);
 		this.graph = graph;
 		// Retrieve the list of available actions for the graph type
-		List<Action> available_actions = ServiceGUIManager.getManager().getAvailableActions( graph);
+		List<Action> available_actions = GSServiceGUIManager.getAvailableActions( graph);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -380,7 +380,7 @@ public class WhatToDoWithGraph extends Frame {
 	 */
 	private boolean executeSave(){
 		
-		String savePath = GraphManager.getInstance().getGraphPath( graph);
+		String savePath = GSGraphManager.getInstance().getGraphPath( graph);
 		if (savePath == null) {
 			GsFileFilter ffilter = new GsFileFilter();
 			ffilter.setExtensionList(new String[] { "zginml" }, "GINsim files");
@@ -428,7 +428,7 @@ public class WhatToDoWithGraph extends Frame {
 
 	public static void layoutIfNeeded(Graph<?, ?> graph) {
 		if (needLayout(graph)) {
-			for (Action action: ServiceGUIManager.getManager().getAvailableActions( graph)) {
+			for (Action action: GSServiceGUIManager.getAvailableActions( graph)) {
 				if (action instanceof LayoutAction) {
 					action.actionPerformed(null);
 					break;

@@ -12,7 +12,7 @@ import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.EStatus;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.ExportAction;
@@ -85,8 +85,7 @@ class CADPExportAction extends ExportAction<RegulatoryGraph> {
 					"Nothing to export: The graph is empty");
 		}
 
-		CADPExportService service = ServiceManager.getManager().getService(
-				CADPExportService.class);
+		CADPExportService service = GSServiceManager.getService(CADPExportService.class);
 		if (service == null) {
 			throw new GsException(GsException.GRAVITY_ERROR,
 					"CADPExportService service is not available");

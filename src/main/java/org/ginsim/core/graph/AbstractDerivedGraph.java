@@ -43,12 +43,12 @@ abstract public class AbstractDerivedGraph<V, E extends Edge<V>, AG extends Grap
         }
 
         if (associatedGraph != null) {
-            GraphManager.getInstance().removeGraphListener( associatedGraph, this);
+            GSGraphManager.getInstance().removeGraphListener( associatedGraph, this);
             associatedGraph = null;
             return;
         }
         associatedGraph = associated_graph;
-        GraphManager.getInstance().addGraphListener( associatedGraph, this);
+        GSGraphManager.getInstance().addGraphListener( associatedGraph, this);
     }
 	
     /**
@@ -59,13 +59,13 @@ abstract public class AbstractDerivedGraph<V, E extends Edge<V>, AG extends Grap
 
         if ( associatedGraph == null && getAssociatedGraphID() != null) {
         	
-            AG ag = (AG) GraphManager.getInstance().getGraphFromPath( associatedID);
+            AG ag = (AG) GSGraphManager.getInstance().getGraphFromPath( associatedID);
             if (ag != null) {
                 setAssociatedGraph( ag);
             } else {
                 File f = new File( associatedID);
                 if (f.exists()) {
-                    ag = (AG) GraphManager.getInstance().open(f);
+                    ag = (AG) GSGraphManager.getInstance().open(f);
                     setAssociatedGraph(ag);
                 } else {
                 	throw new GsException(GsException.GRAVITY_INFO, "STR_openAssociatedGraphFailed"+"\n"+associatedID);
@@ -89,7 +89,7 @@ abstract public class AbstractDerivedGraph<V, E extends Edge<V>, AG extends Grap
     public String getAssociatedGraphID() throws GsException{
 		
         if (associatedGraph != null) {
-            associatedID = GraphManager.getInstance().getGraphPath( associatedGraph);
+            associatedID = GSGraphManager.getInstance().getGraphPath( associatedGraph);
             if (associatedID == null) {
                 throw new GsException(GsException.GRAVITY_INFO, "STR_associate_save");
             }

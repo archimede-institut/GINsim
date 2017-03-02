@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 import org.ginsim.TestUtils;
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
@@ -124,7 +124,7 @@ class GraphExamples {
 	 * 
 	 */
 	public static RegulatoryGraph rg1() {
-		RegulatoryGraph g = GraphManager.getInstance().getNewGraph(); 
+		RegulatoryGraph g = GSGraphManager.getInstance().getNewGraph(); 
 		try { g.setGraphName("regulatory_graph_A");} catch (GsException e) {}
 		
 		g.addNewNode("A", "A", (byte)1);
@@ -157,7 +157,7 @@ class GraphExamples {
 	 *        
 	 */
 	public static RegulatoryGraph rg2() {
-		RegulatoryGraph g = GraphManager.getInstance().getNewGraph(); 
+		RegulatoryGraph g = GSGraphManager.getInstance().getNewGraph(); 
 		try { g.setGraphName("regulatory_graph_B");} catch (GsException e) {}
 		
 		g.addNewNode("A", "A", (byte)1);
@@ -184,7 +184,7 @@ class GraphExamples {
 	}
 	
 	public static RegulatoryGraph rgempty() {
-		RegulatoryGraph g = GraphManager.getInstance().getNewGraph(); 
+		RegulatoryGraph g = GSGraphManager.getInstance().getNewGraph(); 
 		try { g.setGraphName("regulatory_graph_empty");} catch (GsException e) {}
 		return g;
 	}
@@ -200,7 +200,7 @@ class GraphExamples {
 	 * 
 	 */
 	public static  DynamicGraph dg1() {
-		DynamicGraph g = GraphManager.getInstance().getNewGraph( DynamicGraph.class); 
+		DynamicGraph g = GSGraphManager.getInstance().getNewGraph( DynamicGraph.class); 
 		try { g.setGraphName("dynamic_graph_A");} catch (GsException e) {}
 		
 		g.addNode(new DynamicNode("a00"));
@@ -226,7 +226,7 @@ class GraphExamples {
 	 * 
 	 */
 	public static  DynamicGraph dg2() {
-		DynamicGraph g = GraphManager.getInstance().getNewGraph(DynamicGraph.class); 
+		DynamicGraph g = GSGraphManager.getInstance().getNewGraph(DynamicGraph.class); 
 		try { g.setGraphName("dynamic_graph_B");} catch (GsException e) {}
 		
 		g.addNode(new DynamicNode("a00"));
@@ -244,7 +244,7 @@ class GraphExamples {
 	}
 
 	public static DynamicGraph dgempty() {
-		DynamicGraph g = GraphManager.getInstance().getNewGraph(DynamicGraph.class); 
+		DynamicGraph g = GSGraphManager.getInstance().getNewGraph(DynamicGraph.class); 
 		try { g.setGraphName("dynamic_graph_empty");} catch (GsException e) {}
 		return g;
 	}

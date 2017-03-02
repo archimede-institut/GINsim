@@ -10,7 +10,7 @@ import javax.swing.Action;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.service.Service;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.common.utils.IntrospectionUtils;
 
 
@@ -28,7 +28,7 @@ public abstract class SimpleServiceGUI<S extends Service> extends AbstractServic
 		if (backend == null) {
 			this.service = null;
 		} else {
-			this.service = ServiceManager.get((Class<S>)backend.value());
+			this.service = GSServiceManager.get((Class<S>)backend.value());
 			if (service == null) {
 				LogManager.error("Could not retrieve backend service: "+ backend.value());
 			}

@@ -12,7 +12,7 @@ import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.EStatus;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.ExportAction;
@@ -88,8 +88,7 @@ class NuSMVExportAction extends ExportAction<RegulatoryGraph> {
 					"Nothing to export: The graph is empty");
 		}
 
-		NuSMVExportService service = ServiceManager.getManager().getService(
-				NuSMVExportService.class);
+		NuSMVExportService service = GSServiceManager.getService(NuSMVExportService.class);
 		if (service == null) {
 			throw new GsException(GsException.GRAVITY_ERROR,
 					"NuSMVExportService service is not available");

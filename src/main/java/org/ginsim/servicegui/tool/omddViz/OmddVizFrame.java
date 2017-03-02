@@ -19,7 +19,7 @@ import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDOperator;
 import org.colomoto.mddlib.operators.MDDBaseOperators;
 import org.ginsim.common.application.Txt;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.tree.Tree;
@@ -143,7 +143,7 @@ public class OmddVizFrame extends StackDialog implements ActionListener {
 		} else if (e.getSource() == displayTreeButton) {
 			run();
 			TreeBuilder parser = new TreeBuilderFromManualOmdd();
-			Tree tree = GraphManager.getInstance().getNewGraph( Tree.class, parser);
+			Tree tree = GSGraphManager.getInstance().getNewGraph( Tree.class, parser);
 				
 			parser.setParameter(TreeBuilderFromManualOmdd.PARAM_MANUALOMDD, resOmdd);
 			parser.setParameter(TreeBuilderFromManualOmdd.PARAM_NODEORDER, graph.getNodeOrder());

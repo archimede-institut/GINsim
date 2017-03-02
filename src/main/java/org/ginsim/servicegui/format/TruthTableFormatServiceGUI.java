@@ -2,7 +2,7 @@ package org.ginsim.servicegui.format;
 
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.service.EStatus;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.service.FormatSupportServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.GUIFor;
@@ -21,8 +21,8 @@ import org.mangosdk.spi.ProviderFor;
 public class TruthTableFormatServiceGUI extends
 		FormatSupportServiceGUI<TruthTableFormatService> {
 
-	private static TruthTableFormatService SERVICE = ServiceManager
-			.getManager().getService(TruthTableFormatService.class);
+	private static TruthTableFormatService SERVICE = GSServiceManager
+			.getService(TruthTableFormatService.class);
 	private static FileFormatDescription FORMAT = new FileFormatDescription(
 			"TruthTable", "tt");
 

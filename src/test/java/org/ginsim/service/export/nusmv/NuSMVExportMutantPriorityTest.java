@@ -20,7 +20,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationFixed;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationMultiple;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.junit.BeforeClass;
@@ -45,8 +45,7 @@ public class NuSMVExportMutantPriorityTest {
 		graph = TestFileUtils
 				.loadGraph(new File(dir + "/" + sModel + ".ginml"));
 
-		service = ServiceManager.getManager().getService(
-				NuSMVExportService.class);
+		service = GSServiceManager.getService(NuSMVExportService.class);
 		assertNotNull("NuSMVExportService service is not available", service);
 	}
 

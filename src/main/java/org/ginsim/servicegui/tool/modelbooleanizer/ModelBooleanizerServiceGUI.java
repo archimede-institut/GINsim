@@ -12,7 +12,7 @@ import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.EStatus;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
@@ -63,8 +63,7 @@ class BooleanizeAction extends ToolAction {
 		if (this.graph.getModel().isBoolean()) {
 			GUIMessageUtils.openErrorDialog("STR_booleanize_isBoolean");
 		} else {
-			ModelBooleanizerService service = ServiceManager.getManager()
-					.getService(ModelBooleanizerService.class);
+			ModelBooleanizerService service = GSServiceManager.getService(ModelBooleanizerService.class);
 			LogicalModel bModel = service.booleanize(this.graph.getModel());
 
 			RegulatoryGraph bGraph = LogicalModel2RegulatoryGraph

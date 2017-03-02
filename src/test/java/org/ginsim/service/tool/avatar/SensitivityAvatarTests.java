@@ -9,7 +9,7 @@ import junit.framework.TestCase;
 import org.colomoto.biolqm.StatefulLogicalModel;
 import org.colomoto.biolqm.StatefulLogicalModelImpl;
 import org.colomoto.biolqm.io.avatar.AvatarUtils;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.service.tool.avatar.domain.AbstractStateSet;
@@ -65,7 +65,7 @@ public class SensitivityAvatarTests extends TestCase {
 		}
 	}*/
 	private static void myTestBladder() throws Exception {
-		RegulatoryGraph graph = (RegulatoryGraph)GraphManager.getInstance().open(dir+"Bladder_Model_Stateful.zginml");
+		RegulatoryGraph graph = (RegulatoryGraph)GSGraphManager.getInstance().open(dir+"Bladder_Model_Stateful.zginml");
 		List<String> nodes = new ArrayList<String>();
 		for(RegulatoryNode node : graph.getNodeOrder()) nodes.add(node.getName());
 		String[] names = new String[]{"EGFR_stimulus","FGFR3_stimulus","DNAdamage","GrowthInhibitors","Proliferation","Apoptosis","Growth_Arrest"};

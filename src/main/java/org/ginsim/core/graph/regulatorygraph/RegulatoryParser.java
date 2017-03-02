@@ -14,7 +14,7 @@ import java.util.Vector;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.BooleanParser;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
@@ -87,7 +87,7 @@ public final class RegulatoryParser extends GsXMLHelper {
      */
     public RegulatoryParser(Set set, Attributes attributes, String s_dtd) throws GsException {
     	
-        graph = GraphManager.getInstance().getNewGraph( RegulatoryGraph.class, true);
+        graph = GSGraphManager.getInstance().getNewGraph( RegulatoryGraph.class, true);
         this.set = set;
 		s_nodeOrder = attributes.getValue("nodeorder");
         if (s_nodeOrder == null) {

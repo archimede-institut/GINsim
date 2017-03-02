@@ -18,7 +18,7 @@ import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.ginsim.service.tool.stablestates.StableStatesService;
@@ -639,8 +639,7 @@ public class NuSMVEncoder {
 		}
 		String sRet = "";
 		try {
-			StableStateSearcher sss = ServiceManager.getManager()
-					.getService(StableStatesService.class)
+			StableStateSearcher sss = GSServiceManager.getService(StableStatesService.class)
 					.getStableStateSearcher(model);
 			int omdds = sss.call();
 			MDDManager ddmanager = sss.getMDDManager().getManager(newNodeOrder);

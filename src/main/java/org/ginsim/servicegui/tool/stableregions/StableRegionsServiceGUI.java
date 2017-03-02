@@ -9,7 +9,7 @@ import javax.swing.Action;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.EStatus;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.GUIFor;
@@ -50,8 +50,7 @@ class StableRegionsAction extends ToolAction {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		StableRegionsService srService = ServiceManager.getManager().getService(
-				StableRegionsService.class);
+		StableRegionsService srService = GSServiceManager.getService(StableRegionsService.class);
 		srService.getSCCs(graph);
 	}
 

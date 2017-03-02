@@ -16,7 +16,7 @@ import org.colomoto.mddlib.PathSearcher;
 import org.colomoto.mddlib.operators.MDDBaseOperators;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 
 /**
@@ -50,7 +50,7 @@ public class SATEncoder {
 					NodeInfo node = coreNodes.get(i);
 					this.printNodeComment2CNF(sb, node, i + 1);
 				}
-				StableStateSearcher stableStateSearcher = ServiceManager.get(
+				StableStateSearcher stableStateSearcher = GSServiceManager.get(
 						StableStatesService.class)
 						.getStableStateSearcher(model);
 				int root = stableStateSearcher.call();

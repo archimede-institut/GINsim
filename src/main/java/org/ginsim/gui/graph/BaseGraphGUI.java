@@ -16,7 +16,7 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.GraphViewListener;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
@@ -58,7 +58,7 @@ public abstract class BaseGraphGUI<G extends Graph<V,E>, V, E extends Edge<V>>
 		this.helper = helper;
 		
 		editActionManager = new EditActionManager(this, helper.getEditActions(graph));
-		GraphManager.getInstance().addGraphListener(g, this);
+		GSGraphManager.getInstance().addGraphListener(g, this);
 		g.addViewListener(this);
 	}
 
@@ -138,7 +138,7 @@ public abstract class BaseGraphGUI<G extends Graph<V,E>, V, E extends Edge<V>>
 			return false;
 		}
 		
-		String savePath = GraphManager.getInstance().getGraphPath( graph);
+		String savePath = GSGraphManager.getInstance().getGraphPath( graph);
 		
 		if (savePath == null) {
 			isSaved = false;
@@ -184,7 +184,7 @@ public abstract class BaseGraphGUI<G extends Graph<V,E>, V, E extends Edge<V>>
 			} catch (GsException gse) {
 				LogManager.debug( "Unable to set graph name: " + graph_name);
 			}
-			GraphManager.getInstance().registerGraph( graph, filename);
+			GSGraphManager.getInstance().registerGraph( graph, filename);
 			return save();
 		}
 		

@@ -12,7 +12,7 @@ import org.ginsim.TestFileUtils;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -43,8 +43,7 @@ public class TestComposition {
 			saModel[i] = saModel[i].substring(0, saModel[i].indexOf('.'));
 		}
 
-		service = ServiceManager.getManager().getService(
-				CompositionService.class);
+		service = GSServiceManager.getService(CompositionService.class);
 		assertNotNull("CompositionService service is not available", service);
 	}
 

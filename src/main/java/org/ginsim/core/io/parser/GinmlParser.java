@@ -7,7 +7,7 @@ import java.util.Set;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.ParsingWarningReport;
 import org.ginsim.common.xml.XMLHelper;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.notification.NotificationManager;
 import org.xml.sax.Attributes;
@@ -64,7 +64,7 @@ public final class GinmlParser extends XMLHelper {
         if (qName.equals("graph")) {
         	try{
 	            String s_class = attributes.getValue("class");
-	            Class parser_class = GraphManager.getInstance().getParserClass( s_class);
+	            Class parser_class = GSGraphManager.getInstance().getParserClass( s_class);
 	            if( parser_class != null){
 		            Class<?> parameter_types[] = new Class[3];
 		            parameter_types[0] = Set.class;

@@ -23,10 +23,10 @@ import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionG
 import org.ginsim.core.graph.hierarchicaltransitiongraph.StatesSet;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphSelection;
-import org.ginsim.gui.service.ServiceGUIManager;
+import org.ginsim.gui.service.GSServiceGUIManager;
 import org.ginsim.gui.shell.actions.LayoutAction;
 import org.ginsim.gui.shell.MainFrame;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
@@ -129,12 +129,12 @@ public class LimitedSimulationFrame extends LogicalModelActionDialog {
 			return;
 		}
 
-		LimitedSimulationService service = ServiceManager.getManager().getService(LimitedSimulationService.class);
+		LimitedSimulationService service = GSServiceManager.getService(LimitedSimulationService.class);
 		try {
 			DynamicGraph dynGraph = service.run(htg, constraint, model, params);
 
 			// force a layout on the STG: not perfect but better than the current weird situation
-			for (Action action: ServiceGUIManager.getManager().getAvailableActions( dynGraph)) {
+			for (Action action: GSServiceGUIManager.getAvailableActions( dynGraph)) {
 				if (action instanceof LayoutAction) {
 					action.actionPerformed(null);
 					break;

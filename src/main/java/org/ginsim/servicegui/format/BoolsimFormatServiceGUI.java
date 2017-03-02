@@ -2,7 +2,7 @@ package org.ginsim.servicegui.format;
 
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.service.EStatus;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.service.FormatSupportServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.GUIFor;
@@ -20,7 +20,7 @@ import org.mangosdk.spi.ProviderFor;
 @ServiceStatus( EStatus.RELEASED)
 public class BoolsimFormatServiceGUI extends FormatSupportServiceGUI<BoolsimFormatService> {
 
-	private static BoolsimFormatService SERVICE = ServiceManager.getManager().getService(BoolsimFormatService.class);
+	private static BoolsimFormatService SERVICE = GSServiceManager.getService(BoolsimFormatService.class);
 	private static FileFormatDescription FORMAT = new FileFormatDescription("Boolsim", "net");
 	
 	public BoolsimFormatServiceGUI() {

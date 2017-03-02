@@ -11,7 +11,7 @@ import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
@@ -77,7 +77,7 @@ public class SimulationParameters implements XMLize, NamedObject, NamedStateStor
      */
     public String getDescr(List<NodeInfo> nodeOrder) {
         String name = param_list.graph.getGraphName();
-        String saveName = GraphManager.getInstance().getGraphPath( param_list.graph);
+        String saveName = GSGraphManager.getInstance().getGraphPath( param_list.graph);
         if (saveName != null) {
             int pos = saveName.lastIndexOf(File.separatorChar);
             if (pos != -1) {

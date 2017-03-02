@@ -32,9 +32,9 @@ import org.ginsim.core.notification.NotificationManager;
  * @author Lionel Spinelli
  * @author Aurelien Naldi
  */
-public class GraphManager {
+public class GSGraphManager {
 
-    private static GraphManager instance = null;
+    private static GSGraphManager instance = null;
     private HashMap<Class<Graph>, GraphFactory> graphFactories = new HashMap<Class<Graph>, GraphFactory>();
     private HashMap<Graph, GraphInfo<?>> graphFilepath = new HashMap<Graph, GraphInfo<?>>();
     
@@ -45,7 +45,7 @@ public class GraphManager {
     /**
      * The constructor of the manager retrieves the list of available GraphFactory
      */
-    private GraphManager(){
+    private GSGraphManager(){
     	
         Iterator<GraphFactory> factory_list = ExtensionLoader.iterator(GraphFactory.class);
         while (factory_list.hasNext()) {
@@ -64,10 +64,10 @@ public class GraphManager {
     /**
      * @return an instance of this graphDescriptor.
      */
-    public static GraphManager getInstance() {
+    public static GSGraphManager getInstance() {
     	
         if (instance == null) {
-            instance = new GraphManager();
+            instance = new GSGraphManager();
         }
         return instance;
     }

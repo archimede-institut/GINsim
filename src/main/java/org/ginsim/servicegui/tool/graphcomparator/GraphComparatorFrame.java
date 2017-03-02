@@ -26,9 +26,9 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
@@ -136,12 +136,12 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 		SeparatorComboBox comboBox = new SeparatorComboBox();
 		comboBox.addItem(Txt.t("STR_gcmp_from_file")+" :");
 		comboBox.addItem(new JSeparator());
-		graphList = new ArrayList(GraphManager.getInstance().getAllGraphs().size());
+		graphList = new ArrayList(GSGraphManager.getInstance().getAllGraphs().size());
 		HashMap graphNames = new HashMap();
 		int indexToSelect = 0;
 		int i = 2;
 
-		for (Iterator it = GraphManager.getInstance().getAllGraphs().iterator(); it.hasNext();) {
+		for (Iterator it = GSGraphManager.getInstance().getAllGraphs().iterator(); it.hasNext();) {
 
 			Graph graph = (Graph) it.next();
 			String name = graph.getGraphName();
@@ -179,7 +179,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 		Graph g2 = getGraph(g2_modelComboBox, g2_filepath);		
 		opt_display_graph = displayGraphCheckBox.getSelectedObjects() != null;//display the graph if displayGraphCheckBox is checked
 
-		GraphComparatorService gcService = ServiceManager.getManager().getService( GraphComparatorService.class);
+		GraphComparatorService gcService = GSServiceManager.getService( GraphComparatorService.class);
 		GraphComparatorResult gcResult = gcService.run(frame_graph, g1, g2);
 		if ( gcResult == null) {
 			cancel();
@@ -203,7 +203,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 		int index = comboBox.getSelectedIndex() ;
 		if (index == 0) {
 			try{
-				g = GraphManager.getInstance().open(new File(filepath.getText()));
+				g = GSGraphManager.getInstance().open(new File(filepath.getText()));
 			}
 			catch( GsException ge){
 				GUIMessageUtils.openErrorDialog(new GsException(GsException.GRAVITY_INFO, Txt.t("STR_GraphNotOpened")), this.frame);

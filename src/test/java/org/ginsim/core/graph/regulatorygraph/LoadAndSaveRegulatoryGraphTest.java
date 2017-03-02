@@ -12,7 +12,7 @@ import java.util.Set;
 import org.ginsim.TestFileUtils;
 import org.ginsim.TestUtils;
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 import org.junit.After;
 import org.junit.Before;
@@ -51,12 +51,12 @@ public class LoadAndSaveRegulatoryGraphTest {
 	@After
 	public void afterEachTest(){
 		
-		Set<Graph> graph_list = GraphManager.getInstance().getAllGraphs();
+		Set<Graph> graph_list = GSGraphManager.getInstance().getAllGraphs();
 		if( graph_list != null && !graph_list.isEmpty()){
 			
 			List<Graph> graphs = new ArrayList<Graph>(graph_list);
 			for( Graph graph : graphs){
-				GraphManager.getInstance().close( graph);
+				GSGraphManager.getInstance().close( graph);
 			}
 		}
 		
@@ -104,7 +104,7 @@ public class LoadAndSaveRegulatoryGraphTest {
 	private File saveGraph(){
 		
 		// Create a new RegulatoryGraph
-		RegulatoryGraph graph = GraphManager.getInstance().getNewGraph();
+		RegulatoryGraph graph = GSGraphManager.getInstance().getNewGraph();
 		assertNotNull( "Create graph : the created graph is null: creation failed.", graph);
 		try {
 			graph.setGraphName( "saveGraphTest");

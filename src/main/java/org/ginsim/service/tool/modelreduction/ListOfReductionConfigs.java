@@ -2,7 +2,7 @@ package org.ginsim.service.tool.modelreduction;
 
 import java.util.*;
 
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.GraphEventCascade;
 import org.ginsim.core.graph.GraphListener;
@@ -35,7 +35,7 @@ public class ListOfReductionConfigs extends NamedList<ReductionConfig>
     	canRemove = true;
     	canOrder = true;
 */
-        GraphManager.getInstance().addGraphListener( this.graph, this);
+        GSGraphManager.getInstance().addGraphListener( this.graph, this);
     }
 
 	protected ReductionConfig doCreate(String name, int pos) {

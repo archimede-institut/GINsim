@@ -31,7 +31,7 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Txt;
 import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
-import org.ginsim.core.graph.GraphManager;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
@@ -40,7 +40,7 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationUser;
 import org.ginsim.core.graph.tree.Tree;
 import org.ginsim.core.graph.tree.TreeBuilder;
 import org.ginsim.core.graph.tree.TreeBuilderFromCircuit;
-import org.ginsim.core.service.ServiceManager;
+import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
@@ -59,7 +59,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 
     private static final long serialVersionUID = 2671795894716799300L;
 
-    private static final CircuitService CIRCUITS = ServiceManager.getManager().getService(CircuitService.class);
+    private static final CircuitService CIRCUITS = GSServiceManager.getService(CircuitService.class);
 
     protected RegulatoryGraph graph;
 
@@ -510,7 +510,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         }
 		parser.setParameter(TreeBuilderFromCircuit.PARAM_ALLCONTEXTS, contexts);
 
-        Tree tree = GraphManager.getInstance().getNewGraph( Tree.class, parser);
+        Tree tree = GSGraphManager.getInstance().getNewGraph( Tree.class, parser);
 		GUIManager.getInstance().newFrame(tree,false);
 	}
 	
