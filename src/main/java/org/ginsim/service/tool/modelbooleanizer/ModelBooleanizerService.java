@@ -3,8 +3,8 @@ package org.ginsim.service.tool.modelbooleanizer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.modifier.booleanize.Booleanizer;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.modifier.booleanize.Booleanizer;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeAttributesReader;

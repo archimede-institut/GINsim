@@ -2,7 +2,7 @@ package org.ginsim.core.graph.regulatorygraph;
 
 import java.util.List;
 
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.NodeInfo;
 
 /**
  * Order the components of a regulatory graph.

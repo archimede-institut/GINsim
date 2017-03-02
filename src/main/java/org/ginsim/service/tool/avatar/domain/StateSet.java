@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
+import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.service.tool.avatar.utils.AvaMath;
 
 /**

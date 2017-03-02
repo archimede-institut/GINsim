@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.colomoto.logicalmodel.services.ScriptEngineLoader;
+import org.colomoto.biolqm.services.ScriptEngineLoader;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
@@ -129,7 +129,9 @@ public class ScriptLauncher {
             Py.getSystemState().path.add(0, dir.getAbsolutePath());
             PythonInterpreter pi = new PythonInterpreter();
             pi.set("gs", this);
-            pi.set("lm", new org.colomoto.logicalmodel.services.ScriptLauncher());
+            org.colomoto.biolqm.services.ScriptLauncher lqm_launcher = new org.colomoto.biolqm.services.ScriptLauncher(args);
+            pi.set("lm", lqm_launcher);
+            pi.set("lqm", lqm_launcher);
             pi.execfile(filename);
         } else {
 
@@ -138,7 +140,9 @@ public class ScriptLauncher {
             try {
                 ScriptEngine engine = ScriptEngineLoader.loadEngine(filename);
                 engine.put("gs", this);
-                engine.put("lm", new org.colomoto.logicalmodel.services.ScriptLauncher());
+                org.colomoto.biolqm.services.ScriptLauncher lqm_launcher = new org.colomoto.biolqm.services.ScriptLauncher(args);
+                engine.put("lm", lqm_launcher);
+                engine.put("lqm", lqm_launcher);
 
                 engine.eval(new java.io.FileReader(filename));
             } catch (Exception e) {

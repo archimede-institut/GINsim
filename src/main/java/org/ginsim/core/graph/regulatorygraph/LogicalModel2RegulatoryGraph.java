@@ -2,10 +2,10 @@ package org.ginsim.core.graph.regulatorygraph;
 
 import java.util.*;
 
-import org.colomoto.logicalmodel.ConnectivityMatrix;
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.StatefulLogicalModel;
+import org.colomoto.biolqm.ConnectivityMatrix;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.StatefulLogicalModel;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.PathSearcher;
 import org.colomoto.mddlib.VariableEffect;

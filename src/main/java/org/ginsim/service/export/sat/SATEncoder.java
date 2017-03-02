@@ -6,10 +6,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.modifier.booleanize.Booleanizer;
-import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.modifier.booleanize.Booleanizer;
+import org.colomoto.biolqm.tool.stablestate.StableStateSearcher;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
 import org.colomoto.mddlib.PathSearcher;

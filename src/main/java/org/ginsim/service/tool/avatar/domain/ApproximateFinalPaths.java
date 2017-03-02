@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.colomoto.logicalmodel.io.avatar.AvatarLogicalModelException;
+import org.colomoto.biolqm.io.avatar.AvatarLogicalModelException;
 
 /**
  * Approximate representation of the probabilities of the transitions within and going out of a cycle.<br>

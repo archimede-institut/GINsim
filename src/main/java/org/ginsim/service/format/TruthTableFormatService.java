@@ -1,6 +1,6 @@
 package org.ginsim.service.format;
 
-import org.colomoto.logicalmodel.io.truthtable.TruthTableFormat;
+import org.colomoto.biolqm.io.truthtable.TruthTableFormat;
 import org.ginsim.core.service.*;
 import org.mangosdk.spi.ProviderFor;
 

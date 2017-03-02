@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.biolqm.LogicalModel;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.DecisionOnEdge;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraph;

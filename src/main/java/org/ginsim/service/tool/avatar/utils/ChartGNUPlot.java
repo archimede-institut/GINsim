@@ -14,7 +14,7 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
+import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.service.tool.avatar.domain.State;
 
 

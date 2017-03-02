@@ -3,7 +3,7 @@ package org.ginsim.service.tool.avatar;
 import java.util.Arrays;
 import java.util.List;
 import junit.framework.TestCase;
-import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
+import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.service.tool.avatar.domain.Result;
 import org.ginsim.service.tool.avatar.params.AvatarParameters;
 import org.ginsim.service.tool.avatar.service.AvatarServiceFacade;

@@ -13,7 +13,7 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 
-import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
+import org.colomoto.biolqm.tool.stablestate.StableStateSearcher;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;

@@ -8,12 +8,12 @@ import java.util.List;
 
 import javax.xml.stream.XMLStreamException;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.io.sbml.SBMLFormat;
-import org.colomoto.logicalmodel.io.sbml.SBMLQualBundle;
-import org.colomoto.logicalmodel.io.sbml.SBMLqualExport;
-import org.colomoto.logicalmodel.io.sbml.SBMLqualImport;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.io.sbml.SBMLFormat;
+import org.colomoto.biolqm.io.sbml.SBMLQualBundle;
+import org.colomoto.biolqm.io.sbml.SBMLqualExport;
+import org.colomoto.biolqm.io.sbml.SBMLqualImport;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;

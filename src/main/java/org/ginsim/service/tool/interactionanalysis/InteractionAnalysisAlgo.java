@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
 import org.ginsim.common.application.LogManager;

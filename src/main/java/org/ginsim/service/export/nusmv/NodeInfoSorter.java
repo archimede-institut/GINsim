@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.mddlib.PathSearcher;
 
 public class NodeInfoSorter {

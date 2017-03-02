@@ -3,7 +3,7 @@ package org.ginsim.core.graph.regulatorygraph.perturbation;
 import java.io.IOException;
 import java.util.*;
 
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.GraphManager;

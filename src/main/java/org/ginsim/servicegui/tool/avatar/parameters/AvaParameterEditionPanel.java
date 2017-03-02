@@ -1,6 +1,6 @@
 package org.ginsim.servicegui.tool.avatar.parameters;
 
-import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
+import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.utils.data.ListEditionPanel;

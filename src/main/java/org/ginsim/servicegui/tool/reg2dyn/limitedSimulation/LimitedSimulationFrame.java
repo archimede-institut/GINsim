@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.biolqm.LogicalModel;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.application.Txt;

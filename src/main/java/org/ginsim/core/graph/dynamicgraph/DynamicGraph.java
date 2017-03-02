@@ -2,8 +2,8 @@ package org.ginsim.core.graph.dynamicgraph;
 
 import java.util.List;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphAssociation;

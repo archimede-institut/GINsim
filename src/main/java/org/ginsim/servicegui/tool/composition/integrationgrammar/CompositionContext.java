@@ -3,7 +3,7 @@ package org.ginsim.servicegui.tool.composition.integrationgrammar;
 import java.util.List;
 import java.util.Set;
 
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.NodeInfo;
 
 /**
  * 

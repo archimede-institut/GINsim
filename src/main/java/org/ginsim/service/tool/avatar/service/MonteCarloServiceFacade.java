@@ -1,7 +1,7 @@
 package org.ginsim.service.tool.avatar.service;
 
-import org.colomoto.logicalmodel.StatefulLogicalModel;
-import org.colomoto.logicalmodel.StatefulLogicalModelImpl;
+import org.colomoto.biolqm.StatefulLogicalModel;
+import org.colomoto.biolqm.StatefulLogicalModelImpl;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;

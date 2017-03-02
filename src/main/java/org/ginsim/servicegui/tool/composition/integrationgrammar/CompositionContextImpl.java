@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.servicegui.tool.composition.CompositionSpecificationDialog;
 
 public class CompositionContextImpl implements CompositionContext {

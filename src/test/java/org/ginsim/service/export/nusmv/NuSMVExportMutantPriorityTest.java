@@ -9,8 +9,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.modifier.reduction.ModelReducer;
 import org.ginsim.TestFileUtils;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.Txt;

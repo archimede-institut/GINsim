@@ -84,8 +84,8 @@
 
     <dependency>
       <groupId>org.colomoto</groupId>
-      <artifactId>LogicalModel</artifactId>
-      <version>0.3-SNAPSHOT</version>
+      <artifactId>bioLQM</artifactId>
+      <version>0.4-SNAPSHOT</version>
     </dependency>
 
     <dependency>
@@ -194,7 +194,7 @@
         <configuration>
           <links>
             <link>http://aurelien-naldi.github.com/gh-documentation/api/mddlib</link>
-            <link>http://aurelien-naldi.github.com/gh-documentation/api/logicalmodel</link>
+            <link>http://aurelien-naldi.github.com/gh-documentation/api/bioLQM</link>
           </links>
         </configuration>
       </plugin>
@@ -246,8 +246,8 @@
   	<dependencies>
   		<dependency>
   			<groupId>org.colomoto</groupId>
-  			<artifactId>LogicalModel</artifactId>
-  			<version>0.3-SNAPSHOT</version>
+  			<artifactId>bioLQM</artifactId>
+  			<version>0.4-SNAPSHOT</version>
   		</dependency>
   	</dependencies>
   </dependencyManagement>

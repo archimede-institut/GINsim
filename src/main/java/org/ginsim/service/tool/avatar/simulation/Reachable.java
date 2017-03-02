@@ -1,8 +1,8 @@
 package org.ginsim.service.tool.avatar.simulation;
 
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.StatefulLogicalModel;
-import org.colomoto.logicalmodel.tool.simulation.updater.AsynchronousUpdater;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.StatefulLogicalModel;
+import org.colomoto.biolqm.tool.simulation.updater.AsynchronousUpdater;
 import org.ginsim.service.tool.avatar.domain.State;
 import org.ginsim.service.tool.avatar.domain.StateSet;
 

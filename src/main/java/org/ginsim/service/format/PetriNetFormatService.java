@@ -1,6 +1,6 @@
 package org.ginsim.service.format;
 
-import org.colomoto.logicalmodel.io.petrinet.PetriNetFormat;
+import org.colomoto.biolqm.io.petrinet.INAFormat;
 import org.ginsim.core.service.*;
 import org.mangosdk.spi.ProviderFor;
 
@@ -12,9 +12,9 @@ import org.mangosdk.spi.ProviderFor;
 @ProviderFor(Service.class)
 @Alias("PN")
 @ServiceStatus(EStatus.RELEASED)
-public class PetriNetFormatService extends FormatSupportService<PetriNetFormat> {
+public class PetriNetFormatService extends FormatSupportService<INAFormat> {
 
 	public PetriNetFormatService() {
-		super(new PetriNetFormat());
+		super(new INAFormat());
 	}
 }

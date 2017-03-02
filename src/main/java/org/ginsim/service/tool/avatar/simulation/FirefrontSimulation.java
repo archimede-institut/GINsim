@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.StatefulLogicalModel;
-import org.colomoto.logicalmodel.tool.simulation.updater.AsynchronousUpdater;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.StatefulLogicalModel;
+import org.colomoto.biolqm.tool.simulation.updater.AsynchronousUpdater;
 import org.ginsim.service.tool.avatar.domain.AbstractStateSet;
 import org.ginsim.service.tool.avatar.domain.CompactStateSet;
 import org.ginsim.service.tool.avatar.domain.Result;

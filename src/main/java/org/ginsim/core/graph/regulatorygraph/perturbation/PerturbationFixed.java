@@ -3,8 +3,8 @@ package org.ginsim.core.graph.regulatorygraph.perturbation;
 import java.io.IOException;
 import java.util.Map;
 
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.perturbation.FixedValuePerturbation;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.modifier.perturbation.FixedValuePerturbation;
 import org.ginsim.common.xml.XMLWriter;
 
 public class PerturbationFixed extends FixedValuePerturbation implements Perturbation {

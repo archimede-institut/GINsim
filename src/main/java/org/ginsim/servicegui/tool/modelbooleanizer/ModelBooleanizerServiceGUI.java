@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.swing.Action;
 
-import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.biolqm.LogicalModel;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;

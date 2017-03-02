@@ -2,7 +2,7 @@ package org.ginsim.core.graph.hierarchicaltransitiongraph;
 
 import java.util.List;
 
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.core.graph.AbstractGraphFactory;
 import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.view.style.NodeStyle;

@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 

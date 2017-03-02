@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import junit.framework.TestCase;
-import org.colomoto.logicalmodel.StatefulLogicalModel;
-//import org.colomoto.logicalmodel.io.avatar.AvatarImport;
+import org.colomoto.biolqm.StatefulLogicalModel;
+//import org.colomoto.biolqm.io.avatar.AvatarImport;
 import org.ginsim.service.tool.avatar.simulation.Reachable;
 
 public class SimpleReachableTests extends TestCase {

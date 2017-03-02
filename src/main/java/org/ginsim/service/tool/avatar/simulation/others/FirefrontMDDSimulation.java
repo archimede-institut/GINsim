@@ -11,8 +11,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.StatefulLogicalModel;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.StatefulLogicalModel;
 import org.ginsim.service.tool.avatar.domain.Result;
 import org.ginsim.service.tool.avatar.domain.State;
 import org.ginsim.service.tool.avatar.domain.MDDStateSet;

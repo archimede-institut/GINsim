@@ -1,6 +1,6 @@
 package org.ginsim.gui.graph.hierarchicaltransitiongraph;
 
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.GraphEventCascade;

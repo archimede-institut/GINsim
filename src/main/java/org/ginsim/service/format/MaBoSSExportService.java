@@ -1,6 +1,6 @@
 package org.ginsim.service.format;
 
-import org.colomoto.logicalmodel.io.maboss.MaBoSSFormat;
+import org.colomoto.biolqm.io.maboss.MaBoSSFormat;
 import org.ginsim.core.service.*;
 import org.mangosdk.spi.ProviderFor;
 

@@ -1,6 +1,6 @@
 package org.ginsim.service.format;
 
-import org.colomoto.logicalmodel.io.gna.GNAFormat;
+import org.colomoto.biolqm.io.gna.GNAFormat;
 import org.ginsim.core.service.*;
 import org.mangosdk.spi.ProviderFor;
 

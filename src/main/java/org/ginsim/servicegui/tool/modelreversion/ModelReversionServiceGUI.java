@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.swing.Action;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.LogicalModelModifier;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.modifier.ModelModifier;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
@@ -70,9 +70,9 @@ class ReversionAction extends ToolAction {
 		LogicalModel origModel = this.graph.getModel();
 
 		// Model reverser
-		LogicalModelModifier modelReverser = revService.getModelReverser();
+		ModelModifier modelReverser = revService.getModelReverser(origModel);
 		RegulatoryGraph gReversed = LogicalModel2RegulatoryGraph
-				.importModel(modelReverser.apply(origModel));
+				.importModel(modelReverser.getModifiedModel());
 
 		// Copy all the (edge & node) styles from the original graph to the reversed one
 		boolService.copyNodeStyles(this.graph, gReversed);

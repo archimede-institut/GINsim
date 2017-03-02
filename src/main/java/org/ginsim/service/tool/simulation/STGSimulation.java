@@ -1,12 +1,12 @@
 package org.ginsim.service.tool.simulation;
 
 import java.util.List;
-import org.colomoto.logicalmodel.tool.simulation.MultipleSuccessorsUpdater;
-import org.colomoto.logicalmodel.tool.simulation.MultipleSuccessorSimulation;
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.tool.simulation.MultipleSuccessorsUpdater;
+import org.colomoto.biolqm.tool.simulation.MultipleSuccessorSimulation;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
 
-import org.colomoto.logicalmodel.tool.simulation.SimulationStrategy;
+import org.colomoto.biolqm.tool.simulation.SimulationStrategy;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDManagerFactory;
 import org.colomoto.mddlib.MDDVariable;

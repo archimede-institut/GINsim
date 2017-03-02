@@ -7,8 +7,8 @@ import javax.swing.JOptionPane;
 
 import org.colomoto.common.task.Task;
 import org.colomoto.common.task.TaskListener;
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.GUIManager;

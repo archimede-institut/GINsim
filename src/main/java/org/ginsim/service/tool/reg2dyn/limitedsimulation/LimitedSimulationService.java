@@ -2,7 +2,7 @@ package org.ginsim.service.tool.reg2dyn.limitedsimulation;
 
 import java.util.HashMap;
 
-import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.biolqm.LogicalModel;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.callable.BasicProgressListener;
 import org.ginsim.core.graph.Graph;

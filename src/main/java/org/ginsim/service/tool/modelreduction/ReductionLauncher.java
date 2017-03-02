@@ -2,7 +2,7 @@ package org.ginsim.service.tool.modelreduction;
 
 import java.util.List;
 
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.NodeInfo;
 
 public interface ReductionLauncher {
 

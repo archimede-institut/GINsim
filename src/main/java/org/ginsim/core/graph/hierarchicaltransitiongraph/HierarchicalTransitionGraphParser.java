@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GraphManager;

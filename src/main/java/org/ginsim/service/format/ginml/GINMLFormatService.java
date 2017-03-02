@@ -2,7 +2,7 @@ package org.ginsim.service.format.ginml;
 
 import java.io.IOException;
 
-import org.colomoto.logicalmodel.io.ginml.GINMLFormat;
+import org.colomoto.biolqm.io.ginml.GINMLFormat;
 import org.ginsim.core.service.*;
 import org.mangosdk.spi.ProviderFor;
 

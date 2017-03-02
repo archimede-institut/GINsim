@@ -8,19 +8,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.io.OutputStreamProvider;
-import org.colomoto.logicalmodel.io.petrinet.PNConfig;
-import org.colomoto.logicalmodel.io.petrinet.PetriNetSubformats;
-import org.colomoto.logicalmodel.io.OutputStreamProvider;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.io.OutputStreamProvider;
+import org.colomoto.biolqm.io.petrinet.PNConfig;
+import org.colomoto.biolqm.io.petrinet.PetriNetSubformats;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
@@ -36,21 +33,18 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implemen
 
 	static final String PNFORMAT = "export.petriNet.defaultFormat";
 
+	private final PetriNetSubformats format;
 	private LogicalModel model = null;
-	PetriNetSubformats format = null;
 	PNConfig config = null;
 	Map m_init = null;
 	Map m_input = null;
 	
-	public PetriNetExportAction(RegulatoryGraph graph) {
+	public PetriNetExportAction(RegulatoryGraph graph, PetriNetSubformats format) {
 		super(graph, "STR_PetriNet", "STR_PetriNet_descr", null);
+		this.format = format;
 	}
 
 	protected void doExport( String filename) {
-		if (format == null) {
-			throw new RuntimeException("No selected format");
-		}
-		
 		// retrieve the selected initial state if needed
 		byte[] initialstate = null;
 		Map<NodeInfo,List<Integer>> m_init_values = null;
@@ -93,9 +87,6 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implemen
 
 	@Override
 	protected FileFormatDescription getFileFilter() {
-		if (format == null) {
-			return null;
-		}
 		return new FileFormatDescription(format.name(), format.getExtension());
 	}
 
@@ -104,9 +95,8 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implemen
 		new PetriNetExportFrame(null, graph, this);
 	}
 
-	public void selectFile(LogicalModel model, PetriNetSubformats format, PNConfig config) {
+	public void selectFile(LogicalModel model, PNConfig config) {
 		this.model = model;
-		this.format = format;
 		this.config = config;
 		selectFile();
 	}
@@ -135,7 +125,6 @@ class PetriNetExportFrame extends LogicalModelActionDialog {
 	private PetriNetFormatService service = ServiceManager.getManager().getService(PetriNetFormatService.class);
 	private final PetriNetExportAction action;
 	private PrioritySelectionPanel priorityPanel = null;
-	private final JComboBox formatCombo;
 	private InitialStatePanel initStatePanel = null;
 
 	PNConfig config = new PNConfig();
@@ -168,26 +157,13 @@ class PetriNetExportFrame extends LogicalModelActionDialog {
     	cst.gridx = 1;
     	cst.gridy = 1;
     	cst.weightx = 1;
-    	PetriNetSubformats[] formats = service.format.getSubformats();
-    	formatCombo = new JComboBox(formats);
-    	String defaultFormatName = PetriNetSubformats.INA.name();
-    	defaultFormatName = OptionStore.getOption(FORMATOPTIONKEY, defaultFormatName);
-    	PetriNetSubformats format = PetriNetSubformats.valueOf(defaultFormatName);
-    	if (format == null) {
-    		format = PetriNetSubformats.INA;
-    	}
-    	formatCombo.setSelectedItem(format);
-    	mainPanel.add(formatCombo, cst);
     	
     	setMainPanel(mainPanel);
 	}
 
 	@Override
 	public void run(LogicalModel model) {
-		PetriNetSubformats format = (PetriNetSubformats)formatCombo.getSelectedItem();
-		OptionStore.setOption(FORMATOPTIONKEY, format.name());
-		// initStatePanel
-		action.selectFile(model, format, config);
+		action.selectFile(model, config);
 		cancel();
 	}
 

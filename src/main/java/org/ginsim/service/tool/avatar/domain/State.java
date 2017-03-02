@@ -1,6 +1,6 @@
 package org.ginsim.service.tool.avatar.domain;
 
-import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
+import org.colomoto.biolqm.io.avatar.AvatarUtils;
 
 
 public class State {

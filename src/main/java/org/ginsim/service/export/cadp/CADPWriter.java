@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.biolqm.LogicalModel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.service.tool.composition.IntegrationFunction;
 

@@ -2,7 +2,7 @@ package org.ginsim.core.graph.hierarchicaltransitiongraph;
 
 import java.util.List;
 
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphAssociation;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;

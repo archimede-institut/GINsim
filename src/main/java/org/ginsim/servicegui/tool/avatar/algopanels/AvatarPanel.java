@@ -17,7 +17,7 @@ import javax.swing.JTextField;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import org.colomoto.logicalmodel.StatefulLogicalModel;
+import org.colomoto.biolqm.StatefulLogicalModel;
 import org.ginsim.service.tool.avatar.params.AvatarParameters;
 import org.ginsim.service.tool.avatar.simulation.AvatarSimulation;
 import org.ginsim.service.tool.avatar.simulation.Simulation;

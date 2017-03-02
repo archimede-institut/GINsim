@@ -1,6 +1,6 @@
 package org.ginsim.service.tool.reg2dyn;
 
-import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.biolqm.LogicalModel;
 import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;

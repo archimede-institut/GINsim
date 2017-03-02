@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
-import org.colomoto.logicalmodel.services.ExtensionLoader;
+import org.colomoto.biolqm.services.ExtensionLoader;
 import org.ginsim.core.graph.Graph;
 
 /**

@@ -1,6 +1,6 @@
 package org.ginsim.service.format;
 
-import org.colomoto.logicalmodel.io.boolsim.BoolSimFormat;
+import org.colomoto.biolqm.io.boolsim.BoolSimFormat;
 import org.ginsim.core.service.*;
 import org.mangosdk.spi.ProviderFor;
 

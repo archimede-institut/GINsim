@@ -12,10 +12,10 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.LogicalModelModifier;
-import org.colomoto.logicalmodel.tool.reduction.FixedComponentRemover;
-import org.colomoto.logicalmodel.tool.reduction.OutputSimplifier;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.modifier.reduction.ModelReductionService;
+import org.colomoto.biolqm.modifier.reduction.ReductionSettings;
+import org.colomoto.biolqm.services.ServiceManager;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
@@ -34,6 +34,7 @@ import org.ginsim.servicegui.tool.modelreduction.ReductionSelectionPanel;
 abstract public class LogicalModelActionDialog extends StackDialog implements ProgressListener, PerturbationHolder, ReductionHolder, ChangeListener {
 
 	private static final ObjectAssociationManager OManager = ObjectAssociationManager.getInstance();
+	private static final ModelReductionService reductionService = ServiceManager.getManager().getModifier(ModelReductionService.class);
 	
 	protected final RegulatoryGraph lrg;
 	private final ListOfPerturbations perturbations;
@@ -165,7 +166,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	
 	@Override
 	public void setResult(Object result) {
-		// empty implement implementation: not all derived classes will want to do something
+		// empty implementation: not all derived classes will want to do something
 	}
 
 	
@@ -190,24 +191,25 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	@Override
 	protected void run() throws GsException {
 
-        // collect all modifiers to apply
-        List<LogicalModelModifier> modifiers = new ArrayList<LogicalModelModifier>();
-        modifiers.add(getPerturbation());
-        modifiers.add(getReduction());
-        if (cb_propagate.isSelected()) {
-            modifiers.add( new FixedComponentRemover() );
-        }
-        if (cb_simplify.isSelected()) {
-            modifiers.add( new OutputSimplifier() );
-        }
-
-        // retrieve the model and apply modifiers
+        // retrieve the model
         LogicalModel model = lrg.getModel();
-        for (LogicalModelModifier modifier: modifiers) {
-            if (modifier != null) {
-                model = modifier.apply(model);
-            }
+
+        // apply model modifiers: perturbation and reduction
+        model = getPerturbation().apply(model);
+
+        ReductionSettings reductionSettings = reductionService.getSettings();
+        if (cb_propagate.isSelected()) {
+        	reductionSettings.handleFixed = true;
+        	reductionSettings.purgeFixed = true;
         }
+        
+        if (cb_simplify.isSelected()) {
+        	reductionSettings.handleOutputs = true;
+        }
+        
+        // TODO: merge all reductions in a single pass
+        model = getReduction().apply(model);
+        model = reductionService.getModifier(model, reductionSettings).getModifiedModel();
 
 		run(model);
 	}

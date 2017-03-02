@@ -3,7 +3,7 @@ package org.ginsim.servicegui.tool.avatar.algopanels;
 import java.awt.Color;
 import javax.swing.Icon;
 import javax.swing.JPanel;
-import org.colomoto.logicalmodel.StatefulLogicalModel;
+import org.colomoto.biolqm.StatefulLogicalModel;
 import org.ginsim.service.tool.avatar.params.AvatarParameters;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
 

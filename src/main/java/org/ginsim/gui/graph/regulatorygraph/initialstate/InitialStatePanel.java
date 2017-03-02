@@ -6,7 +6,7 @@ import java.awt.GridBagLayout;
 
 import javax.swing.*;
 
-import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
+import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;

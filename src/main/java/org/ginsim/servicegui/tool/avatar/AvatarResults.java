@@ -30,8 +30,8 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
-import org.colomoto.logicalmodel.StatefulLogicalModel;
-import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
+import org.colomoto.biolqm.StatefulLogicalModel;
+import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;

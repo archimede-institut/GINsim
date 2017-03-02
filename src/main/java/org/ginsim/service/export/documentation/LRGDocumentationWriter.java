@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.biolqm.LogicalModel;
 import org.ginsim.common.document.DocumentStyle;
 import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.common.utils.IOUtils;

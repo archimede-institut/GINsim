@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
-import org.colomoto.logicalmodel.services.ExtensionLoader;
+import org.colomoto.biolqm.services.ExtensionLoader;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.gui.service.GUIFor;
 

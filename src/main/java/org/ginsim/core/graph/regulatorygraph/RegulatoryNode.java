@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.NodeInfoHolder;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.NodeInfoHolder;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
 import org.colomoto.mddlib.operators.MDDBaseOperators;

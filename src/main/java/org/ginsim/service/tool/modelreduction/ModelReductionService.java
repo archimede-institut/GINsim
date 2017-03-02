@@ -1,7 +1,7 @@
 package org.ginsim.service.tool.modelreduction;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.modifier.reduction.ModelReducer;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;

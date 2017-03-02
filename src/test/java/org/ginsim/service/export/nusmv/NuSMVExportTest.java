@@ -7,7 +7,7 @@ import static org.junit.Assert.fail;
 import java.io.File;
 import java.io.IOException;
 
-import org.colomoto.logicalmodel.tool.reduction.ModelReducer;
+import org.colomoto.biolqm.modifier.reduction.ModelReducer;
 import org.ginsim.TestFileUtils;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.Txt;

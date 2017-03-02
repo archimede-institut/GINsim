@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.perturbation.MultiplePerturbation;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.modifier.perturbation.MultiplePerturbation;
 import org.ginsim.common.xml.XMLWriter;
 
 public class PerturbationMultiple extends MultiplePerturbation<Perturbation> implements Perturbation {

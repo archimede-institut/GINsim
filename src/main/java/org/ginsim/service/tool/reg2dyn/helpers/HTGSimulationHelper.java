@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;

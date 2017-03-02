@@ -11,9 +11,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.tool.stablestate.StableStateSearcher;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;

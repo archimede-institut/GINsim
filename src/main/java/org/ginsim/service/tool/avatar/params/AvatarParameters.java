@@ -1,7 +1,7 @@
 package org.ginsim.service.tool.avatar.params;
 
 import java.io.IOException;
-import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
+import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;

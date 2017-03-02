@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.LogicalModelImpl;
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.StatefulLogicalModelImpl;
-import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.LogicalModelImpl;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.StatefulLogicalModelImpl;
+import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDManagerFactory;
 import org.colomoto.mddlib.MDDVariableFactory;

@@ -8,7 +8,7 @@ import java.awt.Color;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
+import org.colomoto.biolqm.tool.stablestate.StableStateSearcher;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.OptionStore;

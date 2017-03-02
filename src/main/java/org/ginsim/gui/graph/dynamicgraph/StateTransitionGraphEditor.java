@@ -3,7 +3,7 @@ package org.ginsim.gui.graph.dynamicgraph;
 import java.awt.*;
 import java.util.List;
 
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.GraphManager;
 import org.ginsim.core.graph.GraphChangeType;

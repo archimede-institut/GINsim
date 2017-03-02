@@ -13,8 +13,8 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;

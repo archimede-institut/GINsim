@@ -1,10 +1,10 @@
 package org.ginsim.servicegui.tool.avatar;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.StatefulLogicalModel;
-import org.colomoto.logicalmodel.StatefulLogicalModelImpl;
-import org.colomoto.logicalmodel.io.avatar.AvatarUtils;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.StatefulLogicalModel;
+import org.colomoto.biolqm.StatefulLogicalModelImpl;
+import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphManager;

@@ -10,7 +10,7 @@ import java.util.Map.Entry;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.colomoto.logicalmodel.services.ExtensionLoader;
+import org.colomoto.biolqm.services.ExtensionLoader;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.service.ServiceClassInfo;

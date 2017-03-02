@@ -16,8 +16,8 @@ import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.tool.stablestate.StableStateSearcher;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.tool.stablestate.StableStateSearcher;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.Graph;

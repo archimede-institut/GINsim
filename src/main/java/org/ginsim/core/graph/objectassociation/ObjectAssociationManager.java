@@ -3,7 +3,7 @@ package org.ginsim.core.graph.objectassociation;
 import java.util.*;
 import java.util.Map.Entry;
 
-import org.colomoto.logicalmodel.services.ExtensionLoader;
+import org.colomoto.biolqm.services.ExtensionLoader;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.service.ServiceClassInfo;
 import org.ginsim.core.graph.Graph;

@@ -6,7 +6,7 @@ import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.colomoto.logicalmodel.StatefulLogicalModel;
+import org.colomoto.biolqm.StatefulLogicalModel;
 import org.ginsim.service.tool.avatar.domain.State;
 import org.ginsim.service.tool.avatar.params.AvatarParameters;
 import org.ginsim.service.tool.avatar.simulation.MonteCarloSimulation;

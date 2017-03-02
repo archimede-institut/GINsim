@@ -12,8 +12,8 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;

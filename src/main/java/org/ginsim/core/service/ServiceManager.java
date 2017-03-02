@@ -5,7 +5,7 @@ import java.util.Iterator;
 import java.util.ServiceConfigurationError;
 import java.util.Set;
 
-import org.colomoto.logicalmodel.services.ExtensionLoader;
+import org.colomoto.biolqm.services.ExtensionLoader;
 import org.ginsim.common.application.LogManager;
 
 
@@ -45,6 +45,15 @@ public class ServiceManager{
 		}
 		
 		return manager;
+	}
+
+	/**
+	 * Method providing access to the LQM manager instance
+	 * 
+	 * @return the ServiceManager singleton 
+	 */
+	public static org.colomoto.biolqm.services.ServiceManager getLQMManager(){
+		return org.colomoto.biolqm.services.ServiceManager.getManager();
 	}
 
 	/**

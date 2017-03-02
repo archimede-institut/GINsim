@@ -5,10 +5,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
-import org.colomoto.logicalmodel.tool.reduction.FixedComponentRemover;
+import org.colomoto.biolqm.modifier.reduction.FixedComponentRemover;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -85,8 +85,7 @@ public class CircuitAlgo {
         }
 
         // propagate fixed components to avoid showing useless contexts
-        FixedComponentRemover simplifier = new FixedComponentRemover();
-        lmodel = simplifier.apply(lmodel);
+        lmodel = FixedComponentRemover.reduceFixed(lmodel, true);
 
         functions = lmodel.getLogicalFunctions();
         this.nodeOrder = graph.getNodeOrder();

@@ -9,8 +9,8 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.colomoto.logicalmodel.services.Colomoto;
-import org.colomoto.logicalmodel.services.ExtensionLoader;
+import org.colomoto.biolqm.services.Colomoto;
+import org.colomoto.biolqm.services.ExtensionLoader;
 import org.ginsim.common.application.CurrentOS;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OSXAdapter;

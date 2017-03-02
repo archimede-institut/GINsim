@@ -7,8 +7,8 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JTextPane;
 
-import org.colomoto.logicalmodel.NodeInfo;
-import org.colomoto.logicalmodel.StatefulLogicalModel;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.StatefulLogicalModel;
 import org.ginsim.service.tool.avatar.domain.CompactStateSet;
 import org.ginsim.service.tool.avatar.domain.Dictionary;
 import org.ginsim.service.tool.avatar.domain.Result;

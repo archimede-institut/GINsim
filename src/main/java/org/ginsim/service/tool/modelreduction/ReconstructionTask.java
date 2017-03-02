@@ -1,8 +1,8 @@
 package org.ginsim.service.tool.modelreduction;
 
 import org.colomoto.common.task.AbstractTask;
-import org.colomoto.logicalmodel.LogicalModel;
-import org.colomoto.logicalmodel.NodeInfo;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;

@@ -2,7 +2,7 @@ package org.ginsim.servicegui.tool.reg2dyn;
 
 import java.awt.Frame;
 
-import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.biolqm.LogicalModel;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;

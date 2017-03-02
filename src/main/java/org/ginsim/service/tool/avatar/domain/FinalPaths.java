@@ -3,7 +3,7 @@ package org.ginsim.service.tool.avatar.domain;
 import java.util.Collection;
 import java.util.Map;
 
-import org.colomoto.logicalmodel.io.avatar.AvatarLogicalModelException;
+import org.colomoto.biolqm.io.avatar.AvatarLogicalModelException;
 
 /**
  * Interface for the storage transitions within and going-out of a state-set<br>

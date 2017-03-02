@@ -3,7 +3,7 @@ package org.ginsim.service.export.prism;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.colomoto.logicalmodel.LogicalModel;
+import org.colomoto.biolqm.LogicalModel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateStore;
