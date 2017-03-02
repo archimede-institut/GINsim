@@ -16,7 +16,7 @@ import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.io.OutputStreamProvider;
 import org.colomoto.biolqm.io.petrinet.PNConfig;
-import org.colomoto.biolqm.io.petrinet.PetriNetSubformats;
+import org.colomoto.biolqm.io.petrinet.PNFormat;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -26,21 +26,21 @@ import org.ginsim.core.service.ServiceManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
-import org.ginsim.service.format.PetriNetFormatService;
+import org.ginsim.service.format.PetriNetINAFormatService;
 import org.ginsim.servicegui.tool.reg2dyn.PrioritySelectionPanel;
 
 public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implements NamedStateStore {
 
 	static final String PNFORMAT = "export.petriNet.defaultFormat";
 
-	private final PetriNetSubformats format;
+	private final PNFormat format;
 	private LogicalModel model = null;
 	PNConfig config = null;
 	Map m_init = null;
 	Map m_input = null;
 	
-	public PetriNetExportAction(RegulatoryGraph graph, PetriNetSubformats format) {
-		super(graph, "STR_PetriNet", "STR_PetriNet_descr", null);
+	public PetriNetExportAction(RegulatoryGraph graph, PNFormat format) {
+		super(graph, format.getName(), "STR_PetriNet_descr", null);
 		this.format = format;
 	}
 
@@ -79,7 +79,7 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implemen
 
 		// call the selected export method to do the job
 		try {
-			format.getEncoder( model).export(config, new OutputStreamProvider(filename));
+			format. export(model, config, new OutputStreamProvider(filename));
 		} catch (IOException e) {
 			LogManager.error(e);
 		}
@@ -87,7 +87,7 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implemen
 
 	@Override
 	protected FileFormatDescription getFileFilter() {
-		return new FileFormatDescription(format.name(), format.getExtension());
+		return new FileFormatDescription(format.getName(), format.getID());
 	}
 
 	@Override
@@ -122,7 +122,7 @@ class PetriNetExportFrame extends LogicalModelActionDialog {
 
 	private static final String FORMATOPTIONKEY = "PNformat";
 	
-	private PetriNetFormatService service = ServiceManager.getManager().getService(PetriNetFormatService.class);
+	private PetriNetINAFormatService service = ServiceManager.getManager().getService(PetriNetINAFormatService.class);
 	private final PetriNetExportAction action;
 	private PrioritySelectionPanel priorityPanel = null;
 	private InitialStatePanel initStatePanel = null;

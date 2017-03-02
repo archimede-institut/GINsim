@@ -5,16 +5,16 @@ import org.ginsim.core.service.*;
 import org.mangosdk.spi.ProviderFor;
 
 /**
- * GINsim export service for some Petri net formats.
+ * GINsim export service for the INA Petri net format.
  * 
  * @author Aurelien Naldi
  */
 @ProviderFor(Service.class)
-@Alias("PN")
+@Alias("INA")
 @ServiceStatus(EStatus.RELEASED)
-public class PetriNetFormatService extends FormatSupportService<INAFormat> {
+public class PetriNetINAFormatService extends FormatSupportService<INAFormat> {
 
-	public PetriNetFormatService() {
+	public PetriNetINAFormatService() {
 		super(new INAFormat());
 	}
 }

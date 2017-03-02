@@ -195,7 +195,10 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         LogicalModel model = lrg.getModel();
 
         // apply model modifiers: perturbation and reduction
-        model = getPerturbation().apply(model);
+        Perturbation p = getPerturbation();
+        if (p != null) {
+        	model = getPerturbation().apply(model);
+        }
 
         ReductionSettings reductionSettings = reductionService.getSettings();
         if (cb_propagate.isSelected()) {
@@ -208,7 +211,10 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         }
         
         // TODO: merge all reductions in a single pass
-        model = getReduction().apply(model);
+        ReductionConfig reduction = getReduction();
+        if (reduction != null) {
+        	model = getReduction().apply(model);
+        }
         model = reductionService.getModifier(model, reductionSettings).getModifiedModel();
 
 		run(model);
