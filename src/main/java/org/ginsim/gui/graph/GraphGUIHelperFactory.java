@@ -1,11 +1,8 @@
 package org.ginsim.gui.graph;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.ServiceConfigurationError;
-import java.util.ServiceLoader;
 
-import org.colomoto.biolqm.services.ExtensionLoader;
+import org.colomoto.biolqm.ExtensionLoader;
 import org.ginsim.core.graph.Graph;
 
 /**
@@ -41,17 +38,10 @@ public class GraphGUIHelperFactory {
 	 */
 	private GraphGUIHelperFactory(){
 		
-        Iterator<GraphGUIHelper> helpers = ExtensionLoader.iterator(GraphGUIHelper.class);
-        while (helpers.hasNext()) {
-            try {
-            	GraphGUIHelper<?,?,?> helper = helpers.next();
-            	Class graph_class = helper.getGraphClass();
-                    if( graph_class != null) {
-                    	guiGraphHelpers.put( graph_class, helper);
-                    }
-            }
-            catch (ServiceConfigurationError e){
-                    // For now just ignore the exceptions
+        for (GraphGUIHelper<?,?,?> helper: ExtensionLoader.load_instances(GraphGUIHelper.class)) {
+        	Class<?> graph_class = helper.getGraphClass();
+            if( graph_class != null) {
+            	guiGraphHelpers.put( graph_class, helper);
             }
         }
 	}

@@ -8,7 +8,7 @@ import java.util.Set;
 
 import javax.swing.Action;
 
-import org.colomoto.biolqm.services.ExtensionLoader;
+import org.colomoto.biolqm.ExtensionLoader;
 import org.ginsim.Launcher;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.service.ServiceClassInfo;
@@ -45,60 +45,46 @@ public class GSServiceGUIManager{
 	 */
 	static {
         
-        Iterator<ServiceGUI> service_list = ExtensionLoader.iterator(ServiceGUI.class);
-        while (service_list.hasNext()) {
-            try {
-            	ServiceGUI service = service_list.next();
-            	if( service == null){
-            		LogManager.error("Got a null service");
-            		continue;
-            	}
-            	
-    			// Check for the service status. If service is not published, it is not
-    			// provided apart in case of a development environment
-    			ServiceStatus service_status = service.getClass().getAnnotation( ServiceStatus.class);
-    			EStatus status;
-    			if( service_status != null){
-    				status = service_status.value();
-    			}
-    			else{
-    				LogManager.error( "Service '" + service.getClass().getName() + "' does not have a declared status. Consider it deprecated.");
-    				status = EStatus.DEPRECATED;
-    			}
-    			boolean rejected;
-    			switch( status) {
-    			case DEPRECATED:
-    				rejected = true;
-    				break;
-    			case DEVELOPMENT:
-    				rejected = !Launcher.developer_mode;
-    				service.setWeight(ServiceGUI.W_UNDER_DEVELOPMENT);
-    				break;
-    			case RELEASED:
-    				rejected = false;
-    				break;
-    			default:
-    				rejected = true;
-    				break;
-    			}
-    			if( !rejected){
-	    			// Check the weight of the service so it can be ordered
-	            	int weight = service.getWeight();
-	            	int position = 0;
-	        		for (ServiceGUI s: services) {
-	        			if (s.getWeight() > weight) {
-	        				break;
-	        			}
-	        			position++;
-	        		}
-	        		
-	        		// Add the service to the list
-	        		services.add( position, service);
-    			}
-            }
-            catch (ServiceConfigurationError e){
-
-            }
+        List<ServiceGUI> service_list = ExtensionLoader.load_instances(ServiceGUI.class);
+        for (ServiceGUI service: service_list) {
+			// Check for the service status. If service is not published, it is not
+			// provided apart in case of a development environment
+			ServiceStatus service_status = service.getClass().getAnnotation( ServiceStatus.class);
+			EStatus status;
+			if (service_status != null) {
+				status = service_status.value();
+			} else {
+				LogManager.error( "Service '" + service.getClass().getName() + "' does not have a declared status. Consider it deprecated.");
+				status = EStatus.DEPRECATED;
+			}
+			boolean rejected = true;
+			switch (status) {
+			case DEPRECATED:
+				rejected = true;
+				break;
+			case DEVELOPMENT:
+				rejected = !Launcher.developer_mode;
+				service.setWeight(ServiceGUI.W_UNDER_DEVELOPMENT);
+				break;
+			case RELEASED:
+				rejected = false;
+				break;
+			}
+			
+			if (!rejected) {
+    			// Check the weight of the service so it can be ordered
+            	int weight = service.getWeight();
+            	int position = 0;
+        		for (ServiceGUI s: services) {
+        			if (s.getWeight() > weight) {
+        				break;
+        			}
+        			position++;
+        		}
+        		
+        		// Add the service to the list
+        		services.add( position, service);
+			}
         }
 	}
 	

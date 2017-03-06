@@ -5,15 +5,19 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.colomoto.biolqm.services.ExtensionLoader;
+import org.colomoto.biolqm.ExtensionLoader;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.core.service.ServiceClassInfo;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraphImpl;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraphImpl;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
@@ -23,6 +27,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphImpl;
 import org.ginsim.core.io.parser.GinmlParser;
 import org.ginsim.core.notification.NotificationManager;
+import org.ginsim.core.service.ServiceClassInfo;
 
 
 /**
@@ -46,18 +51,8 @@ public class GSGraphManager {
      * The constructor of the manager retrieves the list of available GraphFactory
      */
     private GSGraphManager(){
-    	
-        Iterator<GraphFactory> factory_list = ExtensionLoader.iterator(GraphFactory.class);
-        while (factory_list.hasNext()) {
-            try {
-            	GraphFactory factory = factory_list.next();
-            	if( factory != null){
-            		graphFactories.put( factory.getGraphClass(), factory);
-            	}
-            }
-            catch (ServiceConfigurationError e){
-
-            }
+        for (GraphFactory factory: ExtensionLoader.load_instances(GraphFactory.class)) {
+    		graphFactories.put( factory.getGraphClass(), factory);
         }
     }
     

@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.colomoto.biolqm.services.ScriptEngineLoader;
+import org.colomoto.biolqm.LQMScriptLauncher;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
@@ -128,7 +128,7 @@ public class ScriptLauncher {
             Py.getSystemState().path.add(0, dir.getAbsolutePath());
             PythonInterpreter pi = new PythonInterpreter();
             pi.set("gs", this);
-            org.colomoto.biolqm.services.ScriptLauncher lqm_launcher = new org.colomoto.biolqm.services.ScriptLauncher(args);
+            LQMScriptLauncher lqm_launcher = new LQMScriptLauncher(args);
             pi.set("lm", lqm_launcher);
             pi.set("lqm", lqm_launcher);
             pi.execfile(filename);
@@ -137,9 +137,9 @@ public class ScriptLauncher {
             // Generic scripting support through ScriptEngine
             // This method also supports python scripts, but is slower and allows less tweaks
             try {
-                ScriptEngine engine = ScriptEngineLoader.loadEngine(filename);
+                ScriptEngine engine = LQMScriptLauncher.loadEngine(filename);
                 engine.put("gs", this);
-                org.colomoto.biolqm.services.ScriptLauncher lqm_launcher = new org.colomoto.biolqm.services.ScriptLauncher(args);
+                LQMScriptLauncher lqm_launcher = new LQMScriptLauncher(args);
                 engine.put("lm", lqm_launcher);
                 engine.put("lqm", lqm_launcher);
 

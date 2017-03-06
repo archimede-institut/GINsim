@@ -1,13 +1,17 @@
 package org.ginsim.core.graph.objectassociation;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Vector;
 
-import org.colomoto.biolqm.services.ExtensionLoader;
-import org.ginsim.common.application.LogManager;
-import org.ginsim.core.service.ServiceClassInfo;
-import org.ginsim.core.graph.Graph;
+import org.colomoto.biolqm.ExtensionLoader;
 import org.ginsim.common.utils.IntrospectionUtils;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.service.ServiceClassInfo;
 
 /**
  * The association manager can be used as proxy to retrieve or create associated objects.
@@ -32,19 +36,9 @@ public class ObjectAssociationManager {
 		specializedObjectManagers = new HashMap<Class, List<GraphAssociatedObjectManager>>();
 		objectsOfGraph = new HashMap<Graph, Map<String,Object>>();
 
-        Iterator<GraphAssociatedObjectManager> managers = ExtensionLoader.iterator(GraphAssociatedObjectManager.class);
-        while (managers.hasNext()) {
-            try {
-                GraphAssociatedObjectManager mgr = managers.next();
-                if (mgr != null) {
-                    registerObjectManager(mgr);
-                }
-            }
-            catch (ServiceConfigurationError e){
-                LogManager.debug(e);
-            }
+        for (GraphAssociatedObjectManager mgr: ExtensionLoader.load_instances(GraphAssociatedObjectManager.class)) {
+            registerObjectManager(mgr);
         }
-
 	}
 	
 	static public ObjectAssociationManager getInstance(){

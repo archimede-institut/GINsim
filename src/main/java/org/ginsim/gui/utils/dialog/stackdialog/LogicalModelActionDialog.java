@@ -12,10 +12,10 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.colomoto.biolqm.LQMServiceManager;
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.modifier.reduction.ModelReductionService;
 import org.colomoto.biolqm.modifier.reduction.ReductionSettings;
-import org.colomoto.biolqm.services.LQMServiceManager;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;

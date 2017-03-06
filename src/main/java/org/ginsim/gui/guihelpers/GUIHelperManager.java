@@ -8,7 +8,7 @@ import java.util.Map;
 import java.util.ServiceConfigurationError;
 import java.util.ServiceLoader;
 
-import org.colomoto.biolqm.services.ExtensionLoader;
+import org.colomoto.biolqm.ExtensionLoader;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.gui.service.GUIFor;
 
@@ -25,31 +25,19 @@ public class GUIHelperManager {
 	
 	private GUIHelperManager() {
 		
-        Iterator<GUIHelper> it_helpers = ExtensionLoader.iterator(GUIHelper.class);
-        while (it_helpers.hasNext()) {
-            try {
-            	GUIHelper helper = it_helpers.next();
-            	if (helper == null) {
-            		continue;
-            	}
-            	
-            	GUIFor guifor = helper.getClass().getAnnotation(GUIFor.class);
-            	if (guifor != null) {
-            		Class<?> cl = guifor.value();
-            		if (classHelpers.containsKey(cl)) {
-            			LogManager.debug("Duplicate GUIHelper for class: "+cl);
-            			continue;
-            		}
-            		classHelpers.put(cl, helper);
-            	} else {
-            		helpers.add(helper);
-            	}
-            }
-            catch (ServiceConfigurationError e){
-
-            }
+        for (GUIHelper helper : ExtensionLoader.load_instances(GUIHelper.class)) {
+        	GUIFor guifor = helper.getClass().getAnnotation(GUIFor.class);
+        	if (guifor != null) {
+        		Class<?> cl = guifor.value();
+        		if (classHelpers.containsKey(cl)) {
+        			LogManager.debug("Duplicate GUIHelper for class: "+cl);
+        			continue;
+        		}
+        		classHelpers.put(cl, helper);
+        	} else {
+        		helpers.add(helper);
+        	}
         }
-
 	}
 	
 	public GUIHelper getHelper(Object o) {

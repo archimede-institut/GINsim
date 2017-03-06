@@ -9,8 +9,8 @@ import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.colomoto.biolqm.services.Colomoto;
-import org.colomoto.biolqm.services.ExtensionLoader;
+import org.colomoto.biolqm.LQMLauncher;
+import org.colomoto.biolqm.ExtensionLoader;
 import org.ginsim.common.application.CurrentOS;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OSXAdapter;
@@ -64,7 +64,7 @@ public class Launcher {
             if (args[i].equals("-lm")) {
                 String[] lmargs = new String[args.length-(i+1)];
                 System.arraycopy(args, i+1, lmargs, 0, lmargs.length);
-                Colomoto.main(lmargs);
+                LQMLauncher.main(lmargs);
                 return;
             } else if (args[i].equals("-s")) {
         		ScriptLauncher script = new ScriptLauncher();

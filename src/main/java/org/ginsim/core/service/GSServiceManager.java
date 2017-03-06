@@ -1,11 +1,9 @@
 package org.ginsim.core.service;
 
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.ServiceConfigurationError;
 import java.util.Set;
 
-import org.colomoto.biolqm.services.ExtensionLoader;
+import org.colomoto.biolqm.ExtensionLoader;
 import org.ginsim.common.application.LogManager;
 
 
@@ -37,31 +35,22 @@ public class GSServiceManager {
 	 */
 	static {
 		
-        Iterator<Service> service_list = ExtensionLoader.iterator( Service.class);
-        while (service_list.hasNext()) {
-            try {
-            	Service service = service_list.next();
-            	if( service != null){
-            		Class<Service> cl = (Class<Service>) service.getClass();
-            		services.put( cl, service);
-            		if (serviceNames.containsKey(cl.getName())) {
-            			LogManager.error("Duplicated service:" + cl.getName());
-            		} else {
-            			serviceNames.put(cl.getName(), service);
-            		}
-            		Alias alias = cl.getAnnotation(Alias.class);
-            		if (alias != null) {
-                		if (serviceNames.containsKey(alias.value())) {
-                			LogManager.error("Duplicated service:" + alias.value());
-                		} else {
-                    		serviceNames.put(alias.value(), service);
-                		}
-            		}
-            	}
-            }
-            catch (ServiceConfigurationError e){
-            	LogManager.debug(e);
-            }
+        for (Service service: ExtensionLoader.load_instances(Service.class)) {
+    		Class<Service> cl = (Class<Service>) service.getClass();
+    		services.put( cl, service);
+    		if (serviceNames.containsKey(cl.getName())) {
+    			LogManager.error("Duplicated service:" + cl.getName());
+    		} else {
+    			serviceNames.put(cl.getName(), service);
+    		}
+    		Alias alias = cl.getAnnotation(Alias.class);
+    		if (alias != null) {
+        		if (serviceNames.containsKey(alias.value())) {
+        			LogManager.error("Duplicated service:" + alias.value());
+        		} else {
+            		serviceNames.put(alias.value(), service);
+        		}
+    		}
         }
 	}
 	

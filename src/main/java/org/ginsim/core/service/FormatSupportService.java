@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.colomoto.biolqm.LQMServiceManager;
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.io.LogicalModelFormat;
 import org.colomoto.biolqm.io.OutputStreamProvider;
-import org.colomoto.biolqm.services.LQMServiceManager;
 import org.colomoto.biolqm.modifier.booleanize.Booleanizer;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
