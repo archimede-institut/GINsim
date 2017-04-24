@@ -1,0 +1,30 @@
+package org.ginsim.servicegui.format;
+
+import org.ginsim.common.utils.FileFormatDescription;
+import org.ginsim.core.service.EStatus;
+import org.ginsim.core.service.GSServiceManager;
+import org.ginsim.core.service.ServiceStatus;
+import org.ginsim.gui.service.FormatSupportServiceGUI;
+import org.ginsim.gui.service.GUIFor;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.service.format.CNetFormatService;
+import org.mangosdk.spi.ProviderFor;
+
+/**
+ * GUI Action to export model to the CNET format
+ * 
+ * @author Aurelien Naldi
+ */
+@ProviderFor(ServiceGUI.class)
+@GUIFor(CNetFormatService.class)
+@ServiceStatus( EStatus.RELEASED)
+public class CNetFormatServiceGUI extends FormatSupportServiceGUI<CNetFormatService> {
+
+	private static CNetFormatService SERVICE = GSServiceManager.getService(CNetFormatService.class);
+	private static FileFormatDescription FORMAT = new FileFormatDescription("CNET", "cnet");
+	
+	public CNetFormatServiceGUI() {
+		super("CNET", SERVICE, FORMAT);
+	}
+	
+}
