@@ -1,0 +1,70 @@
+package org.ginsim.servicegui.tool.trapspace;
+
+import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.swing.Action;
+
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.notification.NotificationManager;
+import org.ginsim.core.service.EStatus;
+import org.ginsim.core.service.ServiceStatus;
+import org.ginsim.gui.service.AbstractServiceGUI;
+import org.ginsim.gui.service.GUIFor;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.shell.actions.ToolAction;
+import org.ginsim.service.tool.trapspace.TrapSpaceService;
+import org.mangosdk.spi.ProviderFor;
+
+
+/**
+ * Define the action for stableStates service
+ */
+@ProviderFor( ServiceGUI.class)
+@GUIFor( TrapSpaceService.class)
+@ServiceStatus( EStatus.DEVELOPMENT)
+public class TrapSpaceServiceGUI extends AbstractServiceGUI {
+	    
+	@Override
+	public List<Action> getAvailableActions(Graph<?, ?> graph) {
+		
+		if (graph instanceof RegulatoryGraph) {
+			List<Action> actions = new ArrayList<Action>();
+			actions.add(new NewTrapSpaceAction( (RegulatoryGraph)graph, this));
+			return actions;
+		}
+		return null;
+	}
+
+	@Override
+	public int getInitialWeight() {
+		return W_TOOLS_MAIN + 20;
+	}
+}
+
+class NewTrapSpaceAction extends ToolAction {
+
+	private static final long serialVersionUID = -5261063882326331644L;
+	private final RegulatoryGraph graph;
+	
+	public NewTrapSpaceAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+		
+		super( "STR_trapSpaces", "STR_trapSpaces_descr", serviceGUI);
+		this.graph = graph;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		
+    	if (graph.getNodeOrderSize() < 1) {
+            NotificationManager.publishWarning( graph, Txt.t("STR_emptyGraph"));
+    		return;
+    	}
+
+    	new TrapSpaceSwingUI(null, graph);
+	}
+	
+}

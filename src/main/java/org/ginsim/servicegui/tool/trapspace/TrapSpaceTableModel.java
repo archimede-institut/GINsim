@@ -1,0 +1,47 @@
+package org.ginsim.servicegui.tool.trapspace;
+
+import javax.swing.table.AbstractTableModel;
+
+import org.colomoto.biolqm.tool.trapspaces.TrapSpace;
+import org.colomoto.biolqm.tool.trapspaces.TrapSpaceList;
+
+public class TrapSpaceTableModel extends AbstractTableModel {
+
+	TrapSpaceList solutions = null;
+	
+	void setSolutions(TrapSpaceList solutions) {
+		this.solutions = solutions;
+		fireTableStructureChanged();
+	}
+	
+	@Override
+	public int getRowCount() {
+		if (solutions == null) {
+			return 0;
+		}
+		
+		return solutions.size();
+	}
+
+	@Override
+	public int getColumnCount() {
+		if (solutions == null) {
+			return 0;
+		}
+		
+		return solutions.getNVars();
+	}
+
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		TrapSpace t = solutions.get(rowIndex);
+		byte v = t.pattern[columnIndex];
+		
+		if (v < 0) {
+			return "*";
+		}
+		
+		return ""+v;
+	}
+
+}
