@@ -29,13 +29,17 @@ public class TrapSpaceTableModel extends AbstractTableModel {
 			return 0;
 		}
 		
-		return solutions.getNVars();
+		return solutions.getNVars()+1;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		TrapSpace t = solutions.get(rowIndex);
-		byte v = t.pattern[columnIndex];
+		if (columnIndex == 0) {
+			return "";
+		}
+		
+		byte v = t.pattern[columnIndex-1];
 		
 		if (v < 0) {
 			return "*";

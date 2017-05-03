@@ -18,7 +18,6 @@ import org.colomoto.biolqm.tool.trapspaces.TrapSpaceSettings;
 import org.colomoto.common.task.Task;
 import org.colomoto.common.task.TaskListener;
 import org.colomoto.common.task.TaskStatus;
-import org.ginsim.common.application.LogManager;
 import org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.GSServiceManager;
@@ -51,6 +50,8 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
 		model = new TrapSpaceTableModel();
 		tresult = new EnhancedJTable(model);
 		settings = srv.getSettings();
+		settings.terminal = true;
+		settings.bdd = true;
 		
 		// needed for the scroll bars to appear as needed
 		tresult.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
@@ -82,33 +83,27 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
         }
 
         setRunning(false);
-		try {
-			TrapSpaceList solutions = m_identifier.getResult();
-			if (solutions == null) {
-				System.out.println("No solution");
-				return;
-			}
-			
-			model.setSolutions(solutions);
+		TrapSpaceList solutions = m_identifier.getResult();
+		if (solutions == null) {
+			System.out.println("No solution");
+			return;
+		}
+		
+		model.setSolutions(solutions);
 
-			
-			TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
-			Enumeration<TableColumn> columns = tresult.getColumnModel().getColumns();
-			
-			if (columns.hasMoreElements()) {
-				TableColumn col = columns.nextElement();
-				col.setMinWidth(150);
-				col.setMaxWidth(400);
-			}
-			while (columns.hasMoreElements()) {
-				TableColumn col = columns.nextElement();
-				col.setHeaderRenderer(headerRenderer);
-				col.setMinWidth(20);
-				col.setMaxWidth(25);
-			}
-			
-		} catch (Exception e) {
-			LogManager.error(e);
+		TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
+		Enumeration<TableColumn> columns = tresult.getColumnModel().getColumns();
+		
+		if (columns.hasMoreElements()) {
+			TableColumn col = columns.nextElement();
+			col.setMinWidth(150);
+			col.setMaxWidth(400);
+		}
+		while (columns.hasMoreElements()) {
+			TableColumn col = columns.nextElement();
+			col.setHeaderRenderer(headerRenderer);
+			col.setMinWidth(20);
+			col.setMaxWidth(25);
 		}
 	}
 
