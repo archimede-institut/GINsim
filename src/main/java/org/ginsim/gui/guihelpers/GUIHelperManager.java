@@ -2,11 +2,8 @@ package org.ginsim.gui.guihelpers;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.ServiceConfigurationError;
-import java.util.ServiceLoader;
 
 import org.colomoto.biolqm.ExtensionLoader;
 import org.ginsim.common.application.LogManager;

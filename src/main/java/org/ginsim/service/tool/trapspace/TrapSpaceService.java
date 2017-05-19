@@ -38,7 +38,7 @@ public class TrapSpaceService implements Service {
 		return TOOL.getSettings(null);
 	}
 	
-	public TrapSpaceList launch(LogicalModel model, TrapSpaceSettings settings) {
+	public TrapSpaceList launch(LogicalModel model, TrapSpaceSettings settings) throws Exception {
 		return TOOL.getSolutions(model, settings);
 	}
 }

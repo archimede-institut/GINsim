@@ -2,9 +2,13 @@ package org.ginsim.servicegui.tool.trapspace;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.Enumeration;
 
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -12,6 +16,7 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
 import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.helper.clingo.ClingoLauncher;
 import org.colomoto.biolqm.tool.trapspaces.TrapSpaceIdentifier;
 import org.colomoto.biolqm.tool.trapspaces.TrapSpaceList;
 import org.colomoto.biolqm.tool.trapspaces.TrapSpaceSettings;
@@ -19,8 +24,11 @@ import org.colomoto.common.task.Task;
 import org.colomoto.common.task.TaskListener;
 import org.colomoto.common.task.TaskStatus;
 import org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer;
+import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.trapspacetree.TrapSpaceTree;
 import org.ginsim.core.service.GSServiceManager;
+import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.service.tool.trapspace.TrapSpaceService;
@@ -28,7 +36,7 @@ import org.ginsim.service.tool.trapspace.TrapSpaceService;
 
 
 /**
- * A simple GUI to launch stable states search and view the result
+ * A simple GUI to launch the identification of trap-spaces and view the result.
  * 
  * @author Aurelien Naldi
  */
@@ -39,6 +47,7 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
 	
 	TrapSpaceTableModel model;
 	JTable tresult;
+	JCheckBox cb_tree;
 	
 	private final TrapSpaceSettings settings;
 	TrapSpaceIdentifier m_identifier;
@@ -50,8 +59,10 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
 		model = new TrapSpaceTableModel();
 		tresult = new EnhancedJTable(model);
 		settings = srv.getSettings();
-		settings.terminal = true;
-		settings.bdd = true;
+		settings.terminal = false;
+		settings.tree = true;
+		settings.bdd = !ClingoLauncher.isAvailable();
+		settings.reduce = false;
 		
 		// needed for the scroll bars to appear as needed
 		tresult.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
@@ -59,13 +70,30 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
 		tresult.setDefaultRenderer(Object.class, new ColoredCellRenderer());
 		tresult.setAutoCreateRowSorter(true);
 		
-		JScrollPane pane = new JScrollPane(tresult);
-		setMainPanel(pane);
+		JPanel main = new JPanel(new GridBagLayout());
+		GridBagConstraints cst = new GridBagConstraints();
+		cst.gridx = 0;
+		cst.gridy = 0;
+		cb_tree = new JCheckBox("Generate inclusion tree");
+		main.add(cb_tree, cst);
+		cst.gridy++;
+		cst.weightx = 1;
+		cst.weighty = 1;
+		cst.fill = GridBagConstraints.BOTH;
+		main.add(new JScrollPane(tresult), cst);
+		setMainPanel(main);
 	}
 	
 	@Override
 	public void run(LogicalModel lmodel) {
         setRunning(true);
+        if (cb_tree.isSelected()) {
+        	settings.tree = true;
+        	settings.terminal = false;
+        } else {
+        	settings.tree = false;
+        	settings.terminal = true;
+        }
 		m_identifier = srv.getIdentifier(lmodel, settings);
 		m_identifier.background(this);
     }
@@ -86,6 +114,14 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
 		TrapSpaceList solutions = m_identifier.getResult();
 		if (solutions == null) {
 			System.out.println("No solution");
+			return;
+		}
+		
+		if (settings.tree) {
+			TrapSpaceTree tree = GSGraphManager.getInstance().getNewGraph(TrapSpaceTree.class, solutions);
+			tree.setAssociatedGraph(lrg);
+			GUIManager.getInstance().newFrame( tree);
+			cancel();
 			return;
 		}
 		

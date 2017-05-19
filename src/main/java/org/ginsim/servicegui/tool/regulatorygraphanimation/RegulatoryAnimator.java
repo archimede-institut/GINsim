@@ -17,7 +17,6 @@ import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.view.GraphicalAttributesStore;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
@@ -40,8 +39,6 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
     private DynamicGraph dynGraph;
 
     private Vector<DynamicNode> path = new Vector();
-    
-    private GraphicalAttributesStore dynGas;
     
     private List nodeOrder;
     private PathPlayer pathPlayer = null;
@@ -92,7 +89,6 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
         this.regGraph = regGraph;
         this.dynGraph = dynGraph;
         nodeOrder = regGraph.getNodeOrder();
-        dynGas = new GraphicalAttributesStore(dynGraph);
         styleManager = regGraph.getStyleManager();
         styleProvider = new LRGStateStyleProvider(regGraph);
         stg_styleProvider = new STGPathStyleProvider(dynGraph, this);

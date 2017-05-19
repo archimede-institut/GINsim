@@ -1,15 +1,10 @@
 package org.ginsim.servicegui.tool.regulatorygraphanimation;
 
 import java.awt.Color;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.ginsim.core.graph.dynamicgraph.DynamicEdge;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.EdgeStyleOverride;
 import org.ginsim.core.graph.view.style.NodeStyle;

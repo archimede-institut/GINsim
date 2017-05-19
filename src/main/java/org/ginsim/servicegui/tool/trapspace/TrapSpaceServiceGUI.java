@@ -63,7 +63,7 @@ class NewTrapSpaceAction extends ToolAction {
             NotificationManager.publishWarning( graph, Txt.t("STR_emptyGraph"));
     		return;
     	}
-
+    	
     	new TrapSpaceSwingUI(null, graph);
 	}
 	

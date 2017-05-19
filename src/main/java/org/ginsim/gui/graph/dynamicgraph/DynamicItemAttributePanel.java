@@ -1,14 +1,12 @@
 package org.ginsim.gui.graph.dynamicgraph;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
-import javax.swing.*;
-import javax.swing.event.TableModelListener;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
