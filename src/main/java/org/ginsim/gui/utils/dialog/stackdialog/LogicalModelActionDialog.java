@@ -4,8 +4,6 @@ import java.awt.Component;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
@@ -213,8 +211,9 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         // TODO: merge all reductions in a single pass
         ReductionConfig reduction = getReduction();
         if (reduction != null) {
-        	model = getReduction().apply(model);
+        	model = reduction.apply(model);
         }
+
         model = reductionService.getModifier(model, reductionSettings).getModifiedModel();
 
 		run(model);

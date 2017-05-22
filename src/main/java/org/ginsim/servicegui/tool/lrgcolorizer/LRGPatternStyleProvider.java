@@ -21,6 +21,8 @@ public class LRGPatternStyleProvider implements StyleProvider<RegulatoryNode, Re
 	private final PatternColoredNodeStyle nodeStyle;
 	private final PatternColoredEdgeStyle edgeStyle;
 	
+	private final StyleManager<RegulatoryNode, RegulatoryMultiEdge> styleManager;
+	
 	private final Map<RegulatoryNode, Integer> nodeIndex = new HashMap<RegulatoryNode, Integer>();
 	
 	private byte[] pattern = null;
@@ -35,14 +37,17 @@ public class LRGPatternStyleProvider implements StyleProvider<RegulatoryNode, Re
 			i++;
 		}
 		
-		StyleManager<RegulatoryNode, RegulatoryMultiEdge> styleManager = lrg.getStyleManager();
+		styleManager = lrg.getStyleManager();
 		nodeStyle = new PatternColoredNodeStyle(styleManager.getDefaultNodeStyle());
 		edgeStyle = new PatternColoredEdgeStyle(styleManager.getDefaultEdgeStyle());
+		
 	}
 
 	public void setPattern(byte[] state, boolean[] marked) {
 		this.pattern = state;
 		this.marked = marked;
+		
+		styleManager.styleUpdated(nodeStyle);
 	}
 	
 	@Override
@@ -52,6 +57,10 @@ public class LRGPatternStyleProvider implements StyleProvider<RegulatoryNode, Re
 		}
 		
 		Integer i = nodeIndex.get(node);
+		if (i < 0) {
+			nodeStyle.setBaseStyle(baseStyle, ActivityType.REDUCED, true);
+			return nodeStyle;
+		}
 		ActivityType activity;
 		if (i == null || pattern[i] < 0) {
 			activity = ActivityType.FREE;
@@ -89,7 +98,7 @@ public class LRGPatternStyleProvider implements StyleProvider<RegulatoryNode, Re
 }
 
 enum ActivityType {
-	INACTIVE, ACTIVE, PARTIAL, FREE;
+	INACTIVE, ACTIVE, PARTIAL, FREE, REDUCED;
 }
 
 
@@ -117,6 +126,8 @@ class PatternColoredNodeStyle extends NodeStyleOverride<RegulatoryNode> {
 			return Color.YELLOW;
 		case INACTIVE:
 			return Color.CYAN;
+		case REDUCED:
+			return Color.PINK;
 		default:
 			return Color.WHITE;
 		}
