@@ -32,7 +32,7 @@ public class XMLWriter {
 	 * @return true if the given string can be used as ID
 	 */
 	public static boolean isValidId(String id) {
-		return Pattern.compile("^[a-zA-Z0-9_-]+$").matcher(id).find();
+		return Pattern.compile("^[a-zA-Z_][a-zA-Z0-9_]*$").matcher(id).find();
 	}
 
     
