@@ -76,7 +76,7 @@ class ReversionAction extends ToolAction {
 		boolService.copyNodeStyles(this.graph, gReversed);
 
 		// Show the reversed graph
-		GUIManager.getInstance().whatToDoWithGraph(gReversed, true);
+		GUIManager.getInstance().whatToDoWithGraph(gReversed);
 		if (!origModel.isBoolean()) {
 			GUIMessageUtils.openErrorDialog("STR_reverse_multivalue");
 		}

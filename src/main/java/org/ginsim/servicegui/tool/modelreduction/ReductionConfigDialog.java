@@ -69,7 +69,7 @@ public class ReductionConfigDialog extends StackDialog implements ReductionLaunc
         if (task == reconstructionTask) {
     	    isRunning = false;
             RegulatoryGraph newGraph = reconstructionTask.getResult();
-            GUIManager.getInstance().whatToDoWithGraph(newGraph, this.graph, false);
+            GUIManager.getInstance().whatToDoWithGraph(newGraph, this.graph);
             cancel();
         }
     }

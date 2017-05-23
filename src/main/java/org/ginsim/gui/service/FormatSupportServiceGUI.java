@@ -69,7 +69,7 @@ public class FormatSupportServiceGUI<S extends FormatSupportService> extends Abs
 
 		try {
 			RegulatoryGraph newGraph = service.importLRG(filename);
-			GUIManager.getInstance().whatToDoWithGraph(newGraph, true);
+			GUIManager.getInstance().whatToDoWithGraph(newGraph);
 		} catch (Exception e) {
 			LogManager.error("Error in "+format_name+" import:\n "+e);
 		}

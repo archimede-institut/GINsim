@@ -359,8 +359,8 @@ public class GUIManager {
 	// ---------------------- METHODS LINKED TO THE whatToDoWithGraph FRAME -----------------------------------
 
 
-	public void whatToDoWithGraph(Graph<?, ?> new_graph, boolean b) {
-		whatToDoWithGraph( new_graph, null, b);
+	public void whatToDoWithGraph(Graph<?, ?> new_graph) {
+		whatToDoWithGraph( new_graph, null);
 	}
 
 	/**
@@ -372,7 +372,7 @@ public class GUIManager {
 	 * @param parentGraph the graph from which the new graph was generated
 	 * @param b (unused)
 	 */
-	public void whatToDoWithGraph(Graph<?, ?> new_graph, Graph<?,?> parent_graph, boolean b) {
+	public void whatToDoWithGraph(Graph<?, ?> new_graph, Graph<?,?> parent_graph) {
 		
 		// If the new graph is null, an error message is displayed
 		if( new_graph == null){

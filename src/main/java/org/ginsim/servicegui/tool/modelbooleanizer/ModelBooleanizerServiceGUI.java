@@ -71,7 +71,7 @@ class BooleanizeAction extends ToolAction {
 			service.copyNodeStyles(this.graph, bGraph);
 
 			// Show the Booleanized graph
-			GUIManager.getInstance().whatToDoWithGraph(bGraph, true);
+			GUIManager.getInstance().whatToDoWithGraph(bGraph);
 		}
 	}
 }

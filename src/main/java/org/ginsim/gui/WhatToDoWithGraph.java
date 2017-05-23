@@ -56,7 +56,7 @@ import org.ginsim.gui.utils.widgets.Frame;
  */
 public class WhatToDoWithGraph extends Frame {
 
-	public static final int LITMIT_ASK_QUESTION = 50;
+	public static final int LITMIT_ASK_QUESTION = 0;
 	private static final int LIMIT_WARNING = 500;
 	private static final int LIMIT_DISABLE_DISPLAY = 1000;
 	

@@ -120,7 +120,7 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
 		if (settings.tree) {
 			TrapSpaceTree tree = GSGraphManager.getInstance().getNewGraph(TrapSpaceTree.class, solutions);
 			tree.setAssociatedGraph(lrg);
-			GUIManager.getInstance().newFrame( tree);
+			GUIManager.getInstance().whatToDoWithGraph( tree);
 			cancel();
 			return;
 		}

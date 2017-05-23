@@ -52,7 +52,7 @@ public class SimulationFrame extends LogicalModelActionDialog {
         this.doClose();
 
         DynamicGraph graph = simulation.getGraph();
-        GUIManager.getInstance().whatToDoWithGraph(graph, true);
+        GUIManager.getInstance().whatToDoWithGraph(graph);
     }
 
 }

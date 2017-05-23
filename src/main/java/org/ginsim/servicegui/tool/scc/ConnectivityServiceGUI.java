@@ -87,7 +87,7 @@ class SCCGraphAction extends ToolAction implements TaskListener {
             return;
         }
         ReducedGraph result = this.task.getResult();
-        GUIManager.getInstance().whatToDoWithGraph(result, true);
+        GUIManager.getInstance().whatToDoWithGraph(result);
         this.task = null;
         setEnabled(true);
     }
@@ -109,7 +109,7 @@ class ConnectivityColorizeGraphAction extends GenericGraphAction {
         styler = service.getStyleProvider(components, graph);
         graph.getStyleManager().setStyleProvider(styler);
         if (GUIManager.getInstance().getFrame(graph) == null) {
-        		GUIManager.getInstance().whatToDoWithGraph(graph, true);
+        		GUIManager.getInstance().whatToDoWithGraph(graph);
         }
 	}
 }
@@ -184,6 +184,6 @@ class ExtractFromSCCGraphAction extends GenericGraphAction {
 			return;
 	    }
 	    
-        GUIManager.getInstance().whatToDoWithGraph(subgraph, graph, true);
+        GUIManager.getInstance().whatToDoWithGraph(subgraph, graph);
 	}
 }

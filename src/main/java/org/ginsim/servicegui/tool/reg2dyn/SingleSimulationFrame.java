@@ -60,7 +60,7 @@ public class SingleSimulationFrame extends BaseSimulationFrame {
 		if (null == graph) {
 			GUIMessageUtils.openErrorDialog("no graph generated", regGraphFrame);
 		} else {
-			GUIManager.getInstance().whatToDoWithGraph( (Graph)graph, true);
+			GUIManager.getInstance().whatToDoWithGraph( (Graph)graph);
 		}
 		cancel();
 	}

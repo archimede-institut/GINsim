@@ -190,7 +190,7 @@ public class GraphComparatorFrame  extends StackDialog implements ActionListener
 			GUIManager.getInstance().newFrame(gcResult.getDiffGraph());
 			new GraphComparatorCaptionFrame(gcResult);
 		} else {
-			GUIManager.getInstance().whatToDoWithGraph(gcResult.getDiffGraph(), false);
+			GUIManager.getInstance().whatToDoWithGraph(gcResult.getDiffGraph());
 		}
 
 
