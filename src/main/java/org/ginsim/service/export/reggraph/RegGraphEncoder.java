@@ -27,8 +27,8 @@ public class RegGraphEncoder {
 				.hasNext();) {
 			RegulatoryMultiEdge edge = it.next();
 
-			String sourceId = ((RegulatoryNode) edge.getTarget()).getId();
-			String targetId = ((RegulatoryNode) edge.getSource()).getId();
+			String sourceId = ((RegulatoryNode) edge.getSource()).getId();
+			String targetId = ((RegulatoryNode) edge.getTarget()).getId();
 			String edgeType;
 			switch (edge.getSign()) {
 			case NEGATIVE:
