@@ -2,6 +2,9 @@ package org.ginsim.core.graph.dynamicgraph;
 
 import java.awt.Color;
 
+import org.ginsim.common.utils.ColorPalette;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.style.EdgeStyleImpl;
 import org.ginsim.core.graph.view.style.StyleProperty;
@@ -93,4 +96,37 @@ public class DefaultDynamicEdgeStyle extends EdgeStyleImpl<DynamicNode, DynamicE
 			c_dec = (Color)value;
 		}
 	}
+
+    @Override
+    public String getCSS() {
+        String parent = super.getCSS();
+
+        // add styles for signed edges
+        StringBuffer sb = new StringBuffer();
+        sb.append(".edge_inc {\n");
+        sb.append("stroke: "+ColorPalette.getColorCode(c_inc)+";\n");
+        sb.append("}\n");
+
+        sb.append(".edge_dec {\n");
+        sb.append("stroke: "+ColorPalette.getColorCode(c_dec)+";\n");
+        sb.append("}\n");
+
+        return parent+sb.toString();
+    }
+
+    @Override
+    public String getCSSClass(DynamicEdge edge) {
+		String ret = super.getCSSClass(edge);
+		switch (edge.changeType) {
+		case INCREASE:
+		case MULTIPLE_INCREASE:
+			return ret + " edge_inc";
+		case DECREASE:
+		case MULTIPLE_DECREASE:
+			return ret + " edge_dec";
+		}
+
+    	return ret;
+    }
+
 }

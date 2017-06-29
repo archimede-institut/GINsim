@@ -47,7 +47,7 @@ public class LRGPatternStyleProvider implements StyleProvider<RegulatoryNode, Re
 		this.pattern = state;
 		this.marked = marked;
 		
-		styleManager.styleUpdated(nodeStyle);
+		styleManager.stylesUpdated();
 	}
 	
 	@Override

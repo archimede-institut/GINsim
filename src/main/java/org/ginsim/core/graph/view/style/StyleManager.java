@@ -559,14 +559,22 @@ public class StyleManager<V, E extends Edge<V>> {
 	}
 
 	/**
-	 * Called when a style has been modified, it will refresh the view.
-	 * @param style
+	 * Called when all styling has been modified, it will refresh the view.
 	 */
-	public void styleUpdated(Style style) {
-
-		// TODO: fire metadata change
+	public void stylesUpdated() {
 		backend.damage(null);
 		backend.repaint();
+	}
+	
+	/**
+	 * Called when a style has been modified, it will refresh the view.
+	 * Currently it just forwards call to stylesUpdated()
+	 * 
+	 * @param style the updated style
+	 */
+	public void styleUpdated(Style style) {
+		// TODO: fire metadata change
+		stylesUpdated();
 	}
 
 	/**
