@@ -27,6 +27,8 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GSServiceGUIManager;
 import org.ginsim.gui.shell.AboutDialog;
 
+import py4j.GatewayServer;
+
 
 /**
  * Simple launcher: parse command line arguments, show some help, open files or run the script mode accordingly.
@@ -81,6 +83,12 @@ public class Launcher {
                 // force exit as jython seems to often delay it
                 System.exit(0);
                 return;
+            } else if (args[i].equals("-py")) {
+            	System.out.println("Starting the Py4J gateway (<ctrl>-c to interrupt)");
+        		ScriptLauncher script = new ScriptLauncher();
+            	GatewayServer pygw = new GatewayServer(script);
+            	pygw.start();
+            	return;
             } else if (args[i].equals("-n")) {
         		open.add(null);
         		continue;
@@ -100,6 +108,7 @@ public class Launcher {
                 System.out.println("\t-n: start with a new regulatory graph.");
                 System.out.println("\t-s: display the script help message.");
                 System.out.println("\t-s <file>: run \"script\" from <file>. Extra arguments are script arguments.");
+                System.out.println("\t-py: launch a server for the py4j python gateway.");
                 System.out.println("\t-h:  display this message.");
                 System.out.println("\t--dev : enable the developer's options.");
                 System.out.println("\t-lm: LogicalModel mode: takes the same arguments as the LogicalModel conversion tool.");
