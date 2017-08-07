@@ -159,6 +159,8 @@ public class SimulationParameters implements XMLize, NamedObject, NamedStateStor
 
     @Override
 	public void toXML(XMLWriter out) throws IOException {
+    	// avoid failure on unspecified priority class definition
+    	PrioritySetDefinition pcdef = getPriorityClassDefinition();
 		out.openTag("parameter");
 		out.addAttr("name", name);
 		out.addAttr("updating", pcdef.getName());
