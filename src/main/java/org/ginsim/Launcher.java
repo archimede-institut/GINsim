@@ -84,10 +84,11 @@ public class Launcher {
                 System.exit(0);
                 return;
             } else if (args[i].equals("-py")) {
-            	System.out.println("Starting the Py4J gateway (<ctrl>-c to interrupt)");
         		ScriptLauncher script = new ScriptLauncher();
-            	GatewayServer pygw = new GatewayServer(script);
+            	GatewayServer pygw = new GatewayServer(script, 0);
             	pygw.start();
+            	System.out.println(pygw.getListeningPort());
+            	System.out.println("Started the Py4J gateway (<ctrl>-c to interrupt)");
             	return;
             } else if (args[i].equals("-n")) {
         		open.add(null);
