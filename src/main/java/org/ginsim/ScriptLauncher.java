@@ -60,6 +60,9 @@ public class ScriptLauncher {
 	 */
 	public String[] args;
 	
+	/** Access the LQM launcher as well */
+    private LQMScriptLauncher lqm_launcher = null;
+	
 	/**
 	 * Initialisation method for the script helper to ensure a working OptionStore.
 	 */
@@ -128,9 +131,8 @@ public class ScriptLauncher {
             Py.getSystemState().path.add(0, dir.getAbsolutePath());
             PythonInterpreter pi = new PythonInterpreter();
             pi.set("gs", this);
-            LQMScriptLauncher lqm_launcher = new LQMScriptLauncher(args);
-            pi.set("lm", lqm_launcher);
-            pi.set("lqm", lqm_launcher);
+            pi.set("lm", LQM());
+            pi.set("lqm", LQM());
             pi.execfile(filename);
         } else {
 
@@ -139,9 +141,8 @@ public class ScriptLauncher {
             try {
                 ScriptEngine engine = LQMScriptLauncher.loadEngine(filename);
                 engine.put("gs", this);
-                LQMScriptLauncher lqm_launcher = new LQMScriptLauncher(args);
-                engine.put("lm", lqm_launcher);
-                engine.put("lqm", lqm_launcher);
+                engine.put("lm", LQM());
+                engine.put("lqm", LQM());
 
                 engine.eval(new java.io.FileReader(filename));
             } catch (Exception e) {
@@ -152,7 +153,19 @@ public class ScriptLauncher {
         // reset the running status: should not be needed but may be convenient later
         running = false;
 	}
-	
+
+	/**
+	 * Grab a proxy to the bioLQM API
+	 * 
+	 * @return a LQM script launcher
+	 */
+	public LQMScriptLauncher LQM() {
+		if (lqm_launcher == null) {
+			lqm_launcher = new LQMScriptLauncher(args);
+		}
+		return lqm_launcher;
+	}
+
 	/**
 	 * Open a graph from a file.
 	 * 
