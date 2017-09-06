@@ -17,7 +17,6 @@ import javax.swing.table.TableColumn;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.helper.clingo.ClingoLauncher;
-import org.colomoto.biolqm.tool.trapspaces.TrapSpaceIdentifier;
 import org.colomoto.biolqm.tool.trapspaces.TrapSpaceList;
 import org.colomoto.biolqm.tool.trapspaces.TrapSpaceSettings;
 import org.colomoto.common.task.Task;
@@ -50,7 +49,7 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
 	JCheckBox cb_tree;
 	
 	private final TrapSpaceSettings settings;
-	TrapSpaceIdentifier m_identifier;
+	Task<TrapSpaceList> m_identifier;
 
     public TrapSpaceSwingUI(JFrame f, RegulatoryGraph lrg) {
 		super(lrg, f, "stableStatesGUI", 600, 400);
@@ -94,7 +93,7 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
         	settings.tree = false;
         	settings.terminal = true;
         }
-		m_identifier = srv.getIdentifier(lmodel, settings);
+		m_identifier = srv.getTask(lmodel, settings);
 		m_identifier.background(this);
     }
 

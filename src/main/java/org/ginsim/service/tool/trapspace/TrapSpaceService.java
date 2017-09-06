@@ -6,6 +6,7 @@ import org.colomoto.biolqm.tool.trapspaces.TrapSpaceIdentifier;
 import org.colomoto.biolqm.tool.trapspaces.TrapSpaceList;
 import org.colomoto.biolqm.tool.trapspaces.TrapSpaceSettings;
 import org.colomoto.biolqm.tool.trapspaces.TrapSpaceTool;
+import org.colomoto.common.task.Task;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
@@ -30,15 +31,15 @@ public class TrapSpaceService implements Service {
 	public TrapSpaceService() {
 	}
 
-	public TrapSpaceIdentifier getIdentifier(LogicalModel model, TrapSpaceSettings settings) {
-		return TOOL.getIdentifier(model, settings);
+	public Task<TrapSpaceList> getTask(LogicalModel model, TrapSpaceSettings settings) {
+		return TOOL.getTask(model, settings);
 	}
 	
 	public TrapSpaceSettings getSettings() {
-		return TOOL.getSettings(null);
+		return TOOL.getSettings();
 	}
 	
 	public TrapSpaceList launch(LogicalModel model, TrapSpaceSettings settings) throws Exception {
-		return TOOL.getSolutions(model, settings);
+		return TOOL.getResult(model, settings);
 	}
 }
