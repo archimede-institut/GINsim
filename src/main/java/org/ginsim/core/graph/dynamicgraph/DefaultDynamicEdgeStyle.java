@@ -3,8 +3,6 @@ package org.ginsim.core.graph.dynamicgraph;
 import java.awt.Color;
 
 import org.ginsim.common.utils.ColorPalette;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.style.EdgeStyleImpl;
 import org.ginsim.core.graph.view.style.StyleProperty;
@@ -36,6 +34,11 @@ public class DefaultDynamicEdgeStyle extends EdgeStyleImpl<DynamicNode, DynamicE
             return EdgePattern.SIMPLE;
         }
 
+        Object pattern = getProperty(StyleProperty.PATTERN);
+        if (pattern != null && pattern instanceof EdgePattern) {
+        	return (EdgePattern)pattern;
+        }
+        
 		switch (edge.changeType) {
 		case MULTIPLE_BOTH:
 		case MULTIPLE_INCREASE:
@@ -64,7 +67,7 @@ public class DefaultDynamicEdgeStyle extends EdgeStyleImpl<DynamicNode, DynamicE
 
 	@Override
 	public boolean enforcePattern() {
-		return true;
+		return false;
 	}
 
 	@Override
