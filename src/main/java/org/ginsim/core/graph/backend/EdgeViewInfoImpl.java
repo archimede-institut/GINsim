@@ -4,12 +4,14 @@ import java.awt.Point;
 import java.util.List;
 
 import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.view.EdgeAnchor;
 import org.ginsim.core.graph.view.EdgeViewInfo;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 
 public class EdgeViewInfoImpl<V, E extends Edge<V>> implements EdgeViewInfo<V, E> {
 
 	List<Point> points = null;
+	private EdgeAnchor anchor = EdgeAnchor.NE;
 	private EdgeStyle<V, E> style = null;
 	private boolean curve = false;
 	
@@ -41,5 +43,15 @@ public class EdgeViewInfoImpl<V, E extends Edge<V>> implements EdgeViewInfo<V, E
 	@Override
 	public void setPoints(List<Point> l) {
 		this.points = l;
+	}
+
+	@Override
+	public EdgeAnchor getAnchor() {
+		return anchor;
+	}
+
+	@Override
+	public void setAnchor(EdgeAnchor anchor) {
+		this.anchor = anchor;
 	}
 }

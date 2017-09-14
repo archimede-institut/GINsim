@@ -114,6 +114,11 @@ public interface EdgeAttributesReader<V,E extends Edge<V>> extends AttributesRea
 	void setStyle(EdgeStyle style);
 
 	
+	EdgeAnchor getAnchor();
+	
+	void setAnchor(EdgeAnchor anchor);
+
+	
 	@Deprecated
 	void setLineWidth(float w);
 	@Deprecated

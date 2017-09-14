@@ -224,8 +224,9 @@ copyright by
 <!ELEMENT edgevisualsetting ( polyline? )> 
 <!ATTLIST edgevisualsetting 
     points CDATA #IMPLIED
-    curve CDATA #IMPLIED
-    style CDATA #IMPLIED
+    curve  CDATA #IMPLIED
+    anchor CDATA #IMPLIED
+    style  CDATA #IMPLIED
 > 
 
 <!ELEMENT edgestyle EMPTY> 

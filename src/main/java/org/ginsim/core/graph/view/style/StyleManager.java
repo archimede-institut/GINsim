@@ -14,6 +14,7 @@ import org.ginsim.core.graph.GraphBackend;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphFactory;
+import org.ginsim.core.graph.view.EdgeAnchor;
 import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.EdgeViewInfo;
 import org.ginsim.core.graph.view.NodeShape;
@@ -294,6 +295,21 @@ public class StyleManager<V, E extends Edge<V>> {
     public void setEdgeCurved(E edge, boolean curved) {
         backend.damage(edge);
         backend.ensureEdgeViewInfo(edge).setCurve(curved);
+        backend.damage(edge);
+        backend.repaint();
+    }
+
+    public EdgeAnchor getEdgeAnchor(E edge) {
+        EdgeViewInfo<V, E> info = backend.getEdgeViewInfo(edge);
+        if (info == null) {
+            return null;
+        }
+        return info.getAnchor();
+    }
+    
+    public void setEdgeAnchor(E edge, EdgeAnchor anchor) {
+        backend.damage(edge);
+        backend.ensureEdgeViewInfo(edge).setAnchor(anchor);
         backend.damage(edge);
         backend.repaint();
     }

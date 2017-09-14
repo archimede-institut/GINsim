@@ -16,6 +16,7 @@ import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.GraphBackend;
 import org.ginsim.core.graph.view.Bezier;
+import org.ginsim.core.graph.view.EdgeAnchor;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.EdgeEnd;
 import org.ginsim.core.graph.view.EdgePattern;
@@ -213,7 +214,30 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 			setPoints(null);
 		}
  }
- 
+
+	@Override
+	public EdgeAnchor getAnchor() {
+		if (viewInfo != null) {
+			EdgeAnchor anchor = viewInfo.getAnchor();
+			if (anchor != null) {
+				return anchor;
+			}
+		}
+
+		return EdgeAnchor.NE;
+	}
+
+	@Override
+	public void setAnchor(EdgeAnchor anchor) {
+        if (viewInfo == null) {
+        	if (anchor == null) {
+        		return;
+        	}
+        	viewInfo = graph.ensureEdgeViewInfo(edge);
+        }
+		viewInfo.setAnchor(anchor);
+	}
+
 	@Override
 	public boolean isCurve() {
 		if (viewInfo != null) {
@@ -266,7 +290,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 			s = getPath();
 			points = cachedPoints;
 		} else {
-			s = createPath(points, isCurve());
+			s = createPath(points, isCurve(), getAnchor());
 		}
 		if (selected) {
 			g.setColor(Color.PINK);
@@ -331,7 +355,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 		return false;
 	}
 
-	private Shape createPath(List<Point> points, boolean curve) {
+	private Shape createPath(List<Point> points, boolean curve, EdgeAnchor anchor) {
 
 		Path2D path = new Path2D.Float();
 
@@ -379,7 +403,7 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 		if (cachedPath == null) {
 			stroke.setWidth(getLineWidth());
 			cachedPoints = ViewHelper.getPoints(nreader, this, edge);
-			cachedPath = createPath(cachedPoints, isCurve());
+			cachedPath = createPath(cachedPoints, isCurve(), getAnchor());
 		}
 		return cachedPath;
 	}
@@ -438,6 +462,10 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
             }
             if (isCurve()) {
                 writer.addAttr("curve", "true");
+            }
+            EdgeAnchor anchor = getAnchor();
+            if (anchor != null) {
+                writer.addAttr("anchor", anchor.name());
             }
             writer.addAttr("style", style.getName());
         }

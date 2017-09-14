@@ -6,7 +6,9 @@ import java.util.List;
 
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.view.EdgeAnchor;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
+import org.ginsim.core.graph.view.EdgePattern;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.ViewHelper;
 import org.ginsim.core.graph.view.style.EdgeStyle;
@@ -93,7 +95,13 @@ public class GinmlHelper {
         if (value!= null && !value.equalsIgnoreCase("false")) {
             ereader.setCurve(true);
         }
-
+        
+        value = attributes.getValue("anchor");
+        if (value != null) {
+        	EdgeAnchor anchor = EdgeAnchor.valueOf(value);
+            ereader.setAnchor(anchor);
+        }
+        
         value = attributes.getValue("style");
     	if (value != null) {
     		loadOldVS = false;

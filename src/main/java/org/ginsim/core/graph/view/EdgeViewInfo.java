@@ -25,6 +25,10 @@ public interface EdgeViewInfo<V, E extends Edge<V>> {
 	boolean isCurve();
 	
 	void setCurve(boolean curve);
+	
+	EdgeAnchor getAnchor();
+	
+	void setAnchor(EdgeAnchor anchor);
 
 	void setPoints(List<Point> l);
 }

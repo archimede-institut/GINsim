@@ -1,6 +1,8 @@
 package org.ginsim.core.graph.view;
 
-import java.awt.*;
+import java.awt.Font;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +32,12 @@ public class ViewHelper {
 	 * @param bounds the bounds of the item with the loop
 	 * @return the list of points for a loop.
 	 */
-	private static PointList getPoints(Rectangle bounds) {
+	private static PointList getPoints(Rectangle bounds, EdgeAnchor anchor) {
 
 		PointList points = new PointList();
+
+		int h = (int)bounds.getHeight();
+		int w = (int)bounds.getWidth();
 		
 		int md = (int)bounds.getWidth();
 		int d = (int)bounds.getHeight();
@@ -47,13 +52,39 @@ public class ViewHelper {
 		} else if (d > md*2) {
 			d = md*2;
 		}
+		
 		int x = (int)bounds.getMaxX();
 		int y = (int)bounds.getMinY();
-		points.add(new Point(x-md, y));
-		points.add(new Point(x-md, y-d));
-		points.add(new Point(x+d, y-d));
-		points.add(new Point(x+d, y+md));
-		points.add(new Point(x+2, y+md));
+		switch (anchor) {
+		case SE:
+			points.add(new Point(x+2, y+md));
+			points.add(new Point(x+d, y+md));
+			points.add(new Point(x+d, y+h+md));
+			points.add(new Point(x-md, y+h+md));
+			points.add(new Point(x-md, y+h+2));
+			break;
+		case SW:
+			points.add(new Point(x-w-2, y+md));
+			points.add(new Point(x-w-d, y+md));
+			points.add(new Point(x-w-d, y+h+md));
+			points.add(new Point(x-w+md, y+h+md));
+			points.add(new Point(x-w+md, y+h+2));
+			break;
+		case NW:
+			points.add(new Point(x-w+md, y));
+			points.add(new Point(x-w+md, y-d));
+			points.add(new Point(x-w-d, y-d));
+			points.add(new Point(x-w-d, y+md));
+			points.add(new Point(x-w-2, y+md));
+			break;
+		default:
+			points.add(new Point(x-md, y));
+			points.add(new Point(x-md, y-d));
+			points.add(new Point(x+d, y-d));
+			points.add(new Point(x+d, y+md));
+			points.add(new Point(x+2, y+md));
+			break;
+		}
 		return points;
 	}
 	
@@ -217,7 +248,7 @@ public class ViewHelper {
         if (source == target) {
             if (realPoints == null) {
                 Rectangle box = getBounds(nodeReader, source);
-                return getPoints(box);
+                return getPoints(box, edgeReader.getAnchor());
             }
         }
 
@@ -263,7 +294,7 @@ public class ViewHelper {
 			if (type.source) {
 				box = translateRectangle(box, movex, movey);
 			}
-			return getPoints(box);
+			return getPoints(box, ereader.getAnchor());
 		}
 		
 		Rectangle b1 = getBounds(nreader, source);
@@ -352,7 +383,7 @@ public class ViewHelper {
 		
 		if (source == target && modifiedPoints == null) {
 			Rectangle box = getBounds(nodeReader, source);
-			return getPoints(box);
+			return getPoints(box, edgeReader.getAnchor());
 		}
 		
 		Rectangle b1 = getBounds(nodeReader, source);

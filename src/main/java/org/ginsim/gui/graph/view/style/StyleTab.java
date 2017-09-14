@@ -9,6 +9,7 @@ import java.util.*;
 
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.view.EdgeAnchor;
 import org.ginsim.core.graph.view.style.*;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
@@ -44,6 +45,7 @@ public class StyleTab extends JPanel
 
     private final JLabel label = new JLabel();
     private final JCheckBox curveCheckbox;
+    private final JCheckBox anchorCheckbox;
     private boolean providerMode = false;
 
     private boolean pending = false;
@@ -98,6 +100,17 @@ public class StyleTab extends JPanel
             }
         });
         add(curveCheckbox, c);
+
+        // anchor setting for edges
+        c.gridx++;
+        anchorCheckbox = new JCheckBox("anchor");
+        anchorCheckbox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                updateAnchor();
+            }
+        });
+        add(anchorCheckbox, c);
 
         // style provider reset button
         c.gridx++;
@@ -225,9 +238,14 @@ public class StyleTab extends JPanel
                 curveCheckbox.setEnabled(true);
                 curveCheckbox.setVisible(true);
                 curveCheckbox.setSelected(manager.getEdgeCurved(first));
+                anchorCheckbox.setEnabled(true);
+                anchorCheckbox.setVisible(true);
+                anchorCheckbox.setSelected(manager.getEdgeAnchor(first) == EdgeAnchor.SE);
             } else {
                 curveCheckbox.setEnabled(false);
                 curveCheckbox.setVisible(false);
+                anchorCheckbox.setEnabled(false);
+                anchorCheckbox.setVisible(false);
                 label.setText("Style for "+edges.size()+" selected edges");
             }
             setCurrentStyle(selected);
@@ -236,6 +254,8 @@ public class StyleTab extends JPanel
 
         curveCheckbox.setEnabled(false);
         curveCheckbox.setVisible(false);
+        anchorCheckbox.setEnabled(false);
+        anchorCheckbox.setVisible(false);
         Style selected = null;
         Object first = null;
         for (Object node: nodes) {
@@ -333,6 +353,18 @@ public class StyleTab extends JPanel
             }
 
             manager.setEdgeCurved(first, curveCheckbox.isSelected());
+        }
+    }
+
+    protected void updateAnchor() {
+        if (anchorCheckbox.isEnabled() && selectedEdges != null && selectedEdges.size() == 1) {
+            Edge first = null;
+            for (Edge e: selectedEdges) {
+                first = e;
+                break;
+            }
+
+            manager.setEdgeAnchor(first, anchorCheckbox.isSelected() ? EdgeAnchor.SE : EdgeAnchor.NE);
         }
     }
 
