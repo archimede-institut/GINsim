@@ -6,7 +6,9 @@ import java.util.regex.Pattern;
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.modifier.booleanize.Booleanizer;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
@@ -49,14 +51,33 @@ public class ModelBooleanizerService implements Service {
 						destNode.getId().length() - 1)) - 1;
 				dNReader.move(this.DX * i, this.DY * i);
 			}
+			dNReader.refresh();
 		}
-		dNReader.refresh();
+
+		// copy all unaffected edges
+		EdgeAttributesReader ereader = src.getEdgeAttributeReader();
+		EdgeAttributesReader bereader = dest.getEdgeAttributeReader();
+		for (RegulatoryMultiEdge bme: dest.getEdges()) {
+			RegulatoryNode bsrc = this.getEquivalentNode(src, bme.getSource());
+			RegulatoryNode target = this.getEquivalentNode(src, bme.getTarget());
+			if (bsrc != null && target != null) {
+				RegulatoryMultiEdge me = src.getEdge(bsrc, target);
+                if (me != null) {
+					ereader.setEdge(me);
+					bereader.setEdge(bme);
+					bereader.copyFrom(ereader);
+				}
+			}
+			bereader.refresh();
+		}
+
 	}
 
-	private RegulatoryNode getEquivalentNode(RegulatoryGraph graph,
-			RegulatoryNode node) {
+	private RegulatoryNode getEquivalentNode(RegulatoryGraph graph, RegulatoryNode node) {
+
+		String nid = node.getId();
 		for (RegulatoryNode gNode : graph.getNodes()) {
-			if (node.getId().startsWith(gNode.getId())) {
+			if (nid.startsWith(gNode.getId())) {
 				return gNode;
 			}
 		}
