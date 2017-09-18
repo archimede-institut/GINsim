@@ -110,11 +110,9 @@ public class CSSNodeStyle implements CSSStyle {
 			return;
 		}
 		NodeAttributesReader nreader = (NodeAttributesReader)areader;
-		if (background != null) nreader.setBackgroundColor(background);
-		if (foreground != null) nreader.setForegroundColor(foreground);
-		if (textcolor != null)  nreader.setTextColor(textcolor);
-		if (border != null)     nreader.setBorder(border);
-		if (shape != null)      nreader.setShape(shape);
+		
+		// FIXME: reimplement CSS styling using styles
+
 		areader.damage();
 	}
 	

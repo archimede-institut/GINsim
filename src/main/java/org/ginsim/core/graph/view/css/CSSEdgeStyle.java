@@ -108,10 +108,9 @@ public class CSSEdgeStyle implements CSSStyle {
 			return;
 		}
 		EdgeAttributesReader ereader = (EdgeAttributesReader)areader;
-		if (lineColor != null)	   ereader.setLineColor(lineColor);
-		if (curve != NULL_CURVE)   ereader.setCurve(curve==1);
-		if (lineEnd != null)       ereader.setLineEnd(lineEnd);
-		if (border != NULL_BORDER) ereader.setLineWidth(border);
+		
+		// FIXME: reimplement CSS styling using styles
+		
 		ereader.damage();
 	}
 

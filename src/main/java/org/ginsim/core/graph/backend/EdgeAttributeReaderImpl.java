@@ -34,7 +34,7 @@ import org.ginsim.core.graph.view.style.StyleManager;
  */
 public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttributesReader<V,E> {
 
-	private static final int MAX_EDGE_SIZE = 7;
+	private static final int MAX_EDGE_SIZE = 12;
 	public static final String EDGE_COLOR = "vs.edgecolor";
     protected static Map<String, float[]> m_pattern = null;
 	
@@ -197,11 +197,8 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 
 	@Override
 	public void copyFrom(EdgeAttributesReader fereader) {
-		setLineColor(fereader.getLineColor());
 		setCurve(fereader.isCurve());
-		setLineEnd(fereader.getLineEnd());
-		setLineWidth(fereader.getLineWidth());
-		setDash(fereader.getDash());
+		setStyle(fereader.getStyle());
 		
 		List<Point> oldPoints = fereader.getPoints();
 		if (oldPoints != null) {
@@ -490,26 +487,37 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 			return;
 		}
 		
-		if (viewInfo == null) {
+		if (viewInfo == null && style != null) {
 			viewInfo = graph.ensureEdgeViewInfo(edge);
 		}
 		if (viewInfo == null) {
 			return;
 		}
-		
+		if (style != null) {
+			// TODO: cleanup style adding
+			// the list of styles is checked every time, could be more efficient
+			boolean copyStyle = true;
+			List<EdgeStyle<V,E>> styles = styleManager.getEdgeStyles();
+			for (EdgeStyle<V, E> st: styles) {
+				if (style.equals(st)) {
+					copyStyle = false;
+					break;
+				}
+			}
+			if (copyStyle) {
+				styles.add(style);
+			}
+		}
 		viewInfo.setStyle(style);
 	}
 
-	
-	// TODO: remove setters
-	public void setDash(EdgePattern pattern) {
+	@Override
+	public EdgeStyle getStyle() {
+		if (edge == null || viewInfo == null) {
+			return null;
+		}
+		
+		return viewInfo.getStyle();
 	}
-    public void setLineEnd(EdgeEnd ending) {
-    }
-    public void setLineWidth(float w) {
-    }
-    public void setLineColor(Color color) {
-    }
-
-
+	
 }

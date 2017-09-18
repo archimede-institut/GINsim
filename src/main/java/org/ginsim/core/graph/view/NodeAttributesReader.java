@@ -100,18 +100,6 @@ public interface NodeAttributesReader<V> extends AttributesReader {
 
 	void setStyle(NodeStyle<V> style);
 
-
-    @Deprecated
-    void setForegroundColor(Color color);
-    @Deprecated
-    void setTextColor(Color color);
-    @Deprecated
-    void setBackgroundColor(Color color);
-    @Deprecated
-    void setSize(int w, int h);
-    @Deprecated
-	void setBorder(NodeBorder index);
-    @Deprecated
-	void setShape(NodeShape shapeIndex);
+	NodeStyle<V> getStyle();
 
 }

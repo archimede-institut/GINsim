@@ -72,7 +72,7 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 							}
 							Dimensions dim = bb.getDimensions();
 							if (dim != null) {
-								nreader.setSize((int)dim.getWidth(), (int)dim.getHeight());
+								// FIXME: turn layout information into styling?
 							}
 						} catch (Exception e) {
 							

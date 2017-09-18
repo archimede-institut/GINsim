@@ -5,7 +5,6 @@ import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.core.graph.view.NodeAttributesReader;
-import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 import org.ginsim.service.tool.reg2dyn.helpers.STGSimulationHelper;
@@ -40,11 +39,13 @@ public class STGLimitedSimulationHelper extends STGSimulationHelper {
 		HierarchicalNode hierarchicalNode = htg.getNodeForState(item.state);
 		htg_vreader.setNode(hierarchicalNode);
 		vreader.copyFrom(htg_vreader);
-		if (status == 1) {
-			vreader.setShape(NodeShape.RECTANGLE);
-		} else {
-			vreader.setShape(NodeShape.ELLIPSE);
-		}
+		
+		// TODO: enforcing node shape is no longer possible, set some property instead?
+//		if (status == 1) {
+//			vreader.setShape(NodeShape.RECTANGLE);
+//		} else {
+//			vreader.setShape(NodeShape.ELLIPSE);
+//		}
 		if (item.previous != null) {
 			stateTransitionGraph.addEdge((DynamicNode)item.previous, node, item.multiple);
 		}

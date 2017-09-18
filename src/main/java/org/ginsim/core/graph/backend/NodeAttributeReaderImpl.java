@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.Shape;
 import java.io.IOException;
+import java.util.List;
 
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
@@ -232,11 +233,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 	@Override
     public void copyFrom(NodeAttributesReader fvreader) {
         setPos(fvreader.getX(), fvreader.getY());
-        setSize(fvreader.getWidth(), fvreader.getHeight());
-        setShape(fvreader.getShape());
-        setBackgroundColor(fvreader.getBackgroundColor());
-        setForegroundColor(fvreader.getForegroundColor());
-        setBorder(fvreader.getBorder());
+        setStyle(fvreader.getStyle());
     }
 
 	@Override
@@ -381,17 +378,33 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 		if (viewInfo == null) {
 			return;
 		}
+
+		
+		if (style != null) {
+			// TODO: cleanup style adding
+			// the list of styles is checked every time, could be more efficient
+			boolean copyStyle = true;
+			List<NodeStyle<V>> styles = styleManager.getNodeStyles();
+			for (NodeStyle<V> st: styles) {
+				if (style.equals(st)) {
+					copyStyle = false;
+					break;
+				}
+			}
+			if (copyStyle) {
+				styles.add(style);
+			}
+	
+			viewInfo.setStyle(style);
+		}
 		this.style = style;
-		viewInfo.setStyle(style);
 	}
 
-
-    // TODO: remove setters completely
-	public void setForegroundColor(Color color) {}
-	public void setTextColor(Color color) {}
-    public void setBackgroundColor(Color color) {}
-    public void setSize(int w, int h) {}
-    public void setBorder(NodeBorder border) {}
-    public void setShape(NodeShape shape) {}
-
+	@Override
+	public NodeStyle<V> getStyle() {
+		if (viewInfo == null) {
+			return null;
+		}
+		return viewInfo.getStyle();
+	}
 }
