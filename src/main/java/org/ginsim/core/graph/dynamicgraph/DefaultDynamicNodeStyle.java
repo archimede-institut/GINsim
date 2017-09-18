@@ -1,5 +1,8 @@
 package org.ginsim.core.graph.dynamicgraph;
 
+import java.awt.Color;
+
+import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.graph.view.style.NodeStyleImpl;
 import org.ginsim.core.graph.view.style.StyleProperty;
@@ -25,10 +28,11 @@ public class DefaultDynamicNodeStyle extends NodeStyleImpl<DynamicNode> {
 	}
 
 	@Override
-	public NodeShape getNodeShape(DynamicNode obj) {
+	public Color getBackground(DynamicNode obj) {
 		if (obj != null && obj.isStable()) {
-			return NodeShape.ELLIPSE;
+			return ColorPalette.defaultPalette[3];
 		}
-		return NodeShape.RECTANGLE;
+		return Color.WHITE;
 	}
+
 }

@@ -3,6 +3,8 @@ package org.ginsim.core.graph.regulatorygraph;
 import org.ginsim.core.graph.AbstractGraphFactory;
 import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.view.style.EdgeStyle;
+import org.ginsim.core.graph.view.style.NodeStyle;
+import org.ginsim.core.graph.view.style.NodeStyleImpl;
 import org.mangosdk.spi.ProviderFor;
 
 
@@ -50,6 +52,11 @@ public class RegulatoryGraphFactory extends AbstractGraphFactory<RegulatoryGraph
     	return RegulatoryParser.class;
     }
 
+	@Override
+	public NodeStyle<RegulatoryNode> createDefaultNodeStyle(RegulatoryGraph graph) {
+		return new DefaultRegulatoryNodeStyle();
+	}
+	
 	@Override
 	public EdgeStyle<RegulatoryNode, RegulatoryMultiEdge> createDefaultEdgeStyle(RegulatoryGraph graph) {
 		return new DefaultRegulatoryEdgeStyle();

@@ -25,8 +25,15 @@ public class DefaultDynamicEdgeStyle extends EdgeStyleImpl<DynamicNode, DynamicE
 	};
 	private static final StyleProperty[] PROPERTIES = StyleProperty.merge(EdgeStyleImpl.DEFAULT_PROPERTIES, EXTRA_PROPERTIES);
 
-	private Color c_inc = new Color(0,200,0);
-	private Color c_dec = new Color(200,0,0);
+	private Color c_inc;
+	private Color c_dec;
+
+	public DefaultDynamicEdgeStyle() {
+		c_inc = new Color(0,200,0);
+		c_dec = new Color(200,0,0);
+
+		c_inc = c_dec = (Color)getProperty(StyleProperty.COLOR);
+	}
 	
 	@Override
 	public EdgePattern getPattern(DynamicEdge edge) {
