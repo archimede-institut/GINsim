@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.*;
+import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -374,6 +375,9 @@ class IntegerPropertyBox extends PropertyEditor<JSpinner> implements ChangeListe
 		this.model = new PropertySpinnerModel(property);
 		this.component.setModel(model);
 		this.component.addChangeListener(this);
+		JTextField jtf = ((DefaultEditor) this.component.getEditor()).getTextField();
+		jtf.setEditable(true);
+		jtf.setColumns(2);
 	}
 
 	@Override
