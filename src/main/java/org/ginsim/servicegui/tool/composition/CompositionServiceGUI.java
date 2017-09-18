@@ -26,7 +26,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(CompositionService.class)
-@ServiceStatus(EStatus.RELEASED)
+@ServiceStatus(EStatus.DEVELOPMENT)
 public class CompositionServiceGUI extends AbstractServiceGUI {
 
 	@Override

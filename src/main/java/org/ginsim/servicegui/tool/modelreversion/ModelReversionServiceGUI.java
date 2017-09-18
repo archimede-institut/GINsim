@@ -31,7 +31,7 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(ModelReversionService.class)
-@ServiceStatus(EStatus.DEVELOPMENT)
+@ServiceStatus(EStatus.RELEASED)
 public class ModelReversionServiceGUI extends AbstractServiceGUI {
 
 	@Override
