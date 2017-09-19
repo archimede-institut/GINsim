@@ -27,6 +27,7 @@ import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.ViewCopyHelper;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.io.parser.GINMLWriter;
 
@@ -641,6 +642,49 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 				}
 			}
 		}
+	}
+
+	
+	@Override
+	public void copyView(Graph<V,E> src, ViewCopyHelper<Graph<V,E>,V,E> helper) {
+
+		// FIXME: should clone styles instead of copying them
+		
+		// copy nodes
+		NodeAttributesReader sNReader = src.getNodeAttributeReader();
+		NodeAttributesReader dNReader = this.getNodeAttributeReader();
+
+		Dimension offset = helper.getOffset();
+		
+		for (V destNode : this.getNodes()) {
+			V srcNode = helper.getSourceNode(destNode);
+			if (srcNode == null) {
+				continue;
+			}
+			dNReader.setNode(destNode);
+			sNReader.setNode(srcNode);
+			dNReader.copyFrom(sNReader);
+			if (offset != null) {
+				dNReader.move(offset.width, offset.height);
+			}
+			dNReader.refresh();
+		}
+
+		
+		// copy edges
+		EdgeAttributesReader sEReader = src.getEdgeAttributeReader();
+		EdgeAttributesReader dEReader = this.getEdgeAttributeReader();
+		for (E dEdge: this.getEdges()) {
+			E sEdge = helper.getSourceEdge(dEdge);
+            if (sEdge == null) {
+            	continue;
+            }
+			sEReader.setEdge(sEdge);
+			dEReader.setEdge(dEdge);
+			dEReader.copyFrom(sEReader);
+			dEReader.refresh();
+		}
+
 	}
 
 	

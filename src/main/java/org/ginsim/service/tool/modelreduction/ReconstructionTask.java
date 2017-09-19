@@ -1,9 +1,21 @@
 package org.ginsim.service.tool.modelreduction;
 
-import org.colomoto.common.task.AbstractTask;
+import java.awt.Dimension;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.common.task.AbstractTask;
 import org.ginsim.core.annotation.Annotation;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -16,18 +28,13 @@ import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
-import org.ginsim.core.graph.view.EdgeAttributesReader;
-import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.ViewCopyHelper;
 import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
-
-import java.text.DateFormat;
-import java.util.*;
-import java.util.Map.Entry;
 
 /**
  * Reconstruct a Regulatory Graph from a Logical model and restore layout,
@@ -36,7 +43,8 @@ import java.util.Map.Entry;
  *
  * @author Aurelien Naldi
  */
-public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
+public class ReconstructionTask extends AbstractTask<RegulatoryGraph>
+  implements ViewCopyHelper<Graph<RegulatoryNode,RegulatoryMultiEdge>, RegulatoryNode, RegulatoryMultiEdge> {
 
 	private final RegulatoryGraph graph;
     private final LogicalModel newModel;
@@ -76,39 +84,26 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
 					"\n\n"+note.getComment());
 		}
 
-		//GsGraphManager<RegulatoryNode, RegulatoryMultiEdge> simplifiedManager = simplifiedGraph.getGraphManager();
-		List<RegulatoryNode> simplified_nodeOrder = simplifiedGraph.getNodeOrder();
+		// restore the view
+		simplifiedGraph.copyView(graph, this);
 
-		// Create all the nodes of the new model
-		NodeAttributesReader vreader = graph.getNodeAttributeReader();
-		NodeAttributesReader simplified_vreader = simplifiedGraph.getNodeAttributeReader();
-		for (RegulatoryNode vertex: graph.getNodeOrder()) {
-            RegulatoryNode clone = simplifiedGraph.getNodeByName(vertex.getId());
+
+		// Map original elements to their clone in the new graph
+		List<RegulatoryNode> simplified_nodeOrder = simplifiedGraph.getNodeOrder();
+		for (RegulatoryNode clone: simplified_nodeOrder) {
+            RegulatoryNode vertex = getSourceNode(clone);
 			if (clone != null) {
-				vreader.setNode(vertex);
-				simplified_vreader.setNode(clone);
-				simplified_vreader.copyFrom(vreader);
 				copyMap.put(vertex, clone);
 			}
 		}
-
-		// copy all unaffected edges
-		EdgeAttributesReader ereader = graph.getEdgeAttributeReader();
-		EdgeAttributesReader simplified_ereader = simplifiedGraph.getEdgeAttributeReader();
-		for (RegulatoryMultiEdge me: graph.getEdges()) {
-			RegulatoryNode src = (RegulatoryNode)copyMap.get(me.getSource());
-			RegulatoryNode target = (RegulatoryNode)copyMap.get(me.getTarget());
-			if (src != null && target != null) {
-				RegulatoryMultiEdge me_clone = simplifiedGraph.getEdge(src, target);
-                if (me_clone != null) {
-					copyMap.put(me, me_clone);
-					ereader.setEdge(me);
-					simplified_ereader.setEdge(me_clone);
-					simplified_ereader.copyFrom(ereader);
-				}
+		for (RegulatoryMultiEdge me_clone: simplifiedGraph.getEdges()) {
+			RegulatoryMultiEdge me = getSourceEdge(me_clone);
+            if (me_clone != null) {
+				copyMap.put(me, me_clone);
 			}
 		}
 
+		
 		// build a mapping between new nodes and old position
 		Map<RegulatoryNode, Integer> m_orderPos = new HashMap<RegulatoryNode, Integer>();
 		Iterator<RegulatoryNode> it_oldOrder = oldNodeOrder.iterator();
@@ -224,5 +219,24 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph> {
 		}
 		return simplifiedGraph;
 	}
-	
+
+	@Override
+	public RegulatoryNode getSourceNode(RegulatoryNode node) {
+        return graph.getNodeByName(node.getId());
+	}
+
+	@Override
+	public RegulatoryMultiEdge getSourceEdge(RegulatoryMultiEdge me) {
+        RegulatoryNode src = getSourceNode(me.getSource());
+        RegulatoryNode tgt = getSourceNode(me.getTarget());
+        if (src != null && tgt != null) {
+        	return graph.getEdge(src, tgt);
+        }
+		return null;
+	}
+
+	public Dimension getOffset() {
+		return null;
+	}
+
 }

@@ -6,6 +6,7 @@ import java.util.Collection;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
+import org.ginsim.core.graph.view.ViewCopyHelper;
 import org.ginsim.core.graph.view.style.StyleManager;
 
 
@@ -67,6 +68,15 @@ public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 	 * @param listener
 	 */
 	void addViewListener(GraphViewListener listener);
+	
+	/**
+	 * Transfer view settings from a related graph.
+	 * The position and styles of matching nodes and edges
+	 * will be copied from the source graph to the current one
+	 * 
+	 * @param src the source graph
+	 */
+	void copyView(Graph<V,E> src, ViewCopyHelper<Graph<V,E>,V,E> helper);
 	
 	/**
 	 * The graph has changed, all listeners will be notified.
