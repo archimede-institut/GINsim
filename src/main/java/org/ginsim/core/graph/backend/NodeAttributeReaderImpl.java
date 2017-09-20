@@ -379,25 +379,29 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 			return;
 		}
 
-		
-		if (style != null) {
-			// TODO: cleanup style adding
-			// the list of styles is checked every time, could be more efficient
-			boolean copyStyle = true;
-			List<NodeStyle<V>> styles = styleManager.getNodeStyles();
-			for (NodeStyle<V> st: styles) {
-				if (style.equals(st)) {
-					copyStyle = false;
-					break;
-				}
-			}
-			if (copyStyle) {
-				styles.add(style);
-			}
-	
-			viewInfo.setStyle(style);
+		if (style == null) {
+			this.style = null;
+			viewInfo.setStyle(null);
+			return;
 		}
-		this.style = style;
+		
+		// TODO: cleanup style adding
+		// the list of styles is checked every time, could be more efficient
+		List<NodeStyle<V>> styles = styleManager.getNodeStyles();
+		NodeStyle<V> existing = null;
+		for (NodeStyle<V> st: styles) {
+			if (style.equals(st)) {
+				existing = st;
+				break;
+			}
+		}
+		if (existing == null) {
+			existing = styleManager.addNodeStyle();
+			existing.copy(style);
+		}
+
+		viewInfo.setStyle(existing);
+		this.style = existing;
 	}
 
 	@Override

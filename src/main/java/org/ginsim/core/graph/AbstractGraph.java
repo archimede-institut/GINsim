@@ -1,6 +1,8 @@
 package org.ginsim.core.graph;
 
-import java.awt.*;
+import java.awt.Dimension;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,8 +22,8 @@ import java.util.zip.ZipOutputStream;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.graph.backend.JgraphtBackendImpl;
 import org.ginsim.core.graph.backend.EdgeAttributeReaderImpl;
+import org.ginsim.core.graph.backend.JgraphtBackendImpl;
 import org.ginsim.core.graph.backend.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
@@ -648,8 +650,6 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	@Override
 	public void copyView(Graph<V,E> src, ViewCopyHelper<Graph<V,E>,V,E> helper) {
 
-		// FIXME: should clone styles instead of copying them
-		
 		// copy nodes
 		NodeAttributesReader sNReader = src.getNodeAttributeReader();
 		NodeAttributesReader dNReader = this.getNodeAttributeReader();

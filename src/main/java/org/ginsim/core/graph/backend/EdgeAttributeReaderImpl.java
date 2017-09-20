@@ -493,22 +493,26 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 		if (viewInfo == null) {
 			return;
 		}
-		if (style != null) {
-			// TODO: cleanup style adding
-			// the list of styles is checked every time, could be more efficient
-			boolean copyStyle = true;
-			List<EdgeStyle<V,E>> styles = styleManager.getEdgeStyles();
-			for (EdgeStyle<V, E> st: styles) {
-				if (style.equals(st)) {
-					copyStyle = false;
-					break;
-				}
-			}
-			if (copyStyle) {
-				styles.add(style);
+		if (style == null) {
+			this.style = null;
+			viewInfo.setStyle(null);
+			return;
+		}
+		
+		List<EdgeStyle<V,E>> styles = styleManager.getEdgeStyles();
+		EdgeStyle<V,E> existing = null;
+		for (EdgeStyle<V,E> st: styles) {
+			if (style.equals(st)) {
+				existing = st;
+				break;
 			}
 		}
-		viewInfo.setStyle(style);
+		if (existing == null) {
+			existing = styleManager.addEdgeStyle();
+			existing.copy(style);
+		}
+
+		viewInfo.setStyle(existing);
 	}
 
 	@Override
@@ -519,5 +523,5 @@ public class EdgeAttributeReaderImpl<V, E extends Edge<V>> implements EdgeAttrib
 		
 		return viewInfo.getStyle();
 	}
-	
+
 }

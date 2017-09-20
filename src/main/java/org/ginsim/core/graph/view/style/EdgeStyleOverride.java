@@ -69,4 +69,9 @@ public class EdgeStyleOverride<V,E extends Edge<V>> extends BaseStyleOverride<Ed
     public String getCSSClass(E edge) {
         return "edge";
     }
+
+	@Override
+	public void copy(Style source) {
+		// No copy for style overrides
+	}
 }

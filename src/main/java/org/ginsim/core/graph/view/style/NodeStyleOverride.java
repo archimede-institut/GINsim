@@ -83,4 +83,9 @@ public class NodeStyleOverride<V> extends BaseStyleOverride<NodeStyle<V>> implem
         return "node";
     }
 
+	@Override
+	public void copy(Style source) {
+		// No copy for style overrides
+	}
+
 }

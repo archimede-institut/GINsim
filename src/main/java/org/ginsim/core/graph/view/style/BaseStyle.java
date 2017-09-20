@@ -35,4 +35,28 @@ abstract public class BaseStyle<S extends Style> implements Style {
         }
         return "_"+name.trim().toLowerCase().replaceAll(" ", "_");
     }
+    
+    @Override
+    public void copy(Style source) {
+    	setName(source.getName());
+    	for (StyleProperty prop: getProperties()) {
+    		setProperty(prop, source.getProperty(prop));
+    	}
+    }
+    
+    public boolean equals(Object other) {
+    	if (other == null || other.getClass() != getClass()) {
+    		return false;
+    	}
+    	
+		Style style = (Style)other;
+		if (style.getProperties() != getProperties()) {
+			return false;
+		}
+		if (style.getName() != getName()) {
+			return false;
+		}
+		
+		return true;
+    }
 }
