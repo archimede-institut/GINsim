@@ -213,7 +213,7 @@ copyright by
     properties CDATA #IMPLIED
 >
 
-<!--  In the future, ttributes will be mandatory and sub elements removed -->
+<!--  In the future, attributes will be mandatory and sub elements removed -->
 <!ELEMENT nodevisualsetting ( (point|rect|ellipse)? )>
 <!ATTLIST nodevisualsetting 
     x CDATA #IMPLIED
@@ -232,7 +232,7 @@ copyright by
 <!ELEMENT edgestyle EMPTY> 
 <!ATTLIST edgestyle 
     name CDATA #IMPLIED
-    style CDATA #IMPLIED
+    pattern CDATA #IMPLIED
     color CDATA #IMPLIED
     line_width CDATA #IMPLIED
     ending CDATA #IMPLIED
