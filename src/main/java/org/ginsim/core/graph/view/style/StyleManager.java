@@ -110,13 +110,11 @@ public class StyleManager<V, E extends Edge<V>> {
             return;
         }
 		// save node styles
-		style2ginml(writer, defaultNodeStyle, "nodestyle");
 		for (NodeStyle<V> style: nodeStyles) {
 			style2ginml(writer, style, "nodestyle");
 		}
 		
 		// save edge styles
-		style2ginml(writer, defaultEdgeStyle, "edgestyle");
 		for (EdgeStyle<V,E> style: edgeStyles) {
 			style2ginml(writer, style, "edgestyle");
 		}
@@ -192,13 +190,13 @@ public class StyleManager<V, E extends Edge<V>> {
 		}
 		
 		if (style != null) {
-			fillStyle(style, attributes);
+			fillStyle(style, mattrs);
 		}
 	}
 	
-	private void fillStyle(Style style, Attributes attrs) {
+	private void fillStyle(Style style, Map<String, String> attrs) {
 		for (StyleProperty prop: style.getProperties()) {
-			String val = attrs.getValue(prop.name);
+			String val = attrs.get(prop.name);
 			if (val != null) {
 				style.setProperty(prop, prop.getValue(val));
 			}
