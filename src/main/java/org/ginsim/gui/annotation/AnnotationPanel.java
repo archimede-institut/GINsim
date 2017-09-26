@@ -178,6 +178,6 @@ class LinkListHelper extends ListPanelHelper<AnnotationLink, List<AnnotationLink
 
     @Override
     public String[] getActionLabels() {
-        return new String[] {"->"};
+        return new String[] {"#"};
     }
 }

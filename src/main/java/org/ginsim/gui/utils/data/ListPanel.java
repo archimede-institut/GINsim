@@ -498,6 +498,9 @@ class SimpleListModel<T, L extends List<T>> extends AbstractTableModel implement
         	if (oa == null || "".equals(oa)) {
         		return "";
         	}
+        	if (oa == "#") {
+        		oa = "["+(row+1)+"]";
+        	}
         	JButton b = (JButton)m_button.get(oa);
         	if (b == null) {
         		if (oa instanceof String) {
