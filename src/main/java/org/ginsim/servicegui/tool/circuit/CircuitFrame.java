@@ -145,19 +145,28 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         if (resultPanel == null) {
         	resultPanel = new javax.swing.JPanel();
         	resultPanel.setLayout(new GridBagLayout());
-        	GridBagConstraints c = new GridBagConstraints();
-        	c.gridwidth = 2;
-        	c.weightx = 1;
-        	c.fill = GridBagConstraints.BOTH;
 
+        	GridBagConstraints c = new GridBagConstraints();
+
+            // Perturbation selection
         	c.gridx = 0;
         	c.gridy = 0;
+        	c.weightx = 1;
+        	c.fill = GridBagConstraints.BOTH;
         	mutantPanel = new PerturbationSelectionPanel(this, graph, mutantstore);
         	resultPanel.add(mutantPanel, c);
 
-        	c.gridy++;
+            // Checkbox for the strict mode
+            c.gridx = 0;
+            c.gridy = 1;
+        	cb_cleanup = new JCheckBox(Txt.t("STR_do_cleanup"));
+            cb_cleanup.setSelected(true);
+            resultPanel.add(cb_cleanup, c);
+
+            c.gridy++;
         	resultPanel.add(getLabelProgression(), c);
         	
+            // Result table
         	c.gridy++;
         	c.weighty = 1;
         	resultPanel.add(getSplitPane(), c);
@@ -165,19 +174,10 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
             // actions button
         	c.gridy++;
         	c.weighty = 0;
-        	c.anchor = GridBagConstraints.WEST;
+        	c.anchor = GridBagConstraints.EAST;
         	c.fill = GridBagConstraints.NONE;
         	c.gridwidth = 1;
             resultPanel.add(getViewContextButton(), c);
-
-            // cleanup checkbox
-            c.gridx = 0;
-            c.gridy++;
-        	c.gridwidth = 2;
-        	c.fill = GridBagConstraints.BOTH;
-        	cb_cleanup = new JCheckBox(Txt.t("STR_do_cleanup"));
-            cb_cleanup.setSelected(true);           // FIXME: remember this as a setting
-            resultPanel.add(cb_cleanup, c);
         }
         return resultPanel;
     }
@@ -333,6 +333,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
     }
 
     protected void showInfo() {
+        viewContextButton.setEnabled(false);
         CircuitDescrInTree cdtree = getSelectedContextFromTreeTable();
         if (cdtree == null || mddPaths == null) {
             jta.setText("no data");
@@ -422,6 +423,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         }
 
         jta.setText(sb.toString());
+        viewContextButton.setEnabled(true);
     }
 
     protected void runAnalyse() {
@@ -440,7 +442,6 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         tree = null;
         treemodel.reload(this);
         showCircuit();
-        viewContextButton.setEnabled(true);
     }
 
     private JTextArea getJTextArea() {
