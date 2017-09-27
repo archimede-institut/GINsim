@@ -252,13 +252,11 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         case NONE:
             cSearcher = CIRCUITS.getCircuitSearcher(graph, config);
             cSearcher.background(this);
-            updateStatus(CircuitGUIStatus.SCC);
-            break;
-        case SCC:
-        	cSearcher.cancel();
-            cancel();
+            updateStatus(CircuitGUIStatus.SEARCH);
             break;
         case SEARCH:
+        	cSearcher.cancel();
+            cancel();
             break;
         case CIRCUITS:
         case RESULT:
@@ -281,20 +279,18 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
     }
 
     protected void updateStatus(CircuitGUIStatus status) {
+        this.status = status;
         switch (status) {
         case NONE:
             this.status = status;
             setRunText(Txt.t("STR_circuit_search"), Txt.t("STR_circuit_search_descr"));
             break;
-        case SCC:
-            this.status = status;
-            cards.show(jContentPane, "result");
-            setRunText(Txt.t("STR_cancel"), null);
-            break;
         case SEARCH:
+            setRunText(Txt.t("STR_cancel"), null);
             break;
         case CIRCUITS:
             this.status = status;
+            cards.show(jContentPane, "result");
             setProgress("Number of circuits satisfying the requirements: "+ v_circuit.size());
             setRunText(Txt.t("STR_circuit_analyse"), Txt.t("STR_circuit_analyse_tooltip"));
             break;
@@ -302,7 +298,6 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
     }
 
     public void setResult(List result) {
-        updateStatus(CircuitGUIStatus.SEARCH);
         if (result != null) {
             v_circuit = result;
             if (config != null) {
