@@ -46,9 +46,8 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 
 		// NORTH begin
 		mainPanel = new JPanel(new BorderLayout());
-		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager
-				.getInstance().getObject(config.getGraph(),
-						SimulationParametersManager.KEY, true);
+		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance()
+				.getObject(config.getGraph(), SimulationParametersManager.KEY, true);
 		priorityPanel = new PrioritySelectionPanel(this, paramList.pcmanager);
 		priorityPanel.setStore(config);
 		mainPanel.add(priorityPanel, BorderLayout.NORTH);
@@ -72,8 +71,7 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 		if (this.hasInputs) {
 			JPanel stateInputsPanel = new JPanel(new BorderLayout());
 			stateInputsPanel.setBorder(BorderFactory.createCompoundBorder(
-					BorderFactory.createTitledBorder("State inputs"),
-					stateInputsPanel.getBorder()));
+					BorderFactory.createTitledBorder("State inputs"), stateInputsPanel.getBorder()));
 
 			JTextArea jtaCTL = new JTextArea();
 			jtaCTL.setBackground(mainPanel.getBackground());
@@ -85,8 +83,7 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 			stateInputsPanel.add(jtaCTL, BorderLayout.NORTH);
 
 			JPanel fixInputsPanel = new JPanel();
-			fixInputsPanel.setLayout(new BoxLayout(fixInputsPanel,
-					BoxLayout.LINE_AXIS));
+			fixInputsPanel.setLayout(new BoxLayout(fixInputsPanel, BoxLayout.LINE_AXIS));
 			this.listCTLFixedInputs = new ArrayList<JCheckBox>();
 			for (NodeInfo node : this.config.getModel().getNodeOrder()) {
 				if (node.isInput()) {
@@ -95,8 +92,7 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 					this.listCTLFixedInputs.add(jcb);
 				}
 			}
-			JScrollPane fixInputsScroll = new JScrollPane(fixInputsPanel,
-					JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+			JScrollPane fixInputsScroll = new JScrollPane(fixInputsPanel, JScrollPane.VERTICAL_SCROLLBAR_NEVER,
 					JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 			stateInputsPanel.add(fixInputsScroll, BorderLayout.SOUTH);
 			fixInputsScroll.setBorder(BorderFactory.createEmptyBorder());
@@ -105,11 +101,9 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 		}
 
 		JPanel ssPanel = new JPanel(new BorderLayout());
-		ssPanel.setBorder(BorderFactory.createCompoundBorder(
-				BorderFactory.createTitledBorder("Stable states"),
+		ssPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Stable states"),
 				ssPanel.getBorder()));
-		mcCheckBox = new JCheckBox(
-				"Compute & include the stable states in the export?");
+		mcCheckBox = new JCheckBox("Compute & include the stable states in the export?");
 		ssPanel.add(mcCheckBox, BorderLayout.LINE_START);
 		bottomPanel.add(ssPanel, BorderLayout.SOUTH);
 
@@ -119,6 +113,12 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 
 	@Override
 	public void run(LogicalModel model) {
+		if (this.getPerturbation() != null) {
+			model = this.getPerturbation().apply(model);
+		}
+		if (this.getReduction() != null) {
+			model = this.getReduction().apply(model);
+		}
 		config.updateModel(model);
 		if (this.hasInputs) {
 			for (JCheckBox jcb : this.listCTLFixedInputs) {
