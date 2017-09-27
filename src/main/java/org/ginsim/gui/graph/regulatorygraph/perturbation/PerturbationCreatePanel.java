@@ -19,6 +19,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.gui.utils.widgets.RangeSlider;
 
+@SuppressWarnings("serial")
 public class PerturbationCreatePanel extends JPanel implements ActionListener, ChangeListener {
 
 	private final ListOfPerturbations perturbations;
@@ -161,7 +162,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 			return;
 		}
 		
-		selectNode.setSelectedItem(null);
+		selectNode.setSelectedItem( selectNode.getSelectedItem());
 	}
 
 	protected void create() {
