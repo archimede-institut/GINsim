@@ -46,7 +46,7 @@ public class CircuitAlgo {
 	private static final boolean testOutLimit = false;
 
     private Map m_report = new HashMap();
-    private byte[][] t_constraint;
+    private byte[][] t_constraint = null;
 
     // some context data
     RegulatoryNode target;
@@ -64,20 +64,15 @@ public class CircuitAlgo {
     boolean do_cleanup;
 
     public CircuitAlgo(RegulatoryGraph graph, boolean do_cleanup) {
-        this(graph, null, null, do_cleanup);
-    }
-
-    public CircuitAlgo(RegulatoryGraph graph, Perturbation mutant, boolean do_cleanup) {
-        this(graph, null, mutant, do_cleanup);
+        this(graph, null, do_cleanup);
     }
 
         /**
          * @param graph the studied graph
          * @param t_constraint constraints on the nodes
          */
-    public CircuitAlgo(RegulatoryGraph graph, byte[][] t_constraint, Perturbation mutant, boolean do_cleanup) {
+    public CircuitAlgo(RegulatoryGraph graph, Perturbation mutant, boolean do_cleanup) {
         this.do_cleanup = do_cleanup;
-        this.t_constraint = t_constraint;
         LogicalModel lmodel = graph.getModel();
         ddmanager = lmodel.getMDDManager();
         if (mutant != null) {

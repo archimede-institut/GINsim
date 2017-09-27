@@ -1,19 +1,14 @@
 package org.ginsim.servicegui.tool.circuit;
 
+import java.util.*;
+
 import java.awt.CardLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.*;
 
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextArea;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeModelEvent;
@@ -21,13 +16,11 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.colomoto.common.task.Task;
-import org.colomoto.common.task.TaskListener;
-import org.colomoto.common.task.TaskStatus;
+import org.colomoto.common.task.*;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
 import org.colomoto.mddlib.PathSearcher;
-import org.ginsim.common.application.LogManager;
+
 import org.ginsim.common.application.Txt;
 import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
@@ -45,10 +38,7 @@ import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.Label;
-import org.ginsim.gui.utils.widgets.treetable.AbstractTreeTableModel;
-import org.ginsim.gui.utils.widgets.treetable.JTreeTable;
-import org.ginsim.gui.utils.widgets.treetable.TreeTableModel;
-import org.ginsim.gui.utils.widgets.treetable.TreeTableModelAdapter;
+import org.ginsim.gui.utils.widgets.treetable.*;
 import org.ginsim.service.tool.circuit.*;
 
 
@@ -63,13 +53,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 
     protected RegulatoryGraph graph;
 
-    protected static final int STATUS_NONE = 0;
-    private static final int STATUS_SCC = 1;
-    private static final int STATUS_SEARCH_CIRCUIT = 2;
-    private static final int STATUS_SHOW_CIRCUIT = 3;
-    private static final int STATUS_SHOW_RESULT = 4;
-
-    private int status = STATUS_NONE;
+    private CircuitGUIStatus status = CircuitGUIStatus.NONE;
 
     private List v_circuit = new ArrayList();
     protected JTreeTable tree = null;
@@ -91,7 +75,6 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 	private JButton viewContextButton;
 
     private CircuitSearcher cSearcher = null;
-    private CircuitAlgo cAnalyser = null;
 
     private MDDManager ddmanager = null;
     private PathSearcher mddPaths = null;
@@ -110,7 +93,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         this.graph = (RegulatoryGraph) graph;
         mutantstore = new PerturbationUser(this.graph, "circuits_frame");
         initialize();
-        updateStatus(STATUS_NONE);
+        updateStatus(CircuitGUIStatus.NONE);
     }
 
     /**
@@ -146,7 +129,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
      * 
      * @return javax.swing.JPanel
      */
-    private javax.swing.JPanel getJContentPane() {
+    private JPanel getJContentPane() {
         if (jContentPane == null) {
             jContentPane = new javax.swing.JPanel();
             cards = new CardLayout();
@@ -158,7 +141,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         return jContentPane;
     }
 
-    private javax.swing.JPanel getResultPanel() {
+    private JPanel getResultPanel() {
         if (resultPanel == null) {
         	resultPanel = new javax.swing.JPanel();
         	resultPanel.setLayout(new GridBagLayout());
@@ -266,19 +249,19 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
 
     protected void run() {
         switch (status) {
-        case STATUS_NONE:
+        case NONE:
             cSearcher = CIRCUITS.getCircuitSearcher(graph, config);
             cSearcher.background(this);
-            updateStatus(STATUS_SCC);
+            updateStatus(CircuitGUIStatus.SCC);
             break;
-        case STATUS_SCC:
+        case SCC:
         	cSearcher.cancel();
             cancel();
             break;
-        case STATUS_SEARCH_CIRCUIT:
+        case SEARCH:
             break;
-        case STATUS_SHOW_CIRCUIT:
-        case STATUS_SHOW_RESULT:
+        case CIRCUITS:
+        case RESULT:
             if (configDialog != null) {
                 configDialog.setVisible(false);
             }
@@ -297,20 +280,20 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
         getLabelProgression().setText(text);
     }
 
-    protected void updateStatus(int status) {
+    protected void updateStatus(CircuitGUIStatus status) {
         switch (status) {
-        case STATUS_NONE:
+        case NONE:
             this.status = status;
             setRunText(Txt.t("STR_circuit_search"), Txt.t("STR_circuit_search_descr"));
             break;
-        case STATUS_SCC:
+        case SCC:
             this.status = status;
             cards.show(jContentPane, "result");
             setRunText(Txt.t("STR_cancel"), null);
             break;
-        case STATUS_SEARCH_CIRCUIT:
+        case SEARCH:
             break;
-        case STATUS_SHOW_CIRCUIT:
+        case CIRCUITS:
             this.status = status;
             setProgress("Number of circuits satisfying the requirements: "+ v_circuit.size());
             setRunText(Txt.t("STR_circuit_analyse"), Txt.t("STR_circuit_analyse_tooltip"));
@@ -319,7 +302,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
     }
 
     public void setResult(List result) {
-        updateStatus(STATUS_SEARCH_CIRCUIT);
+        updateStatus(CircuitGUIStatus.SEARCH);
         if (result != null) {
             v_circuit = result;
             if (config != null) {
@@ -330,7 +313,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
     }
 
     private void showCircuit() {
-        updateStatus(STATUS_SHOW_CIRCUIT);
+        updateStatus(CircuitGUIStatus.CIRCUITS);
         if (treemodel == null) {
         	treemodel = new GsCircuitTreeModel(v_circuit);
         }
@@ -473,7 +456,7 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
      * 
      * @return javax.swing.JLabel
      */
-    public javax.swing.JLabel getLabelProgression() {
+    public JLabel getLabelProgression() {
         if (labelProgression == null) {
             labelProgression = new Label("", Label.MESSAGE_NORMAL);
         }
@@ -585,7 +568,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
     }
 
     protected MDDManager analyse(RegulatoryGraph graph, CircuitSearchStoreConfig config, Perturbation mutant, boolean do_cleanup) {
-        CircuitAlgo circuitAlgo = new CircuitAlgo(graph, config == null ? null : config.t_constraint, mutant, do_cleanup);
+        CircuitAlgo circuitAlgo = new CircuitAlgo(graph, mutant, do_cleanup);
         Vector v_functional = new Vector();
         Vector v_positive = new Vector();
         Vector v_negative = new Vector();

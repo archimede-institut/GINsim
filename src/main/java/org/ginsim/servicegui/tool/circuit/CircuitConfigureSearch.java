@@ -9,7 +9,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
+import javax.swing.JSpinner.DefaultEditor;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import org.ginsim.common.application.Txt;
@@ -62,14 +64,13 @@ public class CircuitConfigureSearch extends JPanel {
         add(new JLabel(Txt.t("STR_min")), c);
 
         c = new GridBagConstraints();
-        c.gridx = 0;
-        c.gridy = 1;
+        c.gridx = 2;
+        c.gridy = 0;
         add(new JLabel(Txt.t("STR_max")), c);
         
         c = new GridBagConstraints();
-        c.gridx = 2;
+        c.gridx = 4;
         c.gridy = 0;
-        c.gridheight = 2;
         c.anchor = GridBagConstraints.EAST;
         add(getButtonReset(), c);
         
@@ -80,15 +81,15 @@ public class CircuitConfigureSearch extends JPanel {
         add(smodel.getSMin(), c);
 
         c = new GridBagConstraints();
-        c.gridx = 1;
-        c.gridy = 1;
+        c.gridx = 3;
+        c.gridy = 0;
         c.fill = GridBagConstraints.HORIZONTAL;
         add(smodel.getSMax(), c);
 
         c = new GridBagConstraints();
         c.gridx = 0;
-        c.gridy = 2;
-        c.gridwidth = 3;
+        c.gridy = 1;
+        c.gridwidth = 5;
         c.fill = GridBagConstraints.BOTH;
         c.weightx = 1;
         c.weighty = 1;
@@ -106,7 +107,7 @@ public class CircuitConfigureSearch extends JPanel {
     
     private JTable getJTable() {
         if (jtable == null) {
-            model = new GsCircuitConfigModel(circuitFrame, config.v_list, config.t_status, config.t_constraint);
+            model = new GsCircuitConfigModel(circuitFrame, config.v_list, config.t_status);
             jtable = new EnhancedJTable(model);
         }
         return jtable;
@@ -124,13 +125,13 @@ public class CircuitConfigureSearch extends JPanel {
         return buttonReset;
     }
     protected void reset() {
-        for (int i=0 ; i<nodeOrder.size() ; i++) {
-            RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(i);
+    	int len = nodeOrder.size();
+    	smodel.setMinValue(1);
+    	smodel.setMaxValue(len);
+        for (int i=0 ; i<len ; i++) {
             config.t_status[i] = 3;
-            config.t_constraint[i][0] = 0;
-            config.t_constraint[i][1] = vertex.getMaxValue();
         }
-        model.fireTableRowsUpdated(0, nodeOrder.size());
+        model.fireTableRowsUpdated(0, len);
     }
 
 }
@@ -141,7 +142,6 @@ class GsCircuitConfigModel extends DefaultTableModel {
  
     private List<RegulatoryNode> v_list;
     private byte[] t_status;
-    private byte[][] t_constraint;
     private CircuitFrame frame;
     
     /**
@@ -151,31 +151,24 @@ class GsCircuitConfigModel extends DefaultTableModel {
      * @param t_status
      * @param t_constraint 
      */
-    public GsCircuitConfigModel(CircuitFrame frame, List<RegulatoryNode> v_list, byte[] t_status, byte[][] t_constraint) {
+    public GsCircuitConfigModel(CircuitFrame frame, List<RegulatoryNode> v_list, byte[] t_status) {
         this.frame = frame;
         this.v_list = v_list;
         this.t_status = t_status;
-        this.t_constraint = t_constraint;
     }
 
     public int getColumnCount() {
-        return 6;
+        return 3;
     }
 
     public String getColumnName(int column) {
         switch (column) {
             case 0:
-                return "gene";
+                return "Component";
             case 1:
-                return "must";
+                return "Required";
             case 2:
-                return "must not";
-            case 3:
-                return "any";
-            case 4:
-                return "test min";
-            case 5:
-                return "max";
+                return "Excluded";
         }
         return super.getColumnName(column);
     }
@@ -186,11 +179,7 @@ class GsCircuitConfigModel extends DefaultTableModel {
                 return String.class;
             case 1:
             case 2:
-            case 3:
                 return Boolean.class;
-            case 4:
-            case 5:
-                return Integer.class;
         }
         return super.getColumnClass(columnIndex);
     }
@@ -208,55 +197,20 @@ class GsCircuitConfigModel extends DefaultTableModel {
                 return v_list.get(row);
             case 1:
             case 2:
-            case 3:
                 return t_status[row] == column ? Boolean.TRUE : Boolean.FALSE;
-            case 4:
-                if (t_constraint[row][0] == 0) {
-                    return "";
-                }
-                return ""+t_constraint[row][0];
-            case 5:
-                if (t_constraint[row][1] == v_list.get(row).getMaxValue()) {
-                    return "";
-                }
-                return ""+t_constraint[row][1];
         }
         return super.getValueAt(row, column);
     }
     
     public void setValueAt(Object aValue, int row, int column) {
         if (column > 0 && column <= 3) {
-            t_status[row] = (byte)column;
+        	if (aValue == Boolean.FALSE) {
+                t_status[row] = (byte)3;
+        	} else {
+        		t_status[row] = (byte)column;
+        	}
             fireTableRowsUpdated(row, row);
-            frame.updateStatus(CircuitFrame.STATUS_NONE);
-        } else if (column == 4) {
-            if (aValue == null) {
-                t_constraint[row][0] = 0;
-            } else {
-                byte val = ((Integer)aValue).byteValue();
-                if (val > 0 && val <= v_list.get(row).getMaxValue()) {
-                    t_constraint[row][0] = val;
-                    if (t_constraint[row][0] > t_constraint[row][1]) {
-                        t_constraint[row][1] = t_constraint[row][0];
-                    }
-                }
-            }
-            fireTableRowsUpdated(row, row);
-            frame.updateStatus(CircuitFrame.STATUS_NONE);
-        } else if (column == 5) {
-            if (aValue == null) {
-                t_constraint[row][1] = v_list.get(row).getMaxValue();
-            } else {
-                byte val = ((Integer)aValue).byteValue();
-                if (val > 0 && val <= v_list.get(row).getMaxValue()) {
-                    t_constraint[row][1] = val;
-                    if (t_constraint[row][0] > t_constraint[row][1]) {
-                        t_constraint[row][0] = t_constraint[row][1];
-                    }
-                }
-            }
-            fireTableRowsUpdated(row, row);
-            frame.updateStatus(CircuitFrame.STATUS_NONE);
+            frame.updateStatus(CircuitGUIStatus.NONE);
         }
     }
 }
@@ -306,19 +260,24 @@ class GsCircuitSpinModel implements MinMaxSpinModel {
     }
 
     public void setMaxValue(Object value) {
-        if (value instanceof String) {
-            try {
-                 int val = (byte)Integer.parseInt(value.toString());
-                 if (val > 0 && val <= config.v_list.size()) {
-                     config.maxlen = val;
-                     if (val < config.minlen) {
-                         config.minlen = val;
-                         updateMin();
-                     }
-                 }
-            } catch (NumberFormatException e) {}
-        }    
-        updateMax();
+    	if (value == null) {
+    		return;
+    	}
+    	try {
+    		int val = Integer.parseInt( value.toString());
+    		setMaxValue(val);
+    	} catch (Exception e) {}
+    }
+    
+    public void setMaxValue(int val) {
+       if (val > 0 && val <= config.v_list.size()) {
+           config.maxlen = val;
+           if (val < config.minlen) {
+               config.minlen = val;
+               updateMin();
+           }
+          updateMax();
+       }
     }
 
     public Object getNextMinValue() {
@@ -345,27 +304,34 @@ class GsCircuitSpinModel implements MinMaxSpinModel {
         return ""+config.minlen;
     }
 
+    public void setMinValue(int val) {
+    	if (val > 0 && val <= config.v_list.size()) {
+    		config.minlen = val;
+    		if (val > config.maxlen) {
+    			config.maxlen = val;
+    			updateMax();
+    		}
+            updateMin();
+    	}
+    }
+    
     public void setMinValue(Object value) {
-        if (value instanceof String) {
-            try {
-                 int val = (byte)Integer.parseInt(value.toString());
-                 if (val > 0 && val <= config.v_list.size()) {
-                     config.minlen = val;
-                     if (val > config.maxlen) {
-                         config.maxlen = val;
-                         updateMax();
-                     }
-                 }
-            } catch (NumberFormatException e) {}
-        }    
-        updateMin();
+        if (value == null) {
+        	return;
+        }
+        try {
+             int val = (byte)Integer.parseInt(value.toString());
+             setMinValue(val);
+        } catch (NumberFormatException e) {}
     }
 
     public JSpinner getSMin() {
         if (smin == null) {
             smin = new JSpinner(m_min);
-            smin.setEditor(m_min.getEditor());
-            smin.setSize(70, smin.getHeight());
+            smin.setSize(90, smin.getHeight());
+    		JTextField jtf = ((DefaultEditor)smin.getEditor()).getTextField();
+    		jtf.setEditable(true);
+    		jtf.setColumns(2);
         }
         return smin;
     }
@@ -373,19 +339,23 @@ class GsCircuitSpinModel implements MinMaxSpinModel {
     public JSpinner getSMax() {
         if (smax == null) {
             smax = new JSpinner(m_max);
-            smax.setEditor(m_max.getEditor());
-            smax.setSize(70, smax.getHeight());
+            smax.setSize(90, smax.getHeight());
+            
+    		JTextField jtf = ((DefaultEditor)smax.getEditor()).getTextField();
+    		jtf.setEditable(true);
+    		jtf.setColumns(2);
+            
         }
         return smax;
     }
     
     private void updateMin() {
         m_min.update();
-        frame.updateStatus(CircuitFrame.STATUS_NONE);
+        frame.updateStatus(CircuitGUIStatus.NONE);
     }
     private void updateMax() {
         m_max.update();
-        frame.updateStatus(CircuitFrame.STATUS_NONE);
+        frame.updateStatus(CircuitGUIStatus.NONE);
     }
 
 	public String getMaxName() {
