@@ -485,12 +485,17 @@ public class CircuitFrame extends StackDialog implements ProgressListener<List>,
      * if a context is selected in the treeTable, it will use it, else it will use a "random" context (the first in v_circuit)
      */
 	private void viewContext() {
+        CircuitDescrInTree dtree = getSelectedContextFromTreeTable();
+        if (dtree == null) {
+            return;
+        }
+		
         TreeBuilderFromCircuit parser = new TreeBuilderFromCircuit();
         parser.setParameter(TreeBuilder.PARAM_NODEORDER, graph.getNodeOrder());
         parser.setParameter(TreeBuilderFromCircuit.PARAM_MANAGER, ddmanager);
 
         // construct the list of circuits (to allow selecting it)
-        CircuitDescr cd_sel = getSelectedContextFromTreeTable().getCircuit();
+        CircuitDescr cd_sel = dtree.getCircuit();
         List contexts = new ArrayList(v_circuit.size());
         for (Iterator it = v_circuit.iterator(); it.hasNext();) {
             CircuitDescrInTree cdit = (CircuitDescrInTree) it.next();
