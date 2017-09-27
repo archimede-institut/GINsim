@@ -10,7 +10,6 @@ import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
-import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateStore;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;

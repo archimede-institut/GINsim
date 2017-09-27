@@ -15,7 +15,7 @@ import org.ginsim.common.application.LogManager;
  *
  * @author Aurelien Naldi.
  */
-public class NamedStatesIterator implements Iterator {
+public class NamedStatesIterator implements Iterator<byte[]> {
 
 	StatesIterator it_states;
 	Iterator it_input = null;
@@ -34,8 +34,8 @@ public class NamedStatesIterator implements Iterator {
         return it_states.hasNext();
     }
 
-    public Object next() {
-        Object ret = it_states.next();
+    public byte[] next() {
+        byte[] ret = it_states.next();
         if (!it_states.hasNext() && it_input.hasNext()) {
             it_states.reset((byte[])it_input.next());
         }
@@ -48,7 +48,7 @@ public class NamedStatesIterator implements Iterator {
 }
 
 class StatesIterator implements Iterator {
-    Iterator helper;
+    Iterator<byte[]> helper;
     Iterator helperIterator = null;
     List nodeOrder;
     Map m_init;
@@ -83,8 +83,8 @@ class StatesIterator implements Iterator {
 		return helper != null && helper.hasNext();
 	}
 
-	public Object next() {
-		Object ret = helper.next();
+	public byte[] next() {
+		byte[] ret = helper.next();
 		if (!helper.hasNext() && helperIterator != null && helperIterator.hasNext()) {
 			helper = new Reg2DynStatesIterator(nodeOrder,
 					((NamedState)helperIterator.next()).getMap(), refLine);

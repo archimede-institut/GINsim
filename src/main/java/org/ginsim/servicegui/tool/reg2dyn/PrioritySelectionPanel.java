@@ -20,7 +20,7 @@ public class PrioritySelectionPanel extends ListSelectionPanel<PrioritySetDefini
     private PriorityDefinitionStore store;
 
     public PrioritySelectionPanel(StackDialog dialog, PrioritySetList pcmanager) {
-        super(dialog, Txt.t("STR_priorityclass"));
+        super(dialog, Txt.t("STR_UpdatingMode"));
         this.pcmanager = pcmanager;
         initialize("", false);
 	}
