@@ -106,8 +106,7 @@ public class WikiDocumentWriter extends DocumentWriter {
 	protected void doAddAnchor(String name, String content) throws IOException {
 		// TODO
 	}
-	protected void doOpenList(String style) throws IOException {
-		boolean numbered = false;
+	protected void doOpenList(String style, boolean numbered) throws IOException {
 		if (style != null) {
 			Map m_style = documentStyles.getPropertiesForStyle(style);
 			if (m_style != null) {

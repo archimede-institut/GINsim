@@ -305,10 +305,13 @@ public abstract class DocumentWriter {
 	 * @throws IOException
 	 */
 	public void openList(String style) throws IOException {
+		openList(style, false);
+	}
+	public void openList(String style, boolean isNumbered) throws IOException {
 		while (pos.pos == POS_PARAGRAPH) {
 			closeParagraph();
 		}
-		doOpenList(style);
+		doOpenList(style, isNumbered);
 		pos = new DocumentPos(pos, POS_LIST, style);
 	}
 	
@@ -392,7 +395,7 @@ public abstract class DocumentWriter {
 	protected abstract void doAddLink(String href, String content) throws IOException;
 	protected abstract void doAddAnchor(String name, String content) throws IOException;
 	protected abstract void doAddImage(BufferedImage img, String name) throws IOException;
-	protected abstract void doOpenList(String style) throws IOException;
+	protected abstract void doOpenList(String style, boolean isNumbered) throws IOException;
 	protected abstract void doOpenListItem() throws IOException;
 	protected abstract void doCloseListItem() throws IOException;
 	protected abstract void doCloseList() throws IOException;

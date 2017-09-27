@@ -286,7 +286,8 @@ public class OOoDocumentWriter extends DocumentWriter {
 	protected void doAddAnchor(String name, String content) throws IOException {
 		// TODO
 	}
-	protected void doOpenList(String style) throws IOException {
+	protected void doOpenList(String style, boolean numbered) throws IOException {
+		// FIXME: support numbered list
 		xmlw.openTag("text:list");
 		if (style != null) {
 			xmlw.addAttr("text:style-name", style);

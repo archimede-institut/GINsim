@@ -217,8 +217,7 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 		xmlw.closeTag();
 	}
 
-	protected void doOpenList(String style) throws IOException {
-		boolean numbered = false;
+	protected void doOpenList(String style, boolean numbered) throws IOException {
 		if (style != null) {
 			Map m_style = documentStyles.getPropertiesForStyle(style);
 			if (m_style != null) {

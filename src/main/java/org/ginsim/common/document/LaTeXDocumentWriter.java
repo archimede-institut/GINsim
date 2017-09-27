@@ -235,8 +235,13 @@ public class LaTeXDocumentWriter extends DocumentWriter {
 	protected void doAddAnchor(String name, String content) throws IOException {
 	    // TODO
 	}
-	protected void doOpenList(String style) throws IOException {
-		writer.write("\n\\begin{itemize}\n");
+	protected void doOpenList(String style, boolean numbered) throws IOException {
+		if (numbered) {
+			// FIXME: support numbered list (s/itemize/enumerate/)
+			writer.write("\n\\begin{itemize}\n");
+		} else {
+			writer.write("\n\\begin{itemize}\n");
+		}
 	}
 	protected void doOpenListItem() throws IOException {
 	    writer.write("\\item ");

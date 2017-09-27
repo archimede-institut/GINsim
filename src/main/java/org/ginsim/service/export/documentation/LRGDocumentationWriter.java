@@ -11,7 +11,6 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
-import org.colomoto.biolqm.LogicalModel;
 import org.ginsim.common.document.DocumentStyle;
 import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.common.utils.IOUtils;
@@ -35,7 +34,6 @@ import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
 import org.ginsim.service.export.image.ImageExportService;
 import org.ginsim.service.tool.stablestates.StableStatesService;
-import org.ginsim.gui.graph.dynamicgraph.StableTableModel;
 
 /**
  * GenericDocumentExport is a plugin to export the documentation of a model into multiples document format.
@@ -322,7 +320,7 @@ public class LRGDocumentationWriter {
         if (links == null || links.size() < 1) {
             return;
         }
-        doc.openList("L1");
+        doc.openList("links", true);
         for (AnnotationLink lnk: links) {
             String s_link;
             if (lnk.getHelper() != null) {
