@@ -29,7 +29,7 @@ public class NodeStyleImpl<V> extends BaseStyle<NodeStyle<V>> implements NodeSty
     public static final int MAX_HEIGHT = 100;
 	public static final int MIN_SIZE = 15;
 
-	private static final StyleProperty[] DEFAULT_PROPERTIES = {
+	public static final StyleProperty[] DEFAULT_PROPERTIES = {
 		StyleProperty.BACKGROUND,
 		StyleProperty.FOREGROUND,
 		StyleProperty.TEXT,

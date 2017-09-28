@@ -12,13 +12,13 @@ abstract public class StyleProperty {
 	public static final ColorProperty BACKGROUND = new ColorProperty("background", true);
 	public static final ColorProperty FOREGROUND = new ColorProperty("foreground", true);
 	public static final ColorProperty TEXT       = new ColorProperty("text", true);
-	public static final EnumProperty SHAPE      = new EnumProperty("shape", NodeShape.values(), true);
-	public static final EnumProperty BORDER     = new EnumProperty("border", NodeBorder.values(), true);
+	public static final EnumProperty  SHAPE      = new EnumProperty("shape", NodeShape.values(), true);
+	public static final EnumProperty  BORDER     = new EnumProperty("border", NodeBorder.values(), true);
 
 
-	public static final ColorProperty COLOR      = new ColorProperty("color", true);
-	public static final EnumProperty ENDING     = new EnumProperty("ending", EdgeEnd.values(), true);
-	public static final EnumProperty PATTERN    = new EnumProperty("pattern", EdgePattern.values(), true);
+	public static final ColorProperty COLOR     = new ColorProperty("color", true);
+	public static final EnumProperty  ENDING    = new EnumProperty("ending", EdgeEnd.values(), true);
+	public static final EnumProperty  PATTERN   = new EnumProperty("pattern", EdgePattern.values(), true);
 	
 
 	public static final IntegerProperty WIDTH     = new IntegerProperty("width", true, 15, 400, 5, 40);

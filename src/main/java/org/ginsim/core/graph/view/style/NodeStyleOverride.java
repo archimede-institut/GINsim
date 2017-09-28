@@ -18,7 +18,7 @@ public class NodeStyleOverride<V> extends BaseStyleOverride<NodeStyle<V>> implem
 
 	@Override
 	public Color getForeground(V obj) {
-		return baseStyle.getBackground(obj);
+		return baseStyle.getForeground(obj);
 	}
 
 	@Override

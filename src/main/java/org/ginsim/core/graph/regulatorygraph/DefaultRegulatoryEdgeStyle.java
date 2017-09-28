@@ -20,16 +20,33 @@ public class DefaultRegulatoryEdgeStyle extends EdgeStyleImpl<RegulatoryNode, Re
 	private static final StyleProperty PROP_NEGATIVE = StyleProperty.createColorProperty("negative");
 	private static final StyleProperty PROP_DUAL = StyleProperty.createColorProperty("dual");
 	
+	private static final Color COLOR_POSITIVE = new Color(0,200,0);
+	private static final Color COLOR_NEGATIVE = new Color(200,0,0);
+	private static final Color COLOR_DUAL = new Color(0,0,200);
+	private static final Color COLOR_NONE = new Color(20,20,20);
+	
 	private static final StyleProperty[] EXTRA_PROPERTIES = {
 		PROP_POSITIVE,
 		PROP_NEGATIVE,
 		PROP_DUAL,
 	};
 	private static final StyleProperty[] PROPERTIES = StyleProperty.merge(EdgeStyleImpl.DEFAULT_PROPERTIES, EXTRA_PROPERTIES);
+
+	public Color getDefaultColor(RegulatoryEdgeSign sign) {
+		switch (sign) {
+		case POSITIVE:
+			return (Color)getProperty(PROP_POSITIVE);
+		case NEGATIVE:
+			return (Color)getProperty(PROP_NEGATIVE);
+		case DUAL:
+			return (Color)getProperty(PROP_DUAL);
+		}
+		return COLOR_NONE;
+	}
 	
-	private Color c_positive = new Color(0,200,0);
-	private Color c_negative = new Color(200,0,0);
-	private Color c_dual = new Color(0,0,200);
+	private Color c_positive = COLOR_POSITIVE;
+	private Color c_negative = COLOR_NEGATIVE;
+	private Color c_dual = COLOR_DUAL;
 	
 	public DefaultRegulatoryEdgeStyle() {
 		// setWidth(2);
@@ -105,7 +122,7 @@ public class DefaultRegulatoryEdgeStyle extends EdgeStyleImpl<RegulatoryNode, Re
 			c_dual = (Color)value;
 		}
 	}
-
+ 
     @Override
     public String getCSS() {
         String parent = super.getCSS();

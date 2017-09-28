@@ -1,31 +1,48 @@
 package org.ginsim.service.tool.localgraph;
 
-import java.awt.Color;
 import java.util.Map;
 
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.ActivityLevel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.style.EdgeStyle;
-import org.ginsim.core.graph.view.style.EdgeStyleOverride;
 import org.ginsim.core.graph.view.style.NodeStyle;
 import org.ginsim.core.graph.view.style.StyleManager;
-import org.ginsim.core.graph.view.style.StyleProperty;
 import org.ginsim.core.graph.view.style.StyleProvider;
 
 public class LocalGraphStyleProvider implements StyleProvider<RegulatoryNode, RegulatoryMultiEdge>  {
 
-	private final Map<RegulatoryMultiEdge, LocalGraphCategory> functionalityMap;
+	private Map<RegulatoryMultiEdge, LocalGraphCategory> functionalityMap;
+	private Map<RegulatoryNode, ActivityLevel> activityMap;
 	private final LocalGraphEdgeStyle edgeStyle;
+	private final LocalGraphNodeStyle nodeStyle;
 	
-	public LocalGraphStyleProvider(StyleManager<RegulatoryNode, RegulatoryMultiEdge> styleManager, Map<RegulatoryMultiEdge, LocalGraphCategory> functionalityMap) {
+	private boolean styleNodes = true;
+	
+	public LocalGraphStyleProvider(StyleManager<RegulatoryNode, RegulatoryMultiEdge> styleManager,
+			Map<RegulatoryMultiEdge, LocalGraphCategory> functionalityMap,
+			Map<RegulatoryNode, ActivityLevel> activityMap) {
 		
 		this.edgeStyle = new LocalGraphEdgeStyle(styleManager.getDefaultEdgeStyle());
+		this.nodeStyle = new LocalGraphNodeStyle(styleManager.getDefaultNodeStyle());
 		this.functionalityMap = functionalityMap;
+		this.activityMap = activityMap;
 	}
 	
 	@Override
 	public NodeStyle<RegulatoryNode> getNodeStyle(RegulatoryNode node,	NodeStyle<RegulatoryNode> baseStyle) {
+		if (activityMap == null) {
+			return baseStyle;
+		}
+
+		ActivityLevel level = activityMap.get(node);
+		if (level == null) {
+			level = ActivityLevel.INACTIVE;
+		}
+		if (styleNodes) {
+			nodeStyle.setBaseStyle(baseStyle, level);
+			return nodeStyle;
+		}
 		return baseStyle;
 	}
 
@@ -39,33 +56,9 @@ public class LocalGraphStyleProvider implements StyleProvider<RegulatoryNode, Re
 		return edgeStyle;
 	}
 
-}
-
-class LocalGraphEdgeStyle extends EdgeStyleOverride<RegulatoryNode,RegulatoryMultiEdge> {
-
-	private LocalGraphCategory category = LocalGraphCategory.NONFUNCTIONNAL;
-
-	public LocalGraphEdgeStyle(EdgeStyle<RegulatoryNode, RegulatoryMultiEdge> style) {
-		super(style);
-	}
-
-	public void setBaseStyle(EdgeStyle<RegulatoryNode, RegulatoryMultiEdge> style, LocalGraphCategory category) {
-		super.setBaseStyle(style);
-		this.category = category;
-	}
-
-	@Override
-	public Color getColor(RegulatoryMultiEdge obj) {
-		switch (category) {
-		case POSITIVE:
-			return Color.GREEN;
-		case NEGATIVE:
-			return Color.RED;
-		case DUAL:
-			return Color.BLUE;
-		}
-
-		return Color.GRAY;
+	public void setMapping(Map<RegulatoryMultiEdge, LocalGraphCategory> functionalityMap, Map<RegulatoryNode, ActivityLevel> activityMap) {
+		this.functionalityMap = functionalityMap;
+		this.activityMap = activityMap;
 	}
 
 }
