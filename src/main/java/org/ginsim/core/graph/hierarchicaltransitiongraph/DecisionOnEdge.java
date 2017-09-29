@@ -79,7 +79,7 @@ public class DecisionOnEdge extends Edge<HierarchicalNode> implements ToolTipsab
 			case CHANGE_BOTH: 
 				if (s.length() > 0) s.append(' ');
 				s.append(nodeOrder.get(i).getNodeID());
-				s.append('x');
+				s.append('\u00B1');
 				break;
 			}
 		}
