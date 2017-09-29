@@ -106,14 +106,14 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 			c.weightx = 0;
 			c.weighty = 0;
 			c.fill = GridBagConstraints.EAST;
-			colorizeCheckbox = new JCheckBox(Txt.t("STR_localGraph_autoUpdate"));
+			colorizeCheckbox = new JCheckBox(Txt.t("STR_localGraph_color"));
 			colorizeCheckbox.setSelected(config.getGraph().getNodeOrderSize() < THRESHOLD_AUTO_REFRESH);
 			colorizeCheckbox.addChangeListener(this);
 			mainPanel.add(colorizeCheckbox, c);
 
 			c.gridy++;
 			c.fill = GridBagConstraints.EAST;
-			colorNodes = new JCheckBox(Txt.t("STR_localGraph_Nodes"));
+			colorNodes = new JCheckBox(Txt.t("STR_localGraph_nodes"));
 			colorNodes.setSelected(true);
 			colorNodes.addChangeListener(this);
 			mainPanel.add(colorNodes, c);
