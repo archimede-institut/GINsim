@@ -291,7 +291,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         NodeAttributesReader vReader = getNodeAttributeReader();
         NodeAttributesReader cvreader = otherGraph.getNodeAttributeReader();
         for (RegulatoryNode vertexOri: otherGraph.getNodes()) {
-            RegulatoryNode vertex = vertexOri.clone((RegulatoryGraph)otherGraph);
+            RegulatoryNode vertex = vertexOri.clone(this);
             addNodeWithNewId(vertex);
             cvreader.setNode(vertexOri);
             vReader.setNode(vertex);
