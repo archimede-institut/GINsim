@@ -25,15 +25,12 @@ public class DecisionAnalysisFrame extends LogicalModelActionDialog  {
 	private HierarchicalTransitionGraph htg;
 	private JPanel mainPanel;
 	private PrioritySelectionPanel selectPriorityClass;
-	private RegulatoryGraph regGraph;
 	private SimulationParameters currentParameter;
 	
 	
 	public DecisionAnalysisFrame(JFrame frame, HierarchicalTransitionGraph graph, RegulatoryGraph lrg) {
 		super(lrg, frame, "STR_htg_decision_analysis", 475, 260);
 		this.htg = (HierarchicalTransitionGraph) graph;
-		this.regGraph = lrg;
-		setMainPanel(getMainPanel());			
     }
 	
 	protected JPanel getMainPanel() {
@@ -57,7 +54,7 @@ public class DecisionAnalysisFrame extends LogicalModelActionDialog  {
 
 
 	private PrioritySelectionPanel getPriorityClassSelector() {
-        SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( regGraph, SimulationParametersManager.KEY, true);
+        SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( lrg, SimulationParametersManager.KEY, true);
 		if (selectPriorityClass == null) {
 			selectPriorityClass = new PrioritySelectionPanel(this, paramList.pcmanager);
 			this.currentParameter = paramList.get(0);
