@@ -9,6 +9,9 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
+import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
+import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.NamedList;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
@@ -19,12 +22,14 @@ import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
  * store all simulation parameters and offer a mean to access them.
  * Also deals with updating them when the graph is changed
  */
+@SuppressWarnings("serial")
 public class SimulationParameterList extends NamedList<SimulationParameters>
 	implements GraphListener<RegulatoryGraph>,  GenericListListener {
 
     public final RegulatoryGraph graph;
     public final NamedStatesHandler imanager;
     public final PrioritySetList pcmanager;
+    private final ListOfPerturbations perturbations;
 
     /**
      * @param graph
@@ -37,6 +42,7 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
     public SimulationParameterList( Graph<RegulatoryNode,RegulatoryMultiEdge> graph, SimulationParameters param) {
     	
         this.graph = (RegulatoryGraph) graph;
+        perturbations = (ListOfPerturbations)ObjectAssociationManager.getInstance().getObject(graph, PerturbationManager.KEY, true);
         imanager = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph, NamedStatesManager.KEY, true);
         imanager.getInitialStates().addListListener(this);
         imanager.getInputConfigs().addListListener(this);
@@ -141,4 +147,7 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
 		ObjectAssociationManager.getInstance().fireUserUpdate(graph, Reg2DynService.KEY, param.name, null);
 	}
 
+	public Perturbation getPerturbation(SimulationParameters param) {
+		return perturbations.getUsedPerturbation(Reg2DynService.KEY+"::"+param.getName());
+	}
 }

@@ -87,6 +87,10 @@ public class SimulationParameters implements XMLize, NamedObject, NamedStateStor
         }
         String s = "construction parameters:\n";
         s += "    Regulatory graph: " + name + "\n";
+        Perturbation perturbation = param_list.getPerturbation(this);
+        if (perturbation != null) {
+            s += "    Perturbation: "+perturbation+"\n";
+        }
         s += "    Simulation strategy: " + simulationStrategy + "\n";
         s += "    Updating policy: ";
 		if (pcdef != null) {
@@ -143,11 +147,6 @@ public class SimulationParameters implements XMLize, NamedObject, NamedStateStor
             s += "\n";
         }
 
-        // TODO: get the real associated perturbation
-        Perturbation perturbation = null;
-        if (perturbation != null) {
-            s += "    Perturbation: "+perturbation+"\n";
-        }
         if (maxdepth != 0) {
             s += "    Max depth: "+maxdepth+"\n";
         }
@@ -197,13 +196,6 @@ public class SimulationParameters implements XMLize, NamedObject, NamedStateStor
             out.closeTag();
         }
 
-        // TODO: get the real associated perturbation
-        Perturbation perturbation = null;
-		if (perturbation != null) {
-            out.openTag("mutant");
-            out.addAttr("value", perturbation.toString());
-            out.closeTag();
-		}
 		out.closeTag();
 	}
 
@@ -214,9 +206,8 @@ public class SimulationParameters implements XMLize, NamedObject, NamedStateStor
     	newp.name = name;
     	newp.maxdepth = maxdepth;
     	newp.maxnodes = maxnodes;
-        // TODO: get the real associated perturbation
-        Perturbation perturbation = null;
-//    	newp.perturbation = perturbation;
+    	// TODO: transfer the perturbation
+        Perturbation perturbation = param_list.getPerturbation(this);
     	newp.setPriorityDefinition(pcdef);
 
     	if (m_initState != null) {
@@ -270,7 +261,7 @@ public class SimulationParameters implements XMLize, NamedObject, NamedStateStor
 
         // TODO: get the real associated perturbation
         Perturbation perturbation = null;
-//        other.perturbation = (Perturbation)mapping.get(perturbation);
+        Perturbation o_perturbation = (Perturbation)mapping.get(perturbation);
         PrioritySetDefinition new_pcdef = (PrioritySetDefinition)mapping.get(pcdef);
         if (new_pcdef == null) {
             PrioritySetList new_pcman = (PrioritySetList)mapping.get("");
