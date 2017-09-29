@@ -54,7 +54,7 @@ copyright by
 <!ENTITY % gxl-attr-extension "ginmlversion CDATA #IMPLIED">
 <!ENTITY % graph-attr-extension "class (regulatory|dynamical|cellular|reduced|hierarchical) 'regulatory'
                                                               nodeorder NMTOKENS #IMPLIED">
-<!ENTITY % node-attr-extension "name CDATA #IMPLIED basevalue CDATA '0' maxvalue CDATA '1'">
+<!ENTITY % node-attr-extension "name CDATA #IMPLIED basevalue CDATA '0' maxvalue CDATA '1' tags CDATA #IMPLIED">
 <!ENTITY % edge-attr-extension "effects CDATA #IMPLIED sign (positive|negative|unknown|dual) 'positive' minvalue CDATA '1'">
 <!ENTITY % rel-attr-extension "">
 <!ENTITY % relend-attr-extension "">

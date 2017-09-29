@@ -156,6 +156,10 @@ public final class DynamicParser extends GsXMLHelper {
 	                    pos = POS_VERTEX;
 	                    vertex = new DynamicNode(id);
 	                    graph.addNode(vertex);
+	                    String tags = attributes.getValue("tags");
+	                    if (tags != null && tags.contains("stable")) {
+	                    	vertex.setStable(true, vareader);
+	                    }
                     } else {
                         pos = POS_FILTERED;
                     }

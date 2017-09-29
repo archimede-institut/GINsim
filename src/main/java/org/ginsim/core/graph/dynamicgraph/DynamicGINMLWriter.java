@@ -22,6 +22,9 @@ public class DynamicGINMLWriter extends GINMLWriter<DynamicGraph, DynamicNode, D
 
 	protected void hook_nodeAttribute(XMLWriter out, DynamicNode node) throws IOException {
         out.addAttr("id", node.getId());
+        if (node.isStable()) {
+            out.addAttr("tags", "stable");
+        }
 	}
 	
 	protected void hook_edgeAttribute(XMLWriter out, DynamicEdge edge) throws IOException {
