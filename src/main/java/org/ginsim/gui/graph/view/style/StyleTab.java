@@ -5,20 +5,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.*;
-
-import org.ginsim.core.graph.Edge;
-import org.ginsim.core.graph.Graph;
-import org.ginsim.core.graph.view.EdgeAnchor;
-import org.ginsim.core.graph.view.style.*;
-import org.ginsim.gui.graph.GraphGUI;
-import org.ginsim.gui.graph.GraphSelection;
-import org.ginsim.gui.shell.editpanel.EditTab;
-import org.ginsim.gui.utils.widgets.StockButton;
+import java.util.Collection;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+
+import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.view.style.EdgeStyle;
+import org.ginsim.core.graph.view.style.NodeStyle;
+import org.ginsim.core.graph.view.style.Style;
+import org.ginsim.core.graph.view.style.StyleManager;
+import org.ginsim.core.graph.view.style.StyleProvider;
+import org.ginsim.gui.graph.GraphGUI;
+import org.ginsim.gui.graph.GraphSelection;
+import org.ginsim.gui.shell.editpanel.EditTab;
+import org.ginsim.gui.utils.widgets.StockButton;
 
 /**
  * The style tab: forward selection to the actual Style panel.
@@ -44,14 +47,13 @@ public class StyleTab extends JPanel
     private final JCheckBox cb_compatibilityMode;
 
     private final JLabel label = new JLabel();
-    private final JCheckBox curveCheckbox;
-    private final JCheckBox anchorCheckbox;
     private boolean providerMode = false;
 
     private boolean pending = false;
 
     private Style currentStyle = null;
 
+    private final EdgeRoutingPanel routing;
 
     public StyleTab(GraphGUI gui) {
         super(new GridBagLayout());
@@ -64,6 +66,7 @@ public class StyleTab extends JPanel
         list.setCellRenderer(new StyleCellRenderer());
         list.addListSelectionListener(this);
 
+        this.routing = new EdgeRoutingPanel(manager);
         this.stylePanel = new StyleEditionPanel(gui, manager);
 
         GridBagConstraints c = new GridBagConstraints();
@@ -89,28 +92,10 @@ public class StyleTab extends JPanel
         c.fill = GridBagConstraints.NONE;
         c.anchor = GridBagConstraints.NORTH;
         add(label, c);
-
-        // curve setting for edges
-        c.gridx++;
-        curveCheckbox = new JCheckBox("curve");
-        curveCheckbox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                updateCurveFlag();
-            }
-        });
-        add(curveCheckbox, c);
-
-        // anchor setting for edges
-        c.gridx++;
-        anchorCheckbox = new JCheckBox("anchor");
-        anchorCheckbox.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                updateAnchor();
-            }
-        });
-        add(anchorCheckbox, c);
+        
+        // routing panel
+        c.gridx += 1;
+        add(routing, c);
 
         // style provider reset button
         c.gridx++;
@@ -203,11 +188,11 @@ public class StyleTab extends JPanel
 
         if (nodes == null && edges == null) {
             // TODO: pick the first style
+            routing.setSelected(null);
             bNodes.setEnabled(true);
             bEdges.setEnabled(true);
             label.setText("");
-            curveCheckbox.setEnabled(false);
-            curveCheckbox.setVisible(false);
+            
             return;
         }
 
@@ -234,28 +219,18 @@ public class StyleTab extends JPanel
             }
 
             if (edges.size() == 1) {
-                label.setText("Style for edge: "+first);
-                curveCheckbox.setEnabled(true);
-                curveCheckbox.setVisible(true);
-                curveCheckbox.setSelected(manager.getEdgeCurved(first));
-                anchorCheckbox.setEnabled(true);
-                anchorCheckbox.setVisible(true);
-                anchorCheckbox.setSelected(manager.getEdgeAnchor(first) == EdgeAnchor.SE);
+                label.setText("");
+                routing.setVisible(true);
+                routing.setSelected(first);
             } else {
-                curveCheckbox.setEnabled(false);
-                curveCheckbox.setVisible(false);
-                anchorCheckbox.setEnabled(false);
-                anchorCheckbox.setVisible(false);
+                routing.setSelected(null);
                 label.setText("Style for "+edges.size()+" selected edges");
             }
             setCurrentStyle(selected);
             return;
         }
 
-        curveCheckbox.setEnabled(false);
-        curveCheckbox.setVisible(false);
-        anchorCheckbox.setEnabled(false);
-        anchorCheckbox.setVisible(false);
+        routing.setSelected(null);
         Style selected = null;
         Object first = null;
         for (Object node: nodes) {
@@ -342,30 +317,6 @@ public class StyleTab extends JPanel
             return;
         }
         manager.setCompatMode(cb_compatibilityMode.isSelected());
-    }
-
-    protected void updateCurveFlag() {
-        if (curveCheckbox.isEnabled() && selectedEdges != null && selectedEdges.size() == 1) {
-            Edge first = null;
-            for (Edge e: selectedEdges) {
-                first = e;
-                break;
-            }
-
-            manager.setEdgeCurved(first, curveCheckbox.isSelected());
-        }
-    }
-
-    protected void updateAnchor() {
-        if (anchorCheckbox.isEnabled() && selectedEdges != null && selectedEdges.size() == 1) {
-            Edge first = null;
-            for (Edge e: selectedEdges) {
-                first = e;
-                break;
-            }
-
-            manager.setEdgeAnchor(first, anchorCheckbox.isSelected() ? EdgeAnchor.SE : EdgeAnchor.NE);
-        }
     }
 
     private void updated() {

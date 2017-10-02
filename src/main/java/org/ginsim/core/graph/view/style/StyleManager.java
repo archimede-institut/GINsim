@@ -312,6 +312,18 @@ public class StyleManager<V, E extends Edge<V>> {
         backend.repaint();
     }
 
+	public void clearEdgeRouting(E selected) {
+		EdgeViewInfo<V, E> info = backend.getEdgeViewInfo(selected);
+		if (info != null) {
+			backend.damage(selected);
+			info.setAnchor(null);
+			info.setPoints(null);
+			info.setCurve(false);
+			backend.damage(selected);
+			backend.repaint();
+		}
+	}
+
     /**
      * Activate the compatibility mode and add a notification about it.
      */
@@ -677,4 +689,5 @@ public class StyleManager<V, E extends Edge<V>> {
 		}
 		styleUpdated(style);
 	}
+
 }
