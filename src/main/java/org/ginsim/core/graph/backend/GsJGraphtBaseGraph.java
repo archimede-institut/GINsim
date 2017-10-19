@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.ginsim.common.utils.ArraySet;
@@ -485,6 +486,9 @@ class EdgeIterator<V,E extends Edge<V>> implements Iterator<E> {
     }
 
     public E next() {
+    	if (next == null) {
+    		throw new NoSuchElementException();
+    	}
         E ret = next;
         selectNext();
         return ret;
