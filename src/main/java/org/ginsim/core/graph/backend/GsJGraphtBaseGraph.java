@@ -1,5 +1,6 @@
 package org.ginsim.core.graph.backend;
 
+import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
@@ -429,6 +430,9 @@ class EdgeSet<V,E extends Edge<V>> implements Set<E> {
 
 	@Override
 	public boolean contains(Object o) {
+		if (o instanceof Edge) {
+			return contains((Edge)o);
+		}
 		return false;
 	}
 
@@ -459,7 +463,14 @@ class EdgeSet<V,E extends Edge<V>> implements Set<E> {
 
 	@Override
 	public <T> T[] toArray(T[] a) {
-		return null;
+		if (a.length < size() ) {
+			Array.newInstance(a.getClass(), size());
+		}
+		int idx = 0;
+		for (E e: this) {
+			a[idx++] = (T)e;
+		}
+		return a;
 	}
 }
 

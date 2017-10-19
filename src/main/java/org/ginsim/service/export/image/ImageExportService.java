@@ -5,8 +5,11 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Base64;
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -57,6 +60,13 @@ public class ImageExportService implements Service {
         root.appendChild(dim);
 
         metadata.mergeTree("javax_imageio_1.0", root);
+    }
+    
+    public String base64PNG(Graph<?, Edge<?>> graph) throws IOException {
+    	BufferedImage img = getPNG(graph, 4);
+    	ByteArrayOutputStream os = new ByteArrayOutputStream();
+    	ImageIO.write(img, "png", os);
+    	return Base64.getEncoder().encodeToString(os.toByteArray());
     }
 
     /**
