@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Set;
 
 import org.colomoto.biolqm.ExtensionLoader;
+import org.colomoto.biolqm.LQMServiceManager;
 import org.ginsim.common.application.LogManager;
+import org.ginsim.core.graph.GINsimFormat;
 
 
 /**
@@ -52,6 +54,9 @@ public class GSServiceManager {
         		}
     		}
         }
+        
+        // Manually register the bioLQM services
+        LQMServiceManager.register(new GINsimFormat());
 	}
 	
 	/**
