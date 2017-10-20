@@ -6,6 +6,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -28,6 +29,9 @@ public class TargetEdgesIterator implements Iterator<RegulatoryNode> {
 	}
 
 	public RegulatoryNode next() {
+		if (next == null) {
+			throw new NoSuchElementException();
+		}
 		RegulatoryNode ret = next;
 		
 		// find the next.

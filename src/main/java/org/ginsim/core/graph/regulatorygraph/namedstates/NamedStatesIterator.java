@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.common.application.LogManager;
@@ -165,7 +166,7 @@ final class Reg2DynStatesIterator implements Iterator {
 	 */
 	public Object next() {
 		if (!goon) {
-			return null;
+			throw new NoSuchElementException();
 		}
 
 		byte[] ret = new byte[nbGenes];

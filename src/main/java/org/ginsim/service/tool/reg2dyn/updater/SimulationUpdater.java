@@ -1,6 +1,7 @@
 package org.ginsim.service.tool.reg2dyn.updater;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
@@ -47,6 +48,9 @@ abstract public class SimulationUpdater implements Iterator {
 		return next != null;
 	}
 	public Object next() {
+		if (next == null) {
+			throw new NoSuchElementException();
+		}
 		SimulationQueuedState ret = new SimulationQueuedState(next, depth+1, node, multiple);
 		multiple = false;
 		doBuildNext();
