@@ -42,7 +42,7 @@ public abstract class Simulation {
 		
 	public void addModel(StatefulLogicalModel _model) {
 		model = _model;
-		List<NodeInfo> components = model.getNodeOrder(); 
+		List<NodeInfo> components = model.getComponents(); 
 		oracle = new ArrayList<CompactStateSet>();
 		int nstates = -1; 
 		for(NodeInfo comp : components) nstates=Math.max(nstates, comp.getMax()+1);
@@ -59,7 +59,7 @@ public abstract class Simulation {
 		List<List<byte[]>> os = model.getOracles();
 		if(os!=null) {
 			for(List<byte[]> o : os)
-				oracle.add(new CompactStateSet("oracle_"+(i++),model.getNodeOrder(),o));
+				oracle.add(new CompactStateSet("oracle_"+(i++),model.getComponents(),o));
 		}
 	}
 
@@ -73,7 +73,7 @@ public abstract class Simulation {
 		Result res = runSim();
 		for(String key : res.complexAttractors.keySet()){
 			if(res.complexAttractors.get(key) instanceof StateSet)
-				res.complexAttractorPatterns.put(key,MDDUtils.getStatePatterns(model.getNodeOrder(),(StateSet)res.complexAttractors.get(key)));
+				res.complexAttractorPatterns.put(key,MDDUtils.getStatePatterns(model.getComponents(),(StateSet)res.complexAttractors.get(key)));
 			else if(res.complexAttractors.get(key) instanceof CompactStateSet)
 				res.complexAttractorPatterns.put(key,((CompactStateSet)res.complexAttractors.get(key)).getStates());
 		}
@@ -102,7 +102,7 @@ public abstract class Simulation {
 
 	private String getNodes() {
 		String result = "";
-		for(NodeInfo node : model.getNodeOrder()) result+=node.getNodeID()+",";
+		for(NodeInfo node : model.getComponents()) result+=node.getNodeID()+",";
 		return result.substring(0,result.length()-1);
 	}
 

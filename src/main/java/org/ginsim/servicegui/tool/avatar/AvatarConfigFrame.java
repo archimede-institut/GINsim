@@ -499,12 +499,12 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 		  
 		/** A: extract selected states */
 	    List<byte[]> initialStates = new ArrayList<byte[]>();
-    	int nstates = _model.getNodeOrder().size();
+    	int nstates = _model.getComponents().size();
 		if(states.getStateList().size()==0){
 			for(NamedState state2 : states.getIStateList()){
 		    	byte[] state = new byte[nstates];
 		    	for(int i=0; i<nstates; i++){
-		    		NodeInfo node = _model.getNodeOrder().get(i);
+		    		NodeInfo node = _model.getComponents().get(i);
 		    		List<Integer> values = node.isInput() ? state2.getMap().get(node) : null;
 		    		if(values==null || values.size()>1) state[i]=-1;
 		    		else state[i]=(byte)((int)values.get(0));
@@ -517,7 +517,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 				if(states.getIStateList().size()==0){
 			    	byte[] state = new byte[nstates];
 			    	for(int i=0; i<nstates; i++){
-			    		NodeInfo node = _model.getNodeOrder().get(i);
+			    		NodeInfo node = _model.getComponents().get(i);
 			    		List<Integer> values = state1.getMap().get(node);
 			    		if(values==null || values.size()>1) state[i]=-1;
 			    		else state[i]=(byte)((int)values.get(0));
@@ -528,7 +528,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 				for(NamedState state2 : states.getIStateList()){
 			    	byte[] state = new byte[nstates];
 			    	for(int i=0; i<nstates; i++){
-			    		NodeInfo node = _model.getNodeOrder().get(i);
+			    		NodeInfo node = _model.getComponents().get(i);
 			    		List<Integer> values = node.isInput() ? state2.getMap().get(node) : state1.getMap().get(node);
 			    		if(values==null || values.size()>1) state[i]=-1;
 			    		else state[i]=(byte)((int)values.get(0));
@@ -555,7 +555,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 			}
 		    byte[] state = new byte[nstates];
 		    for(int i=0; i<nstates; i++){
-		    		NodeInfo node = _model.getNodeOrder().get(i);
+		    		NodeInfo node = _model.getComponents().get(i);
 		    		List<Integer> values = ostate.getMap().get(node);
 		    		if(values==null || values.size()>1) state[i]=-1;
 		    		else state[i]=(byte)((int)values.get(0));

@@ -56,7 +56,7 @@ public class LogicalModel2RegulatoryGraph {
 		this.matrix = new ConnectivityMatrix(model);
 
 		// mapping
-		coreNodes = model.getNodeOrder();
+		coreNodes = model.getComponents();
 		node2node = new HashMap<NodeInfo, RegulatoryNode>();
 		
 		// add all components

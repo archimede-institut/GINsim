@@ -48,7 +48,7 @@ public class FirefrontMDDSimulation extends FirefrontSimulation {
 		/** A: parameterize/initialize firefront */
 		
 		Result result = new Result();
-		List<NodeInfo> vars = model.getNodeOrder();
+		List<NodeInfo> vars = model.getComponents();
 		if(beta==-1) beta=alpha;		
 	    //int nrStates = 1;
 		//for(NodeInfo comp : model.getNodeOrder()) nrStates *= comp.getMax()+1;
@@ -220,7 +220,7 @@ public class FirefrontMDDSimulation extends FirefrontSimulation {
 	    result.strategy = "FireFront";
 		for(String key : result.complexAttractors.keySet()){
 			if(result.complexAttractors.get(key) instanceof MDDStateSet)
-				result.complexAttractorPatterns.put(key,MDDUtils.getStatePatterns(model.getNodeOrder(),(MDDStateSet)result.complexAttractors.get(key)));
+				result.complexAttractorPatterns.put(key,MDDUtils.getStatePatterns(model.getComponents(),(MDDStateSet)result.complexAttractors.get(key)));
 				//result.complexAttractorPatterns.put(key,((MDDStateSet)result.complexAttractors.get(key)).getCompactStates());
 		}
 	    //result.runs = maxRuns;
@@ -236,7 +236,7 @@ public class FirefrontMDDSimulation extends FirefrontSimulation {
 		List<MDDStateSet> result = new ArrayList<MDDStateSet>();
 		Collection<String> keys = complexA.getKeys();
 		while(!keys.isEmpty()){
-			MDDStateSet att = new MDDStateSet(model.getNodeOrder());
+			MDDStateSet att = new MDDStateSet(model.getComponents());
 			String key = keys.iterator().next();
 			State s = complexA.getState(key);
 			keys.remove(key);

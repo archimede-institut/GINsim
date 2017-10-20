@@ -1,9 +1,6 @@
 package org.ginsim.service.tool.reg2dyn.updater;
 
 import org.colomoto.biolqm.LogicalModel;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
-import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 
 
 public class SynchronousSimulationUpdater extends SimulationUpdater {

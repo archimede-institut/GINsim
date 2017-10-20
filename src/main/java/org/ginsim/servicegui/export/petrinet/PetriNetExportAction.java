@@ -64,7 +64,7 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implemen
 		}
 		
 		if (m_init_values != null) {
-			List<NodeInfo> nodes = model.getNodeOrder();
+			List<NodeInfo> nodes = model.getComponents();
 			initialstate = new byte[nodes.size()];
 			int i=0;
 			for (NodeInfo ni: nodes) {

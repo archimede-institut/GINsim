@@ -40,7 +40,7 @@ public final class SimulationUtils {
 	 */
 	public static State getRandomState(LogicalModel model, List<byte[]> states, boolean hasSuccessors) {
 		SequentialUpdater updater = new SequentialUpdater(model);
-		List<NodeInfo> nodes = model.getNodeOrder();
+		List<NodeInfo> nodes = model.getComponents();
 		Random r = new Random();
 
 		/** A: select state conditions **/

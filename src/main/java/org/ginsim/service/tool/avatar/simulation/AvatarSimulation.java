@@ -101,11 +101,11 @@ public class AvatarSimulation extends Simulation {
 	    int performed=0, truncated=0, avgSteps=0, minSteps=0;
 	    int stateSpaceSize=1, space=Math.max(runs/100, 1), psize=0;
 		int maxExits = (minTransientSize>=300) ? minTransientSize : 300;
-	    for(NodeInfo comp : model.getNodeOrder()) stateSpaceSize *= comp.getMax()+1;
+	    for(NodeInfo comp : model.getComponents()) stateSpaceSize *= comp.getMax()+1;
 	    List<AbstractStateSet> savedTransients = new ArrayList<AbstractStateSet>();
 	    int largestFoundTransient = -1;
 	    Map<String,List<Double>> plotProbs = new HashMap<String,List<Double>>();
-		if(!quiet) output("Quiet="+quiet+"\nNode order: "+model.getNodeOrder()+"\nPSize="+psize+",maxPSize="+maxPSize);
+		if(!quiet) output("Quiet="+quiet+"\nNode order: "+model.getComponents()+"\nPSize="+psize+",maxPSize="+maxPSize);
 		//System.out.println("ORACLES\n"+oracle);
 	    
 	    /** II: Simulation **/
@@ -634,7 +634,7 @@ public class AvatarSimulation extends Simulation {
 	
 	@Override
 	public void dynamicUpdateValues() {
-		List<NodeInfo> components =model.getNodeOrder();
+		List<NodeInfo> components =model.getComponents();
 		int allStates = 1;
 		for(NodeInfo comp : components) allStates *= comp.getMax()+1; 
 

@@ -31,7 +31,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 
 import org.colomoto.biolqm.StatefulLogicalModel;
-import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
@@ -277,7 +276,7 @@ public class AvatarResults {
 	 		        //HierarchicalTransitionGraph graph = GraphManager.getInstance().getNewGraph(HierarchicalTransitionGraph.class,model.getNodeOrder());
 	 		        //RegulatoryGraph graph = GraphManager.getInstance().getNewGraph(RegulatoryGraph.class,model.getNodeOrder());
 	 				//ReducedGraph graph = GraphManager.getInstance().getNewGraph(ReducedGraph.class,model.getNodeOrder());
-	 				DynamicGraph graph = GSGraphManager.getInstance().getNewGraph(DynamicGraph.class,model.getNodeOrder());
+	 				DynamicGraph graph = GSGraphManager.getInstance().getNewGraph(DynamicGraph.class,model.getComponents());
 	 				graph = SimulationUtils.getGraphFromAttractor(graph,res.complexAttractors.get(this.getKey()),model);
 	 			    //GUIManager.getInstance().whatToDoWithGraph(graph, true);
 	 			    Frame f = new WhatToDoWithGraph(graph);

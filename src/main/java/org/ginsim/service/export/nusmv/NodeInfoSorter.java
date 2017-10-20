@@ -17,7 +17,7 @@ public class NodeInfoSorter {
 	public List<NodeInfo> getNodesWithInputsAtEnd(LogicalModel model) {
 		List<NodeInfo> internal = new ArrayList<NodeInfo>();
 		List<NodeInfo> inputs = new ArrayList<NodeInfo>();
-		for (NodeInfo node : model.getNodeOrder()) {
+		for (NodeInfo node : model.getComponents()) {
 			if (node.isInput()) {
 				inputs.add(node);
 			} else {
@@ -30,7 +30,7 @@ public class NodeInfoSorter {
 
 	public List<NodeInfo> getNodesByIncNumberRegulators(LogicalModel model) {
 		Set<NodeInfoDegree> inDegree = new TreeSet<NodeInfoDegree>();
-		List<NodeInfo> lNodeOrder = model.getNodeOrder();
+		List<NodeInfo> lNodeOrder = model.getComponents();
 
 		// Compute the IN degree
 		PathSearcher searcher = new PathSearcher(model.getMDDManager(), 1);

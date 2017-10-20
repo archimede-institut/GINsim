@@ -84,7 +84,7 @@ public class NuSMVEncoder {
 		out.write("\nMODULE main\n");
 
 		LogicalModel model = config.getModel();
-		List<NodeInfo> coreNodes = model.getNodeOrder();
+		List<NodeInfo> coreNodes = model.getComponents();
 		List<NodeInfo> outputNodes = model.getExtraComponents();
 		if (coreNodes.isEmpty() && outputNodes.isEmpty()) {
 			throw new GsException(GsException.GRAVITY_ERROR,
@@ -98,7 +98,7 @@ public class NuSMVEncoder {
 		NodeInfo[] aNodeOrder = new NodeInfo[coreNodes.size()];
 		boolean hasInputVars = false;
 		for (int i = 0; i < aNodeOrder.length; i++) {
-			NodeInfo node = model.getNodeOrder().get(i);
+			NodeInfo node = model.getComponents().get(i);
 			aNodeOrder[i] = node;
 			if (node.isInput())
 				hasInputVars = true;

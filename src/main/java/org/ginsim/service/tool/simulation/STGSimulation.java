@@ -29,7 +29,7 @@ public class STGSimulation extends MultipleSuccessorSimulation {
 	public STGSimulation(LogicalModel model, MultipleSuccessorsUpdater updater, SimulationStrategy strategy) {
 		super(updater, strategy);
 		
-		List<NodeInfo> nodes = model.getNodeOrder();
+		List<NodeInfo> nodes = model.getComponents();
 		stateTransitionGraph = GSGraphManager.getInstance().getNewGraph( DynamicGraph.class, nodes);
 		stateTransitionGraph.setLogicalModel(model);
 	}

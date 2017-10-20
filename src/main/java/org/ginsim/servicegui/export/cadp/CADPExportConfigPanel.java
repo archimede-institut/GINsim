@@ -324,7 +324,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 				for (int i = 0; i < state.length; i++)
 					if (state[i] == -1) {
 						toRemove.add(state);
-						byte max = getGraph().getModel().getNodeOrder().get(i)
+						byte max = getGraph().getModel().getComponents().get(i)
 								.getMax();
 						for (byte j = 0; j <= max; j++) {
 							byte[] newState = state.clone();
@@ -416,7 +416,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 							argumentValues
 									.add(new Integer(
 											foreignStableState[getGraph()
-													.getModel().getNodeOrder()
+													.getModel().getComponents()
 													.indexOf(argument)]));
 
 					}
@@ -424,7 +424,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 					if (!argumentValues.isEmpty()) {
 
 						byte actualValue = stableState[getGraph().getModel()
-								.getNodeOrder().indexOf(input)];
+								.getComponents().indexOf(input)];
 						byte computedValue = (byte) IntegrationFunction
 								.getIntegrationFunctionComputer(
 										integrationFunction)
@@ -516,7 +516,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 		byte[] reducedState = new byte[subSet.size()];
 		for (RegulatoryNode sub : subSet)
 			reducedState[subSet.indexOf(sub)] = state[getGraph().getModel()
-					.getNodeOrder().indexOf(sub)];
+					.getComponents().indexOf(sub)];
 
 		return reducedState;
 	}

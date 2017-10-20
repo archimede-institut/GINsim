@@ -21,7 +21,7 @@ public final class Reachable {
 	public static StateSet computeReachableStates(StatefulLogicalModel model) {
 		AsynchronousUpdater updater = new AsynchronousUpdater(model);
 		int totalstates=1;
-		for(NodeInfo comp : model.getNodeOrder()) totalstates *= comp.getMax()+1;
+		for(NodeInfo comp : model.getComponents()) totalstates *= comp.getMax()+1;
 		
 		StateSet attractors = new StateSet();
 		StateSet states = new StateSet(updater.getSuccessors(model.getInitialStates()));

@@ -25,7 +25,7 @@ public class STGSimulationHelper implements SimulationHelper {
 	protected NodeAttributesReader vreader;
 	
 	public STGSimulationHelper(LogicalModel model, SimulationParameters params) {
-		List<NodeInfo> nodes = model.getNodeOrder();
+		List<NodeInfo> nodes = model.getComponents();
 		stateTransitionGraph = GSGraphManager.getInstance().getNewGraph( DynamicGraph.class, nodes);
 		// FIXME: associated graph in the new simulation
 		stateTransitionGraph.setAssociatedGraph(params.param_list.graph);

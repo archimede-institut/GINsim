@@ -61,7 +61,7 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 		// SOUTH begin
 		JPanel bottomPanel = new JPanel(new BorderLayout());
 
-		for (NodeInfo node : this.config.getModel().getNodeOrder()) {
+		for (NodeInfo node : this.config.getModel().getComponents()) {
 			if (node.isInput()) {
 				this.hasInputs = true;
 				break;
@@ -85,7 +85,7 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 			JPanel fixInputsPanel = new JPanel();
 			fixInputsPanel.setLayout(new BoxLayout(fixInputsPanel, BoxLayout.LINE_AXIS));
 			this.listCTLFixedInputs = new ArrayList<JCheckBox>();
-			for (NodeInfo node : this.config.getModel().getNodeOrder()) {
+			for (NodeInfo node : this.config.getModel().getComponents()) {
 				if (node.isInput()) {
 					JCheckBox jcb = new JCheckBox(node.getNodeID());
 					fixInputsPanel.add(jcb);

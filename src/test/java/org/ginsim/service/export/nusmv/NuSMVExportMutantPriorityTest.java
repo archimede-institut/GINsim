@@ -97,8 +97,8 @@ public class NuSMVExportMutantPriorityTest {
 
 		// Perturbation
 		List<Perturbation> lst = new ArrayList<Perturbation>();
-		lst.add(new PerturbationFixed(model.getNodeOrder().get(0), 0));
-		lst.add(new PerturbationFixed(model.getNodeOrder().get(1), 1));
+		lst.add(new PerturbationFixed(model.getComponents().get(0), 0));
+		lst.add(new PerturbationFixed(model.getComponents().get(1), 1));
 		Perturbation perturbation = new PerturbationMultiple(lst);
 
 		model = perturbation.apply(model);

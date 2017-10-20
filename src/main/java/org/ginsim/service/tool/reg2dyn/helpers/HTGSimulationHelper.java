@@ -27,7 +27,7 @@ public class HTGSimulationHelper  implements SimulationHelper {
 		if (params.simulationStrategy == SimulationParameters.STRATEGY_HTG) {
 			compacted = true;
 		}
-		List<NodeInfo> nodes = model.getNodeOrder();
+		List<NodeInfo> nodes = model.getComponents();
 		this.htg = GSGraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, nodes, compacted);
 		
 		// FIXME: associated graph based on LogicalModel

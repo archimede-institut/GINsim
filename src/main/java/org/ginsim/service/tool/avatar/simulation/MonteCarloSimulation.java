@@ -144,7 +144,7 @@ public class MonteCarloSimulation extends Simulation {
 
 	@Override
 	public void dynamicUpdateValues() {
-		List<NodeInfo> components =model.getNodeOrder();
+		List<NodeInfo> components =model.getComponents();
 		int allStates = 1;
 		for(NodeInfo comp : components) allStates *= comp.getMax()+1; 
 		runs=Math.max(10000, allStates);

@@ -59,7 +59,7 @@ public class PRISMEncoder {
 			GsException {
 
 		LogicalModel model = config.getModel();
-		List<NodeInfo> coreNodes = model.getNodeOrder();
+		List<NodeInfo> coreNodes = model.getComponents();
 		// Nodes actual logical rules
 		int[] kMDDs = model.getLogicalFunctions();
 

@@ -39,7 +39,7 @@ public class SATEncoder {
 
 		LogicalModel multiValueModel = config.getModel();
 		LogicalModel model = Booleanizer.booleanize(multiValueModel);
-		List<NodeInfo> coreNodes = model.getNodeOrder();
+		List<NodeInfo> coreNodes = model.getComponents();
 		StringBuffer sb = new StringBuffer();
 		int nSATrules = 0;
 		int iNonInputs = 0;
@@ -100,9 +100,9 @@ public class SATEncoder {
 		if (!config.getInputState().keySet().isEmpty()
 				|| !config.getInitialState().isEmpty()) {
 			sb.append("c user variable restriction\n");
-			nSATrules += varRestr2SAT(model.getNodeOrder(), config
+			nSATrules += varRestr2SAT(model.getComponents(), config
 					.getInputState().keySet().iterator(), sb);
-			nSATrules += varRestr2SAT(model.getNodeOrder(), config
+			nSATrules += varRestr2SAT(model.getComponents(), config
 					.getInitialState().keySet().iterator(), sb);
 		}
 

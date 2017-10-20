@@ -292,7 +292,7 @@ public class FirefrontSimulation extends Simulation {
 
 	@Override
 	public void dynamicUpdateValues() {
-		List<NodeInfo> components =model.getNodeOrder();
+		List<NodeInfo> components =model.getComponents();
 		int allStates = 1;
 		for(NodeInfo comp : components) allStates *= comp.getMax()+1; 
 		alpha=1.0/(double)(10*allStates);

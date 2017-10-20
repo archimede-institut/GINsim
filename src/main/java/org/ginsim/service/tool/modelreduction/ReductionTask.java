@@ -50,7 +50,7 @@ public class ReductionTask extends AbstractTask<LogicalModel> {
     }
 
 	public ReductionTask(LogicalModel model, ReductionConfig config, ReductionLauncher launcher) {
-        this.nodeOrder = model.getNodeOrder();
+        this.nodeOrder = model.getComponents();
         if (config.propagate) {
             model = FixedComponentRemover.reduceFixed(model, true);
         }

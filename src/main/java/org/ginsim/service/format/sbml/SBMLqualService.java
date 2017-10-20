@@ -117,7 +117,7 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 
 
             // set the initial state
-            List<NodeInfo> nodes = model.getNodeOrder();
+            List<NodeInfo> nodes = model.getComponents();
             byte[] state = new byte[nodes.size()];
             NamedState initState = config.getSelectedInitialState();
             NamedState inputState = config.getSelectedInputState();

@@ -10,8 +10,6 @@ import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
 
-import org.ginsim.johnsonCycles.ElementaryCyclesSearch;
-
 
 public class PNtoGraph{
 	private PNGraph pnGraph;
@@ -22,7 +20,7 @@ public class PNtoGraph{
 	
 	
 	public PNtoGraph(LogicalModel model) {
-		this.nodeOrder = model.getNodeOrder();
+		this.nodeOrder = model.getComponents();
 		this.ddmanager = model.getMDDManager();
 		this.functions = model.getLogicalFunctions();
 		

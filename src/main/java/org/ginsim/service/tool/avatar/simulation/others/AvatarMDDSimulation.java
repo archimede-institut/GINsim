@@ -62,13 +62,13 @@ public class AvatarMDDSimulation extends AvatarSimulation {
 		
 		/** I: Initializations **/
 		Result result = new Result();
-		List<NodeInfo> vars = model.getNodeOrder();
+		List<NodeInfo> vars = model.getComponents();
 	    int performed=0, truncated=0, steps=0;
 	    int stateSpaceSize=1, space=Math.max(runs/100, 1), psize=0;
-	    for(NodeInfo comp : model.getNodeOrder()) stateSpaceSize *= comp.getMax()+1;
+	    for(NodeInfo comp : model.getComponents()) stateSpaceSize *= comp.getMax()+1;
 	    List<AbstractStateSet> savedTransients = new ArrayList<AbstractStateSet>();
 	    Map<String,List<Double>> plotProbs = new HashMap<String,List<Double>>();
-		if(!quiet) output("Quiet="+quiet+"\nNode order: "+model.getNodeOrder()+"\nPSize="+psize+",maxPSize="+maxPSize);
+		if(!quiet) output("Quiet="+quiet+"\nNode order: "+model.getComponents()+"\nPSize="+psize+",maxPSize="+maxPSize);
 	    
 	    /** II: Simulation **/
 		
@@ -305,7 +305,7 @@ public class AvatarMDDSimulation extends AvatarSimulation {
 	    if(isGUI) publish("Creating compact patterns of the found attractors");
 		for(String key : result.complexAttractors.keySet()){
 			if(result.complexAttractors.get(key) instanceof MDDStateSet)
-				result.complexAttractorPatterns.put(key,MDDUtils.getStatePatterns(model.getNodeOrder(),(MDDStateSet)result.complexAttractors.get(key)));
+				result.complexAttractorPatterns.put(key,MDDUtils.getStatePatterns(model.getComponents(),(MDDStateSet)result.complexAttractors.get(key)));
 				//result.complexAttractorPatterns.put(key,((MDDStateSet)result.complexAttractors.get(key)).getCompactStates());
 		}
 	    result.strategy = "Avatar";
@@ -335,10 +335,10 @@ public class AvatarMDDSimulation extends AvatarSimulation {
         //for(byte[] succ : successors) if(succ[succ.length-2]==0) System.out.println(">>"+s+"|"+new State(succ));
         
         double prob = s.probability*(1.0/(double)successors.size());
-        if(exitProbs==null) return new MDDStateSet(model.getNodeOrder(),successors,prob);
+        if(exitProbs==null) return new MDDStateSet(model.getComponents(),successors,prob);
         else if(!quiet) output("\tExits of "+s+" => "+exitProbs);
         
-        MDDStateSet succSet = new MDDStateSet(model.getNodeOrder());
+        MDDStateSet succSet = new MDDStateSet(model.getComponents());
         for(byte[] succ : successors){
         	State u = new State(succ,prob);
         	if(intraNull.contains(u)) continue;
@@ -363,7 +363,7 @@ public class AvatarMDDSimulation extends AvatarSimulation {
 	 * @return the revised complex attractor
 	 */
 	public MDDStateSet calculateComplexAttractor(List<MDDStateSet> C, int t) {
-		MDDStateSet Cstar = new MDDStateSet(model.getNodeOrder());
+		MDDStateSet Cstar = new MDDStateSet(model.getComponents());
 		MDDStateSet L = C.get(t); 
 	    if(!quiet) output("\tVisiting all reincarnations to discover the master attractor ...");
 	    while(!L.isEmpty()){
@@ -516,23 +516,23 @@ public class AvatarMDDSimulation extends AvatarSimulation {
 	 */
 	public void extendCycle(State v, MDDStateSet cycle, MDDStateSet result, int i, int tau, Map<String,Integer> time, int originalTime){
 	    if(!quiet) output("\t\tExtending tau="+tau+" cycle="+cycle.getKeys());
-	    MDDStateSet Q = new MDDStateSet(model.getNodeOrder());
+	    MDDStateSet Q = new MDDStateSet(model.getComponents());
 	    if(v==null){
             //if(!quiet) output("cycle="+cycle);
 	        for(State u : cycle.getStates()){
 	            time.put(u.key,i);
 	            result.add(u);
-	            for(State s : new MDDStateSet(model.getNodeOrder(),exhaustiveUpdater.getSuccessors(u.state)).getStates())
+	            for(State s : new MDDStateSet(model.getComponents(),exhaustiveUpdater.getSuccessors(u.state)).getStates())
 	            	if(!cycle.contains(s)) Q.add(s);
 	        }
 	    } else {
 	    	if(!quiet) output("("+i+")V="+v.key);
             time.put(v.key,i);
             result.add(v);
-            Q.addAll(new MDDStateSet(model.getNodeOrder(),exhaustiveUpdater.getSuccessors(v.state)));
+            Q.addAll(new MDDStateSet(model.getComponents(),exhaustiveUpdater.getSuccessors(v.state)));
 	    }
 	    i++;
-	    MDDStateSet additions = new MDDStateSet(model.getNodeOrder());
+	    MDDStateSet additions = new MDDStateSet(model.getComponents());
 	    if(tau>0){
 	    	if(!quiet) output("Tau>0 and Q="+Q.getKeys());
 	        for(State w : Q.getStates()){
