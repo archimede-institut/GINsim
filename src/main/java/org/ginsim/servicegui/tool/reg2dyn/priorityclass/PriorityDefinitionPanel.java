@@ -7,24 +7,19 @@ import java.util.List;
 
 import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.gui.utils.data.*;
+import org.ginsim.gui.utils.data.ListEditionPanel;
 import org.ginsim.gui.utils.widgets.StockButton;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
 
 
 /**
  * configure priority classes.
   */
-public class PriorityDefinitionPanel extends ListEditionPanel<PriorityClass, PrioritySetDefinition>
-        implements ListPanelCompanion<PrioritySetDefinition, PrioritySetList> {
+public class PriorityDefinitionPanel extends ListEditionPanel<PriorityClass, PrioritySetDefinition> {
 
     private final List<RegulatoryNode> nodeOrder;
-
-    private PrioritySetList pcmanager;
     private PrioritySetDefinition pcdef;
-    
     private final StockButton but_group = new StockButton("group.png",true);
 
     // TODO: make sure to always have at least one class selected
@@ -32,9 +27,9 @@ public class PriorityDefinitionPanel extends ListEditionPanel<PriorityClass, Pri
     /**
      * @param editPanel
      */
-    public PriorityDefinitionPanel(ListEditionPanel<PrioritySetDefinition, PrioritySetList> editPanel) {
-    	super(PriorityDefinitionHelper.HELPER, editPanel.getSelectedItem(), "pclassConfig", null, null);
-        this.nodeOrder = editPanel.getList().nodeOrder;
+    public PriorityDefinitionPanel(List<RegulatoryNode> nodeOrder, PrioritySetDefinition pcdef) {
+    	super(PriorityDefinitionHelper.HELPER, pcdef, "pclassConfig", null, null);
+        this.nodeOrder = nodeOrder;
 
         but_group.setMinimumSize(new Dimension(35,25));
         but_group.addActionListener(new ActionListener() {
@@ -44,10 +39,6 @@ public class PriorityDefinitionPanel extends ListEditionPanel<PriorityClass, Pri
         });
         addButton(but_group);
 
-        if (editPanel != null) {
-            editPanel.addPanel(this, "PCLASS");
-            editPanel.showPanel("PCLASS");
-        }
     }
 
     public PrioritySetDefinition getCurrentDefinition() {
@@ -108,29 +99,11 @@ public class PriorityDefinitionPanel extends ListEditionPanel<PriorityClass, Pri
 //		but_remove.setEnabled(b);
 	}
 
-    @Override
-    public void setParentList(PrioritySetList list) {
-        this.pcmanager = list;
-    }
 
-    @Override
-    public void selectionUpdated(int[] selection) {
-        PrioritySetDefinition curDef = pcdef;
-        if (pcmanager == null || selection == null || selection.length != 1) {
-            pcdef = null;
-            if (curDef != null) {
-                setList(null);
-            }
-            setEnabled(false);
-            return;
-        } else {
-            pcdef = pcmanager.get(selection[0]);
-
-            setEnabled(true);
-        }
-        if (curDef != pcdef) {
-            setList(pcdef);
-        }
-    }
-
+	public void setList(PrioritySetDefinition pcdef) {
+		super.setList(pcdef);
+		this.pcdef = pcdef;
+		
+		// TODO: show information and dedicated edition panel
+	}
 }

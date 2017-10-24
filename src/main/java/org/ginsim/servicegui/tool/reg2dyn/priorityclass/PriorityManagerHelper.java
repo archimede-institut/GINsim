@@ -8,13 +8,14 @@ import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetAddMode;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinition;
 
 /**
  * GUI helper for the list of priority class definitions
  *
  * @author Aurelien Naldi
  */
-public class PriorityManagerHelper extends ListPanelHelper<PrioritySetDefinition, PrioritySetList> {
+public class PriorityManagerHelper extends ListPanelHelper<UpdaterDefinition, PrioritySetList> {
 
     public static final String FILTER_NO_SYNCHRONOUS = "[no-synchronous]";
     public static final PriorityManagerHelper HELPER = new PriorityManagerHelper();
@@ -33,8 +34,8 @@ public class PriorityManagerHelper extends ListPanelHelper<PrioritySetDefinition
     }
 
     @Override
-    public ListPanelCompanion getCompanion(ListEditionPanel<PrioritySetDefinition, PrioritySetList> editPanel) {
-        PriorityDefinitionPanel configPanel = new PriorityDefinitionPanel(editPanel);
+    public ListPanelCompanion getCompanion(ListEditionPanel<UpdaterDefinition, PrioritySetList> editPanel) {
+        UpdatingPanel configPanel = new UpdatingPanel(editPanel);
         return configPanel;
     }
 

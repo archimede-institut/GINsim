@@ -1,6 +1,9 @@
 package org.ginsim.service.tool.reg2dyn.updater;
 
+import java.util.List;
+
 import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.tool.simulation.DeterministicUpdater;
 import org.colomoto.biolqm.tool.simulation.updater.SynchronousUpdater;
 
@@ -22,7 +25,21 @@ public class UpdaterDefinitionSynchronous implements UpdaterDefinition {
 	}
 
 	@Override
-	public String getDefaultName() {
+	public String getName() {
 		return "Synchronous";
+	}
+
+	@Override
+	public void setName(String name) {
+	}
+
+	@Override
+	public String toString() {
+		return getName();
+	}
+
+	@Override
+	public String summary(List<NodeInfo> nodeOrder) {
+		return getName();
 	}
 }

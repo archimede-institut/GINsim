@@ -62,7 +62,7 @@ public class DecisionAnalysis extends Thread {
 	 * @return
 	 */
 	private SimulationUpdater getUpdaterForState(byte[] state) {
-   		SimulationUpdater updater = BaseSimulationUpdater.getInstance(model, params.getPriorityClassDefinition());
+   		SimulationUpdater updater = params.getPriorityClassDefinition().getUpdater(model);
    		updater.setState(state, 0, null);
    		return updater;
 	}

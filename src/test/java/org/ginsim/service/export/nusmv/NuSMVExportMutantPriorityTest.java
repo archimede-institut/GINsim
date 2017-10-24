@@ -89,7 +89,7 @@ public class NuSMVExportMutantPriorityTest {
         pcDef.clear();
         pcDef.add(class1);
         pcDef.add(class2);
-		config.setPriorityDefinition(pcDef);
+		config.setUpdatingMode(pcDef);
 		pcDef.m_elt.put(nodeOrder.get(0), class1);
 		pcDef.m_elt.put(nodeOrder.get(1), class1);
 		pcDef.m_elt.put(nodeOrder.get(2), class2);

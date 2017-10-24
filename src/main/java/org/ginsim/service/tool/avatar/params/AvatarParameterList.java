@@ -13,6 +13,7 @@ import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.NamedList;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinition;
 
 /**
  * Stores the context of simulations (parameters and changes to the input model)
@@ -75,8 +76,12 @@ public class AvatarParameterList extends NamedList<AvatarParameters> implements 
     private void nodeRemoved(Object data) {
     	pcmanager.nodeOrder.remove(data); // remove it from priority classes
         for (int i=0 ; i<pcmanager.size() ; i++) {
-        	PrioritySetDefinition pcdef = pcmanager.get(i);
-    		if (pcdef.m_elt != null) pcdef.m_elt.remove(data);
+        	UpdaterDefinition updater = pcmanager.get(i);
+        	// TODO: future types of updaters may need some treatment as well
+        	if (updater instanceof PrioritySetDefinition) {
+        		PrioritySetDefinition pcdef = (PrioritySetDefinition)updater;
+        		if (pcdef.m_elt != null) pcdef.m_elt.remove(data);
+        	}
         }
     }
     
@@ -85,8 +90,12 @@ public class AvatarParameterList extends NamedList<AvatarParameters> implements 
 		if (pcmanager.nodeOrder.contains(node)) return;
 		pcmanager.nodeOrder.add(node);
         for (int i=0 ; i<pcmanager.size() ; i++) {
-        	PrioritySetDefinition pcdef = pcmanager.get(i);
-    		if (pcdef.m_elt != null) pcdef.m_elt.put(node, pcdef.get(0));
+        	UpdaterDefinition updater = pcmanager.get(i);
+        	// TODO: future types of updaters may need some treatment as well
+        	if (updater instanceof PrioritySetDefinition) {
+        		PrioritySetDefinition pcdef = (PrioritySetDefinition)updater;
+        		if (pcdef.m_elt != null) pcdef.m_elt.put(node, pcdef.get(0));
+        	}
         }
 	}
 

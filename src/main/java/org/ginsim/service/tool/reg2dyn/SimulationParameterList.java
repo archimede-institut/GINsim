@@ -16,6 +16,7 @@ import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.NamedList;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinition;
 
 
 /**
@@ -91,10 +92,13 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
         // remove it from priority classes
     	pcmanager.nodeOrder.remove(data);
         for (int i=0 ; i<pcmanager.size() ; i++) {
-        	PrioritySetDefinition pcdef = pcmanager.get(i);
-    		if (pcdef.m_elt != null) {
-    			pcdef.m_elt.remove(data);
-    		}
+        	UpdaterDefinition updater = pcmanager.get(i);
+        	if (updater instanceof PrioritySetDefinition) {
+        		PrioritySetDefinition pcdef = (PrioritySetDefinition)updater;
+	    		if (pcdef.m_elt != null) {
+	    			pcdef.m_elt.remove(data);
+	    		}
+        	}
         }
     }
     
@@ -106,10 +110,13 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
 		}
 		pcmanager.nodeOrder.add(node);
         for (int i=0 ; i<pcmanager.size() ; i++) {
-        	PrioritySetDefinition pcdef = pcmanager.get(i);
-    		if (pcdef.m_elt != null) {
-    			pcdef.m_elt.put(node, pcdef.get(0));
-    		}
+        	UpdaterDefinition updater = pcmanager.get(i);
+        	if (updater instanceof PrioritySetDefinition) {
+        		PrioritySetDefinition pcdef = (PrioritySetDefinition)updater;
+	    		if (pcdef.m_elt != null) {
+	    			pcdef.m_elt.put(node, pcdef.get(0));
+	    		}
+        	}
         }
 	}
 

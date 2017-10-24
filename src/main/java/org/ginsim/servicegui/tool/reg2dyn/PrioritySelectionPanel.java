@@ -6,18 +6,18 @@ import org.ginsim.common.application.Txt;
 import org.ginsim.gui.utils.data.ListEditionPanel;
 import org.ginsim.gui.utils.data.ListSelectionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityDefinitionStore;
+import org.ginsim.service.tool.reg2dyn.priorityclass.UpdaterDefinitionStore;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinition;
 import org.ginsim.servicegui.tool.reg2dyn.priorityclass.PriorityManagerHelper;
 
 
-public class PrioritySelectionPanel extends ListSelectionPanel<PrioritySetDefinition> {
+public class PrioritySelectionPanel extends ListSelectionPanel<UpdaterDefinition> {
 	private static final long serialVersionUID = 1213902700181873169L;
 
 	private ListEditionPanel pcpanel;
 	private final PrioritySetList pcmanager;
-    private PriorityDefinitionStore store;
+    private UpdaterDefinitionStore store;
 
     public PrioritySelectionPanel(StackDialog dialog, PrioritySetList pcmanager) {
         super(dialog, Txt.t("STR_UpdatingMode"));
@@ -31,22 +31,22 @@ public class PrioritySelectionPanel extends ListSelectionPanel<PrioritySetDefini
     }
 
     @Override
-    public PrioritySetDefinition getSelected() {
+    public UpdaterDefinition getSelected() {
         if (store == null) {
             return null;
         }
-        return store.getPriorityDefinition();
+        return store.getUpdatingMode();
     }
 
     @Override
-    public void setSelected(PrioritySetDefinition sel) {
+    public void setSelected(UpdaterDefinition sel) {
         if (store == null) {
             return;
         }
-        store.setPriorityDefinition(sel);
+        store.setUpdatingMode(sel);
     }
 
-    public void setStore(PriorityDefinitionStore store) {
+    public void setStore(UpdaterDefinitionStore store) {
         this.store = store;
         refresh();
     }

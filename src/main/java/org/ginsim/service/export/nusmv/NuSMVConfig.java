@@ -10,9 +10,12 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateStore;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityDefinitionStore;
+import org.ginsim.service.tool.reg2dyn.priorityclass.UpdaterDefinitionStore;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinition;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinitionAsynchronous;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinitionSynchronous;
 
-public class NuSMVConfig implements NamedStateStore, PriorityDefinitionStore {
+public class NuSMVConfig implements NamedStateStore, UpdaterDefinitionStore {
 
 	public static final int CFG_SYNC = 0;
 	public static final int CFG_ASYNC = 1;
@@ -24,7 +27,7 @@ public class NuSMVConfig implements NamedStateStore, PriorityDefinitionStore {
 	private Map<NamedState, Object> m_input;
 
 	private boolean exportStableStates;
-	private PrioritySetDefinition priorities;
+	private UpdaterDefinition updater;
 	private int updatePolicy;
 	private Set<String> setFixedInputs;
 
@@ -42,15 +45,22 @@ public class NuSMVConfig implements NamedStateStore, PriorityDefinitionStore {
 	}
 
 	public void setUpdatePolicy() {
-		if (priorities == null)
+		if (updater == null || updater == UpdaterDefinitionAsynchronous.DEFINITION) {
 			updatePolicy = CFG_ASYNC;
-		else if (priorities.size() == 1) {
-			if (priorities.getPclass(graph.getNodeInfos())[0][1] == 0)
-				updatePolicy = CFG_SYNC;
-			else
-				updatePolicy = CFG_ASYNC;
-		} else
-			updatePolicy = CFG_PCLASS;
+		} else if (updater == UpdaterDefinitionSynchronous.DEFINITION) {
+			updatePolicy = CFG_SYNC;
+		} else if (updater instanceof PrioritySetDefinition) {
+			PrioritySetDefinition priorities = (PrioritySetDefinition)updater;
+			if (priorities.size() == 1) {
+				if (priorities.getPclass(graph.getNodeInfos())[0][1] == 0) {
+					updatePolicy = CFG_SYNC;
+				} else {
+					updatePolicy = CFG_ASYNC;
+				}
+			} else {
+				updatePolicy = CFG_PCLASS;
+			}
+		}
 	}
 
 	public void updateModel(LogicalModel model) {
@@ -98,13 +108,13 @@ public class NuSMVConfig implements NamedStateStore, PriorityDefinitionStore {
 	}
 
 	@Override
-	public PrioritySetDefinition getPriorityDefinition() {
-		return priorities;
+	public UpdaterDefinition getUpdatingMode() {
+		return updater;
 	}
 
 	@Override
-	public void setPriorityDefinition(PrioritySetDefinition pcdef) {
-		this.priorities = pcdef;
+	public void setUpdatingMode(UpdaterDefinition pcdef) {
+		this.updater = pcdef;
 		setUpdatePolicy();
 	}
 }

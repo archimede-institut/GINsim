@@ -1,6 +1,9 @@
 package org.ginsim.service.tool.reg2dyn.updater;
 
+import java.util.List;
+
 import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.tool.simulation.MultipleSuccessorsUpdater;
 import org.colomoto.biolqm.tool.simulation.updater.CompleteUpdater;
 
@@ -19,7 +22,21 @@ public class UpdaterDefinitionComplete implements UpdaterDefinition {
 	}
 
 	@Override
-	public String getDefaultName() {
+	public String getName() {
 		return "Complete";
+	}
+
+	@Override
+	public void setName(String name) {
+	}
+
+	@Override
+	public String toString() {
+		return getName();
+	}
+
+	@Override
+	public String summary(List<NodeInfo> nodeOrder) {
+		return getName();
 	}
 }

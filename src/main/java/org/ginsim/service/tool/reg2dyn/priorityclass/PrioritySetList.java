@@ -6,17 +6,24 @@ import java.util.List;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.NamedList;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinition;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinitionAsynchronous;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinitionComplete;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinitionSequential;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinitionSynchronous;
 
 /**
  * The list of all available priority set definitions.
  *
- * @author aurelien Naldi
+ * @author Aurelien Naldi
  */
-public class PrioritySetList extends NamedList<PrioritySetDefinition> {
+public class PrioritySetList extends NamedList<UpdaterDefinition> {
 
 	public static final String SYNCHRONOUS = "synchronous", ASYNCHRONOUS = "asynchronous"; 
 	
 	public final List<RegulatoryNode> nodeOrder;
+	
+	private final int lockedIndex;
 
 	private static List<RegulatoryNode> filterInputVariables(List<RegulatoryNode> nodeOrder) {
 		List<RegulatoryNode> alFiltered = new ArrayList<RegulatoryNode>();
@@ -30,22 +37,13 @@ public class PrioritySetList extends NamedList<PrioritySetDefinition> {
 	public PrioritySetList(RegulatoryGraph graph) {
 		this.nodeOrder = filterInputVariables(graph.getNodeOrder());
 
-		// add default priority classes
-		int index = addDefinition(null);
-		PrioritySetDefinition pcdef = get(index);
-		pcdef.setName(ASYNCHRONOUS);
-		PriorityClass pc = pcdef.get(0);
-		pc.setName("all");
-		pc.setMode(PriorityClass.ASYNCHRONOUS);
-		pcdef.lock();
-
-		index = addDefinition(null);
-		pcdef = get(index);
-		pcdef.setName(SYNCHRONOUS);
-		pc = pcdef.get(0);
-		pc.setName("all");
-		pc.setMode(PriorityClass.SYNCHRONOUS);
-		pcdef.lock();
+		// add default updaters
+		add(UpdaterDefinitionAsynchronous.DEFINITION);
+		add(UpdaterDefinitionSynchronous.DEFINITION);
+		add(UpdaterDefinitionComplete.DEFINITION);
+		add(new UpdaterDefinitionSequential());
+		
+		this.lockedIndex = size();
 	}
 
     public int addDefinition(Object mode) {
@@ -63,7 +61,6 @@ public class PrioritySetList extends NamedList<PrioritySetDefinition> {
                 // should be equivalent to the old priority system: add one class per node
             	pcdef.clear();
             	pcdef.m_elt.clear();
-                int rank = 0;
                 for (RegulatoryNode node: nodeOrder) {
                     currentClass = pcdef.get(pcdef.add());
                     pcdef.associate(node, currentClass);
@@ -86,9 +83,9 @@ public class PrioritySetList extends NamedList<PrioritySetDefinition> {
     		return false;
     	}
 
-        // check that the first two definitions are not selected
+        // check that the default updaters are not selected
         for (int i: selection) {
-            if (i<2) {
+            if (i<lockedIndex) {
                 return false;
             }
         }
@@ -96,9 +93,9 @@ public class PrioritySetList extends NamedList<PrioritySetDefinition> {
     }
 
     public boolean removeSelection(int[] sel) {
-        List<PrioritySetDefinition> toRemove = new ArrayList<PrioritySetDefinition>();
+        List<UpdaterDefinition> toRemove = new ArrayList<UpdaterDefinition>();
         for (int i: sel) {
-            if (i < 2) {
+            if (i < lockedIndex) {
                 return false;
             }
             toRemove.add(get(i));

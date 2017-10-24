@@ -109,7 +109,6 @@ public class NuSMVEncoder {
 
 		String sTmp;
 		int[][] iaTmp = null;
-		PrioritySetDefinition priorities = config.getPriorityDefinition();
 		// classNum -> className
 		TreeMap<Integer, String> tmPcNum2Name = new TreeMap<Integer, String>();
 		// classNum -> RankNum
@@ -138,6 +137,7 @@ public class NuSMVEncoder {
 			break;
 
 		case NuSMVConfig.CFG_PCLASS:
+			PrioritySetDefinition priorities = (PrioritySetDefinition)config.getUpdatingMode();
 			out.write("-- Priority classes\n  PCs : { ");
 			for (int i = 0; i < priorities.size(); i++) {
 				PriorityClass pc = (PriorityClass) priorities.get(i);

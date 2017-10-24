@@ -1,12 +1,16 @@
 package org.ginsim.service.tool.reg2dyn.updater;
 
-import org.colomoto.biolqm.LogicalModel;
+import java.util.List;
 
-public interface UpdaterDefinition {
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
+import org.ginsim.core.utils.data.NamedObject;
+
+public interface UpdaterDefinition extends NamedObject {
 
 	public final static boolean USE_BIOLQM_UPDATERS = true;
 
 	SimulationUpdater getUpdater(LogicalModel model);
-	
-	String getDefaultName();
+
+	String summary(List<NodeInfo> nodeOrder);
 }

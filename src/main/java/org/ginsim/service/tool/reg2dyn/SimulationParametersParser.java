@@ -19,6 +19,7 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinition;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -89,21 +90,21 @@ public class SimulationParametersParser extends XMLHelper {
                     if (s != null) {
                     	if ("asynchrone_df".equals(s)) {
                     		param.breadthFirst = false;
-                    		param.setPriorityDefinition(paramLists.pcmanager.get(0));
+                    		param.setUpdatingMode(paramLists.pcmanager.get(0));
                     	} else if ("asynchrone_bf".equals(s)) {
-                    		param.setPriorityDefinition(paramLists.pcmanager.get(0));
+                    		param.setUpdatingMode(paramLists.pcmanager.get(0));
                     		param.breadthFirst = true;
                     	} else if ("synchrone".equals(s)) {
-                    		param.setPriorityDefinition(paramLists.pcmanager.get(1));
+                    		param.setUpdatingMode(paramLists.pcmanager.get(1));
                     		param.breadthFirst = false;
                     	}
                     } else {
                         s = attributes.getValue("updating");
-                        PrioritySetDefinition o = paramLists.pcmanager.getByName(s);
+                        UpdaterDefinition o = paramLists.pcmanager.getByName(s);
                         if (o == null) {
                         	o = paramLists.pcmanager.getByName(PrioritySetList.ASYNCHRONOUS);
                         }
-                        param.setPriorityDefinition(o);
+                        param.setUpdatingMode(o);
                         param.breadthFirst = "true".equals(attributes.getValue("breadthFirst"));
                     }
                     s = attributes.getValue("maxdepth");
@@ -147,12 +148,12 @@ public class SimulationParametersParser extends XMLHelper {
                 	pcdef = (PrioritySetDefinition)paramLists.pcmanager.get(index);
                 	pcdef.clear();
                 	pcdef.m_elt.clear();
-                	param.setPriorityDefinition(pcdef);
+                	param.setUpdatingMode(pcdef);
                     pclass_fine = false;
                     posback = pos;
                     pos = POS_PCLASS;
                 } else if (qName.equals("priorityClass")) {
-                	param.setPriorityDefinition(paramLists.pcmanager.getByName(attributes.getValue("ref")));
+                	param.setUpdatingMode(paramLists.pcmanager.getByName(attributes.getValue("ref")));
                 }
                 break;
             case POS_PCLASS:

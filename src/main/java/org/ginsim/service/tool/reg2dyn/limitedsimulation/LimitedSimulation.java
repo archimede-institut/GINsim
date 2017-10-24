@@ -58,7 +58,7 @@ public class LimitedSimulation implements Runnable {
 		this.nbnode = 0;
 
 		helper = new STGLimitedSimulationHelper(model, htg, params, constraint);
-		updater = BaseSimulationUpdater.getInstance(model, params.getPriorityClassDefinition());
+		updater = params.getPriorityClassDefinition().getUpdater(model);
 	    initStatesIterator = constraint.getNewIterator();
 	}
 

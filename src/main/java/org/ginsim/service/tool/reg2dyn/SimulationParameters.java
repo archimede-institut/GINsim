@@ -22,13 +22,17 @@ import org.ginsim.gui.graph.regulatorygraph.initialstate.InitStateTableModel;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
-import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityDefinitionStore;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinition;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinitionAsynchronous;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinitionComplete;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinitionSynchronous;
+import org.ginsim.service.tool.reg2dyn.priorityclass.UpdaterDefinitionStore;
 
 
 /**
  * remember, save and restore a simulation parameter.
  */
-public class SimulationParameters implements XMLize, NamedObject, NamedStateStore, PriorityDefinitionStore {
+public class SimulationParameters implements XMLize, NamedObject, NamedStateStore, UpdaterDefinitionStore {
 
 	public static final int STRATEGY_STG = 0;
 	public static final int STRATEGY_SCCG = 1;
@@ -45,7 +49,7 @@ public class SimulationParameters implements XMLize, NamedObject, NamedStateStor
     public Map m_input = new HashMap();
     public SimulationParameterList param_list;
 
-    private PrioritySetDefinition pcdef;
+    private UpdaterDefinition updaterDefinition;
 
     /**
      * empty constructor for everyday use.
@@ -53,7 +57,7 @@ public class SimulationParameters implements XMLize, NamedObject, NamedStateStor
      */
     public SimulationParameters(SimulationParameterList param_list) {
     	this.param_list = param_list;
-        setPriorityDefinition(param_list.pcmanager.get(0));
+        setUpdatingMode(param_list.pcmanager.get(0));
     }
 
     /**
@@ -90,25 +94,8 @@ public class SimulationParameters implements XMLize, NamedObject, NamedStateStor
             s += "    Perturbation: "+perturbation+"\n";
         }
         s += "    Simulation strategy: " + simulationStrategy + "\n";
-        s += "    Updating policy: ";
-		if (pcdef != null) {
-	        if (pcdef.size() > 1) {
-	            s += "by priority class\n";
-	            int[][] pclass = getPriorityClassDefinition().getPclass(nodeOrder);
-	            for (int i=0 ; i<pclass.length ; i++) {
-	                int[] cl = pclass[i];
-	                s += "        "+cl[0]+ (cl[1]==0?" sync":" async")+": ";
-	                for (int j=2;j<cl.length ; j+=2) {
-	                    if (j>2) {
-	                        s += ", ";
-	                    }
-	                    s += nodeOrder.get(cl[j])+(cl[j+1]==0?"":cl[j+1]==1?"+":"-");
-	                }
-	                s += "\n";
-	            }
-	        } else {
-	        	s += pcdef.toString()+"\n";
-	        }
+		if (updaterDefinition != null) {
+			s += "    Updating policy: " + updaterDefinition.summary(nodeOrder);
 		}
         s += "    Initial states: ";
         if (m_initState == null || m_initState.size()==0) {
@@ -157,7 +144,7 @@ public class SimulationParameters implements XMLize, NamedObject, NamedStateStor
     @Override
 	public void toXML(XMLWriter out) throws IOException {
     	// avoid failure on unspecified priority class definition
-    	PrioritySetDefinition pcdef = getPriorityClassDefinition();
+    	UpdaterDefinition pcdef = getPriorityClassDefinition();
 		out.openTag("parameter");
 		out.addAttr("name", name);
 		out.addAttr("updating", pcdef.getName());
@@ -166,13 +153,14 @@ public class SimulationParameters implements XMLize, NamedObject, NamedStateStor
 		out.addAttr("maxnodes", ""+maxnodes);
 		out.addAttr("simulationStrategy", ""+simulationStrategy);
 
-		if (pcdef.size() > 1) {
+		if (pcdef instanceof PrioritySetDefinition) {
 			out.openTag("priorityClass");
 			out.addAttr("ref", pcdef.getName());
 			out.closeTag();
 		} else {
 			
 		}
+		
         if (m_initState != null && m_initState.keySet().size() > 0) {
             out.openTag("initstates");
             Iterator it = m_initState.keySet().iterator();
@@ -206,7 +194,7 @@ public class SimulationParameters implements XMLize, NamedObject, NamedStateStor
     	newp.maxnodes = maxnodes;
     	// TODO: transfer the perturbation
         Perturbation perturbation = param_list.getPerturbation(this);
-    	newp.setPriorityDefinition(pcdef);
+    	newp.setUpdatingMode(updaterDefinition);
 
     	if (m_initState != null) {
     		newp.m_initState = new HashMap();
@@ -238,8 +226,8 @@ public class SimulationParameters implements XMLize, NamedObject, NamedStateStor
         return m_input;
     }
 
-	public PrioritySetDefinition getPriorityClassDefinition() {
-        return getPriorityDefinition();
+	public UpdaterDefinition getPriorityClassDefinition() {
+        return getUpdatingMode();
 	}
 
     public void copy_to(SimulationParameters other, Map mapping) {
@@ -260,35 +248,47 @@ public class SimulationParameters implements XMLize, NamedObject, NamedStateStor
         // TODO: get the real associated perturbation
         Perturbation perturbation = null;
         Perturbation o_perturbation = (Perturbation)mapping.get(perturbation);
-        PrioritySetDefinition new_pcdef = (PrioritySetDefinition)mapping.get(pcdef);
-        if (new_pcdef == null) {
+        UpdaterDefinition new_updater = (UpdaterDefinition)mapping.get(updaterDefinition);
+        if (new_updater == null) {
+            // FIXME: need a cleaner transposition of updating modes
             PrioritySetList new_pcman = (PrioritySetList)mapping.get("");
-            if (pcdef.size() < 2) {
-                PriorityClass pc = (PriorityClass)pcdef.get(0);
-                if (pc.getMode() == PriorityClass.SYNCHRONOUS) {
-                    new_pcdef = (PrioritySetDefinition)new_pcman.get(1);
-                } else {
-                    new_pcdef = (PrioritySetDefinition)new_pcman.get(0);
-                }
-            } else {
+            if (updaterDefinition instanceof UpdaterDefinitionAsynchronous) {
+            	new_updater = UpdaterDefinitionAsynchronous.DEFINITION;
+            } else if (updaterDefinition instanceof UpdaterDefinitionSynchronous) {
+            	new_updater = UpdaterDefinitionSynchronous.DEFINITION;
+            } else if (updaterDefinition instanceof UpdaterDefinitionComplete) {
+            	new_updater = UpdaterDefinitionComplete.DEFINITION;
+            } else if (updaterDefinition instanceof PrioritySetDefinition) {
+            	PrioritySetDefinition pcdef = (PrioritySetDefinition)updaterDefinition;
+	            if (pcdef.size() < 2) {
+	                PriorityClass pc = pcdef.get(0);
+	                if (pc.getMode() == PriorityClass.SYNCHRONOUS) {
+	                    new_updater = UpdaterDefinitionSynchronous.DEFINITION;
+	                } else {
+	                    new_updater = UpdaterDefinitionAsynchronous.DEFINITION;
+	                }
+	            }
+            }
+            
+            if (new_updater == null) {
                 LogManager.error( "[BUG] complex pcdef not transposed in the reduced model");
-                new_pcdef = (PrioritySetDefinition)new_pcman.get(0);
+                new_updater = (UpdaterDefinition)new_pcman.get(0);
             }
         }
-        other.setPriorityDefinition(new_pcdef);
+        other.setUpdatingMode(new_updater);
     }
 
     @Override
-    public PrioritySetDefinition getPriorityDefinition() {
-        if (pcdef == null) {
-            pcdef = param_list.pcmanager.get(0);
+    public UpdaterDefinition getUpdatingMode() {
+        if (updaterDefinition == null) {
+            updaterDefinition = param_list.pcmanager.get(0);
         }
-        return pcdef;
+        return updaterDefinition;
     }
 
     @Override
-    public void setPriorityDefinition(PrioritySetDefinition pcdef) {
-        this.pcdef = pcdef;
+    public void setUpdatingMode(UpdaterDefinition updef) {
+        this.updaterDefinition = updef;
     }
 
 }

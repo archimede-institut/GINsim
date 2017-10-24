@@ -8,13 +8,19 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.tool.simulation.updater.PriorityClasses;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.ListenableNamedList;
-import org.ginsim.core.utils.data.NamedObject;
+import org.ginsim.service.tool.reg2dyn.updater.BaseSimulationUpdater;
+import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinition;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinitionAsynchronous;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinitionSynchronous;
 
 /**
  * Definition of a set of priority classes: store a list of classes
@@ -22,7 +28,7 @@ import org.ginsim.core.utils.data.NamedObject;
  *
  * @author Aurelien Naldi
  */
-public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> implements NamedObject, XMLize {
+public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> implements UpdaterDefinition, XMLize {
 
     public static final int UP = 0;
     public static final int DOWN = 1;
@@ -30,7 +36,6 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
     
 	public Map<RegulatoryNode, Object> m_elt;
 	private String name;
-	private boolean locked;
 
 	public PrioritySetDefinition(List<RegulatoryNode> elts, String name) {
 		setName(name);
@@ -43,25 +48,32 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
 	}
 
 	@Override
-	public void setName(String name) {
-		if (locked) {
-			return;
+	public SimulationUpdater getUpdater(LogicalModel model) {
+		if (USE_BIOLQM_UPDATERS) {
+			PriorityClasses pcs = null;
+			// TODO: refactor the editing structure of priority classes to use bioLQM's updater 
+//			MultipleSuccessorsUpdater lqmUpdater = new PriorityUpdater(model, pcs);
+//			return new GenericSimulationUpdater(lqmUpdater);
 		}
+		return BaseSimulationUpdater.getInstance(model, this);
+	}
+
+	@Override
+	public void setName(String name) {
 		this.name = name;
 	}
+	
 	@Override
 	public String getName() {
 		return name;
 	}
+	
 	@Override
 	public String toString() {
 		return name;
 	}
 
 	public void moveElementAt(int j, int pos) {
-		if (locked) {
-			return;
-		}
 		moveElement(j, pos);
 	}
 
@@ -108,7 +120,7 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
      * @return
      */
     public boolean remove(int[] t_index) {
-		if (locked || t_index.length >= size()) {
+		if (t_index.length >= size()) {
 			return false;
 		}
 		for (int i = t_index.length - 1 ; i > -1 ; i--) {
@@ -160,9 +172,6 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
      * if some selected class are part of a group, the whole group will move with it.
      */
     private boolean doMoveUp(int[] selection, int diff) {
-		if (locked) {
-			return false;
-		}
         int[][] index = getMovingRows(UP, selection);
         if (index == null) {
             return false;
@@ -200,9 +209,6 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
      * if some selected class are part of a group, the whole group will move with it.
      */
     private boolean doMoveDown(int[] selection, int diff) {
-		if (locked) {
-			return false;
-		}
         int[][] index = getMovingRows(DOWN, selection);
         if (index == null) {
             return false;
@@ -439,13 +445,6 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
     	return getPclass(nodeOrder);
     }
 
-	public void lock() {
-		this.locked = true;
-		for (PriorityClass pc : this) {
-			pc.lock();
-		}
-	}
-
     public boolean match(String filter) {
         return this.getName().toLowerCase().indexOf(filter.toLowerCase()) >= 0;
     }
@@ -460,7 +459,7 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
 
     public int add(int i) {
         int len = size();
-        if (locked || i>len || i<0) {
+        if (i>len || i<0) {
             return -1;
         }
 
@@ -543,4 +542,30 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
         refresh();
     }
 
+	@Override
+	public String summary(List<NodeInfo> nodeOrder) {
+        if (size() == 1) {
+        	int mode = get(0).getMode();
+        	if (mode == PriorityClass.ASYNCHRONOUS) {
+        		return UpdaterDefinitionAsynchronous.DEFINITION.summary(nodeOrder);
+        	}
+    		return UpdaterDefinitionSynchronous.DEFINITION.summary(nodeOrder);
+        }
+        String s = getName();
+        s += "by priority class\n";
+        int[][] pclass = getPclass(nodeOrder);
+        for (int i=0 ; i<pclass.length ; i++) {
+            int[] cl = pclass[i];
+            s += "        "+cl[0]+ (cl[1]==0?" sync":" async")+": ";
+            for (int j=2;j<cl.length ; j+=2) {
+                if (j>2) {
+                    s += ", ";
+                }
+                s += nodeOrder.get(cl[j])+(cl[j+1]==0?"":cl[j+1]==1?"+":"-");
+            }
+            s += "\n";
+        }
+
+		return s;
+	}
 }
