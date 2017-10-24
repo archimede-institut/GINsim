@@ -18,6 +18,7 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 import org.ginsim.service.tool.reg2dyn.helpers.SimulationHelper;
+import org.ginsim.service.tool.reg2dyn.updater.BaseSimulationUpdater;
 import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
 
 
@@ -57,7 +58,7 @@ public class LimitedSimulation implements Runnable {
 		this.nbnode = 0;
 
 		helper = new STGLimitedSimulationHelper(model, htg, params, constraint);
-		updater = SimulationUpdater.getInstance(model, params);
+		updater = BaseSimulationUpdater.getInstance(model, params.getPriorityClassDefinition());
 	    initStatesIterator = constraint.getNewIterator();
 	}
 

@@ -10,6 +10,7 @@ import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
+import org.ginsim.service.tool.reg2dyn.updater.BaseSimulationUpdater;
 import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
 
 
@@ -61,7 +62,7 @@ public class DecisionAnalysis extends Thread {
 	 * @return
 	 */
 	private SimulationUpdater getUpdaterForState(byte[] state) {
-   		SimulationUpdater updater = SimulationUpdater.getInstance(model, params);
+   		SimulationUpdater updater = BaseSimulationUpdater.getInstance(model, params.getPriorityClassDefinition());
    		updater.setState(state, 0, null);
    		return updater;
 	}

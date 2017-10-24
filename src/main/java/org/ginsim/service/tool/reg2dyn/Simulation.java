@@ -15,6 +15,7 @@ import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesIterator;
 import org.ginsim.service.tool.reg2dyn.helpers.STGSimulationHelper;
 import org.ginsim.service.tool.reg2dyn.helpers.SimulationHelper;
+import org.ginsim.service.tool.reg2dyn.updater.BaseSimulationUpdater;
 import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
 
 
@@ -55,7 +56,7 @@ public class Simulation implements Runnable {
 		}
 		breadthFirst = params.breadthFirst;
 		// TODO: fully remove regulatory graph from here
-   		updater = SimulationUpdater.getInstance(model, params);
+   		updater = BaseSimulationUpdater.getInstance(model, params.getPriorityDefinition());
    		set_initialStates(model.getComponents(), params.m_input, params.m_initState);
     }
 

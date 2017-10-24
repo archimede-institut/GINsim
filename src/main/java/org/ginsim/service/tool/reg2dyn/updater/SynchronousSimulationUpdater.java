@@ -3,7 +3,7 @@ package org.ginsim.service.tool.reg2dyn.updater;
 import org.colomoto.biolqm.LogicalModel;
 
 
-public class SynchronousSimulationUpdater extends SimulationUpdater {
+public class SynchronousSimulationUpdater extends BaseSimulationUpdater {
 
 	public SynchronousSimulationUpdater(ModelHelper helper) {
 		super(helper);

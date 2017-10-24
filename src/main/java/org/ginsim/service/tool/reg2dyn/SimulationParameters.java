@@ -30,8 +30,6 @@ import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityDefinitionStore;
  */
 public class SimulationParameters implements XMLize, NamedObject, NamedStateStore, PriorityDefinitionStore {
 
-    public static final int MUTANT = 0;
-
 	public static final int STRATEGY_STG = 0;
 	public static final int STRATEGY_SCCG = 1;
 	public static final int STRATEGY_HTG = 2;
