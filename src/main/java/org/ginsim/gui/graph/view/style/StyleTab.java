@@ -360,14 +360,24 @@ public class StyleTab extends JPanel
 
 	public void createStyle() {
 		Style newStyle = null;
-		if (selectedNodes != null ) {
+		if (selectedNodes != null) {
 			newStyle = manager.addNodeStyle();
+			copyStyle(newStyle);
             nStyleModel.refresh();
 		} else if (selectedEdges != null) {
 			newStyle = manager.addEdgeStyle();
+			copyStyle(newStyle);
             eStyleModel.refresh();
 		}
 		setCurrentStyle(newStyle);
+	}
+	
+	private void copyStyle(Style newStyle) {
+		if (currentStyle.getClass() == newStyle.getClass() && currentStyle.getParent() != null) {
+			String name = newStyle.getName();
+			newStyle.copy(currentStyle);
+			newStyle.setName(name);
+		}
 	}
 
 	public void deleteStyle() {

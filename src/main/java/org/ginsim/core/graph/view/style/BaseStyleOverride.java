@@ -47,4 +47,9 @@ abstract public class BaseStyleOverride<S extends Style> implements Style {
 	public Object getParentProperty(StyleProperty property) {
 		return null;
 	}
+	
+	@Override
+	public Style getParent() {
+		return defaultStyle;
+	}
 }

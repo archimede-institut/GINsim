@@ -57,4 +57,6 @@ public interface Style {
      * @param source
      */
     void copy(Style source);
+    
+    Style getParent();
 }

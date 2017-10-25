@@ -37,6 +37,11 @@ abstract public class BaseStyle<S extends Style> implements Style {
     }
     
     @Override
+    public Style getParent() {
+    	return parent;
+    }
+    
+    @Override
     public void copy(Style source) {
     	setName(source.getName());
     	for (StyleProperty prop: getProperties()) {
