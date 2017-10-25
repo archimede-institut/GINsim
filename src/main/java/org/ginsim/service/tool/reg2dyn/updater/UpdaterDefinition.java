@@ -4,9 +4,10 @@ import java.util.List;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
+import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.utils.data.NamedObject;
 
-public interface UpdaterDefinition extends NamedObject {
+public interface UpdaterDefinition extends NamedObject, XMLize {
 
 	public final static boolean USE_BIOLQM_UPDATERS = true;
 

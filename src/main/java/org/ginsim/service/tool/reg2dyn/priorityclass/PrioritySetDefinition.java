@@ -28,7 +28,7 @@ import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinitionSynchronous;
  *
  * @author Aurelien Naldi
  */
-public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> implements UpdaterDefinition, XMLize {
+public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> implements UpdaterDefinition {
 
     public static final int UP = 0;
     public static final int DOWN = 1;

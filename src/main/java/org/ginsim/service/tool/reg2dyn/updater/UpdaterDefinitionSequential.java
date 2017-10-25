@@ -6,6 +6,7 @@ import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.tool.simulation.DeterministicUpdater;
 import org.colomoto.biolqm.tool.simulation.updater.SequentialUpdater;
+import org.ginsim.common.xml.XMLWriter;
 
 public class UpdaterDefinitionSequential implements UpdaterDefinition {
 
@@ -36,5 +37,9 @@ public class UpdaterDefinitionSequential implements UpdaterDefinition {
 	public String summary(List<NodeInfo> nodeOrder) {
 		// TODO: custom sequential updating will need a summary
 		return getName();
+	}
+
+	@Override
+	public void toXML(XMLWriter out) {
 	}
 }

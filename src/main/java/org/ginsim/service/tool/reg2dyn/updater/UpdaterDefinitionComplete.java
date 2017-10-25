@@ -6,6 +6,7 @@ import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.tool.simulation.MultipleSuccessorsUpdater;
 import org.colomoto.biolqm.tool.simulation.updater.CompleteUpdater;
+import org.ginsim.common.xml.XMLWriter;
 
 public class UpdaterDefinitionComplete implements UpdaterDefinition {
 
@@ -38,5 +39,9 @@ public class UpdaterDefinitionComplete implements UpdaterDefinition {
 	@Override
 	public String summary(List<NodeInfo> nodeOrder) {
 		return getName();
+	}
+	
+	@Override
+	public void toXML(XMLWriter out) {
 	}
 }
