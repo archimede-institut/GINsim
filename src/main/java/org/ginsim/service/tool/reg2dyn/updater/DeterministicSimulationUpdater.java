@@ -61,6 +61,10 @@ public class DeterministicSimulationUpdater implements SimulationUpdater {
 		return this;
 	}
 
+	@Override
+	public void remove() {
+		throw new UnsupportedOperationException("remove");
+	}
 
 }
 
