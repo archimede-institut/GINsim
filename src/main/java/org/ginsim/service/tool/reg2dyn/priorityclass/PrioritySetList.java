@@ -25,17 +25,8 @@ public class PrioritySetList extends NamedList<UpdaterDefinition> {
 	
 	private final int lockedIndex;
 
-	private static List<RegulatoryNode> filterInputVariables(List<RegulatoryNode> nodeOrder) {
-		List<RegulatoryNode> alFiltered = new ArrayList<RegulatoryNode>();
-		for (int i = 0; i < nodeOrder.size(); i++) {
-			if (!nodeOrder.get(i).isInput())
-				alFiltered.add(nodeOrder.get(i));
-		}
-		return alFiltered;
-	}
-	
 	public PrioritySetList(RegulatoryGraph graph) {
-		this.nodeOrder = filterInputVariables(graph.getNodeOrder());
+		this.nodeOrder = graph.getNodeOrder();
 
 		// add default updaters
 		add(UpdaterDefinitionAsynchronous.DEFINITION);
