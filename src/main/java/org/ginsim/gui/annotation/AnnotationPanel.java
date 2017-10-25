@@ -168,7 +168,11 @@ class LinkListHelper extends ListPanelHelper<AnnotationLink, List<AnnotationLink
 
     @Override
     public boolean doRemove(List<AnnotationLink> list, int[] sel) {
-        return removeItems(list, sel);
+        boolean result = removeItems(list, sel);
+        if (result) {
+        	// FIXME: force text refresh
+        }
+        return result;
     }
 
     @Override

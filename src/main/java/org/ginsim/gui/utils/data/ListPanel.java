@@ -25,6 +25,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
 
+import org.ginsim.common.utils.ListReorderListener;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.SplitPane;
 import org.ginsim.gui.utils.widgets.StockButton;
@@ -336,8 +337,12 @@ public class ListPanel<T, L extends List<T>> extends JPanel
         }
         int[] sel = jl.getSelectedRows();
         
-        helper.remove(list, sel);
-        refresh();
+        if (helper.remove(list, sel)) {
+        	if (list instanceof ListReorderListener) {
+        		((ListReorderListener)list).deleted(sel);
+        	}
+        	refresh();
+        }
     }
 
     protected void doAdd(ActionEvent e) {

@@ -81,10 +81,7 @@ public class ListPanelHelper<T, L extends List<T>> {
 			return false;
 		}
 		
-		if (doRemove(list, sel)) {
-			return true;
-		}
-		return false;
+		return doRemove(list, sel);
 	}
 
     public ListPanel<T,L> getListPanel(L list) {

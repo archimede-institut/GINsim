@@ -3,7 +3,10 @@ package org.ginsim.core.annotation;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
+import org.ginsim.common.utils.ListReorderListener;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.Graph;
@@ -13,9 +16,10 @@ import org.ginsim.core.graph.Graph;
  * 
  * @author Aurelien Naldi
  */
-public class Annotation extends ArrayList<AnnotationLink> implements XMLize {
+public class Annotation extends ArrayList<AnnotationLink> implements XMLize, ListReorderListener {
 
 	private String comment;
+	Pattern ref = Pattern.compile("\\[([0-9][0-9,\\w]*)\\]");
 	
 	/**
 	 * create an empty annotation.
@@ -27,6 +31,7 @@ public class Annotation extends ArrayList<AnnotationLink> implements XMLize {
     public List<AnnotationLink> getLinkList() {
         return this;
     }
+    
 	/**
 	 * get the vector of url
 	 * @return the vector of String (url).
@@ -161,4 +166,72 @@ public class Annotation extends ArrayList<AnnotationLink> implements XMLize {
 		buf.append(comment.replaceAll("\n", "<br/>"));
 		return buf.toString();
 	}
+	
+	@Override
+	public void reordered(int[] mapping) {
+		if (comment == null || comment.length() < 3) {
+			return;
+		}
+		int[] mapped = new int[mapping.length];
+		for (int i=0 ; i< mapping.length ; i++) {
+			mapped[mapping[i]] = i;
+		}
+		remap(mapped);
+	}
+	
+	@Override
+	public void deleted(int[] sel) {
+		int[] mapped = new int[size() + sel.length];
+		for (int i=0 ; i< mapped.length ; i++) {
+			mapped[i] = i;
+		}
+		for (int d: sel) {
+			mapped[d] = -1;
+			for (int i=d+1 ; i<mapped.length ; i++) {
+				mapped[i]--;
+			}
+		}
+		remap(mapped);
+	}
+	
+	private void remap(int[] mapped) {
+		// Find and update references to links in the text
+		int len = comment.length();
+		Matcher m = ref.matcher(comment);
+		StringBuffer newComment = new StringBuffer(len);
+		int start = 0;
+		while (m.find()) {
+			String curMatch = m.group(1);
+			int curStart = m.start();
+			int curEnd = m.end();
+			newComment.append(comment.substring(start, curStart));
+			newComment.append("[");
+			String[] refs = curMatch.split(",");
+			boolean first = true;
+			for (String ref: refs) {
+				if (!first) {
+					newComment.append(",");
+				} else {
+					first = false;
+				}
+				int index = Integer.parseInt(ref);
+				if (index > 0 && index <= mapped.length) {
+					index = mapped[index-1]+1;
+				}
+				if (index <= 0) {
+					newComment.append("?");
+				} else {
+					newComment.append(index);
+				}
+			}
+			newComment.append("]");
+			start = curEnd;
+		}
+		
+		if (start > 0) {
+			newComment.append(comment.substring(start));
+			comment = newComment.toString();
+		}
+	}
+
 }
