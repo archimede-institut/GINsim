@@ -56,9 +56,14 @@ public class DeterministicSimulationUpdater implements SimulationUpdater {
 
 	@Override
 	public SimulationUpdater cloneForState(byte[] state) {
-		setState(state, 0, null);
-		// TODO Auto-generated method stub
-		return this;
+		SimulationUpdater clone = this.clone();
+		clone.setState(state, 0, null);
+		return clone;
+	}
+
+	@Override
+	public DeterministicSimulationUpdater clone() {
+		return new DeterministicSimulationUpdater(updater);
 	}
 
 	@Override

@@ -66,9 +66,14 @@ public class GenericSimulationUpdater implements SimulationUpdater {
 
 	@Override
 	public SimulationUpdater cloneForState(byte[] state) {
-		setState(state, 0, null);
-		// TODO Auto-generated method stub
-		return this;
+		SimulationUpdater clone = this.clone();
+		clone.setState(state, 0, null);
+		return clone;
+	}
+
+	@Override
+	public GenericSimulationUpdater clone() {
+		return new GenericSimulationUpdater(updater);
 	}
 
 	@Override
