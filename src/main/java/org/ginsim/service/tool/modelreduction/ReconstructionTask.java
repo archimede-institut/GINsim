@@ -187,7 +187,6 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph>
 				PrioritySetDefinition pcdef = (PrioritySetDefinition)updater;
 				int index = new_pcman.addDefinition(null);
 				PrioritySetDefinition new_pcdef = (PrioritySetDefinition)new_pcman.get(index);
-				new_pcman.addDefinition(new_pcdef);
 				new_pcdef.setName(pcdef.getName());
 				m_alldata.put(pcdef, new_pcdef);
 				Map<PriorityClass, PriorityClass> m_pclass = new HashMap<PriorityClass, PriorityClass>();
