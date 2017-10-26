@@ -11,6 +11,7 @@ import javax.swing.*;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.SplitPane;
 
+@SuppressWarnings("serial")
 public class ListEditionPanel<T,L extends List<T>> extends SplitPane {
 
     private final Object associated;
@@ -67,6 +68,9 @@ public class ListEditionPanel<T,L extends List<T>> extends SplitPane {
 
     public void setList(L list) {
         listPanel.setList(list);
+        if (list.size() > 0) {
+            listPanel.selectItem(0);
+        }
     }
 
     public T getSelectedItem() {

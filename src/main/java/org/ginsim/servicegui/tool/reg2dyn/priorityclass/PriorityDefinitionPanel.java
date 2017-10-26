@@ -16,13 +16,12 @@ import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 /**
  * configure priority classes.
   */
+@SuppressWarnings("serial")
 public class PriorityDefinitionPanel extends ListEditionPanel<PriorityClass, PrioritySetDefinition> {
 
     private final List<RegulatoryNode> nodeOrder;
     private PrioritySetDefinition pcdef;
     private final StockButton but_group = new StockButton("group.png",true);
-
-    // TODO: make sure to always have at least one class selected
 
     /**
      * @param editPanel
@@ -101,9 +100,7 @@ public class PriorityDefinitionPanel extends ListEditionPanel<PriorityClass, Pri
 
 
 	public void setList(PrioritySetDefinition pcdef) {
-		super.setList(pcdef);
 		this.pcdef = pcdef;
-		
-		// TODO: show information and dedicated edition panel
+		super.setList(pcdef);
 	}
 }
