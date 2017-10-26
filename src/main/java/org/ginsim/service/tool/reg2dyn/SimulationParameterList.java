@@ -14,6 +14,7 @@ import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.NamedList;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
 import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinition;
@@ -63,7 +64,7 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
 			nodeAdded(data);
 			break;
 		case NODEREMOVED:
-			nodeRemoved(data);
+			nodeRemoved((RegulatoryNode)data);
 			break;
 		case GRAPHMERGED:
 			Collection<?> items = (Collection<?>)data;
@@ -88,16 +89,14 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
 		return null;
 	}
 	
-    private void nodeRemoved(Object data) {
+    private void nodeRemoved(RegulatoryNode node) {
         // remove it from priority classes
-    	pcmanager.nodeOrder.remove(data);
+    	pcmanager.nodeOrder.remove(node);
         for (int i=0 ; i<pcmanager.size() ; i++) {
         	UpdaterDefinition updater = pcmanager.get(i);
         	if (updater instanceof PrioritySetDefinition) {
         		PrioritySetDefinition pcdef = (PrioritySetDefinition)updater;
-	    		if (pcdef.m_elt != null) {
-	    			pcdef.m_elt.remove(data);
-	    		}
+    			pcdef.removeNode(node);
         	}
         }
     }
@@ -113,9 +112,8 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
         	UpdaterDefinition updater = pcmanager.get(i);
         	if (updater instanceof PrioritySetDefinition) {
         		PrioritySetDefinition pcdef = (PrioritySetDefinition)updater;
-	    		if (pcdef.m_elt != null) {
-	    			pcdef.m_elt.put(node, pcdef.get(0));
-	    		}
+    			PriorityClass cl = pcdef.get(0);
+    			pcdef.associate(node, cl);
         	}
         }
 	}

@@ -13,7 +13,6 @@ import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.tool.simulation.updater.PriorityClasses;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.ListenableNamedList;
 import org.ginsim.service.tool.reg2dyn.updater.BaseSimulationUpdater;
@@ -34,16 +33,16 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
     public static final int DOWN = 1;
     public static final int NONE = 2;
     
-	public Map<RegulatoryNode, Object> m_elt;
+	public Map<RegulatoryNode, PriorityClass[]> m_elt;
 	private String name;
 
 	public PrioritySetDefinition(List<RegulatoryNode> elts, String name) {
 		setName(name);
 		add();
-		m_elt = new HashMap<RegulatoryNode, Object>();
+		m_elt = new HashMap<RegulatoryNode, PriorityClass[]>();
 		PriorityClass newclass = get(0);
 		for (RegulatoryNode v: elts) {
-			m_elt.put(v, newclass);
+			m_elt.put(v, new PriorityClass[] {newclass});
 		}
 	}
 
@@ -78,11 +77,21 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
 	}
 
     public void associate(RegulatoryNode node, PriorityClass cl) {
-        m_elt.put(node, cl);
+    	PriorityClass[] t = m_elt.get(node);
+    	if (t == null || t.length != 1) {
+    		m_elt.put(node, new PriorityClass[] {cl});
+    	} else {
+    		t[0] = cl;
+    	}
     }
     public void associate(RegulatoryNode node, PriorityClass clUp, PriorityClass clDown) {
-        Object[] t = {clUp, clDown};
-        m_elt.put(node, t);
+    	PriorityClass[] t = m_elt.get(node);
+    	if (t == null || t.length != 2) {
+    		m_elt.put(node, new PriorityClass[] {clUp, clDown});
+    	} else {
+    		t[0] = clUp;
+    		t[1] = clDown;
+    	}
     }
 
     private void moveElement(int j, int pos) {
@@ -140,15 +149,10 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
             Set<RegulatoryNode> elts = m_elt.keySet();
             PriorityClass lastClass = get(size()-1);
             for (RegulatoryNode v: elts) {
-                Object cl = m_elt.get(v); 
-                if (cl == c) {
-                    m_elt.put(v,lastClass);
-                } else if (cl instanceof Object[]) {
-                    Object[] t = (Object[])cl;
-                    for (int j=0 ; j<t.length ; j++) {
-                        if (t[j] == c) {
-                            t[j] = lastClass;
-                        }
+                PriorityClass[] t = m_elt.get(v); 
+                for (int j=0 ; j<t.length ; j++) {
+                    if (t[j] == c) {
+                        t[j] = lastClass;
                     }
                 }
             }
@@ -314,21 +318,24 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
             out.addAttr("mode", ""+pc.getMode());
             out.addAttr("rank", ""+pc.rank);
 			s_tmp = new StringBuffer();
-            for (Entry<RegulatoryNode, Object> e: m_elt.entrySet()) {
+            for (Entry<RegulatoryNode, PriorityClass[]> e: m_elt.entrySet()) {
             	RegulatoryNode v = e.getKey();
-                Object oc = e.getValue();
-                if (oc instanceof PriorityClass) {
-                    if (oc == pc) {
+            	PriorityClass[] t = e.getValue();
+            	if (t == null || t.length < 1 || t.length > 2) {
+            		continue;
+            	}
+            	if (t.length == 1) {
+            		if (t[0] == pc) {
                         s_tmp.append(v+" ");
-                    }
-                } else if (oc instanceof Object[]) {
-                    Object[] t = (Object[])oc;
-                    for (int j=0 ; j<t.length ; j++) {
-                        if (t[j] == pc) {
-                            s_tmp.append(v+","+(j==0 ? "+" : "-")+" ");
-                        }
-                    }
-                }
+            		}
+            	} else {
+            		if (t[0] == pc) {
+                        s_tmp.append(v+",+ ");
+            		}
+            		if (t[1] == pc) {
+                        s_tmp.append(v+",- ");
+            		}
+            	}
             }
 			out.addAttr("content", s_tmp.toString());
 			out.closeTag();
@@ -373,28 +380,24 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
             }
             for (int n=0 ; n<nodeOrder.size() ; n++) {
                 Object k = nodeOrder.get(n);
-                Object target = m_elt.get(k);
-                // if +1 and -1 are separated, target is an Object[]
-                if (target instanceof Object[]) {
-                    Object[] t = (Object[])target;
-                    if (t[0] == pc) {
-                        // to do it right: if both +1 and -1 are in the same class, add the node only once :)
-                        if (t[1] == pc) {
-                            v_content.add(n);
-                            v_content.add(zaroo);
-                        } else {
-                            v_content.add(n);
-                            v_content.add(one);
-                        }
-                    } else if (t[1] == pc) {
-                        v_content.add(n);
-                        v_content.add(minusOne);
-                    }
-                } else { // +1 and -1 aren't separated, always accept every transitions
-                    if (target == pc) {
+                PriorityClass[] t = m_elt.get(k);
+                if (t.length == 1) {
+                	if (t[0] == pc) {
+                		v_content.add(n);
+                		v_content.add(zaroo);
+                	}
+                } else if (t[0] == pc) {
+                    // to do it right: if both +1 and -1 are in the same class, add the node only once :)
+                    if (t[1] == pc) {
                         v_content.add(n);
                         v_content.add(zaroo);
+                    } else {
+                        v_content.add(n);
+                        v_content.add(one);
                     }
+                } else if (t[1] == pc) {
+                    v_content.add(n);
+                    v_content.add(minusOne);
                 }
             }
         }
@@ -567,5 +570,12 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
         }
 
 		return s;
+	}
+
+	public void removeNode(RegulatoryNode node) {
+		if (m_elt == null) {
+			return;
+		}
+		m_elt.remove(node);
 	}
 }

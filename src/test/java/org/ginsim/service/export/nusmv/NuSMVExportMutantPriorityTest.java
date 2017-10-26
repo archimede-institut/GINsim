@@ -90,11 +90,11 @@ public class NuSMVExportMutantPriorityTest {
         pcDef.add(class1);
         pcDef.add(class2);
 		config.setUpdatingMode(pcDef);
-		pcDef.m_elt.put(nodeOrder.get(0), class1);
-		pcDef.m_elt.put(nodeOrder.get(1), class1);
-		pcDef.m_elt.put(nodeOrder.get(2), class2);
-		pcDef.m_elt.put(nodeOrder.get(3), class2);
-
+		pcDef.associate(nodeOrder.get(0), class1);
+		pcDef.associate(nodeOrder.get(1), class1);
+		pcDef.associate(nodeOrder.get(2), class2);
+		pcDef.associate(nodeOrder.get(3), class2);
+		
 		// Perturbation
 		List<Perturbation> lst = new ArrayList<Perturbation>();
 		lst.add(new PerturbationFixed(model.getComponents().get(0), 0));

@@ -246,21 +246,16 @@ public class SimulationParametersParser extends XMLHelper {
                 for (int j=0 ; j<nodeOrder.size() ; j++) {
                     RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(j);
                     if (vertex.getId().equals(s_vertex)) {
-                        Object oc = pcdef.m_elt.get(vertex);
-                        Object[] t;
-                        if (oc == null || oc instanceof PriorityClass) {
-                            t = new Object[2];
-                            t[0] = t[1] = oc;
-                        } else { // should be an array 
-                            t = (Object[])oc;
-                        }
-                        // t[0] --> + ; t[1] --> -
-                        if (t_content[i].endsWith(",+")) {
-                            t[0] = pc;
+                    	PriorityClass[] oc = pcdef.m_elt.get(vertex);
+                    	if (oc == null) {
+                    		oc = new PriorityClass[2];
+                            pcdef.associate(vertex, pc,pc);
+                    	} else if (t_content[i].endsWith(",+")) {                         
+                    		// t[0] --> + ; t[1] --> -
+                            oc[0] = pc;
                         } else {
-                            t[1] = pc;
+                            oc[1] = pc;
                         }
-                        pcdef.m_elt.put(vertex, t);
                         break;
                     }
                 }
@@ -270,7 +265,7 @@ public class SimulationParametersParser extends XMLHelper {
                 for (int j=0 ; j<nodeOrder.size() ; j++) {
                     RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(j);
                     if (vertex.getId().equals(t_content[i])) {
-                    	pcdef.m_elt.put(vertex, pc);
+                    	pcdef.associate(vertex, pc);
                         break;
                     }
                 }
@@ -282,29 +277,28 @@ public class SimulationParametersParser extends XMLHelper {
     
     private void closeClass() {
         // some consistency checking
+    	PriorityClass cl = pcdef.get(0);
         if (pclass_fine) {
         	for (RegulatoryNode vertex: nodeOrder) {
-        		Object oc = pcdef.m_elt.get(vertex);
-        		Object[] t;
-        		if (oc instanceof PriorityClass) {
-        			// added to a single class, fix it
-                    t = new Object[2];
-                    t[0] = t[1] = oc;
-                    pcdef.m_elt.put(vertex, t);
-                } else if (oc instanceof Object[]) {
-                	t = (Object[])oc;
-                	if (t[0] == null) {
-                		t[0] = pcdef.get(0);
-                	}
-                	if (t[1] == null) {
-                		t[1] = pcdef.get(0);
-                	}
-                } else {
-                    t = new Object[2];
-                    t[0] = t[1] = pcdef.get(0);
-                    pcdef.m_elt.put(vertex, t);
-                }
+        		PriorityClass[] oc = pcdef.m_elt.get(vertex);
+        		if (oc == null) {
+        			pcdef.associate(vertex, cl,cl);        			
+        		} else {
+	            	if (oc[0] == null) {
+	            		oc[0] = cl;
+	            	}
+	            	if (oc[1] == null) {
+	            		oc[1] = cl;
+	            	}
+        		}
         	}
+        } else {
+        	for (RegulatoryNode vertex: nodeOrder) {
+        		PriorityClass[] oc = pcdef.m_elt.get(vertex);
+        		if (oc == null) {
+        			pcdef.associate(vertex, cl);
+        		}
+        	}        	
         }
     }
 }

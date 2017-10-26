@@ -11,6 +11,7 @@ import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 import org.ginsim.core.utils.data.GenericListListener;
 import org.ginsim.core.utils.data.NamedList;
+import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
 import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinition;
@@ -58,11 +59,15 @@ public class AvatarParameterList extends NamedList<AvatarParameters> implements 
     @Override
 	public GraphEventCascade graphChanged(RegulatoryGraph g, GraphChangeType type, Object data) {
 		switch (type) {
-		case NODEADDED: nodeAdded(data); break;
-		case NODEREMOVED: nodeRemoved(data); break;
+		case NODEADDED: nodeAdded((RegulatoryNode)data); break;
+		case NODEREMOVED: nodeRemoved((RegulatoryNode)data); break;
 		case GRAPHMERGED:
 			Collection<?> items = (Collection<?>)data;
-			for (Object item: items) if(!(item instanceof Edge)) nodeAdded(item);
+			for (Object item: items) {
+				if(item instanceof RegulatoryNode) {
+					nodeAdded((RegulatoryNode)item);
+				}
+			}
 			break;
 		case NODEUPDATED:
 			RegulatoryNode node = (RegulatoryNode)data;
@@ -73,28 +78,30 @@ public class AvatarParameterList extends NamedList<AvatarParameters> implements 
 		return null;
 	}
 	
-    private void nodeRemoved(Object data) {
+    private void nodeRemoved(RegulatoryNode data) {
     	pcmanager.nodeOrder.remove(data); // remove it from priority classes
         for (int i=0 ; i<pcmanager.size() ; i++) {
         	UpdaterDefinition updater = pcmanager.get(i);
         	// TODO: future types of updaters may need some treatment as well
         	if (updater instanceof PrioritySetDefinition) {
         		PrioritySetDefinition pcdef = (PrioritySetDefinition)updater;
-        		if (pcdef.m_elt != null) pcdef.m_elt.remove(data);
+        		pcdef.removeNode(data);
         	}
         }
     }
     
-	private void nodeAdded(Object data) {
-		RegulatoryNode node = (RegulatoryNode)data; //add it to the default priority class
-		if (pcmanager.nodeOrder.contains(node)) return;
+	private void nodeAdded(RegulatoryNode node) {
+		if (pcmanager.nodeOrder.contains(node)) {
+			return;
+		}
 		pcmanager.nodeOrder.add(node);
         for (int i=0 ; i<pcmanager.size() ; i++) {
         	UpdaterDefinition updater = pcmanager.get(i);
         	// TODO: future types of updaters may need some treatment as well
         	if (updater instanceof PrioritySetDefinition) {
         		PrioritySetDefinition pcdef = (PrioritySetDefinition)updater;
-        		if (pcdef.m_elt != null) pcdef.m_elt.put(node, pcdef.get(0));
+    			PriorityClass cl = pcdef.get(0);
+    			pcdef.associate(node, cl);
         	}
         }
 	}

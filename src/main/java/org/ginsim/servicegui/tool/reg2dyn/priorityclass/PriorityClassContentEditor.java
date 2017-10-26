@@ -128,14 +128,17 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
             int index = t[i];
             PriorityMember k = l_available.get(index);
             if (k.type != NONE) { // +1 and -1 are separated, don't move everything
-                Object[] tk = (Object[])pcdef.m_elt.get(k.vertex);
+                PriorityClass[] tk = pcdef.m_elt.get(k.vertex);
+                if (tk == null || tk.length != 2) {
+                	pcdef.associate(k.vertex, currentClass, currentClass);
+                }
                 if (k.type == UP) {
                     tk[0] = currentClass;
                 } else {
                     tk[1] = currentClass;
                 }
             } else { // simple case
-                pcdef.m_elt.put(k.vertex, currentClass);
+            	pcdef.associate(k.vertex, currentClass);
             }
         }
         refresh();
@@ -154,15 +157,21 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
         for (int i=0 ; i<t.length ; i++) {
             int index = t[i];
             PriorityMember k = l_content.get(index);
+            PriorityClass[] tk = pcdef.m_elt.get(k.vertex);
             if (k.type != NONE) { // +1 and -1 are separated, don't move everything
-                Object[] tk = (Object[])pcdef.m_elt.get(k.vertex);
-                if (k.type == UP) {
+            	if (tk == null || tk.length != 2) {
+            		pcdef.associate(k.vertex, nextClass, nextClass);
+            	} else if (k.type == UP) {
                     tk[0] = nextClass;
                 } else {
                     tk[1] = nextClass;
                 }
             } else { // simple case
-                pcdef.m_elt.put(k.vertex, nextClass);
+            	if (tk == null || tk.length != 1) {
+            		pcdef.associate(k.vertex, nextClass);
+            	} else {
+            		tk[0] = nextClass;
+            	}
             }
         }
         refresh();
@@ -211,8 +220,8 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
 
         for (RegulatoryNode v: parentPanel.getNodeOrder()) {
             PriorityMember k = new PriorityMember(v, NONE);
-            Object target = pcdef.m_elt.get(v);
-            if (target instanceof Object[]) {
+            PriorityClass[] target = pcdef.m_elt.get(v);
+            if (target.length == 2) {
                 Object[] t = (Object[])target;
                 k.type = DOWN;
                 PriorityMember kp = new PriorityMember(v, UP);
@@ -232,7 +241,7 @@ public class PriorityClassContentEditor extends JPanel implements ListPanelCompa
                     l_available.add(k);
                 }
             } else {
-                if (target == currentClass) {
+                if (target[0] == currentClass) {
                     l_content.add(k);
                 } else {
                     l_available.add(k);

@@ -35,6 +35,7 @@ import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetList;
+import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinition;
 
 /**
  * Reconstruct a Regulatory Graph from a Logical model and restore layout,
@@ -176,13 +177,17 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph>
 		// priority classes definition and simulation parameters
 		SimulationParameterList params = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, SimulationParametersManager.KEY, false);
 		if (params != null) {
-			PrioritySetList pcman = params.pcmanager;
 			SimulationParameterList new_params = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( simplifiedGraph, SimulationParametersManager.KEY, true);
+			PrioritySetList pcman = params.pcmanager;
 			PrioritySetList new_pcman = new_params.pcmanager;
-			for (int i=2 ; i<pcman.size() ; i++) {
-				PrioritySetDefinition pcdef = (PrioritySetDefinition)pcman.get(i);
+			for (UpdaterDefinition updater: pcman) {
+				if (!(updater instanceof PrioritySetDefinition)) {
+					continue;
+				}
+				PrioritySetDefinition pcdef = (PrioritySetDefinition)updater;
 				int index = new_pcman.addDefinition(null);
 				PrioritySetDefinition new_pcdef = (PrioritySetDefinition)new_pcman.get(index);
+				new_pcman.addDefinition(new_pcdef);
 				new_pcdef.setName(pcdef.getName());
 				m_alldata.put(pcdef, new_pcdef);
 				Map<PriorityClass, PriorityClass> m_pclass = new HashMap<PriorityClass, PriorityClass>();
@@ -200,10 +205,15 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph>
 				}
 
 				// properly place nodes
-				for (Entry<?,?> e: pcdef.m_elt.entrySet()) {
+				for (Entry<RegulatoryNode,PriorityClass[]> e: pcdef.m_elt.entrySet()) {
 					RegulatoryNode vertex = (RegulatoryNode)copyMap.get(e.getKey());
 					if (vertex != null) {
-						new_pcdef.m_elt.put(vertex,	m_pclass.get(e.getValue()));
+						PriorityClass[] t = e.getValue();
+						PriorityClass[] newt = new PriorityClass[t.length];
+						for (int i=0 ; i<t.length ; i++) {
+							newt[i] = m_pclass.get(t[i]);
+						}
+						new_pcdef.m_elt.put(vertex,	newt);
 					}
 				}
 			}
