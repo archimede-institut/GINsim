@@ -13,8 +13,9 @@ public class PerturbationUser implements PerturbationHolder {
 
 	private static final ObjectAssociationManager OManager = ObjectAssociationManager.getInstance();
 	
-	private String userID;
+	private final String userID;
 	private final ListOfPerturbations perturbations;
+	private Perturbation perturbation;
 	
 	public PerturbationUser(RegulatoryGraph graph, String userID) {
 		this((ListOfPerturbations)OManager.getObject(graph, PerturbationManager.KEY, true), userID);
@@ -23,15 +24,17 @@ public class PerturbationUser implements PerturbationHolder {
 	public PerturbationUser(ListOfPerturbations perturbations, String userID) {
 		this.perturbations = perturbations;
 		this.userID = userID;
+		this.perturbation = perturbations.getUsedPerturbation(userID);
 	}
 	
 	@Override
 	public Perturbation getPerturbation() {
-		return perturbations.getUsedPerturbation(userID);
+		return perturbation;
 	}
 
 	@Override
 	public void setPerturbation(Perturbation perturbation) {
 		perturbations.usePerturbation(userID, perturbation);
+		this.perturbation = perturbations.getUsedPerturbation(userID);
 	}
 }
