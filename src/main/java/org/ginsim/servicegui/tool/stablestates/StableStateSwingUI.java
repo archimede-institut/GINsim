@@ -44,7 +44,7 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
 
     public StableStateSwingUI(JFrame f, RegulatoryGraph lrg) {
 		super(lrg, f, "stableStatesGUI", 600, 400);
-		setUserID("stable_search", false);
+		setUserID("stable_search");
 		
 		model = new StableTableModel(lrg);
 		tresult = new EnhancedJTable(model);

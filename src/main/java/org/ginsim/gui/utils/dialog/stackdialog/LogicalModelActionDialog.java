@@ -43,7 +43,6 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	private Perturbation perturbation = null;
     private ReductionConfig reduction = null;
 	private String userID = null;
-	private boolean immediateSync = true;
 
 	protected JPanel mainPanel = new JPanel(new GridBagLayout());
     private JCheckBox cb_propagate = new JCheckBox("Propagate fixed values");
@@ -73,12 +72,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
      * @param userID
      */
     public void setUserID(String userID) {
-    	setUserID(userID, true);
-    }
-    
-    public void setUserID(String userID, boolean immediateSync) {
     	this.userID = userID;
-    	this.immediateSync = immediateSync;
 		this.perturbation = perturbations.getUsedPerturbation(userID);
 		this.reduction = reductions.getUsedReduction(userID);
     	perturbationPanel.refresh();
@@ -134,9 +128,11 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	
 	@Override
 	public void setPerturbation(Perturbation perturbation) {
-		this.perturbation = perturbation;
-		if (userID != null && immediateSync) {
+		if (userID != null) {
 			perturbations.usePerturbation(userID, perturbation);
+			this.perturbation = perturbations.getUsedPerturbation(userID);
+		} else {
+			this.perturbation = perturbation;
 		}
 	}
 
@@ -147,9 +143,11 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 
     @Override
     public void setReduction(ReductionConfig reduction) {
-        this.reduction = reduction;
-        if (userID != null && immediateSync) {
+        if (userID != null) {
             reductions.useReduction(userID, reduction);
+            this.reduction = reductions.getUsedReduction(userID);
+        } else {
+            this.reduction = reduction;
         }
     }
 
@@ -189,12 +187,6 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	@Override
 	protected void run() throws GsException {
 
-		// force sync at run time
-		if (!immediateSync && userID != null) {
-			perturbations.usePerturbation(userID, perturbation);
-			reductions.useReduction(userID, reduction);
-		}
-		
         // retrieve the model
         LogicalModel model = lrg.getModel();
 
