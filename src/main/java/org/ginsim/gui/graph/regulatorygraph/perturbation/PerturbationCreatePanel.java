@@ -3,6 +3,7 @@ package org.ginsim.gui.graph.regulatorygraph.perturbation;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
@@ -26,8 +27,6 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 	private final PerturbationPanelCompanion helper;
 	private PerturbationType type = null;
 	
-	private static final boolean SHOWTYPECOMBO = PerturbationType.values().length > 1;
-	
 	private final JComboBox selectNode;
     private final RegulatorModel regulatorModel;
 	private final JComboBox selectRegulator;
@@ -43,6 +42,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 	private JRadioButton radioEct = new JRadioButton("1 - Ectopic activity");
 	private RangeSlider rangeSlider = new RangeSlider(0,1);
 	private JSlider valueSlider = new JSlider(0,1);
+	private JLabel labelRegulator;
 	
 	private final CreateAction acCreate = new CreateAction(this);
 	
@@ -51,58 +51,58 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		this.perturbations = perturbations;
 		this.helper = helper;
 		
-		GridBagConstraints cst = new GridBagConstraints();
-
-		if (SHOWTYPECOMBO) {
-			add(new JLabel("Type of perturbation"), cst);
-			
-			cst = new GridBagConstraints();
-			cst.gridy = 1;
-			cst.weightx = 1;
-			cst.fill = GridBagConstraints.HORIZONTAL;
-			selectType = new JComboBox<PerturbationType>(PerturbationType.values());
-			selectType.addActionListener(this);
-			add(selectType, cst);
-
-			cst = new GridBagConstraints();
-			cst.gridx = 1;
-		} else {
-			selectType = null;
-			cst.gridy = 1;
-		}
-
-		add(new JLabel("Component"), cst);
+		Insets insets = new Insets(5, 5, 10, 10);
 		
-		cst = new GridBagConstraints();
+		GridBagConstraints cst = new GridBagConstraints();
+		cst.insets = insets;
+		cst.gridx = 0;
+		cst.gridy = 0;
+		add(new JLabel("Component"), cst);
 		cst.gridy = 1;
-		cst.gridx = 1;
+		add(new JLabel("Type of perturbation"), cst);
+		
+		cst.gridx++;
+		cst.gridy = 0;
 		cst.weightx = 1;
 		cst.fill = GridBagConstraints.HORIZONTAL;
 		selectNode = new JComboBox<NodeInfo>(perturbations.getNodes());
 		selectNode.addActionListener(this);
 		add(selectNode, cst);
 
+		cst.gridy++;
+		selectType = new JComboBox<PerturbationType>(PerturbationType.values());
+		selectType.addActionListener(this);
+		add(selectType, cst);
+
 		// reserved space for the specialised settings
-		cst = new GridBagConstraints();
 		cst.gridx = 0;
 		cst.gridy = 2;
 		cst.gridwidth = 2;
 		cst.weightx = 1;
-		cst.weighty = 1;
-		cst.fill = GridBagConstraints.BOTH;
+		cst.fill = GridBagConstraints.HORIZONTAL;
 		setupPanel.setMinimumSize(new Dimension(100, 100));
 		add(setupPanel, cst);
 		
 		// fill the setup panel
 		cst = new GridBagConstraints();
+		cst.gridx = 0;
+		cst.gridy = 0;
+		cst.weightx = 0;
+		cst.insets = insets;
+		labelRegulator = new JLabel("Regulator");
+		setupPanel.add(labelRegulator, cst);
+		
+		cst.gridx = 1;
+		cst.gridy = 0;
+		cst.weightx = 1;
+		cst.fill = GridBagConstraints.HORIZONTAL;
         regulatorModel = new RegulatorModel( perturbations.getGraph());
 		selectRegulator = new JComboBox( regulatorModel);
-        new JComboBox();
 		selectRegulator.addActionListener(this);
 		setupPanel.add(selectRegulator, cst);
 		
-		cst = new GridBagConstraints();
-		cst.gridy = 1;
+		cst.gridx = 0;
+		cst.gridy++;
 		setupPanel.add(valueLabel, cst);
 		
 		rangeSlider.setMinorTickSpacing(1);
@@ -113,7 +113,6 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		group.add(radioEct);
 		radioKO.setSelected(true);
 		
-		cst = new GridBagConstraints();
 		cst.anchor = GridBagConstraints.WEST;
 		cst.gridx = 1;
 		cst.gridy = 1;
@@ -121,31 +120,28 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		setupPanel.add(rangeSlider, cst);
 		setupPanel.add(valueSlider, cst);
 		
-		cst = new GridBagConstraints();
 		cst.anchor = GridBagConstraints.WEST;
 		cst.gridx = 1;
 		cst.gridy = 2;
 		setupPanel.add(radioEct, cst);
 
 		// create button
-		cst = new GridBagConstraints();
-		cst.gridx = 1;
-		cst.gridy = 4;
-		add(new JButton( acCreate ), cst);
+		cst.gridx = 0;
+		cst.gridy++;
+		cst.anchor = GridBagConstraints.SOUTHWEST;
+		cst.weightx = 0;
+		setupPanel.add(new JButton( acCreate ), cst);
 
-		// create button
-		cst = new GridBagConstraints();
+		// help text for multiple perturbations
 		cst.gridx = 0;
 		cst.gridy = 5;
 		cst.gridwidth = 3;
-		cst.fill = GridBagConstraints.HORIZONTAL;
-		add(new JLabel("You can also select multiple perturbations to combine them"), cst);
+		cst.weightx = 1;
+		cst.anchor = GridBagConstraints.SOUTHWEST;
+		cst.fill = GridBagConstraints.BOTH;
+		add(new JLabel("Select multiple perturbations to combine them"), cst);
 		
-		if (SHOWTYPECOMBO) {
-			setType((PerturbationType)selectType.getSelectedItem());
-		} else {
-			setType(PerturbationType.RANGE);
-		}
+		setType((PerturbationType)selectType.getSelectedItem());
 	}
 	
 	private void setType(PerturbationType type) {
@@ -154,6 +150,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		radioEct.setVisible(false);
 		rangeSlider.setVisible(false);
 		valueSlider.setVisible(false);
+		labelRegulator.setVisible(false);
 		selectRegulator.setVisible(false);
 		valueLabel.setText("");
 
@@ -263,9 +260,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 	
 	private void updateGUI() {
 		PerturbationType selectedType = PerturbationType.RANGE;
-		if (SHOWTYPECOMBO) {
-			selectedType = (PerturbationType)selectType.getSelectedItem();
-		}
+		selectedType = (PerturbationType)selectType.getSelectedItem();
 		if (type != selectedType) {
 			setType(selectedType);
 		}
@@ -288,6 +283,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		switch (type) {
 		case RANGE:
 			selectRegulator.setVisible(false);
+			labelRegulator.setVisible(false);
 			if (selected.getMax() < 2) {
 				setupPanel.setBorder(BorderFactory.createTitledBorder("Fix component value"));
 				rangeSlider.setVisible(false);
@@ -310,6 +306,7 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 			setupPanel.setBorder(BorderFactory.createTitledBorder("Fix a regulator for this component"));
             regulatorModel.setNode(selected);
 			selectRegulator.setVisible(true);
+			labelRegulator.setVisible(true);
 			rangeSlider.setVisible(false);
 
 			valueLabel.setVisible(false);
@@ -337,20 +334,6 @@ public class PerturbationCreatePanel extends JPanel implements ActionListener, C
 		acCreate.setEnabled(true);
 	}
 
-}
-
-
-/**
- * Fix header holding buttons to add new perturbations
- */
-class PerturbationPanelHeader extends JPanel {
-
-	private final PerturbationPanelCompanion companion;
-
-	public PerturbationPanelHeader(PerturbationPanelCompanion companion) {
-		this.companion = companion;
-		add(new JLabel("TODO: always show add buttons"));
-	}
 }
 
 

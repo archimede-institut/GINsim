@@ -1,5 +1,8 @@
 package org.ginsim.gui.graph.regulatorygraph.perturbation;
 
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -133,31 +136,52 @@ class PerturbationPanelCompanion implements ListPanelCompanion<Perturbation, Lis
         perturbations.removePerturbations(removed);
         return true;
     }
+
+	public void showCreatePanel() {
+        editPanel.showPanel(CREATE);
+        refresh();
+	}
 }
 
 class MultipleSelectionPanel extends JPanel {
 
 	private final PerturbationPanelCompanion companion;
-	JButton btn = new JButton();
-	JTextArea label = new JTextArea(6,70);
+	AddMultiplePerturbationAction createAction;
+	AddPerturbationAction showCreateAction;
+	JTextArea label = new JTextArea();
 
 	
 	public MultipleSelectionPanel(PerturbationPanelCompanion companion) {
+		super(new GridBagLayout());
 		this.companion = companion;
 
-        PerturbationPanelHeader header = new PerturbationPanelHeader(companion);
-        add(header);
+		GridBagConstraints cst = new GridBagConstraints();
+		Insets insets = new Insets(5, 5, 10, 10);
+		cst.insets = insets;
+		cst.gridx = cst.gridy = 0;
+        
+        cst.gridy = 1;
+        createAction = new AddMultiplePerturbationAction(companion);
+		add(new JButton(createAction), cst);
+		cst.gridx = 1;
+		showCreateAction = new AddPerturbationAction(companion);
+        add(new JButton(showCreateAction), cst);
 
         JScrollPane sp = new JScrollPane();
+		label.setEditable(false);
         sp.setViewportView(label);
-		add(sp);
-		add(btn);
+		cst.gridx = 0;
+        cst.gridy = 0;
+        cst.gridwidth = 2;
+        cst.weightx = 1;
+        cst.weighty = 1;
+        cst.fill = GridBagConstraints.BOTH;
+		add(sp, cst);
 		select(-1);
 	}
 
 	public void select(int index) {
-		btn.setEnabled(false);
-		btn.setVisible(false);
+		createAction.setSelection(null);
 		if (index < 0) {
 			label.setText("No selection");
 		} else {
@@ -184,10 +208,7 @@ class MultipleSelectionPanel extends JPanel {
             }
         }
 		label.setText(sb.toString());
-		Action createAction = new AddMultiplePerturbationAction(companion, indices);
-		btn.setAction(createAction);
-		btn.setEnabled(true);
-        btn.setVisible(true);
+		createAction.setSelection(indices);
 	}
 }
 
@@ -195,16 +216,36 @@ class MultipleSelectionPanel extends JPanel {
 class AddMultiplePerturbationAction extends AbstractAction {
 	
 	private final PerturbationPanelCompanion companion;
-	private final int[] selected;
+	private int[] selected;
 	
-	public AddMultiplePerturbationAction(PerturbationPanelCompanion companion, int[] selected) {
+	public AddMultiplePerturbationAction(PerturbationPanelCompanion companion) {
 		super("Create multiple perturbation");
 		this.companion = companion;
-		this.selected = selected;
+		this.selected = null;
+	}
+	
+	public void setSelection(int[] indices) {
+		this.selected = indices;
+		setEnabled(indices != null && indices.length > 1);
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
         companion.addMultiple(selected);
+	}
+}
+
+class AddPerturbationAction extends AbstractAction {
+	
+	private final PerturbationPanelCompanion companion;
+	
+	public AddPerturbationAction(PerturbationPanelCompanion companion) {
+		super("Setup new Perturbation");
+		this.companion = companion;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+        companion.showCreatePanel();
 	}
 }
