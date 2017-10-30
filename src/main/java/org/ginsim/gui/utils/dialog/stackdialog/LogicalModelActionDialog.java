@@ -43,6 +43,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	private Perturbation perturbation = null;
     private ReductionConfig reduction = null;
 	private String userID = null;
+	private boolean immediateSync = true;
 
 	protected JPanel mainPanel = new JPanel(new GridBagLayout());
     private JCheckBox cb_propagate = new JCheckBox("Propagate fixed values");
@@ -72,7 +73,14 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
      * @param userID
      */
     public void setUserID(String userID) {
+    	setUserID(userID, true);
+    }
+    
+    public void setUserID(String userID, boolean immediateSync) {
     	this.userID = userID;
+    	this.immediateSync = immediateSync;
+		this.perturbation = perturbations.getUsedPerturbation(userID);
+		this.reduction = reductions.getUsedReduction(userID);
     	perturbationPanel.refresh();
         reductionPanel.refresh();
         cb_simplify.setSelected(reductions.isStrippingOutput(userID));
@@ -121,35 +129,27 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 
 	@Override
 	public Perturbation getPerturbation() {
-		if (userID != null) {
-			return perturbations.getUsedPerturbation(userID);
-		}
 		return perturbation;
 	}
 	
 	@Override
 	public void setPerturbation(Perturbation perturbation) {
-		if (userID != null) {
+		this.perturbation = perturbation;
+		if (userID != null && immediateSync) {
 			perturbations.usePerturbation(userID, perturbation);
-		} else {
-			this.perturbation = perturbation;
 		}
 	}
 
     @Override
     public ReductionConfig getReduction() {
-        if (userID != null) {
-            return reductions.getUsedReduction(userID);
-        }
         return reduction;
     }
 
     @Override
     public void setReduction(ReductionConfig reduction) {
-        if (userID != null) {
+        this.reduction = reduction;
+        if (userID != null && immediateSync) {
             reductions.useReduction(userID, reduction);
-        } else {
-            this.reduction = reduction;
         }
     }
 
@@ -189,6 +189,12 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	@Override
 	protected void run() throws GsException {
 
+		// force sync at run time
+		if (!immediateSync && userID != null) {
+			perturbations.usePerturbation(userID, perturbation);
+			reductions.useReduction(userID, reduction);
+		}
+		
         // retrieve the model
         LogicalModel model = lrg.getModel();
 
