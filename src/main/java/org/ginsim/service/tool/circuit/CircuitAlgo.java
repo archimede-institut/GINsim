@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Vector;
 
 import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
 import org.colomoto.biolqm.modifier.reduction.FixedComponentRemover;
@@ -55,7 +56,7 @@ public class CircuitAlgo {
 
     RegulatoryGraph graph;
 
-    List<RegulatoryNode> nodeOrder;
+    List<NodeInfo> nodeOrder;
     int[] t_maxValues;
     long fullPhaseSpace;
     long score;
@@ -79,16 +80,17 @@ public class CircuitAlgo {
             lmodel = mutant.apply(lmodel);
         }
 
-        // propagate fixed components to avoid showing useless contexts
-        lmodel = FixedComponentRemover.reduceFixed(lmodel, true);
+        // TODO: propagate fixed components to avoid showing useless contexts
+        // This requires propagating the reduction to the calling objects or mapping reduced elements
+//        lmodel = FixedComponentRemover.reduceFixed(lmodel, true);
 
         functions = lmodel.getLogicalFunctions();
-        this.nodeOrder = graph.getNodeOrder();
+        this.nodeOrder = lmodel.getComponents();
         t_maxValues = new int[functions.length];
         fullPhaseSpace = 1;
         int i=0;
-        for (RegulatoryNode node: nodeOrder) {
-        	t_maxValues[i] = node.getMaxValue()+1;
+        for (NodeInfo node: nodeOrder) {
+        	t_maxValues[i] = node.getMax()+1;
         	fullPhaseSpace *= t_maxValues[i];
         }
         this.graph = graph;
