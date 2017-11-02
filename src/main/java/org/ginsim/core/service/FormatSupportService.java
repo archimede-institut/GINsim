@@ -62,20 +62,23 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 		registerFormat(format);
 	}
 
-	public void export(RegulatoryGraph graph, String filename) throws IOException {
-		export(graph.getModel(), filename);
+	public String export(RegulatoryGraph graph, String filename) throws IOException {
+		return export(graph.getModel(), filename);
 	}
 
-	public void export(LogicalModel model, String filename) throws IOException {
+	public String export(LogicalModel model, String filename) throws IOException {
 		OutputStreamProvider out = new OutputStreamProvider(filename);
-		export(model, out);
+		return export(model, out);
 	}
 	
-	public void export(LogicalModel model, OutputStreamProvider out) throws IOException {
+	public String export(LogicalModel model, OutputStreamProvider out) throws IOException {
+		String message = null;
 		if (!model.isBoolean() && format.getMultivaluedSupport() == LogicalModelFormat.MultivaluedSupport.BOOLEANIZED) {
 			model = Booleanizer.booleanize(model);
+			message = "Multivalued model was converted to Boolean";
 		}
 		format.export(model, out);
+		return message;
 	}
 	
 	public LogicalModel importFile(File f) throws IOException {

@@ -7,10 +7,12 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.colomoto.biolqm.io.LogicalModelFormat;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.service.FormatSupportService;
 import org.ginsim.gui.GUIManager;
@@ -75,13 +77,16 @@ public class FormatSupportServiceGUI<S extends FormatSupportService> extends Abs
 		}
 	}
 	
-	public void doExport(RegulatoryGraph graph, String filename) {
+	public void doExport(RegulatoryGraph graph, String filename, ExportAction<?> action) {
 		if (filename == null) {
 			return;
 		}
 
 		try {
-			service.export(graph, filename);
+			String message = service.export(graph, filename);
+			if (message != null) {
+				action.notifyWarning(message);
+			}
 		} catch (IOException e) {
 			LogManager.error("Error in "+format_name+" export:\n"+e);
 		}
@@ -135,7 +140,7 @@ class FormatExportAction extends ExportAction<RegulatoryGraph> {
 
 	@Override
 	protected void doExport(String filename) throws IOException {
-		serviceGUI.doExport(graph, filename);
+		serviceGUI.doExport(graph, filename, this);
 	}
 	
 	public StackDialogHandler getConfigPanel() {

@@ -95,8 +95,8 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 	 * @throws IOException
 	 */
     @Override
-	public void export( RegulatoryGraph graph, String filename) throws IOException {
-		export(new SBMLQualConfig(graph), filename);
+	public String export( RegulatoryGraph graph, String filename) throws IOException {
+		return export(new SBMLQualConfig(graph), filename);
 	}
 
 	
@@ -107,7 +107,7 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 	 * @param filename the path to the target file
 	 * @throws IOException
 	 */
-	public void export( SBMLQualConfig config, String filename) throws IOException{
+	public String export( SBMLQualConfig config, String filename) throws IOException{
         RegulatoryGraph graph = config.getGraph();
 		LogicalModel model = graph.getModel();
 		OutputStream out = new FileOutputStream(new File(filename));
@@ -157,6 +157,7 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 			}
 			
 			sExport.export(out);
+			return null;
 		} catch (XMLStreamException e) {
 			throw new IOException(e);
 		}

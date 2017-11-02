@@ -73,6 +73,10 @@ public abstract class ExportAction<G extends Graph> extends BaseAction {
         LogManager.error(e);
         NotificationManager.publishError( graph, "Export failed: " + e.getLocalizedMessage() + ". See logs for details");
     }
+	public void notifyWarning(String message) {
+        NotificationManager.publishWarning( graph, message);
+	}
+
 
 	public StackDialogHandler getConfigPanel() {
 		return null;
@@ -101,4 +105,5 @@ public abstract class ExportAction<G extends Graph> extends BaseAction {
 	 * Main export function: will be called after the target file was selected
 	 */
 	abstract protected void doExport(String filename) throws Exception;
+
 }
