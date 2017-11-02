@@ -183,6 +183,9 @@ public class Launcher {
                 LogManager.error("Could not load extension files");
             }
         }
+
+        // make sure that services are loaded at init time
+        GSServiceManager.getAvailableServices();
 	}
 	
 	/**
