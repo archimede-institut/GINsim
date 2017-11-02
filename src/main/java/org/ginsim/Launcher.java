@@ -51,9 +51,6 @@ public class Launcher {
 	 * @throws ClassNotFoundException 
 	 */
 	public static void main(String[] args) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
-        ExtensionLoader.loadExtensions("extensions", Launcher.class);
-        init();
-		
         List<String> open = new ArrayList<String>();
 
         /*
@@ -63,7 +60,7 @@ public class Launcher {
          *  - help
          */
         for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("-lm")) {
+            if (args[i].equals("-lm") || args[i].equals("-lqm")) {
                 String[] lmargs = new String[args.length-(i+1)];
                 System.arraycopy(args, i+1, lmargs, 0, lmargs.length);
                 LQMLauncher.main(lmargs);
@@ -112,7 +109,7 @@ public class Launcher {
                 System.out.println("\t-py: launch a server for the py4j python gateway.");
                 System.out.println("\t-h:  display this message.");
                 System.out.println("\t--dev : enable the developer's options.");
-                System.out.println("\t-lm: LogicalModel mode: takes the same arguments as the LogicalModel conversion tool.");
+                System.out.println("\t-lm: bioLQM mode: takes the same arguments as the bioLQM conversion tool.");
                 return;
             }
         	
@@ -128,10 +125,11 @@ public class Launcher {
 		GUIManager.getInstance().startup( open);
 	}
 
-	/**
+	/*
 	 * Initialise GINsim core: detect the current directory, load services
 	 */
-	private static void init() {
+	static {
+        ExtensionLoader.loadExtensions("extensions", Launcher.class);
 		String basedir = null;
 		
 		Class<?> cl = Launcher.class;
