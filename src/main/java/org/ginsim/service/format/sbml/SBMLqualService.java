@@ -88,6 +88,13 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 				}
 			}
 			
+			// Handle annotations
+			importAnnotation(lrg, qbundle.document, lrg.getAnnotation());
+			for (QualitativeSpecies sp: qbundle.qmodel.getListOfQualitativeSpecies()) {
+				RegulatoryNode node = lrg.getNodeByName(sp.getId());
+				importAnnotation(lrg, sp, node.getAnnotation());
+			}
+			
 			return lrg;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -188,6 +195,21 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 		String txt = gsnote.getComment();
 		if (txt != null && txt.length() > 0) {
 			elt.setNotes(txt);
+		}
+	}
+	
+	public void importAnnotation(RegulatoryGraph lrg, SBase elt, org.ginsim.core.annotation.Annotation gsnote) throws XMLStreamException {
+		Annotation as = elt.getAnnotation();
+		for (CVTerm term: as.getListOfCVTerms()) {
+			for (String s: term.getResources()) {
+				gsnote.add(new AnnotationLink(s, lrg));
+			}
+		}
+		
+		String txt = elt.getNotesString();
+		if (txt != null && txt.length() > 0) {
+			// TODO: handle text notes: convert from HTML to text, or enrich GINsim's capabilities?
+//			gsnote.setComment(txt);
 		}
 	}
 }
