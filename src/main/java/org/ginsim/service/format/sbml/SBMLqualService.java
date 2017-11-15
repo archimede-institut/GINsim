@@ -14,6 +14,7 @@ import org.colomoto.biolqm.io.sbml.SBMLFormat;
 import org.colomoto.biolqm.io.sbml.SBMLQualBundle;
 import org.colomoto.biolqm.io.sbml.SBMLqualExport;
 import org.colomoto.biolqm.io.sbml.SBMLqualImport;
+import org.ginsim.core.annotation.AnnotationLink;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -21,12 +22,18 @@ import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.service.*;
 import org.mangosdk.spi.ProviderFor;
+import org.sbml.jsbml.Annotation;
+import org.sbml.jsbml.CVTerm;
+import org.sbml.jsbml.CVTerm.Qualifier;
 import org.sbml.jsbml.ListOf;
+import org.sbml.jsbml.Model;
+import org.sbml.jsbml.SBase;
 import org.sbml.jsbml.ext.layout.BoundingBox;
 import org.sbml.jsbml.ext.layout.Dimensions;
 import org.sbml.jsbml.ext.layout.Layout;
 import org.sbml.jsbml.ext.layout.Point;
 import org.sbml.jsbml.ext.layout.SpeciesGlyph;
+import org.sbml.jsbml.ext.qual.QualitativeSpecies;
 
 @ProviderFor( Service.class)
 @Alias("SBML")
@@ -156,6 +163,15 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 				}
 			}
 			
+			// Add annotations
+			Model smodel = qbundle.document.getModel();
+			exportAnnotation(smodel, graph.getAnnotation());
+			for (RegulatoryNode node: graph.getNodeOrder()) {
+				QualitativeSpecies qs = qbundle.qmodel.getQualitativeSpecies("G0");
+				exportAnnotation(qs, node.getAnnotation());
+			}
+			
+			
 			sExport.export(out);
 			return null;
 		} catch (XMLStreamException e) {
@@ -163,4 +179,15 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 		}
 	}
 
+	public void exportAnnotation(SBase elt, org.ginsim.core.annotation.Annotation gsnote) throws XMLStreamException {
+		Annotation as = elt.getAnnotation();
+		for (AnnotationLink link: gsnote) {
+			CVTerm term = new CVTerm(Qualifier.BQB_UNKNOWN, link.getLink());
+			as.addCVTerm(term);
+		}
+		String txt = gsnote.getComment();
+		if (txt != null && txt.length() > 0) {
+			elt.setNotes(txt);
+		}
+	}
 }
