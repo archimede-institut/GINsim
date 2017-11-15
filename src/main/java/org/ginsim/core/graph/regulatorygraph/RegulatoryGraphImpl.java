@@ -102,7 +102,11 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 	public boolean addNode( RegulatoryNode node){
 		
         if (node != null && super.addNode( node)) {
-    		nodeOrder.add( node);
+    		if (!nodeOrder.contains(node)) {
+        		nodeOrder.add( node);
+    		} else {
+    			System.err.println("The new node " + node + "was added to the node order behind my back");
+    		}
     		return true;
         }
         

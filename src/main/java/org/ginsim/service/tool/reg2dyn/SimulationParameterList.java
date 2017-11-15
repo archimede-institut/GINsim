@@ -104,14 +104,13 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
 	private void nodeAdded(Object data) {
         // if needed, add it to the default priority class!
 		RegulatoryNode node = (RegulatoryNode)data;
-		if (pcmanager.nodeOrder.contains(node)) {
-			return;
-		}
-		pcmanager.nodeOrder.add(node);
         for (int i=0 ; i<pcmanager.size() ; i++) {
         	UpdaterDefinition updater = pcmanager.get(i);
         	if (updater instanceof PrioritySetDefinition) {
         		PrioritySetDefinition pcdef = (PrioritySetDefinition)updater;
+        		if (pcdef.m_elt.containsKey(node)) {
+        			continue;
+        		}
     			PriorityClass cl = pcdef.get(0);
     			pcdef.associate(node, cl);
         	}
