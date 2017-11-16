@@ -134,7 +134,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 
 	private Component getGetSelectFromGraphButton() {
 		if (b_selectFromGraph == null) {
-            b_selectFromGraph = new JButton(ImageLoader.getImageIcon("undo.gif"));
+            b_selectFromGraph = new JButton(ImageLoader.getImageIcon("pick.png"));
             b_selectFromGraph.addActionListener(this);
             b_selectFromGraph.setToolTipText("get the selected node");
 		}

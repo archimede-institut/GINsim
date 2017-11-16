@@ -11,9 +11,6 @@ import javax.swing.JPanel;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
-import org.ginsim.gui.graph.regulatorygraph.logicalfunction.graphictree.FunctionPanelImpl;
-import org.ginsim.gui.graph.regulatorygraph.logicalfunction.neweditor.FunctionEditor;
 import org.ginsim.gui.graph.regulatorygraph.IncomingEdgeListModel;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 import org.ginsim.gui.utils.data.GenericPropertyHolder;
@@ -26,10 +23,8 @@ public class LogicalFunctionPanel extends AbstractParameterPanel implements Obje
 	private IncomingEdgeListModel edgeList = null;
 	private RegulatoryNode currentNode = null;
 	private LogicalFunctionTreePanel treePanel = null;
-	private FunctionEditor functionEditor = null;
 	private RegulatoryGraph graph;
 	private GenericPropertyInfo	pinfo;
-	private JPanel eastPanel;
 
 	public LogicalFunctionPanel(RegulatoryGraph graph) {
 		super(graph);
@@ -42,31 +37,8 @@ public class LogicalFunctionPanel extends AbstractParameterPanel implements Obje
 	 */
 	private void initialize() {
 		setLayout(new BorderLayout());
-		functionEditor = new FunctionEditor();
 		add(getTreePanel(), BorderLayout.CENTER);
-		eastPanel = new JPanel(new CardLayout());
-		eastPanel.add("edit", functionEditor.getEditPanel());
-		eastPanel.add("display", functionEditor.getDisplayPanel());
-		add(eastPanel, BorderLayout.EAST);
-		functionEditor.getEditPanel().setVisible(false);
-		functionEditor.getDisplayPanel().setVisible(false);
 		edgeList = new IncomingEdgeListModel();
-	}
-	public void setEditEditorVisible(boolean b) {
-		eastPanel.setVisible(b);
-		if (b)
-			((CardLayout)eastPanel.getLayout()).show(eastPanel, "edit");
-	}
-	public void setDisplayEditorVisible(boolean b) {
-		eastPanel.setVisible(b);
-		if (b)
-			((CardLayout)eastPanel.getLayout()).show(eastPanel, "display");
-	}
-	public FunctionEditor getFunctionEditor() {
-		return functionEditor;
-	}
-	public void initEditor(TreeInteractionsModel m, FunctionPanelImpl fp) {
-		functionEditor.init(m, fp);
 	}
 	public void setEditedItem(Object obj) {
 		if (currentNode != null) treePanel.setEditedItem(obj);
@@ -75,7 +47,6 @@ public class LogicalFunctionPanel extends AbstractParameterPanel implements Obje
 			edgeList.setEdge(graph.getIncomingEdges(currentNode));
 			treePanel.setEditedItem(obj);
 		}
-		setEditEditorVisible(false);
 	}
 
 	protected JPanel getTreePanel() {
@@ -99,12 +70,6 @@ public class LogicalFunctionPanel extends AbstractParameterPanel implements Obje
 	}
 
 	public void mouseClicked(MouseEvent e) {
-		if (functionEditor.getEditPanel().isShowing()) functionEditor.validate();
-		if (functionEditor.getDisplayPanel().isShowing()) {
-			functionEditor.getDisplayPanel().cancel();
-		}
-		setEditEditorVisible(false);
-
 		treePanel.getTree().setEditable(true);
 	}
 
@@ -120,13 +85,6 @@ public class LogicalFunctionPanel extends AbstractParameterPanel implements Obje
 	public void mouseExited(MouseEvent e) {
 	}
 	public void keyTyped(KeyEvent e) {
-		/*if ('\t' == e.getKeyChar()) {
-			TreeExpression exp = treePanel.getSelectedFunction();
-			if ((exp != null) && !((Boolean) exp.getProperty("invalid")).booleanValue()) {
-				setDisplayEditorVisible(true);
-				functionEditor.init(exp, currentNode, graph, treePanel.getTree());
-			}
-		}*/
 	}
 	public void keyPressed(KeyEvent e) {
 	}
