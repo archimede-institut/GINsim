@@ -42,7 +42,7 @@ public class PrioritySetList extends NamedList<UpdaterDefinition> {
         if (mode instanceof PrioritySetAddMode) {
             addMode = (PrioritySetAddMode)mode;
         }
-        String name = findUniqueName("priorities ");
+        String name = findUniqueName("Priorities ");
 
 		PrioritySetDefinition pcdef = new PrioritySetDefinition(nodeOrder, name);
         PriorityClass lastClass = pcdef.get(0);
