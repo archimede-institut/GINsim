@@ -1,5 +1,6 @@
 package org.ginsim.servicegui.tool.pathfinding;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -11,8 +12,7 @@ import org.ginsim.core.graph.Graph;
  */
 public class PathFinding extends Thread {
 
-	private Object start;
-	private Object end;
+	private List<Object> search;
 	private ResultHandler resultHandler;
 	private Graph graph;
 
@@ -26,27 +26,37 @@ public class PathFinding extends Thread {
 	 * @param start a node
 	 * @param end a node
 	 */
-	public PathFinding(ResultHandler resultHandler, Graph graph, Object start, Object end) {
+	public PathFinding(ResultHandler resultHandler, Graph graph, List<Object> search) {
 		this.resultHandler = resultHandler;
-		this.start = start;
-		this.end = end;
+		this.search = search;
 		this.graph = graph;
 	}
 
 	public void run() {
-		List<Edge> path = graph.getShortestPath(start, end);
-		if (path != null) {
-			Vector nodes = new Vector(path.size()+1);
-			nodes.add(start);
+		
+		List<Object> nodes = null;
+		Object prev = null;
+		for (Object o: search) {
+			if (prev == null) {
+				prev = o;
+				continue;
+			}
+			List<Edge> path = graph.getShortestPath(prev, o);
+			
+			if (path == null) {
+				resultHandler.setPath(null);
+				return;
+			}
+			
+			if (nodes == null) {
+				nodes = new ArrayList<Object>(path.size()+1);
+				nodes.add(prev);
+			}
 			for (Edge e: path) {
 				nodes.add(e.getTarget());
 			}
-			resultHandler.setProgress(100);
-			resultHandler.setProgressionText("Path found...");
-			resultHandler.setPath(nodes);
-		} else {
-			resultHandler.setProgressionText("There is no path between "+start+" and "+end);
-			resultHandler.setProgress(100);
+			prev = o;
 		}
+		resultHandler.setPath(nodes);
 	}
 }

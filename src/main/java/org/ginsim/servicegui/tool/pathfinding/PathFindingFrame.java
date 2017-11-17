@@ -38,6 +38,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	private List path;
 	private PathStyleProvider selector;
 	private JButton b_selectFromGraph;
+	private JButton b_add;
 
     private JTable constraintTable;
     private ConstraintSelectionModel constraintModel;
@@ -59,7 +60,11 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
         c.weighty = 0;
         c.anchor = GridBagConstraints.NORTHWEST;
         mainPanel.add(getGetSelectFromGraphButton(), c);
+        
+        c.gridx++;
+        mainPanel.add(getAddButton(), c);
 
+        c.gridx = 0;
         c.gridy++;
         c.weightx = 1;
         c.weighty = 1;
@@ -140,6 +145,15 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		}
 		return b_selectFromGraph;
 	}
+	
+	private Component getAddButton() {
+		if (b_add == null) {
+			b_add = new JButton(ImageLoader.getImageIcon("list-add.png"));
+			b_add.addActionListener(this);
+			b_add.setToolTipText("Add an intermediate");
+		}
+		return b_add;
+	}
 
     private Component getNodeTable() {
         if (constraintTable == null) {
@@ -203,30 +217,29 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
         }
 
 		setProgressionText("searching...");
-		setProgress(0);
-        setProgressMax(graph.getNodes().size());
 
         // TODO: support intermediate nodes
-		Object start = nodes.get(0);
-		Object end = nodes.get(nodes.size()-1);
-		Thread thread = new PathFinding(this, graph, start, end);
+		Thread thread = new PathFinding(this, graph, nodes);
 		thread.start();
 
 	}
 	
-	public void setProgress(int progress) {
-		progressBar.setValue(progress);
-	}
-	protected void setProgressMax(int max) {
-		progressBar.setMaximum(max);
-	}
 	public void setProgressionText(String text) {
-		this.progressionLabel.setText(text);
+		getProgressionLabel().setText(text);
 	}
 	
-	public void setPath(Vector path) {
+	public void setPath(List<Object> path) {
 		this.path = path;
-		pathList.setListData(path);
+		if (path == null) {
+			int r = 0;
+			setProgressionText("There is no path between "+constraintModel.getValueAt(r, 1)+" and "+constraintModel.getValueAt(r+1, 1));
+			resultsPanel.setVisible(false);
+			return;
+		}
+
+		progressionPanel.setVisible(false);
+		setProgressionText("Path found...");
+		pathList.setListData(path.toArray(new Object[path.size()]));
 		resultsPanel.setVisible(true);
 		progressionPanel.setVisible(false);
 		doColorize();
@@ -245,6 +258,8 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 			clipboard.setContents(data, data);
 		} else if (e.getSource() == b_selectFromGraph) {
 			getSelectionFromGraph();
+		} else if (e.getSource() == b_add) {
+			constraintModel.add();
 		}
 	}
 	
@@ -404,6 +419,11 @@ class ConstraintSelectionModel extends AbstractTableModel {
         }
         findInGraph(lookup);
 
+    }
+    
+    public void add() {
+    	constraints.add(constraints.get(getRowCount()-1));
+    	fireTableDataChanged();
     }
 
     private void findInGraph(String lookup) {
