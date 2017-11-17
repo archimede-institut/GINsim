@@ -565,10 +565,10 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
 
     protected MDDManager analyse(RegulatoryGraph graph, CircuitSearchStoreConfig config, Perturbation mutant, boolean do_cleanup) {
         CircuitAlgo circuitAlgo = new CircuitAlgo(graph, mutant, do_cleanup);
-        Vector v_functional = new Vector();
-        Vector v_positive = new Vector();
-        Vector v_negative = new Vector();
-        Vector v_dual = new Vector();
+        List v_functional = new ArrayList();
+        List v_positive = new ArrayList();
+        List v_negative = new ArrayList();
+        List v_dual = new ArrayList();
 
         // first some cleanups, to allow running it several times in a row, with different mutants
         v_root.clear();
@@ -639,7 +639,7 @@ class GsCircuitTreeModel extends AbstractTreeTableModel {
         return circuitAlgo.getManager();
     }
 
-    private void placeCircuit(Vector v, CircuitDescrInTree cdescr) {
+    private void placeCircuit(List v, CircuitDescrInTree cdescr) {
         for (int i = 0; i < v.size(); i++) {
             if (cdescr.getScore() < ((CircuitDescrInTree) v.get(i)).getScore()) {
                 v.add(i, cdescr);

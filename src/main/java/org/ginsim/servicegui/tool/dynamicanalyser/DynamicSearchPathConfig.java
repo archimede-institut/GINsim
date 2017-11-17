@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -252,7 +251,7 @@ public class DynamicSearchPathConfig extends JDialog {
         if (this.path == null) {
             return;
         }
-        Vector v_path = new Vector(this.path.size()+1);
+        List v_path = new ArrayList(this.path.size()+1);
         v_path.add(s_nodeOrder);
         v_path.addAll(this.path);
         JDialog pathViewDialog = new JDialog(frame);
@@ -263,7 +262,7 @@ public class DynamicSearchPathConfig extends JDialog {
         pathViewDialog.setSize(w,h);
         JScrollPane scrollPane = new JScrollPane();
         pathViewDialog.setContentPane(scrollPane);
-        scrollPane.setViewportView(new JList(v_path));
+        scrollPane.setViewportView(new JList(v_path.toArray()));
         pathViewDialog.setVisible(true);
     }
     

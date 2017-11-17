@@ -1,15 +1,16 @@
 package org.ginsim.core.graph.regulatorygraph;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
@@ -64,12 +65,12 @@ public final class RegulatoryParser extends GsXMLHelper {
     private RegulatoryEdge edge = null;
     private Annotation annotation = null;
     private Map<String, RegulatoryEdge> m_edges = new HashMap();
-    private Vector v_waitingInteractions = new Vector();
+    private List v_waitingInteractions = new ArrayList();
     private String s_nodeOrder;
     private Set set;
 
-    private Hashtable values;
-    private Vector v_function;
+    private Map<RegulatoryNode, Map> values;
+    private List v_function;
 
     /** some more stuff to check consistency of "old" models (with explicit and free maxvalue) */
     Map<RegulatoryEdge, Integer> m_checkMaxValue;
@@ -329,10 +330,10 @@ public final class RegulatoryParser extends GsXMLHelper {
                 		v_waitingInteractions.add(attributes.getValue("val"));
                 		v_waitingInteractions.add(attributes.getValue("idActiveInteractions"));
                 } else if (qName.equals("value")) {
-                	v_function = new Vector();
+                	v_function = new ArrayList();
                 	((Hashtable)values.get(vertex)).put(attributes.getValue("val"), v_function);
                 } else if (qName.equals("exp")) {
-                	v_function.addElement(attributes.getValue("str"));
+                	v_function.add(attributes.getValue("str"));
                 }
                 break; // POS_VERTEX
 
@@ -466,7 +467,7 @@ public final class RegulatoryParser extends GsXMLHelper {
      * install the correct nodeOrder in the graph: it should match the saved one.
      */
     private void placeNodeOrder() {
-    		Vector v_order = new Vector();
+    		List v_order = new ArrayList();
     		String[] t_order = s_nodeOrder.split(" ");
     		boolean ok = true;
     		if (set == null) {
@@ -500,17 +501,15 @@ public final class RegulatoryParser extends GsXMLHelper {
 
     private void parseBooleanFunctions() {
       Collection<RegulatoryMultiEdge> allowedEdges;
-      RegulatoryNode vertex;
       String value, exp;
       try {
-        for (Enumeration enu_vertex = values.keys(); enu_vertex.hasMoreElements(); ) {
-          vertex = (RegulatoryNode)enu_vertex.nextElement();
+        for (RegulatoryNode vertex: values.keySet()) {
           allowedEdges = graph.getIncomingEdges(vertex);
           if (allowedEdges.size() > 0) {
             for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
               value = (String)enu_values.nextElement();
-              for (Enumeration enu_exp = ((Vector)((Hashtable)values.get(vertex)).get(value)).elements(); enu_exp.hasMoreElements(); ) {
-                exp = (String)enu_exp.nextElement();
+              for (Iterator enu_exp = ((List)((Hashtable)values.get(vertex)).get(value)).iterator(); enu_exp.hasNext(); ) {
+                exp = (String)enu_exp.next();
                 addExpression(Byte.parseByte(value), vertex, exp);
               }
             }
@@ -551,7 +550,7 @@ public final class RegulatoryParser extends GsXMLHelper {
 //      Set<GsDirectedEdge> l = interactionList.getGraph().getGraphManager().getIncomingEdges(vertex);
       TreeParam param = interactionList.addEmptyParameter(val, vertex);
       String[] t_interaction = par.split(" ");
-      Vector v = new Vector();
+      List v = new ArrayList();
       String srcString, indexString;
       for (int i = 0; i < t_interaction.length; i++) {
         if (t_interaction[i].lastIndexOf("_") != -1) {
@@ -581,55 +580,3 @@ public final class RegulatoryParser extends GsXMLHelper {
     }
 }
 
-//class InteractionInconsistencyDialog extends StackDialog {
-//	private static final long serialVersionUID = 4607140440879983498L;
-//
-//	RegulatoryGraph graph;
-//	Map m;
-//	JPanel panel = null;
-//
-//	public InteractionInconsistencyDialog(Map m, Graph graph,
-//			String msg, int w, int h) {
-//		
-//		super( graph, msg, w, h);
-//		this.graph = (RegulatoryGraph)graph;
-//		this.m = m;
-//
-//		setMainPanel(getMainPanel());
-//	}
-//
-//	private JPanel getMainPanel() {
-//		if (panel == null) {
-//			panel = new JPanel();
-//			JTextArea txt = new JTextArea();
-//			String s1 = "";
-//			String s2 = "";
-//			Iterator it = m.entrySet().iterator();
-//			while (it.hasNext()) {
-//				Entry entry = (Entry)it.next();
-//				Entry e2 = (Entry)entry.getKey();
-//				RegulatoryEdge edge = (RegulatoryEdge)e2.getKey();
-//				byte oldmax = ((Integer)e2.getValue()).byteValue();
-//				if (entry.getValue() == null) {
-//					s1 += edge.getLongDetail(" ")+": max should be "+(oldmax == -1 ? "max" : ""+oldmax)+"\n";
-//				} else {
-//					s2 += edge.getLongDetail(" ")+ ": max was explicitely set to "+oldmax+"\n";
-//				}
-//			}
-//
-//			if (s1 != "") {
-//				s1 = "potential problems:\n" + s1+"\n\n";
-//			}
-//			if (s2 != "") {
-//				s1 = s1 + "warnings only:\n"+s2;
-//			}
-//			txt.setText(s1);
-//			txt.setEditable(false);
-//			panel.add(txt);
-//		}
-//		return panel;
-//	}
-//	public void run() {
-//		// TODO: propose some automatic corrections
-//	}
-//}

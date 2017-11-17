@@ -1,7 +1,7 @@
 package org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function;
 
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.List;
 
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -85,7 +85,7 @@ public class ParamTreeNode implements ParamTreeElement {
     for (int i = 1; i < sons.length; i++)
       sons[i].makeFunctions(h, f + and + toString() + ":" + (edge.getMin(i - 1)), dv, pattern);
   }
-  public void makeDNF(Vector v, String s, int value) {
+  public void makeDNF(List v, String s, int value) {
     String and = "";
     if (!s.equals("")) and = " & ";
     sons[0].makeDNF(v, s + and + "!" + toString(), value);

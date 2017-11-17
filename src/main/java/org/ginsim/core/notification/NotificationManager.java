@@ -1,9 +1,9 @@
 package org.ginsim.core.notification;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.notification.detailed.DetailedErrorNotification;
@@ -38,7 +38,7 @@ public class NotificationManager {
 	 */
 	public NotificationManager(){
 		
-		notificationListerners = new Vector<TopicsListener>();
+		notificationListerners = new ArrayList<TopicsListener>();
 		memorizedNotifications = new HashMap<Notification, Boolean>();
 	}
 	
@@ -329,7 +329,7 @@ private class TopicsListener{
 	public TopicsListener( NotificationListener listener){
 		
 		this.listener = listener;
-		topics = new Vector<Object>();
+		topics = new ArrayList<Object>();
 	}
 	
 	/**

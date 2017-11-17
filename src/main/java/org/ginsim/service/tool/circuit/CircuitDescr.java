@@ -1,6 +1,6 @@
 package org.ginsim.service.tool.circuit;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
@@ -36,11 +36,11 @@ public class CircuitDescr {
     public int[][] t_sub;
     
     // which sub circuits go in which category ?
-    public Vector v_positive = null;
-    public Vector v_negative = null;
-    public Vector v_dual = null;
-    public Vector v_all = new Vector();
-    public Vector v_functional = null;
+    public List v_positive = null;
+    public List v_negative = null;
+    public List v_dual = null;
+    public List v_all = new ArrayList();
+    public List v_functional = null;
     
     // to iterate through "subcircuits"
     private int[] t_pos;
@@ -55,7 +55,7 @@ public class CircuitDescr {
      * @param nodeOrder
      * @return the tree of members of the circuit
      */
-    public String printMe(Vector nodeOrder) {
+    public String printMe(List nodeOrder) {
         int min = nodeOrder.indexOf(t_vertex[0]);
         int minIndex = 0;
         for (int i = 0; i < t_vertex.length; i++) {
@@ -127,31 +127,31 @@ public class CircuitDescr {
             switch ((int)t_mark[sub][1]) {
                 case POSITIVE:
                     if (v_positive == null) {
-                        v_positive = new Vector();
+                        v_positive = new ArrayList();
                     }
                     v_positive.add(cdtree);
                     if (v_functional == null) {
-                        v_functional = new Vector();
+                        v_functional = new ArrayList();
                     }
                     v_functional.add(cdtree);
                     break;
                 case NEGATIVE:
                     if (v_negative == null) {
-                        v_negative = new Vector();
+                        v_negative = new ArrayList();
                     }
                     v_negative.add(cdtree);
                     if (v_functional == null) {
-                        v_functional = new Vector();
+                        v_functional = new ArrayList();
                     }
                     v_functional.add(cdtree);
                     break;
                 case DUAL:
                     if (v_dual == null) {
-                        v_dual = new Vector();
+                        v_dual = new ArrayList();
                     }
                     v_dual.add(cdtree);
                     if (v_functional == null) {
-                        v_functional = new Vector();
+                        v_functional = new ArrayList();
                     }
                     v_functional.add(cdtree);
                     break;

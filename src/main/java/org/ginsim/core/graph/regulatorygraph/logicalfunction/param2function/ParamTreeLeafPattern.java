@@ -1,8 +1,10 @@
 package org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.List;
 
 import org.ginsim.common.application.LogManager;
 
@@ -33,35 +35,35 @@ public class ParamTreeLeafPattern extends ParamTreeLeaf {
     return false;
   }
   public void makeFunctions(Hashtable h, String f, int dv, boolean pattern) {
-    Vector v;
+    List v;
     if (h.containsKey(this)) {
-      v = (Vector)h.get(this);
-      v.addElement(f);
+      v = (List)h.get(this);
+      v.add(f);
     }
     else if (!f.equals("")) {
-      v = new Vector();
-      v.addElement(f);
+      v = new ArrayList();
+      v.add(f);
       h.put(this, v);
     }
   }
   public void buildFunctions(ParamTreeNode node, int dv) {
     Hashtable h = new Hashtable(), h2;
     Object key, key2;
-    Vector v;
+    List v;
     String f = "", f2, f3;
-    Enumeration enu_values, enu_functions, enu2_values;
+    Iterator enu_values, enu_functions, enu2_values;
 
     functions.clear();
     node.makeFunctions(h, f, dv, true);
-    enu_values = h.keys();
-    while (enu_values.hasMoreElements()) {
-      key = enu_values.nextElement();
-      v = (Vector)h.get(key);
-      enu_functions = v.elements();
-      f = enu_functions.nextElement().toString();
+    enu_values = h.keySet().iterator();
+    while (enu_values.hasNext()) {
+      key = enu_values.next();
+      v = (List)h.get(key);
+      enu_functions = v.iterator();
+      f = enu_functions.next().toString();
       if (f.split(" ").length > 1) f = "(" + f + ")";
-      while (enu_functions.hasMoreElements()) {
-        f2 = enu_functions.nextElement().toString();
+      while (enu_functions.hasNext()) {
+        f2 = enu_functions.next().toString();
         if (f2.split(" ").length > 1) f2 = "(" + f2 + ")";
         f = f + " | " + f2;
       }
@@ -77,9 +79,9 @@ public class ParamTreeLeafPattern extends ParamTreeLeaf {
       }
       else {
     	h2 = ((ParamTreeLeafPattern)key).getFunctions();
-    	enu2_values = h2.keys();
-    	while (enu2_values.hasMoreElements()) {
-    	  key2 = enu2_values.nextElement();
+    	enu2_values = h2.keySet().iterator();
+    	while (enu2_values.hasNext()) {
+    	  key2 = enu2_values.next();
     	  f3 = (String)h2.get(key2);
     	  if (f3.split(" ").length > 1) f3 = "(" + f3 + ")";
     	  if (f.split(" ").length > 1) f = "(" + f + ")";
@@ -107,6 +109,6 @@ public class ParamTreeLeafPattern extends ParamTreeLeaf {
     return functions;
   }
 
-  public void makeDNF(Vector v, String s, int value) {
+  public void makeDNF(List v, String s, int value) {
   }
 }

@@ -1,9 +1,8 @@
 package org.ginsim.core.graph.regulatorygraph.logicalfunction.parser;
 
-import java.util.Enumeration;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Stack;
-import java.util.Vector;
 
 public abstract class TBooleanParser {
   private Stack operatorStack, operandStack;
@@ -23,13 +22,13 @@ public abstract class TBooleanParser {
     int i, j, k;
     String elem;
     String[] split = s.split(nodeFactory.getOperatorsAndParenthesis());
-    Vector operands = new Vector();
-    Vector operators;
+    List<String> operands = new ArrayList<String>();
+    List<String> operators;
     TBooleanTreeNode tbtn;
 
     for (i = 0; i < split.length; i++) {
       if (!split[i].equals("")) {
-        operands.addElement(split[i]);
+        operands.add(split[i]);
       }
     }
     if (verifOperandList(operands)) {
@@ -97,18 +96,16 @@ public abstract class TBooleanParser {
     }
     return ret;
   }
-  private String readElement(Vector operators, Vector operands, String s, int i) {
-    String s2 = s.substring(i).trim(), tmp, ret = "";
+  private String readElement(List<String> operators, List<String> operands, String s, int i) {
+    String s2 = s.substring(i).trim(), ret = "";
 
-    for (Enumeration enu = operands.elements(); enu.hasMoreElements(); ) {
-      tmp = (String)enu.nextElement();
+    for (String tmp: operands) {
       if (s2.startsWith(tmp) && tmp.length() > ret.length()) {
         ret = tmp;
       }
     }
     if (ret.equals("")) {
-      for (Enumeration enu = operators.elements(); enu.hasMoreElements(); ) {
-        tmp = (String)enu.nextElement();
+      for (String tmp: operators) {
         if (s2.startsWith(tmp)) {
           ret = tmp;
           break;

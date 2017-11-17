@@ -1,7 +1,6 @@
 package org.ginsim.gui.graph.regulatorygraph;
 
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.table.AbstractTableModel;
 
@@ -32,7 +31,7 @@ public class TableInteractionsModel extends AbstractTableModel {
      * @param graph
      * @param v_ok
      */
-	public TableInteractionsModel(RegulatoryGraph graph, Vector v_ok) {
+	public TableInteractionsModel(RegulatoryGraph graph, List v_ok) {
 		super();
 		this.interactions = null;
         this.graph = graph;
@@ -195,7 +194,7 @@ public class TableInteractionsModel extends AbstractTableModel {
 	 * @param row
 	 * @param edgeIndex
 	 */
-    public void setActivesEdges(int row, Vector edgeIndex) {
+    public void setActivesEdges(int row, List edgeIndex) {
         setActivesEdges(row, edgeIndex, 1);
     }
     /**
@@ -204,7 +203,7 @@ public class TableInteractionsModel extends AbstractTableModel {
      * @param edgeIndex
      * @param value
      */
-    public void setActivesEdges(int row, Vector edgeIndex, int value) {
+    public void setActivesEdges(int row, List edgeIndex, int value) {
 		if (row >= interactions.size()) {
 			LogicalParameter inter = new LogicalParameter(value);
 			inter.setEdges(edgeIndex);

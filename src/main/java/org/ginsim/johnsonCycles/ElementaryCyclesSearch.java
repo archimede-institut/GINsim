@@ -1,7 +1,7 @@
 package org.ginsim.johnsonCycles;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 
 
@@ -43,10 +43,10 @@ public class ElementaryCyclesSearch {
 	private boolean[] blocked = null;
 
 	/** B-Lists, used by the algorithm of Johnson */
-	private Vector[] B = null;
+	private List[] B = null;
 
 	/** Stack for nodes, used by the algorithm of Johnson */
-	private Vector stack = null;
+	private List stack = null;
 
 	/**
 	 * Constructor.
@@ -68,22 +68,22 @@ public class ElementaryCyclesSearch {
 	 * @return List::List::Object with the Lists of the elementary cycles.
 	 */
 	public List getElementaryCycles() {
-		this.cycles = new Vector();
+		this.cycles = new ArrayList();
 		this.blocked = new boolean[this.adjList.length];
-		this.B = new Vector[this.adjList.length];
-		this.stack = new Vector();
+		this.B = new List[this.adjList.length];
+		this.stack = new ArrayList();
 		StrongConnectedComponents sccs = new StrongConnectedComponents(this.adjList);
 		int s = 0;
 
 		while (true) {
 			SCCResult sccResult = sccs.getAdjacencyList(s);
 			if (sccResult != null && sccResult.getAdjList() != null) {
-				Vector[] scc = sccResult.getAdjList();
+				List[] scc = sccResult.getAdjList();
 				s = sccResult.getLowestNodeId();
 				for (int j = 0; j < scc.length; j++) {
 					if ((scc[j] != null) && (scc[j].size() > 0)) {
 						this.blocked[j] = false;
-						this.B[j] = new Vector();
+						this.B[j] = new ArrayList();
 					}
 				}
 
@@ -107,7 +107,7 @@ public class ElementaryCyclesSearch {
 	 * connected component s is part of.
 	 * @return true, if cycle found; false otherwise
 	 */
-	private boolean findCycles(int v, int s, Vector[] adjList) {
+	private boolean findCycles(int v, int s, List[] adjList) {
 		boolean f = false;
 		this.stack.add(new Integer(v));
 		this.blocked[v] = true;
@@ -116,7 +116,7 @@ public class ElementaryCyclesSearch {
 			int w = ((Integer) adjList[v].get(i)).intValue();
 			// found cycle
 			if (w == s) {
-				Vector cycle = new Vector();
+				List cycle = new ArrayList();
 				for (int j = 0; j < this.stack.size(); j++) {
 					int index = ((Integer) this.stack.get(j)).intValue();
 					cycle.add(this.graphNodes[index]);
@@ -146,13 +146,13 @@ public class ElementaryCyclesSearch {
 	}
 
 	/**
-	 * Unblocks recursivly all blocked nodes, starting with a given node.
+	 * Unblocks recursively all blocked nodes, starting with a given node.
 	 *
 	 * @param node node to unblock
 	 */
 	private void unblock(int node) {
 		this.blocked[node] = false;
-		Vector Bnode = this.B[node];
+		List Bnode = this.B[node];
 		while (Bnode.size() > 0) {
 			Integer w = (Integer) Bnode.get(0);
 			Bnode.remove(0);

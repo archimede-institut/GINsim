@@ -1,7 +1,8 @@
 package org.ginsim.core.graph.regulatorygraph.logicalfunction.parser;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
-import java.util.Vector;
 
 public class TBooleanTreeNodeFactory {
   private String[] operators = {TAndOperator.SYMBOL, TOrOperator.SYMBOL, TNotOperator.SYMBOL};
@@ -19,13 +20,13 @@ public class TBooleanTreeNodeFactory {
     operatorsAndParenthesis += "\\(|\\)| ";
     this.parser = parser;
   }
-  public Vector getOperators() {
-    Vector v = new Vector();
+  public List<String> getOperators() {
+    List<String> v = new ArrayList<String>();
     for (int i = 0; i < operators.length; i++) {
-		v.addElement(operators[i]);
+		v.add(operators[i]);
 	}
-    v.addElement("(");
-    v.addElement(")");
+    v.add("(");
+    v.add(")");
     return v;
   }
   public TBooleanOperator createOperator(String value, Stack stack) {

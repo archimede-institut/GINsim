@@ -4,11 +4,12 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.TreeMap;
-import java.util.Vector;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipOutputStream;
@@ -34,7 +35,7 @@ public class OOoDocumentWriter extends DocumentWriter {
 	ZipOutputStream zo;
 	OutputStreamWriter writer;
 	
-	Vector v_table = new Vector();
+	List<OOoTable> v_table = new ArrayList();
 	OOoTable curTable = null;
 	
 	Map m_files = new TreeMap();
@@ -210,7 +211,7 @@ public class OOoDocumentWriter extends DocumentWriter {
 		xmlw.closeTag();
 		v_table.remove(curTable);
 		if (v_table.size() > 0) {
-			curTable = (OOoTable)v_table.get(v_table.size()-1);
+			curTable = v_table.get(v_table.size()-1);
 		} else {
 			curTable = null;
 		}

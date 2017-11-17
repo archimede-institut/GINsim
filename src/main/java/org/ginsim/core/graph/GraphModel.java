@@ -118,7 +118,7 @@ public interface GraphModel<V,E extends Edge<V>> {
 	 * Other kind of graph could overwrite this method. 
 	 * 
 	 * @param regexp the regular expression node ID must match to be selected
-	 * @return a Vector of vertices
+	 * @return a List of vertices
 	 */
 	List<V> searchNodes( String regexp);
 	

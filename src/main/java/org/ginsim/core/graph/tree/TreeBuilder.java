@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.Edge;
@@ -146,7 +145,7 @@ public abstract class TreeBuilder {
 	 * Remove all the vertices from the tree
 	 */
 	public void clearTree() {
-		Vector<TreeNode> tmp = new Vector<TreeNode>( tree.getNodeCount());
+		List<TreeNode> tmp = new ArrayList<TreeNode>( tree.getNodeCount());
 		for (TreeNode vertex: tree.getNodes()) {
 			tmp.add(vertex);
 		}

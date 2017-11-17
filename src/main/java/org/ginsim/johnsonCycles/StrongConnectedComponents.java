@@ -1,7 +1,8 @@
 package org.ginsim.johnsonCycles;
 
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is a helpclass for the search of all elementary cycles in a graph 
@@ -39,7 +40,7 @@ public class StrongConnectedComponents {
 	private boolean[] visited = null;
 
 	/** Helpattribute for finding scc's */
-	private Vector stack = null;
+	private List stack = null;
 
 	/** Helpattribute for finding scc's */
 	private int[] lowlink = null;
@@ -51,7 +52,7 @@ public class StrongConnectedComponents {
 	private int sccCounter = 0;
 
 	/** Helpattribute for finding scc's */
-	private Vector currentSCCs = null;
+	private List currentSCCs = null;
 
 	/**
 	 * Constructor.
@@ -78,19 +79,19 @@ public class StrongConnectedComponents {
 		this.lowlink = new int[this.adjListOriginal.length];
 		this.number = new int[this.adjListOriginal.length];
 		this.visited = new boolean[this.adjListOriginal.length];
-		this.stack = new Vector();
-		this.currentSCCs = new Vector();
+		this.stack = new ArrayList();
+		this.currentSCCs = new ArrayList();
 
 		this.makeAdjListSubgraph(node);
 
 		for (int i = node; i < this.adjListOriginal.length; i++) {
 			if (!this.visited[i]) {
 				this.getStrongConnectedComponents(i);
-				Vector nodes = this.getLowestIdComponent();
+				List nodes = this.getLowestIdComponent();
 				if (nodes != null && !nodes.contains(new Integer(node)) && !nodes.contains(new Integer(node + 1))) {
 					return this.getAdjacencyList(node + 1);
 				} else {
-					Vector[] adjacencyList = this.getAdjList(nodes);
+					List[] adjacencyList = this.getAdjList(nodes);
 					if (adjacencyList != null) {
 						for (int j = 0; j < this.adjListOriginal.length; j++) {
 							if (adjacencyList[j].size() > 0) {
@@ -115,7 +116,7 @@ public class StrongConnectedComponents {
 		this.adjList = new int[this.adjListOriginal.length][0];
 
 		for (int i = node; i < this.adjList.length; i++) {
-			Vector successors = new Vector();
+			List successors = new ArrayList();
 			for (int j = 0; j < this.adjListOriginal[i].length; j++) {
 				if (this.adjListOriginal[i][j] >= node) {
 					successors.add(new Integer(this.adjListOriginal[i][j]));
@@ -135,14 +136,14 @@ public class StrongConnectedComponents {
 	 * Calculates the strong connected component out of a set of scc's, that
 	 * contains the node with the lowest index.
 	 *
-	 * @return Vector::Integer of the scc containing the lowest nodenumber
+	 * @return List::Integer of the scc containing the lowest nodenumber
 	 */
-	private Vector getLowestIdComponent() {
+	private List getLowestIdComponent() {
 		int min = this.adjList.length;
-		Vector currScc = null;
+		List currScc = null;
 
 		for (int i = 0; i < this.currentSCCs.size(); i++) {
-			Vector scc = (Vector) this.currentSCCs.get(i);
+			List scc = (List) this.currentSCCs.get(i);
 			for (int j = 0; j < scc.size(); j++) {
 				Integer node = (Integer) scc.get(j);
 				if (node.intValue() < min) {
@@ -156,17 +157,17 @@ public class StrongConnectedComponents {
 	}
 
 	/**
-	 * @return Vector[]::Integer representing the adjacency-structure of the
+	 * @return List[]::Integer representing the adjacency-structure of the
 	 * strong connected component with least vertex in the currently viewed
 	 * subgraph
 	 */
-	private Vector[] getAdjList(Vector nodes) {
-		Vector[] lowestIdAdjacencyList = null;
+	private List[] getAdjList(List nodes) {
+		List[] lowestIdAdjacencyList = null;
 
 		if (nodes != null) {
-			lowestIdAdjacencyList = new Vector[this.adjList.length];
+			lowestIdAdjacencyList = new List[this.adjList.length];
 			for (int i = 0; i < lowestIdAdjacencyList.length; i++) {
-				lowestIdAdjacencyList[i] = new Vector();
+				lowestIdAdjacencyList[i] = new ArrayList();
 			}
 			for (int i = 0; i < nodes.size(); i++) {
 				int node = ((Integer) nodes.get(i)).intValue();
@@ -209,7 +210,7 @@ public class StrongConnectedComponents {
 		// found scc
 		if ((lowlink[root] == number[root]) && (stack.size() > 0)) {
 			int next = -1;
-			Vector scc = new Vector();
+			List scc = new ArrayList();
 
 			do {
 				next = ((Integer) this.stack.get(stack.size() - 1)).intValue();
@@ -262,7 +263,7 @@ public class StrongConnectedComponents {
 			System.out.print("i: " + i + "\n");
 			SCCResult r = scc.getAdjacencyList(i);
 			if (r != null) {
-				Vector[] al = scc.getAdjacencyList(i).getAdjList();
+				List[] al = scc.getAdjacencyList(i).getAdjList();
 				for (int j = i; j < al.length; j++) {
 					if (al[j].size() > 0) {
 						System.out.print("j: " + j);

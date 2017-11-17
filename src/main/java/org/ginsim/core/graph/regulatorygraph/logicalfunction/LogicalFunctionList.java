@@ -1,8 +1,8 @@
 package org.ginsim.core.graph.regulatorygraph.logicalfunction;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBooleanData;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBooleanParser;
@@ -25,30 +25,24 @@ public class LogicalFunctionList implements TBooleanData {
   public void setData(List v) {
     logicalFunctions = v;
   }
-  public Vector getAsStringVector() {
+  public List getAsStringList() {
     List params = parser.getParams(logicalFunctions);
     Iterator it = params.iterator(), it2;
-    Vector v, v2 = new Vector();
+    List v, v2 = new ArrayList();
     Integer element;
     String s;
 
     while (it.hasNext()) {
-      v = (Vector)it.next();
+      v = (List)it.next();
       it2 = v.iterator();
       s = "";
       while (it2.hasNext()) {
         element = (Integer)it2.next();
         s = s + element.toString() + " ";
       }
-      v2.addElement(s.trim());
+      v2.add(s.trim());
     }
     return v2;
   }
 
-//  public void print() {
-//    Iterator it = getAsStringVector().iterator();
-//    while (it.hasNext()) {
-//		System.err.println(it.next());
-//	}
-//  }
 }

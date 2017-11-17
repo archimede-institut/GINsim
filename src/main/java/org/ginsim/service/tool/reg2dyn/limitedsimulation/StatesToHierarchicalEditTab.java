@@ -6,10 +6,10 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -101,7 +101,7 @@ public class StatesToHierarchicalEditTab extends AbstractParameterPanel<DynamicN
 	protected void showInHTGButton() {
 		if (node != null) {
 			GraphSelection<HierarchicalNode, ?> selection = GUIManager.getInstance().getGraphGUI(htg).getSelection();
-			Collection<HierarchicalNode> v = new Vector<HierarchicalNode>();
+			Collection<HierarchicalNode> v = new ArrayList<HierarchicalNode>();
 			v.add(node);
 			selection.setSelectedNodes(v);
 			GUIManager.getInstance().getFrame(htg).toFront();

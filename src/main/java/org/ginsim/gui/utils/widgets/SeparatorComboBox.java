@@ -3,7 +3,7 @@ package org.ginsim.gui.utils.widgets;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
@@ -63,9 +63,8 @@ public class SeparatorComboBox extends JComboBox implements KeyListener
 	/**
 	 *  Standard constructor. See JComboBox API for details
 	 */
-	public SeparatorComboBox(Vector<?> items)
-	{
-		super(items);
+	public SeparatorComboBox(List<?> items) {
+		super(items.toArray());
 		init();
 	}
 

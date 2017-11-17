@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.NodeInfoHolder;
@@ -237,7 +236,7 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	 * @param index
 	 * @param edges
 	 */
-	public void updateInteraction(int index, Vector edges) {
+	public void updateInteraction(int index, List edges) {
 		v_logicalParameters.updateInteraction(index, edges);
 	}
 

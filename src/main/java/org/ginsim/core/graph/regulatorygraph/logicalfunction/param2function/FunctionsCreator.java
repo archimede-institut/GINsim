@@ -7,8 +7,10 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Vector;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -69,11 +71,11 @@ public class FunctionsCreator {
     }
     return new ParamTree(as, def);
   }
-  public Hashtable doIt(boolean comp) {
-    Hashtable functions, hash;
-    Vector vector;
+  public Map doIt(boolean comp) {
+    Map functions, hash;
+    List<String> vector;
     String s, s2;
-    Object key, key2;
+    Object key2;
 
     ParamTree tree = null;
 	  if (!comp)
@@ -85,46 +87,45 @@ public class FunctionsCreator {
     tree.findPatterns();
     functions = tree.getFunctions();
     hash = new Hashtable();
-    for (Enumeration enu = functions.keys(); enu.hasMoreElements(); ) {
+    for (Object key: functions.keySet() ) {
       s = "";
-      key = enu.nextElement();
-      Enumeration enu2 = ((Vector)functions.get(key)).elements();
+      Iterator<String> enu2 = ((List)functions.get(key)).iterator();
       if (key instanceof ParamTreeLeafPattern) {
-      	s = enu2.nextElement().toString();
+      	s = enu2.next().toString();
         if (s.split(" ").length > 1) {
           s = "(" + s + ")";
         }
-        while (enu2.hasMoreElements()) {
-          s2 = enu2.nextElement().toString();
+        while (enu2.hasNext()) {
+          s2 = enu2.next().toString();
           if (s2.split(" ").length > 1) {
             s2 = "(" + s2 + ")";
           }
           s = s + " | " + s2;
         }
-        enu2 = ((ParamTreeLeafPattern)key).getFunctions().keys();
-        while (enu2.hasMoreElements()) {
-          key2 = enu2.nextElement();
+        enu2 = ((ParamTreeLeafPattern)key).getFunctions().keySet().iterator();
+        while (enu2.hasNext()) {
+          key2 = enu2.next();
           s2 = ((ParamTreeLeafPattern)key).getFunctions().get(key2).toString();
           if (!hash.containsKey(key2)) {
-            hash.put(key2, new Vector());
+            hash.put(key2, new ArrayList());
           }
-          vector = (Vector)hash.get(key2);
+          vector = (List)hash.get(key2);
           if (!s.equals("")) {
-            vector.addElement("(" + s + ") & (" + s2 + ")");
+            vector.add("(" + s + ") & (" + s2 + ")");
           }
           else {
-            vector.addElement(s2);
+            vector.add(s2);
           }
         }
       }
       else {
         if (!hash.containsKey(key)) {
-          hash.put(key, new Vector());
+          hash.put(key, new ArrayList());
         }
-        vector = (Vector)hash.get(key);
-        while (enu2.hasMoreElements()) {
-          s = (String)enu2.nextElement();
-          vector.addElement(s);
+        vector = (List)hash.get(key);
+        while (enu2.hasNext()) {
+          s = (String)enu2.next();
+          vector.add(s);
         }
       }
     }

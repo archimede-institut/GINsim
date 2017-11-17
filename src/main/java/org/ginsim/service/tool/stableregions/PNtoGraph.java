@@ -1,9 +1,9 @@
 package org.ginsim.service.tool.stableregions;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Vector;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
@@ -100,7 +100,7 @@ public class PNtoGraph{
 	
 	private void makeTransitions(List[] t_transition) {for (int i=0 ; i<len ; i++) {
             int f = functions[i];
-            Vector v_transition = new Vector();
+            List v_transition = new ArrayList();
             t_transition[i] = v_transition;
             browse(v_transition, ddmanager, f, i, nodeOrder, len);
         }

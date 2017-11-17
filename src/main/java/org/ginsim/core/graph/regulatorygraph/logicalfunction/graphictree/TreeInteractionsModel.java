@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JTree;
 import javax.swing.event.TreeModelEvent;
@@ -34,7 +33,7 @@ public class TreeInteractionsModel implements TreeModel {
 	private TreeString root;
 
 	private LogicalFunctionView view = null;
-	private Vector treeModelListeners = new Vector();
+	private List treeModelListeners = new ArrayList();
 
 	public TreeInteractionsModel(RegulatoryGraph graph) {
 		root = new TreeString(null, "Function list");
@@ -123,7 +122,7 @@ public class TreeInteractionsModel implements TreeModel {
 				}
 			}
 	}
-	public void setActivesEdges(Vector edgeIndex, int value) {
+	public void setActivesEdges(List edgeIndex, int value) {
 		LogicalParameter inter = new LogicalParameter(value);
 		inter.setEdges(edgeIndex);
 		node.addLogicalParameter(inter, false);
@@ -180,7 +179,7 @@ public class TreeInteractionsModel implements TreeModel {
 		LogicalFunctionList functionList = (LogicalFunctionList)parser.eval();
 		List params = parser.getParams(functionList.getData());
 		Iterator it = params.iterator(), it2;
-		Vector v;
+		List v;
 		RegulatoryEdge edge;
 		LogicalFunctionListElement element;
 		TreeParam param;
@@ -190,12 +189,12 @@ public class TreeInteractionsModel implements TreeModel {
 		TreeExpression exp = addExpression(val, root);
 		if (exp != null)
 			while (it.hasNext()) {
-				it2 = ((Vector)it.next()).iterator();
-				v = new Vector();
+				it2 = ((List)it.next()).iterator();
+				v = new ArrayList();
 				while (it2.hasNext()) {
 					element = (LogicalFunctionListElement)it2.next();
 					edge = element.getEdge().getEdge(element.getIndex());
-					v.addElement(edge);
+					v.add(edge);
 				}
 				if (v.size() > 0) setActivesEdges(v, val);
 				param = new TreeParam(exp, v);
@@ -311,11 +310,11 @@ public class TreeInteractionsModel implements TreeModel {
 			Iterator it = params.iterator();
 			TreeParam paramBasal = null;
 			while (it.hasNext()) {
-				Iterator it2 = ((Vector)it.next()).iterator();
-				Vector v = new Vector();
+				Iterator it2 = ((List)it.next()).iterator();
+				List v = new ArrayList();
 				while (it2.hasNext()) {
 					LogicalFunctionListElement element = (LogicalFunctionListElement)it2.next();
-					v.addElement(element.getEdge().getEdge(element.getIndex()));
+					v.add(element.getEdge().getEdge(element.getIndex()));
 				}
 				if (v.size() > 0) setActivesEdges(v, val);
 				TreeParam param = new TreeParam(exp, v);
@@ -484,7 +483,7 @@ public class TreeInteractionsModel implements TreeModel {
 	//////////////// TreeModel interface implementation ///////////////////////
 
 	public void addTreeModelListener(TreeModelListener l) {
-		treeModelListeners.addElement(l);
+		treeModelListeners.add(l);
 	}
 
 	public Object getChild(Object parent, int index) {
@@ -512,7 +511,7 @@ public class TreeInteractionsModel implements TreeModel {
 	}
 
 	public void removeTreeModelListener(TreeModelListener l) {
-		treeModelListeners.removeElement(l);
+		treeModelListeners.remove(l);
 	}
 
 	public void valueForPathChanged(TreePath path, Object newValue) {

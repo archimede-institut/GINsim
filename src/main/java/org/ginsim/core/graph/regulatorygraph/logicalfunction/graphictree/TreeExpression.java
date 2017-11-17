@@ -1,15 +1,9 @@
 package org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree;
 
 import java.awt.Point;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.BooleanGene;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.BooleanParser;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalFunctionList;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalFunctionListElement;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBinaryOperator;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBooleanOperator;
@@ -163,23 +157,6 @@ public class TreeExpression extends TreeElement {
   }
   public String toString() {
     return userExpression;
-  }
-  private void makeDNFString() throws Exception {
-    functionsCreator.makeTree(1234);
-    BooleanParser parser = new BooleanParser(functionsCreator.getGraph().getIncomingEdges(functionsCreator.getCurrentNode()));
-    parser.compile(userExpression, functionsCreator.getGraph(), functionsCreator.getCurrentNode());
-    root = parser.getRoot();
-    LogicalFunctionList functionList = (LogicalFunctionList)parser.eval();
-    List params = parser.getParams(functionList.getData());
-    Iterator it = params.iterator();
-    while (it.hasNext()) {
-      Iterator it2 = ((Vector)it.next()).iterator();
-      Vector v = new Vector();
-      while (it2.hasNext()) {
-        LogicalFunctionListElement element = (LogicalFunctionListElement)it2.next();
-        v.addElement(element.getEdge().getEdge(element.getIndex()));
-      }
-    }
   }
   public boolean isLeaf() {
     return false;

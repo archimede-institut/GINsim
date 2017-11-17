@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Vector;
 
 import org.colomoto.biolqm.ExtensionLoader;
 import org.ginsim.common.utils.IntrospectionUtils;
@@ -103,7 +102,7 @@ public class ObjectAssociationManager {
             List<GraphAssociatedObjectManager> specialized_managers =  specializedObjectManagers.get( graph_class);
 
             if( specialized_managers == null){
-                specialized_managers = new Vector<GraphAssociatedObjectManager>();
+                specialized_managers = new ArrayList<GraphAssociatedObjectManager>();
                 specializedObjectManagers.put( graph_class, specialized_managers);
             }
 

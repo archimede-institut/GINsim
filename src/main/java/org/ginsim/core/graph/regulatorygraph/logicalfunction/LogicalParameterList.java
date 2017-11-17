@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -101,7 +100,7 @@ public class LogicalParameterList extends ArrayList<LogicalParameter> {
 			param.hasConflict = false;
 		}
 		it = manualp.iterator();
-		Vector toremove = new Vector();
+		List toremove = new ArrayList();
 		while (it.hasNext()) {
 			LogicalParameter param = (LogicalParameter)it.next();
 			param.isDup = false;
@@ -111,7 +110,7 @@ public class LogicalParameterList extends ArrayList<LogicalParameter> {
 				LogicalParameter other = (LogicalParameter) it2.next();
 				if (param.equals(other)) {
 					if (other.getValue() == param.getValue()) {
-						toremove.addElement(param);
+						toremove.add(param);
 					}
 					else {
 						param.hasConflict = true;
@@ -193,7 +192,7 @@ public class LogicalParameterList extends ArrayList<LogicalParameter> {
 	public Iterator iterator(boolean manual) {
 		return manualp.iterator();
 	}
-	public void updateInteraction(int index, Vector edges) {
+	public void updateInteraction(int index, List edges) {
 		Object o = get(index);
 		if (functionp.contains(o)) {
 			return;

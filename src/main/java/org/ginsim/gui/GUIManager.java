@@ -1,8 +1,8 @@
 package org.ginsim.gui;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JOptionPane;
 
@@ -227,13 +227,13 @@ public class GUIManager {
 	 */
 	public void quit( ){
 		
-		// Construction of the Vector of graph is required to avoid the ConcurrentModificationException
+		// Construction of the List of graph is required to avoid the ConcurrentModificationException
 		// a loop on the graphToGUIObject.keySet() will generate due to the graphToGUIObject.remove( graph)
 		// call in the close() method
 		
 		// Ignore the startup dialog setting: we want to quit
 		STARTUPDIALOG = false;
-		Vector<Graph> graph_list = new Vector<Graph>();
+		List<Graph> graph_list = new ArrayList<Graph>();
 		graph_list.addAll( graphToGUIObject.keySet());
 		for ( Graph g: graph_list) {
 			if (!close(g)) {
@@ -248,10 +248,10 @@ public class GUIManager {
 	 */
 	public void closeEmptyGraphs(){
 		
-		// Construction of the Vector of graph is required to avoid the ConcurrentModificationException
+		// Construction of the List of graph is required to avoid the ConcurrentModificationException
 		// a loop on the graphToGUIObject.keySet() will generate due to the graphToGUIObject.remove( graph)
 		// call in the close() method
-		Vector<Graph> graph_list = new Vector<Graph>();
+		List<Graph> graph_list = new ArrayList<Graph>();
 		graph_list.addAll( graphToGUIObject.keySet());
 		for ( Graph g: graph_list) {
 			if( g.getNodeCount() == 0){
@@ -402,8 +402,8 @@ public class GUIManager {
 		
 		private GraphGUI graphGUI;
 		private Frame frame;
-		private Vector<Object> blockEdit;
-		private Vector<Object> blockClose;
+		private List<Object> blockEdit;
+		private List<Object> blockClose;
 		
 		public GUIObject( GraphGUI graph_gui, Frame frame){
 			
@@ -440,7 +440,7 @@ public class GUIManager {
 		        return;
 		    }
 		    if (blockEdit == null) {
-		        blockEdit = new Vector<Object>();
+		        blockEdit = new ArrayList<Object>();
 		    }
 		    blockEdit.add(key);
 		}
@@ -484,7 +484,7 @@ public class GUIManager {
 		        return;
 		    }
 		    if (blockClose == null) {
-		        blockClose = new Vector<Object>();
+		        blockClose = new ArrayList<Object>();
 		    }
 		    blockClose.add(key);
 		}

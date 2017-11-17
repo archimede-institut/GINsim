@@ -1,7 +1,7 @@
 package org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function;
 
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.List;
 
 interface ParamTreeElement {
   public boolean isLeaf();
@@ -16,6 +16,6 @@ interface ParamTreeElement {
   public void setParent(ParamTreeNode e);
   public void setParentIndex(int i);
   public void makeFunctions(Hashtable h, String f, int dv, boolean pattern);
-  public void makeDNF(Vector v, String s, int value);
+  public void makeDNF(List v, String s, int value);
   public int hashCode();
 }

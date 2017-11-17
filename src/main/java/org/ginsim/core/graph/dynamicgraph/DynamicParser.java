@@ -1,8 +1,9 @@
 package org.ginsim.core.graph.dynamicgraph;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.common.application.GsException;
@@ -70,7 +71,7 @@ public final class DynamicParser extends GsXMLHelper {
 			throw new GsException(GsException.GRAVITY_ERROR, "invalidGraphName");
 		}
 		String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
-		Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);
+		List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>(t_nodeOrder.length);
 		for (int i=0 ; i<t_nodeOrder.length ; i++) {
 		    nodeOrder.add( new NodeInfo( t_nodeOrder[i]));
 		}
@@ -190,7 +191,7 @@ public final class DynamicParser extends GsXMLHelper {
 							throw new SAXException( new GsException(GsException.GRAVITY_ERROR, "STR_InvalidGraphName"));
 						}
             			String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
-            			Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);
+            			List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>(t_nodeOrder.length);
             			for (int i=0 ; i<t_nodeOrder.length ; i++) {
             			    nodeOrder.add( new NodeInfo( t_nodeOrder[i]));
             			}

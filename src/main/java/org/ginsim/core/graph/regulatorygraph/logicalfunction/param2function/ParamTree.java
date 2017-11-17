@@ -6,9 +6,9 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.Vector;
 
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -40,20 +40,20 @@ public class ParamTree {
     if (level == 0) {
 		root = new ParamTreeNode(v, me, null, -1);
 	} else {
-      Vector nodes = new Vector();
+      List<ParamTreeNode> nodes = new ArrayList();
       getNodes(level - 1, 0, root, nodes);
 
       for (int i = 0; i < nodes.size(); i++) {
-        e = (ParamTreeNode)nodes.elementAt(i);
+        e = nodes.get(i);
         for (int j = 0; j <= e.getNbEdge(); j++) {
 			e.addSon(new ParamTreeNode(v, me, e, j), j);
 		}
       }
     }
   }
-  private void getNodes(int wantedDepth, int currentDepth, ParamTreeElement node, Vector v) {
+  private void getNodes(int wantedDepth, int currentDepth, ParamTreeElement node, List v) {
     if (currentDepth == wantedDepth) {
-		v.addElement(node);
+		v.add(node);
 	} else {
 		for (int i = 0; i < node.getNbSons(); i++) {
 			if (!node.getSon(i).isLeaf()) {
@@ -65,10 +65,10 @@ public class ParamTree {
   private void addLeaves(int dv) {
     ParamTreeNode e;
     ParamTreeLeafValue value;
-    Vector v = new Vector();
+    List v = new ArrayList();
     getNodes(depth, 0, root, v);
     for (int i = 0; i < v.size(); i++) {
-      e = (ParamTreeNode)v.elementAt(i);
+      e = (ParamTreeNode)v.get(i);
       for (int j = 0; j <= e.getNbEdge(); j++) {
         value = new ParamTreeLeafValue(e, j);
         value.setValue(new Integer(dv));
@@ -105,16 +105,15 @@ public class ParamTree {
     return (ParamTreeLeaf)currentNode;
   }
   public void process() {
-    Vector nodes = new Vector();
-    ParamTreeElement e, s;
+    List<ParamTreeElement> nodes = new ArrayList();
+    ParamTreeElement s;
     ParamTreeNode p;
     boolean b;
 
     for (int i = depth; i >= 0; i--) {
       nodes.clear();
       getNodes(i, 0, root, nodes);
-      for (Enumeration enu = nodes.elements(); enu.hasMoreElements(); ) {
-        e = (ParamTreeElement)enu.nextElement();
+      for (ParamTreeElement e: nodes) {
         b = true;
         for (int j = 1; j < e.getNbSons(); j++) {
 			b = b && e.getSon(0).equals(e.getSon(j));
@@ -136,9 +135,9 @@ public class ParamTree {
     }
   }
   public void findPatterns() {
-    Vector lastNodes = new Vector();
+    List<ParamTreeNode> lastNodes = new ArrayList();
     HashMap hm;
-    ParamTreeNode node, lastn, parent;
+    ParamTreeNode parent;
     ParamTreeLeafPattern treeLeaf;
     int np = 1;
     boolean ok = true;
@@ -148,8 +147,7 @@ public class ParamTree {
       if (!root.isLeaf()) {
         getLastNodes(lastNodes, root);
         hm = new HashMap();
-        for (Enumeration enu = lastNodes.elements(); enu.hasMoreElements(); ) {
-          node = (ParamTreeNode)enu.nextElement();
+        for (ParamTreeNode node: lastNodes ) {
           if (!hm.containsKey(node)) {
 			hm.put(node, new Integer(1));
 		} else {
@@ -160,13 +158,12 @@ public class ParamTree {
         Iterator it = set.iterator();
         ok = false;
         while (it.hasNext()) {
-          node = (ParamTreeNode)((Entry)it.next()).getKey();
+          ParamTreeNode node = (ParamTreeNode)((Entry)it.next()).getKey();
           if (((Integer)hm.get(node)).intValue() > 1) {
             treeLeaf = new ParamTreeLeafPattern();
             treeLeaf.setName("P" + np);
             treeLeaf.buildFunctions(node, defaultValue);
-            for (Enumeration enu = lastNodes.elements(); enu.hasMoreElements(); ) {
-              lastn = (ParamTreeNode)enu.nextElement();
+            for (ParamTreeNode lastn: lastNodes) {
               if (lastn.hashCode() == node.hashCode()) {
                 parent = lastn.getParent();
                 for (int i = 0; i < parent.getNbSons(); i++) {
@@ -193,16 +190,16 @@ public class ParamTree {
     root.makeFunctions(h, "", defaultValue, false);
     return h;
   }
-  public String getDNFForm(int value, Vector params) {
-    Vector v = new Vector();
+  public String getDNFForm(int value, List params) {
+    List v = new ArrayList();
     root.makeDNF(v, "", value);
     String s = "", tmp;
     if (v.size() > 0) {
-      tmp = s = (String)v.firstElement();
+      tmp = s = (String)v.get(0);
       if (tmp.indexOf('&') >= 0)
 		    s = "(" + tmp + ")";
       for (int i = 1; i < v.size(); i++) {
-        tmp = (String)v.elementAt(i);
+        tmp = (String)v.get(i);
         if (tmp.indexOf('&') >= 0)
 			    s += " | (" + tmp + ")";
 		    else
@@ -211,13 +208,13 @@ public class ParamTree {
     }
     return s;
   }
-  private void getLastNodes(Vector v, ParamTreeElement node) {
+  private void getLastNodes(List v, ParamTreeElement node) {
     boolean ok = true;
     for (int i = 0; i < node.getNbSons(); i++) {
 		ok = ok & node.getSon(i).isLeaf();
 	}
     if (ok) {
-		v.addElement(node);
+		v.add(node);
 	} else {
 		for (int i = 0; i < node.getNbSons(); i++) {
 			if (!node.getSon(i).isLeaf()) {

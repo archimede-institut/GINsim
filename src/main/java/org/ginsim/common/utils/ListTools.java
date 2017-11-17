@@ -13,8 +13,8 @@ public class ListTools {
     /**
      * Create a list based on an array
      *
-     * @param t the array we want to convert to vector
-     * @return the new Vector
+     * @param t the array we want to convert to list
+     * @return the new list
      */
     public static <T> List<T> getListFromArray(T[] t) {
 

@@ -1,9 +1,10 @@
 package org.ginsim.core.graph.hierarchicaltransitiongraph;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Vector;
 
 import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.common.application.GsException;
@@ -72,7 +73,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
 			throw new GsException(GsException.GRAVITY_ERROR, "invalidGraphName");
 		}
 		String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
-		Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);
+		List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>(t_nodeOrder.length);
 		childCount = new byte[t_nodeOrder.length];
 		for (int i=0 ; i<t_nodeOrder.length ; i++) {
 			String[] args = t_nodeOrder[i].split(":");
@@ -216,7 +217,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
 						}
 						try {
 							String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
-							Vector<NodeInfo> nodeOrder = new Vector<NodeInfo>(t_nodeOrder.length);
+							List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>(t_nodeOrder.length);
 							byte[] childCount = new byte[t_nodeOrder.length];
 							for (int i=0 ; i<t_nodeOrder.length ; i++) {
 								String[] args = t_nodeOrder[i].split(":");

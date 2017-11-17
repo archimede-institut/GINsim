@@ -2,7 +2,6 @@ package org.ginsim.servicegui.tool.pathfinding;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;

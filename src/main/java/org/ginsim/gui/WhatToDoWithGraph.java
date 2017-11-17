@@ -6,9 +6,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.AbstractButton;
 import javax.swing.Action;
@@ -74,9 +74,9 @@ public class WhatToDoWithGraph extends Frame {
 	private JComboBox comboBox_Tools;
 	private JComboBox comboBox_Exports;
 	
-	private final List<LayoutAction> availableLayoutActions = new Vector<LayoutAction>();
-	private final List<Action> availableToolActions = new Vector<Action>();
-	private final List<ExportAction> availableExportActions = new Vector<ExportAction>();
+	private final List<LayoutAction> availableLayoutActions = new ArrayList<LayoutAction>();
+	private final List<Action> availableToolActions = new ArrayList<Action>();
+	private final List<ExportAction> availableExportActions = new ArrayList<ExportAction>();
 	
 	/**
 	 * Create the frame.

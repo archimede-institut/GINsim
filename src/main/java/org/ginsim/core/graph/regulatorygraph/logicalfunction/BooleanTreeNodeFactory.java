@@ -3,7 +3,6 @@ package org.ginsim.core.graph.regulatorygraph.logicalfunction;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBooleanOperand;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.parser.TBooleanParser;
@@ -34,7 +33,7 @@ public class BooleanTreeNodeFactory extends TBooleanTreeNodeFactory {
 //    }
     LogicalFunctionList il = new LogicalFunctionList();
     il.setParser(parser);
-    il.setData(new Vector(p));
+    il.setData(new ArrayList(p));
     bg.setLogicalFunctionList(il);
     return bg;
   }
@@ -43,7 +42,7 @@ public class BooleanTreeNodeFactory extends TBooleanTreeNodeFactory {
   	Object[] allParams = parser.getAllParams();
     List allData = parser.getAllData();
     int nb_params = allParams.length;
-    Vector data;
+    List data;
     Iterator it_data;
     LogicalFunctionListElement element;
 //    String testString = "";
@@ -53,7 +52,7 @@ public class BooleanTreeNodeFactory extends TBooleanTreeNodeFactory {
 //	}
 
     for (int i = 0; i < nb_params; i++) {
-      data = (Vector)allParams[i];
+      data = (ArrayList)allParams[i];
       it_data = data.iterator();
       while (it_data.hasNext()) {
         element = (LogicalFunctionListElement)it_data.next();

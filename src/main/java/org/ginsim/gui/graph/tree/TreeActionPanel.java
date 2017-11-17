@@ -6,8 +6,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -41,11 +41,11 @@ public class TreeActionPanel extends JPanel implements GUIEditor<Tree> {
     private GraphGUI gui = null;
 	private boolean hasSelectionChanged = false;
 	
-	private static Vector<String> TREEMODES;
+	private static List<String> TREEMODES;
 
 	private JLabel labelChooseComboBox;
 	static {
-		TREEMODES = new Vector<String>(3);
+		TREEMODES = new ArrayList<String>(3);
 		TREEMODES.add(Txt.t("STR_treeviewer_diagram_with_all_leafs"));
 		TREEMODES.add(Txt.t("STR_treeviewer_diagram"));
 		TREEMODES.add(Txt.t("STR_treeviewer_tree"));
@@ -82,7 +82,7 @@ public class TreeActionPanel extends JPanel implements GUIEditor<Tree> {
 		c.gridy = 0;
 		add(new JLabel(Txt.t("STR_treeviewer_tree_choose_mode")), c);
 		c.gridx++;
-		treeModeList = new JComboBox(TREEMODES);
+		treeModeList = new JComboBox(TREEMODES.toArray());
 		treeModeList.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				selectionChange();

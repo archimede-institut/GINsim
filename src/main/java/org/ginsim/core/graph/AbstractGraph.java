@@ -13,7 +13,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -296,11 +295,11 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * Other kind of graph could overwrite this method. 
 	 * 
 	 * @param regexp the regular expression node ID must match to be selected
-	 * @return a Vector of vertices
+	 * @return a List of vertices
 	 */
 	public List<V> searchNodes( String regexp) {
 		
-		Vector<V> v = new Vector<V>();
+		List<V> v = new ArrayList<V>();
 		
 		Pattern pattern = Pattern.compile(regexp, Pattern.COMMENTS | Pattern.CASE_INSENSITIVE);
 		

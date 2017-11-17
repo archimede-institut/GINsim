@@ -35,7 +35,7 @@ public class NodeReducedData {
 	 */
 	public NodeReducedData(String id, List content) {
         if (content == null) {
-            this.content = new Vector();
+            this.content = new ArrayList();
             this.id = id;
             return;
         }

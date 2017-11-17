@@ -1,9 +1,9 @@
 package org.ginsim.servicegui.tool.regulatorygraphanimation;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.AbstractListModel;
 import javax.swing.JFrame;
@@ -38,7 +38,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
     private RegulatoryGraph regGraph;
     private DynamicGraph dynGraph;
 
-    private Vector<DynamicNode> path = new Vector();
+    private List<DynamicNode> path = new ArrayList<DynamicNode>();
     
     private List nodeOrder;
     private PathPlayer pathPlayer = null;
@@ -208,7 +208,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
 //        
 //        // highlight available edges and vertices
 //        Iterator it = dynGraph.getOutgoingEdges(path.get(path.size()-1)).iterator();
-//        Vector v_highlight = new Vector();
+//        List v_highlight = new ArrayList();
 //        while (it.hasNext()) {
 //            v_highlight.add(it.next());
 //        }
@@ -280,7 +280,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
 
     private class PathPlayer extends Thread {
         
-        private Vector path;
+        private List path;
         private RegulatoryAnimator animator;
         private int start;
         
@@ -289,7 +289,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
          * @param animator
          * @param start
          */
-        public PathPlayer(Vector path, RegulatoryAnimator animator, int start) {
+        public PathPlayer(List path, RegulatoryAnimator animator, int start) {
             this.path = path;
             this.animator = animator;
             this.start = start;
@@ -329,7 +329,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
     /**
      * @return the selected path
      */
-    public Vector getPath() {
+    public List getPath() {
         return path;
     }
 

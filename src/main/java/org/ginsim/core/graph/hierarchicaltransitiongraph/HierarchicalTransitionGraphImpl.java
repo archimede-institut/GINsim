@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -164,8 +163,8 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 /* **************** NODE SEARCH ************/
 	
 	@Override
-	public Vector<HierarchicalNode> searchNodes(String regexp) {
-		Vector<HierarchicalNode> v = new Vector<HierarchicalNode>();
+	public List<HierarchicalNode> searchNodes(String regexp) {
+		List<HierarchicalNode> v = new ArrayList<HierarchicalNode>();
 		
 		StringBuffer s = new StringBuffer();
 		for (int i = 0; i < regexp.length(); i++) {

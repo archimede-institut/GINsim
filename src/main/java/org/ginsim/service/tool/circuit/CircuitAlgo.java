@@ -1,15 +1,14 @@
 package org.ginsim.service.tool.circuit;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
-import org.colomoto.biolqm.modifier.reduction.FixedComponentRemover;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -107,13 +106,13 @@ public class CircuitAlgo {
     public int checkEdge(RegulatoryEdge ei, int[] t_circuit, int nextmin, int nextmax) {
         me = ei.me;
         // first look for a previous test on this interaction with the same constraints
-        Vector[] t_report = (Vector[])m_report.get(me);
+        List[] t_report = (List[])m_report.get(me);
         if (!testOutLimit || nextmax == -1) {
             nextmax = me.getTarget().getMaxValue();
         }
         if (t_report != null) {
             if (t_report[ei.index] != null) {
-                Vector v_lr = t_report[ei.index];
+                List v_lr = t_report[ei.index];
                 for (int i=0 ; i<v_lr.size() ; i++) {
                 	subReport sr = (subReport)v_lr.get(i);
                 	if (sr.min == nextmin && sr.max == nextmax) {
@@ -124,11 +123,11 @@ public class CircuitAlgo {
                 // the next step will add a relevant test
             } else {
                 // some tests did exist on the same multiedge, but not exactly the right "subedge"
-                t_report[ei.index] = new Vector();
+                t_report[ei.index] = new ArrayList();
             }
         } else { // no report existed on this multiedge, create a new one
-            t_report = new Vector[me.getEdgeCount()];
-            t_report[ei.index] = new Vector();
+            t_report = new List[me.getEdgeCount()];
+            t_report[ei.index] = new ArrayList();
             m_report.put(me, t_report);
         }
 
@@ -162,9 +161,9 @@ public class CircuitAlgo {
         t_lc[0] = (byte) (min-1);
         t_lc[1] = min;
 
-        Vector[] t_ei = new Vector[t_lc.length];
+        List[] t_ei = new List[t_lc.length];
         for (int i=0 ; i<t_lc.length ; i++) {
-            Vector v = new Vector();
+            List v = new ArrayList();
             int val = t_lc[i];
             for (int j=0 ; j<me.getEdgeCount() ; j++) {
                 if (val >= me.getMin(j) && (me.getMax(j) == -1 || val <= me.getMax(j))) {
@@ -176,7 +175,7 @@ public class CircuitAlgo {
         if (t_ei.length == 4) {
             // if both inside refers to the same parameters, remove the unnecessary one
             if (t_ei[1].size() == t_ei[2].size() && t_ei[1].containsAll(t_ei[2])) {
-                t_ei = new Vector[] { t_ei[0], t_ei[1], t_ei[3]};
+                t_ei = new List[] { t_ei[0], t_ei[1], t_ei[3]};
             }
             // TODO: what if both inside/outside are inverted ? (==> action will also be inverted)
             // Has all this still a meaning now ??
@@ -184,7 +183,7 @@ public class CircuitAlgo {
         if (t_ei.length == 3) {
             // if both outside refers to the same parameters, remove the unnecessary one
             if (t_ei[0].size() == t_ei[2].size() && t_ei[0].containsAll(t_ei[2])) {
-                t_ei = new Vector[] { t_ei[0], t_ei[1]};
+                t_ei = new List[] { t_ei[0], t_ei[1]};
             }
         }
 

@@ -6,10 +6,10 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.Enumeration;
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
+import java.util.Map;
 
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.JButton;
@@ -30,8 +30,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameterList;
-import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeElement;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function.FunctionsCreator;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
@@ -220,7 +220,7 @@ public class InteractionPanel extends AbstractParameterPanel
 	 */
 	private JTable getJTable() {
 		if (jTable == null) {
-            Vector v_ok = new Vector();
+            List v_ok = new ArrayList();
 	        interactionList = new TableInteractionsModel(graph, v_ok);
 			jTable = new EnhancedJTable(interactionList);
             jTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
@@ -467,7 +467,7 @@ public class InteractionPanel extends AbstractParameterPanel
                 selectedrow = -1;
             }
 			int[] indices=jList.getSelectedIndices();
-			Vector edgeindex = new Vector();
+			List edgeindex = new ArrayList();
 			Object[] objs = jList.getSelectedValues();
 			for (int i=0;i<indices.length;i++) {
 				if (objs[i] != null) {
@@ -537,31 +537,31 @@ public class InteractionPanel extends AbstractParameterPanel
 
 	protected void doChaos(boolean comp, boolean one) {
       FunctionsCreator c = null;
-      Vector v = new Vector();
+      List v = new ArrayList();
       List interactions = ((TableInteractionsModel)jTable.getModel()).getInteractions();
 
       TreeInteractionsModel interactionsModel = currentNode.getInteractionsModel();
 			if (!comp) {
 				int[] sel = jTable.getSelectedRows();
-				for (int i = 0; i < sel.length; i++) v.addElement(interactions.get(sel[i]));
+				for (int i = 0; i < sel.length; i++) v.add(interactions.get(sel[i]));
 				c = new FunctionsCreator(graph, v, currentNode);
 			}
 			else
 				c = new FunctionsCreator(graph, interactions, currentNode);
 
-      Hashtable h = c.doIt(comp);
+      Map h = c.doIt(comp);
 
-      Enumeration enu = h.keys();
+      Iterator enu = h.keySet().iterator();
       Integer key;
       String s;
 
-      while (enu.hasMoreElements()) {
-        key = (Integer)enu.nextElement();
-        v = (Vector)h.get(key);
-        Enumeration enu2 = v.elements();
+      while (enu.hasNext()) {
+        key = (Integer)enu.next();
+        v = (List)h.get(key);
+        Iterator enu2 = v.iterator();
         if (one) {
-        	s = "(" + (String)enu2.nextElement() + ")";
-        	while (enu2.hasMoreElements()) s = s + " | " + "(" + (String)enu2.nextElement() + ")";
+        	s = "(" + (String)enu2.next() + ")";
+        	while (enu2.hasNext()) s = s + " | " + "(" + (String)enu2.next() + ")";
         	try {
         		interactionsModel.addExpression(null, key.byteValue(), currentNode, s);
         	}
@@ -570,8 +570,8 @@ public class InteractionPanel extends AbstractParameterPanel
         	}
         }
         else {
-        	while (enu2.hasMoreElements()) {
-        		s = (String)enu2.nextElement();
+        	while (enu2.hasNext()) {
+        		s = (String)enu2.next();
         		try {
         			interactionsModel.addExpression(null, key.byteValue(), currentNode, s);
         		}

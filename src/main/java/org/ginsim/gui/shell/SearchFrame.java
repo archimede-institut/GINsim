@@ -9,7 +9,6 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -135,7 +134,7 @@ public class SearchFrame extends SimpleDialog implements ListSelectionListener {
 			return;
 		}
 		oldFilter = filter;
-		tableModel.setData(new Vector());
+		tableModel.setData(new ArrayList());
 		List<?> foundNodes = g.searchNodes(filter);
 		if (foundNodes.size() > MAX_FOUND_NODES_DISPLAYED) {
 			foundNodes = (List<?>) foundNodes.subList(0, MAX_FOUND_NODES_DISPLAYED);
@@ -144,7 +143,7 @@ public class SearchFrame extends SimpleDialog implements ListSelectionListener {
 	}
 
 	public void selectNodes() {
-		List l = new Vector();
+		List l = new ArrayList();
 		int[] t = table.getSelectedRows();
 		for (int i = 0; i < t.length; i++) {
 			l.add(tableModel.getNodeAt(t[i]));

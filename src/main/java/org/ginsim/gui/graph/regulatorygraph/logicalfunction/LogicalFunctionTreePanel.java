@@ -19,9 +19,11 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.Vector;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.swing.Icon;
 import javax.swing.JScrollPane;
@@ -229,20 +231,20 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
 
   private void deleteSelection() {
     Enumeration enu;
-    Vector v;
+    List v;
     TreeElement treeElement;
 
     TreePath[] selectedPaths = tree.getSelectionPaths();
     if (selectedPaths != null) {
       enu = tree.getExpandedDescendants(tree.getPathForRow(0));
       tree.stopEditing();
-      v = new Vector();
+      v = new ArrayList();
       tree.stopEditing();
       for (int i = 0; i < selectedPaths.length; i++) {
         treeElement = (TreeElement) selectedPaths[i].getLastPathComponent();
         if (!(treeElement instanceof TreeParam)) {
           treeElement.remove(false);
-          v.addElement(treeElement);
+          v.add(treeElement);
           if (treeElement.toString().equals("")) treeElement.getParent().setProperty("null function", new Boolean(false));
         }
       }
@@ -426,59 +428,6 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
     }
   }
 
-//  public void pasteFunctionsInManual(TreeElement[] functions, boolean remove, GsTreeManual manual) {
-//    Enumeration enu, enu2;
-//    TreePath tp;
-//    TreeParam param;
-//
-//    try {
-//      enu = tree.getExpandedDescendants(tree.getPathForRow(0));
-//      for (int i = 0; i < functions.length; i++) {
-//        enu2 = functions[i].getChilds().elements();
-//        while (enu2.hasMoreElements()) {
-//          param = (TreeParam) enu2.nextElement();
-//          manual.addChild(new TreeParam(manual, param.getEdgeIndexes()), -1);
-//        }
-//        if (remove) {
-//          functions[i].remove(false);
-//        }
-//      }
-//      interactionList.fireTreeStructureChanged((TreeElement) tree.getPathForRow(0).getLastPathComponent());
-//      interactionList.refreshNode();
-//      while (enu.hasMoreElements()) {
-//        tp = (TreePath) enu.nextElement();
-//        tree.expandPath(tp);
-//      }
-//    }
-//    catch (Exception ex) {
-//      ex.printStackTrace();
-//    }
-//  }
-
-/*  public void pasteManualsInValue(TreeElement[] manuals, boolean remove, TreeValue value) {
-    Enumeration enu, enu2;
-    TreeParam param;
-    TreePath tp;
-
-    enu = tree.getExpandedDescendants(tree.getPathForRow(0));
-    for (int i = 0; i < manuals.length; i++) {
-      enu2 = manuals[i].getChilds().elements();
-      while (enu2.hasMoreElements()) {
-        param = (TreeParam) enu2.nextElement();
-        value.getChild(0).addChild(new TreeParam(value.getChild(0), param.getEdgeIndexes()), -1);
-      }
-      if (remove) {
-        manuals[i].clearChilds();
-      }
-    }
-    interactionList.fireTreeStructureChanged((TreeElement) tree.getPathForRow(0).getLastPathComponent());
-    interactionList.refreshNode();
-    while (enu.hasMoreElements()) {
-      tp = (TreePath) enu.nextElement();
-      tree.expandPath(tp);
-    }
-  }
-*/
   public void pasteParamsInValue(TreeElement[] params, boolean remove, TreeValue value) {
     Enumeration enu;
     TreePath tp;
@@ -532,29 +481,29 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
 
   private boolean doChaos(TreeElement[] params, boolean oneFunction) {
     FunctionsCreator c = null;
-    Vector v = new Vector();
+    List v = new ArrayList();
     int value = ((TreeValue) params[0].getParent().getParent()).getValue();
     LogicalParameter lp;
 
     for (int i = 0; i < params.length; i++) {
       lp = new LogicalParameter(value);
       lp.setEdges(((TreeParam) params[i]).getEdgeIndexes());
-      v.addElement(lp);
+      v.add(lp);
     }
     c = new FunctionsCreator((RegulatoryGraph) graph, v, interactionList.getNode());
 
-    Hashtable h = c.doIt(false);
+    Map h = c.doIt(false);
 
-    Enumeration enu = h.keys(), enu2;
+    Iterator enu = h.keySet().iterator(), enu2;
     Integer key;
     String s;
 
     if (!oneFunction) {
-      while (enu.hasMoreElements()) {
-        key = (Integer) enu.nextElement();
-        v = (Vector) h.get(key);
-        for (enu2 = v.elements(); enu2.hasMoreElements(); ) {
-          s = (String) enu2.nextElement();
+      while (enu.hasNext()) {
+        key = (Integer) enu.next();
+        v = (List) h.get(key);
+        for (enu2 = v.iterator(); enu2.hasNext(); ) {
+          s = (String) enu2.next();
           try {
             interactionList.addExpression(null, key.byteValue(), interactionList.getNode(), s);
           }
@@ -565,12 +514,12 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
       }
     }
     else {
-      while (enu.hasMoreElements()) {
-        key = (Integer) enu.nextElement();
-        v = (Vector) h.get(key);
-        enu2 = v.elements();
-        s = (String) enu2.nextElement();
-        while (enu2.hasMoreElements()) s = s + " | (" + (String)enu2.nextElement() + ")";
+      while (enu.hasNext()) {
+        key = (Integer) enu.next();
+        v = (List) h.get(key);
+        enu2 = v.iterator();
+        s = (String) enu2.next();
+        while (enu2.hasNext()) s = s + " | (" + (String)enu2.next() + ")";
         try {
           interactionList.addExpression(null, key.byteValue(), interactionList.getNode(), s);
         }

@@ -1,7 +1,7 @@
 package org.ginsim.common.application;
 
-import java.util.Vector;
-
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * When something bad happen, a GsException must be raised.
@@ -18,7 +18,7 @@ public class GsException extends Exception {
     public static final int GRAVITY_ERROR = 2;
     
     private int gravity;
-    private Vector<String> message;
+    private List<String> message;
     private Exception exception;
     
     /**
@@ -29,7 +29,7 @@ public class GsException extends Exception {
     public GsException (int gravity, String message) {
     	
         this.gravity = gravity;
-        this.message = new Vector<String>();
+        this.message = new ArrayList<String>();
         this.message.add( message);
         this.exception = null;
     }
@@ -37,7 +37,7 @@ public class GsException extends Exception {
     public GsException( String message, Exception excep){
     	
     	this.gravity = GRAVITY_ERROR;
-    	this.message = new Vector<String>();
+    	this.message = new ArrayList<String>();
     	this.message.add( message);
     	this.exception = excep;
     }
@@ -49,14 +49,14 @@ public class GsException extends Exception {
      */
     public GsException (int gravity, Exception e) {
         this.gravity = gravity;
-        this.message = new Vector<String>();
+        this.message = new ArrayList<String>();
         this.exception = e;
     }
     
     public GsException( int gravity, String[] messages){
     	
         this.gravity = gravity;
-        this.message = new Vector<String>();
+        this.message = new ArrayList<String>();
         for( String text : messages){
         	this.message.add( text);
         }

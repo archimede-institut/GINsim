@@ -1,6 +1,7 @@
 package org.ginsim.johnsonCycles;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -26,7 +27,7 @@ public class AdjacencyList {
 		int[][] list = new int[adjacencyMatrix.length][];
 
 		for (int i = 0; i < adjacencyMatrix.length; i++) {
-			Vector v = new Vector();
+			List v = new ArrayList();
 			for (int j = 0; j < adjacencyMatrix[i].length; j++) {
 				if (adjacencyMatrix[i][j]) {
 					v.add(new Integer(j));

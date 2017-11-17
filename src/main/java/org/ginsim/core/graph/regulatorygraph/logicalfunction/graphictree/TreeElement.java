@@ -1,18 +1,19 @@
 package org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.List;
 
 public abstract class TreeElement implements Comparable {
-  protected Vector childs;
+  protected List childs;
   protected TreeElement parent;
   protected boolean selected, editable, dropable, edited;
   protected Color foreground;
   protected Hashtable property;
 
   public TreeElement(TreeElement parent) {
-    childs = new Vector();
+    childs = new ArrayList();
     this.parent = parent;
     selected = false;
     foreground = Color.black;
@@ -28,7 +29,7 @@ public abstract class TreeElement implements Comparable {
     TreeElement te = null;
     if (childs != null) {
       if (index < childs.size()) {
-		te = (TreeElement)childs.elementAt(index);
+		te = (TreeElement)childs.get(index);
 	}
     }
     return te;
@@ -39,7 +40,7 @@ public abstract class TreeElement implements Comparable {
 		if (index == -1) {
 			childs.add(element);
 		} else {
-			childs.insertElementAt(element, index);
+			childs.add(index, element);
 		}
 	}
     return element;
@@ -47,7 +48,7 @@ public abstract class TreeElement implements Comparable {
   public void removeChild(int index) {
     if (childs != null) {
 		if (childs.size() > index) {
-			childs.removeElementAt(index);
+			childs.remove(index);
 		}
 	}
   }
@@ -56,7 +57,7 @@ public abstract class TreeElement implements Comparable {
 		childs.clear();
 	}
   }
-  public Vector getChilds() {
+  public List getChilds() {
     return childs;
   }
   public int getChildCount() {

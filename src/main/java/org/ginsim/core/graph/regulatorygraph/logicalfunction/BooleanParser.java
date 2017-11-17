@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Vector;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
@@ -106,7 +105,7 @@ public class BooleanParser extends TBooleanParser {
 				}
 			}
 			if (j >= 0) {
-				L = new Vector();
+				L = new ArrayList();
 				for (j = 0; j < edgesList.size(); j++) {
 					if (!((LogicalFunctionListElement) F[j].get(K[j])).toString().equals("")) {
 						L.add(F[j].get(K[j]));
@@ -118,7 +117,7 @@ public class BooleanParser extends TBooleanParser {
 			}
 		}
 		allParams = v.toArray();
-		allData = new Vector(allParams.length);
+		allData = new ArrayList(allParams.length);
 		for (i = 0; i < allParams.length; i++) {
 			allData.add(new Integer(i));
 		}

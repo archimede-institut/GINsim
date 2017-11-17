@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
@@ -88,7 +88,7 @@ class CopyAction extends AbstractAction {
 			}
 			if (questionHasBeenAsked == 0) { //extend
 				nodes.add(node);
-				Vector v = new Vector();
+				List v = new ArrayList();
 				v.add(node);
 				graphSelection.addNodesToSelection(v);
 			} else if (questionHasBeenAsked == 1){ //restraint

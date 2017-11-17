@@ -1,15 +1,15 @@
 package org.ginsim.johnsonCycles;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.Vector;
 
 public class SCCResult {
 	private Set nodeIDsOfSCC = null;
-	private Vector[] adjList = null;
+	private List[] adjList = null;
 	private int lowestNodeId = -1;
 	
-	public SCCResult(Vector[] adjList, int lowestNodeId) {
+	public SCCResult(List[] adjList, int lowestNodeId) {
 		this.adjList = adjList;
 		this.lowestNodeId = lowestNodeId;
 		this.nodeIDsOfSCC = new HashSet();
@@ -22,7 +22,7 @@ public class SCCResult {
 		}
 	}
 
-	public Vector[] getAdjList() {
+	public List[] getAdjList() {
 		return adjList;
 	}
 

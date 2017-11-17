@@ -5,9 +5,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.lang.reflect.Constructor;
+import java.util.ArrayList;
 import java.util.EventObject;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.List;
 
 import javax.swing.AbstractCellEditor;
 import javax.swing.JButton;
@@ -34,7 +34,7 @@ import org.ginsim.gui.utils.data.models.ValueListComboModel;
 public class EnhancedJTable extends JTable {
 	private static final long serialVersionUID = 835349911766025807L;
 
-	private Vector v_actionListeners;
+	private List<TableActionListener> v_actionListeners;
 
 	public void addCellEditor(Class theClass, TableCellEditor theEditor) {
 		setDefaultEditor(theClass, theEditor);
@@ -90,7 +90,7 @@ public class EnhancedJTable extends JTable {
 
 	public void addActionListener(TableActionListener l) {
 		if (v_actionListeners == null) {
-			v_actionListeners = new Vector();
+			v_actionListeners = new ArrayList<TableActionListener>();
 		}
 		v_actionListeners.add(l);
 	}
@@ -103,11 +103,11 @@ public class EnhancedJTable extends JTable {
 	}
 
 	public void click(int row, int col) {
-		if (v_actionListeners != null) {
-			Iterator it = v_actionListeners.iterator();
-			while (it.hasNext()) {
-				((TableActionListener) it.next()).actionPerformed(row, col);
-			}
+		if (v_actionListeners == null) {
+			return;
+		}
+		for (TableActionListener listener: v_actionListeners) {
+			listener.actionPerformed(row, col);
 		}
 	}
 

@@ -6,9 +6,7 @@ import org.ginsim.gui.graph.regulatorygraph.TableInteractionsModel;
 
 public class FTableInteractionModel extends TableInteractionsModel {
 	private static final long serialVersionUID = 6944736425274853595L;
-	/* public FTableInteractionModel(RegulatoryGraph graph, Vector v_ok) {
-        super(graph, v_ok);
-    }*/
+
     public FTableInteractionModel(RegulatoryNode no) {
         super(no);
     }

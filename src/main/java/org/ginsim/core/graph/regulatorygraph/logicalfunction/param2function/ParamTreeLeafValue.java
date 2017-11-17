@@ -1,7 +1,8 @@
 package org.ginsim.core.graph.regulatorygraph.logicalfunction.param2function;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
-import java.util.Vector;
+import java.util.List;
 
 import org.ginsim.common.application.LogManager;
 
@@ -34,16 +35,16 @@ public class ParamTreeLeafValue extends ParamTreeLeaf {
     return false;
   }
   public void makeFunctions(Hashtable h, String f, int dv, boolean pattern) {
-    Vector v;
+    List v;
 
     if (value != dv) {
       if (h.containsKey(new Integer(value))) {
-        v = (Vector)h.get(new Integer(value));
-        v.addElement(f);
+        v = (List)h.get(new Integer(value));
+        v.add(f);
       }
       else if (!f.equals("")) {
-        v = new Vector();
-        v.addElement(f);
+        v = new ArrayList();
+        v.add(f);
         h.put(new Integer(value), v);
       }
     }
@@ -55,7 +56,7 @@ public class ParamTreeLeafValue extends ParamTreeLeaf {
     return toString().hashCode();
   }
 
-  public void makeDNF(Vector v, String s, int value) {
-    if (this.value == value) v.addElement(s);
+  public void makeDNF(List v, String s, int value) {
+    if (this.value == value) v.add(s);
   }
 }

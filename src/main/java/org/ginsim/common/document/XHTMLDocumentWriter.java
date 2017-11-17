@@ -5,10 +5,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
@@ -30,7 +31,7 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 	OutputStreamWriter writer;
 	
 	Map m_style = new HashMap();
-	Vector v_table = new Vector();
+	List<xHTMLTable> v_table = new ArrayList<xHTMLTable>();
 	xHTMLTable curTable = null;
 	public String NEW_LINE = "<br />";
 	
@@ -136,7 +137,7 @@ public class XHTMLDocumentWriter extends DocumentWriter {
 		xmlw.closeTag();
 		v_table.remove(curTable);
 		if (v_table.size() > 0) {
-			curTable = (xHTMLTable)v_table.get(v_table.size()-1);
+			curTable = v_table.get(v_table.size()-1);
 		} else {
 			curTable = null;
 		}

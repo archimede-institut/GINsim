@@ -7,7 +7,6 @@ import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
-import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
@@ -22,7 +21,6 @@ public class WikiDocumentWriter extends DocumentWriter {
 	OutputStreamWriter writer;
 	
 	Map m_style = new HashMap();
-	Vector v_table = new Vector();
 	public String NEW_LINE = "\n";
 	
 	Stack lists = new Stack();

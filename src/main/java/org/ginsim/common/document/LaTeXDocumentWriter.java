@@ -4,10 +4,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.Vector;
 
 import javax.imageio.ImageIO;
 
@@ -25,7 +26,7 @@ public class LaTeXDocumentWriter extends DocumentWriter {
 	OutputStreamWriter writer;
 	
 	Map m_style = new HashMap();
-	Vector v_table = new Vector();
+	List<LaTeXTable> v_table = new ArrayList();
 	LaTeXTable curTable = null;
 	public String NEW_LINE = "\\newline\n";
 	
@@ -103,7 +104,7 @@ public class LaTeXDocumentWriter extends DocumentWriter {
 	    writer.write("\\end{tabular}\n");
 		v_table.remove(curTable);
 		if (v_table.size() > 0) {
-			curTable = (LaTeXTable)v_table.get(v_table.size()-1);
+			curTable = v_table.get(v_table.size()-1);
 		} else {
 			curTable = null;
 		}
