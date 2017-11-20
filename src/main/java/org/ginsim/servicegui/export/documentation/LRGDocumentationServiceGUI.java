@@ -3,6 +3,7 @@ package org.ginsim.servicegui.export.documentation;
 import org.ginsim.Launcher;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.document.DocumentWriter;
+import org.ginsim.common.document.GenericDocumentFormat;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -44,10 +45,13 @@ public class LRGDocumentationServiceGUI extends AbstractServiceGUI {
     @Override
     public List<Action> getAvailableActions(Graph<?, ?> graph) {
         if (graph instanceof RegulatoryGraph) {
+        	RegulatoryGraph lrg = (RegulatoryGraph)graph;
             List<Action> actions = new ArrayList<Action>();
-            actions.add(new LRGDocumentationAction((RegulatoryGraph)graph, service));
+        	for (GenericDocumentFormat format: GenericDocumentFormat.getAllFormats()) {
+                actions.add(new LRGDocumentationAction(lrg, format, service));
+        	}
             if (Launcher.developer_mode) {
-                actions.add(new JSONDocumentationAction((RegulatoryGraph)graph, this));
+                actions.add(new JSONDocumentationAction(lrg, this));
             }
 
             return actions;

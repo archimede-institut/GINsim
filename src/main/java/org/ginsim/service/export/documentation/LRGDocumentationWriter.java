@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.ginsim.common.document.DocumentStyle;
 import org.ginsim.common.document.DocumentWriter;
+import org.ginsim.common.document.GenericDocumentFormat;
 import org.ginsim.common.utils.IOUtils;
 import org.ginsim.common.utils.OpenUtils;
 import org.ginsim.core.annotation.Annotation;
@@ -53,16 +54,14 @@ public class LRGDocumentationWriter {
 	private int len;
 	private final StableStatesService sss = GSServiceManager.get(StableStatesService.class);
 
-	private DocumentExportConfig config;
 	
     public LRGDocumentationWriter(RegulatoryGraph graph) {
     	this.graph = graph;
     }
 
-	public void export( DocumentExportConfig config, String filename) throws Exception {
+	public void export( GenericDocumentFormat format, String filename) throws Exception {
 
-		this.config = config;
-		this.doc = config.format.getWriter();
+		this.doc = format.getWriter();
 		
 		doc.setOutput(new File(filename));
 		nodeOrder = graph.getNodeOrder();
@@ -90,20 +89,9 @@ public class LRGDocumentationWriter {
 		doc.closeParagraph();
 		
 		// all nodes with comment and logical functions
-		if (true) {
-			doc.openHeader(2, "Nodes", null);
-			writeLogicalFunctionsTable(config.putComment);
-		}
+		doc.openHeader(2, "Nodes", null);
+		writeLogicalFunctionsTable();
 		
-		// initial states
-		if (config.exportInitStates) {
-			writeInitialStates();
-		}
-		// mutant description
-		if (config.exportMutants) {
-			writePerturbations();
-		}
-
 		doc.close();//close the document		
 	}
 
@@ -173,19 +161,13 @@ public class LRGDocumentationWriter {
         doc.closeTable();
 	}
 
-	private void writeLogicalFunctionsTable(boolean putcomment) throws IOException {
-		if (config.putComment) {
-			doc.openTable(null, "table", new String[] { "", "", "", "" });
-		} else {
-			doc.openTable(null, "table", new String[] { "", "", "" });
-		}
+	private void writeLogicalFunctionsTable() throws IOException {
+		doc.openTable(null, "table", new String[] { "", "", "", "" });
 		doc.openTableRow(null);
 		doc.openTableCell("ID", true);
 		doc.openTableCell("Val", true);
 		doc.openTableCell("Logical function", true);
-		if (putcomment) {
-			doc.openTableCell("Comment", true);
-		}
+		doc.openTableCell("Comment", true);
 		
 		for (RegulatoryNode vertex: graph.getNodeOrder()) {
 			TreeInteractionsModel lfunc = vertex.getInteractionsModel();
@@ -238,33 +220,31 @@ public class LRGDocumentationWriter {
 				doc.openTableCell(null);//Values (empty)
 				doc.openTableCell("no function");//function
 			}
-			if (putcomment) {
-				doc.openTableCell(1,nbrows, null, false);
-				writeAnnotation(vertex.getAnnotation());
-				
-				boolean hasRegulatorComment = false;
-				for (RegulatoryMultiEdge me: graph.getIncomingEdges(vertex)) {
-					if (me.getSource() == vertex) {
-						continue;
-					}
-					Annotation annot = me.getAnnotation();
-					if (annot.isEmpty()) {
-						continue;
-					}
-					if (!hasRegulatorComment) {
-						doc.openTable("", "", new String[] {"", ""});
-						doc.openTableCell("Regulator", true);
-						doc.openTableCell("Comment", true);
-						hasRegulatorComment = true;
-					}
-					doc.openTableRow();
-					doc.openTableCell(me.getSource().toString(), true);
-					doc.openTableCell(null);
-					writeAnnotation(me.getAnnotation());
+			doc.openTableCell(1,nbrows, null, false);
+			writeAnnotation(vertex.getAnnotation());
+			
+			boolean hasRegulatorComment = false;
+			for (RegulatoryMultiEdge me: graph.getIncomingEdges(vertex)) {
+				if (me.getSource() == vertex) {
+					continue;
 				}
-				if (hasRegulatorComment) {
-					doc.closeTable();
+				Annotation annot = me.getAnnotation();
+				if (annot.isEmpty()) {
+					continue;
 				}
+				if (!hasRegulatorComment) {
+					doc.openTable("", "", new String[] {"", ""});
+					doc.openTableCell("Regulator", true);
+					doc.openTableCell("Comment", true);
+					hasRegulatorComment = true;
+				}
+				doc.openTableRow();
+				doc.openTableCell(me.getSource().toString(), true);
+				doc.openTableCell(null);
+				writeAnnotation(me.getAnnotation());
+			}
+			if (hasRegulatorComment) {
+				doc.closeTable();
 			}
 			doc.closeTableRow();
 			

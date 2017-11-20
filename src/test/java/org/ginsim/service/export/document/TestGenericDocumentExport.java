@@ -1,12 +1,11 @@
 package org.ginsim.service.export.document;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.ginsim.TestFileUtils;
+import org.ginsim.common.document.GenericDocumentFormat;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.GSServiceManager;
-import org.ginsim.service.export.documentation.DocumentExportConfig;
 import org.ginsim.service.export.documentation.LRGDocumentationService;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -28,11 +27,8 @@ public class TestGenericDocumentExport {
 		LRGDocumentationService export =  GSServiceManager.get(LRGDocumentationService.class);
 		String filename = tmpDir.getAbsolutePath()+File.separator+"graph.html";
 		
-		DocumentExportConfig config = new DocumentExportConfig();
-		config.exportInitStates = false;
-		config.exportMutants = false;
 		try {
-			export.run(graph, config, filename);
+			export.run(graph, GenericDocumentFormat.getAllFormats().get(0), filename);
 		} catch (Exception e) {
 			Assert.fail("Error during export: "+e.getMessage());
 		}
