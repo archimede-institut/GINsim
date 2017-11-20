@@ -11,7 +11,7 @@ import org.ginsim.gui.service.ServiceGUI;
 
 
 /**
- * this class is used for all actions, it will lookup for an internatiolized string
+ * this class is used for all actions, it will lookup for an internationalized string
  * for the name and the tooltip
  */
 public abstract class BaseAction extends AbstractAction {
@@ -50,18 +50,26 @@ public abstract class BaseAction extends AbstractAction {
 			   ServiceGUI serviceGUI) {
 		this(name, getIcon(icon), tooltip, accelerator, mnemonic, serviceGUI);
 	}
-	
+
 	public BaseAction(String name,
 			   ImageIcon icon,
 			   String tooltip,
 			   KeyStroke accelerator,
 			   Integer mnemonic,
 			   ServiceGUI serviceGUI) {
+
+		String title = Txt.t(name);
+		int idx = title.indexOf('/');
+		if (idx > 0 && idx < title.length()-1) {
+			String category = title.substring(0, idx);
+			this.putValue("category", category);
+			title = title.substring(idx+1);
+		}
+		this.putValue( Action.NAME, title);
 		
 		if (mnemonic != null) {
 			this.putValue(Action.MNEMONIC_KEY, mnemonic);
 		}
-		this.putValue( Action.NAME, Txt.t(name));
 		if( icon != null ) {
 			this.putValue( Action.SMALL_ICON, icon );
 		}

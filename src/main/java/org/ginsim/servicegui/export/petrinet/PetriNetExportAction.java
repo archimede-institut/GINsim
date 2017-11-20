@@ -40,7 +40,7 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implemen
 	Map m_input = null;
 	
 	public PetriNetExportAction(RegulatoryGraph graph, PNFormat format) {
-		super(graph, format.getName(), "STR_PetriNet_descr", null);
+		super(graph, "STR_PetriNet_"+format.getID(), "STR_PetriNet_"+format.getID()+"_descr", null);
 		this.format = format;
 	}
 

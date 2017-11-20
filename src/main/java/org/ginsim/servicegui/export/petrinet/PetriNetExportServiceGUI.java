@@ -11,14 +11,10 @@ import org.colomoto.biolqm.io.petrinet.PNMLFormat;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.EStatus;
-import org.ginsim.core.service.GSServiceManager;
-import org.ginsim.gui.service.AbstractServiceGUI;
-import org.ginsim.gui.service.GUIFor;
-import org.ginsim.gui.service.ServiceGUI;
-import org.ginsim.gui.service.SimpleServiceGUI;
-import org.ginsim.gui.service.StandaloneGUI;
 import org.ginsim.core.service.ServiceStatus;
-import org.ginsim.service.format.PetriNetINAFormatService;
+import org.ginsim.gui.service.AbstractServiceGUI;
+import org.ginsim.gui.service.ServiceGUI;
+import org.ginsim.gui.service.StandaloneGUI;
 import org.mangosdk.spi.ProviderFor;
 
 /**

@@ -1,6 +1,8 @@
 package org.ginsim.gui.shell;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.Action;
 import javax.swing.JMenu;
@@ -8,7 +10,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
 
-import org.ginsim.Launcher;
 import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.gui.graph.EditActionManager;
@@ -27,6 +28,16 @@ import org.ginsim.gui.shell.callbacks.SelectionCallBack;
 
 public class MainFrameActionManager implements FrameActionManager {
 
+	private static final String IMPORT = Txt.t("STR_Import");
+	private static final String EXPORT = Txt.t("STR_Export");
+	private static final String LAYOUT = Txt.t("STR_Layout");
+	private static final String GRAPH  = Txt.t("STR_Graph");
+	private static final String TOOLS  = Txt.t("STR_Tools");
+	private static final String TOOLKIT = Txt.t("STR_Toolkits");
+
+	Map<String, JMenu> menus = new HashMap<String, JMenu>();
+	Map<String, JMenu> submenus = new HashMap<String, JMenu>();
+
 	private void fillMenu(JMenu menu, List<Action> actions) {
 		for (Action action: actions) {
 			menu.add(action);
@@ -41,46 +52,35 @@ public class MainFrameActionManager implements FrameActionManager {
 		// get Service-related actions
 		List<Action> actions = GSServiceGUIManager.getAvailableActions(graph);
 
-		// add them to the right menus
-		JMenu importMenu = new JMenu( Txt.t("STR_Import"));
-		JMenu exportMenu = new JMenu( Txt.t("STR_Export"));
-		JMenu layoutMenu = new JMenu( Txt.t("STR_Layout"));
-		JMenu graphMenu = new JMenu( Txt.t("STR_Graph"));
-		JMenu toolsMenu = new JMenu( Txt.t("STR_Tools"));
-		JMenu toolkitsMenu = null;
-		if (Launcher.developer_mode) {
-			 toolkitsMenu = new JMenu( Txt.t("STR_Toolkits"));
-		}
-
-		EditCallBack.addEditEntries(graphMenu, gui);
-		graphMenu.addSeparator();
-		SelectionCallBack.fillMenu(graphMenu, graph); //Add all the simple selection actions
+		EditCallBack.addEditEntries(getMenu(GRAPH), gui);
+		getMenu(GRAPH).addSeparator();
+		SelectionCallBack.fillMenu(getMenu(GRAPH), graph); //Add all the simple selection actions
 		
 		int nextSeparator = 0;
 		
 		for (Action action: actions) {
 			if (nextSeparator < ServiceGUI.separators.length && ((BaseAction)action).getWeight() >= ServiceGUI.separators[nextSeparator]) {
 				if (action instanceof GenericGraphAction) {
-					graphMenu.add( new JSeparator());
+					getMenu(GRAPH).add( new JSeparator());
 				} else if (action instanceof ToolAction) {
-					toolsMenu.add( new JSeparator());
+					getMenu(TOOLS).add( new JSeparator());
 				} else if (action instanceof ExportAction) {
-					exportMenu.add( new JSeparator());
+					getMenu(EXPORT).add( new JSeparator());
 				}
 				nextSeparator++;
 			}
 			if (action instanceof ImportAction) {
-				importMenu.add( action);
+				addAction(IMPORT, action);
 			} else if (action instanceof ExportAction) {
-				exportMenu.add( action);
+				addAction(EXPORT, action);
 			} else if (action instanceof LayoutAction) {
-				layoutMenu.add( action);
+				addAction(LAYOUT, action);
 			} else if (action instanceof GenericGraphAction) {
-				graphMenu.add( action);
+				addAction(GRAPH, action);
 			} else if (action instanceof ToolAction) {
-				toolsMenu.add( action);
+				addAction(TOOLS, action);
 			} else {
-				toolkitsMenu.add( action);
+				addAction(TOOLKIT, action);
 			}
 		}
 
@@ -88,24 +88,46 @@ public class MainFrameActionManager implements FrameActionManager {
 		menubar.removeAll();
 		toolbar.removeAll();
         menubar.add(FileCallBack.getMainMenu());
-		menubar.add( FileCallBack.getFileMenu(graph, importMenu, exportMenu));
+		menubar.add( FileCallBack.getFileMenu(graph, getMenu(IMPORT), getMenu(EXPORT)));
 		// TODO: the file menu should add some stuff to the toolbar as well
 
 		EditActionManager editManager = gui.getEditActionManager();
 		editManager.addEditButtons( toolbar);
 		
-		menubar.add( gui.getViewMenu( layoutMenu));
+		menubar.add( gui.getViewMenu( getMenu(LAYOUT)));
 		
-		if (graphMenu.getItemCount() > 0) {
-			menubar.add( graphMenu);
-		}
-		if (toolsMenu.getItemCount() > 0) {
-			menubar.add( toolsMenu);
-		}
-		if (toolkitsMenu != null && toolkitsMenu.getItemCount() > 0) {
-			menubar.add( toolkitsMenu);
+		menubar.add( getMenu(GRAPH));
+		menubar.add( getMenu(GRAPH));
+		if (menus.containsKey(TOOLKIT)) {
+			menubar.add( getMenu(TOOLKIT));
 		}
 		
 	}
+	
+	private JMenu getMenu(String key) {
+		if (!menus.containsKey(key)) {
+			menus.put(key, new JMenu(key));
+		}
+		return menus.get(key);
+	}
+	
+	private JMenu getSubmenu(String key, String name) {
+		String s = key+"/"+name;
+		if (!submenus.containsKey(s)) {
+			JMenu parent = getMenu(key);
+			JMenu newmenu = new JMenu(name);
+			parent.add(newmenu);
+			submenus.put(s, newmenu);
+		}
+		return submenus.get(s);
+	}
 
+	private void addAction(String s_menu, Action action) {
+		JMenu menu = getMenu(s_menu);
+		String category = (String)action.getValue("category");
+		if (category != null) {
+			menu = getSubmenu(s_menu, category);
+		}
+		menu.add(action);
+	}
 }
