@@ -39,6 +39,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	private PathStyleProvider selector;
 	private JButton b_selectFromGraph;
 	private JButton b_add;
+	private JButton b_del;
 
     private JTable constraintTable;
     private ConstraintSelectionModel constraintModel;
@@ -63,6 +64,10 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
         
         c.gridx++;
         mainPanel.add(getAddButton(), c);
+        
+        c.gridx++;
+        mainPanel.add(getDelButton(), c);
+        b_del.setEnabled(false);
 
         c.gridx = 0;
         c.gridy++;
@@ -153,6 +158,15 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 			b_add.setToolTipText("Add an intermediate");
 		}
 		return b_add;
+	}
+
+	private Component getDelButton() {
+		if (b_del == null) {
+			b_del = new JButton(ImageLoader.getImageIcon("list-remove.png"));
+			b_del.addActionListener(this);
+			b_del.setToolTipText("Remove an intermediate");
+		}
+		return b_del;
 	}
 
     private Component getNodeTable() {
@@ -260,6 +274,10 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 			getSelectionFromGraph();
 		} else if (e.getSource() == b_add) {
 			constraintModel.add();
+			b_del.setEnabled(true);
+		} else if (e.getSource() == b_del) {
+			constraintModel.del(constraintTable.getSelectedRows());
+			b_del.setEnabled( constraintModel.getRowCount() > 2);
 		}
 	}
 	
@@ -364,7 +382,24 @@ class ConstraintSelectionModel extends AbstractTableModel {
         constraints.add("");
     }
 
-    @Override
+    public void del(int[] selectedRows) {
+    	if (selectedRows == null) {
+    		return;
+    	}
+    	int n = 0;
+    	for (int i: selectedRows) {
+    		if (getRowCount() < 2) {
+    			break;
+    		}
+    		constraints.remove(i-n);
+    		n++;
+    	}
+    	if (n>0) {
+    		fireTableDataChanged();
+    	}
+	}
+
+	@Override
     public int getRowCount() {
         return constraints.size();
     }
