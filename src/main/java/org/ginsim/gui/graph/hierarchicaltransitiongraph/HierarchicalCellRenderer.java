@@ -7,6 +7,8 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 
+import org.ginsim.gui.graph.dynamicgraph.DynamicItemCellRenderer;
+
 public class HierarchicalCellRenderer extends DefaultTableCellRenderer implements TableCellRenderer {
 	private static final long serialVersionUID = -7412224236522039621L;
 
@@ -14,12 +16,17 @@ public class HierarchicalCellRenderer extends DefaultTableCellRenderer implement
     public Component getTableCellRendererComponent( JTable table , Object value , boolean isSelected , boolean hasFocus ,
             										int row , int column ) {
         Component cmp = super.getTableCellRendererComponent( table , value , isSelected , hasFocus , row , column );
-        cmp.setBackground(Color.WHITE);
-        cmp.setForeground(Color.BLACK);
+        Color[] backgrounds = isSelected ? DynamicItemCellRenderer.BG_SEL : DynamicItemCellRenderer.BG_NORMAL;
+        cmp.setBackground(backgrounds[0]);
+        if (isSelected) {
+            cmp.setForeground(Color.WHITE);
+        } else {
+            cmp.setForeground(Color.BLACK);
+        }
         if(table != null) {
             String state = (String)table.getModel().getValueAt(row, column); 
             if (state.equals("*")) {
-            	cmp.setBackground( Color.green );
+            	cmp.setBackground( backgrounds[1] );
             }
         }
         return cmp;
