@@ -1,10 +1,8 @@
 package org.ginsim.gui.graph.dynamicgraph;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
-import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
@@ -41,7 +39,13 @@ public class DynamicItemAttributePanel extends AbstractParameterPanel {
 		// assemble the panel content
         this.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
+        c.gridx = 0;
+        c.gridy = 0;
         c.weightx = 1;
+        c.fill = GridBagConstraints.HORIZONTAL;
+        this.add(new StateActionPanel(tableModel), c);
+        
+        c.gridy++;
         c.weighty = 1;
         c.fill = GridBagConstraints.BOTH;
         this.add(getScrollPane(tableModel), c);
@@ -51,17 +55,10 @@ public class DynamicItemAttributePanel extends AbstractParameterPanel {
 			extraTableModel = new ExtraTableModel(extra);
 			extraValues = new byte[extra.length];
 			
-			c = new GridBagConstraints();
-			c.gridy = 1;
-	        c.weightx = 1;
-            c.fill = GridBagConstraints.HORIZONTAL;
-            this.add(new JLabel("Values for (pseudo) outputs"), c);
-
             c.gridy++;
 	        c.weighty = 1;
 	        c.fill = GridBagConstraints.BOTH;
             this.add(getScrollPane(extraTableModel), c);
-	        System.out.println("ADDING an extra table... "+extra[0]);
 		} else {
 			extraValues = null;
 			extraTableModel = null;
@@ -100,7 +97,7 @@ public class DynamicItemAttributePanel extends AbstractParameterPanel {
 }
 
 
-class ExtraTableModel extends AbstractTableModel {
+class ExtraTableModel extends AbstractTableModel implements StateTableModel {
 
 	private final String[] titles;
 	private byte[] values = null;
@@ -135,6 +132,21 @@ class ExtraTableModel extends AbstractTableModel {
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
 		return values[columnIndex];
+	}
+
+	@Override
+	public byte[] getState(int index) {
+		return values;
+	}
+
+	@Override
+	public int getComponentCount() {
+		return titles.length;
+	}
+
+	@Override
+	public String getComponentName(int index) {
+		return titles[index];
 	}
 	
 }

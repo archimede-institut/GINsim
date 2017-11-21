@@ -20,7 +20,7 @@ import org.ginsim.gui.GUIManager;
  * 
  * TODO: this should move to the GUI
  */
-public class DynamicItemModel extends AbstractTableModel {
+public class DynamicItemModel extends AbstractTableModel implements StateTableModel {
 
     private static final long serialVersionUID = 8860415338236400531L;
     private List nodeOrder;
@@ -87,7 +87,7 @@ public class DynamicItemModel extends AbstractTableModel {
         if (column == 0) {
             return "";
         }
-        return ""+nodeOrder.get(column-1);
+        return nodeOrder.get(column-1).toString();
     }
 
     /**
@@ -151,6 +151,33 @@ public class DynamicItemModel extends AbstractTableModel {
 
 	public boolean isOutgoing(int row) {
 		return row > 0 && row<=nbNext;
+	}
+
+	@Override
+	public byte[] getState(int index) {
+		if (index == 0) {
+			return state;
+		}
+		
+        if (index > nbNext) {
+        	int r = index - nbNext;
+        	if (prevState == null || r > prevState.length) {
+        		return null;
+        	}
+        	return prevState[r-1].state;
+        }
+        
+        return nextState[index-1].state;
+	}
+
+	@Override
+	public int getComponentCount() {
+		return nodeOrder.size();
+	}
+
+	@Override
+	public String getComponentName(int index) {
+		return nodeOrder.get(index).toString();
 	}
 }
 
