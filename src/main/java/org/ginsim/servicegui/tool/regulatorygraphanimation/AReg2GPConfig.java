@@ -140,12 +140,12 @@ public class AReg2GPConfig extends JDialog {
 		}
 	    String gnuplotsFilename;
         
-        gnuplotsFilename  = FileSelectionHelper.selectSaveFilename( null, new String[]{".gnuplot"}, "Gnuplot files");
+        gnuplotsFilename  = FileSelectionHelper.selectSaveFilename( null, new String[]{"gnuplot"}, "Gnuplot files");
 	    if (gnuplotsFilename == null) {
 	        return;
 	    }
         File scriptfile = new File(gnuplotsFilename);
-        File datafile = new File(gnuplotsFilename.substring(0, gnuplotsFilename.length()-8)+".data");
+        File datafile = new File(gnuplotsFilename.substring(0, gnuplotsFilename.length()-7)+"data");
 	    switch (combo_choice.getSelectedIndex()) {
 	    	case 0:
 	    	    doSaveGnuPlotArrowPath(scriptfile, datafile, path, nodeOrder, t_selected);
