@@ -97,7 +97,7 @@ public class MainFrameActionManager implements FrameActionManager {
 		menubar.add( gui.getViewMenu( getMenu(LAYOUT)));
 		
 		menubar.add( getMenu(GRAPH));
-		menubar.add( getMenu(GRAPH));
+		menubar.add( getMenu(TOOLS));
 		if (menus.containsKey(TOOLKIT)) {
 			menubar.add( getMenu(TOOLKIT));
 		}
