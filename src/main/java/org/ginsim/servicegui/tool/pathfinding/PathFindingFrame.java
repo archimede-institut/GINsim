@@ -19,6 +19,7 @@ import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphChangeType;
+import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
@@ -42,7 +43,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	private JButton b_del;
 
     private JTable constraintTable;
-    private ConstraintSelectionModel constraintModel;
+    private PathFindingTableModel constraintModel;
 	
 	
 	public PathFindingFrame( Graph graph) {
@@ -50,7 +51,11 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
         setTitle("Search a path");
 		this.setMinimumSize(new Dimension(300, 300));
 		this.graph = graph;
-        constraintModel = new ConstraintSelectionModel(graph);
+		if (graph instanceof DynamicGraph) {
+			constraintModel = new DynamicAnalyserPathModel((DynamicGraph)graph);
+		} else {
+			constraintModel = new ConstraintSelectionModel(graph);
+		}
 
         JPanel mainPanel = new javax.swing.JPanel();
         mainPanel.setLayout(new GridBagLayout());
@@ -75,7 +80,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
         c.weighty = 1;
         c.gridwidth = 5;
         c.fill = GridBagConstraints.BOTH;
-        mainPanel.add(getNodeTable(), c);
+        mainPanel.add(new JScrollPane(getNodeTable()), c);
 
         c.gridx = 0;
         c.gridy++;
@@ -231,11 +236,7 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
         }
 
 		setProgressionText("searching...");
-
-        // TODO: support intermediate nodes
-		Thread thread = new PathFinding(this, graph, nodes);
-		thread.start();
-
+		new PathFinding(this, graph, nodes).start();
 	}
 	
 	public void setProgressionText(String text) {
@@ -273,13 +274,32 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		} else if (e.getSource() == b_selectFromGraph) {
 			getSelectionFromGraph();
 		} else if (e.getSource() == b_add) {
-			constraintModel.add();
-			b_del.setEnabled(true);
-		} else if (e.getSource() == b_del) {
-			constraintModel.del(constraintTable.getSelectedRows());
+			int[] sel = constraintTable.getSelectedRows();
+			if (sel != null && sel.length > 0) {
+				constraintModel.add(sel[0]);
+			} else {
+				constraintModel.add( constraintModel.getRowCount()-1);
+			}
 			b_del.setEnabled( constraintModel.getRowCount() > 2);
+		} else if (e.getSource() == b_del) {
+			del();
 		}
 	}
+	
+	private void del() {
+		int[] sel = constraintTable.getSelectedRows();
+		
+    	int n = 0;
+    	for (int i: sel) {
+    		if (constraintModel.del(i-n)) {
+    			n++;
+    		}
+    	}
+
+		b_del.setEnabled( constraintModel.getRowCount() > 2);
+	}
+	
+	
 	
 	private void getSelectionFromGraph() {
 		GraphGUI<?, ?, ?> gui = GUIManager.getInstance().getGraphGUI(graph);
@@ -289,7 +309,8 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 		}
 
         // apply the selection
-        constraintModel.setNode(selected.iterator().next(), constraintTable.getSelectedRows());
+		Object node = selected.iterator().next();
+        constraintModel.setNode(node, constraintTable.getSelectedRows());
 	}
 
 	/**
@@ -370,33 +391,31 @@ public class PathFindingFrame extends StackDialog implements ActionListener, Res
 	}
 }
 
-class ConstraintSelectionModel extends AbstractTableModel {
+class ConstraintSelectionModel<N> extends AbstractTableModel implements PathFindingTableModel<N> {
 
     private final Graph graph;
     private final List<String> constraints = new ArrayList<String>(2);
-    private final Map<String, Object> m_constraint2node = new HashMap<String, Object>();
+    private final Map<String, N> m_constraint2node = new HashMap<String, N>();
 
-    public ConstraintSelectionModel(Graph graph) {
+    @Override
+	public String getColumnName(int column) {
+		return "Node";
+	}
+
+	public ConstraintSelectionModel(Graph graph) {
         this.graph = graph;
         constraints.add("");
         constraints.add("");
     }
 
-    public void del(int[] selectedRows) {
-    	if (selectedRows == null) {
-    		return;
-    	}
-    	int n = 0;
-    	for (int i: selectedRows) {
-    		if (getRowCount() < 2) {
-    			break;
-    		}
-    		constraints.remove(i-n);
-    		n++;
-    	}
-    	if (n>0) {
-    		fireTableDataChanged();
-    	}
+    @Override
+    public boolean del(int index) {
+		if (getRowCount() < 2) {
+			return false;
+		}
+		constraints.remove(index);
+		fireTableDataChanged();
+		return true;
 	}
 
 	@Override
@@ -406,7 +425,7 @@ class ConstraintSelectionModel extends AbstractTableModel {
 
     @Override
     public int getColumnCount() {
-        return 2;
+        return 1;
     }
 
     @Override
@@ -415,24 +434,11 @@ class ConstraintSelectionModel extends AbstractTableModel {
             return null;
         }
 
-        if (col == 0) {
-            if (row == 0) {
-                return "start";
-            }
-            if (row == getRowCount()-1) {
-                return "target";
-            }
-            return "through";
-        }
-
         return constraints.get(row);
     }
 
     @Override
     public boolean isCellEditable(int row, int col) {
-        if (col == 0) {
-            return false;
-        }
         return true;
     }
 
@@ -441,10 +447,7 @@ class ConstraintSelectionModel extends AbstractTableModel {
         if (row >= getRowCount()) {
             return;
         }
-        if (col == 0) {
-            return;
-        }
-
+        
         String old = constraints.get(row);
         String lookup = aValue.toString();
         constraints.set(row, lookup);
@@ -456,8 +459,10 @@ class ConstraintSelectionModel extends AbstractTableModel {
 
     }
     
-    public void add() {
-    	constraints.add(constraints.get(getRowCount()-1));
+    @Override
+    public void add(int index) {
+    	String s = constraints.get(index);
+    	constraints.add(index, s);
     	fireTableDataChanged();
     }
 
@@ -466,7 +471,7 @@ class ConstraintSelectionModel extends AbstractTableModel {
             return;
         }
 
-        List foundNodes = graph.searchNodes( lookup);
+        List<N> foundNodes = graph.searchNodes( lookup);
         if (foundNodes == null || foundNodes.size() < 1) {
             return;
         }
@@ -474,11 +479,12 @@ class ConstraintSelectionModel extends AbstractTableModel {
         m_constraint2node.put(lookup, foundNodes.get(0));
     }
 
-    public List getNodes() {
+    @Override
+    public List<N> getNodes() {
 
-        List nodes = new ArrayList();
+        List<N> nodes = new ArrayList<N>();
         for (String s:constraints) {
-            Object n = m_constraint2node.get(s);
+            N n = m_constraint2node.get(s);
             if (n == null) {
                 return null;
             }
@@ -492,7 +498,8 @@ class ConstraintSelectionModel extends AbstractTableModel {
         return nodes;
     }
 
-    public void setNode(Object node, int[] selectedRows) {
+    @Override
+    public void setNode(N node, int[] selectedRows) {
         String txt = node.toString();
         for (int i: selectedRows) {
             setValueAt(txt, i, 1);
