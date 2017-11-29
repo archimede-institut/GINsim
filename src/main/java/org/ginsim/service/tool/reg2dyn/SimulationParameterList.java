@@ -76,22 +76,12 @@ public class SimulationParameterList extends NamedList<SimulationParameters>
                 }
 			}
 			break;
-
-		case NODEUPDATED:
-			RegulatoryNode node = (RegulatoryNode)data;
-			if (node.isInput()) {
-				nodeRemoved(node);
-			} else {
-				nodeAdded(node);
-			}
-			break;
 		}
 		return null;
 	}
 	
     private void nodeRemoved(RegulatoryNode node) {
         // remove it from priority classes
-    	pcmanager.nodeOrder.remove(node);
         for (int i=0 ; i<pcmanager.size() ; i++) {
         	UpdaterDefinition updater = pcmanager.get(i);
         	if (updater instanceof PrioritySetDefinition) {
