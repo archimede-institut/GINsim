@@ -174,7 +174,7 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 			Model smodel = qbundle.document.getModel();
 			exportAnnotation(smodel, graph.getAnnotation());
 			for (RegulatoryNode node: graph.getNodeOrder()) {
-				QualitativeSpecies qs = qbundle.qmodel.getQualitativeSpecies("G0");
+				QualitativeSpecies qs = qbundle.qmodel.getQualitativeSpecies(node.getId());
 				exportAnnotation(qs, node.getAnnotation());
 			}
 			
