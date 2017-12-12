@@ -10,7 +10,7 @@ import org.ginsim.core.graph.view.style.NodeStyleOverride;
 
 class LocalGraphNodeStyle extends NodeStyleOverride<RegulatoryNode> {
 
-	private final Color C_INACTIVE, C_MIDLEVEL, C_ACTIVE;
+	private final Color C_INACTIVE, C_MIDLEVEL, C_ACTIVE, C_FOREGROUND;
 	private ActivityLevel level = ActivityLevel.INACTIVE;
 
 	public LocalGraphNodeStyle(NodeStyle<RegulatoryNode> style) {
@@ -25,6 +25,7 @@ class LocalGraphNodeStyle extends NodeStyleOverride<RegulatoryNode> {
 			C_MIDLEVEL = Color.PINK;
 			C_ACTIVE = Color.ORANGE;
 		}
+		C_FOREGROUND = Color.BLACK;
 	}
 
 	public void setBaseStyle(NodeStyle<RegulatoryNode> style, ActivityLevel level) {
@@ -41,6 +42,16 @@ class LocalGraphNodeStyle extends NodeStyleOverride<RegulatoryNode> {
 			return C_ACTIVE;
 		}
 		return C_INACTIVE;
+	}
+
+	@Override
+	public Color getForeground(RegulatoryNode obj) {
+		return C_FOREGROUND;
+	}
+
+	@Override
+	public Color getTextColor(RegulatoryNode obj) {
+		return C_FOREGROUND;
 	}
 
 }
