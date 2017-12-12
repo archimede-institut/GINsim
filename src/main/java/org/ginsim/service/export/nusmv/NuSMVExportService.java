@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 import org.ginsim.common.application.GsException;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
@@ -26,9 +27,13 @@ import org.mangosdk.spi.ProviderFor;
  */
 @ProviderFor(Service.class)
 @Alias("NuSMV")
-@ServiceStatus(EStatus.DEVELOPMENT)
+@ServiceStatus(EStatus.RELEASED)
 public class NuSMVExportService implements Service {
 
+	public NuSMVConfig getConfig(RegulatoryGraph graph) {
+		return new NuSMVConfig(graph);
+	}
+	
 	public void run(NuSMVConfig config, String filename) throws IOException, GsException {
 		File f = new File(filename);
 		export(config, f);
