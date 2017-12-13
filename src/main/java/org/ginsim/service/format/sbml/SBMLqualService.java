@@ -28,11 +28,7 @@ import org.sbml.jsbml.CVTerm.Qualifier;
 import org.sbml.jsbml.ListOf;
 import org.sbml.jsbml.Model;
 import org.sbml.jsbml.SBase;
-import org.sbml.jsbml.ext.layout.BoundingBox;
-import org.sbml.jsbml.ext.layout.Dimensions;
-import org.sbml.jsbml.ext.layout.Layout;
-import org.sbml.jsbml.ext.layout.Point;
-import org.sbml.jsbml.ext.layout.SpeciesGlyph;
+import org.sbml.jsbml.ext.layout.*;
 import org.sbml.jsbml.ext.qual.QualitativeSpecies;
 
 @ProviderFor( Service.class)
@@ -68,10 +64,18 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 					Layout layout = layouts.get(0);
 					NodeAttributesReader nreader = lrg.getNodeAttributeReader();
 					List<RegulatoryNode> nodes = lrg.getNodeOrder();
-					for (SpeciesGlyph glyph: layout.getListOfSpeciesGlyphs()) {
-						String sid = glyph.getSpecies();
+					for (GraphicalObject graphics: layout.getListOfAdditionalGraphicalObjects()) {
+						if (!(graphics instanceof GeneralGlyph)) {
+							continue;
+						}
+						GeneralGlyph glyph = (GeneralGlyph)graphics;
+						String sid = glyph.getReference();
+						int index = simport.getIndexForName(sid);
+						if (index < 0) {
+							continue;
+						}
 						try {
-							nreader.setNode( nodes.get( simport.getIndexForName(sid)));
+							nreader.setNode( nodes.get( index));
 							BoundingBox bb = glyph.getBoundingBox();
 							Point pos = bb.getPosition();
 							if (pos != null) {
@@ -126,7 +130,7 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 		LogicalModel model = graph.getModel();
 		OutputStream out = new FileOutputStream(new File(filename));
 		try {
-			SBMLqualExport sExport = new SBMLqualExport(model);
+			SBMLqualExport sExport = new SBMLqualExport(model, true);
 			SBMLQualBundle qbundle = sExport.getSBMLBundle();
 
 
@@ -156,8 +160,8 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 				NodeAttributesReader nreader = graph.getNodeAttributeReader();
 				for (RegulatoryNode node: graph.getNodeOrder()) {
 					nreader.setNode(node);
-					SpeciesGlyph glyph = new SpeciesGlyph();
-					glyph.setSpecies(sExport.getSpecies(node.getNodeInfo()).getId());
+					GeneralGlyph glyph = new GeneralGlyph();
+					glyph.setReference(sExport.getSpecies(node.getNodeInfo()).getId());
 					BoundingBox bb = new BoundingBox();
 					Point pos = bb.createPosition();
 					pos.setX(nreader.getX());
@@ -166,7 +170,7 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 					dim.setWidth(nreader.getWidth());
 					dim.setHeight(nreader.getHeight());
 					glyph.setBoundingBox(bb);
-					layout.addSpeciesGlyph(glyph);
+					layout.addGeneralGlyph(glyph);
 				}
 			}
 			
