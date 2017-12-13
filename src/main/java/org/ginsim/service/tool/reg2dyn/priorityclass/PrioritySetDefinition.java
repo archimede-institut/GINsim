@@ -421,33 +421,6 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
         return pclass;
     }
 
-	/**
-     * @return the compiled priority class.
-     * @see <code>getPclass</code>
-     */
-    public int[][] getPclassNew(List<NodeInfo> nodeInfos) {
-
-    	Map<NodeInfo, RegulatoryNode> m_info2node = new HashMap<NodeInfo, RegulatoryNode>();
-    	for (RegulatoryNode node: m_elt.keySet()) {
-    		for (NodeInfo ni: nodeInfos) {
-    			if (ni.equals(node)) {
-    				m_info2node.put(ni, node);
-    				break;
-    			}
-    		}
-    	}
-
-    	List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>();
-		for (NodeInfo ni: nodeInfos) {
-			nodeOrder.add(ni);
-			if (ni == null) {
-				LogManager.debug("No matching RegulatoryNode for "+ni);
-			}
-		}
-
-    	return getPclass(nodeOrder);
-    }
-
     public boolean match(String filter) {
         return this.getName().toLowerCase().indexOf(filter.toLowerCase()) >= 0;
     }
