@@ -25,10 +25,15 @@ public class InitialStatePanel extends JPanel {
     
 	public InitialStatePanel() {}
 	
-	public InitialStatePanel(NamedStatesHandler imanager, boolean several) {
-	    initPanel = new StateListPanel(this, imanager.getInitialStates(), several, Txt.t("STR_Initial_state"));
-	    inputPanel = new StateListPanel(this, imanager.getInputConfigs(), several, Txt.t("STR_Fixed_inputs"));
+	public InitialStatePanel(NamedStatesHandler imanager, boolean several,
+			String titleInternal, String titleInput) {
+	    initPanel = new StateListPanel(this, imanager.getInitialStates(), several, titleInternal);
+	    inputPanel = new StateListPanel(this, imanager.getInputConfigs(), several, titleInput);
 	    doLayout(imanager.getNormalNodes().size()>0,imanager.getInputNodes().size()>0);
+	}
+	
+	public InitialStatePanel(NamedStatesHandler imanager, boolean several) {
+		this(imanager, several, Txt.t("STR_Initial_state"), Txt.t("STR_Fixed_inputs"));
 	}
 	protected void doLayout(boolean hasNormal, boolean hasInputs){
 	    setLayout(new GridBagLayout());
@@ -44,6 +49,11 @@ public class InitialStatePanel extends JPanel {
 	    if(hasNormal) add(initPanel, c);
         c.gridy = 2;
         if(hasInputs) add(inputPanel, c);
+	}
+	public InitialStatePanel(Graph graph, boolean several,
+			String titleInternal, String titleInput) {
+		this((NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph, NamedStatesManager.KEY, true), several,
+				titleInternal, titleInput);
 	}
     public InitialStatePanel(Graph graph, boolean several) {
         this((NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(graph, NamedStatesManager.KEY, true), several);

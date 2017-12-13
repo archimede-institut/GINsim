@@ -23,13 +23,14 @@ import org.ginsim.service.export.sat.SATExportService;
 import org.mangosdk.spi.ProviderFor;
 
 /**
- * GUI Action to export a SAT model description
+ * GINsim export service capable of encoding the model properties into a SAT
+ * specification in CNF.
  * 
  * @author Pedro T. Monteiro
  */
 @ProviderFor(ServiceGUI.class)
 @StandaloneGUI
-@ServiceStatus(EStatus.DEVELOPMENT)
+@ServiceStatus(EStatus.RELEASED)
 public class SATExportServiceGUI extends AbstractServiceGUI {
 
 	@Override
@@ -56,8 +57,7 @@ public class SATExportServiceGUI extends AbstractServiceGUI {
 class SATExportAction extends ExportAction<RegulatoryGraph> {
 
 	private static final long serialVersionUID = -3615904375655037276L;
-	private static final FileFormatDescription FORMAT = new FileFormatDescription(
-			"SAT", "cnf");
+	private static final FileFormatDescription FORMAT = new FileFormatDescription("SAT", "cnf");
 
 	private SATConfig config;
 
@@ -79,20 +79,15 @@ class SATExportAction extends ExportAction<RegulatoryGraph> {
 	@Override
 	protected void doExport(String filename) throws GsException, IOException {
 		if (config == null) {
-			throw new GsException(GsException.GRAVITY_ERROR,
-					"Nothing to export: SATConfig must be specified");
+			throw new GsException(GsException.GRAVITY_ERROR, "Nothing to export: SATConfig must be specified");
 		}
-		if (config.getGraph() == null
-				|| config.getGraph().getNodes().size() == 0) {
-			throw new GsException(GsException.GRAVITY_ERROR,
-					"Nothing to export: The graph is empty");
+		if (config.getGraph() == null || config.getGraph().getNodes().size() == 0) {
+			throw new GsException(GsException.GRAVITY_ERROR, "Nothing to export: The graph is empty");
 		}
 
-		SATExportService service = GSServiceManager.getService(
-				SATExportService.class);
+		SATExportService service = GSServiceManager.getService(SATExportService.class);
 		if (service == null) {
-			throw new GsException(GsException.GRAVITY_ERROR,
-					"SATExportService service is not available");
+			throw new GsException(GsException.GRAVITY_ERROR, "SATExportService service is not available");
 		}
 		service.run(config, filename);
 	}

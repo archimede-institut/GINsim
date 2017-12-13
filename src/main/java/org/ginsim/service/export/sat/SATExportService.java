@@ -12,23 +12,22 @@ import org.ginsim.core.service.ServiceStatus;
 import org.mangosdk.spi.ProviderFor;
 
 /**
- * GINsim export service capable of encoding the working model into a SAT
+ * GINsim export service capable of encoding the model properties into a SAT
  * specification in CNF.
+ * 
  * @author Pedro T. Monteiro
  */
 @ProviderFor(Service.class)
 @Alias("SAT")
-@ServiceStatus(EStatus.DEVELOPMENT)
+@ServiceStatus(EStatus.RELEASED)
 public class SATExportService implements Service {
 
-	public void run(SATConfig config, String filename) throws IOException,
-			GsException {
+	public void run(SATConfig config, String filename) throws IOException, GsException {
 		File f = new File(filename);
 		export(config, f);
 	}
 
-	public void export(SATConfig config, File file) throws IOException,
-			GsException {
+	public void export(SATConfig config, File file) throws IOException, GsException {
 		FileWriter writer = new FileWriter(file);
 
 		SATEncoder encoder = new SATEncoder();
