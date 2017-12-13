@@ -150,7 +150,7 @@ public class NuSMVEncoder {
 			}
 			out.write(" };\n");
 
-			iaTmp = priorities.getPclassNew(model.getComponents());
+			iaTmp = priorities.getPclass(model.getComponents());
 			for (int i = 0; i < iaTmp.length; i++) {
 				sTmp = tmPcNum2Name.get(i + 1);
 				out.write("  " + sTmp + "_vars : { ");

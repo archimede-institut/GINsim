@@ -51,7 +51,7 @@ public class NuSMVConfig implements NamedStateStore, UpdaterDefinitionStore {
 		} else if (updater instanceof PrioritySetDefinition) {
 			PrioritySetDefinition priorities = (PrioritySetDefinition)updater;
 			if (priorities.size() == 1) {
-				if (priorities.getPclassNew(model.getComponents())[0][1] == 0) {
+				if (priorities.getPclass(model.getComponents())[0][1] == 0) {
 					updatePolicy = CFG_SYNC;
 				} else {
 					updatePolicy = CFG_ASYNC;

@@ -1,4 +1,4 @@
--- May 12, 2014 12:27:23 AM WEST
+-- December 13, 2017 10:44:49 PM WET
 --
 -- NuSMV implicit representation of a logical model exported by GINsim
 --
@@ -12,14 +12,14 @@ MODULE main
 IVAR
 -- Simulation mode declaration --
 -- Priority classes
-  PCs : { PC_class_1, PC_class_2 };
-  PC_class_1_vars : { PC_class_1_gA_gB };
-  PC_class_2_vars : { PC_class_2_gC, PC_class_2_gD };
+  PCs : { PC_class, PC_class1 };
+  PC_class_vars : { PC_class_gA_gB };
+  PC_class1_vars : { PC_class1_gC, PC_class1_gD };
 
 VAR
 
 -- Priority definition
-  PCrank : { rank1_PC_class_1, rank2_PC_class_2 };
+  PCrank : { rank1_PC_class, rank2_PC_class1 };
 
 -- State variables declaration
   gA : {0, 1};
@@ -31,8 +31,8 @@ ASSIGN
 -- Establishing priorities
   PCrank :=
     case
-      !gA_std | !gB_std : rank1_PC_class_1;
-      TRUE : rank2_PC_class_2;
+      !gA_std | !gB_std : rank1_PC_class;
+      TRUE : rank2_PC_class1;
     esac;
 
 -- Variable update if conditions are met
@@ -102,10 +102,10 @@ gD_inc := gD_focal > gD;
 gD_dec := gD_focal < gD;
 gD_std := gD_focal = gD;
 
-update_gA_OK := (PCs = PC_class_1) & (PC_class_1_vars = PC_class_1_gA_gB) & (PCrank = rank1_PC_class_1);
-update_gB_OK := (PCs = PC_class_1) & (PC_class_1_vars = PC_class_1_gA_gB) & (PCrank = rank1_PC_class_1);
-update_gC_OK := (PCs = PC_class_2) & (PC_class_2_vars = PC_class_2_gC) & (PCrank = rank2_PC_class_2);
-update_gD_OK := (PCs = PC_class_2) & (PC_class_2_vars = PC_class_2_gD) & (PCrank = rank2_PC_class_2);
+update_gA_OK := (PCs = PC_class) & (PC_class_vars = PC_class_gA_gB) & (PCrank = rank1_PC_class);
+update_gB_OK := (PCs = PC_class) & (PC_class_vars = PC_class_gA_gB) & (PCrank = rank1_PC_class);
+update_gC_OK := (PCs = PC_class1) & (PC_class1_vars = PC_class1_gC) & (PCrank = rank2_PC_class1);
+update_gD_OK := (PCs = PC_class1) & (PC_class1_vars = PC_class1_gD) & (PCrank = rank2_PC_class1);
 
 -- DISCLAIMER: There are no INput nor OUTput variables in the weak/strong stable states description
 stableStates := weakSS | strongSS;
