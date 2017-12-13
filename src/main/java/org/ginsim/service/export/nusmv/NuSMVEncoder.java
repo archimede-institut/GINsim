@@ -17,6 +17,7 @@ import org.colomoto.biolqm.tool.stablestate.StableStateSearcher;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
+import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PriorityClass;
@@ -210,6 +211,8 @@ public class NuSMVEncoder {
 			break;
 
 		default:
+			GUIMessageUtils.openWarningDialog("Unsupported updating mode. Considering the Asynchronous one.");
+		case NuSMVConfig.CFG_ASYNC:
 			out.write("-- Asynchronous\n  PCs : { ");
 			boolean bFirst = true;
 			for (int i = 0; i < coreNodes.size(); i++) {

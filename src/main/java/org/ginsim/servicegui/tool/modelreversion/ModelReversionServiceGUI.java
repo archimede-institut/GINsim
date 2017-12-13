@@ -8,6 +8,7 @@ import javax.swing.Action;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.modifier.ModelModifier;
+import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
@@ -78,8 +79,7 @@ class ReversionAction extends ToolAction {
 		// Show the reversed graph
 		GUIManager.getInstance().whatToDoWithGraph(gReversed);
 		if (!origModel.isBoolean()) {
-			GUIMessageUtils.openErrorDialog("STR_reverse_multivalue");
+			GUIMessageUtils.openWarningDialog(Txt.t("STR_reverse_multivalue"));
 		}
-
 	}
 }
