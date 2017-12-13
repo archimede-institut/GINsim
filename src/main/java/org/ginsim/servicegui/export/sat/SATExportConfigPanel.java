@@ -29,7 +29,7 @@ public class SATExportConfigPanel extends LogicalModelActionDialog {
 
 	public SATExportConfigPanel(SATConfig config, SATExportAction action) {
 		super(config.getGraph(), null, Txt.t("STR_SAT"), 600, 400);
-		this.setTitle(Txt.t("STR_SATRunningTitle"));
+		this.setTitle(Txt.t("STR_SAT_descr"));
 		setUserID(Txt.t("STR_SAT"));
 		this.config = config;
 		this.action = action;
