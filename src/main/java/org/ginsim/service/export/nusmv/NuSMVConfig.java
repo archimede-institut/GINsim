@@ -20,6 +20,7 @@ public class NuSMVConfig implements NamedStateStore, UpdaterDefinitionStore {
 	public static final int CFG_SYNC = 0;
 	public static final int CFG_ASYNC = 1;
 	public static final int CFG_PCLASS = 2;
+	public static final int CFG_COMPLETE = 3;
 
 	private RegulatoryGraph graph;
 	private LogicalModel model;
@@ -60,6 +61,8 @@ public class NuSMVConfig implements NamedStateStore, UpdaterDefinitionStore {
 			} else {
 				updatePolicy = CFG_PCLASS;
 			}
+		} else {
+			updatePolicy = CFG_COMPLETE;
 		}
 	}
 
