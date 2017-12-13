@@ -231,7 +231,7 @@ class PrioritySimulationUpdater extends BaseSimulationUpdater {
 	
     public PrioritySimulationUpdater(LogicalModel model, PrioritySetDefinition pcdef) {
 		super(model);
-		pclass = pcdef.getPclassNew(model.getComponents());
+		pclass = pcdef.getPclass(model.getComponents());
 	}
     public PrioritySimulationUpdater(ModelHelper helper,int[][] pclass) {
 		super(helper);
