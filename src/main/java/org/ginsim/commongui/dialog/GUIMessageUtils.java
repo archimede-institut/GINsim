@@ -46,6 +46,15 @@ public class GUIMessageUtils {
 	}
 	
 	/**
+	 * Open a Message Dialog box to indicate users a warning message.
+	 * 
+	 * @param message the message to show to the user
+	 */
+	public static void openWarningDialog(String message) {
+		JOptionPane.showMessageDialog( null, message, Txt.t("STR_warning"), JOptionPane.WARNING_MESSAGE);
+	}
+
+	/**
 	 * Open a confirmation Dialog box (OK/Cancel) with the given message and the given title 
 	 * 
 	 * @param msg the message to display in the box
