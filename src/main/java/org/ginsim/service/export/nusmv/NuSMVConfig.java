@@ -22,7 +22,6 @@ public class NuSMVConfig implements NamedStateStore, UpdaterDefinitionStore {
 	public static final int CFG_PCLASS = 2;
 	public static final int CFG_COMPLETE = 3;
 
-	private RegulatoryGraph graph;
 	private LogicalModel model;
 	private Map<NamedState, Object> m_initStates;
 	private Map<NamedState, Object> m_input;
@@ -35,11 +34,10 @@ public class NuSMVConfig implements NamedStateStore, UpdaterDefinitionStore {
 	/**
 	 * @param graph
 	 */
-	public NuSMVConfig(RegulatoryGraph graph) {
+	public NuSMVConfig(LogicalModel model) {
 		this.m_initStates = new HashMap<NamedState, Object>();
 		this.m_input = new HashMap<NamedState, Object>();
-		this.graph = graph;
-		this.model = graph.getModel();
+		this.model = model;
 		this.updatePolicy = CFG_ASYNC; // Default update policy
 		this.setFixedInputs = new HashSet<String>();
 		this.exportStableStates = false; 
@@ -53,7 +51,7 @@ public class NuSMVConfig implements NamedStateStore, UpdaterDefinitionStore {
 		} else if (updater instanceof PrioritySetDefinition) {
 			PrioritySetDefinition priorities = (PrioritySetDefinition)updater;
 			if (priorities.size() == 1) {
-				if (priorities.getPclass(graph.getNodeInfos())[0][1] == 0) {
+				if (priorities.getPclassNew(model.getComponents())[0][1] == 0) {
 					updatePolicy = CFG_SYNC;
 				} else {
 					updatePolicy = CFG_ASYNC;
@@ -92,10 +90,6 @@ public class NuSMVConfig implements NamedStateStore, UpdaterDefinitionStore {
 
 	public Map<NamedState, Object> getInputState() {
 		return m_input;
-	}
-
-	public RegulatoryGraph getGraph() {
-		return graph;
 	}
 
 	public LogicalModel getModel() {

@@ -16,6 +16,7 @@ import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.InitialStatePanel;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.service.export.nusmv.NuSMVConfig;
@@ -36,8 +37,8 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 	private JCheckBox mcCheckBox;
 	private boolean hasInputs;
 
-	public NuSMVExportConfigPanel(NuSMVConfig config, NuSMVExportAction action) {
-		super(config.getGraph(), null, Txt.t("STR_NuSMV"), 600, 400);
+	public NuSMVExportConfigPanel(RegulatoryGraph graph, NuSMVConfig config, NuSMVExportAction action) {
+		super(graph, null, Txt.t("STR_NuSMV"), 600, 400);
 		this.setTitle(Txt.t("STR_NuSMVRunningTitle"));
 		setUserID(Txt.t("STR_NuSMV"));
 		this.config = config;
@@ -47,13 +48,13 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 		// NORTH begin
 		mainPanel = new JPanel(new BorderLayout());
 		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance()
-				.getObject(config.getGraph(), SimulationParametersManager.KEY, true);
+				.getObject(graph, SimulationParametersManager.KEY, true);
 		priorityPanel = new PrioritySelectionPanel(this, paramList.pcmanager);
 		priorityPanel.setStore(config);
 		mainPanel.add(priorityPanel, BorderLayout.NORTH);
 
 		// CENTER begin
-		initPanel = new InitialStatePanel(config.getGraph(), true);
+		initPanel = new InitialStatePanel(graph, true);
 		initPanel.setParam(config);
 		// initPanel.setMessage(Txt.t("STR_NuSMV_Checked"));
 		mainPanel.add(initPanel, BorderLayout.CENTER);

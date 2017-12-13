@@ -72,8 +72,8 @@ class NuSMVExportAction extends ExportAction<RegulatoryGraph> {
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		config = new NuSMVConfig(graph);
-		new NuSMVExportConfigPanel(config, this);
+		config = new NuSMVConfig(graph.getModel());
+		new NuSMVExportConfigPanel(this.graph, config, this);
 	}
 
 	@Override
@@ -82,8 +82,8 @@ class NuSMVExportAction extends ExportAction<RegulatoryGraph> {
 			throw new GsException(GsException.GRAVITY_ERROR,
 					"Nothing to export: NuSMVConfig must be specified");
 		}
-		if (config.getGraph() == null
-				|| config.getGraph().getNodes().size() == 0) {
+		if (config.getModel() == null
+				|| config.getModel().getComponents().size() == 0) {
 			throw new GsException(GsException.GRAVITY_ERROR,
 					"Nothing to export: The graph is empty");
 		}

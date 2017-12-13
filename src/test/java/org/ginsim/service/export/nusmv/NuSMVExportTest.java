@@ -75,7 +75,7 @@ public class NuSMVExportTest {
 		for (int i = 0; i < saModel.length; i++) {
 			File tmpFile = new File(tmpDir, saModel[i]);
 
-			NuSMVConfig config = new NuSMVConfig(saGraph[i]);
+			NuSMVConfig config = new NuSMVConfig(saGraph[i].getModel());
 			config.setUpdatePolicy(NuSMVConfig.CFG_ASYNC);
 
 			ModelReducer reducer = new ModelReducer(config.getModel());
@@ -104,7 +104,7 @@ public class NuSMVExportTest {
 		for (int i = 0; i < saModel.length; i++) {
 			File tmpFile = new File(tmpDir, saModel[i]);
 
-			NuSMVConfig config = new NuSMVConfig(saGraph[i]);
+			NuSMVConfig config = new NuSMVConfig(saGraph[i].getModel());
 			config.setUpdatePolicy(NuSMVConfig.CFG_ASYNC);
 
 			runService(config, tmpFile);
@@ -129,7 +129,7 @@ public class NuSMVExportTest {
 		for (int i = 0; i < saModel.length; i++) {
 			File tmpFile = new File(tmpDir, saModel[i]);
 
-			NuSMVConfig config = new NuSMVConfig(saGraph[i]);
+			NuSMVConfig config = new NuSMVConfig(saGraph[i].getModel());
 			config.setUpdatePolicy(NuSMVConfig.CFG_SYNC);
 
 			ModelReducer reducer = new ModelReducer(config.getModel());
@@ -158,7 +158,7 @@ public class NuSMVExportTest {
 		for (int i = 0; i < saModel.length; i++) {
 			File tmpFile = new File(tmpDir, saModel[i]);
 
-			NuSMVConfig config = new NuSMVConfig(saGraph[i]);
+			NuSMVConfig config = new NuSMVConfig(saGraph[i].getModel());
 			config.setUpdatePolicy(NuSMVConfig.CFG_SYNC);
 
 			runService(config, tmpFile);

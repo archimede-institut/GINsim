@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
+import org.colomoto.biolqm.LogicalModel;
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
@@ -30,8 +30,8 @@ import org.mangosdk.spi.ProviderFor;
 @ServiceStatus(EStatus.RELEASED)
 public class NuSMVExportService implements Service {
 
-	public NuSMVConfig getConfig(RegulatoryGraph graph) {
-		return new NuSMVConfig(graph);
+	public NuSMVConfig getConfig(LogicalModel model) {
+		return new NuSMVConfig(model);
 	}
 	
 	public void run(NuSMVConfig config, String filename) throws IOException, GsException {

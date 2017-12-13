@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.modifier.reduction.ModelReducer;
 import org.ginsim.TestFileUtils;
 import org.ginsim.common.application.GsException;
@@ -75,25 +76,25 @@ public class NuSMVExportMutantPriorityTest {
 		File tmpDir = TestFileUtils.getTempTestFileDirectory(module);
 		File tmpFile = new File(tmpDir, sModel + ".smv");
 
-		NuSMVConfig config = new NuSMVConfig(graph);
+		NuSMVConfig config = new NuSMVConfig(graph.getModel());
 		LogicalModel model = config.getModel();
 		List<RegulatoryNode> nodeOrder = graph.getNodeOrder();
 
 		// Priorities
-		config.setUpdatePolicy(NuSMVConfig.CFG_PCLASS);
-		PriorityClass class1 = new PriorityClass(1, "class_1");
-		class1.setMode(PriorityClass.SYNCHRONOUS);
-		PriorityClass class2 = new PriorityClass(2, "class_2");
-		class2.setMode(PriorityClass.ASYNCHRONOUS);
 		PrioritySetDefinition pcDef = new PrioritySetDefinition(nodeOrder, "pctest");
         pcDef.clear();
-        pcDef.add(class1);
-        pcDef.add(class2);
-		config.setUpdatingMode(pcDef);
+        pcDef.m_elt.clear();
+
+        PriorityClass class1 = pcDef.get(pcDef.add());
+		class1.setMode(PriorityClass.SYNCHRONOUS);
+        PriorityClass class2 = pcDef.get(pcDef.add());
+		class2.setMode(PriorityClass.ASYNCHRONOUS);
+
 		pcDef.associate(nodeOrder.get(0), class1);
 		pcDef.associate(nodeOrder.get(1), class1);
 		pcDef.associate(nodeOrder.get(2), class2);
 		pcDef.associate(nodeOrder.get(3), class2);
+		config.setUpdatingMode(pcDef);
 		
 		// Perturbation
 		List<Perturbation> lst = new ArrayList<Perturbation>();
