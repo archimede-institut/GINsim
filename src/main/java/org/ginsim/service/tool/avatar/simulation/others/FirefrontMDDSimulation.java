@@ -30,7 +30,8 @@ import com.panayotis.gnuplot.JavaPlot;
  * Firefront simulation for the quasi-exact analysis of point attractors
  * 
  * @author Rui Henriques
- * @author Pedro Monteiro, Nuno Mendes
+ * @author Pedro T. Monteiro
+ * @author Nuno Mendes
  * @version 1.0
  */
 public class FirefrontMDDSimulation extends FirefrontSimulation {

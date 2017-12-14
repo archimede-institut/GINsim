@@ -25,7 +25,8 @@ import com.panayotis.gnuplot.JavaPlot;
 /**
  * Monte Carlo simulation for the analysis of point attractors
  * 
- * @author Rui Henriques, Pedro Monteiro
+ * @author Rui Henriques
+ * @author Pedro T. Monteiro
  * @version 1.0
  */
 public class MonteCarloSimulation extends Simulation {

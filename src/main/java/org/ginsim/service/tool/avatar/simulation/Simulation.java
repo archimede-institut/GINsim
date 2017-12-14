@@ -20,7 +20,8 @@ import org.ginsim.service.tool.avatar.utils.ChartGNUPlot;
  * Class defining an abstract simulation and providing facilities for their management.<br>
  * Specialized simulations (e.g. Avatar, Firefront, MonteCarlo) can be added.
  * 
- * @author Rui Henriques, Pedro Monteiro
+ * @author Rui Henriques
+ * @author Pedro T. Monteiro
  * @version 1.0
  */
 public abstract class Simulation {

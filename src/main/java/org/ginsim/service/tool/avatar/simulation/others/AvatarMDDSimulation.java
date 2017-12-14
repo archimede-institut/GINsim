@@ -41,7 +41,8 @@ import com.panayotis.gnuplot.JavaPlot;
  * Class providing all the functionalities to explore STGs, extend and rewire cycles.
  * 
  * @author Rui Henriques
- * @author Pedro Monteiro, Nuno Mendes
+ * @author Pedro T. Monteiro
+ * @author Nuno Mendes
  * @version 1.0
  */
 public class AvatarMDDSimulation extends AvatarSimulation {

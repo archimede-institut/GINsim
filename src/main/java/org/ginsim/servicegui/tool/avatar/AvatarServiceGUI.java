@@ -23,11 +23,12 @@ import java.util.List;
 
 /**
  * GUI for the avatar simulation services
- * @author Pedro Monteiro, Rui Henriques
+ * @author Pedro T. Monteiro
+ * @author Rui Henriques
  */
 @ProviderFor(ServiceGUI.class)
 @GUIFor(AvatarService.class)
-@ServiceStatus(EStatus.DEVELOPMENT)
+@ServiceStatus(EStatus.RELEASED)
 public class AvatarServiceGUI extends AbstractServiceGUI {
 
     @Override
@@ -48,7 +49,8 @@ public class AvatarServiceGUI extends AbstractServiceGUI {
 
 /**
  * Action to enable the presence Avatar simulations within the menu with the ginsim services
- * @author Pedro Monteiro, Rui Henriques
+ * @author Pedro T. Monteiro
+ * @author Rui Henriques
  */
 class AvatarAction extends ToolAction {
 

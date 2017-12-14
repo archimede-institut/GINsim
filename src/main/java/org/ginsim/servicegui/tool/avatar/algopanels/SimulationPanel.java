@@ -8,7 +8,8 @@ import org.ginsim.service.tool.avatar.params.AvatarParameters;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
 
 /**
- * Class for managing the panel with the parameters of a simulation (e.g. Avatar, Firefront and MonteCarlo panels).<br>
+ * Class for managing the panel with the parameters of a simulation (e.g.
+ * Avatar, Firefront and MonteCarlo panels).<br>
  * Panels for alternative simulations can be easily added.
  * 
  * @author Rui Henriques
@@ -17,39 +18,49 @@ import org.ginsim.service.tool.avatar.simulation.Simulation;
 public abstract class SimulationPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
-	protected boolean flexible;
-	protected Color purple = new Color(204,153,255);
+	protected Color purple = new Color(204, 153, 255);
 	protected Icon helpImg;
 
 	/**
 	 * Instantiates the context of a simulation panel
-	 * @param img icon for the help tooltip
-	 * @param flex true for a flexible gridbaglayout (default: true)
+	 * 
+	 * @param img
+	 *            icon for the help tooltip
 	 */
-	public SimulationPanel(Icon img, boolean flex){
-		flexible = flex;
+	public SimulationPanel(Icon img) {
 		helpImg = img;
 	}
-	
+
 	/**
-	 * Given contextual information, returns a simulation adequately parameterized according to the panel
-	 * @param model the stateful logical model possibly defining a set of initial states and oracles
-	 * @param plots whether charts should be created and plotted 
-	 * @param quiet whether detailed logs of the behavior of the simulation are to be printed (default: true)
-	 * @return the parameterized simulation ready to be executed 
+	 * Given contextual information, returns a simulation adequately parameterized
+	 * according to the panel
+	 * 
+	 * @param model
+	 *            the stateful logical model possibly defining a set of initial
+	 *            states and oracles
+	 * @param plots
+	 *            whether charts should be created and plotted
+	 * @param quiet
+	 *            whether detailed logs of the behavior of the simulation are to be
+	 *            printed (default: true)
+	 * @return the parameterized simulation ready to be executed
 	 * @throws Exception
 	 */
 	public abstract Simulation getSimulation(StatefulLogicalModel model, boolean plots, boolean quiet) throws Exception;
-	
+
 	/**
 	 * Saves the parameters within the fields of the panel
-	 * @param param the set of parameters to be read for populating the panel
+	 * 
+	 * @param param
+	 *            the set of parameters to be read for populating the panel
 	 */
 	public abstract void unload(AvatarParameters param);
-	
+
 	/**
 	 * Reads the fields of the panel and exports them into a set of parameters
-	 * @param param the set of parameters to be populated
+	 * 
+	 * @param param
+	 *            the set of parameters to be populated
 	 */
 	public abstract void load(AvatarParameters param);
 }
