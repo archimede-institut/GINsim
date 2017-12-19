@@ -1,16 +1,16 @@
 package org.ginsim.service.tool.avatar.params;
 
 import java.io.IOException;
+
 import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
-import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.utils.data.NamedObject;
 import org.ginsim.service.tool.avatar.simulation.AvatarSimulation;
+import org.ginsim.service.tool.avatar.simulation.AvatarSimulation.AvatarStrategy;
 import org.ginsim.service.tool.avatar.simulation.FirefrontSimulation;
 import org.ginsim.service.tool.avatar.simulation.MonteCarloSimulation;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
-import org.ginsim.service.tool.avatar.simulation.AvatarSimulation.AvatarStrategy;
 
 
 /**
@@ -28,7 +28,7 @@ public class AvatarParameters implements XMLize, NamedObject {
 	public String name = "new_parameter";
 	public AvatarStateStore statestore;
 	public boolean[] statesSelected, istatesSelected; //oraclesSelected, ioraclesSelected, enabled, ienabled;
-	public boolean plots, quiet, avaKeepTrans;
+	public boolean quiet, avaKeepTrans;
 	public int algorithm, avaStrategy;
 	public String avaRuns, avaTau, avaDepth, avaAproxDepth, avaMinTran, avaMinCycle, avaMaxPSize, avaMaxRewiringSize;
 	public String ffMaxExpand, ffDepth, ffAlpha, ffBeta, mcDepth, mcRuns;
@@ -46,7 +46,6 @@ public class AvatarParameters implements XMLize, NamedObject {
 		if(sim instanceof AvatarSimulation){
 			AvatarSimulation avasim = (AvatarSimulation) sim;
 			algorithm = 0;
-	    	plots = avasim.plots;
 	    	quiet = avasim.quiet;
 	    	avaRuns=""+avasim.runs;
 	    	avaTau=""+avasim.tauInit;
@@ -67,7 +66,6 @@ public class AvatarParameters implements XMLize, NamedObject {
 	    	ffDepth=""+ffsim.maxDepth;
 	    	ffAlpha=""+ffsim.alpha;
 	    	ffBeta=""+ffsim.beta;
-	    	plots=ffsim.plots;
 	    	quiet=ffsim.quiet;
 		} else { //MonteCarlo
 			MonteCarloSimulation mcsim = (MonteCarloSimulation) sim;
@@ -84,7 +82,7 @@ public class AvatarParameters implements XMLize, NamedObject {
 	 */
 	public String toFullString() {
 		return "name="+name+"\n"+printStates()
-		+"\nplots="+plots+"\nquiet="+quiet+"\navaKeepTrans="+avaKeepTrans
+		+"\nquiet="+quiet+"\navaKeepTrans="+avaKeepTrans
 		+"\nalgorithm="+algorithm+"\navaStrategy="+avaStrategy
 		+"\navaRuns="+avaRuns+"\navaTau="+avaTau+"\navaDepth="+avaDepth+"\navaAproxDepth="+avaAproxDepth+"\navaMinTran="+avaMinTran+"\navaMinCycle="+avaMinCycle+"\navaMaxPSize="+avaMaxPSize+"\navaMaxRewiringSize="+avaMaxRewiringSize
 		+"\nffMaxExpand="+ffMaxExpand+"\nffDepth="+ffDepth+"\nffAlpha="+ffAlpha+"\nffBeta="+ffBeta+"\nmcDepth="+mcDepth+"\nmcRuns="+mcRuns;

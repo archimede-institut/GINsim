@@ -1,24 +1,22 @@
 package org.ginsim.servicegui.tool.avatar.algopanels;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.Icon;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
 
 import org.colomoto.biolqm.StatefulLogicalModel;
 import org.ginsim.service.tool.avatar.params.AvatarParameters;
+import org.ginsim.service.tool.avatar.service.EnumAlgorithm;
 import org.ginsim.service.tool.avatar.simulation.AvatarSimulation;
 import org.ginsim.service.tool.avatar.simulation.AvatarSimulation.AvatarStrategy;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
@@ -37,7 +35,6 @@ public class AvatarPanel extends SimulationPanel {
 	private JTextField minTranB = new JTextField(), minCycleB = new JTextField(), maxPsizeB = new JTextField(),
 			maxRewiringSizeB = new JTextField();
 	private JCheckBox keepTransB = new JCheckBox("Keep transients");
-	private JCheckBox keepOraclesB = new JCheckBox("Keep oracles");
 	private JComboBox<String> strategy = new JComboBox<String>(new DefaultComboBoxModel<String>(
 			new String[] { "Exact exit probabilities", "Uniform exit probabilities" }));
 
@@ -59,9 +56,6 @@ public class AvatarPanel extends SimulationPanel {
 	private String maxPSizeVar = open + "Minimum number of states in a SCC to stop expansion (default: 10000)" + end;
 	private String maxRewiringSizeVar = open + "Maximum number of states to be rewired at a time" + end;
 	private JPanel panelAvatarP1, panelAvatarP2;
-	private JPanel p1c = new JPanel(new GridLayout(1, 3));
-	private JLabel[] questions = new JLabel[] { new JLabel(""), new JLabel(""), new JLabel(""), new JLabel(""),
-			new JLabel(""), new JLabel(""), new JLabel(""), new JLabel(""), new JLabel("") };
 
 	/**
 	 * Instantiates the context of a simulation panel
@@ -69,10 +63,10 @@ public class AvatarPanel extends SimulationPanel {
 	 * @param img
 	 *            icon for the help tooltip
 	 */
-	public AvatarPanel(Icon img) {
-		super(img);
-		// setBorder(new TitledBorder(new LineBorder(purple,2), "Avatar",
-		// TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
+	public AvatarPanel() {
+		// this.setBorder(BorderFactory.createTitledBorder(EnumAlgorithm.AVATAR + "
+		// parameters"));
+
 		runsB.setText("1000");
 		tauB.setText("3");
 		depthB.setText("1E6");
@@ -105,21 +99,16 @@ public class AvatarPanel extends SimulationPanel {
 		removeAll();
 		setLayout(new GridBagLayout());
 
-		panelAvatarP1 = new JPanel();
-		panelAvatarP1.setBorder(new TitledBorder(new LineBorder(purple, 2), "Avatar parameters", TitledBorder.LEADING,
-				TitledBorder.TOP, null, new Color(0, 0, 0)));
-
 		JLabel runsL = new JLabel("#Runs");
 		JLabel tauL = new JLabel("Tau");
 		JLabel depthL = new JLabel("Max depth");
-		JLabel strategyL = new JLabel("Rewiring ");
-		JLabel aproxDepthL = new JLabel("with depth ", JLabel.RIGHT);
+		JLabel strategyL = new JLabel("Rewiring");
+		JLabel aproxDepthL = new JLabel("with depth ");
 		JLabel minTranL = new JLabel("Min transient size");
 		JLabel minCycleL = new JLabel("Min states to rewire ");
 		JLabel maxPsizeL = new JLabel("Expansion limit ");
 		JLabel maxRewiringSizeL = new JLabel("Rewiring limit ");
 
-		GridBagConstraints g = new GridBagConstraints();
 		keepTransB.setToolTipText(keepTransVar);
 		runsL.setToolTipText(runsVar);
 		strategyL.setToolTipText(strategyVar);
@@ -127,50 +116,39 @@ public class AvatarPanel extends SimulationPanel {
 		maxRewiringSizeL.setToolTipText(maxRewiringSizeVar);
 		minTranL.setToolTipText(minTransVar);
 
-		JPanel p1a = new JPanel(new GridLayout(3, 2));
-		panelAvatarP1.setLayout(new GridBagLayout());
-		p1a.add(runsL);
-		p1a.add(runsB);
-		p1a.add(maxPsizeL);
-		p1a.add(maxPsizeB);
-		p1a.add(maxRewiringSizeL);
-		p1a.add(maxRewiringSizeB);
+		panelAvatarP1 = new JPanel(new GridLayout(5, 2));
+		panelAvatarP1.setBorder(BorderFactory.createTitledBorder(EnumAlgorithm.AVATAR + " parameters"));
 
-		JPanel p1b = new JPanel(new GridLayout(1, 2));
-		p1b.add(strategyL);
-		p1b.add(strategy);
-		p1c.add(new JLabel(""));
-		p1c.add(aproxDepthL);
-		p1c.add(aproxDepth);
-		p1c.setVisible(false);
-		JPanel p1d = new JPanel(new GridLayout(1, 1));
-		p1d.add(keepTransB);
+		panelAvatarP1.add(runsL);
+		panelAvatarP1.add(runsB);
+		panelAvatarP1.add(maxPsizeL);
+		panelAvatarP1.add(maxPsizeB);
+		panelAvatarP1.add(maxRewiringSizeL);
+		panelAvatarP1.add(maxRewiringSizeB);
+		panelAvatarP1.add(strategyL);
+		panelAvatarP1.add(strategy);
+		// p1a.add(aproxDepthL);
+		// p1a.add(aproxDepth);
+		GridBagConstraints c = new GridBagConstraints();
+		c.gridwidth = 2;
+		c.gridx = 0;
+		c.fill = GridBagConstraints.HORIZONTAL;
+		panelAvatarP1.add(keepTransB, c);
+		// JPanel p1d = new JPanel(new GridLayout(1, 1));
+		// p1d.add(keepTransB);
+
 		JPanel p1e = new JPanel(new GridLayout(1, 1));
 		p1e.add(minTranL);
 		p1e.add(minTranB);
 
-		GridBagConstraints c = new GridBagConstraints();
-		c.fill = GridBagConstraints.HORIZONTAL;
-		c.weightx = 1;
-		c.gridwidth = 1;
-		panelAvatarP1.add(p1a, c);
-		c.gridy = 1;
-		panelAvatarP1.add(p1b, c);
-		c.gridy = 2;
-		panelAvatarP1.add(p1c, c);
-		c.gridy = 3;
-		panelAvatarP1.add(p1d, c);
-		// c.gridy=4;
-		// panelAvatarP1.add(p1e,c);
-
+		GridBagConstraints g = new GridBagConstraints();
 		g.weightx = 1;
 		g.gridwidth = 1;
 		g.fill = GridBagConstraints.HORIZONTAL;
 		add(panelAvatarP1, g);
 
 		panelAvatarP2 = new JPanel();
-		panelAvatarP2.setBorder(new TitledBorder(new LineBorder(purple, 2), "Expert parameters", TitledBorder.LEADING,
-				TitledBorder.TOP, null, new Color(0, 0, 0)));
+		panelAvatarP2.setBorder(BorderFactory.createTitledBorder("Expert parameters"));
 
 		minTranL.setToolTipText(minTransVar);
 		minCycleL.setToolTipText(minCycleVar);
@@ -191,7 +169,7 @@ public class AvatarPanel extends SimulationPanel {
 	}
 
 	@Override
-	public Simulation getSimulation(StatefulLogicalModel model, boolean plots, boolean quiet) throws Exception {
+	public Simulation getSimulation(StatefulLogicalModel model, boolean quiet) throws Exception {
 		AvatarSimulation sim = new AvatarSimulation();
 		sim.addModel(model);
 		sim.isGUI = true;
@@ -204,7 +182,6 @@ public class AvatarPanel extends SimulationPanel {
 		sim.minTransientSize = (int) Double.parseDouble(minTranB.getText());
 		sim.keepTransients = keepTransB.isSelected();
 		sim.keepOracle = true;
-		sim.plots = plots;
 		sim.quiet = quiet;
 		String stg = (String) strategy.getSelectedItem();
 		if (stg.contains("xact"))

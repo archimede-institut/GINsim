@@ -33,7 +33,7 @@
 		<maintainer>
 			<foaf:Person>
 				<foaf:name>Pedro Tiago Monteiro</foaf:name>
-				<foaf:mbox rdf:resource="mailto:ptgm@igc.gulbenkian.pt"/>
+				<foaf:mbox rdf:resource="mailto:Pedro.Tiago.Monteiro@tecnico.ulisboa.pt"/>
 				<foaf:made>Software development</foaf:made>
 			</foaf:Person>
 		</maintainer>

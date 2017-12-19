@@ -204,7 +204,7 @@ public final class MDDUtils {
 	}
 
 	private static boolean equals(byte[] s1, byte[] s2) {
-		System.out.println(AvatarUtils.toString(s1) + "<->" + AvatarUtils.toString(s2));
+//		System.out.println(AvatarUtils.toString(s1) + "<->" + AvatarUtils.toString(s2));
 		for (int i = 0, l = s1.length; i < l; i++)
 			if (s1[i] != s2[i])
 				return false;

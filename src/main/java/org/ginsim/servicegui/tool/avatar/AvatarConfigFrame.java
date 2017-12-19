@@ -1,8 +1,5 @@
 package org.ginsim.servicegui.tool.avatar;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
@@ -16,8 +13,6 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -25,10 +20,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTextPane;
+import javax.swing.JTextArea;
+import javax.swing.ScrollPaneConstants;
 import javax.swing.ToolTipManager;
-import javax.swing.border.LineBorder;
-import javax.swing.border.TitledBorder;
+import javax.swing.text.DefaultCaret;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
@@ -52,7 +47,6 @@ import org.ginsim.servicegui.tool.avatar.algopanels.AvatarPanel;
 import org.ginsim.servicegui.tool.avatar.algopanels.FirefrontPanel;
 import org.ginsim.servicegui.tool.avatar.algopanels.MonteCarloPanel;
 import org.ginsim.servicegui.tool.avatar.algopanels.SimulationPanel;
-import org.ginsim.servicegui.tool.avatar.others.TitleToolTipPanel;
 import org.ginsim.servicegui.tool.avatar.parameters.AvaParameterEditionPanel;
 import org.ginsim.servicegui.tool.avatar.parameters.AvatarParametersHelper;
 
@@ -65,11 +59,9 @@ import org.ginsim.servicegui.tool.avatar.parameters.AvatarParametersHelper;
  * @version 1.0
  */
 public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
-
-	private static final int W = 1020, H = 600;
+	private static final long serialVersionUID = -8243962416980316054L;
+	private static final int W = 950, H = 550;
 	private static final String ID = "avatar_gui";
-	private static final long serialVersionUID = 1L;
-	private Color purple = new Color(204, 153, 255), blue = new Color(130, 180, 246), marine = new Color(204, 204, 255);
 
 	/****************/
 	/** PARAMETERS **/
@@ -86,8 +78,6 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 	/** selected simulation: Avatar, Firefront or Monte Carlo */
 	public JComboBox<EnumAlgorithm> jcbAlgorithm = new JComboBox<EnumAlgorithm>(new DefaultComboBoxModel<EnumAlgorithm>(
 			new EnumAlgorithm[] { EnumAlgorithm.AVATAR, EnumAlgorithm.FIREFRONT, EnumAlgorithm.MONTE_CARLO }));
-	/** whether charts should be created and plotted */
-	public JCheckBox plots = new JCheckBox("Plot statistics");
 	/**
 	 * whether detailed logs should be printed (not advisable for complex models)
 	 */
@@ -95,10 +85,9 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 	/** named store with the initial states and oracles */
 	public AvatarStateStore statestore;
 
-	private JPanel progressBar;
+	private JPanel outputPanel;
 	private JSplitPane horizontalPanel;
-	private boolean first = true;
-	public JTextPane progress = new JTextPane();
+	public JTextArea jtaOutput = new JTextArea();
 	private JButton forceStop = new JButton("Force exit");
 	private AvatarResults results;
 	private File memorizedFile = new File("chart.png"), logFile = new File("log.txt"),
@@ -106,11 +95,10 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 	private AvaParameterEditionPanel editionPanel;
 
 	private String open = "<html><div style=\"width:265px;\">", end = "</div></html>";
-	private String statesVar = open + "Specification of (sets of) initial states (* means all possible values)" + end;
-	private String algoVar = open + "Select the algorithm:"
-			+ "<br>1) AVATAR, an adapted Monte Carlo simulation, for attractor identification and approximation of reachability probabilities"
-			+ "<br>2) FIREFRONT for a quasi-exact reachability probabilities of stable states and small complex attractors"
-			+ "<br>3) MONTECARLO for an approximation of reachability probabilities of stable states" + end;
+	private String algoVar = open
+			+ "AVATAR - an adapted Monte Carlo simulation, for attractor identification and approximation of reachability probabilities"
+			+ "<br>FIREFRONT - for a quasi-exact reachability probabilities of stable states and small complex attractors"
+			+ "<br>MONTECARLO - for an approximation of reachability probabilities of stable states" + end;
 
 	/**
 	 * Creates the panel with avatar-based simulations from the current graph
@@ -126,6 +114,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 		super(graph, _parent, ID, W, H);
 		this.setTitle(Txt.t("STR_avatar"));
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		// this.setSize(900, 600);
 
 		ToolTipManager.sharedInstance().setInitialDelay(0);
 		ToolTipManager.sharedInstance().setDismissDelay(40000);
@@ -157,19 +146,14 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 		statestore.addOracle(oracles);
 		states.updateParam(statestore);
 
-		Icon img = new ImageIcon(getClass().getResource("/greyQuestionMark.png"));
-		panelAvatar = new AvatarPanel(img);
-		panelFF = new FirefrontPanel(img);
-		panelFF.setBorder(new TitledBorder(new LineBorder(purple, 2), EnumAlgorithm.FIREFRONT + " Parameters",
-				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		panelMC = new MonteCarloPanel(img);
-		panelMC.setBorder(new TitledBorder(new LineBorder(purple, 2), EnumAlgorithm.MONTE_CARLO + " Parameters",
-				TitledBorder.LEADING, TitledBorder.TOP, null, new Color(0, 0, 0)));
-		plots.setSelected(true);
+		panelAvatar = new AvatarPanel();
+		panelFF = new FirefrontPanel();
+		panelMC = new MonteCarloPanel();
 		quiet.setSelected(true);
 		quiet.setToolTipText(
 				"Check this box to enable logs production (may lead to significant computational time overhead)");
 		jcbAlgorithm.setSelectedIndex(0);
+		jcbAlgorithm.setToolTipText(algoVar);
 
 		AvatarParameterList paramList = (AvatarParameterList) ObjectAssociationManager.getInstance().getObject(lrg,
 				AvatarParametersManager.KEY, false);
@@ -229,7 +213,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 
 		/** LOAD PARAMS **/
 		AvatarParametersHelper.unload(param, this);
-		JPanel rightPanel = new JPanel(new GridBagLayout());
+		JPanel rightPanel = new JPanel();
 		JPanel topPanel = getTopPanel();
 		rightPanel.removeAll();
 		rightPanel.setLayout(new GridBagLayout());
@@ -241,16 +225,12 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 		gbc.fill = GridBagConstraints.BOTH;
 		rightPanel.add(topPanel, gbc);
 
-		Icon img = new ImageIcon(getClass().getResource("/greyQuestionMark.png"));
-		int width = 200, widthstates = 430, startX = 5, startY = 10, heightStates = 300, shiftX = 5;
-
 		/*
 		 * if(statestore.getInputState().size()==0){ this.setResizable(true);
 		 * //this.setSize(getWidth(),getHeight()-70); heightStates=heightStates-70; }
 		 */
-		JPanel statesPanel = new TitleToolTipPanel();
-		statesPanel.setToolTipText(statesVar);
-		statesPanel.setBorder(BorderFactory.createTitledBorder("States and oracles"));
+		// statesPanel.setBorder(BorderFactory.createTitledBorder("States and
+		// oracles"));
 		gbc.gridx = 2;
 		gbc.gridy = 2;
 		gbc.weightx = 1;
@@ -258,39 +238,33 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 		gbc.gridwidth = 1;
 		gbc.gridheight = 2;
 		gbc.fill = GridBagConstraints.BOTH;
-		statesPanel.setLayout(new GridLayout(1, 1));
 		// states.setPreferredSize(new Dimension(500,200));
 		// states.scrollRectToVisible(states.getBounds());
-		states.setMinimumSize(new Dimension(widthstates - 10, heightStates - 15));
+		// states.setMinimumSize(new Dimension(widthstates - 10, heightStates - 15));
 		// System.out.println("Size:"+param.states.getAllStateList().size()+"<->"+param.states.getAllIStateList().size());
-		statesPanel.add(states);
-		rightPanel.add(statesPanel, gbc);
+		rightPanel.add(states, gbc);
 		gbc.gridheight = 1;
 
 		/** A: select algorithm **/
 		jcbAlgorithm.setSelectedIndex(param.algorithm);
 		jcbAlgorithm.setVisible(true);
 		quiet.setSelected(param.quiet);
-		plots.setSelected(param.plots);
-		JPanel panelOutput = new TitleToolTipPanel();
+		JPanel panelOutput = new JPanel();
 		panelOutput.setLayout(new GridLayout(1, 1));
 		panelOutput.setBorder(BorderFactory.createTitledBorder("Output"));
 		panelOutput.add(quiet);
 
-		JPanel panelAlgo = new TitleToolTipPanel();
-		panelAlgo.setLayout(new GridLayout(2, 1));
-		panelAlgo.setBorder(BorderFactory.createTitledBorder("Simulation"));
-
-		JPanel panelSelAlgo = new TitleToolTipPanel();
-		panelSelAlgo.setMinimumSize(new Dimension(0, 50));
-		panelSelAlgo.setToolTipText(algoVar);
+		JPanel panelSelAlgo = new JPanel();
 		panelSelAlgo.setBorder(BorderFactory.createTitledBorder("Algorithm"));
 		panelSelAlgo.setLayout(new GridLayout(1, 1));
 		panelSelAlgo.add(jcbAlgorithm);
 
+		JPanel panelAlgo = new JPanel();
+		panelAlgo.setLayout(new GridLayout(2, 1));
+		panelAlgo.setBorder(BorderFactory.createTitledBorder("Simulation"));
 		panelAlgo.add(panelSelAlgo);
 		panelAlgo.add(panelOutput);
-		// algorithm.setPreferredSize(new Dimension(widthstates-10, heightStates-22));
+
 		gbc.gridx = 1;
 		gbc.gridy = 0;
 		gbc.weightx = 0;
@@ -309,7 +283,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 					panelFF.setVisible(true);
 				} else if (algo == EnumAlgorithm.MONTE_CARLO) {
 					panelMC.setVisible(true);
-				} else {
+				} else if (algo == EnumAlgorithm.AVATAR) {
 					panelAvatar.setVisible(true);
 				}
 			}
@@ -345,12 +319,13 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 		panelAvatar.setVisible(false);
 		panelFF.setVisible(false);
 		panelMC.setVisible(false);
-		if (jcbAlgorithm.getSelectedIndex() == 0)
+		if (jcbAlgorithm.getSelectedItem() == EnumAlgorithm.AVATAR) {
 			panelAvatar.setVisible(true);
-		else if (jcbAlgorithm.getSelectedIndex() == 1)
+		} else if (jcbAlgorithm.getSelectedItem() == EnumAlgorithm.FIREFRONT) {
 			panelFF.setVisible(true);
-		else
+		} else if (jcbAlgorithm.getSelectedItem() == EnumAlgorithm.MONTE_CARLO) {
 			panelMC.setVisible(true);
+		}
 
 		/** PARAM PANEL **/
 		JSplitPane paramPanel = editionPanel.getEditionPanel();
@@ -359,37 +334,36 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 		paramPanel.setEnabled(true);
 		paramPanel.setIgnoreRepaint(false);
 		paramPanel.setOneTouchExpandable(true);
-		paramPanel.setDividerLocation(0.3);
+		paramPanel.setDividerLocation(150);
 		// paramPanel.setMinimumSize(new Dimension(300,100));
 		paramPanel.setBorder(BorderFactory.createEmptyBorder(1, 1, 1, 1));
-		paramPanel.setBorder(null);
+		// paramPanel.setBorder(null);
 
 		/** G: Progress bar **/
-		progress.setContentType("text/html");
-		progress.setOpaque(false);
-		progress.setBorder(BorderFactory.createEmptyBorder(0, 5, 5, 5));
-		progress.setBackground(new Color(0, 0, 0, 0));
-		progress.setFont(new Font(Font.MONOSPACED, 3, 5));
-		JScrollPane jsp = new JScrollPane(progress);
-		// jsp.setsetMargin(new Insets(20,20,20,20));
-		jsp.setBorder(null);
-		progressBar = new JPanel();
-		progressBar.setBorder(new TitledBorder(new LineBorder(marine, 4), "Running progress... ", TitledBorder.LEADING,
-				TitledBorder.TOP, null, new Color(0, 0, 0)));
-		progressBar.setLayout(new GridBagLayout());
+//		jtpOutput.setContentType("text/html");
+//		jtpOutput.setFont(new Font(Font.MONOSPACED, 3, 5));
+		jtaOutput.setWrapStyleWord(true);
+		((DefaultCaret)jtaOutput.getCaret()).setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
+		JScrollPane jsp = new JScrollPane(jtaOutput);
+		jsp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		// jsp.setMaximumSize(new Dimension(getWidth(), 50));
+		outputPanel = new JPanel();
+		outputPanel.setBorder(BorderFactory.createTitledBorder("Output"));
+		outputPanel.setLayout(new GridBagLayout());
 		gbc.gridy = 3;
 		gbc.gridx = 1;
 		gbc.weightx = 1;
 		gbc.gridwidth = 2;
 		gbc.fill = GridBagConstraints.BOTH;
-		progressBar.add(jsp, gbc);
+		outputPanel.add(jsp, gbc);
 		gbc.gridy = 3;
 		gbc.gridx = 3;
 		gbc.weightx = 0;
 		gbc.gridwidth = 0;
 		gbc.fill = GridBagConstraints.NONE;
 		gbc.anchor = GridBagConstraints.EAST;
-		progressBar.add(forceStop, gbc);
+		forceStop.setEnabled(false);
+		outputPanel.add(forceStop, gbc);
 
 		forceStop.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
@@ -397,18 +371,8 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 					results.kill(true);
 			}
 		});
-		horizontalPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, paramPanel, progressBar);
+		horizontalPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, paramPanel, outputPanel);
 		horizontalPanel.setEnabled(true);
-		horizontalPanel.setOneTouchExpandable(true);
-		paramPanel.setMinimumSize(new Dimension(400, 400));
-		progressBar.setMaximumSize(new Dimension(400, 50));
-		if (first) {
-			horizontalPanel.getRightComponent().setVisible(false);
-			first = false;
-		} else
-			horizontalPanel.setDividerLocation(0.7);
-		// paramPanel.setRightComponent(rightPanel);
-		// paramPanel.setContinuousLayout(true);
 
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
@@ -419,6 +383,8 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 		gbc.fill = GridBagConstraints.BOTH;
 		mainPanel.add(horizontalPanel, gbc);
 
+		horizontalPanel.setDividerLocation(getHeight() - 200);
+
 		mainPanel.repaint();
 		mainPanel.validate();
 	}
@@ -428,8 +394,8 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 
 		brun.setEnabled(false);
 		forceStop.setEnabled(true);
-		progress.setText("Initializing simulation");
-		progressBar.setVisible(true);
+		jtaOutput.append("Initializing simulation\n");
+		outputPanel.setVisible(true);
 		horizontalPanel.getRightComponent().setVisible(true);
 		horizontalPanel.setDividerLocation(0.8);
 
@@ -514,10 +480,11 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 			}
 			// for(List<byte[]> o : oracles) System.out.println("Oracle
 			// entry:"+AvatarUtils.toString(o));
-			((StatefulLogicalModelImpl) model).setOracles(oracles);
+			// FIXME ptgm this avoids consecutive runs to use previously discovered oracles
+			// ((StatefulLogicalModelImpl) model).setOracles(oracles);
 
 		} catch (Exception e) {
-			progress.setEnabled(false);
+			jtaOutput.setEnabled(false);
 			brun.setEnabled(true);
 			String fileErrorMessage = "Unfortunately we were not able to finish your request.<br><em>Reason:</em> Exception while reading the input states and parsing the model.";
 			AvatarResults.errorDisplay(fileErrorMessage, e);
@@ -529,20 +496,20 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 			/** B: extract algo-specific parameters and run */
 			EnumAlgorithm algo = (EnumAlgorithm) jcbAlgorithm.getSelectedItem();
 			if (algo == EnumAlgorithm.FIREFRONT)
-				sim = ((FirefrontPanel) panelFF).getSimulation(model, plots.isSelected(), quiet.isSelected());
+				sim = ((FirefrontPanel) panelFF).getSimulation(model, quiet.isSelected());
 			else if (algo == EnumAlgorithm.AVATAR)
-				sim = ((AvatarPanel) panelAvatar).getSimulation(model, plots.isSelected(), quiet.isSelected());
+				sim = ((AvatarPanel) panelAvatar).getSimulation(model, quiet.isSelected());
 			else if (algo == EnumAlgorithm.MONTE_CARLO)
-				sim = ((MonteCarloPanel) panelMC).getSimulation(model, false, quiet.isSelected());
+				sim = ((MonteCarloPanel) panelMC).getSimulation(model, quiet.isSelected());
 		} catch (Exception e) {
-			progress.setEnabled(false);
+			jtaOutput.setEnabled(false);
 			brun.setEnabled(true);
 			String fileErrorMessage = "Unfortunately we were not able to finish your request.<br><em>Reason:</em> Exception while parameterizing the algorithm!";
 			AvatarResults.errorDisplay(fileErrorMessage, e);
 			e.printStackTrace();
 			return;
 		}
-		results = new AvatarResults(sim, progress, this, quiet.isSelected(), model, memorizedFile, logFile, resFile,
+		results = new AvatarResults(sim, jtaOutput, this, quiet.isSelected(), model, memorizedFile, logFile, resFile,
 				csvFile, brun, forceStop);
 		results.runAvatarResults();
 	}

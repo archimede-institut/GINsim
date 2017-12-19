@@ -5,20 +5,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
-import junit.framework.TestCase;
+
 import org.colomoto.biolqm.StatefulLogicalModel;
 import org.colomoto.biolqm.StatefulLogicalModelImpl;
 import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.service.tool.avatar.domain.AbstractStateSet;
 import org.ginsim.service.tool.avatar.domain.Result;
 import org.ginsim.service.tool.avatar.simulation.AvatarSimulation;
-import org.ginsim.service.tool.avatar.simulation.FirefrontSimulation;
-import org.ginsim.service.tool.avatar.simulation.MonteCarloSimulation;
 import org.ginsim.service.tool.avatar.simulation.AvatarSimulation.AvatarStrategy;
 import org.ginsim.service.tool.avatar.utils.AvaMath;
+
+import junit.framework.TestCase;
 
 
 public class SensitivityAvatarTests extends TestCase {
@@ -122,7 +121,6 @@ public class SensitivityAvatarTests extends TestCase {
 		sim.minTransientSize = minTransientSize;
 		sim.keepOracle = keepOracle;
 		sim.keepTransients = true;
-		sim.plots = true;
 		sim.quiet = true;
 		sim.strategy = strategy;
 		sim.outputDir = outputDir;

@@ -19,6 +19,7 @@ import org.ginsim.service.tool.avatar.domain.CompactStateSet;
 import org.ginsim.service.tool.avatar.domain.Result;
 import org.ginsim.service.tool.avatar.domain.State;
 import org.ginsim.service.tool.avatar.domain.StateSet;
+import org.ginsim.service.tool.avatar.service.EnumAlgorithm;
 import org.ginsim.service.tool.avatar.utils.AvaException;
 import org.ginsim.service.tool.avatar.utils.ChartGNUPlot;
 import org.ginsim.service.tool.avatar.utils.StateProbComparator;
@@ -125,21 +126,21 @@ public class FirefrontSimulation extends Simulation {
 				complexA.addAll(F);
 			}
 
-			if (isGUI)
+			if (isGUI) {
 				publish(" Iteration:" + k + "<br>states=[F=" + F.size() + ",N=" + N.size() + ",A=" + A.size() + "]"
 						+ "<br>probs=[F=" + F.totalProbability() + ",N=" + N.totalProbability() + ",A="
 						+ A.totalProbability() + "]" + "<br>total prob="
 						+ (F.totalProbability() + N.totalProbability() + A.totalProbability()));
-
-			if (plots) {
-				pStates.add(new double[] { F.size(), N.size(), A.size() });
-				pProbs.add(new double[] { F.totalProbability(), N.totalProbability(), A.totalProbability() });
 			}
-			if (!quiet)
-				output("Iteration:" + k + "\n\tstates=[F=" + F.size() + ",N=" + N.size() + ",A=" + A.size() + "]"
-						+ "\n\tprobs=[F=" + F.totalProbability() + ",N=" + N.totalProbability() + ",A="
-						+ A.totalProbability() + "]" + "\n\ttotal prob="
-						+ (F.totalProbability() + N.totalProbability() + A.totalProbability()));
+
+			pStates.add(new double[] { F.size(), N.size(), A.size() });
+			pProbs.add(new double[] { F.totalProbability(), N.totalProbability(), A.totalProbability() });
+
+//			if (!quiet)
+//				output("Iteration:" + k + "\n\tstates=[F=" + F.size() + ",N=" + N.size() + ",A=" + A.size() + "]"
+//						+ "\n\tprobs=[F=" + F.totalProbability() + ",N=" + N.totalProbability() + ",A="
+//						+ A.totalProbability() + "]" + "\n\ttotal prob="
+//						+ (F.totalProbability() + N.totalProbability() + A.totalProbability()));
 
 			/** B1: states to expand and pass */
 
@@ -169,14 +170,14 @@ public class FirefrontSimulation extends Simulation {
 				if (Q.isEmpty()) {
 					// discovery = true;
 					A.addCumulative(s);
-					if (result.contains(s))
+					if (result.contains(s)) {
 						result.increment(s);
-					else {
+					} else {
 						result.add(s);
 						result.attractorsDepths.get(s.key).add(k);
 					}
 					if (!quiet)
-						output("Found an attractor:" + s.toString());
+						output("\tFound an attractor:" + s.toString());
 				} else {
 					boolean complex = false;
 					for (AbstractStateSet trans : result.complexAttractors.values()) {
@@ -203,14 +204,14 @@ public class FirefrontSimulation extends Simulation {
 								na++;
 								complex = true;
 								if (!quiet)
-									output("Incrementing attractor!");
+									output("\tIncrementing attractor!");
 								break;
 							}
 						}
 					}
 					if (!complex) {
 						if (!quiet)
-							output(Q.size() + " successors\n\tParent state has probability " + s.probability);
+							output("\t" + Q.size() + " successors\n\tParent state has probability " + s.probability);
 						for (State v : Q.getStates()) {
 							if (toPass.contains(v))
 								toPass.addCumulative(v);
@@ -220,7 +221,7 @@ public class FirefrontSimulation extends Simulation {
 									N.remove(v);
 								}
 								if (!quiet)
-									output("v => " + v.toString());
+									output("\tv => " + v.toString());
 								if (v.probability >= alpha)
 									toPass.addCumulative(v); // if(!A.contains(v) && !toExpand.contains(v))
 								else
@@ -246,30 +247,32 @@ public class FirefrontSimulation extends Simulation {
 					+ "\n\ttotal prob=" + (F.totalProbability() + N.totalProbability() + A.totalProbability()));
 		result.residual = N.totalProbability() + F.totalProbability();
 
-		if (!isGUI)
+		if (!isGUI) {
 			outputDir = (outputDir.contains("/") || outputDir.contains("\\")) ? outputDir + "/"
 					: new File("").getAbsolutePath() + outputDir + "/";
-		if (plots) {
-			String title = "Plot: F, N and A cardinal evolutions";
-			// pStates.add(new double[]{F.size(),N.size(),A.size()});
-			JavaPlot chartStates = ChartGNUPlot.getProgression(pStates, title, "#Iterations", "#states");
-			BufferedImage img = ChartGNUPlot.getImage(chartStates);
-			result.addPlot(title, img);
-			if (!isGUI) {
-				String filename = outputDir + model.getName() + "_states.png";
-				ChartGNUPlot.writePNGFile(img, new File(filename));
-			}
-			String title2 = "Plot: F, N and A cumulative probability evolutions";
-			// pProbs.add(new
-			// double[]{F.totalProbability(),N.totalProbability(),A.totalProbability()});
-			JavaPlot chartProbs = ChartGNUPlot.getProgression(pProbs, title2, "#Iterations", "probability");
-			BufferedImage img2 = ChartGNUPlot.getImage(chartProbs);
-			result.addPlot(title2, img2);
-			if (!isGUI) {
-				String filename = outputDir + model.getName() + "_probs.png";
-				ChartGNUPlot.writePNGFile(img2, new File(filename));
-			}
 		}
+
+		// Plots
+		String title = "Plot: F, N and A cardinal evolutions";
+		// pStates.add(new double[]{F.size(),N.size(),A.size()});
+		JavaPlot chartStates = ChartGNUPlot.getProgression(pStates, title, "#Iterations", "#states");
+		BufferedImage img = ChartGNUPlot.getImage(chartStates);
+		result.addPlot(title, img);
+		if (!isGUI) {
+			String filename = outputDir + model.getName() + "_states.png";
+			ChartGNUPlot.writePNGFile(img, new File(filename));
+		}
+		String title2 = "Plot: F, N and A cumulative probability evolutions";
+		// pProbs.add(new
+		// double[]{F.totalProbability(),N.totalProbability(),A.totalProbability()});
+		JavaPlot chartProbs = ChartGNUPlot.getProgression(pProbs, title2, "#Iterations", "probability");
+		BufferedImage img2 = ChartGNUPlot.getImage(chartProbs);
+		result.addPlot(title2, img2);
+		if (!isGUI) {
+			String filename = outputDir + model.getName() + "_probs.png";
+			ChartGNUPlot.writePNGFile(img2, new File(filename));
+		}
+
 		// System.out.println(toPrint.toString());
 		// for(double[] v : pStates) System.out.println("s:"+AvatarUtils.toString(v));
 		// for(double[] v : pProbs) System.out.println("p:"+AvatarUtils.toString(v));
@@ -287,7 +290,7 @@ public class FirefrontSimulation extends Simulation {
 		// output("Total of "+k+" steps from a max of "+maxRuns+" iterations!");
 		// System.out.println("Runs:"+maxRuns+" truncated:"+truncated+"
 		// performed:"+performed);
-		result.strategy = "FireFront";
+		result.strategy = EnumAlgorithm.FIREFRONT;
 		result.log = saveOutput();
 		return result;
 	}
@@ -331,12 +334,11 @@ public class FirefrontSimulation extends Simulation {
 		maxDepth = allStates;
 		maxExpand = allStates;
 		quiet = true;
-		plots = true;
 	}
 
 	@Override
 	public String parametersToString() {
-		return "\talpha=" + alpha + "\n\tbeta=" + beta + "\n\tMax.Depth=" + maxDepth + "\n\tMax.StatesExpanded/Run="
+		return "\tAlpha=" + alpha + "\n\tBeta=" + beta + "\n\tMax depth=" + maxDepth + "\n\tMax states expanded/Run="
 				+ maxExpand;
 	}
 

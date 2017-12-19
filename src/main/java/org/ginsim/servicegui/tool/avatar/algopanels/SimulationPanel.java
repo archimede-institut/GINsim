@@ -1,8 +1,7 @@
 package org.ginsim.servicegui.tool.avatar.algopanels;
 
-import java.awt.Color;
-import javax.swing.Icon;
 import javax.swing.JPanel;
+
 import org.colomoto.biolqm.StatefulLogicalModel;
 import org.ginsim.service.tool.avatar.params.AvatarParameters;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
@@ -16,20 +15,7 @@ import org.ginsim.service.tool.avatar.simulation.Simulation;
  * @version 1.0
  */
 public abstract class SimulationPanel extends JPanel {
-
-	private static final long serialVersionUID = 1L;
-	protected Color purple = new Color(204, 153, 255);
-	protected Icon helpImg;
-
-	/**
-	 * Instantiates the context of a simulation panel
-	 * 
-	 * @param img
-	 *            icon for the help tooltip
-	 */
-	public SimulationPanel(Icon img) {
-		helpImg = img;
-	}
+	private static final long serialVersionUID = -8563253212299485519L;
 
 	/**
 	 * Given contextual information, returns a simulation adequately parameterized
@@ -46,7 +32,7 @@ public abstract class SimulationPanel extends JPanel {
 	 * @return the parameterized simulation ready to be executed
 	 * @throws Exception
 	 */
-	public abstract Simulation getSimulation(StatefulLogicalModel model, boolean plots, boolean quiet) throws Exception;
+	public abstract Simulation getSimulation(StatefulLogicalModel model, boolean quiet) throws Exception;
 
 	/**
 	 * Saves the parameters within the fields of the panel

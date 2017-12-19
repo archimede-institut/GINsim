@@ -1,7 +1,6 @@
 package org.ginsim.service.tool.avatar.domain;
 
 import java.util.Collection;
-import java.util.List;
 
 /**
  * Abstract class enclosing a state-set<br>

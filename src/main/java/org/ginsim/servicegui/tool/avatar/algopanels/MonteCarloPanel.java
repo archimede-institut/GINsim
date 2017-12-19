@@ -2,12 +2,13 @@ package org.ginsim.servicegui.tool.avatar.algopanels;
 
 import java.awt.GridLayout;
 
-import javax.swing.Icon;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import org.colomoto.biolqm.StatefulLogicalModel;
 import org.ginsim.service.tool.avatar.params.AvatarParameters;
+import org.ginsim.service.tool.avatar.service.EnumAlgorithm;
 import org.ginsim.service.tool.avatar.simulation.MonteCarloSimulation;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
 
@@ -33,8 +34,9 @@ public class MonteCarloPanel extends SimulationPanel {
 	 * @param img
 	 *            icon for the help tooltip
 	 */
-	public MonteCarloPanel(Icon helpImg) {
-		super(helpImg);
+	public MonteCarloPanel() {
+		this.setBorder(BorderFactory.createTitledBorder(EnumAlgorithm.MONTE_CARLO + " Parameters"));
+
 		JLabel runsL = new JLabel("#Runs");
 		JLabel depthL = new JLabel("Max depth    ");
 		runs.setText("1E3");
@@ -50,7 +52,7 @@ public class MonteCarloPanel extends SimulationPanel {
 	}
 
 	@Override
-	public Simulation getSimulation(StatefulLogicalModel model, boolean plots, boolean quiet) throws Exception {
+	public Simulation getSimulation(StatefulLogicalModel model, boolean quiet) throws Exception {
 		MonteCarloSimulation sim = new MonteCarloSimulation();
 		sim.addModel(model);
 		sim.isGUI = true;

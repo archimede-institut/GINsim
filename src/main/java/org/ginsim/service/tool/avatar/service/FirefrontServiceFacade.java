@@ -1,6 +1,7 @@
 package org.ginsim.service.tool.avatar.service;
 
 import java.io.File;
+
 import org.colomoto.biolqm.StatefulLogicalModel;
 import org.colomoto.biolqm.StatefulLogicalModelImpl;
 import org.ginsim.core.graph.GSGraphManager;
@@ -16,7 +17,6 @@ import org.ginsim.service.tool.avatar.domain.Result;
 import org.ginsim.service.tool.avatar.simulation.FirefrontSimulation;
 import org.ginsim.service.tool.avatar.simulation.MDDUtils;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
-import org.ginsim.service.tool.avatar.utils.AvaException;
 import org.ginsim.service.tool.avatar.utils.AvaOptions;
 import org.mangosdk.spi.ProviderFor;
 
@@ -51,7 +51,7 @@ public class FirefrontServiceFacade implements Service {
 		// System.out.println("Elapsed time: "+result.time+"ms\n\n");
 		// System.out.println(">> Results <<\n"+result.toString());
 		// for(State attractor : result.pointAttractors.values())
-		// System.out.println("Point attractor "+attractor.toString()+" with probability
+		// System.out.println("Stable states "+attractor.toString()+" with probability
 		// bounds=["+result.attractorsLowerBound.get(attractor.key)+","+result.attractorsUpperBound.get(attractor.key)+"]");
 		return result;
 	}
@@ -119,7 +119,6 @@ public class FirefrontServiceFacade implements Service {
 		// if(maxRuns>0) sim.maxRuns=maxRuns; //optional
 
 		sim.quiet = AvaOptions.getBoolValue("quiet", args);
-		sim.plots = AvaOptions.getBoolValue("plots", args);
 		sim.outputDir = AvaOptions.getStringValue("output-dir", args);
 		if (sim.outputDir == null)
 			sim.outputDir = new File("").getAbsolutePath();

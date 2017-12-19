@@ -141,7 +141,6 @@ public class AllTests extends TestCase {
 		sim.beta=0.00001; 
 		sim.maxExpand=-1;
 		sim.quiet = true;
-		sim.plots = true; 
 		sim.outputDir = outputDir;
 		Result res = sim.run();
 		System.out.print("FireFront\t"+res.time+"\t"+res.memory+"\t"+getAttractors(res)+"\t"+getSizes(res));
@@ -159,7 +158,6 @@ public class AllTests extends TestCase {
 		sim.minTransientSize = 200;
 		sim.keepTransients = keepTransients;
 		sim.keepOracle = true;
-		sim.plots = true;
 		sim.quiet = true;
 		sim.strategy = strategy;
 		sim.outputDir = outputDir;

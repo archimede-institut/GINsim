@@ -1,11 +1,5 @@
 package org.ginsim.service.tool.avatar.utils;
 
-import com.panayotis.gnuplot.JavaPlot;
-import com.panayotis.gnuplot.plot.DataSetPlot;
-import com.panayotis.gnuplot.style.PlotStyle;
-import com.panayotis.gnuplot.style.Style;
-import com.panayotis.gnuplot.terminal.ImageTerminal;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -14,8 +8,11 @@ import java.util.Map;
 
 import javax.imageio.ImageIO;
 
-import org.colomoto.biolqm.io.avatar.AvatarUtils;
-import org.ginsim.service.tool.avatar.domain.State;
+import com.panayotis.gnuplot.JavaPlot;
+import com.panayotis.gnuplot.plot.DataSetPlot;
+import com.panayotis.gnuplot.style.PlotStyle;
+import com.panayotis.gnuplot.style.Style;
+import com.panayotis.gnuplot.terminal.ImageTerminal;
 
 
 /**

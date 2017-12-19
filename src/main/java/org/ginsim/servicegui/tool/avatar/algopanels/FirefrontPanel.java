@@ -2,12 +2,13 @@ package org.ginsim.servicegui.tool.avatar.algopanels;
 
 import java.awt.GridLayout;
 
-import javax.swing.Icon;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import org.colomoto.biolqm.StatefulLogicalModel;
 import org.ginsim.service.tool.avatar.params.AvatarParameters;
+import org.ginsim.service.tool.avatar.service.EnumAlgorithm;
 import org.ginsim.service.tool.avatar.simulation.FirefrontSimulation;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
 
@@ -25,9 +26,6 @@ public class FirefrontPanel extends SimulationPanel {
 	private JTextField alphaB = new JTextField(), betaB = new JTextField();
 
 	private String open = "<html><div style=\"width:265px;\">", end = "</div></html>";
-	private String runsffVar = open
-			+ "Maximum number of iterations performed by the program (should be less than the square size of the state space) [default: 1E3]"
-			+ end;
 	private String alphaVar = open
 			+ "Minimum probability required for a state to be explored (be included the firefront set) [default: 10E-5]"
 			+ end;
@@ -44,8 +42,9 @@ public class FirefrontPanel extends SimulationPanel {
 	 * @param img
 	 *            icon for the help tooltip
 	 */
-	public FirefrontPanel(Icon img) {
-		super(img);
+	public FirefrontPanel() {
+		this.setBorder(BorderFactory.createTitledBorder(EnumAlgorithm.FIREFRONT + " parameters"));
+
 		JLabel alphaL = new JLabel("Alpha");
 		JLabel betaL = new JLabel("Beta");
 		JLabel maxExpandffL = new JLabel("Max expansion  ");
@@ -72,7 +71,7 @@ public class FirefrontPanel extends SimulationPanel {
 	}
 
 	@Override
-	public Simulation getSimulation(StatefulLogicalModel model, boolean plots, boolean quiet) throws Exception {
+	public Simulation getSimulation(StatefulLogicalModel model, boolean quiet) throws Exception {
 		int depth = (int) Double.parseDouble(depthffB.getText());
 		double alpha = Double.parseDouble(alphaB.getText());
 		double beta = Double.parseDouble(betaB.getText());
@@ -88,7 +87,6 @@ public class FirefrontPanel extends SimulationPanel {
 			sim.maxDepth = depth; // optional
 		sim.maxExpand = (int) Double.parseDouble(maxExpandffB.getText());
 		sim.quiet = quiet;
-		sim.plots = plots;
 
 		// System.out.println("FIREFRONT\n"+"Model: "+model.getName());
 		// System.out.println("Initial states:");

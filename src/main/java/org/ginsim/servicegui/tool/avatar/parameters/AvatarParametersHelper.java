@@ -36,7 +36,6 @@ public class AvatarParametersHelper extends ListPanelHelper<AvatarParameters, Av
      */
     public static void unload(AvatarParameters param, AvatarConfigFrame acf){
     	acf.jcbAlgorithm.setSelectedIndex(param.algorithm);
-    	acf.plots.setSelected(param.plots);
     	acf.quiet.setSelected(param.quiet);
 		acf.statestore = param.statestore;
 		acf.states = new CompleteStatePanel(acf.statestore.nstates,acf.statestore.instates,acf.statestore.oracles,true);
@@ -55,7 +54,6 @@ public class AvatarParametersHelper extends ListPanelHelper<AvatarParameters, Av
     public static AvatarParameters load(AvatarConfigFrame main){
     	AvatarParameters p = new AvatarParameters();
     	p.algorithm = main.jcbAlgorithm.getSelectedIndex();
-    	p.plots = main.plots.isSelected();
     	p.quiet = main.quiet.isSelected();
     	
     	p.statestore = main.statestore;

@@ -116,7 +116,6 @@ public class AvatarServiceFacade implements Service {
 		sim.smallStateSpace = SMALL_STATE_SPACE;
 		sim.keepTransients = AvaOptions.getBoolValue("keepTransients", args);
 		sim.keepOracle = true; // AvaOptions.getBoolValue("keepAttractors",args);
-		sim.plots = AvaOptions.getBoolValue("plots", args);
 		sim.quiet = AvaOptions.getBoolValue("quiet", args);
 		String strategy = AvaOptions.getStringValue("strategy", args);
 		if (strategy.contains("Matrix"))

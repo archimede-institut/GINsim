@@ -2,7 +2,6 @@ package org.ginsim.service.tool.avatar.utils;
 
 import org.apache.commons.math3.linear.LUDecomposition;
 import org.apache.commons.math3.linear.MatrixUtils;
-import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ejml.simple.SimpleMatrix;
 /*import org.la4j.LinearAlgebra.InverterFactory;
 import org.la4j.Matrix;

@@ -67,7 +67,7 @@ public class CompactStateSet extends AbstractStateSet {
 		mddNode = mdd.nodeFromStates(noncompactstates,1);
 		PathSearcher searcher = new PathSearcher(mdd,1);
 		int[] path = searcher.setNode(mddNode);
-		for (int p : searcher) states.add(AvatarUtils.toByteArray(path));
+		for (@SuppressWarnings("unused") int p : searcher) states.add(AvatarUtils.toByteArray(path));
 	}
 
 	/**
