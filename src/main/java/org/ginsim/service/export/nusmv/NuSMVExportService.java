@@ -33,11 +33,16 @@ public class NuSMVExportService implements Service {
 	public NuSMVConfig getConfig(LogicalModel model) {
 		return new NuSMVConfig(model);
 	}
-	
+
+	public void run(LogicalModel model, String filename) throws IOException, GsException {
+		run(getConfig(model), filename);
+	}
+
 	public void run(NuSMVConfig config, String filename) throws IOException, GsException {
 		File f = new File(filename);
 		export(config, f);
 	}
+
 	public void export(NuSMVConfig config, File file) throws IOException, GsException {
 
 		FileWriter writer = new FileWriter(file);

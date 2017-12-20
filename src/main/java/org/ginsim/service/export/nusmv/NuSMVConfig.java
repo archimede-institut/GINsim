@@ -32,7 +32,7 @@ public class NuSMVConfig implements NamedStateStore, UpdaterDefinitionStore {
 	private Set<String> setFixedInputs;
 
 	/**
-	 * @param graph
+	 * @param model
 	 */
 	public NuSMVConfig(LogicalModel model) {
 		this.m_initStates = new HashMap<NamedState, Object>();
