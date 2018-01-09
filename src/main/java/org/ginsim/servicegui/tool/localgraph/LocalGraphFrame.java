@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
@@ -28,6 +26,7 @@ import org.ginsim.core.graph.regulatorygraph.ActivityLevel;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
 import org.ginsim.core.graph.view.style.StyleManager;
@@ -47,7 +46,7 @@ import org.ginsim.service.tool.localgraph.LocalGraphStyleProvider;
 
 @SuppressWarnings("serial")
 public class LocalGraphFrame extends StackDialog implements ActionListener,
-		TableModelListener, ListSelectionListener, ChangeListener {
+		TableModelListener, ListSelectionListener, PerturbationHolder {
 
 	private final int THRESHOLD_AUTO_REFRESH = 15;
 	private Container mainPanel;
@@ -61,11 +60,8 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 	private final StyleManager<RegulatoryNode, RegulatoryMultiEdge> styleManager;
 
 	private PerturbationSelectionPanel mutantSelectionPanel;
-	private PerturbationHolder mutantStore;
+	private Perturbation perturbation;
 	private StateSelectorTable sst;
-	
-	private JCheckBox colorizeCheckbox;
-	private JCheckBox colorNodes;
 	
 	private boolean isColorized = false;
 
@@ -86,9 +82,8 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 			c.weightx = 2;
 			c.gridx = 0;
 			c.gridy = 0;
-			mutantStore = new PerturbationStore();
 			mutantSelectionPanel = new PerturbationSelectionPanel(this,
-					config.getGraph(), mutantStore);
+					config.getGraph(), this);
 			mainPanel.add(mutantSelectionPanel, c);
 			
 			
@@ -101,25 +96,10 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 			sst.table.getSelectionModel().addListSelectionListener(this);
 			mainPanel.add(sst, c);
 
-
-			c.gridy++;
-			c.weightx = 0;
-			c.weighty = 0;
-			c.fill = GridBagConstraints.EAST;
-			colorizeCheckbox = new JCheckBox(Txt.t("STR_localGraph_color"));
-			colorizeCheckbox.setSelected(config.getGraph().getNodeOrderSize() < THRESHOLD_AUTO_REFRESH);
-			colorizeCheckbox.addChangeListener(this);
-			mainPanel.add(colorizeCheckbox, c);
-
-			c.gridy++;
-			c.fill = GridBagConstraints.EAST;
-			colorNodes = new JCheckBox(Txt.t("STR_localGraph_nodes"));
-			colorNodes.setSelected(true);
-			colorNodes.addChangeListener(this);
-			mainPanel.add(colorNodes, c);
-
-			
 			if (config.getDynamic() != null) {
+				c.weightx = 0;
+				c.weighty = 0;
+				c.fill = GridBagConstraints.EAST;
 				c.gridy++;
 				addStatesButton = new JButton(
 						Txt.t("STR_localGraph_addStates"));
@@ -157,11 +137,9 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 			return;
 		}
 		try {
-			colorizeCheckbox.setEnabled(false);
 			activityMap = getActivities(states);
-			functionalityMap = service.run(config.getGraph(), states, mutantStore.getPerturbation());
+			functionalityMap = service.run(config.getGraph(), states, getPerturbation());
 			doColorize();
-			colorizeCheckbox.setEnabled(true);
 		} catch (GsException e) {
 			LogManager.error(e);
 			NotificationManager.publishError(config.getGraph(), "Local Graph: "
@@ -170,7 +148,7 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 	}
 
 	private Map<RegulatoryNode, ActivityLevel> getActivities(List<byte[]> states) {
-		if (states == null || states.size() < 1 || !colorNodes.isSelected()) {
+		if (states == null || states.size() < 1) {
 			return null;
 		}
 		
@@ -239,13 +217,11 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 		functionalityMap = null;
 		activityMap = null;
 		isColorized = false;
-		if (colorizeCheckbox.isSelected()) {
-			doColorize();
-		}
+		doColorize();
 	}
 
 	private void doColorize() {
-		if (isColorized | !colorizeCheckbox.isSelected()) {
+		if (isColorized) {
 			return;
 		}
 		
@@ -271,18 +247,18 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 	}
 
 	@Override
-	public void stateChanged(ChangeEvent e) {
-		if (e.getSource() == colorNodes && colorizeCheckbox.isSelected()) {
-			activityMap = getActivities(sst.getStates());
-			isColorized = false;
-		}
-		
-		if (colorizeCheckbox.isEnabled() && colorizeCheckbox.isSelected()) {
-			doColorize();
-		} else {
-			undoColorize();
+	public Perturbation getPerturbation() {
+		return perturbation;
+	}
+
+	@Override
+	public void setPerturbation(Perturbation perturbation) {
+		if (perturbation != this.perturbation) {
+			this.perturbation = perturbation;
+			changed();
 		}
 	}
+
 }
 
 class StateSelectorTable extends JPanel {
