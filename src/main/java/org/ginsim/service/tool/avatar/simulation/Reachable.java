@@ -2,7 +2,7 @@ package org.ginsim.service.tool.avatar.simulation;
 
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.StatefulLogicalModel;
-import org.colomoto.biolqm.tool.simulation.updater.AsynchronousUpdater;
+import org.colomoto.biolqm.tool.simulation.multiplesuccessor.AsynchronousUpdater;
 import org.ginsim.service.tool.avatar.domain.State;
 import org.ginsim.service.tool.avatar.domain.StateSet;
 

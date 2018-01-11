@@ -1,10 +1,10 @@
 package org.ginsim.service.tool.reg2dyn.updater;
 
+import org.colomoto.biolqm.tool.simulation.multiplesuccessor.MultipleSuccessorsUpdater;
+import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
+
 import java.util.List;
 import java.util.NoSuchElementException;
-
-import org.colomoto.biolqm.tool.simulation.MultipleSuccessorsUpdater;
-import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 
 /**
  * Wrap LogicalModel's updater API into GINsim.

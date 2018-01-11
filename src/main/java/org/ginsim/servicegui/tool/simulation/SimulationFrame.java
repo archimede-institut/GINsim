@@ -1,9 +1,9 @@
 package org.ginsim.servicegui.tool.simulation;
 
 import org.colomoto.biolqm.LogicalModel;
-import org.colomoto.biolqm.tool.simulation.MultipleSuccessorsUpdater;
-import org.colomoto.biolqm.tool.simulation.updater.AsynchronousUpdater;
-import org.colomoto.biolqm.tool.simulation.updater.CompleteUpdater;
+import org.colomoto.biolqm.tool.simulation.multiplesuccessor.AsynchronousUpdater;
+import org.colomoto.biolqm.tool.simulation.multiplesuccessor.CompleteUpdater;
+import org.colomoto.biolqm.tool.simulation.multiplesuccessor.MultipleSuccessorsUpdater;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateStore;

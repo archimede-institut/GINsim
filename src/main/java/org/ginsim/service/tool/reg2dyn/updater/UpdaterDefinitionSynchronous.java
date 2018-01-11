@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.tool.simulation.DeterministicUpdater;
-import org.colomoto.biolqm.tool.simulation.updater.SynchronousUpdater;
+import org.colomoto.biolqm.tool.simulation.deterministic.DeterministicUpdater;
+import org.colomoto.biolqm.tool.simulation.deterministic.SynchronousUpdater;
 import org.ginsim.common.xml.XMLWriter;
 
 public class UpdaterDefinitionSynchronous implements UpdaterDefinition {

@@ -8,8 +8,8 @@ import java.util.Random;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.tool.simulation.updater.AsynchronousUpdater;
-import org.colomoto.biolqm.tool.simulation.updater.SequentialUpdater;
+import org.colomoto.biolqm.tool.simulation.multiplesuccessor.AsynchronousUpdater;
+import org.colomoto.biolqm.tool.simulation.deterministic.SequentialUpdater;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;

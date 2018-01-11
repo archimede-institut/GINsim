@@ -2,7 +2,6 @@ package org.ginsim.service.tool.trapspace;
 
 import org.colomoto.biolqm.LQMServiceManager;
 import org.colomoto.biolqm.LogicalModel;
-import org.colomoto.biolqm.tool.trapspaces.TrapSpaceIdentifier;
 import org.colomoto.biolqm.tool.trapspaces.TrapSpaceList;
 import org.colomoto.biolqm.tool.trapspaces.TrapSpaceSettings;
 import org.colomoto.biolqm.tool.trapspaces.TrapSpaceTool;
@@ -31,15 +30,15 @@ public class TrapSpaceService implements Service {
 	public TrapSpaceService() {
 	}
 
-	public Task<TrapSpaceList> getTask(LogicalModel model, TrapSpaceSettings settings) {
-		return TOOL.getTask(model, settings);
+	public Task<TrapSpaceList> getTask(TrapSpaceSettings settings) {
+		return TOOL.getTask(settings);
 	}
 	
-	public TrapSpaceSettings getSettings() {
-		return TOOL.getSettings();
+	public TrapSpaceSettings getSettings(LogicalModel model) {
+		return TOOL.getSettings(model);
 	}
 	
-	public TrapSpaceList launch(LogicalModel model, TrapSpaceSettings settings) throws Exception {
-		return TOOL.getResult(model, settings);
+	public TrapSpaceList launch(TrapSpaceSettings settings) throws Exception {
+		return TOOL.getResult(settings);
 	}
 }

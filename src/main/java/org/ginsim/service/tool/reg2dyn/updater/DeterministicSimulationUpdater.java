@@ -2,7 +2,7 @@ package org.ginsim.service.tool.reg2dyn.updater;
 
 import java.util.NoSuchElementException;
 
-import org.colomoto.biolqm.tool.simulation.DeterministicUpdater;
+import org.colomoto.biolqm.tool.simulation.deterministic.DeterministicUpdater;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 
 /**

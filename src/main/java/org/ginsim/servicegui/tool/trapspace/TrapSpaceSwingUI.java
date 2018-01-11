@@ -48,7 +48,7 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
 	JTable tresult;
 	JCheckBox cb_tree;
 	
-	private final TrapSpaceSettings settings;
+	private final TrapSpaceParameters settings;
 	Task<TrapSpaceList> m_identifier;
 
     public TrapSpaceSwingUI(JFrame f, RegulatoryGraph lrg) {
@@ -57,7 +57,7 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
 		
 		model = new TrapSpaceTableModel();
 		tresult = new EnhancedJTable(model);
-		settings = srv.getSettings();
+		settings = new TrapSpaceParameters();
 		settings.terminal = false;
 		settings.tree = true;
 		settings.bdd = !ClingoLauncher.isAvailable();
@@ -93,7 +93,7 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
         	settings.tree = false;
         	settings.terminal = true;
         }
-		m_identifier = srv.getTask(lmodel, settings);
+		m_identifier = srv.getTask(settings.getSettings(lmodel));
 		m_identifier.background(this);
     }
 
@@ -189,4 +189,25 @@ class ColoredCellRenderer extends DefaultTableCellRenderer {
         }
         return cmp;
     }
+}
+
+class TrapSpaceParameters {
+
+	public boolean reduce = false;
+
+	public boolean bdd = false;
+
+	public boolean terminal = false;
+	public boolean tree = false;
+
+	public TrapSpaceSettings getSettings(LogicalModel model) {
+		TrapSpaceSettings settings = new TrapSpaceSettings(model);
+
+		settings.bdd = this.bdd;
+		settings.reduce = this.reduce;
+		settings.terminal = this.terminal;
+		settings.tree = this.tree;
+
+		return settings;
+	}
 }

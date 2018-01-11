@@ -10,8 +10,7 @@ import java.util.Set;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.tool.simulation.updater.PriorityClasses;
-import org.ginsim.common.application.LogManager;
+import org.colomoto.biolqm.tool.simulation.multiplesuccessor.PriorityClasses;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.ListenableNamedList;

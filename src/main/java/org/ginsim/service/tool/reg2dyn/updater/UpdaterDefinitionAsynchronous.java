@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.tool.simulation.MultipleSuccessorsUpdater;
-import org.colomoto.biolqm.tool.simulation.updater.AsynchronousUpdater;
+import org.colomoto.biolqm.tool.simulation.multiplesuccessor.MultipleSuccessorsUpdater;
+import org.colomoto.biolqm.tool.simulation.multiplesuccessor.AsynchronousUpdater;
 import org.ginsim.common.xml.XMLWriter;
 
 public class UpdaterDefinitionAsynchronous implements UpdaterDefinition {

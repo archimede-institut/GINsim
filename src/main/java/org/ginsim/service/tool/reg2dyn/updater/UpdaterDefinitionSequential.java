@@ -4,8 +4,8 @@ import java.util.List;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.tool.simulation.DeterministicUpdater;
-import org.colomoto.biolqm.tool.simulation.updater.SequentialUpdater;
+import org.colomoto.biolqm.tool.simulation.deterministic.DeterministicUpdater;
+import org.colomoto.biolqm.tool.simulation.deterministic.SequentialUpdater;
 import org.ginsim.common.xml.XMLWriter;
 
 public class UpdaterDefinitionSequential implements UpdaterDefinition {
