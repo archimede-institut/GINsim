@@ -38,7 +38,6 @@ public class LocalGraphService implements Service {
 		}
 
 		LocalGraph lg = new LocalGraph(graph, selStates);
-		lg.setUpdater(new SynchronousSimulationUpdater(model));
 		Map<RegulatoryMultiEdge, LocalGraphCategory> functionalityMap = lg.run();
 		return functionalityMap;
 	}

@@ -9,6 +9,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
+import org.ginsim.service.tool.reg2dyn.updater.SynchronousSimulationUpdater;
 
 /**
  * 
@@ -28,10 +29,7 @@ public class LocalGraph {
 	public LocalGraph(RegulatoryGraph regGraph, List<byte[]> states) {
 		this.regGraph = regGraph;
 		this.states = states;
-	}
-
-	public void setUpdater(SimulationUpdater updater) {
-		this.updater = updater;
+		this.updater = new SynchronousSimulationUpdater(regGraph.getModel());
 	}
 
 	public void setStates(List<byte[]> states) {
@@ -43,6 +41,9 @@ public class LocalGraph {
 
 		for (byte[] state : states) {
 			byte[] fstate = f(state);
+			// TODO: refactor to reduce the amount of computations
+			//   * iterate over nodes and compute their neighbour focal state(s) only once
+			//   * test edges going out of
 			for (RegulatoryMultiEdge edge : regGraph.getEdges()) {
 				RegulatoryNode source = edge.getSource();
 				RegulatoryNode target = edge.getTarget();
@@ -63,26 +64,43 @@ public class LocalGraph {
 	private void updateEdge(Map<RegulatoryMultiEdge, LocalGraphCategory> functionalityMap, 
 			RegulatoryMultiEdge edge, byte[] state,
 			byte[] fstate, int i, int j, int diff) {
-		byte[] stateDiff = getStateDiff(state, i, diff);
-		byte[] fstateDiff = f(stateDiff);
+		byte[] fstateDiff = f(getStateDiff(state, i, diff));
 		if (fstateDiff[j] == fstate[j]) {
 			return; // No effect
 		}
 		LocalGraphCategory func = functionalityMap.get(edge);
+		if (func == LocalGraphCategory.DUAL) {
+			return;
 
-		if ( (diff > 0 && fstateDiff[j] > fstate[j])  ||  (diff < 0 && fstateDiff[j] < fstate[j])) {
-			if (func == null || func == LocalGraphCategory.POSITIVE) {
-				functionalityMap.put(edge, LocalGraphCategory.POSITIVE);
-			} else {
-				functionalityMap.put(edge, LocalGraphCategory.DUAL);
-			}
-		} else {
-			if (func == null || func == LocalGraphCategory.NEGATIVE) {
-				functionalityMap.put(edge, LocalGraphCategory.NEGATIVE);
-			} else {
-				functionalityMap.put(edge, LocalGraphCategory.DUAL);
-			}
 		}
+		LocalGraphCategory local;
+		if ((diff > 0 && fstateDiff[j] > fstate[j]) || (diff < 0 && fstateDiff[j] < fstate[j])) {
+			if (i == j && (
+					(diff > 0 && (fstateDiff[i] <= state[i] || fstate[i] > state[i])) ||
+					(diff < 0 && (fstateDiff[i] >= state[i] || fstate[i] < state[i]))
+			)) { // Extra-check for self-edges
+				return;
+			}
+			local = LocalGraphCategory.POSITIVE;
+		} else {
+			if (i == j) { // Extra-check for self-edges ?
+				if (false) {
+					return;
+				}
+			}
+			local = LocalGraphCategory.NEGATIVE;
+		}
+
+		if (func == local) {
+			return;
+		}
+
+		if (func == null) {
+			functionalityMap.put(edge, local);
+			return;
+		}
+
+		functionalityMap.put(edge, LocalGraphCategory.DUAL);
 	}
 
 	/**
