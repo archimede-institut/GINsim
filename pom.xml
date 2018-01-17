@@ -275,13 +275,4 @@
     </plugins>
   </build>
 
-  <dependencyManagement>
-  	<dependencies>
-  		<dependency>
-  			<groupId>org.colomoto</groupId>
-  			<artifactId>bioLQM</artifactId>
-  			<version>0.4-SNAPSHOT</version>
-  		</dependency>
-  	</dependencies>
-  </dependencyManagement>
 </project>
