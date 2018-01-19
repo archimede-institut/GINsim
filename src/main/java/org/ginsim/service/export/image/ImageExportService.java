@@ -17,9 +17,11 @@ import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.stream.ImageOutputStream;
 
+import org.colomoto.biolqm.tool.trapspaces.TrapSpace;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.ViewHelper;
@@ -27,6 +29,7 @@ import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
+import org.ginsim.servicegui.tool.regulatorygraphanimation.LRGStateStyleProvider;
 import org.mangosdk.spi.ProviderFor;
 
 /**
@@ -59,20 +62,41 @@ public class ImageExportService implements Service {
 
         metadata.mergeTree("javax_imageio_1.0", root);
     }
-    
-    public byte[] rawPNG(Graph<?, Edge<?>> graph) throws IOException {
-    	BufferedImage img = getPNG(graph, 4);
-    	ByteArrayOutputStream os = new ByteArrayOutputStream();
-    	ImageIO.write(img, "png", os);
-    	return os.toByteArray();
+
+    public <N,E extends Edge<N>> byte[] rawPNG (Graph<N, E> graph) throws IOException {
+        BufferedImage img = getPNG(graph, 4);
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ImageIO.write(img, "png", os);
+        return os.toByteArray();
     }
 
-    /**
-     * Export a model view as PNG image.
-     *
-     * @param graph
-     * @param fileName
-     */
+    public byte[] rawPNG(RegulatoryGraph lrg, byte[] state) throws IOException {
+        LRGStateStyleProvider provider = new LRGStateStyleProvider(lrg);
+        provider.setState(state);
+        lrg.getStyleManager().setStyleProvider(provider);
+        byte[] img = rawPNG(lrg);
+        lrg.getStyleManager().setStyleProvider(null);
+        return img;
+    }
+
+    public byte[] rawPNG(RegulatoryGraph lrg, TrapSpace trap) throws IOException {
+        return rawPNG(lrg, trap.pattern);
+    }
+
+    public byte[] rawPNG(RegulatoryGraph lrg, int[] state) throws IOException {
+        byte[] bstate = new byte[state.length];
+        for (int i=0 ; i<state.length ; i++) {
+            bstate[i] = (byte)state[i];
+        }
+        return rawPNG(lrg, bstate);
+    }
+
+        /**
+         * Export a model view as PNG image.
+         *
+         * @param graph
+         * @param fileName
+         */
     public void exportPNG( Graph<?, Edge<?>> graph, String fileName) {
         exportPNG(graph, fileName, 4);
     }

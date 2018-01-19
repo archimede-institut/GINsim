@@ -49,8 +49,10 @@ public class LRGStateStyleProvider implements StyleProvider<RegulatoryNode, Regu
 		
 		Integer i = nodeIndex.get(node);
 		ActivityType activity;
-		if (i == null || state[i] <= 0) {
-			activity = ActivityType.INACTIVE;
+		if (i == null || state[i] < 0) {
+			activity = ActivityType.UNDEFINED;
+		} else if (state[i] == 0) {
+				activity = ActivityType.INACTIVE;
 		} else if (state[i] == node.getMaxValue()) {
 			activity = ActivityType.ACTIVE;
 		} else {
@@ -75,7 +77,7 @@ public class LRGStateStyleProvider implements StyleProvider<RegulatoryNode, Regu
 }
 
 enum ActivityType {
-	INACTIVE, ACTIVE, PARTIAL;
+	UNDEFINED, INACTIVE, ACTIVE, PARTIAL;
 }
 
 
@@ -95,6 +97,8 @@ class StateColoredNodeStyle extends NodeStyleOverride<RegulatoryNode> {
 	@Override
 	public Color getBackground(RegulatoryNode obj) {
 		switch (activity) {
+		case UNDEFINED:
+			return Color.CYAN;
 		case ACTIVE:
 			return Color.ORANGE;
 		case PARTIAL:

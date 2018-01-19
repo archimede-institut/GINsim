@@ -168,16 +168,24 @@ public class ScriptLauncher {
 
 	/**
 	 * Open a graph from a file.
-	 * 
+	 *
 	 * @param filename
 	 * @return the parsed graph
 	 * @throws GsException
 	 */
-	public Graph<?, ?> open(String filename) throws GsException {
+	public Graph<?, ?> load(String filename) throws GsException {
 		File file = new File(filename);
 		return GSGraphManager.getInstance().open( file);
 	}
-	
+
+	/**
+	 * @deprecated see {@link #load(String)}
+	 */
+	@Deprecated
+	public Graph<?, ?> open(String filename) throws GsException {
+		return load(filename);
+	}
+
 	/**
 	 * Lookup a named state matching the given state.
 	 * Marked as deprecated as it should be part of the initial state service.
