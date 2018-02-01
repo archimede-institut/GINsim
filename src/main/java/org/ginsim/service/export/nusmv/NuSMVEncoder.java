@@ -13,7 +13,7 @@ import java.util.TreeMap;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.tool.stablestate.StableStateSearcher;
+import org.colomoto.biolqm.tool.fixpoints.FixpointSearcher;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
@@ -642,7 +642,7 @@ public class NuSMVEncoder {
 		}
 		String sRet = "";
 		try {
-			StableStateSearcher sss = GSServiceManager.getService(StableStatesService.class)
+			FixpointSearcher sss = GSServiceManager.getService(StableStatesService.class)
 					.getStableStateSearcher(model);
 			int omdds = sss.call();
 			MDDManager ddmanager = sss.getMDDManager().getManager(newNodeOrder);

@@ -3,7 +3,7 @@ package org.ginsim.service.tool.stablestates;
 import java.util.List;
 
 import org.colomoto.biolqm.LogicalModel;
-import org.colomoto.biolqm.tool.stablestate.StableStateSearcher;
+import org.colomoto.biolqm.tool.fixpoints.FixpointSearcher;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
@@ -37,11 +37,11 @@ public class StableStatesService implements Service {
 	public StableStatesService() {
 	}
 
-	public StableStateSearcher getSearcher(RegulatoryGraph graph) {
+	public FixpointSearcher getSearcher(RegulatoryGraph graph) {
 		return getStableStateSearcher(graph.getModel());
 	}
 	
-	public StableStateSearcher getStableStateSearcher( RegulatoryGraph regGraph, List<RegulatoryNode> nodeOrder, Perturbation mutant) {
+	public FixpointSearcher getStableStateSearcher( RegulatoryGraph regGraph, List<RegulatoryNode> nodeOrder, Perturbation mutant) {
 		LogicalModel model = regGraph.getModel();
 		if (mutant != null) {
 			mutant.update(model);
@@ -49,8 +49,8 @@ public class StableStatesService implements Service {
 		return getStableStateSearcher(model);
 	}
 
-	public StableStateSearcher getStableStateSearcher( LogicalModel model) {
-		return new StableStateSearcher(model);
+	public FixpointSearcher getStableStateSearcher( LogicalModel model) {
+		return new FixpointSearcher(model);
 	}
 
 }

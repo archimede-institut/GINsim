@@ -15,7 +15,7 @@ import org.colomoto.common.task.Task;
 import org.colomoto.common.task.TaskListener;
 import org.colomoto.common.task.TaskStatus;
 import org.colomoto.biolqm.LogicalModel;
-import org.colomoto.biolqm.tool.stablestate.StableStateSearcher;
+import org.colomoto.biolqm.tool.fixpoints.FixpointSearcher;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -40,7 +40,7 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
 	StableTableModel model;
 	JTable tresult;
 
-    StableStateSearcher m_finder;
+	FixpointSearcher m_finder;
 
     public StableStateSwingUI(JFrame f, RegulatoryGraph lrg) {
 		super(lrg, f, "stableStatesGUI", 600, 400);
@@ -79,7 +79,7 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
         }
 
         setRunning(false);
-        StableStateSearcher m_finder = (StableStateSearcher)task;
+		FixpointSearcher m_finder = (FixpointSearcher)task;
 		try {
 			int result = m_finder.getResult();
 			model.setResult(m_finder.getMDDManager(), result);

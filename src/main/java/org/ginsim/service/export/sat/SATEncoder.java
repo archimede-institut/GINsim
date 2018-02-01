@@ -9,7 +9,7 @@ import java.util.Map;
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.modifier.booleanize.Booleanizer;
-import org.colomoto.biolqm.tool.stablestate.StableStateSearcher;
+import org.colomoto.biolqm.tool.fixpoints.FixpointSearcher;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
 import org.colomoto.mddlib.PathSearcher;
@@ -50,7 +50,7 @@ public class SATEncoder {
 					NodeInfo node = coreNodes.get(i);
 					this.printNodeComment2CNF(sb, node, i + 1);
 				}
-				StableStateSearcher stableStateSearcher = GSServiceManager.get(
+				FixpointSearcher stableStateSearcher = GSServiceManager.get(
 						StableStatesService.class)
 						.getStableStateSearcher(model);
 				int root = stableStateSearcher.call();

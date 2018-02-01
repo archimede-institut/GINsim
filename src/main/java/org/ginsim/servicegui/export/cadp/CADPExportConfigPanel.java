@@ -13,7 +13,7 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 
-import org.colomoto.biolqm.tool.stablestate.StableStateSearcher;
+import org.colomoto.biolqm.tool.fixpoints.FixpointSearcher;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -285,7 +285,7 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 		// Determining the Stable States
 		// Needs to determine stable states of the individual model
 
-		StableStateSearcher ssSearcher = GSServiceManager.getService(StableStatesService.class)
+		FixpointSearcher ssSearcher = GSServiceManager.getService(StableStatesService.class)
 				.getStableStateSearcher(getGraph().getModel());
 
 		PathSearcher pathSearcher = ssSearcher.getPaths();

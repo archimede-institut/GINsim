@@ -17,7 +17,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.colomoto.biolqm.LogicalModel;
-import org.colomoto.biolqm.tool.stablestate.StableStateSearcher;
+import org.colomoto.biolqm.tool.fixpoints.FixpointSearcher;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.Graph;
@@ -194,7 +194,7 @@ class StableState extends TabComponantProvidingAState {
 	private RegulatoryGraph g;
 	private JButton computeStableStateButton;
 	
-	private StableStateSearcher sss;
+	private FixpointSearcher sss;
 
 	private StableTableModel tableModel;
 

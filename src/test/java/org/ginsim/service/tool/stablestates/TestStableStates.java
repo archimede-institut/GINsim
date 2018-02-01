@@ -8,7 +8,7 @@ import java.awt.Color;
 import java.util.Iterator;
 import java.util.Vector;
 
-import org.colomoto.biolqm.tool.stablestate.StableStateSearcher;
+import org.colomoto.biolqm.tool.fixpoints.FixpointSearcher;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.OptionStore;
@@ -122,7 +122,7 @@ public class TestStableStates {
 		node_g1.addLogicalParameter(lp, true);
 
 		// Get the stable states
-		StableStateSearcher stableStateSearcher = GSServiceManager.get(
+		FixpointSearcher stableStateSearcher = GSServiceManager.get(
 				StableStatesService.class).getSearcher(regGraph);
 		assertNotNull("The service didn't return any result",
 				stableStateSearcher);
