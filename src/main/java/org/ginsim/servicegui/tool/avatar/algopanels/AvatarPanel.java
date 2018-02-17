@@ -74,19 +74,20 @@ public class AvatarPanel extends SimulationPanel {
 		aproxDepth.setText("7");
 		minTranB.setText("200");
 		minCycleB.setText("4");
-		maxPsizeB.setText("5E5");
-		maxRewiringSizeB.setText("5E3");
+		maxPsizeB.setText("1E4");
+		maxRewiringSizeB.setText("1E3");
 		refresh();
 
+		// TODO: ptgm: is this change really necessary ?
 		strategy.addItemListener(new ItemListener() {
 			@Override
 			public void itemStateChanged(ItemEvent arg0) {
 				if (strategy.getSelectedIndex() == 0) {
 					keepTransB.setSelected(true);
-					maxRewiringSizeB.setText("5E3");
+					maxRewiringSizeB.setText("1E3");
 				} else {
 					keepTransB.setSelected(false);
-					maxRewiringSizeB.setText("5E5");
+					maxRewiringSizeB.setText("1E5");
 				}
 				// if(strategy.getSelectedIndex()==1) p1c.setVisible(true);
 				// else p1c.setVisible(false);

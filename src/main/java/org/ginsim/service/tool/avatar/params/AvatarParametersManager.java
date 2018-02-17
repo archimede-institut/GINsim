@@ -47,7 +47,6 @@ public class AvatarParametersManager extends BasicGraphAssociatedManager<AvatarP
 
 	@Override
 	public void doSave(OutputStreamWriter os, Graph graph) throws GsException {
-		System.out.println("DO SAVE");
 		AvatarParameterList paramList = (AvatarParameterList) ObjectAssociationManager.getInstance().getObject(graph,
 				KEY, false);
 		// for(AvatarParameters pi : paramList) System.out.println(pi.toFullString());
@@ -72,7 +71,6 @@ public class AvatarParametersManager extends BasicGraphAssociatedManager<AvatarP
 
 	@Override
 	public AvatarParameterList doOpen(InputStream is, Graph graph) throws GsException {
-		System.out.println("DO OPEN");
 		AvatarParameterList paramList = new AvatarParameterList((RegulatoryGraph) graph, null);
 		BufferedReader reader = new BufferedReader(new InputStreamReader(is));
 		StringBuilder out = new StringBuilder();

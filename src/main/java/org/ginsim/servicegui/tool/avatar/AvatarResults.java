@@ -11,6 +11,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +44,7 @@ import org.ginsim.service.tool.avatar.service.EnumAlgorithm;
 import org.ginsim.service.tool.avatar.simulation.MDDUtils;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
 import org.ginsim.service.tool.avatar.simulation.SimulationUtils;
+import org.ginsim.service.tool.avatar.utils.NaturalOrderComparator;
 import org.ginsim.servicegui.tool.avatar.others.IndexableActionListener;
 import org.ginsim.servicegui.tool.avatar.parameters.AvatarParametersHelper;
 
@@ -260,33 +263,39 @@ public class AvatarResults {
 			Map<String, AbstractStateSet> complexAttractors = res.complexAttractors;
 //			mheight = (int) Math.round(((double) complexAttractors.size()) / 2.0) * 19 + 1;
 
-			JPanel panelAtt = new JPanel(new GridLayout(Math.max(1, complexAttractors.size()), 1));
+			GridLayout gl = new GridLayout(Math.max(1, complexAttractors.size()/5), complexAttractors.size() < 5? 1: 5, 10, 10);
+			JPanel panelAtt = new JPanel(gl);
+			panelAtt.setBorder(BorderFactory.createTitledBorder("Complex attractors"));
 
-			for (String key : complexAttractors.keySet()) {
-				JButton button = new JButton("Process " + key + " graph");
-				button.addActionListener(new IndexableActionListener(key, parent) {
-					public void actionPerformed(ActionEvent arg0) {
-						// HierarchicalTransitionGraph graph =
-						// GraphManager.getInstance().getNewGraph(HierarchicalTransitionGraph.class,model.getNodeOrder());
-						// RegulatoryGraph graph =
-						// GraphManager.getInstance().getNewGraph(RegulatoryGraph.class,model.getNodeOrder());
-						// ReducedGraph graph =
-						// GraphManager.getInstance().getNewGraph(ReducedGraph.class,model.getNodeOrder());
-						DynamicGraph graph = GSGraphManager.getInstance().getNewGraph(DynamicGraph.class,
-								model.getComponents());
-						graph = SimulationUtils.getGraphFromAttractor(graph, res.complexAttractors.get(this.getKey()),
-								model);
-						// GUIManager.getInstance().whatToDoWithGraph(graph, true);
-						Frame f = new WhatToDoWithGraph(graph);
-						f.setVisible(true);
-					}
-				});
-				panelAtt.add(button);
-			}
 			if (complexAttractors.size() == 0) {
 				JLabel label = new JLabel("    Complex attractors were not found!");
 				panelAtt.add(label);
 			} else {
+
+				// Sort CAs to create Buttons in alphabetical order
+				List<String> lsCAs = new ArrayList<String>(complexAttractors.keySet());
+				Collections.sort(lsCAs, new NaturalOrderComparator());
+				for (String key : lsCAs) {
+					JButton button = new JButton(key);
+					button.addActionListener(new IndexableActionListener(key, parent) {
+						public void actionPerformed(ActionEvent arg0) {
+							// HierarchicalTransitionGraph graph =
+							// GraphManager.getInstance().getNewGraph(HierarchicalTransitionGraph.class,model.getNodeOrder());
+							// RegulatoryGraph graph =
+							// GraphManager.getInstance().getNewGraph(RegulatoryGraph.class,model.getNodeOrder());
+							// ReducedGraph graph =
+							// GraphManager.getInstance().getNewGraph(ReducedGraph.class,model.getNodeOrder());
+							DynamicGraph graph = GSGraphManager.getInstance().getNewGraph(DynamicGraph.class,
+									model.getComponents());
+							graph = SimulationUtils.getGraphFromAttractor(graph, res.complexAttractors.get(this.getKey()),
+									model);
+							// GUIManager.getInstance().whatToDoWithGraph(graph, true);
+							Frame f = new WhatToDoWithGraph(graph);
+							f.setVisible(true);
+						}
+					});
+					panelAtt.add(button);
+				}
 
 				/** F: Save complex attractors **/
 				// for(List<byte[]> att : res.complexAttractorPatterns.values())

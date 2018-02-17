@@ -7,6 +7,7 @@ import org.ginsim.gui.utils.data.ListEditionPanel;
 import org.ginsim.gui.utils.data.ListPanelCompanion;
 import org.ginsim.service.tool.avatar.params.AvatarParameterList;
 import org.ginsim.service.tool.avatar.params.AvatarParameters;
+import org.ginsim.service.tool.avatar.params.AvatarParametersManager;
 import org.ginsim.servicegui.tool.avatar.AvatarConfigFrame;
 import javax.swing.*;
 
@@ -64,7 +65,7 @@ public class AvaParameterEditionPanel extends JPanel
 	 * simulation
 	 */
 	public void update() {
-		ObjectAssociationManager.getInstance().addObject(graph, "avatar_parameters", paramList);
+		ObjectAssociationManager.getInstance().addObject(graph, AvatarParametersManager.KEY, paramList);
 	}
 
 	@Override
@@ -75,13 +76,12 @@ public class AvaParameterEditionPanel extends JPanel
 			AvatarParameters param = AvatarParametersHelper.load(stackDialog);
 			param.name = paramList.get(currentParam[0]).name;
 			paramList.set(currentParam[0], param);
-			ObjectAssociationManager.getInstance().addObject(graph, "avatar_parameters", paramList);
+			ObjectAssociationManager.getInstance().addObject(graph, AvatarParametersManager.KEY, paramList);
 		}
 		if (sel.length > 0) {
 			if (currentParam.length > 0 && currentParam[0] == sel[0])
 				;
 			else {
-				System.out.println("Update:" + AvatarUtils.toString(sel) + ",ParamList:#" + paramList.size());
 				AvatarParameters param = paramList.get(sel[0]);
 				stackDialog.refresh(param);
 			}

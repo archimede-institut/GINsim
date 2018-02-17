@@ -10,6 +10,7 @@ import java.util.Map;
 import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.service.tool.avatar.service.EnumAlgorithm;
 import org.ginsim.service.tool.avatar.utils.AvaMath;
+import org.ginsim.service.tool.avatar.utils.NaturalOrderComparator;
 
 public class Result {
 
@@ -289,7 +290,9 @@ public class Result {
 		if (complexAttractors.size() > 0) {
 			result += "<br><b>Complex attractors</b>:<br>";
 			// int i=0;
-			for (String key : complexAttractors.keySet()) {
+			List<String> lsCAs = new ArrayList<String>(complexAttractors.keySet());
+			Collections.sort(lsCAs, new NaturalOrderComparator());
+			for (String key : lsCAs) {
 				if (complexAttractorPatterns.size() == 0)
 					result += "&nbsp;&nbsp;&nbsp;" + key + "&nbsp;=>&nbsp;" + complexAttractors.get(key).toString();
 				else
