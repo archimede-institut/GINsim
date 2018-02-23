@@ -11,11 +11,12 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
+import org.colomoto.biolqm.tool.fixpoints.FixpointList;
+import org.colomoto.biolqm.tool.fixpoints.FixpointTask;
 import org.colomoto.common.task.Task;
 import org.colomoto.common.task.TaskListener;
 import org.colomoto.common.task.TaskStatus;
 import org.colomoto.biolqm.LogicalModel;
-import org.colomoto.biolqm.tool.fixpoints.FixpointSearcher;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -40,7 +41,7 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
 	StableTableModel model;
 	JTable tresult;
 
-	FixpointSearcher m_finder;
+	FixpointTask m_finder;
 
     public StableStateSwingUI(JFrame f, RegulatoryGraph lrg) {
 		super(lrg, f, "stableStatesGUI", 600, 400);
@@ -61,9 +62,9 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
 	
 	@Override
 	public void run(LogicalModel lmodel) {
-		m_finder = sss.getStableStateSearcher(lmodel);
-        setRunning(true);
-        m_finder.background(this);
+		m_finder = StableStatesService.getTask(lmodel);
+		setRunning(true);
+		m_finder.background(this);
     }
 
     public void taskUpdated(Task task) {
@@ -71,23 +72,21 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
             return;
         }
 
-        TaskStatus status = m_finder.getStatus();
-        if (status == TaskStatus.CANCELED) {
-            setRunning(false);
-            cancel();
-            return;
-        }
+		TaskStatus status = m_finder.getStatus();
+		if (status == TaskStatus.CANCELED) {
+			setRunning(false);
+			cancel();
+			return;
+		}
 
-        setRunning(false);
-		FixpointSearcher m_finder = (FixpointSearcher)task;
+		setRunning(false);
 		try {
-			int result = m_finder.getResult();
-			model.setResult(m_finder.getMDDManager(), result);
-			m_finder.getMDDManager().free(result);
-	
+			FixpointList result = m_finder.getResult();
+			model.setResult(result);
+
 			TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
 			Enumeration<TableColumn> columns = tresult.getColumnModel().getColumns();
-			
+
 			if (columns.hasMoreElements()) {
 				TableColumn col = columns.nextElement();
 				col.setMinWidth(150);
@@ -99,7 +98,7 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
 				col.setMinWidth(20);
 				col.setMaxWidth(25);
 			}
-			
+
 		} catch (Exception e) {
 			LogManager.error(e);
 		}

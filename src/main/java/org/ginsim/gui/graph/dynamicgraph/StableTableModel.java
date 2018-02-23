@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.swing.table.AbstractTableModel;
 
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.tool.fixpoints.FixpointList;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
@@ -19,10 +21,8 @@ import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 @SuppressWarnings("serial")
 public class StableTableModel extends AbstractTableModel {
 
-	int nbcol = 0;
-	List<byte[]> result = new ArrayList<byte[]>();
-	MDDManager factory;
-	Object[] variables;
+	List<byte[]> result = null;
+	List<?> components = null;
 	NamedStateList istates = null;
 
 	public StableTableModel() {
@@ -35,67 +35,48 @@ public class StableTableModel extends AbstractTableModel {
 	}
 
 	public byte[] getState(int sel) {
-		if (sel < 0) {
+		if (sel < 0 || result == null | sel > result.size()) {
 			return null;
 		}
 		return result.get(sel);
 	}
 
-	public void setResult(MDDManager factory, int idx) {
-		result.clear();
-		this.factory = factory;
-		this.variables = factory.getAllVariables();
-		nbcol = variables.length;
-		if (!factory.isleaf(idx)) {
-			PathSearcher searcher = new PathSearcher(factory, 1);
-			int[] path = searcher.setNode(idx);
-			for (int l: searcher) {
-				byte[] r = new byte[path.length];
-				for (int i=0 ; i<path.length ; i++) {
-					r[i] = (byte)path[i];
-				}
-				result.add(r);
-			}
-		}
-		
+	public void setResult(FixpointList fixpoints) {
+		setResult(fixpoints, fixpoints.nodes);
+	}
+
+	public void setResult(List<byte[]> stables, List<?> components) {
+		this.result = stables;
+		this.components = components;
 		fireTableStructureChanged();
 	}
-	
-	public void setResult(List<byte[]> stables, List<?> variables) {
-		result.clear();
-		this.factory = null;
-		if (stables != null) {
-			for (byte[] path: stables) {
-				byte[] r = new byte[path.length];
-				for (int i=0 ; i<path.length ; i++) {
-					r[i] = path[i];
-				}
-				result.add(r);
-			}
-		}		
-		this.variables = variables.toArray();
-		this.nbcol = this.variables.length;
-		fireTableStructureChanged();
-	}
-	
+
 	@Override
 	public int getRowCount() {
+		if (result == null) {
+			return 0;
+		}
+
 		return result.size();
 	}
 
 	@Override
 	public int getColumnCount() {
-		if (nbcol > 0) {
-			return nbcol+1;
+		if (result == null) {
+			return 0;
 		}
-		return 0;
+
+		return components.size();
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
+		if (result == null) {
+			return "";
+		}
 		if (columnIndex == 0) {
-			if (istates != null && variables != null) {
-				return istates.nameStateInfo(result.get(rowIndex), variables);
+			if (istates != null) {
+				return istates.nameState(result.get(rowIndex), components);
 			}
 			return "";
 		}
@@ -114,10 +95,11 @@ public class StableTableModel extends AbstractTableModel {
 		if (column == 0) {
 			return "Name";
 		}
-		
-		if (variables != null) {
-			return variables[column-1].toString();
+
+		if (components == null) {
+			return null;
 		}
-		return super.getColumnName(column-1);
+		
+		return components.get(column-1).toString();
 	}
 }

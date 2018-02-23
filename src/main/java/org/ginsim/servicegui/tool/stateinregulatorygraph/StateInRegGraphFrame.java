@@ -17,7 +17,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.colomoto.biolqm.LogicalModel;
-import org.colomoto.biolqm.tool.fixpoints.FixpointSearcher;
+import org.colomoto.biolqm.tool.fixpoints.FixpointList;
+import org.colomoto.biolqm.tool.fixpoints.FixpointTask;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.Graph;
@@ -194,8 +195,6 @@ class StableState extends TabComponantProvidingAState {
 	private RegulatoryGraph g;
 	private JButton computeStableStateButton;
 	
-	private FixpointSearcher sss;
-
 	private StableTableModel tableModel;
 
 	private StateInRegGraphFrame stateInRegGraphFrame;
@@ -227,7 +226,7 @@ class StableState extends TabComponantProvidingAState {
 		c.weighty = 1;
 		c.ipady = 0;
 		tableModel = new StableTableModel();
-		tableModel.setResult(null, g.getNodeOrder());
+		tableModel.setResult(null);
         table = new EnhancedJTable(tableModel);
         table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -258,11 +257,11 @@ class StableState extends TabComponantProvidingAState {
 		if (p != null) {
 			p.update(model);
 		}
-		sss = GSServiceManager.getService(StableStatesService.class).getStableStateSearcher(model);
-		int stable;
+		FixpointTask task = GSServiceManager.getService(StableStatesService.class).getTask(model);
+		FixpointList result = null;
 		try {
-			stable = sss.getResult();
-			tableModel.setResult(sss.getMDDManager(), stable);
+			result = task.call();
+			tableModel.setResult(result);
 		} catch (Exception e) {
 			LogManager.error(e);
 		}

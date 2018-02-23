@@ -113,7 +113,7 @@ public class NamedStateList extends ListenableNamedList<NamedState> {
         }
     }
 
-	public String nameStateInfo(byte[] state, Object[] no) {
+    public String nameStateInfo(byte[] state, Object[] no) {
         for (NamedState istate: this) {
             Map<NodeInfo, List<Integer>> m_istate = istate.getMap();
             boolean ok = true;
@@ -138,8 +138,9 @@ public class NamedStateList extends ListenableNamedList<NamedState> {
             }
         }
         return null;
-	}
-	public String nameState(byte[] state, List<RegulatoryNode> no) {
+    }
+
+	public String nameState(byte[] state, List<?> no) {
         for (NamedState istate: this) {
             Map<NodeInfo, List<Integer>> m_istate = istate.getMap();
             boolean ok = true;
