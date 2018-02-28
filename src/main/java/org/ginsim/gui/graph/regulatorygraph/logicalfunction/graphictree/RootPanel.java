@@ -13,6 +13,7 @@ import javax.swing.tree.TreePath;
 
 import org.ginsim.commongui.utils.ImageLoader;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeExpression;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeElement;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeValue;
@@ -48,35 +49,32 @@ public class RootPanel extends BooleanFunctionTreePanel implements ActionListene
     if (e.getSource() == button) {
       try {
         vertex = ((TreeInteractionsModel)tree.getModel()).getNode();
-        Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
         for (i = 1 ; i <= vertex.getMaxValue(); i++) {
           ok = true;
-          for (int k = 0; k < treeElement.getChildCount(); k++)
-						if (((TreeValue)treeElement.getChild(k)).getValue() == i) {
-              ok = false;
-              break;
-            }
-					if (ok) break;
+          for (int k = 0; k < treeElement.getChildCount(); k++) {
+              if (((TreeValue) treeElement.getChild(k)).getValue() == i) {
+                  ok = false;
+                  break;
+              }
+          }
+          if (ok) break;
         }
         if (!ok) {
-					i = 0;
-					ok = true;
-					for (int k = 0; k < treeElement.getChildCount(); k++)
-						if (((TreeValue)treeElement.getChild(k)).getValue() == 0) {
-							ok = false;
-							break;
-						}
-				}
-				if (ok) {
-          ((TreeInteractionsModel)tree.getModel()).addValue(i);
-          ((TreeInteractionsModel)tree.getModel()).addEmptyExpression(i, vertex);
-          ((TreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((TreeElement)tree.getModel().getRoot());
-					if (enu != null)
-						while (enu.hasMoreElements())
-							tree.expandPath((TreePath)enu.nextElement());
-				}
-			}
-      catch (Exception ex) {
+            i = 0;
+            ok = true;
+            for (int k = 0; k < treeElement.getChildCount(); k++)
+                if (((TreeValue)treeElement.getChild(k)).getValue() == 0) {
+                    ok = false;
+                    break;
+                }
+        }
+        if (ok) {
+          TreeInteractionsModel model = ((TreeInteractionsModel)tree.getModel());
+          TreeExpression expr = model.addEmptyExpression(i, vertex);
+          model.fireTreeStructureChanged((TreeElement)model.getRoot());
+          tree.expandPath(model.getPath(expr.getParent()));
+        }
+      } catch (Exception ex) {
         ex.printStackTrace();
       }
     }

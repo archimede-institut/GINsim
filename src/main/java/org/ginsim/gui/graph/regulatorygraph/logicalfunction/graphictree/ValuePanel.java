@@ -23,6 +23,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.tree.TreePath;
 
 import org.ginsim.commongui.utils.ImageLoader;
+import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeExpression;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeInteractionsModel;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeElement;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.graphictree.TreeValue;
@@ -91,20 +92,17 @@ public class ValuePanel extends BooleanFunctionTreePanel implements ActionListen
   }
   public void actionPerformed(ActionEvent e) {
     if (e.getSource() == addButton) {
-      addButton.setEnabled(false);
-      Enumeration enu = tree.getExpandedDescendants(tree.getPathForRow(0));
       addButtonAction();
-      while (enu.hasMoreElements()) {
-		tree.expandPath((TreePath)enu.nextElement());
-	}
+      addButton.setEnabled(false);
     }
   }
   public void addButtonAction() {
     try {
-      ((TreeInteractionsModel)tree.getModel()).addEmptyExpression((byte)((TreeValue)treeElement).getValue(),
-        ((TreeInteractionsModel)tree.getModel()).getNode());
-      ((TreeInteractionsModel)tree.getModel()).fireTreeStructureChanged((TreeElement)tree.getModel().getRoot());
+      TreeInteractionsModel model = ((TreeInteractionsModel)tree.getModel());
+      TreeExpression expr = model.addEmptyExpression((byte)((TreeValue)treeElement).getValue(), model.getNode());
+      model.fireTreeStructureChanged((TreeElement)model.getRoot());
       treeElement.setProperty("null function", new Boolean(true));
+      tree.expandPath(model.getPath(expr.getParent()));
     }
     catch (Exception ex) {
       ex.printStackTrace();

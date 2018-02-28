@@ -173,6 +173,20 @@ public class TreeInteractionsModel implements TreeModel {
 		return null;
 	}
 
+	public TreePath getPath(TreeElement expr) {
+		int depth = expr.getDepth();
+		TreeElement[] path = new TreeElement[depth+1];
+		TreeElement cur = expr;
+		int i = depth;
+		while (cur != null) {
+			path[i] = cur;
+			cur = cur.getParent();
+			i--;
+		}
+
+		return new TreePath(path);
+	}
+
 	public void addExpression(byte val, RegulatoryNode currentNode, BooleanParser parser) throws Exception {
 
 		TBooleanTreeNode root = parser.getRoot();
