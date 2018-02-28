@@ -41,17 +41,18 @@ public class DefaultDynamicEdgeStyle extends EdgeStyleImpl<DynamicNode, DynamicE
             return EdgePattern.SIMPLE;
         }
 
+		switch (edge.changeType) {
+			case MULTIPLE_BOTH:
+			case MULTIPLE_INCREASE:
+			case MULTIPLE_DECREASE:
+				return EdgePattern.DASH;
+		}
+
         Object pattern = getProperty(StyleProperty.PATTERN);
         if (pattern != null && pattern instanceof EdgePattern) {
         	return (EdgePattern)pattern;
         }
         
-		switch (edge.changeType) {
-		case MULTIPLE_BOTH:
-		case MULTIPLE_INCREASE:
-		case MULTIPLE_DECREASE:
-			return EdgePattern.DASH;
-		}
 		return EdgePattern.SIMPLE;
 	}
 

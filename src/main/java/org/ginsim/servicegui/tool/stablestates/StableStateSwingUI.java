@@ -18,6 +18,7 @@ import org.colomoto.common.task.TaskListener;
 import org.colomoto.common.task.TaskStatus;
 import org.colomoto.biolqm.LogicalModel;
 import org.ginsim.common.application.LogManager;
+import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.GSServiceManager;
@@ -46,7 +47,8 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
     public StableStateSwingUI(JFrame f, RegulatoryGraph lrg) {
 		super(lrg, f, "stableStatesGUI", 600, 400);
 		setUserID("stable_search");
-		
+		this.setTitle(Txt.t("STR_stableStates_title"));
+
 		model = new StableTableModel(lrg);
 		tresult = new EnhancedJTable(model);
 		
