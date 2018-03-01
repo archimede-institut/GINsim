@@ -7,7 +7,7 @@
   <groupId>org.ginsim</groupId>
   <artifactId>GINsim</artifactId>
   <name>GINsim</name>
-  <version>2.9.7-SNAPSHOT</version>
+  <version>3.0.0b-SNAPSHOT</version>
   <description>Edition, simulation and analysis of logical models</description>
   <inceptionYear>2005</inceptionYear>
   <packaging>jar</packaging>
