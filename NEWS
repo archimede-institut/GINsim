@@ -1,3 +1,12 @@
+Version 3.0.0b
+Changes since version 2.9.7
+
+General Changes:
+* General code cleaning
+* Promotion of Avatar/Firefront to public feature
+* Enable layout extension in SBML export
+
+---------------------------------------------------------------------------------------------------------------------
 Version 2.9.5.
 Changes since version 2.9.4:
 
