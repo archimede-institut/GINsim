@@ -66,7 +66,7 @@ public class StableTableModel extends AbstractTableModel {
 			return 0;
 		}
 
-		return components.size();
+		return components.size() + 1;
 	}
 
 	@Override
