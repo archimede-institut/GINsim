@@ -54,7 +54,7 @@ public class AvatarPanel extends SimulationPanel {
 			+ "Mininum size of a transient SCC to be kept for subsequent simulations (default: 200)" + end;
 	private String minCycleVar = open + "Minimum number of states in a SCC to trigger rewiring (default: 4)" + end;
 	private String maxPSizeVar = open + "Minimum number of states in a SCC to stop expansion (default: 10000)" + end;
-	private String maxRewiringSizeVar = open + "Maximum number of states to be rewired at a time" + end;
+	private String maxRewiringSizeVar = open + "Maximum number of states in a SCC to be rewired at a time" + end;
 	private JPanel panelAvatarP1, panelAvatarP2;
 
 	/**
