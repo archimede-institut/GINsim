@@ -9,6 +9,7 @@ import java.util.TreeMap;
 import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLHelper;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -81,6 +82,11 @@ public class PerturbationParser extends XMLHelper {
     	}
 	}
 
+	private String getValidID(String id) {
+    	// TODO: forward and use the saved mapping
+    	return XMLWriter.deriveValidId(id);
+	}
+
 	protected void startElement(int id, Attributes attributes) {
 		switch (id) {
 		case PERTURBATION:
@@ -97,7 +103,7 @@ public class PerturbationParser extends XMLHelper {
 
 		case CHANGE:
 			// FIXME
-			String s_vertex = attributes.getValue("target");
+			String s_vertex = getValidID(attributes.getValue("target"));
         	int min = Integer.parseInt(attributes.getValue("min"));
         	int max = Integer.parseInt(attributes.getValue("max"));
             String condition = attributes.getValue("condition");
@@ -119,7 +125,7 @@ public class PerturbationParser extends XMLHelper {
 			break;
 
 		case REGULATOR_CHANGE:
-			s_vertex = attributes.getValue("target");
+			s_vertex = getValidID(attributes.getValue("target"));
 			String s_regulator = attributes.getValue("regulator");
         	int value = Integer.parseInt(attributes.getValue("value"));
         	NodeInfo regulator = null;

@@ -4,12 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.mddlib.MDDManager;
-import org.colomoto.mddlib.MDDVariable;
-import org.colomoto.mddlib.operators.MDDBaseOperators;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.NamedObject;
 
@@ -64,10 +61,12 @@ public class NamedState implements NamedObject {
         for (int i=0 ; i<t_s.length ; i++) {
             RegulatoryNode vertex = null;
             String[] t_val = t_s[i].split(";");
+            // TODO: cleaner fixed mapping
+            t_val[0] = XMLWriter.deriveValidId(t_val[0]);
             if (t_val.length > 1) {
                 for (int j=0 ; j<nodeOrder.size() ; j++) {
-                    if (((RegulatoryNode)nodeOrder.get(j)).getId().equals(t_val[0])) {
-                        vertex = (RegulatoryNode)nodeOrder.get(j);
+                    if (nodeOrder.get(j).getId().equals(t_val[0])) {
+                        vertex = nodeOrder.get(j);
                         break;
                     }
                 }
@@ -109,35 +108,6 @@ public class NamedState implements NamedObject {
 	}
 	public Map<NodeInfo,List<Integer>> getMap() {
 		return m;
-	}
-	public int getMDD(MDDManager factory) {
-
-		int[] nodes = new int[m.size()];
-		int idx = 0;
-		for (Entry<NodeInfo, List<Integer>> e: m.entrySet()) {
-			NodeInfo node = e.getKey();
-			List<Integer> values = e.getValue();
-			if (values == null) {
-				nodes[idx++] = 1;
-				continue;
-			}
-			
-			MDDVariable var = factory.getVariableForKey(node);
-			int[] next = new int[node.getMax()+1];
-			// just to be sure: reset the array
-			for (int v=0 ; v<next.length ; v++) {
-				next[v] = 0;
-			}
-			
-			// set valid values
-			List<Integer> l_val = m.get(node);
-			for (int n: l_val) {
-				next[n] = 1;
-			}
-			
-			nodes[idx++] = var.getNode(next);
-		}
-		return MDDBaseOperators.AND.combine(factory, nodes);
 	}
 
     public byte getFirstValue(NodeInfo ni) {

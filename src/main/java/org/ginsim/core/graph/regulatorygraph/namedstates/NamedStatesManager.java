@@ -69,19 +69,19 @@ class initStateParser extends XMLHelper {
         list = imanager.getInitialStates();
         inputs = imanager.getInputConfigs();
     }
-    
+
     public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
         super.startElement(uri, localName, qName, attributes);
         
         if ("initialState".equals(qName)) {
             int index = list.add();
-            NamedState istate = (NamedState)list.get(index);
+            NamedState istate = list.get(index);
             istate.setData(attributes.getValue("value").trim().split(" "), imanager.normalNodes);
             istate.name = attributes.getValue("name").trim();
         }
         if ("input".equals(qName)) {
             int index = inputs.add();
-            NamedState istate = (NamedState)inputs.get(index);
+            NamedState istate = inputs.get(index);
             istate.setData(attributes.getValue("value").trim().split(" "), imanager.inputNodes);
             istate.name = attributes.getValue("name").trim();
         }
