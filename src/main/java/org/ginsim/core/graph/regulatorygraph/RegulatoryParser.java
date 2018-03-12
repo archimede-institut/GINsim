@@ -14,6 +14,7 @@ import java.util.Set;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
+import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
@@ -31,7 +32,6 @@ import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.InvalidFunctionResolution;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
-
 
 
 /**
@@ -64,7 +64,8 @@ public final class RegulatoryParser extends GsXMLHelper {
     private StyleManager<RegulatoryNode, RegulatoryMultiEdge> styleManager;
     private RegulatoryEdge edge = null;
     private Annotation annotation = null;
-    private Map<String, RegulatoryEdge> m_edges = new HashMap();
+	private Map<String, RegulatoryEdge> m_edges = new HashMap();
+	private Map<String, String> m_validIDs = new HashMap();
     private List v_waitingInteractions = new ArrayList();
     private String s_nodeOrder;
     private Set set;
@@ -236,11 +237,15 @@ public final class RegulatoryParser extends GsXMLHelper {
                 } else if (qName.equals("node")) {
                     String id = attributes.getValue("id");
                     if (set == null || set.contains(id)) {
+						String cleanId = XMLWriter.deriveValidId(id);
+						if (!cleanId.equals(id)) {
+							m_validIDs.put(id, cleanId);
+						}
                         pos = POS_VERTEX;
                         try {
                             byte maxvalue = (byte)Integer.parseInt(attributes.getValue("maxvalue"));
                             String name = attributes.getValue("name");
-                            vertex = graph.addNewNode(id, name, maxvalue);
+                            vertex = graph.addNewNode(cleanId, name, maxvalue);
                             vertex.getV_logicalParameters().setUpdateDup(false);
                         	String s_basal = attributes.getValue("basevalue");
                         	if (s_basal != null) {
@@ -262,7 +267,13 @@ public final class RegulatoryParser extends GsXMLHelper {
                     }
                 } else if (qName.equals("edge")) {
                     String from = attributes.getValue("from");
+                    if (m_validIDs.containsKey(from)) {
+                    	from = m_validIDs.get(from);
+					}
                     String to = attributes.getValue("to");
+					if (m_validIDs.containsKey(to)) {
+						to = m_validIDs.get(to);
+					}
                     if (set == null || set.contains(from) && set.contains(to)) {
                         pos = POS_EDGE;
                         try {
@@ -399,9 +410,9 @@ public final class RegulatoryParser extends GsXMLHelper {
     		Iterator<Entry<RegulatoryEdge,Integer>> it = m_checkMaxValue.entrySet().iterator();
     		while (it.hasNext()) {
     			Entry<RegulatoryEdge,Integer> entry = it.next();
-    			byte m1 = ((RegulatoryEdge)entry.getKey()).getMax();
-    			byte m2 = ((Integer)entry.getValue()).byteValue();
-    			byte max = ((RegulatoryEdge)entry.getKey()).me.getSource().getMaxValue();
+    			byte m1 = entry.getKey().getMax();
+    			byte m2 = entry.getValue().byteValue();
+    			byte max = entry.getKey().me.getSource().getMaxValue();
     			if ( m1 != m2 ) {
 					if (m == null) {
     					m = new HashMap<Entry<RegulatoryEdge,Integer>,String>();
@@ -418,7 +429,7 @@ public final class RegulatoryParser extends GsXMLHelper {
     			LogManager.error( "Interaction inconsistency detected.");
     			for( Entry<RegulatoryEdge,Integer> entry : m.keySet()){
     				LogManager.error( " Edge = " + entry.getKey().getShortDetail());
-    				LogManager.error( "   Pased max value = " + entry.getValue());  
+    				LogManager.error( "   Passed max value = " + entry.getValue());
     			}
     			// TODO: should we report something to the user here?
     			// throw new SAXException( new GsException( GsException.GRAVITY_ERROR, "Interaction inconsistency detected"));
@@ -472,7 +483,11 @@ public final class RegulatoryParser extends GsXMLHelper {
     		boolean ok = true;
     		if (set == null) {
 	    		for (int i=0 ; i<t_order.length ; i++) {
-	    			RegulatoryNode vertex = (RegulatoryNode)graph.getNodeByName(t_order[i]);
+					String sid = t_order[i];
+					if (m_validIDs.containsKey(sid)) {
+						sid = m_validIDs.get(sid);
+					}
+	    			RegulatoryNode vertex = graph.getNodeByName(sid);
 	    			if (vertex == null) {
 	    				ok = false;
 	    				break;
@@ -482,7 +497,7 @@ public final class RegulatoryParser extends GsXMLHelper {
     		} else {
 	    		for (int i=0 ; i<t_order.length ; i++) {
 	    		    if (set.contains(t_order[i])) {
-	    		        RegulatoryNode vertex = (RegulatoryNode)graph.getNodeByName(t_order[i]);
+	    		        RegulatoryNode vertex = graph.getNodeByName(t_order[i]);
 	    		        if (vertex == null) {
 	    		            ok = false;
 	    		            break;
@@ -508,13 +523,13 @@ public final class RegulatoryParser extends GsXMLHelper {
           if (allowedEdges.size() > 0) {
             for (Enumeration enu_values = ((Hashtable)values.get(vertex)).keys(); enu_values.hasMoreElements(); ) {
               value = (String)enu_values.nextElement();
-              for (Iterator enu_exp = ((List)((Hashtable)values.get(vertex)).get(value)).iterator(); enu_exp.hasNext(); ) {
+              for (Iterator enu_exp = ((List)values.get(vertex).get(value)).iterator(); enu_exp.hasNext(); ) {
                 exp = (String)enu_exp.next();
                 addExpression(Byte.parseByte(value), vertex, exp);
               }
             }
             vertex.getInteractionsModel().parseFunctions();
-            if (vertex.getMaxValue() + 1 == ((Hashtable)values.get(vertex)).size()) {
+            if (vertex.getMaxValue() + 1 == values.get(vertex).size()) {
               ((TreeElement)vertex.getInteractionsModel().getRoot()).setProperty("add", new Boolean(false));
             }
           }
@@ -529,6 +544,11 @@ public final class RegulatoryParser extends GsXMLHelper {
     	try {
         BooleanParser tbp = new BooleanParser( graph.getIncomingEdges(vertex));
         TreeInteractionsModel interactionList = vertex.getInteractionsModel();
+        // TODO: cleanup formulas after renamed nodes
+		for (String sid: m_validIDs.keySet()) {
+			String cleanID = m_validIDs.get(sid);
+			exp = exp.replaceAll(sid, cleanID);
+		}
         if (!tbp.compile(exp, graph, vertex)) {
         	Object[] data = new Object[3];
         	data[0] = new Short(val);

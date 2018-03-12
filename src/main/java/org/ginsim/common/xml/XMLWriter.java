@@ -35,7 +35,34 @@ public class XMLWriter {
 		return Pattern.compile("^[a-zA-Z_][a-zA-Z0-9_]*$").matcher(id).find();
 	}
 
-    
+    public static String deriveValidId(String id) {
+        if (isValidId(id)) {
+            return id;
+        }
+
+        id = id.trim();
+        if (id.length() < 1) {
+            return "_";
+        }
+
+        char c = id.charAt(0);
+        if ( !Character.isLetter(c) && c != '_') {
+            id = '_' + id;
+            if (isValidId(id)) {
+                return id;
+            }
+        }
+
+        char[] a = id.toCharArray();
+        for (int i=1 ; i< a.length ; i++) {
+            if (a[i] == '_') continue;
+            if (Character.isLetterOrDigit(a[i])) continue;
+            a[i] = '_';
+        }
+
+        return new String(a);
+    }
+
     /**
      * Create a XMLWriter with the path to a file.
      * 
