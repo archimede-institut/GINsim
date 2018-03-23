@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.colomoto.biolqm.ExtensionLoader;
 import org.colomoto.biolqm.LQMScriptLauncher;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
@@ -31,7 +32,6 @@ import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.GSServiceManager;
-import org.python.core.Py;
 import org.python.util.PythonInterpreter;
 
 import javax.script.ScriptEngine;
@@ -111,9 +111,18 @@ public class ScriptLauncher {
         }
 		
         initOptionStore();
-        if (filename.endsWith(".py")) {
-            // Explicit Jython support
 
+
+		// Explicit Jython support: faster than using Java's scripting API
+		// and allows to extends the python classpath as well
+		Class cl_PI = null;
+		try {
+			cl_PI = ExtensionLoader.getClassLoader().loadClass("org.python.util.PythonInterpreter");
+			System.out.println("Jython is available!");
+		} catch (Exception e) {
+			System.out.println("Jython not found :(");
+		}
+        if (cl_PI != null && filename.endsWith(".py")) {
             // select a base directory for script files:
             // the first parent of the selected script without a __init__.py file
             File dir = f.getParentFile();
@@ -125,30 +134,30 @@ public class ScriptLauncher {
                 dir = dir.getParentFile();
             }
 
-            // Create and set up python interpreter:
+            // Create and set up the python interpreter:
             //  * add the selected folder to the classpath
             //  * add a "gs" object pointing to this script launcher
-            Py.getSystemState().path.add(0, dir.getAbsolutePath());
-            PythonInterpreter pi = new PythonInterpreter();
+			PythonInterpreter pi = new PythonInterpreter();
+            pi.getSystemState().path.add(0, dir.getAbsolutePath());
             pi.set("gs", this);
             pi.set("lm", LQM());
             pi.set("lqm", LQM());
             pi.execfile(filename);
-        } else {
-
-            // Generic scripting support through ScriptEngine
-            // This method also supports python scripts, but is slower and allows less tweaks
-            try {
-                ScriptEngine engine = LQMScriptLauncher.loadEngine(filename);
-                engine.put("gs", this);
-                engine.put("lm", LQM());
-                engine.put("lqm", LQM());
-
-                engine.eval(new java.io.FileReader(filename));
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            return;
         }
+
+		// Generic scripting support through ScriptEngine
+		// This method also supports python scripts, but is slower and allows less tweaks
+		try {
+			ScriptEngine engine = LQMScriptLauncher.loadEngine(filename);
+			engine.put("gs", this);
+			engine.put("lm", LQM());
+			engine.put("lqm", LQM());
+
+			engine.eval(new java.io.FileReader(filename));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
         // reset the running status: should not be needed but may be convenient later
         running = false;

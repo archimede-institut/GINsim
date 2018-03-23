@@ -2,6 +2,10 @@ package org.ginsim.gui.shell.callbacks;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -79,13 +83,14 @@ class ProvideLogAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		
-		String log_zip_path = LogManager.deliverLogs();
+		Path log_zip_path = LogManager.deliverLogs();
 		if( log_zip_path != null){
-			File zip_file = new File( log_zip_path);
-			String save_path = FileSelectionHelper.selectSaveFilename( null, new String[]{".zip"}, "Zip files");
+			File zip_file = log_zip_path.toFile();
+			String save_path = FileSelectionHelper.selectSaveFilename( null, new String[]{"zip"}, "Zip files");
 			if( save_path != null){
-				boolean result = zip_file.renameTo( new File( save_path));
-				if( !result){
+				try {
+					Files.move(log_zip_path, new File(save_path).toPath(), StandardCopyOption.REPLACE_EXISTING);
+				} catch (IOException e) {
 					GUIMessageUtils.openErrorDialog( "Unable to save the log ZIP file to selected path.");
 				}
 			}

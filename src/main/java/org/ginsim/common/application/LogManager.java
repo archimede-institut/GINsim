@@ -7,6 +7,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.zip.ZipEntry;
@@ -30,7 +32,7 @@ public class LogManager {
 	private static int debugmask = 0;
 	
 	// Logging verboseLevel : 0 = log; 1= info; 2 = trace
-	private static int verboseLevel = 0;
+	private static int verboseLevel = 1;
 	
 	// Activate/unactivate the output of 'error', 'info' and 'trace' on the standard outputs (sys.err and sys.out)
 	private static boolean debugMode = false;
@@ -39,36 +41,28 @@ public class LogManager {
 	private static PrintWriter[] logout = null;
 	
 	// Path to the log files
-	private static String logDirPath = null;
-	private static String[] logPath = null;
-	
-	/**
-	 * Initialize the manager
-	 * 
-	 * @param output_dir the dire where log files will be created
-	 * @param verbose the verbose level (0 = log; 1= info; 2 = trace)
-	 * @throws IOException
-	 */
-	public static void init( String output_dir, int verbose, boolean debug) throws IOException{
-		
-		logDirPath = output_dir;
-		
-		logPath = new String[3];
-		logPath[0] = new File( logDirPath, "error.txt").getPath();
-		logPath[1] = new File( logDirPath, "info.txt").getPath();
-		logPath[2] = new File( logDirPath, "trace.txt").getPath();
-		
+	private static Path logDirPath = null;
+	private static Path[] logPath = null;
+
+	static {
+		logPath = new Path[3];
 		logout = new PrintWriter[ logPath.length];
-		for( int i = 0; i < logPath.length; i++){
-			
-			logout[i] = new PrintWriter( logPath[i]);
+
+		try {
+			logDirPath = Files.createTempDirectory("GINsim-logs");
+
+			logPath[0] = logDirPath.resolve("error.txt");
+			logPath[1] = logDirPath.resolve("info.txt");
+			logPath[2] = logDirPath.resolve("trace.txt");
+
+			for (int i = 0; i < logPath.length; i++) {
+				logout[i] = new PrintWriter(logPath[i].toFile());
+			}
+		} catch (IOException e) {
+			System.err.println("Could not create log files");
 		}
-		
-		setVerbose( verbose);
-		
-		debugMode = debug;
 	}
-	
+
 	/**
 	 * Set the verbose level of the logs
 	 * 0 = log; 1= info; 2 = trace
@@ -203,23 +197,23 @@ public class LogManager {
 	 * 
 	 * @return the path to the logs zip file
 	 */
-	public static String deliverLogs(){
+	public static Path deliverLogs(){
 		
 		// Create a buffer for reading the files
 		byte[] buf = new byte[1024];
 
 		try {
 		    // Create the ZIP file
-		    String outFilename = new File( logDirPath, "logs.zip").getPath();
-		    ZipOutputStream out = new ZipOutputStream( new FileOutputStream(outFilename));
+		    Path zipPath = logDirPath.resolve("logs.zip");
+		    ZipOutputStream out = new ZipOutputStream( new FileOutputStream(zipPath.toFile()));
 
 		    // Compress the files
 		    for( int i = 0; i < logPath.length; i++) {
 		    	try{
-			        FileInputStream in = new FileInputStream( logPath[i]);
+			        FileInputStream in = new FileInputStream( logPath[i].toFile());
 	
 			        // Add ZIP entry to output stream.
-			        out.putNextEntry( new ZipEntry( new File( logPath[i]).getName()));
+			        out.putNextEntry( new ZipEntry( logPath[i].getFileName().toString() ));
 	
 			        // Transfer bytes from the file to the ZIP file
 			        int len;
@@ -239,7 +233,7 @@ public class LogManager {
 		    // Complete the ZIP file
 		    out.close();
 		    
-			return outFilename;
+			return zipPath;
 			
 		} catch (IOException e) {
 			LogManager.error( "Unable to provide log zip file");

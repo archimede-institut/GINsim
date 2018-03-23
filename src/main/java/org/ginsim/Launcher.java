@@ -154,34 +154,6 @@ public class Launcher {
             basedir = System.getProperty("user.dir");
         }
 
-		try{
-			LogManager.init( basedir, 2, false);
-		}
-		catch( IOException io){
-			System.err.println("TestRefactor.main() : Unable to initialize the debugger");
-		}
-
-        // extend the classpath if needed
-        File extensionDir = new File(basedir, "extensions");
-        if (extensionDir.isDirectory()) {
-            FileFilter filter = new FileFilter() {
-                public boolean accept(File file) {return file.getPath().toLowerCase().endsWith(".jar");}
-            };
-            File[] files = extensionDir.listFiles();
-            try {
-                URL[] urls = new URL[files.length];
-                int i=0;
-                for (File f: files) {
-                    urls[i++] = f.toURI().toURL();
-                }
-
-                URLClassLoader ucl = new URLClassLoader(urls);
-                // TODO: pass this class loader to the service managers
-            } catch (IOException e) {
-                LogManager.error("Could not load extension files");
-            }
-        }
-
         // make sure that services are loaded at init time
         GSServiceManager.getAvailableServices();
 	}
