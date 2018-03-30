@@ -56,7 +56,23 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 			SBMLQualBundle qbundle = simport.getQualBundle();
 			
 			// TODO: add unused interactions and consistency checks
-			
+
+
+			// Restore user-defined names which are not handled by bioLQM
+			for (RegulatoryNode node: lrg.getNodeOrder()) {
+				QualitativeSpecies sp = qbundle.qmodel.getQualitativeSpecies(node.getId());
+				String name = sp.getName();
+				if (name == null) {
+					continue;
+				}
+				name = name.trim();
+				if (name.length() < 1) {
+					continue;
+				}
+
+				node.setName(name);
+			}
+
 			// add layout information
 			if (qbundle.lmodel != null) {
 				ListOf<Layout> layouts = qbundle.lmodel.getListOfLayouts();
@@ -134,7 +150,23 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 			SBMLQualBundle qbundle = sExport.getSBMLBundle();
 
 
-            // set the initial state
+			// Save user-defined names which are not handled by bioLQM
+			for (RegulatoryNode node: graph.getNodeOrder()) {
+				String name = node.getName();
+				if (name == null) {
+					continue;
+				}
+				name = name.trim();
+				if (name.length() < 1) {
+					continue;
+				}
+
+				// set the name
+				QualitativeSpecies sp = qbundle.qmodel.getQualitativeSpecies(node.getId());
+				sp.setName(name);
+			}
+
+			// set the initial state
             List<NodeInfo> nodes = model.getComponents();
             byte[] state = new byte[nodes.size()];
             NamedState initState = config.getSelectedInitialState();
@@ -156,22 +188,42 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 			// add basic layout information
 			if (qbundle.lmodel != null) {
 				Layout layout = new Layout();
+				layout.setId("__layout__");
 				qbundle.lmodel.addLayout(layout);
 				NodeAttributesReader nreader = graph.getNodeAttributeReader();
+				double width = 0;
+				double height = 0;
 				for (RegulatoryNode node: graph.getNodeOrder()) {
 					nreader.setNode(node);
+					int x = nreader.getX();
+					int w = nreader.getWidth();
+					int y = nreader.getY();
+					int h = nreader.getHeight();
+					String id = sExport.getSpecies(node.getNodeInfo()).getId();
 					GeneralGlyph glyph = new GeneralGlyph();
-					glyph.setReference(sExport.getSpecies(node.getNodeInfo()).getId());
+					glyph.setReference(id);
+					glyph.setId("_ly_"+id);
 					BoundingBox bb = new BoundingBox();
 					Point pos = bb.createPosition();
-					pos.setX(nreader.getX());
-					pos.setY(nreader.getY());
+					pos.setX(x);
+					pos.setY(y);
 					Dimensions dim = bb.createDimensions();
-					dim.setWidth(nreader.getWidth());
-					dim.setHeight(nreader.getHeight());
+					dim.setWidth(w);
+					dim.setHeight(h);
+
+					if (x+w > width) {
+						width = x + w;
+					}
+					if (y+h > height) {
+						height = y + h;
+					}
 					glyph.setBoundingBox(bb);
 					layout.addGeneralGlyph(glyph);
 				}
+				Dimensions dims = new Dimensions();
+				dims.setWidth(width);
+				dims.setHeight(height);
+				layout.setDimensions(dims);
 			}
 			
 			// Add annotations
