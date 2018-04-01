@@ -97,7 +97,7 @@ public class Result {
 	 *            complex attractor to be added
 	 */
 	public void add(AbstractStateSet s) {
-		s.setKey("CA" + (complexAttID++));
+		s.setKey("CA" + (++complexAttID));
 		complexAttractors.put(s.getKey(), s);
 		attractorsCount.put(s.getKey(), 1);
 		attractorsDepths.put(s.getKey(), new ArrayList<Integer>());
