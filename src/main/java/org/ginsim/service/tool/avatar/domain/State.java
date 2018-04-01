@@ -2,26 +2,28 @@ package org.ginsim.service.tool.avatar.domain;
 
 import org.colomoto.biolqm.io.avatar.AvatarUtils;
 
-
 public class State {
 
-	public String key="";
+	public String key = "";
 	public byte[] state;
-	public double probability; 
+	public double probability;
 
-	public State(byte[] s){ 
-		this(s,1);
+	public State(byte[] s) {
+		this(s, 1);
 	}
-	public State(byte[] s, double prob){
+
+	public State(byte[] s, double prob) {
 		key = Dictionary.toKey(s);
-		//for(byte i : s) key += i;
-		state = s; 
+		// for(byte i : s) key += i;
+		state = s;
 		probability = prob;
 	}
-	public String toString(){
-		return AvatarUtils.toString(state)+"(prob="+probability+",key="+key+")";
+
+	public String toString() {
+		return AvatarUtils.toString(state) + "(prob=" + AvatarUtils.round(probability) + ")";
 	}
+
 	public String toShortString() {
-		return AvatarUtils.toString(state)+"(prob="+probability+")";
+		return AvatarUtils.toString(state);
 	}
 }

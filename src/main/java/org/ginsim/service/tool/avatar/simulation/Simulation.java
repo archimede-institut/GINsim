@@ -135,7 +135,7 @@ public abstract class Simulation {
 			resultLog += s + "\n";
 		else
 			System.out.println(s);
-		this.publish(s); // ptgm
+		this.publish(s);
 	}
 
 	protected String saveOutput() {

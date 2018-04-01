@@ -114,8 +114,8 @@ public class AvatarResults {
 						if (res != null) {
 							progress.append("Simulation successfully computed!\n");
 
-							if (parent.getPerturbation() != null)
-								res.perturbation = parent.getPerturbation().getDescription();
+							if (parent.getPerturbation() != null) // ptgm
+								res.perturbation = parent.getPerturbation().toString();
 							if (parent.getReduction() != null)
 								res.reduction = parent.getReduction().toString();
 
@@ -237,7 +237,8 @@ public class AvatarResults {
 				});
 				panelPlot.add(button);
 			}
-			if (res.charts.size() == 0) {
+			// Claudine asked to disable Depth plots for MC
+			if (res.charts.size() == 0 && !res.strategy.equals(EnumAlgorithm.MONTE_CARLO)) {
 				JLabel label = new JLabel("    Plots were not generated (please select the option)!");
 				panelPlot.add(label);
 			}
@@ -268,7 +269,7 @@ public class AvatarResults {
 			panelAtt.setBorder(BorderFactory.createTitledBorder("Complex attractors"));
 
 			if (complexAttractors.size() == 0) {
-				JLabel label = new JLabel("    Complex attractors were not found!");
+				JLabel label = new JLabel("    No complex attractors were found!");
 				panelAtt.add(label);
 			} else {
 

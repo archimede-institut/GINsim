@@ -62,11 +62,11 @@ public class MonteCarloSimulation extends Simulation {
 		for (int sn = 1, i = 0; sn <= runs; sn++, i = 0) {
 			State currentState = SimulationUtils.getRandomState(model, model.getInitialStates(), false);
 			if (isGUI)
-				publish("Iteration: " + sn + "\n  state=" + currentState);
+				publish("Iteration: " + sn + " state=" + currentState.toShortString());
 			// if(model.mustStop()) sn=100000; //last iteration
 			// StateSet Q = new StateSet(start);
-//			if (!quiet)
-//				output("Run:" + sn + "/" + runs);
+			// if (!quiet)
+			// output("Run:" + sn + "/" + runs);
 
 			while (true) {
 
@@ -76,7 +76,7 @@ public class MonteCarloSimulation extends Simulation {
 						result.incrementComplexAttractor(trans.getKey(), i);
 						complex = true;
 						if (!quiet)
-							output("\tIncrementing attractor!");
+							output("  Incrementing attractor!");
 						break;
 					}
 				}
@@ -86,7 +86,7 @@ public class MonteCarloSimulation extends Simulation {
 							result.add(trans, i);
 							complex = true;
 							if (!quiet)
-								output("\tIncrementing attractor!");
+								output("  Incrementing attractor!");
 							break;
 						}
 					}
@@ -110,7 +110,7 @@ public class MonteCarloSimulation extends Simulation {
 				i++;
 				if (maxSteps > 0 && i >= maxSteps) {
 					if (!quiet)
-						output("\tReached maximum depth: quitting current simulation");
+						output("  Reached maximum depth: quitting current simulation");
 					truncated++;
 					break;
 				}
@@ -129,7 +129,7 @@ public class MonteCarloSimulation extends Simulation {
 		}
 
 		// Plots
-		if (result.attractorsDepths.size() > 0) {
+		if (false) { //if (result.attractorsDepths.size() > 0) {
 			// System.out.println("::"+result.attractorsDepths);
 			String title = "Depth of attractors";
 			// System.out.println(result.attractorsDepths);
@@ -140,8 +140,8 @@ public class MonteCarloSimulation extends Simulation {
 				else
 					names.put(att, att);
 			}
-			JavaPlot chart = ChartGNUPlot.getErrorBars(result.attractorsDepths, names, title,
-					"Attractors", "Trajectory length");
+			JavaPlot chart = ChartGNUPlot.getErrorBars(result.attractorsDepths, names, title, "Attractors",
+					"Trajectory length");
 			BufferedImage img2 = ChartGNUPlot.getImage(chart);
 			result.addPlot(title, img2);
 			if (!isGUI) {
@@ -176,7 +176,7 @@ public class MonteCarloSimulation extends Simulation {
 
 	@Override
 	public String parametersToString() {
-		return "\t#Runs=" + runs + "\n\tMax.Depth=" + maxSteps;
+		return "  #Runs=" + runs + "\n  Max depth=" + maxSteps;
 	}
 
 	@Override

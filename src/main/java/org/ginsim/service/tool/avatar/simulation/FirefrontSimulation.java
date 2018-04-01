@@ -13,6 +13,7 @@ import java.util.Map;
 
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.StatefulLogicalModel;
+import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.colomoto.biolqm.tool.simulation.multiplesuccessor.AsynchronousUpdater;
 import org.ginsim.service.tool.avatar.domain.AbstractStateSet;
 import org.ginsim.service.tool.avatar.domain.CompactStateSet;
@@ -21,6 +22,7 @@ import org.ginsim.service.tool.avatar.domain.State;
 import org.ginsim.service.tool.avatar.domain.StateSet;
 import org.ginsim.service.tool.avatar.service.EnumAlgorithm;
 import org.ginsim.service.tool.avatar.utils.AvaException;
+import org.ginsim.service.tool.avatar.utils.AvaMath;
 import org.ginsim.service.tool.avatar.utils.ChartGNUPlot;
 import org.ginsim.service.tool.avatar.utils.StateProbComparator;
 
@@ -127,20 +129,22 @@ public class FirefrontSimulation extends Simulation {
 			}
 
 			if (isGUI) {
-				publish(" Iteration:" + k + "<br>states=[F=" + F.size() + ",N=" + N.size() + ",A=" + A.size() + "]"
-						+ "<br>probs=[F=" + F.totalProbability() + ",N=" + N.totalProbability() + ",A="
-						+ A.totalProbability() + "]" + "<br>total prob="
-						+ (F.totalProbability() + N.totalProbability() + A.totalProbability()));
+				publish(" Iteration:" + k + " set cardinals:[F=" + F.size() + ",N=" + N.size() + ",A=" + A.size() + "]"
+						+ " set probs:[F=" + AvatarUtils.round(F.totalProbability()) + ",N="
+						+ AvatarUtils.round(N.totalProbability()) + ",A=" + AvatarUtils.round(A.totalProbability())
+						+ "]");
 			}
 
 			pStates.add(new double[] { F.size(), N.size(), A.size() });
 			pProbs.add(new double[] { F.totalProbability(), N.totalProbability(), A.totalProbability() });
 
-//			if (!quiet)
-//				output("Iteration:" + k + "\n\tstates=[F=" + F.size() + ",N=" + N.size() + ",A=" + A.size() + "]"
-//						+ "\n\tprobs=[F=" + F.totalProbability() + ",N=" + N.totalProbability() + ",A="
-//						+ A.totalProbability() + "]" + "\n\ttotal prob="
-//						+ (F.totalProbability() + N.totalProbability() + A.totalProbability()));
+			// if (!quiet)
+			// output("Iteration:" + k + "\n states=[F=" + F.size() + ",N=" + N.size() +
+			// ",A=" + A.size() + "]"
+			// + "\n probs=[F=" + F.totalProbability() + ",N=" + N.totalProbability() +
+			// ",A="
+			// + A.totalProbability() + "]" + "\n total prob="
+			// + (F.totalProbability() + N.totalProbability() + A.totalProbability()));
 
 			/** B1: states to expand and pass */
 
@@ -157,7 +161,7 @@ public class FirefrontSimulation extends Simulation {
 			} else
 				toExpand = F;
 			if (!quiet)
-				output("\t[F=" + F.size() + ",EXPAND=" + toExpand.size() + ",PASS=" + toPass.size() + "]");
+				output("  [F=" + F.size() + ",EXPAND=" + toExpand.size() + ",PASS=" + toPass.size() + "]");
 
 			/** B2: for each expanding state generate succ to find attractors */
 
@@ -177,7 +181,7 @@ public class FirefrontSimulation extends Simulation {
 						result.attractorsDepths.get(s.key).add(k);
 					}
 					if (!quiet)
-						output("\tFound an attractor:" + s.toString());
+						output("  Found an attractor:" + s.toString());
 				} else {
 					boolean complex = false;
 					for (AbstractStateSet trans : result.complexAttractors.values()) {
@@ -204,14 +208,14 @@ public class FirefrontSimulation extends Simulation {
 								na++;
 								complex = true;
 								if (!quiet)
-									output("\tIncrementing attractor!");
+									output("  Incrementing attractor!");
 								break;
 							}
 						}
 					}
 					if (!complex) {
 						if (!quiet)
-							output("\t" + Q.size() + " successors\n\tParent state has probability " + s.probability);
+							output("  " + Q.size() + " successors\n  Parent state has probability " + s.probability);
 						for (State v : Q.getStates()) {
 							if (toPass.contains(v))
 								toPass.addCumulative(v);
@@ -221,7 +225,7 @@ public class FirefrontSimulation extends Simulation {
 									N.remove(v);
 								}
 								if (!quiet)
-									output("\tv => " + v.toString());
+									output("  v => " + v.toString());
 								if (v.probability >= alpha)
 									toPass.addCumulative(v); // if(!A.contains(v) && !toExpand.contains(v))
 								else
@@ -241,10 +245,10 @@ public class FirefrontSimulation extends Simulation {
 		}
 
 		if (!quiet)
-			output("Final results:\n\tstates=[F=" + F.size() + ",N=" + N.size() + ",A=" + A.size() + "]"
-					+ "\n\tprobs=[F=" + F.totalProbability() + ",N=" + N.totalProbability() + ",A="
+			output("Final results:\n  states=[F=" + F.size() + ",N=" + N.size() + ",A=" + A.size() + "]"
+					+ "\n  probs=[F=" + F.totalProbability() + ",N=" + N.totalProbability() + ",A="
 					+ A.totalProbability() + ",residual=" + (N.totalProbability() + F.totalProbability()) + "]"
-					+ "\n\ttotal prob=" + (F.totalProbability() + N.totalProbability() + A.totalProbability()));
+					+ "\n  total prob=" + (F.totalProbability() + N.totalProbability() + A.totalProbability()));
 		result.residual = N.totalProbability() + F.totalProbability();
 
 		if (!isGUI) {
@@ -338,7 +342,7 @@ public class FirefrontSimulation extends Simulation {
 
 	@Override
 	public String parametersToString() {
-		return "\tAlpha=" + alpha + "\n\tBeta=" + beta + "\n\tMax depth=" + maxDepth + "\n\tMax states expanded/Run="
+		return "  Alpha=" + alpha + "\n  Beta=" + beta + "\n  Max depth=" + maxDepth + "\n  Max states expanded/Run="
 				+ maxExpand;
 	}
 

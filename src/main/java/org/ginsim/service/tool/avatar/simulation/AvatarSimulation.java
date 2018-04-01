@@ -127,7 +127,7 @@ public class AvatarSimulation extends Simulation {
 
 			State istate = SimulationUtils.getRandomState(model, model.getInitialStates(), false);
 			Map<String, Integer> discoveryTime = new HashMap<String, Integer>();
-			output("Iteration " + sn + "/" + runs + " state=" + istate);
+			output("Iteration " + sn + "/" + runs + " state=" + istate.toShortString());
 //			if (isGUI)
 //				publish("Iteration " + sn + "/" + runs + " state=" + istate);
 
@@ -148,7 +148,7 @@ public class AvatarSimulation extends Simulation {
 				State s = F.getProbableRandomState();
 
 				if (!quiet)
-					output("\tPopped state=" + s.toString() + " Sim=" + sn + ", Reincarnation=" + time + ", #F="
+					output("  Popped state=" + s + " Sim=" + sn + ", Reincarnation=" + time + ", #F="
 							+ F.size() + ", #D=" + D.size() + ", #A=" + result.attractorsCount.keySet().size());
 
 				/** C: Check whether state belongs a transient or terminal cycle **/
@@ -163,7 +163,7 @@ public class AvatarSimulation extends Simulation {
 						else
 							s = ((StateSet) trans).getProbableExitState(s);
 						if (!quiet)
-							output("\tIdentified transient and getting out of it through state = " + s);
+							output("  Identified transient and getting out of it through state = " + s);
 						break;
 					}
 				}
@@ -178,7 +178,7 @@ public class AvatarSimulation extends Simulation {
 							else
 								s = ((StateSet) trans).getProbableExitState(s);
 							if (!quiet)
-								output("\tIdentified transient and getting out of it through state = " + s);
+								output("  Identified transient and getting out of it through state = " + s);
 							break;
 						}
 					}
@@ -191,7 +191,7 @@ public class AvatarSimulation extends Simulation {
 							result.incrementComplexAttractor(trans.getKey(), avgSteps);
 							complex = true;
 							if (!quiet)
-								output("\tIncrementing attractor!");
+								output("  Incrementing attractor!");
 							break;
 						}
 					}
@@ -201,7 +201,7 @@ public class AvatarSimulation extends Simulation {
 								result.add(trans, avgSteps);
 								complex = true;
 								if (!quiet)
-									output("\tIncrementing attractor!");
+									output("  Incrementing attractor!");
 								break;
 							}
 						}
@@ -230,10 +230,10 @@ public class AvatarSimulation extends Simulation {
 					do {
 						prev_cycle_size = Ct.size();
 						if (!quiet)
-							output("\tTau updated from " + tau + " to " + (tau * 2) + " (prev cycle=#" + prev_cycle_size
+							output("  Tau updated from " + tau + " to " + (tau * 2) + " (prev cycle=#" + prev_cycle_size
 									+ ")");
 						if (prev_cycle_size > 0 && !quiet)
-							output("\tTrying another round of cycle extension..");
+							output("  Trying another round of cycle extension..");
 
 						StateSet newstates = new StateSet();
 						// if(exitStates==null || exitStates.size()<maxExits){
@@ -268,11 +268,9 @@ public class AvatarSimulation extends Simulation {
 								if (!Ct.contains(successor))
 									exitStates.add(successor);
 						}
-						output("\tCycle extended from #" + prev_cycle_size + " to #" + Ct.size() + "states (#"
+						if (!quiet)
+							output("  Cycle extended from #" + prev_cycle_size + " to #" + Ct.size() + "states (#"
 								+ exitStates.size() + " exits)");
-						if (isGUI)
-							publish("Cycle extended from #" + prev_cycle_size + " to #" + Ct.size() + "states (#"
-									+ exitStates.size() + " exits)");
 						exitRatio = ((double) exitStates.size()) / (double) Ct.size();
 
 						if (Ct.size() < maxRewiringSize) {
@@ -286,15 +284,13 @@ public class AvatarSimulation extends Simulation {
 					} while (exitRatio > 0 && prev_cycle_size < Ct.size() && Ct.size() < maxPSize);
 
 					if (!quiet)
-						output("\tDone extensions: cycle with exitRatio=" + exitRatio);
-					if (isGUI)
 						publish("Extended cycle with #" + Ct.size() + " states and exitRatio=" + exitRatio);
 
 					/** D2: Rewire Graph **/
 					// C.add(Ct);
 					if (exitStates.isEmpty()) {
 						if (!quiet)
-							output("\tIdentified an attractor!");
+							output("  Identified an attractor!");
 						if (temporaryTransients.size() == 0)
 							result.add(new StateSet(Ct));
 						else
@@ -308,13 +304,11 @@ public class AvatarSimulation extends Simulation {
 					Ct = cycleToRewire;
 					exitStates = exitStatesRewiring;
 					if (Ct.size() > minCSize) {
-						output("\tRewiring cycle  with #" + Ct.size() + " states");
-						if (isGUI)
-							publish("Rewiring cycle  with #" + Ct.size() + " states");
+						if (!quiet)
+							output("  Rewiring cycle  with #" + Ct.size() + " states");
 						rewriteGraph(Ct, exitStates, exitProbs);
-						output("\tCycle rewired");
-						if (isGUI)
-							publish("Cycle rewired");
+						if (!quiet)
+							output("  Cycle rewired");
 						if (Ct.size() > minTransientSize) {
 							StateSet transi = new StateSet(Ct);
 							transi.setExitStates(exitStates);
@@ -329,7 +323,7 @@ public class AvatarSimulation extends Simulation {
 					// F = new StateSet(exitStates);
 					F = generateSuccessors(s, exitProbs.getPaths(s.key), exitStates, Ct);
 					if (!quiet)
-						output("\tSuccessors of " + s.toString() + " => " + F.toString());
+						output("  Successors of " + s.toString() + " => " + F.toString());
 					// if(F.isEmpty()) throw new AvaException("F is empty after re-writing a cycle
 					// with successors: Unknown error!");
 					// D = new StateSet();
@@ -345,15 +339,15 @@ public class AvatarSimulation extends Simulation {
 						result.add(s, avgSteps);
 						for (StateSet transi : temporaryTransients) {
 							if (!quiet)
-								output("\tSaving transient (#" + transi.size() + ")");
+								output("  Saving transient (#" + transi.size() + ")");
 							if (!strategy.equals(AvatarStrategy.RandomExit))
 								transi.setProbPaths(exitProbs);
 							savedTransients.add(transi);
 						}
 						/*
 						 * if(t>0){ StateSet transi = calculateComplexAttractor(C,t-1); if(!quiet)
-						 * output("\tIdentified transient:"+transi); if(transi.size()>minTransientSize){
-						 * if(!quiet) output("\tSaving transient (#"+transi.size()+")");
+						 * output("  Identified transient:"+transi); if(transi.size()>minTransientSize){
+						 * if(!quiet) output("  Saving transient (#"+transi.size()+")");
 						 * transi.setExitStates(exitStates);
 						 * if(!strategy.equals(AvatarStrategy.RandomExit))
 						 * transi.setProbPaths(exitProbs); savedTransients.add(transi); } }
@@ -367,7 +361,7 @@ public class AvatarSimulation extends Simulation {
 				avgSteps++;
 				if (maxSteps > 0 && avgSteps >= maxSteps) {
 					if (!quiet)
-						output("\tReached maximum depth: quitting current simulation");
+						output("  Reached maximum depth: quitting current simulation");
 					truncated++;
 					break; // last;
 				}
@@ -386,7 +380,7 @@ public class AvatarSimulation extends Simulation {
 				}
 			}
 			if (!quiet)
-				output("\tOut of iteration!");
+				output("  Out of iteration!");
 			performed++;
 		}
 
@@ -488,7 +482,7 @@ public class AvatarSimulation extends Simulation {
 		if (exitProbs == null)
 			return new StateSet(successors, prob);
 		else if (!quiet)
-			output("\tExits of " + s + " => " + exitProbs);
+			output("  Exits of " + s + " => " + exitProbs);
 
 		StateSet succSet = new StateSet();
 		for (byte[] succ : successors) {
@@ -523,7 +517,7 @@ public class AvatarSimulation extends Simulation {
 		StateSet Cstar = new StateSet();
 		StateSet L = new StateSet(Ct);
 		if (!quiet)
-			output("\tVisiting all reincarnations to discover the master attractor ...");
+			output("  Visiting all reincarnations to discover the master attractor ...");
 		while (!L.isEmpty()) {
 			State s = L.getFirstState();
 			L.remove(s);
@@ -534,7 +528,7 @@ public class AvatarSimulation extends Simulation {
 						if (Cstar.contains(v))
 							continue;
 						if (!quiet)
-							output("\tAdding state " + v.toString() + " from reincarnation " + k);
+							output("  Adding state " + v.toString() + " from reincarnation " + k);
 						L.add(v);
 					}
 				}
@@ -675,7 +669,7 @@ public class AvatarSimulation extends Simulation {
 			pi.addOutputPaths(cycleL, outL, prob);
 		}
 		if (!quiet)
-			output("\tCycle pivot has " + out.size() + " exists");
+			output("  Cycle pivot has " + out.size() + " exists");
 	}
 
 	/**
@@ -699,7 +693,7 @@ public class AvatarSimulation extends Simulation {
 	public void extendCycle(State v, StateSet cycle, StateSet exits, StateSet newstates, int i, int tau,
 			Map<String, Integer> time, int originalTime) {
 		if (!quiet)
-			output("\t\tExtending tau=" + tau + " cycle=" + cycle.getKeys());
+			output("    Extending tau=" + tau + " cycle=" + cycle.getKeys());
 		StateSet Q = new StateSet();
 		if (v == null) {
 			if (exits != null)
@@ -732,8 +726,8 @@ public class AvatarSimulation extends Simulation {
 				} else if (v != null)
 					time.put(v.key, Math.min(time.get(v.key), time.get(w.key)));
 				// if(result.contains(w) && v!=null){
-				// output("\tw:"+w.key+" d:"+d.get(w.key)+" l:"+lambda.get(w.key));
-				// if(v!=null) output("\t\tv:"+v.key+" d:"+d.get(v.key)+"
+				// output("  w:"+w.key+" d:"+d.get(w.key)+" l:"+lambda.get(w.key));
+				// if(v!=null) output("    v:"+v.key+" d:"+d.get(v.key)+"
 				// l:"+lambda.get(v.key));
 			}
 		}
@@ -776,10 +770,10 @@ public class AvatarSimulation extends Simulation {
 
 	@Override
 	public String parametersToString() {
-		return "\tRuns=" + runs + "\n\tExpansion #states limit=" + maxPSize + "\n\tRewiring #states limit="
-				+ maxRewiringSize + "\n\tKeep transients=" + keepTransients + "\n\tMin transient size="
-				+ minTransientSize + "\n\tKeep oracles=" + keepOracle + "\n\tTau=" + tauInit
-				+ "\n\tMin #states SCC to rewire=" + minCSize + "\n\tMax depth=" + maxSteps;
+		return "  Runs=" + runs + "\n  Expansion #states limit=" + maxPSize + "\n  Rewiring #states limit="
+				+ maxRewiringSize + "\n  Keep transients=" + keepTransients + "\n  Min transient size="
+				+ minTransientSize + "\n  Keep oracles=" + keepOracle + "\n  Tau=" + tauInit
+				+ "\n  Min #states SCC to rewire=" + minCSize + "\n  Max depth=" + maxSteps;
 	}
 
 	@Override

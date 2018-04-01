@@ -234,7 +234,7 @@ public class Result {
 			result += "<br>No perturbations applied<br>";
 		else
 			result += "<br>Applied perturbation: " + perturbation + "<br>";
-		if (perturbation == null)
+		if (reduction == null)
 			result += "No reductions applied<br>";
 		else
 			result += "Name of the selected reduction: " + reduction + "<br>";
@@ -270,19 +270,19 @@ public class Result {
 			for (int i = 0; i < lTmp.size(); i++) {
 				String key = lTmp.get(i);
 				result += "&nbsp;&nbsp;&nbsp;SS" + i + "&nbsp;=>&nbsp;"
-						+ AvatarUtils.toString(pointAttractors.get(key).state);
+						+ pointAttractors.get(key).toShortString();
 				if (!strategy.equals(EnumAlgorithm.FIREFRONT)) {
-					result += "&nbsp;prob=" + format("%.5f", ((double) attractorsCount.get(key)) / (double) sum);
+					result += "&nbsp;prob=" + AvatarUtils.round((double) attractorsCount.get(key) / sum);
 					// result+="&nbsp;counts="+attractorsCount.get(key);
 					if (!strategy.equals(EnumAlgorithm.AVATAR)) {
-						result += "&nbsp;depth=" + format("%.1f", AvaMath.mean(attractorsDepths.get(key))) + "&plusmn;"
-								+ format("%.1f", AvaMath.std(attractorsDepths.get(key))) + "<br>";
+						result += "&nbsp;depth=" + AvatarUtils.round(AvaMath.mean(attractorsDepths.get(key)), 1) + "&plusmn;"
+								+ AvatarUtils.round(AvaMath.std(attractorsDepths.get(key)), 1) + "<br>";
 					} else {
 						result += "<br>";
 					}
 				} else {
-					result += "&nbsp;&nbsp;prob=[" + format("%.5f", attractorsLowerBound.get(key)) + ","
-							+ format("%.5f", attractorsUpperBound.get(key)) + "]";
+					result += "&nbsp;&nbsp;prob=[" + AvatarUtils.round(attractorsLowerBound.get(key)) + ","
+							+ AvatarUtils.round(attractorsUpperBound.get(key)) + "]";
 					result += "&nbsp;depth=" + ((int) AvaMath.mean(attractorsDepths.get(key))) + "<br>";
 				}
 			}
@@ -300,16 +300,16 @@ public class Result {
 							+ AvatarUtils.toString(complexAttractorPatterns.get(key)).replace("-1", "*");
 				if (strategy.equals(EnumAlgorithm.FIREFRONT)) {
 					result += "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prob=["
-							+ format("%.5f", attractorsLowerBound.get(key)) + ","
-							+ format("%.5f", attractorsUpperBound.get(key)) + "]";
+							+ AvatarUtils.round(attractorsLowerBound.get(key)) + ","
+							+ AvatarUtils.round(attractorsUpperBound.get(key)) + "]";
 					result += "&nbsp;depth=" + (int) AvaMath.mean(attractorsDepths.get(key)) + "<br>";
 				} else {
 					result += "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prob="
-							+ format("%.5f", ((double) attractorsCount.get(key)) / (double) sum);
+							+ AvatarUtils.round((double) attractorsCount.get(key) / sum);
 					result += "&nbsp;size=" + complexAttractors.get(key).size();
 					if (!strategy.equals(EnumAlgorithm.AVATAR) && attractorsDepths.containsKey(key))
-						result += "&nbsp;depth=" + format("%.1f", AvaMath.mean(attractorsDepths.get(key))) + "&plusmn;"
-								+ format("%.1f", AvaMath.std(attractorsDepths.get(key))) + "<br>";
+						result += "&nbsp;depth=" + AvatarUtils.round(AvaMath.mean(attractorsDepths.get(key)),1) + "&plusmn;"
+								+ AvatarUtils.round(AvaMath.std(attractorsDepths.get(key)),1) + "<br>";
 					else
 						result += "<br>";
 				}
@@ -324,7 +324,7 @@ public class Result {
 			 * if(attractorsCount.size()>0) result=result.substring(0,result.length()-1);
 			 */
 			if (maxTransientSize > 0)
-				result += "<br> transient found: #" + maxTransientSize + " states";
+				result += "<br><b>Transient found</b>: #" + maxTransientSize + " states";
 			/*
 			 * if(transients.size()>0){ result+=" with sizes {"; for(AbstractStateSet s :
 			 * transients) result+=s.size()+",";
@@ -352,7 +352,7 @@ public class Result {
 			result += "No perturbations applied\n";
 		else
 			result += "Applied perturbation," + perturbation + "\n";
-		if (perturbation == null)
+		if (reduction == null)
 			result += "No reductions applied\n";
 		else
 			result += "Applied reduction," + reduction + "\n";
