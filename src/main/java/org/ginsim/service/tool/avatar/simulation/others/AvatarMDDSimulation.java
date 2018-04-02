@@ -483,12 +483,8 @@ public class AvatarMDDSimulation extends AvatarSimulation {
 
 				final double[][] qMatrix, rMatrix;
 				/** A: Computing q and r **/
-				try {
-					qMatrix = new double[cycle.size()][cycle.size()];
-					rMatrix = new double[cycle.size()][out.size()];
-				} catch (OutOfMemoryError e) {
-					throw new Exception(e);
-				}
+				qMatrix = new double[cycle.size()][cycle.size()];
+				rMatrix = new double[cycle.size()][out.size()];
 
 				for (State s : cycle.getStates()) {
 					MDDStateSet set = generateSuccessors(s, pi.getPaths(s.key), out, cycle);
@@ -522,11 +518,7 @@ public class AvatarMDDSimulation extends AvatarSimulation {
 				boolean ejml = true;
 				if (ejml) {
 					SimpleMatrix RMatrix = new SimpleMatrix(rMatrix);
-					try {
-						RMatrix = new SimpleMatrix(qMatrix).invert().mult(RMatrix);
-					} catch (OutOfMemoryError e) {
-						throw new Exception(e);
-					}
+					RMatrix = new SimpleMatrix(qMatrix).invert().mult(RMatrix);
 					for (int i = 0, l1 = RMatrix.numRows(); i < l1; i++)
 						for (int j = 0, l2 = RMatrix.numCols(); j < l2; j++)
 							rewrittenMatrix[i][j] = RMatrix.get(i, j);
