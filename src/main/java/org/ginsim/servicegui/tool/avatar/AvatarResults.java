@@ -11,6 +11,8 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -114,7 +116,7 @@ public class AvatarResults {
 						if (res != null) {
 							progress.append("Simulation successfully computed!\n");
 
-							if (parent.getPerturbation() != null) // ptgm
+							if (parent.getPerturbation() != null)
 								res.perturbation = parent.getPerturbation().toString();
 							if (parent.getReduction() != null)
 								res.reduction = parent.getReduction().toString();
@@ -129,12 +131,14 @@ public class AvatarResults {
 						}
 					} catch (Exception e) {
 						String fileErrorMessage = e.getMessage();
-						if (!fileErrorMessage.contains("FireFront requests")) {
+						if (fileErrorMessage == null) {
+							e.printStackTrace();
+						} else if (!fileErrorMessage.contains("FireFront requests")) {
 							fileErrorMessage = "Unfortunately we were not able to finish your request.<br>Exception while running the algorithm.<br><em>Reason:</em> "
 									+ fileErrorMessage;
 							e.printStackTrace();
 						}
-//						errorDisplay(fileErrorMessage, e);
+						// errorDisplay(fileErrorMessage, e);
 						GUIMessageUtils.openErrorDialog(fileErrorMessage);
 						stop.setEnabled(false);
 						brun.setEnabled(true);
@@ -221,9 +225,9 @@ public class AvatarResults {
 								if (returnVal == 0)
 									try {
 										ImageIO.write(res.charts.get(this.getKey()), "png", memFile);
-//										JOptionPane.showMessageDialog(output,
-//												new JLabel("Your chart was successfully saved"), "Saving chart...",
-//												JOptionPane.PLAIN_MESSAGE);
+										// JOptionPane.showMessageDialog(output,
+										// new JLabel("Your chart was successfully saved"), "Saving chart...",
+										// JOptionPane.PLAIN_MESSAGE);
 									} catch (IOException e) {
 										JOptionPane.showMessageDialog(output, new JLabel(
 												"Ops! We were not able to save your chart. Please contact the GINsim team!"),
@@ -262,9 +266,11 @@ public class AvatarResults {
 
 			/** E: Draw complex attractors **/
 			Map<String, AbstractStateSet> complexAttractors = res.complexAttractors;
-//			mheight = (int) Math.round(((double) complexAttractors.size()) / 2.0) * 19 + 1;
+			// mheight = (int) Math.round(((double) complexAttractors.size()) / 2.0) * 19 +
+			// 1;
 
-			GridLayout gl = new GridLayout(Math.max(1, complexAttractors.size()/5), complexAttractors.size() < 5? 1: 5, 10, 10);
+			GridLayout gl = new GridLayout(Math.max(1, complexAttractors.size() / 5),
+					complexAttractors.size() < 5 ? 1 : 5, 10, 10);
 			JPanel panelAtt = new JPanel(gl);
 			panelAtt.setBorder(BorderFactory.createTitledBorder("Complex attractors"));
 
@@ -288,8 +294,8 @@ public class AvatarResults {
 							// GraphManager.getInstance().getNewGraph(ReducedGraph.class,model.getNodeOrder());
 							DynamicGraph graph = GSGraphManager.getInstance().getNewGraph(DynamicGraph.class,
 									model.getComponents());
-							graph = SimulationUtils.getGraphFromAttractor(graph, res.complexAttractors.get(this.getKey()),
-									model);
+							graph = SimulationUtils.getGraphFromAttractor(graph,
+									res.complexAttractors.get(this.getKey()), model);
 							// GUIManager.getInstance().whatToDoWithGraph(graph, true);
 							Frame f = new WhatToDoWithGraph(graph);
 							f.setVisible(true);
@@ -374,9 +380,9 @@ public class AvatarResults {
 										BufferedWriter writer = new BufferedWriter(new FileWriter(logFile));
 										writer.write(res.log);
 										writer.close();
-//										JOptionPane.showMessageDialog(output,
-//												new JLabel("Your log was successfully saved"), "Saving log...",
-//												JOptionPane.PLAIN_MESSAGE);
+										// JOptionPane.showMessageDialog(output,
+										// new JLabel("Your log was successfully saved"), "Saving log...",
+										// JOptionPane.PLAIN_MESSAGE);
 									} catch (IOException e) {
 										JOptionPane.showMessageDialog(output, new JLabel(
 												"Ops! We were not able to save your log. Please contact the GINsim team!"),
@@ -389,7 +395,7 @@ public class AvatarResults {
 					}
 				});
 			}
-			if (false) { //!quiet || res.strategy.equals("Avatar")) {
+			if (false) { // !quiet || res.strategy.equals("Avatar")) {
 				panelOthers.add(logButton);
 			}
 		} catch (Exception e) {
@@ -422,8 +428,9 @@ public class AvatarResults {
 								BufferedWriter writer = new BufferedWriter(new FileWriter(resFile));
 								writer.write(htmlResult);
 								writer.close();
-//								JOptionPane.showMessageDialog(output, new JLabel("Your results was successfully saved"),
-//										"Saving results...", JOptionPane.PLAIN_MESSAGE);
+								// JOptionPane.showMessageDialog(output, new JLabel("Your results was
+								// successfully saved"),
+								// "Saving results...", JOptionPane.PLAIN_MESSAGE);
 							} catch (IOException e) {
 								JOptionPane.showMessageDialog(output, new JLabel(
 										"Ops! We were not able to save your results. Please contact the GINsim team!"),
@@ -447,8 +454,9 @@ public class AvatarResults {
 								BufferedWriter writer = new BufferedWriter(new FileWriter(csvFile));
 								writer.write(csvResult);
 								writer.close();
-//								JOptionPane.showMessageDialog(output, new JLabel("Your results was successfully saved"),
-//										"Saving results...", JOptionPane.PLAIN_MESSAGE);
+								// JOptionPane.showMessageDialog(output, new JLabel("Your results was
+								// successfully saved"),
+								// "Saving results...", JOptionPane.PLAIN_MESSAGE);
 							} catch (IOException e) {
 								JOptionPane.showMessageDialog(output, new JLabel(
 										"Ops! We were not able to save your results. Please contact the GINsim team!"),
