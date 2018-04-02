@@ -257,6 +257,14 @@ public class Result {
 			} else {
 				result += "<br>Success: the simulation converged before reaching the maximum depth.<br>";
 			}
+			result += "<br/><br/><b>Probability of state sets</b>:";
+			result += "<br/>&nbsp;&nbsp;&nbsp;Neglected set: " + AvatarUtils.round(this.residual);
+			double attSum = 0;
+			for (Double val : attractorsLowerBound.values()) {
+				attSum += val;
+			}
+			result += "<br/>&nbsp;&nbsp;&nbsp;Attractor set: " + AvatarUtils.round(attSum) + "<br/>";
+			
 		} else {
 			result += "<br><b>Support</b>: " + performed + " successful runs (below max depth) out of " + runs
 					+ "</br>";
