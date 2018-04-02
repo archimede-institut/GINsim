@@ -269,7 +269,7 @@ public class Result {
 			Collections.sort(lTmp);
 			for (int i = 0; i < lTmp.size(); i++) {
 				String key = lTmp.get(i);
-				result += "&nbsp;&nbsp;&nbsp;SS" + i + "&nbsp;=>&nbsp;"
+				result += "&nbsp;&nbsp;&nbsp;SS" + (i+1) + "&nbsp;=>&nbsp;"
 						+ pointAttractors.get(key).toShortString();
 				if (!strategy.equals(EnumAlgorithm.FIREFRONT)) {
 					result += "&nbsp;prob=" + AvatarUtils.round((double) attractorsCount.get(key) / sum);
@@ -375,7 +375,7 @@ public class Result {
 			Collections.sort(lTmp);
 			for (int i = 0; i < lTmp.size(); i++) {
 				String key = lTmp.get(i);
-				result += "SS" + i + "," + AvatarUtils.toOpenString(pointAttractors.get(key).state);
+				result += "SS" + (i+1) + "," + AvatarUtils.toOpenString(pointAttractors.get(key).state);
 				if (!strategy.equals(EnumAlgorithm.FIREFRONT)) {
 					result += "," + format("%.5f", ((double) attractorsCount.get(key)) / (double) sum);
 					// result+=","+attractorsCount.get(key);

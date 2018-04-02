@@ -405,7 +405,7 @@ public class AvatarSimulation extends Simulation {
 					dataset[i][k] = plotProbs.get(key).get(k);
 				}
 				if (namesSSs.contains(key)) {
-					names.add("SS" + namesSSs.indexOf(key));
+					names.add("SS" + (namesSSs.indexOf(key)+1));
 				} else {
 					names.add(key);
 				}
