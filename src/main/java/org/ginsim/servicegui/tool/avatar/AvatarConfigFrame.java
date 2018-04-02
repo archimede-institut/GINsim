@@ -118,6 +118,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 
 		ToolTipManager.sharedInstance().setInitialDelay(0);
 		ToolTipManager.sharedInstance().setDismissDelay(40000);
+		this.jtaOutput.setEditable(false);
 
 		/** A: initial states panel **/
 		List<byte[]> istates = lrg.isStateful() ? lrg.getStates() : new ArrayList<byte[]>();
