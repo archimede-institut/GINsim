@@ -48,4 +48,17 @@ public class TrapSpaceTableModel extends AbstractTableModel {
 		return ""+v;
 	}
 
+	@Override
+	public String getColumnName(int column) {
+		if (column == 0) {
+			return "Name";
+		}
+
+		if (solutions == null) {
+			return null;
+		}
+
+		return solutions.nodes.get(column-1).toString();
+	}
+
 }
