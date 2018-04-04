@@ -69,11 +69,6 @@ public class AvatarParameterList extends NamedList<AvatarParameters> implements 
 				}
 			}
 			break;
-		case NODEUPDATED:
-			RegulatoryNode node = (RegulatoryNode)data;
-			if (node.isInput()) nodeRemoved(node);
-			else nodeAdded(node);
-			break;
 		}
 		return null;
 	}
