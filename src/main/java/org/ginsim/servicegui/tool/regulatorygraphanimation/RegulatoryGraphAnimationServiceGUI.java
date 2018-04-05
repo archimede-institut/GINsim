@@ -41,20 +41,17 @@ public class RegulatoryGraphAnimationServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return W_TOOLS_MAIN + 140;
 	}
+
+	class AnimRegGraphAction extends GenericGraphAction {
+
+		private AnimRegGraphAction( DynamicGraph graph, ServiceGUI serviceGUI) {
+			super( graph, "STR_aRegGraph", "STR_aRegGraph_descr", serviceGUI);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			RegulatoryAnimator.animate( GUIManager.getInstance().getFrame( graph), (DynamicGraph) graph);
+		}
+	}
 }
 
-class AnimRegGraphAction extends GenericGraphAction {
-
-	
-	public AnimRegGraphAction( DynamicGraph graph, ServiceGUI serviceGUI) {
-		
-		super( graph, "STR_aRegGraph", "STR_aRegGraph_descr", serviceGUI);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-        RegulatoryAnimator.animate( GUIManager.getInstance().getFrame( graph), (DynamicGraph) graph);
-	}
-	
-}

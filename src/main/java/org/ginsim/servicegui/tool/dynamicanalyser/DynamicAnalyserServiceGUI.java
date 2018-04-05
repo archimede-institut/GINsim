@@ -40,19 +40,18 @@ public class DynamicAnalyserServiceGUI extends AbstractServiceGUI {
 		return W_GRAPH_SELECTION + 25;
 	}
 
+
+	class DynamicAnalyserAction extends GenericGraphAction {
+
+		private DynamicAnalyserAction( DynamicGraph graph, ServiceGUI serviceGUI) {
+			super( graph, "STR_searchPath", null, "STR_searchPath_descr", null, serviceGUI);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new DynamicSearchPathConfig( GUIManager.getInstance().getFrame( graph), (DynamicGraph)graph);
+		}
+
+	}
 }
 
-class DynamicAnalyserAction extends GenericGraphAction {
-	
-	public DynamicAnalyserAction( DynamicGraph graph, ServiceGUI serviceGUI) {
-		
-		super( graph, "STR_searchPath", null, "STR_searchPath_descr", null, serviceGUI);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-        new DynamicSearchPathConfig( GUIManager.getInstance().getFrame( graph), (DynamicGraph)graph);
-	}
-	
-}

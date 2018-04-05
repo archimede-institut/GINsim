@@ -34,42 +34,11 @@ import org.mangosdk.spi.ProviderFor;
 @ServiceStatus( EStatus.RELEASED)
 public class Reg2DynServiceGUI extends AbstractServiceGUI {
 
-//    public void runAction(int actionType, int ref, Graph graph, JFrame frame) throws GsException {
-//        if (actionType != ACTION_ACTION) {
-//            return;
-//        }
-//        if (!(graph instanceof RegulatoryGraph) || graph.getNodeOrderSize() < 1) {
-//            graph.addNotificationMessage(new Notification(graph, 
-//            		Txt.t(graph instanceof RegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph"),
-//            		Notification.NOTIFICATION_WARNING));
-//            return;
-//        }
-//		if (ref == 0 || ref == 1) {
-////            Map m_params = (Map)graph.getObject("reg2dyn_parameters");
-////            if (m_params == null) {
-////                m_params = new HashMap();
-////                graph.addObject("reg2dyn_parameters", m_params);
-////            }
-////            new Reg2dynFrame(frame, (RegulatoryGraph)graph, m_params).setVisible(true);
-//            GsMainFrame mainFrame = graph.getGraphManager().getMainFrame();
-//            if (mainFrame != null) {
-//            	mainFrame.getActions().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
-//            }
-//
-//            SimulationParameterList paramList = (SimulationParameterList)graph.getObject(SimulationParametersManager.key, true);
-//            if (ref == 0) {
-//                new SingleSimulationFrame(frame, paramList).setVisible(true);
-//            } else {
-//                new BatchSimulationFrame(frame, paramList).setVisible(true);
-//            }
-//		}
-//	}
-    
 	@Override
 	public List<Action> getAvailableActions( Graph<?, ?> graph) {
 		
 		if( graph instanceof RegulatoryGraph){
-			List<Action> actions = new ArrayList<Action>();
+			List<Action> actions = new ArrayList<>();
 			actions.add( new Reg2DynAction( (RegulatoryGraph) graph, this));
 			return actions;
 		}
@@ -80,39 +49,39 @@ public class Reg2DynServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return W_TOOLS_MAIN + 10;
 	}
-}
 
 
-class Reg2DynAction extends ToolAction {
+	class Reg2DynAction extends ToolAction {
 
-	private final RegulatoryGraph graph;
-	
-	public Reg2DynAction( RegulatoryGraph graph, ServiceGUI serviceGUI) {
-		super( "STR_reg2dyn", "STR_reg2dyn_descr", serviceGUI);
-		this.graph = graph;
-	}
+		private final RegulatoryGraph graph;
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-        
-		if ( graph.getNodeOrderSize() < 1) {
-            NotificationManager.publishWarning( graph, Txt.t("STR_emptyGraph"));
-
-            return;
-        }
-		
-		Frame mainFrame = GUIManager.getInstance().getFrame( graph);
-        GraphGUI<?, ?, ?> gui = null;
-		if (mainFrame != null) {
-			gui = GUIManager.getInstance().getGraphGUI( graph);
-			// TODO: replace this with a mode set on the gui
-			// mainFrame.getActions().setCurrentMode( GsActions.MODE_DEFAULT, 0, false);
+		private Reg2DynAction( RegulatoryGraph graph, ServiceGUI serviceGUI) {
+			super( "STR_reg2dyn", "STR_reg2dyn_descr", serviceGUI);
+			this.graph = graph;
 		}
 
-		SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, SimulationParametersManager.KEY, true);
-		SingleSimulationFrame simFrame = new SingleSimulationFrame(mainFrame, paramList);
-        simFrame.setAssociatedGUI(gui);
-        simFrame.setVisible(true);
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+			if ( graph.getNodeOrderSize() < 1) {
+				NotificationManager.publishWarning( graph, Txt.t("STR_emptyGraph"));
+				return;
+			}
+
+			Frame mainFrame = GUIManager.getInstance().getFrame( graph);
+			GraphGUI<?, ?, ?> gui = null;
+			if (mainFrame != null) {
+				gui = GUIManager.getInstance().getGraphGUI( graph);
+				// TODO: replace this with a mode set on the gui
+				// mainFrame.getActions().setCurrentMode( GsActions.MODE_DEFAULT, 0, false);
+			}
+
+			SimulationParameterList paramList = (SimulationParameterList) ObjectAssociationManager.getInstance().getObject( graph, SimulationParametersManager.KEY, true);
+			SingleSimulationFrame simFrame = new SingleSimulationFrame(mainFrame, paramList);
+			simFrame.setAssociatedGUI(gui);
+			simFrame.setVisible(true);
+		}
+
 	}
-		
+
 }

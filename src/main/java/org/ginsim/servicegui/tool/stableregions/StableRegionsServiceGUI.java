@@ -26,7 +26,7 @@ public class StableRegionsServiceGUI extends AbstractServiceGUI {
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		if (graph instanceof RegulatoryGraph) {
-			List<Action> actions = new ArrayList<Action>();
+			List<Action> actions = new ArrayList<>();
 			actions.add(new StableRegionsAction((RegulatoryGraph) graph, this));
 			return actions;
 		}
@@ -37,21 +37,21 @@ public class StableRegionsServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return W_TOOLS_MAIN + 50;
 	}
-}
 
-class StableRegionsAction extends ToolAction {
+	class StableRegionsAction extends ToolAction {
 
-	private final RegulatoryGraph graph;
+		private final RegulatoryGraph graph;
 
-	public StableRegionsAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
-		super("STR_stableregions", "STR_stableregions_descr", serviceGUI);
-		this.graph = graph;
+		private StableRegionsAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+			super("STR_stableregions", "STR_stableregions_descr", serviceGUI);
+			this.graph = graph;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			StableRegionsService srService = GSServiceManager.getService(StableRegionsService.class);
+			srService.getSCCs(graph);
+		}
+
 	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		StableRegionsService srService = GSServiceManager.getService(StableRegionsService.class);
-		srService.getSCCs(graph);
-	}
-
 }

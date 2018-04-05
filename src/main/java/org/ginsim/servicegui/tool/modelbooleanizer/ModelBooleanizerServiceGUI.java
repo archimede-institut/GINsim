@@ -35,7 +35,7 @@ public class ModelBooleanizerServiceGUI extends AbstractServiceGUI {
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		if (graph instanceof RegulatoryGraph) {
-			List<Action> actions = new ArrayList<Action>();
+			List<Action> actions = new ArrayList<>();
 			actions.add(new BooleanizeAction((RegulatoryGraph) graph, this));
 			return actions;
 		}
@@ -46,23 +46,23 @@ public class ModelBooleanizerServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return W_TOOLS_MAIN + 50;
 	}
-}
 
-class BooleanizeAction extends ToolAction {
+	class BooleanizeAction extends ToolAction {
 
-	private static final long serialVersionUID = 4751364133411945974L;
-	private final RegulatoryGraph graph;
+		private static final long serialVersionUID = 4751364133411945974L;
+		private final RegulatoryGraph graph;
 
-	public BooleanizeAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
-		super("STR_booleanize", "STR_booleanize_descr", serviceGUI);
-		this.graph = graph;
-	}
+		private BooleanizeAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+			super("STR_booleanize", "STR_booleanize_descr", serviceGUI);
+			this.graph = graph;
+		}
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		if (this.graph.getModel().isBoolean()) {
-			GUIMessageUtils.openErrorDialog("STR_booleanize_isBoolean");
-		} else {
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			if (this.graph.getModel().isBoolean()) {
+				GUIMessageUtils.openErrorDialog("STR_booleanize_isBoolean");
+				return;
+			}
 			ModelBooleanizerService service = GSServiceManager.getService(ModelBooleanizerService.class);
 			LogicalModel bModel = service.booleanize(this.graph.getModel());
 
@@ -75,3 +75,4 @@ class BooleanizeAction extends ToolAction {
 		}
 	}
 }
+

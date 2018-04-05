@@ -25,7 +25,7 @@ public class PolytopesVizServiceGUI extends AbstractServiceGUI {
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		if (graph instanceof DynamicGraph) {
-			List<Action> actions = new ArrayList<Action>();
+			List<Action> actions = new ArrayList<>();
 			actions.add(new PolytopesVizAction((DynamicGraph)graph, this));
 			return actions;
 		}
@@ -36,20 +36,21 @@ public class PolytopesVizServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return W_TOOLS_MAIN + 40;
 	}
+
+
+	class PolytopesVizAction extends ToolkitAction {
+		private DynamicGraph graph;
+
+		public PolytopesVizAction(DynamicGraph graph, ServiceGUI serviceGUI) {
+			super("STR_polytopesViz", "STR_polytopesViz_descr", serviceGUI);
+			this.graph = graph;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			new PolytopesVizFrame(graph);
+		}
+
+	}
 }
 
-class PolytopesVizAction extends ToolkitAction {
-	private static final long serialVersionUID = -5562888847827466003L;
-	private DynamicGraph graph;
-
-	public PolytopesVizAction(DynamicGraph graph, ServiceGUI serviceGUI) {
-		super("STR_polytopesViz", "STR_polytopesViz_descr", serviceGUI);
-		this.graph = graph;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		new PolytopesVizFrame(graph);
-	}
-	
-}

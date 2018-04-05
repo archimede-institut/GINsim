@@ -46,27 +46,23 @@ public class CompositionServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return W_TOOLS_MAIN + 51;
 	}
-}
 
-class CompositionAction extends ToolAction {
-	private static final long serialVersionUID = -1993709762198153932L;
-	private final RegulatoryGraph graph;
+	class CompositionAction extends ToolAction {
+		private final RegulatoryGraph graph;
 
-	public CompositionAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
-		super("STR_compose", "STR_compose_descr", serviceGUI);
-		this.graph = graph;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		if (graph.getNodeCount() < 1) {
-			NotificationManager.publishWarning(graph,
-					graph instanceof RegulatoryGraph ? "STR_emptyGraph"
-							: "STR_notRegGraph");
-			return;
+		private CompositionAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+			super("STR_compose", "STR_compose_descr", serviceGUI);
+			this.graph = graph;
 		}
 
-		new CompositionConfigDialog(graph).setVisible(true);
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			if (graph.getNodeCount() < 1) {
+				NotificationManager.publishWarning(graph, "STR_emptyGraph");
+				return;
+			}
+			new CompositionConfigDialog(graph).setVisible(true);
+		}
 	}
-
 }
+

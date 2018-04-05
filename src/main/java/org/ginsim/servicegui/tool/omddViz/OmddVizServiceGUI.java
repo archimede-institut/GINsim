@@ -25,7 +25,7 @@ public class OmddVizServiceGUI extends AbstractServiceGUI {
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		if (graph instanceof RegulatoryGraph) {
-			List<Action> actions = new ArrayList<Action>();
+			List<Action> actions = new ArrayList<>();
 			actions.add(new OMDDVizAction((RegulatoryGraph)graph, this));
 			return actions;
 		}
@@ -36,20 +36,21 @@ public class OmddVizServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return W_TOOLKITS_MAIN + 20;
 	}
+
+	class OMDDVizAction extends ToolkitAction {
+
+		private RegulatoryGraph graph;
+
+		public OMDDVizAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+			super("STR_omddViz", "STR_omddViz_descr", serviceGUI);
+			this.graph = graph;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			new OmddVizFrame(graph);
+		}
+
+	}
 }
 
-class OMDDVizAction extends ToolkitAction {
-
-	private RegulatoryGraph graph;
-
-	public OMDDVizAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
-		super("STR_omddViz", "STR_omddViz_descr", serviceGUI);
-		this.graph = graph;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		new OmddVizFrame(graph);
-	}
-	
-}

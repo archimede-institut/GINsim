@@ -35,21 +35,20 @@ public class GraphComparatorServiceGUI extends AbstractServiceGUI{
 	public int getInitialWeight() {
 		return W_TOOLS_MAIN + 80;
 	}
+
+	class GraphComparatorAction extends ToolAction {
+
+		private final Graph graph;
+
+		private GraphComparatorAction( Graph graph, ServiceGUI serviceGUI) {
+			super("STR_gcmp", "STR_gcmp_descr", serviceGUI);
+			this.graph = graph;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new GraphComparatorFrame( GUIManager.getInstance().getFrame( graph), graph);
+		}
+	}
 }
 
-class GraphComparatorAction extends ToolAction {
-
-	private final Graph graph;
-	
-	public GraphComparatorAction( Graph graph, ServiceGUI serviceGUI) {
-		
-		super("STR_gcmp", "STR_gcmp_descr", serviceGUI);
-		this.graph = graph;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		new GraphComparatorFrame( GUIManager.getInstance().getFrame( graph), graph);
-	}
-	
-}

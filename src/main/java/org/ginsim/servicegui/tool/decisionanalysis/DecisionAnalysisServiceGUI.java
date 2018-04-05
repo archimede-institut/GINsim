@@ -22,8 +22,6 @@ import org.ginsim.gui.shell.actions.ToolAction;
 import org.mangosdk.spi.ProviderFor;
 
 
-
-
 @StandaloneGUI
 @ProviderFor( ServiceGUI.class)
 @ServiceStatus( EStatus.RELEASED)
@@ -32,7 +30,7 @@ public class DecisionAnalysisServiceGUI extends AbstractServiceGUI {
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		if (graph instanceof HierarchicalTransitionGraph) {
-			List<Action> actions = new ArrayList<Action>();
+			List<Action> actions = new ArrayList<>();
 			actions.add(new DecisionAnalysisAction((HierarchicalTransitionGraph)graph, this));
 			return actions;
 		}
@@ -43,30 +41,27 @@ public class DecisionAnalysisServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return W_TOOLS_MAIN + 120;
 	}
+
+	class DecisionAnalysisAction extends ToolAction {
+		private final HierarchicalTransitionGraph graph;
+
+		private DecisionAnalysisAction( HierarchicalTransitionGraph graph, ServiceGUI serviceGUI) {
+			super( "STR_htg_decision_analysis", "STR_htg_decision_analysis_descr", serviceGUI);
+			this.graph = graph;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				RegulatoryGraph lrg = graph.getAssociatedGraph();
+				new DecisionAnalysisFrame( GUIManager.getInstance().getFrame( graph), graph, lrg);
+			} catch( GsException ge){
+				GUIMessageUtils.openErrorDialog( "Unable to launch the analysis");
+				LogManager.error( "Unable to execute the service");
+				LogManager.error( ge);
+			}
+		}
+	}
 }
 
 
-class DecisionAnalysisAction extends ToolAction {
-	private static final long serialVersionUID = -2719039497869822805L;
-	private final HierarchicalTransitionGraph graph;
-	
-	public DecisionAnalysisAction( HierarchicalTransitionGraph graph, ServiceGUI serviceGUI) {
-		
-		super( "STR_htg_decision_analysis", "STR_htg_decision_analysis_descr", serviceGUI);
-		this.graph = graph;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		try{
-			RegulatoryGraph lrg = graph.getAssociatedGraph();
-			new DecisionAnalysisFrame( GUIManager.getInstance().getFrame( graph), graph, lrg);
-		}
-		catch( GsException ge){
-    		GUIMessageUtils.openErrorDialog( "Unable to launch the analysis");
-    		LogManager.error( "Unable to execute the service");
-    		LogManager.error( ge);
-		}
-	}
-	
-}

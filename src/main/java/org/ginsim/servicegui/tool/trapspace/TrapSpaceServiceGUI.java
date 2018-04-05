@@ -32,7 +32,7 @@ public class TrapSpaceServiceGUI extends AbstractServiceGUI {
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		
 		if (graph instanceof RegulatoryGraph) {
-			List<Action> actions = new ArrayList<Action>();
+			List<Action> actions = new ArrayList<>();
 			actions.add(new NewTrapSpaceAction( (RegulatoryGraph)graph, this));
 			return actions;
 		}
@@ -43,28 +43,25 @@ public class TrapSpaceServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return W_TOOLS_MAIN + 20;
 	}
-}
 
-class NewTrapSpaceAction extends ToolAction {
+	class NewTrapSpaceAction extends ToolAction {
 
-	private static final long serialVersionUID = -5261063882326331644L;
-	private final RegulatoryGraph graph;
-	
-	public NewTrapSpaceAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
-		
-		super( "STR_trapSpaces", "STR_trapSpaces_descr", serviceGUI);
-		this.graph = graph;
+		private final RegulatoryGraph graph;
+
+		private NewTrapSpaceAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+			super( "STR_trapSpaces", "STR_trapSpaces_descr", serviceGUI);
+			this.graph = graph;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (graph.getNodeOrderSize() < 1) {
+				NotificationManager.publishWarning( graph, Txt.t("STR_emptyGraph"));
+				return;
+			}
+			new TrapSpaceSwingUI(null, graph);
+		}
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-    	if (graph.getNodeOrderSize() < 1) {
-            NotificationManager.publishWarning( graph, Txt.t("STR_emptyGraph"));
-    		return;
-    	}
-    	
-    	new TrapSpaceSwingUI(null, graph);
-	}
-	
 }
+

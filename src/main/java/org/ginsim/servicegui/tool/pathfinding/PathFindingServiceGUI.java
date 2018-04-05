@@ -23,7 +23,7 @@ public class PathFindingServiceGUI extends AbstractServiceGUI {
 
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
-		List<Action> actions = new ArrayList<Action>();
+		List<Action> actions = new ArrayList <>();
 		actions.add(new PathSearchAction(graph, this));
 		return actions;
 	}
@@ -32,16 +32,17 @@ public class PathFindingServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return W_GRAPH_SELECTION + 20;
 	}
+
+	class PathSearchAction extends GenericGraphAction {
+
+		private PathSearchAction(Graph<?, ?> graph, ServiceGUI serviceGUI) {
+			super(graph, "STR_pathFinding", null, "STR_pathFinding_descr", null, serviceGUI);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new PathFindingFrame(graph);
+		}
+	}
 }
 
-class PathSearchAction extends GenericGraphAction {
-
-	public PathSearchAction(Graph<?, ?> graph, ServiceGUI serviceGUI) {
-		super(graph, "STR_pathFinding", null, "STR_pathFinding_descr", null, serviceGUI);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-        new PathFindingFrame(graph);
-	}
-}

@@ -34,7 +34,7 @@ public class CircuitServiceGUI extends AbstractServiceGUI {
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		if (graph instanceof RegulatoryGraph) {
-			List<Action> actions = new ArrayList<Action>();
+			List<Action> actions = new ArrayList<>();
 			actions.add(new CircuitAction((RegulatoryGraph)graph, this));
 			return actions;
 		}
@@ -45,25 +45,25 @@ public class CircuitServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return ServiceGUI.W_TOOLS_MAIN + 60;
 	}
-}
 
-class CircuitAction extends ToolAction {
 
-	private final RegulatoryGraph graph;
-	
-	public CircuitAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
-		
-		super("STR_circuit", serviceGUI);
-		this.graph = graph;
-	}
+	class CircuitAction extends ToolAction {
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-        if (graph.getNodeOrderSize() < 1) {
-            NotificationManager.publishWarning( graph, Txt.t("STR_emptyGraph"));
-            return;
-        }
+		private final RegulatoryGraph graph;
 
-        new CircuitFrame( GUIManager.getInstance().getFrame( graph), graph);
+		private CircuitAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+			super("STR_circuit", serviceGUI);
+			this.graph = graph;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if (graph.getNodeCount() < 1) {
+				NotificationManager.publishWarning( graph, Txt.t("STR_emptyGraph"));
+				return;
+			}
+			new CircuitFrame( GUIManager.getInstance().getFrame( graph), graph);
+		}
+
 	}
 }

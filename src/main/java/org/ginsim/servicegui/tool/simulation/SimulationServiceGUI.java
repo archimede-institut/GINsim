@@ -51,37 +51,35 @@ public class SimulationServiceGUI extends AbstractServiceGUI {
         return W_UNDER_DEVELOPMENT + 10;
     }
 
-}
+    class SimulationAction extends ToolAction {
 
+        private final RegulatoryGraph graph;
 
-class SimulationAction extends ToolAction {
-
-    private final RegulatoryGraph graph;
-
-    public SimulationAction( RegulatoryGraph graph, ServiceGUI serviceGUI) {
-        super( "STR_simulation", "STR_simulation_descr", serviceGUI);
-        this.graph = graph;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-
-        if ( graph.getNodeOrderSize() < 1) {
-            NotificationManager.publishWarning(graph, Txt.t("STR_emptyGraph"));
-            return;
+        private SimulationAction( RegulatoryGraph graph, ServiceGUI serviceGUI) {
+            super( "STR_simulation", "STR_simulation_descr", serviceGUI);
+            this.graph = graph;
         }
 
-        Frame mainFrame = GUIManager.getInstance().getFrame( graph);
-        GraphGUI<?, ?, ?> gui = null;
-        if (mainFrame != null) {
-            gui = GUIManager.getInstance().getGraphGUI( graph);
-            // TODO: replace this with a mode set on the gui
-            // mainFrame.getActions().setCurrentMode( GsActions.MODE_DEFAULT, 0, false);
-        }
+        @Override
+        public void actionPerformed(ActionEvent e) {
 
-        // Show the actual simulation GUI
-        SimulationFrame frame = new SimulationFrame(graph, mainFrame);
-        frame.setVisible(true);
+            if ( graph.getNodeOrderSize() < 1) {
+                NotificationManager.publishWarning(graph, Txt.t("STR_emptyGraph"));
+                return;
+            }
+
+            Frame mainFrame = GUIManager.getInstance().getFrame( graph);
+            GraphGUI<?, ?, ?> gui = null;
+            if (mainFrame != null) {
+                gui = GUIManager.getInstance().getGraphGUI( graph);
+                // TODO: replace this with a mode set on the gui
+                // mainFrame.getActions().setCurrentMode( GsActions.MODE_DEFAULT, 0, false);
+            }
+
+            // Show the actual simulation GUI
+            SimulationFrame frame = new SimulationFrame(graph, mainFrame);
+            frame.setVisible(true);
+        }
     }
 
 }

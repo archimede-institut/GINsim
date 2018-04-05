@@ -37,19 +37,18 @@ public class DataViewerServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return W_GRAPH_COLORIZE+40;
 	}
-}
 
-class DataViewerAction extends GenericGraphAction {
-	private static final long serialVersionUID = 8294301473668672512L;
-	
-	protected DataViewerAction( Graph graph, ServiceGUI serviceGUI) {
-        super( graph, "View data", null, "View associated data", null, serviceGUI);
+	class DataViewerAction extends GenericGraphAction {
 
-	}
-	
-	@Override
-	public void actionPerformed( ActionEvent arg0) {
-		DataViewer viewer = new DataViewer(graph);
-		new HandledStackDialog(viewer);
+		private DataViewerAction( Graph graph, ServiceGUI serviceGUI) {
+			super( graph, "View data", null, "View associated data", null, serviceGUI);
+		}
+
+		@Override
+		public void actionPerformed( ActionEvent arg0) {
+			DataViewer viewer = new DataViewer(graph);
+			new HandledStackDialog(viewer);
+		}
 	}
 }
+

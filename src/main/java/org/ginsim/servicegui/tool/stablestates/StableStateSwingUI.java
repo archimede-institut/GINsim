@@ -1,22 +1,11 @@
 package org.ginsim.servicegui.tool.stablestates;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.util.Enumeration;
-
-import javax.swing.JFrame;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumn;
-
+import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.tool.fixpoints.FixpointList;
 import org.colomoto.biolqm.tool.fixpoints.FixpointTask;
 import org.colomoto.common.task.Task;
 import org.colomoto.common.task.TaskListener;
 import org.colomoto.common.task.TaskStatus;
-import org.colomoto.biolqm.LogicalModel;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer;
@@ -26,6 +15,11 @@ import org.ginsim.gui.graph.dynamicgraph.StableTableModel;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.service.tool.stablestates.StableStatesService;
+
+import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
+import java.util.Enumeration;
 
 
 
@@ -113,44 +107,5 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
             return false;
         }
         return true;
-    }
-}
-
-
-
-/**
- * custom cell renderer to colorize cells
- */
-@SuppressWarnings("serial")
-class ColoredCellRenderer extends DefaultTableCellRenderer {
-
-	static final Color EVEN_BG = new Color(255, 255, 200), ODD_BG = new Color(220, 220, 150);
-	static final Color STAR_BG = Color.CYAN, ACTIVE_BG = new Color(142, 142, 142);
-	
-	@Override
-    public Component getTableCellRendererComponent( JTable table , Object value , boolean isSelected , boolean hasFocus ,
-                                                                                        int row , int column ) {
-        Component cmp = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-        if( table != null && row >= 0) {
-            if (column == 0 || "0".equals(value)) {
-            	if (isSelected) {
-            		cmp.setBackground(table.getSelectionBackground());
-            	} else {
-            		cmp.setBackground(row%2 == 0 ? EVEN_BG : ODD_BG);
-            	}
-            	if (column == 0) {
-            		cmp.setForeground(Color.BLACK);
-            	} else {
-            		cmp.setForeground(cmp.getBackground());
-            	}
-        	} else if ("*".equals(value)) {
-                cmp.setBackground(STAR_BG);
-        		cmp.setForeground(Color.BLACK);
-            } else {
-        		cmp.setForeground(Color.BLACK);
-            	cmp.setBackground(ACTIVE_BG);
-            }
-        }
-        return cmp;
     }
 }

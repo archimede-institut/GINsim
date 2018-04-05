@@ -40,21 +40,21 @@ public class StateInRegulatoryGraphServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return W_GRAPH_COLORIZE + 10;
 	}
-}
 
-class StateInRegulatoryGraphAction extends GenericGraphAction {
+	class StateInRegulatoryGraphAction extends GenericGraphAction {
 
-	private static final long serialVersionUID = -3180174464155997775L;
+		private static final long serialVersionUID = -3180174464155997775L;
 
-	public StateInRegulatoryGraphAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
-		
-		super( graph, "STR_stateInRegGraph", null, "STR_stateInRegGraph_descr", null, serviceGUI);
+		private StateInRegulatoryGraphAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+			super( graph, "STR_stateInRegGraph", null, "STR_stateInRegGraph_descr", null, serviceGUI);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new StateInRegGraphFrame( GUIManager.getInstance().getFrame( graph), graph);
+		}
+
 	}
 
-	@Override
-	public void actionPerformed(ActionEvent e) {
-
-        new StateInRegGraphFrame( GUIManager.getInstance().getFrame( graph), graph);
-	}
-	
 }
+

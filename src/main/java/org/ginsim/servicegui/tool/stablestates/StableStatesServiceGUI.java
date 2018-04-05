@@ -30,9 +30,8 @@ public class StableStatesServiceGUI extends AbstractServiceGUI {
 	    
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
-		
 		if (graph instanceof RegulatoryGraph) {
-			List<Action> actions = new ArrayList<Action>();
+			List<Action> actions = new ArrayList<>();
 			actions.add(new NewStableStatesAction( (RegulatoryGraph)graph, this));
 			return actions;
 		}
@@ -43,28 +42,26 @@ public class StableStatesServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return W_TOOLS_MAIN + 20;
 	}
+
+
+	class NewStableStatesAction extends ToolAction {
+
+		private final RegulatoryGraph graph;
+
+		private NewStableStatesAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+			super( "STR_stableStates", "STR_stableStates_descr", serviceGUI);
+			this.graph = graph;
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+			if (graph.getNodeOrderSize() < 1) {
+				NotificationManager.publishWarning( graph, Txt.t("STR_emptyGraph"));
+				return;
+			}
+			new StableStateSwingUI(null, graph);
+		}
+	}
 }
 
-class NewStableStatesAction extends ToolAction {
-
-	private static final long serialVersionUID = -368269624983512268L;
-	private final RegulatoryGraph graph;
-	
-	public NewStableStatesAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
-		
-		super( "STR_stableStates", "STR_stableStates_descr", serviceGUI);
-		this.graph = graph;
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		
-    	if (graph.getNodeOrderSize() < 1) {
-            NotificationManager.publishWarning( graph, Txt.t("STR_emptyGraph"));
-    		return;
-    	}
-
-    	new StableStateSwingUI(null, graph);
-	}
-	
-}

@@ -38,7 +38,7 @@ public class ModelReversionServiceGUI extends AbstractServiceGUI {
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		if (graph instanceof RegulatoryGraph) {
-			List<Action> actions = new ArrayList<Action>();
+			List<Action> actions = new ArrayList<>();
 			actions.add(new ReversionAction((RegulatoryGraph) graph, this));
 			return actions;
 		}
@@ -49,37 +49,38 @@ public class ModelReversionServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return W_TOOLS_MAIN + 50;
 	}
-}
 
-class ReversionAction extends ToolAction {
+	class ReversionAction extends ToolAction {
 
-	private static final long serialVersionUID = 4751364133411945974L;
-	private final RegulatoryGraph graph;
+		private static final long serialVersionUID = 4751364133411945974L;
+		private final RegulatoryGraph graph;
 
-	public ReversionAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
-		super("STR_reverse", "STR_reverse_descr", serviceGUI);
-		this.graph = graph;
-	}
+		private ReversionAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+			super("STR_reverse", "STR_reverse_descr", serviceGUI);
+			this.graph = graph;
+		}
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		ModelReversionService revService = GSServiceManager.getService( ModelReversionService.class);
-		ModelBooleanizerService boolService = GSServiceManager.getService( ModelBooleanizerService.class);
-		
-		LogicalModel origModel = this.graph.getModel();
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			ModelReversionService revService = GSServiceManager.getService( ModelReversionService.class);
+			ModelBooleanizerService boolService = GSServiceManager.getService( ModelBooleanizerService.class);
 
-		// Model reverser
-		ModelModifier modelReverser = revService.getModelReverser(origModel);
-		RegulatoryGraph gReversed = LogicalModel2RegulatoryGraph
-				.importModel(modelReverser.getModifiedModel());
+			LogicalModel origModel = this.graph.getModel();
 
-		// Copy all the (edge & node) styles from the original graph to the reversed one
-		boolService.copyNodeStyles(this.graph, gReversed);
+			// Model reverser
+			ModelModifier modelReverser = revService.getModelReverser(origModel);
+			RegulatoryGraph gReversed = LogicalModel2RegulatoryGraph
+					.importModel(modelReverser.getModifiedModel());
 
-		// Show the reversed graph
-		GUIManager.getInstance().whatToDoWithGraph(gReversed);
-		if (!origModel.isBoolean()) {
-			GUIMessageUtils.openWarningDialog(Txt.t("STR_reverse_multivalue"));
+			// Copy all the (edge & node) styles from the original graph to the reversed one
+			boolService.copyNodeStyles(this.graph, gReversed);
+
+			// Show the reversed graph
+			GUIManager.getInstance().whatToDoWithGraph(gReversed);
+			if (!origModel.isBoolean()) {
+				GUIMessageUtils.openWarningDialog(Txt.t("STR_reverse_multivalue"));
+			}
 		}
 	}
 }
+

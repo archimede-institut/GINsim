@@ -46,32 +46,28 @@ public class LocalGraphServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return W_GRAPH_COLORIZE + 30;
 	}
-}
 
-class LocalGraphAction extends GenericGraphAction {
-	private static final long serialVersionUID = -4679900718786692002L;
+	class LocalGraphAction extends GenericGraphAction {
 
-	private LocalGraphConfig config;
+		private LocalGraphConfig config;
 
-	protected LocalGraphAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
-		this(graph, null, serviceGUI);
-	}
+		private LocalGraphAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+			this(graph, null, serviceGUI);
+		}
 
-	protected LocalGraphAction(DynamicGraph graph, ServiceGUI serviceGUI)
-			throws GsException {
+		private LocalGraphAction(DynamicGraph graph, ServiceGUI serviceGUI) throws GsException {
+			this(graph.getAssociatedGraph(), graph, serviceGUI);
+		}
 
-		this(graph.getAssociatedGraph(), graph, serviceGUI);
-	}
+		private LocalGraphAction(RegulatoryGraph graph, DynamicGraph dyn, ServiceGUI serviceGUI) {
+			super(dyn, "STR_localGraph", null, "STR_localGraph_descr", null, serviceGUI);
+			this.config = new LocalGraphConfig(graph, dyn);
+		}
 
-	protected LocalGraphAction(RegulatoryGraph graph, DynamicGraph dyn,
-			ServiceGUI serviceGUI) {
-		super(dyn, "STR_localGraph", null, "STR_localGraph_descr", null,
-				serviceGUI);
-		this.config = new LocalGraphConfig(graph, dyn);
-	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		new LocalGraphFrame(config);
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			new LocalGraphFrame(config);
+		}
 	}
 }
+

@@ -29,7 +29,7 @@ public class ReductionServiceGUI extends AbstractServiceGUI {
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		if (graph instanceof RegulatoryGraph) {
-			List<Action> actions = new ArrayList<Action>();
+			List<Action> actions = new ArrayList<>();
 			actions.add(new ReductionAction((RegulatoryGraph)graph, this));
 			return actions;
 		}
@@ -40,26 +40,28 @@ public class ReductionServiceGUI extends AbstractServiceGUI {
 	public int getInitialWeight() {
 		return W_TOOLS_MAIN + 50;
 	}
-}
 
-class ReductionAction extends ToolAction {
 
-	private static final long serialVersionUID = 2341667285128867588L;
-	private final RegulatoryGraph graph;
-	public ReductionAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
-		super("STR_reduce", "STR_reduce_descr", serviceGUI);
-		this.graph = graph;
-	}
+	class ReductionAction extends ToolAction {
 
-	@Override
-	public void actionPerformed(ActionEvent arg0) {
-		if (graph.getNodeCount() < 1) {
-            NotificationManager.publishWarning( graph, graph instanceof RegulatoryGraph ? "STR_emptyGraph" : "STR_notRegGraph");
-            return;
+		private static final long serialVersionUID = 2341667285128867588L;
+		private final RegulatoryGraph graph;
+
+		private ReductionAction(RegulatoryGraph graph, ServiceGUI serviceGUI) {
+			super("STR_reduce", "STR_reduce_descr", serviceGUI);
+			this.graph = graph;
 		}
 
-		// TODO: reset edit mode
-		// mframe.getActions().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
-		new ReductionConfigDialog(graph);
+		@Override
+		public void actionPerformed(ActionEvent arg0) {
+			if (graph.getNodeCount() < 1) {
+				NotificationManager.publishWarning( graph, "STR_emptyGraph");
+				return;
+			}
+
+			// TODO: reset edit mode
+			// mframe.getActions().setCurrentMode(GsActions.MODE_DEFAULT, 0, false);
+			new ReductionConfigDialog(graph);
+		}
 	}
 }
