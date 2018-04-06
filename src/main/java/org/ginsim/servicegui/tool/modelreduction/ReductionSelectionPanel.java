@@ -21,6 +21,7 @@ public class ReductionSelectionPanel extends JPanel {
 
 		setLayout(new GridBagLayout());
 		GridBagConstraints cst = new GridBagConstraints();
+		cst.gridx = cst.gridy = 1;
 		cst.weightx = 1;
 		cst.fill = GridBagConstraints.HORIZONTAL;
 		add(cfgPanel, cst);

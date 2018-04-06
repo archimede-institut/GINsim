@@ -26,6 +26,7 @@ public class PatternSelectionPanel extends JComboBox {
     private final PatternComboModel model;
 
     public PatternSelectionPanel(RegulatoryGraph lrg, boolean input, PatternHolder holder) {
+        setBorder(BorderFactory.createTitledBorder("Input restriction"));
         this.lrg = lrg;
         this.model = new PatternComboModel(lrg, input, holder);
         setModel(model);
