@@ -78,14 +78,6 @@ public class NamedStateList extends ListenableNamedList<NamedState> {
         }
 	}
 
-    public Object getInitState(String s) {
-        for (NamedState istate: this) {
-            if (istate.getName().equals(s)) {
-                return istate;
-            }
-        }
-        return null;
-    }
     public void addInitState(String s, Map m) {
         for (NamedState istate: this) {
             if (istate.getName().equals(s)) {

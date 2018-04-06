@@ -5,7 +5,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
 import javax.swing.BorderFactory;
@@ -14,10 +13,12 @@ import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.table.TableColumn;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Txt;
-import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
+import org.ginsim.commongui.utils.MixedTableHeader;
+import org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.Label;
@@ -268,24 +269,19 @@ public class StateListPanel extends JPanel {
             tableInitStates.getTableHeader().setReorderingAllowed(false);
             tableInitStates.setRowSelectionAllowed(true);
             tableInitStates.setColumnSelectionAllowed(true);
+
+            new MixedTableHeader(tableInitStates, 2);
             model.setTable(tableInitStates);
         }
         return tableInitStates;
     }
     
     /**
-     * The table's structure has changed, update it. 
-     * note: don't try to implement tablemodellistener: when this one is called, 
+     * The table's structure has changed, update it.
+     * note: don't try to implement tablemodellistener: when this one is called,
      * the table structure change may not be applied yet in the column model
      */
     public void updateTable() {
-        Enumeration e_col = tableInitStates.getColumnModel().getColumns();
-        while (e_col.hasMoreElements()) {
-            TableColumn col = (TableColumn)e_col.nextElement();
-            int w = 15+8*5;
-            col.setPreferredWidth(w+10);
-            col.setMinWidth(w);
-        }
     }
 
     /**

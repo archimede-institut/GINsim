@@ -45,7 +45,7 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
 	private static TrapSpaceService srv = GSServiceManager.getService(TrapSpaceService.class);
 	
 	TrapSpaceTableModel model;
-	JTable tresult;
+	EnhancedJTable tresult;
 	JCheckBox cb_tree;
 	
 	private final TrapSpaceParameters settings;
@@ -68,6 +68,7 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
         tresult.getTableHeader().setReorderingAllowed(false);
 		tresult.setDefaultRenderer(Object.class, new ColoredCellRenderer());
 		tresult.setAutoCreateRowSorter(true);
+		tresult.setCopyHeaders();
 		
 		JPanel main = new JPanel(new GridBagLayout());
 		GridBagConstraints cst = new GridBagConstraints();

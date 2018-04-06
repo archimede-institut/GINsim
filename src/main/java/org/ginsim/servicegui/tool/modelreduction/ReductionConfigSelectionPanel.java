@@ -15,16 +15,18 @@ import org.ginsim.service.tool.modelreduction.ReductionConfig;
 import org.ginsim.service.tool.modelreduction.ReductionConfigManager;
 import org.ginsim.service.tool.modelreduction.ReductionHolder;
 
+import java.awt.*;
 import java.util.List;
 
 
-public class RestrictionSelectionPanel extends ListSelectionPanel<ReductionConfig> implements GraphGUIListener<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> {
+public class ReductionConfigSelectionPanel extends ListSelectionPanel<ReductionConfig> implements GraphGUIListener<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> {
+	private static final long serialVersionUID = 1213902700181873169L;
 
 	private final RegulatoryGraph graph;
     private final ReductionHolder holder;
 
-	public RestrictionSelectionPanel(StackDialog dialog, RegulatoryGraph graph, ReductionHolder holder) {
-		super(dialog, "Select a restriction");
+	public ReductionConfigSelectionPanel(StackDialog dialog, RegulatoryGraph graph, ReductionHolder holder) {
+		super(dialog, "Select a reduction");
 		
 		this.graph = graph;
 		this.holder = holder;
@@ -37,7 +39,8 @@ public class RestrictionSelectionPanel extends ListSelectionPanel<ReductionConfi
 	
 	@Override
 	public void configure() {
-		// TODO: configure named state
+		Component panel = ReductionGUIHelper.getReductionPanel(getPerturbationsObject(true));
+        dialog.addTempPanel(panel);
 	}
 
 	public ReductionConfig getSelected() {

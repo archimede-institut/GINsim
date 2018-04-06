@@ -1,12 +1,14 @@
 package org.ginsim.service.tool.modelreduction;
 
+import org.ginsim.core.graph.regulatorygraph.namedstates.PatternHolder;
+
 /**
  * An interface for configuration objects which store a selected reduction.
  * 
  * @author Aurelien Naldi
  *
  */
-public interface ReductionHolder {
+public interface ReductionHolder extends PatternHolder {
 
 	/**
 	 * Retrieve the stored reduction.

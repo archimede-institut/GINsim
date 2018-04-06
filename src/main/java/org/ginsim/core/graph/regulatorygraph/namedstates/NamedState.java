@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.settings.state.Range;
+import org.colomoto.biolqm.settings.state.StatePattern;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.NamedObject;
@@ -20,7 +22,7 @@ public class NamedState implements NamedObject {
 	Map<NodeInfo, List<Integer>> m = new HashMap<NodeInfo, List<Integer>>();
 	
 	public String toString(){
-		return name+m.toString();
+		return name;
 	}
 	
     public void setState(int[] state, List<RegulatoryNode> nodeOrder) {
@@ -29,7 +31,7 @@ public class NamedState implements NamedObject {
     public void setState(int[] state, List<RegulatoryNode> nodeOrder, boolean input) {
         String[] t_s = new String[state.length];
         for (int i=0 ; i<t_s.length ; i++) {
-            RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(i);
+            RegulatoryNode vertex = nodeOrder.get(i);
             if (vertex.isInput() == input) {
                 t_s[i] = vertex + ";" + state[i];
             } else {
@@ -41,14 +43,13 @@ public class NamedState implements NamedObject {
     public void setStateAll(int[] state, List<RegulatoryNode> nodeOrder) {
         String[] t_s = new String[state.length];
         for (int i=0 ; i<t_s.length ; i++) {
-            RegulatoryNode vertex = (RegulatoryNode)nodeOrder.get(i);
+            RegulatoryNode vertex = nodeOrder.get(i);
             t_s[i] = vertex + ";" + state[i];
         }
         setData(t_s, nodeOrder);
     }
     
     public Map<NodeInfo, List<Integer>> getMaxValueTable() {
-    	
 		return m;
 	}
     
@@ -116,5 +117,31 @@ public class NamedState implements NamedObject {
             return 0;
         }
         return values.get(0).byteValue();
+    }
+
+    /**
+     * Convert the internal lists of values into lists of ranges for use in bioLQM.
+     *
+     * @return
+     */
+    public StatePattern getStatePattern() {
+	    if (m == null || m.size() == 0) {
+	        return null;
+        }
+        StatePattern pattern = new StatePattern();
+	    for (NodeInfo ni: m.keySet()) {
+	        List<Integer> values = m.get(ni);
+	        if (values == null) {
+	            continue;
+            }
+	        int l = values.size();
+	        if (l < 1) {
+	            continue;
+            }
+            int min = values.get(0);
+            int max = values.get(l-1);
+            pattern.put(ni, new Range(min, max));
+        }
+        return pattern;
     }
 }

@@ -8,6 +8,7 @@ import org.colomoto.common.task.TaskListener;
 import org.colomoto.common.task.TaskStatus;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Txt;
+import org.ginsim.commongui.utils.MixedTableHeader;
 import org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.GSServiceManager;
@@ -34,7 +35,7 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
 	private static StableStatesService sss = GSServiceManager.getService(StableStatesService.class);
 	
 	StableTableModel model;
-	JTable tresult;
+	EnhancedJTable tresult;
 
 	FixpointTask m_finder;
 
@@ -45,13 +46,18 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
 
 		model = new StableTableModel(lrg);
 		tresult = new EnhancedJTable(model);
+		tresult.setCopyHeaders();
 		
 		// needed for the scroll bars to appear as needed
-		tresult.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+		tresult.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         tresult.getTableHeader().setReorderingAllowed(false);
 		tresult.setDefaultRenderer(Object.class, new ColoredCellRenderer());
 		tresult.setAutoCreateRowSorter(true);
-		
+
+		// auto-assign vertical headers to all but the first column
+		// this works but the header becomes too narrow
+//		new MixedTableHeader(tresult, 1);
+
 		JScrollPane pane = new JScrollPane(tresult);
 		setMainPanel(pane);
 	}
@@ -82,15 +88,17 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
 
 			TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
 			Enumeration<TableColumn> columns = tresult.getColumnModel().getColumns();
+			tresult.getTableHeader().setDefaultRenderer(headerRenderer);
 
 			if (columns.hasMoreElements()) {
 				TableColumn col = columns.nextElement();
+//				col.setHeaderRenderer(headerRenderer);
 				col.setMinWidth(150);
 				col.setMaxWidth(400);
 			}
 			while (columns.hasMoreElements()) {
 				TableColumn col = columns.nextElement();
-				col.setHeaderRenderer(headerRenderer);
+//				col.setHeaderRenderer(headerRenderer);
 				col.setMinWidth(20);
 				col.setMaxWidth(25);
 			}

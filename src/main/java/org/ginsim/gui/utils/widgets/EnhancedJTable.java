@@ -1,6 +1,15 @@
 package org.ginsim.gui.utils.widgets;
 
-import java.awt.Component;
+import org.ginsim.core.utils.data.ValueList;
+import org.ginsim.gui.utils.data.TableActionListener;
+import org.ginsim.gui.utils.data.models.ValueListComboModel;
+
+import javax.swing.*;
+import javax.swing.table.TableCellEditor;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -8,23 +17,6 @@ import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.EventObject;
 import java.util.List;
-
-import javax.swing.AbstractCellEditor;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.KeyStroke;
-import javax.swing.table.TableCellEditor;
-import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
-
-import org.ginsim.core.utils.data.ValueList;
-import org.ginsim.gui.utils.data.TableActionListener;
-import org.ginsim.gui.utils.data.models.ValueListComboModel;
 
 /**
  * A "better" JTable with some often needed customizations. - cell value if
@@ -63,6 +55,10 @@ public class EnhancedJTable extends JTable {
      */
 	public EnhancedJTable() {
 		this(null);
+	}
+
+	public void setCopyHeaders() {
+			setTransferHandler( new TableHeaderTransferHandler());
 	}
 
 	/**

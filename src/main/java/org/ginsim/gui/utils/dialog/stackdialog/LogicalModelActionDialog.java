@@ -14,10 +14,12 @@ import org.colomoto.biolqm.LQMServiceManager;
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.modifier.reduction.ModelReductionService;
 import org.colomoto.biolqm.modifier.reduction.ReductionSettings;
+import org.colomoto.biolqm.settings.state.StatePattern;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationHolder;
@@ -42,6 +44,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 
 	private Perturbation perturbation = null;
     private ReductionConfig reduction = null;
+    private NamedState pattern = null;
 	private String userID = null;
 
 	protected JPanel mainPanel = new JPanel(new GridBagLayout());
@@ -136,20 +139,35 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 		}
 	}
 
-    @Override
-    public ReductionConfig getReduction() {
-        return reduction;
-    }
+	@Override
+	public ReductionConfig getReduction() {
+		return reduction;
+	}
 
-    @Override
-    public void setReduction(ReductionConfig reduction) {
-        if (userID != null) {
-            reductions.useReduction(userID, reduction);
-            this.reduction = reductions.getUsedReduction(userID);
-        } else {
-            this.reduction = reduction;
-        }
-    }
+	@Override
+	public void setReduction(ReductionConfig reduction) {
+		if (userID != null) {
+			reductions.useReduction(userID, reduction);
+			this.reduction = reductions.getUsedReduction(userID);
+		} else {
+			this.reduction = reduction;
+		}
+	}
+
+	@Override
+	public NamedState getPattern() {
+		return pattern;
+	}
+
+	@Override
+	public void setPattern(NamedState pattern) {
+//		if (userID != null) {
+//			reductions.useReduction(userID, reduction);
+//			this.pattern = reductions.getUsedReduction(userID);
+//		} else {
+			this.pattern = pattern;
+//		}
+	}
 
 
 	@Override
@@ -205,8 +223,15 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         if (cb_simplify.isSelected()) {
         	reductionSettings.handleOutputs = true;
         }
-        
-        // TODO: merge all reductions in a single pass
+
+		// Apply input pattern
+		if (pattern != null) {
+			reductionSettings.pattern = pattern.getStatePattern();
+		} else {
+			reductionSettings.pattern = null;
+		}
+
+		// TODO: merge all reductions in a single pass
         ReductionConfig reduction = getReduction();
         if (reduction != null) {
         	model = reduction.apply(model);
