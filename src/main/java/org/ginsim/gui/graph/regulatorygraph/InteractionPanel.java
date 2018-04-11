@@ -619,8 +619,11 @@ class LogicalParameterCellRenderer extends DefaultTableCellRenderer {
 	}
 
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-		JLabel cmp = new JLabel(value.toString());
-	  LogicalParameter param = model.getParameter(row);
+		JLabel cmp = new JLabel();
+		if (value != null) {
+			cmp.setText(value.toString());
+		}
+		LogicalParameter param = model.getParameter(row);
 		Color bgColor = isSelected ? table.getSelectionBackground() : table.getBackground();
 		Color fgColor = isSelected ? table.getSelectionForeground() : table.getForeground();
 		Font font = table.getFont();
