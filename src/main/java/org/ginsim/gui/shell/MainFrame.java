@@ -71,7 +71,7 @@ public class MainFrame extends Frame implements NotificationSource, Notification
 	public MainFrame(GraphGUI graph_gui) {
 		
 		super("MainFrame", 800, 700);
-		setIconImage(ImageLoader.getImage("gs1.gif"));
+		setIconImage(ImageLoader.getImage("gsicon.png"));
 		
         this.graphGUI = graph_gui;
         GUIManager.getInstance().registerGUI( graph_gui, this);

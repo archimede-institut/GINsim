@@ -4,7 +4,7 @@
 		<name>GINsim</name>
 		<description>A computer tool for the modeling and simulation of regulatory networks</description>
 		<homepage rdf:resource="http://www.ginsim.org"/>
-		<logo>gs1.gif</logo>
+		<logo>banner.png</logo>
 		<license rdf:resource="http://usefulinc.com/doap/licenses/gpl">GPL</license>
 		<version>2.9</version>
 <!--

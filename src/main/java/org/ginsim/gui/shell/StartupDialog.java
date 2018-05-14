@@ -38,12 +38,12 @@ public class StartupDialog extends JFrame {
 		setSize(600, 500);
 		setMinimumSize(getSize());
 		setResizable(false);
-		setIconImage(ImageLoader.getImage("gs1.gif"));
+		setIconImage(ImageLoader.getImage("gsicon.png"));
 		JPanel content = new JPanel(new GridBagLayout());
 		setContentPane(content);
 		
 		JPanel header = new JPanel();
-		Image logo = ImageLoader.getImage("gs1.gif");
+		Image logo = ImageLoader.getImage("banner.png");
 		JLabel logoLabel = new JLabel(new ImageIcon( logo ));
 		header.add(logoLabel);
 		JLabel title; 
