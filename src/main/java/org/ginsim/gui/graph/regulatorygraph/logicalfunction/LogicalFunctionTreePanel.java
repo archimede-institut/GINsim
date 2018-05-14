@@ -163,6 +163,7 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
     interactionList.setRootInfos();
     tree.stopEditing();
     tree.setModel(interactionList);
+    autoExpand();
  }
 
   private JTree getJTree(RegulatoryGraph graph){
@@ -217,6 +218,23 @@ public class LogicalFunctionTreePanel extends AbstractParameterPanel implements 
         TreePath tp = (TreePath) enu.nextElement();
         tree.expandPath(tp);
       }
+  }
+
+  private void autoExpand() {
+    int j = tree.getRowCount();
+    if (j < 1) {
+      return;
+    }
+    tree.expandRow(0);
+    int i = 1;
+    while(i < j) {
+      Object o = tree.getPathForRow(i).getLastPathComponent();
+      if (o instanceof TreeValue) {
+        tree.expandRow(i);
+      }
+      i += 1;
+      j = tree.getRowCount();
+    }
   }
 
   public void keyPressed(KeyEvent e) {
