@@ -228,7 +228,11 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 			
 			// Add annotations
 			Model smodel = qbundle.document.getModel();
-			exportAnnotation(smodel, graph.getAnnotation());
+			try {
+				exportAnnotation(smodel, graph.getAnnotation());
+			} catch (XMLStreamException e) {
+				System.err.println("Error exporting model annotation");
+			}
 			for (RegulatoryNode node: graph.getNodeOrder()) {
 				QualitativeSpecies qs = qbundle.qmodel.getQualitativeSpecies(node.getId());
 				org.ginsim.core.annotation.Annotation annotation = node.getAnnotation();
