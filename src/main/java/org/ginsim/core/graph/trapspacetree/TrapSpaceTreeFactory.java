@@ -11,28 +11,28 @@ import org.mangosdk.spi.ProviderFor;
  * @author Aurelien Naldi
  */
 @ProviderFor( GraphFactory.class)
-public class TrapSpaceTreeFactory extends AbstractGraphFactory<TrapSpaceTree> {
+public class TrapSpaceTreeFactory extends AbstractGraphFactory<TrapSpaceInclusionDiagram> {
 
 	public static final String KEY = "trapspacetree";
     private static TrapSpaceTreeFactory instance = null;
 
     public TrapSpaceTreeFactory() {
-		super(TrapSpaceTree.class, KEY);
+		super(TrapSpaceInclusionDiagram.class, KEY);
     	if (instance == null) {
     		instance = this;
     	}
 	}
 
 	@Override
-	public TrapSpaceTree create() {
+	public TrapSpaceInclusionDiagram create() {
 		return new TrapSpaceTreeImpl(this, false);
 	}
 
 	
-	public TrapSpaceTree create(TrapSpaceList solutions) {
+	public TrapSpaceInclusionDiagram create(TrapSpaceList solutions) {
 
 		int n = solutions.size();
-		TrapSpaceTree tree = create();
+		TrapSpaceInclusionDiagram tree = create();
 
 		TrapSpaceNode[] nodes = new TrapSpaceNode[solutions.size()];
 		int i = 0;

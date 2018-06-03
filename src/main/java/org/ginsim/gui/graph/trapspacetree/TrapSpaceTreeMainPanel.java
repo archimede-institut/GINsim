@@ -10,20 +10,20 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.trapspacetree.TrapSpaceNode;
-import org.ginsim.core.graph.trapspacetree.TrapSpaceTree;
+import org.ginsim.core.graph.trapspacetree.TrapSpaceInclusionDiagram;
 import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.servicegui.tool.lrgcolorizer.LRGPatternStyleProvider;
 
 public class TrapSpaceTreeMainPanel extends JPanel implements GUIEditor<TrapSpaceNode> {
 
-	private TrapSpaceTree tree = null;
+	private TrapSpaceInclusionDiagram tree = null;
 	private RegulatoryGraph lrg = null;
 	
     private StyleManager<RegulatoryNode, RegulatoryMultiEdge> styleManager;
     private LRGPatternStyleProvider styleProvider;
 	
-	public TrapSpaceTreeMainPanel(TrapSpaceTree tree) {
+	public TrapSpaceTreeMainPanel(TrapSpaceInclusionDiagram tree) {
 		this.tree = tree;
 		try {
 			this.lrg = tree.getAssociatedGraph();

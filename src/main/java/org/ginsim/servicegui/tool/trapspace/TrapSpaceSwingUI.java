@@ -1,7 +1,5 @@
 package org.ginsim.servicegui.tool.trapspace;
 
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.util.Enumeration;
@@ -10,8 +8,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 
@@ -25,7 +21,7 @@ import org.colomoto.common.task.TaskStatus;
 import org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer;
 import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.trapspacetree.TrapSpaceTree;
+import org.ginsim.core.graph.trapspacetree.TrapSpaceInclusionDiagram;
 import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
@@ -46,7 +42,7 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
 	
 	TrapSpaceTableModel model;
 	EnhancedJTable tresult;
-	JCheckBox cb_tree;
+	JCheckBox cb_diag;
 	
 	private final TrapSpaceParameters settings;
 	Task<TrapSpaceList> m_identifier;
@@ -59,7 +55,7 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
 		tresult = new EnhancedJTable(model);
 		settings = new TrapSpaceParameters();
 		settings.terminal = false;
-		settings.tree = true;
+		settings.diag = true;
 		settings.bdd = !ClingoLauncher.isAvailable();
 		settings.reduce = false;
 		
@@ -74,8 +70,8 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
 		GridBagConstraints cst = new GridBagConstraints();
 		cst.gridx = 0;
 		cst.gridy = 0;
-		cb_tree = new JCheckBox("Generate inclusion tree");
-		main.add(cb_tree, cst);
+		cb_diag = new JCheckBox("Generate inclusion diagram");
+		main.add(cb_diag, cst);
 		cst.gridy++;
 		cst.weightx = 1;
 		cst.weighty = 1;
@@ -87,11 +83,11 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
 	@Override
 	public void run(LogicalModel lmodel) {
         setRunning(true);
-        if (cb_tree.isSelected()) {
-        	settings.tree = true;
+        if (cb_diag.isSelected()) {
+        	settings.diag = true;
         	settings.terminal = false;
         } else {
-        	settings.tree = false;
+        	settings.diag = false;
         	settings.terminal = true;
         }
 		m_identifier = srv.getTask(settings.getSettings(lmodel));
@@ -117,10 +113,10 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
 			return;
 		}
 		
-		if (settings.tree) {
-			TrapSpaceTree tree = GSGraphManager.getInstance().getNewGraph(TrapSpaceTree.class, solutions);
-			tree.setAssociatedGraph(lrg);
-			GUIManager.getInstance().whatToDoWithGraph( tree);
+		if (settings.diag) {
+			TrapSpaceInclusionDiagram diag = GSGraphManager.getInstance().getNewGraph(TrapSpaceInclusionDiagram.class, solutions);
+			diag.setAssociatedGraph(lrg);
+			GUIManager.getInstance().whatToDoWithGraph( diag);
 			cancel();
 			return;
 		}
@@ -161,7 +157,7 @@ class TrapSpaceParameters {
 	public boolean bdd = false;
 
 	public boolean terminal = false;
-	public boolean tree = false;
+	public boolean diag = false;
 
 	public TrapSpaceSettings getSettings(LogicalModel model) {
 		TrapSpaceSettings settings = new TrapSpaceSettings(model);
@@ -169,7 +165,7 @@ class TrapSpaceParameters {
 		settings.bdd = this.bdd;
 		settings.reduce = this.reduce;
 		settings.terminal = this.terminal;
-		settings.tree = this.tree;
+		settings.diag = this.diag;
 
 		return settings;
 	}

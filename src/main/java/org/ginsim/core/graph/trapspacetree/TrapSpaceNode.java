@@ -35,7 +35,7 @@ public class TrapSpaceNode {
 		return s;
 	}
 	
-	public long getSize(TrapSpaceTree tree) {
+	public long getSize(TrapSpaceInclusionDiagram tree) {
 		long size = 1;
 		return size;
 	}

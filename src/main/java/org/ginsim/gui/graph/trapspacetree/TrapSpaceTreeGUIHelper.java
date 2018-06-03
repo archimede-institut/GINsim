@@ -8,7 +8,7 @@ import javax.swing.filechooser.FileFilter;
 
 import org.ginsim.core.graph.trapspacetree.TrapSpaceInclusion;
 import org.ginsim.core.graph.trapspacetree.TrapSpaceNode;
-import org.ginsim.core.graph.trapspacetree.TrapSpaceTree;
+import org.ginsim.core.graph.trapspacetree.TrapSpaceInclusionDiagram;
 import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
@@ -17,42 +17,42 @@ import org.mangosdk.spi.ProviderFor;
 
 
 @ProviderFor( GraphGUIHelper.class)
-public class TrapSpaceTreeGUIHelper implements GraphGUIHelper<TrapSpaceTree, TrapSpaceNode, TrapSpaceInclusion> {
+public class TrapSpaceTreeGUIHelper implements GraphGUIHelper<TrapSpaceInclusionDiagram, TrapSpaceNode, TrapSpaceInclusion> {
 
 	@Override
-	public String getEditingTabLabel(TrapSpaceTree graph) {
+	public String getEditingTabLabel(TrapSpaceInclusionDiagram graph) {
 		return "TST";
 	}
 
 	@Override
-	public Class<TrapSpaceTree> getGraphClass() {
-		return TrapSpaceTree.class;
+	public Class<TrapSpaceInclusionDiagram> getGraphClass() {
+		return TrapSpaceInclusionDiagram.class;
 	}
 
 	@Override
-	public boolean canCopyPaste(TrapSpaceTree graph) {
+	public boolean canCopyPaste(TrapSpaceInclusionDiagram graph) {
 		return false;
 	}
 
 	@Override
-	public GUIEditor<TrapSpaceTree> getMainEditionPanel(TrapSpaceTree tree) {
+	public GUIEditor<TrapSpaceInclusionDiagram> getMainEditionPanel(TrapSpaceInclusionDiagram tree) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public GUIEditor<TrapSpaceNode> getNodeEditionPanel(TrapSpaceTree tree) {
+	public GUIEditor<TrapSpaceNode> getNodeEditionPanel(TrapSpaceInclusionDiagram tree) {
 		return new TrapSpaceTreeMainPanel(tree);
 	}
 
 	@Override
-	public GUIEditor<TrapSpaceInclusion> getEdgeEditionPanel(TrapSpaceTree tree) {
+	public GUIEditor<TrapSpaceInclusion> getEdgeEditionPanel(TrapSpaceInclusionDiagram tree) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public JPanel getInfoPanel(TrapSpaceTree graph) {
+	public JPanel getInfoPanel(TrapSpaceInclusionDiagram graph) {
 
         // just display the number of trap spaces for now
         int n = graph.getNodeCount();
@@ -63,7 +63,7 @@ public class TrapSpaceTreeGUIHelper implements GraphGUIHelper<TrapSpaceTree, Tra
 
 
 	@Override
-	public List<EditAction> getEditActions(TrapSpaceTree graph) {
+	public List<EditAction> getEditActions(TrapSpaceInclusionDiagram graph) {
 		return null;
 	}
 
@@ -76,7 +76,7 @@ public class TrapSpaceTreeGUIHelper implements GraphGUIHelper<TrapSpaceTree, Tra
 	}
 
 	@Override
-	public JPanel getSaveOptionPanel(TrapSpaceTree graph) {
+	public JPanel getSaveOptionPanel(TrapSpaceInclusionDiagram graph) {
 		// TODO Auto-generated method stub
 		JPanel psave = new JPanel();
 		return psave;
