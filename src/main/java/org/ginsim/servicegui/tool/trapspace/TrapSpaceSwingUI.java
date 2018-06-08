@@ -135,7 +135,8 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
 			TableColumn col = columns.nextElement();
 			col.setHeaderRenderer(headerRenderer);
 			col.setMinWidth(20);
-			col.setMaxWidth(25);
+			col.setMaxWidth(40);
+			col.setPreferredWidth(30);
 		}
 	}
 

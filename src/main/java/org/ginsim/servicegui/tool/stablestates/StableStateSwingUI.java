@@ -88,19 +88,18 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
 
 			TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
 			Enumeration<TableColumn> columns = tresult.getColumnModel().getColumns();
-			tresult.getTableHeader().setDefaultRenderer(headerRenderer);
 
 			if (columns.hasMoreElements()) {
 				TableColumn col = columns.nextElement();
-//				col.setHeaderRenderer(headerRenderer);
 				col.setMinWidth(150);
 				col.setMaxWidth(400);
 			}
 			while (columns.hasMoreElements()) {
 				TableColumn col = columns.nextElement();
-//				col.setHeaderRenderer(headerRenderer);
+				col.setHeaderRenderer(headerRenderer);
 				col.setMinWidth(20);
-				col.setMaxWidth(25);
+				col.setMaxWidth(40);
+				col.setPreferredWidth(30);
 			}
 
 		} catch (Exception e) {
