@@ -146,6 +146,7 @@ public class AvatarSimulation extends Simulation {
 
 			while (!F.isEmpty()) {
 				State s = F.getProbableRandomState();
+				if(s == null) System.out.println("istate is null");
 
 				if (!quiet)
 					output("  Popped state=" + s + " Sim=" + sn + ", Reincarnation=" + time + ", #F="
@@ -156,18 +157,20 @@ public class AvatarSimulation extends Simulation {
 				// State nv = null;
 				for (AbstractStateSet trans : temporaryTransients) {
 					if (trans.contains(s)) {
-						minSteps++;
-						avgSteps += Math.ceil((double) trans.size() / 2.0);
 						if (strategy.equals(AvatarStrategy.RandomExit))
 							s = ((StateSet) trans).getExitStateSet().getProbableRandomState();
 						else {
+							if( !((StateSet)trans).hasExhaustivePaths()) continue;
 							s = ((StateSet) trans).getProbableExitState(s);
 						}
+						minSteps++;
+						avgSteps += Math.ceil((double) trans.size() / 2.0);
 						if (!quiet)
 							output("  Identified transient and getting out of it through state = " + s);
 						break;
 					}
 				}
+				if(s == null) System.out.println("2state is null");
 
 				if (keepTransients) {
 					for (AbstractStateSet trans : savedTransients) {

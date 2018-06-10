@@ -134,6 +134,8 @@ public class StateSet extends AbstractStateSet {
 	
 	@Override
 	public boolean contains(State state) { 
+		if(states == null) System.out.println("States are null");
+		if(state == null) System.out.println("State is null");
 		return states.containsKey(state.key); 
 	}
 	
@@ -263,6 +265,10 @@ public class StateSet extends AbstractStateSet {
 		paths = exit;
 	}
 
+	public boolean hasExhaustivePaths() {
+		return paths != null;
+	}
+
 	/**
 	 * Returns the states accessible from the state-set
 	 * @see setExitStates
@@ -286,16 +292,26 @@ public class StateSet extends AbstractStateSet {
 	 * @return a probable exit state selected according to its reachability
 	 */
 	public State getProbableExitState(State s){
-		if(paths == null) return getExitStateSet().getProbableRandomState();
+		if(paths == null) System.out.println("paths is null");
+		if(paths == null) {
+			System.out.println("#exits:"+exitStates.size());
+			return getExitStateSet().getProbableRandomState();
+		}
 		Map<String,Double> exits = paths.getPaths(s.key);
 		double total = AvaMath.sum(exits.values());
 		double point = new Random().nextDouble()*total;
 		double sum = 0;
 		for(String s1 : exits.keySet()){
-			if(!exitStates.contains(s1)) continue;
 			double v=exits.get(s1);
 			sum+=v;
+			if(!exitStates.contains(s1)) continue;
 			if(point<sum) return new State(exitStates.getState(s1).state,s.probability*v);
+		}
+		System.out.println("#exits:"+exitStates.size());
+		//never reached
+		for(String s1 : exits.keySet()){
+			if(exitStates.contains(s1)) 
+				return new State(exitStates.getState(s1).state,s.probability*exits.get(s1));
 		}
 		return null;
 	}	
