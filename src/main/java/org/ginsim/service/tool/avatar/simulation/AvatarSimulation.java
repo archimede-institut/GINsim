@@ -146,7 +146,6 @@ public class AvatarSimulation extends Simulation {
 
 			while (!F.isEmpty()) {
 				State s = F.getProbableRandomState();
-				if(s == null) System.out.println("istate is null");
 
 				if (!quiet)
 					output("  Popped state=" + s + " Sim=" + sn + ", Reincarnation=" + time + ", #F="

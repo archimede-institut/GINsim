@@ -292,8 +292,8 @@ public class StateSet extends AbstractStateSet {
 	 * @return a probable exit state selected according to its reachability
 	 */
 	public State getProbableExitState(State s){
-		if(paths == null) System.out.println("paths is null");
 		if(paths == null) {
+			System.out.println("paths is null");
 			System.out.println("#exits:"+exitStates.size());
 			return getExitStateSet().getProbableRandomState();
 		}
