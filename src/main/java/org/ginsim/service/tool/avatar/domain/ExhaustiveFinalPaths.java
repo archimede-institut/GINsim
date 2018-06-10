@@ -15,8 +15,8 @@ import java.util.Map;
  */
 public class ExhaustiveFinalPaths implements FinalPaths {
 
-	private Map<String,Integer> cycle, out;
-	private List<List<Double>> exitProbs; 
+	public Map<String,Integer> cycle, out;
+	public List<List<Double>> exitProbs; 
 
 	/**
 	 * Creates an empty cycle
@@ -25,6 +25,14 @@ public class ExhaustiveFinalPaths implements FinalPaths {
 		cycle = new HashMap<String,Integer>();
 		out = new HashMap<String,Integer>();
 		exitProbs = new ArrayList<List<Double>>();
+	}
+	
+	public FinalPaths copy() {
+		ExhaustiveFinalPaths res = new ExhaustiveFinalPaths();
+		res.cycle = new HashMap<String,Integer>(cycle);
+		res.out = new HashMap<String,Integer>(out);
+		res.exitProbs = new ArrayList<List<Double>>(exitProbs);
+		return res;
 	}
 	
 	/* (non-Javadoc)

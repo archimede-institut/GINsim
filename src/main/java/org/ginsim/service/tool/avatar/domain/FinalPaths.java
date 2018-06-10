@@ -38,4 +38,5 @@ public interface FinalPaths {
 	 * @return the transitions to reachable exit states from a given state (the transitions maintain the keys of the exit states and the associated probability to reach them)
 	 */
 	public Map<String, Double> getPaths(String key);
+	
 }

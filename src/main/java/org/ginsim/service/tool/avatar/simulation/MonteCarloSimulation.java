@@ -117,12 +117,18 @@ public class MonteCarloSimulation extends Simulation {
 			}
 			depth.add(i);
 		}
+		double sum = 0;
+		for (State a : result.pointAttractors.values()) sum += result.attractorsCount.get(a.key) / (double) runs;
 		for (State a : result.pointAttractors.values()) {
-			double prob = result.attractorsCount.get(a.key) / (double) (runs - truncated);
-			String[] bounds = ConfidenceInterval.getConfidenceInterval(runs - truncated, prob).split(",");
-			double freeProb = ((double) truncated) / (double) runs;
+			//double prob = result.attractorsCount.get(a.key) / (double) (runs - truncated);
+			//String[] bounds = ConfidenceInterval.getConfidenceInterval(runs - truncated, prob).split(",");
+			//double freeProb = ((double) truncated) / (double) runs;
 			try {
-				result.setBounds(a.key, (1 - freeProb) * Double.valueOf(bounds[0]), Double.valueOf(bounds[1]));
+				// previous bounds 
+				// result.setBounds(a.key, (1 - freeProb) * Double.valueOf(bounds[0]), Double.valueOf(bounds[1]));
+				// simple bounds 
+				double prob = result.attractorsCount.get(a.key) / (double) runs; 
+				result.setBounds(a.key, prob, prob+(1-sum));
 			} catch (Exception e) {
 				result.setBounds(a.key, Double.NaN, Double.NaN);
 			}

@@ -36,19 +36,26 @@ import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
+import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.CompleteStatePanel;
+import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.service.tool.avatar.params.AvatarParameterList;
 import org.ginsim.service.tool.avatar.params.AvatarParameters;
 import org.ginsim.service.tool.avatar.params.AvatarParametersManager;
 import org.ginsim.service.tool.avatar.params.AvatarStateStore;
 import org.ginsim.service.tool.avatar.service.EnumAlgorithm;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
+import org.ginsim.service.tool.modelreduction.ListOfReductionConfigs;
+import org.ginsim.service.tool.modelreduction.ReductionConfigManager;
 import org.ginsim.servicegui.tool.avatar.algopanels.AvatarPanel;
 import org.ginsim.servicegui.tool.avatar.algopanels.FirefrontPanel;
 import org.ginsim.servicegui.tool.avatar.algopanels.MonteCarloPanel;
 import org.ginsim.servicegui.tool.avatar.algopanels.SimulationPanel;
+import org.ginsim.servicegui.tool.avatar.others.TitleToolTipPanel;
 import org.ginsim.servicegui.tool.avatar.parameters.AvaParameterEditionPanel;
 import org.ginsim.servicegui.tool.avatar.parameters.AvatarParametersHelper;
+import org.ginsim.servicegui.tool.modelreduction.ReductionSelectionPanel;
 
 /**
  * Main panel for displaying the all of the context associated with avatar
@@ -125,8 +132,19 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 		// for(byte[] istate : istates)
 		// System.out.println("IState="+AvatarUtils.toString(istate));
 
-		NamedStatesHandler nstatesHandler = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(lrg,
-				NamedStatesManager.KEY, true);
+		ListOfPerturbations pertHandler = (ListOfPerturbations) ObjectAssociationManager.getInstance().getObject(lrg, PerturbationManager.KEY, true);
+		
+        this.perturbations = (ListOfPerturbations)ObjectAssociationManager.getInstance().
+        		getObject(lrg, PerturbationManager.KEY, true);
+        this.reductions = (ListOfReductionConfigs)ObjectAssociationManager.getInstance().
+        		getObject(lrg, ReductionConfigManager.KEY, true);
+        
+        //System.out.println("initial refresh");
+        perturbationPanel.refresh();
+        reductionPanel.refresh();
+		
+		NamedStatesHandler nstatesHandler = (NamedStatesHandler) ObjectAssociationManager.getInstance().
+				getObject(lrg, NamedStatesManager.KEY, true);
 		if (nstatesHandler.getInitialStates().size() == 0)
 			statestore = new AvatarStateStore(istates, lrg);
 		else
@@ -214,8 +232,36 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 
 		/** LOAD PARAMS **/
 		AvatarParametersHelper.unload(param, this);
+		
+		/** A: perturbations and reductions **/
+		JPanel topPanel = new TitleToolTipPanel();
+		topPanel.setLayout(new GridBagLayout());
+
+		topPanel.setBorder(BorderFactory.createTitledBorder("Model modifications"));
+//		topPanel.setToolTipText("Applicable perturbations and reductions");
+		ToolTipManager.sharedInstance().setInitialDelay(0);
+		GridBagConstraints c = new GridBagConstraints();
+
+		// perturbation panel
+		c.weightx = 1;
+		c.gridwidth = 2;
+		c.fill = GridBagConstraints.BOTH;
+		topPanel.add(perturbationPanel, c);
+
+		// reduction panel
+		c.gridy = 1;
+		c.weightx = 1;
+		c.gridwidth = 1;
+		c.fill = GridBagConstraints.BOTH;
+		topPanel.add(reductionPanel, c);
+
+		// simplification checkboxes
+		c.gridx = 1;
+		c.weightx = 0;
+		topPanel.add(cb_simplify, c);
+
+		/** B: avatar-specific stuff **/		
 		JPanel rightPanel = new JPanel();
-		JPanel topPanel = getTopPanel();
 		rightPanel.removeAll();
 		rightPanel.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -246,7 +292,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 		rightPanel.add(states, gbc);
 		gbc.gridheight = 1;
 
-		/** A: select algorithm **/
+		/** C: select algorithm **/
 		jcbAlgorithm.setSelectedIndex(param.algorithm);
 		jcbAlgorithm.setVisible(true);
 		quiet.setSelected(param.quiet);
@@ -290,7 +336,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 			}
 		});
 
-		/** B: Output **/
+		/** D: Output **/
 		/*
 		 * panelOutput.add(plots); rightPanel.add(panelOutput);
 		 */

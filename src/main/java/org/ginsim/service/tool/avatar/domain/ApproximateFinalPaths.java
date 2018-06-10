@@ -30,7 +30,7 @@ public class ApproximateFinalPaths implements FinalPaths {
 		exitProbs = new HashMap<Integer,Double>();
 		key = 0;
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see org.ginsim.service.tool.avatar.domain.FinalPaths#addOutputPaths(java.util.Collection, java.util.Collection, double)
 	 */
@@ -67,4 +67,5 @@ public class ApproximateFinalPaths implements FinalPaths {
 		}
 		return result;
 	}
+	
 }

@@ -160,8 +160,9 @@ public class AvatarSimulation extends Simulation {
 						avgSteps += Math.ceil((double) trans.size() / 2.0);
 						if (strategy.equals(AvatarStrategy.RandomExit))
 							s = ((StateSet) trans).getExitStateSet().getProbableRandomState();
-						else
+						else {
 							s = ((StateSet) trans).getProbableExitState(s);
+						}
 						if (!quiet)
 							output("  Identified transient and getting out of it through state = " + s);
 						break;
@@ -340,8 +341,9 @@ public class AvatarSimulation extends Simulation {
 						for (StateSet transi : temporaryTransients) {
 							if (!quiet)
 								output("  Saving transient (#" + transi.size() + ")");
-							if (!strategy.equals(AvatarStrategy.RandomExit))
+							if (!strategy.equals(AvatarStrategy.RandomExit)) {
 								transi.setProbPaths(exitProbs);
+							}
 							savedTransients.add(transi);
 						}
 						/*

@@ -286,6 +286,7 @@ public class StateSet extends AbstractStateSet {
 	 * @return a probable exit state selected according to its reachability
 	 */
 	public State getProbableExitState(State s){
+		if(paths == null) return getExitStateSet().getProbableRandomState();
 		Map<String,Double> exits = paths.getPaths(s.key);
 		double total = AvaMath.sum(exits.values());
 		double point = new Random().nextDouble()*total;

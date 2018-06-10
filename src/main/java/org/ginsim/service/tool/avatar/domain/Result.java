@@ -280,12 +280,14 @@ public class Result {
 				result += "&nbsp;&nbsp;&nbsp;SS" + (i+1) + "&nbsp;=>&nbsp;"
 						+ pointAttractors.get(key).toShortString();
 				if (!strategy.equals(EnumAlgorithm.FIREFRONT)) {
-					result += "&nbsp;prob=" + AvatarUtils.round((double) attractorsCount.get(key) / sum);
-					// result+="&nbsp;counts="+attractorsCount.get(key);
 					if (!strategy.equals(EnumAlgorithm.AVATAR)) {
+						result += "&nbsp;prob=[" + AvatarUtils.round(attractorsLowerBound.get(key)) + "," 
+									+ AvatarUtils.round(attractorsUpperBound.get(key)) + "]";
 						result += "&nbsp;depth=" + AvatarUtils.round(AvaMath.mean(attractorsDepths.get(key)), 1) + "&plusmn;"
 								+ AvatarUtils.round(AvaMath.std(attractorsDepths.get(key)), 1) + "<br>";
 					} else {
+						result += "&nbsp;prob=" + AvatarUtils.round((double) attractorsCount.get(key) / sum);
+						// result+="&nbsp;counts="+attractorsCount.get(key);
 						result += "<br>";
 					}
 				} else {

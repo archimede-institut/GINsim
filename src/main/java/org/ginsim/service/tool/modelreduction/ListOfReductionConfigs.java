@@ -92,11 +92,11 @@ public class ListOfReductionConfigs extends NamedList<ReductionConfig>
     }
 
 
-    protected Collection<String> getOutputStrippingUsers() {
+    public Collection<String> getOutputStrippingUsers() {
         return outputStrippers;
     }
 
-    protected Collection<String> getFixedPropagationUsers() {
+    public Collection<String> getFixedPropagationUsers() {
         return fixedPropagaters;
     }
 

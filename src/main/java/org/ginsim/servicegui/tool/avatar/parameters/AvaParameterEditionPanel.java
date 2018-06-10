@@ -3,6 +3,7 @@ package org.ginsim.servicegui.tool.avatar.parameters;
 import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationManager;
 import org.ginsim.gui.utils.data.ListEditionPanel;
 import org.ginsim.gui.utils.data.ListPanelCompanion;
 import org.ginsim.service.tool.avatar.params.AvatarParameterList;
@@ -47,8 +48,7 @@ public class AvaParameterEditionPanel extends JPanel
 		this.graph = rgraph;
 		this.paramList = paramL;
 		AvatarParametersHelper helper = new AvatarParametersHelper(this);
-		paramPanel = new ListEditionPanel<AvatarParameters, AvatarParameterList>(helper, paramList, "title",
-				stackDialog, null);
+		paramPanel = new ListEditionPanel<AvatarParameters, AvatarParameterList>(helper, paramList, "title", stackDialog, null);
 	}
 
 	/**
@@ -74,13 +74,19 @@ public class AvaParameterEditionPanel extends JPanel
 			return;
 		if (currentParam.length > 0) {
 			AvatarParameters param = AvatarParametersHelper.load(stackDialog);
-			param.name = paramList.get(currentParam[0]).name;
-			paramList.set(currentParam[0], param);
+			try {
+				param.name = paramList.get(currentParam[0]).name;
+				paramList.set(currentParam[0], param);
+			} catch(Exception e) {
+				currentParam = new int[] { 0 };
+				param.name = paramList.get(0).name;
+				paramList.set(0, param);
+				update();
+			}
 			ObjectAssociationManager.getInstance().addObject(graph, AvatarParametersManager.KEY, paramList);
 		}
 		if (sel.length > 0) {
-			if (currentParam.length > 0 && currentParam[0] == sel[0])
-				;
+			if (currentParam.length > 0 && currentParam[0] == sel[0]);
 			else {
 				AvatarParameters param = paramList.get(sel[0]);
 				stackDialog.refresh(param);

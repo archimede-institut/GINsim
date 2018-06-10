@@ -54,42 +54,6 @@ abstract public class AvatarLogicalModelActionDialog extends LogicalModelActionD
 		});
 	}
 
-	/**
-	 * Accesses the panel responsible to apply perturbations and reductions over the
-	 * current graph
-	 * 
-	 * @return the panel with applicable perturbations and reductions to the
-	 *         inputted model
-	 */
-	protected JPanel getTopPanel() {
-		JPanel topPanel = new TitleToolTipPanel();
-		topPanel.setLayout(new GridBagLayout());
-
-		topPanel.setBorder(BorderFactory.createTitledBorder("Model modifications"));
-//		topPanel.setToolTipText("Applicable perturbations and reductions");
-		ToolTipManager.sharedInstance().setInitialDelay(0);
-		GridBagConstraints c = new GridBagConstraints();
-
-		// perturbation panel
-		c.weightx = 1;
-		c.gridwidth = 2;
-		c.fill = GridBagConstraints.BOTH;
-		topPanel.add(perturbationPanel, c);
-
-		// reduction panel
-		c.gridy = 1;
-		c.weightx = 1;
-		c.gridwidth = 1;
-		c.fill = GridBagConstraints.BOTH;
-		topPanel.add(reductionPanel, c);
-
-		// simplification checkboxes
-		c.gridx = 1;
-		c.weightx = 0;
-		topPanel.add(cb_simplify, c);
-		return topPanel;
-	}
-
 	@Override
 	protected JPanel getMainPanel() {
 		return mainPanel;

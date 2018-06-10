@@ -1,14 +1,21 @@
 package org.ginsim.servicegui.tool.avatar.parameters;
 
+import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
+import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.utils.data.NamedList;
 import org.ginsim.gui.graph.regulatorygraph.initialstate.CompleteStatePanel;
+import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.utils.data.ColumnDefinition;
 import org.ginsim.gui.utils.data.ListEditionPanel;
 import org.ginsim.gui.utils.data.ListPanelCompanion;
 import org.ginsim.gui.utils.data.ListPanelHelper;
 import org.ginsim.service.tool.avatar.params.AvatarParameterList;
 import org.ginsim.service.tool.avatar.params.AvatarParameters;
+import org.ginsim.service.tool.modelreduction.ListOfReductionConfigs;
+import org.ginsim.service.tool.modelreduction.ReductionConfig;
 import org.ginsim.servicegui.tool.avatar.AvatarConfigFrame;
+import org.ginsim.servicegui.tool.modelreduction.ReductionSelectionPanel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,6 +44,14 @@ public class AvatarParametersHelper extends ListPanelHelper<AvatarParameters, Av
     public static void unload(AvatarParameters param, AvatarConfigFrame acf){
     	acf.jcbAlgorithm.setSelectedIndex(param.algorithm);
     	acf.quiet.setSelected(param.quiet);
+    	acf.perturbations = param.perturbations;
+    	acf.reductions = param.reductions;
+    	acf.perturbation = param.perturbation;
+    	acf.reduction = param.reduction;
+    	//System.out.println("Refreshing perturbation and reduction panels");
+    	acf.perturbationPanel.refresh();
+    	acf.reductionPanel.refresh();
+
 		acf.statestore = param.statestore;
 		acf.states = new CompleteStatePanel(acf.statestore.nstates,acf.statestore.instates,acf.statestore.oracles,true);
 		acf.states.setParam(acf.statestore);
@@ -55,6 +70,11 @@ public class AvatarParametersHelper extends ListPanelHelper<AvatarParameters, Av
     	AvatarParameters p = new AvatarParameters();
     	p.algorithm = main.jcbAlgorithm.getSelectedIndex();
     	p.quiet = main.quiet.isSelected();
+    	
+    	p.perturbations = main.perturbations;
+    	p.reductions = main.reductions;
+    	p.perturbation = main.perturbation;
+    	p.reduction = main.reduction;
     	
     	p.statestore = main.statestore;
     	p.statesSelected = main.states.getSelection(false);

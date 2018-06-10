@@ -3,12 +3,19 @@ package org.ginsim.service.tool.avatar.params;
 import java.io.IOException;
 
 import org.colomoto.biolqm.io.avatar.AvatarUtils;
+import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;
+import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
+import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.utils.data.NamedObject;
+import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.service.tool.avatar.simulation.AvatarSimulation;
 import org.ginsim.service.tool.avatar.simulation.AvatarSimulation.AvatarStrategy;
+import org.ginsim.service.tool.modelreduction.ListOfReductionConfigs;
+import org.ginsim.service.tool.modelreduction.ReductionConfig;
+import org.ginsim.servicegui.tool.modelreduction.ReductionSelectionPanel;
 import org.ginsim.service.tool.avatar.simulation.FirefrontSimulation;
 import org.ginsim.service.tool.avatar.simulation.MonteCarloSimulation;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
@@ -28,6 +35,10 @@ public class AvatarParameters implements XMLize, NamedObject {
 	public int algorithm, avaStrategy;
 	public String avaRuns, avaTau, avaDepth, avaAproxDepth, avaMinTran, avaMinCycle, avaMaxPSize, avaMaxRewiringSize;
 	public String ffMaxExpand, ffDepth, ffAlpha, ffBeta, mcDepth, mcRuns;
+	public ListOfPerturbations perturbations;
+	public ListOfReductionConfigs reductions;
+	public Perturbation perturbation;
+	public ReductionConfig reduction;
 
 	/**
 	 * Creates an empty context
@@ -151,9 +162,21 @@ public class AvatarParameters implements XMLize, NamedObject {
 	public void toXML(XMLWriter out) throws IOException {
 		out.openTag("parameter");
 		out.addAttr("name", name);
-		// out.addAttr("avatarparameters",toFullString());
+		out.addAttr("avatarparameters",toFullString());
 		// System.out.println(toFullString());
 		// State List
+		if(reduction != null) {
+			out.openTag("reduction");
+            reduction.toXML(out);
+            out.closeTag();
+		}
+		if(perturbation != null) {
+            out.openTag("perturbation");
+            perturbation.toXML(out);
+            out.closeTag();
+		}            
+		System.out.println("after perturbations");
+		
 		out.openTag("stateList");
 		out.addAttr("states", this.getStates(statestore.nstates));
 		out.addAttr("namestates", this.getStates(statestore.nstates));

@@ -37,13 +37,14 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	private static final ModelReductionService reductionService = LQMServiceManager.getModifier(ModelReductionService.class);
 	
 	protected final RegulatoryGraph lrg;
-	private final ListOfPerturbations perturbations;
-	private final ListOfReductionConfigs reductions;
-    protected final PerturbationSelectionPanel perturbationPanel;
-    protected final ReductionSelectionPanel reductionPanel;
+	
+	public ListOfPerturbations perturbations;
+	public ListOfReductionConfigs reductions;
+	public PerturbationSelectionPanel perturbationPanel;
+	public ReductionSelectionPanel reductionPanel;
+	public Perturbation perturbation = null;
+	public ReductionConfig reduction = null;
 
-	private Perturbation perturbation = null;
-    private ReductionConfig reduction = null;
     private NamedState pattern = null;
 	private String userID = null;
 
