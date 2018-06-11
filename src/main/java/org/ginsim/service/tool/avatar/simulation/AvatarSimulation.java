@@ -316,7 +316,7 @@ public class AvatarSimulation extends Simulation {
 							output("  Cycle rewired");
 						if (Ct.size() > minTransientSize) {
 							StateSet transi = new StateSet(Ct);
-							transi.setExitStates(exitStates);
+							transi.setExitStates(new StateSet(exitStates));
 							temporaryTransients.add(transi);
 						}
 					}
