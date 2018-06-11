@@ -159,7 +159,7 @@ public class AvatarSimulation extends Simulation {
 						if (strategy.equals(AvatarStrategy.RandomExit))
 							s = ((StateSet) trans).getExitStateSet().getProbableRandomState();
 						else {
-							if( !((StateSet)trans).hasExhaustivePaths()) continue;
+							if( !((StateSet)trans).hasPathsAndExits()) continue;
 							s = ((StateSet) trans).getProbableExitState(s);
 						}
 						minSteps++;
@@ -178,8 +178,10 @@ public class AvatarSimulation extends Simulation {
 							avgSteps += Math.ceil((double) trans.size() / 2.0);
 							if (strategy.equals(AvatarStrategy.RandomExit))
 								s = ((StateSet) trans).getExitStateSet().getProbableRandomState();
-							else
+							else {
+								if( !((StateSet)trans).hasPathsAndExits()) continue;
 								s = ((StateSet) trans).getProbableExitState(s);
+							}
 							if (!quiet)
 								output("  Identified transient and getting out of it through state = " + s);
 							break;
