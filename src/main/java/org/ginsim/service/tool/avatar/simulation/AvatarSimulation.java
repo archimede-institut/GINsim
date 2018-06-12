@@ -109,6 +109,7 @@ public class AvatarSimulation extends Simulation {
 
 		/** I: Initializations **/
 		Result result = new Result();
+		result.filename = model.getName();
 		int performed = 0, truncated = 0, avgSteps = 0, minSteps = 0;
 		int stateSpaceSize = 1, space = Math.max(runs / 100, 1), psize = 0;
 		int maxExits = (minTransientSize >= 300) ? minTransientSize : 300;
@@ -454,6 +455,7 @@ public class AvatarSimulation extends Simulation {
 		result.performed = performed;
 		result.truncated = truncated;
 		result.memory = memory;
+		result.runs = runs;
 		if (!quiet)
 			output("Simulations asked: " + runs + ", performed: " + performed + ", truncated: " + truncated);
 		result.log = "AVATAR\nModel: " + model.getName() + "\n" + saveOutput();

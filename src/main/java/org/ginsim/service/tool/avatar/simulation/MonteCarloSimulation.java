@@ -57,6 +57,7 @@ public class MonteCarloSimulation extends Simulation {
 	 */
 	public Result runSim() throws IOException {
 		Result result = new Result();
+		result.filename = model.getName();
 		List<Integer> depth = new ArrayList<Integer>();
 		int truncated = 0;
 		for (int sn = 1, i = 0; sn <= runs; sn++, i = 0) {

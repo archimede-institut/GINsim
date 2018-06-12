@@ -52,6 +52,8 @@ public class Result {
 	public int memory;
 	/** FireFront residual probability **/
 	public double residual;
+	/** Fine name **/
+	public String filename;
 	/** Simulation name **/
 	public String name;
 	/** Parameters description **/
@@ -64,6 +66,8 @@ public class Result {
 	public String perturbation = null;
 	/** Applied reductions **/
 	public String reduction = null;
+	/** Convergence **/
+	public boolean convergence = true;
 
 	private int complexAttID = 0;
 
@@ -228,7 +232,7 @@ public class Result {
 	 */
 	public String toHTMLString() {
 
-		String result = "<b>" + name + "</b><br><br><b>Parameters</b><br>"
+		String result = "<b>Model name: " + filename + "<br>" + name + "</b><br><br><b>Parameters</b><br>"
 				+ parameters.replace("\n", "<br>").replace("\t", "&nbsp;&nbsp;") + "<br>";
 		if (perturbation == null)
 			result += "<br>No perturbations applied<br>";
@@ -247,13 +251,16 @@ public class Result {
 		}
 
 		int sum = AvaMath.sumCollection(attractorsCount.values());
+		double probleft = 0;
 		result += "<br><b>Time</b>=" + (((double) time) / 1000.0) + "s";
 		if (strategy.equals(EnumAlgorithm.AVATAR)) {
-			result += "<br><b>Successful runs</b>=" + sum + "<br>";
+			probleft = ((double)(runs-sum))/(double)runs;
+			result += "<br><b>Support</b>: " + sum + " successful runs (below max depth) out of " + runs
+					+ "</br>";
 		} else if (strategy.equals(EnumAlgorithm.FIREFRONT)) {
-			if (performed == 0) {
-				result += "<br><b>WARNING</b>: firefront could not converge before reaching the maximum specified depth. "
-						+ "Please increase the maximum depth for a more precise analysis of stable states.<br>";
+			if (!convergence) {
+				result += "<br><b>Warning</b>: firefront could not converge before reaching the maximum specified depth "
+						+ "(probabilities in F higher than beta).<br>";
 			} else {
 				result += "<br>Success: the simulation converged before reaching the maximum depth.<br>";
 			}
@@ -286,7 +293,9 @@ public class Result {
 						result += "&nbsp;depth=" + AvatarUtils.round(AvaMath.mean(attractorsDepths.get(key)), 1) + "&plusmn;"
 								+ AvatarUtils.round(AvaMath.std(attractorsDepths.get(key)), 1) + "<br>";
 					} else {
-						result += "&nbsp;prob=" + AvatarUtils.round((double) attractorsCount.get(key) / sum);
+						double prob = AvatarUtils.round((double)(attractorsCount.get(key)/(double)runs));
+						result += "&nbsp;prob=[" + prob + "," + (prob+probleft) + "]";
+						//result += "&nbsp;prob=" + AvatarUtils.round((double) attractorsCount.get(key) / sum);
 						// result+="&nbsp;counts="+attractorsCount.get(key);
 						result += "<br>";
 					}
@@ -314,8 +323,8 @@ public class Result {
 							+ AvatarUtils.round(attractorsUpperBound.get(key)) + "]";
 					result += "&nbsp;depth=" + (int) AvaMath.mean(attractorsDepths.get(key)) + "<br>";
 				} else {
-					result += "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prob="
-							+ AvatarUtils.round((double) attractorsCount.get(key) / sum);
+					double prob = AvatarUtils.round((double)(attractorsCount.get(key)/(double)runs));
+					result += "<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prob=[" + prob + "," + (prob+probleft) + "]";
 					result += "&nbsp;size=" + complexAttractors.get(key).size();
 					if (!strategy.equals(EnumAlgorithm.AVATAR) && attractorsDepths.containsKey(key))
 						result += "&nbsp;depth=" + AvatarUtils.round(AvaMath.mean(attractorsDepths.get(key)),1) + "&plusmn;"

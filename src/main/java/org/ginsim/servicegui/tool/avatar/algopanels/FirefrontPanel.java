@@ -32,7 +32,7 @@ public class FirefrontPanel extends SimulationPanel {
 	private String betaVar = open
 			+ "Maximum residual probability in the firefront set to stop the algorithm [default: 10E5]" + end;
 	private String maxExpandVar = open
-			+ "Maximum number of states to be analyzed in the firefront set (probable states) [default: 1E3]. States with lower probability are put in the neglected set."
+			+ "Maximum number of states in the Firefront to be expanded at each iteration [default: 10E3]"
 			+ end;
 	private String depthffVar = open + "Maximum depth (number of visited states) [default: 1E4]" + end;
 
@@ -47,7 +47,7 @@ public class FirefrontPanel extends SimulationPanel {
 
 		JLabel alphaL = new JLabel("Alpha");
 		JLabel betaL = new JLabel("Beta");
-		JLabel maxExpandffL = new JLabel("Max expansion  ");
+		JLabel maxExpandffL = new JLabel("Expansion size ");
 		JLabel depthffL = new JLabel("Max depth");
 
 		setLayout(new GridLayout(4, 2));

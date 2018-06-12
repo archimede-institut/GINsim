@@ -69,8 +69,8 @@ public class FirefrontSimulation extends Simulation {
 		/** A: parameterize/initialize firefront */
 
 		Result result = new Result();
-		if (beta == -1)
-			beta = alpha;
+		result.filename = model.getName();
+		if (beta == -1) beta = alpha;
 		// int nrStates = 1;
 		// for(NodeInfo comp : model.getNodeOrder()) nrStates *= comp.getMax()+1;
 		// int maxIterations = (int) Math.pow(nrStates,2);
@@ -257,6 +257,7 @@ public class FirefrontSimulation extends Simulation {
 		}
 
 		// Plots
+		
 		String title = "Plot: F, N and A cardinal evolutions";
 		// pStates.add(new double[]{F.size(),N.size(),A.size()});
 		JavaPlot chartStates = ChartGNUPlot.getProgression(pStates, title, "#Iterations", "#states");
@@ -281,7 +282,7 @@ public class FirefrontSimulation extends Simulation {
 		// for(double[] v : pStates) System.out.println("s:"+AvatarUtils.toString(v));
 		// for(double[] v : pProbs) System.out.println("p:"+AvatarUtils.toString(v));
 
-		result.performed = k - 1;
+		if(F.totalProbability() > beta) result.convergence = false;
 		for (State a : result.pointAttractors.values())
 			result.setBounds(a.key, a.probability, a.probability + F.totalProbability() + N.totalProbability());
 		for (String key : result.complexAttractors.keySet())
@@ -342,7 +343,7 @@ public class FirefrontSimulation extends Simulation {
 
 	@Override
 	public String parametersToString() {
-		return "  Alpha=" + alpha + "\n  Beta=" + beta + "\n  Max depth=" + maxDepth + "\n  Max states expanded/Run="
+		return "  Alpha=" + alpha + "\n  Beta=" + beta + "\n  Max depth=" + maxDepth + "\n  Max states expanded/Iteration="
 				+ maxExpand;
 	}
 

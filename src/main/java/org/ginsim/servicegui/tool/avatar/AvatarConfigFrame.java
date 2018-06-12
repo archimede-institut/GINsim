@@ -93,6 +93,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 	public AvatarStateStore statestore;
 
 	private JPanel outputPanel;
+	private String filename;
 	private JSplitPane horizontalPanel;
 	public JTextArea jtaOutput = new JTextArea();
 	private JButton forceStop = new JButton("Force exit");
@@ -119,6 +120,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 	 */
 	public AvatarConfigFrame(RegulatoryGraph graph, JFrame _parent) {
 		super(graph, _parent, ID, W, H);
+		filename = graph.getGraphName();
 		this.setTitle(Txt.t("STR_avatar"));
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		// this.setSize(900, 600);
@@ -504,7 +506,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 					state[i] = -1;
 				initialStates.add(state);
 			}
-			model = new StatefulLogicalModelImpl(_model, initialStates);
+			model = new StatefulLogicalModelImpl(_model, initialStates, filename);
 
 			/** B: extract selected oracles */
 			List<List<byte[]>> oracles = new ArrayList<List<byte[]>>();
