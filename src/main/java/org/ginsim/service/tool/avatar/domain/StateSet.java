@@ -293,7 +293,7 @@ public class StateSet extends AbstractStateSet {
 	 */
 	public State getProbableExitState(State s){
 		if(paths == null) {
-			System.out.println("paths is null #exits:"+exitStates.size());
+			//System.out.println("paths is null #exits:"+exitStates.size());
 			return getExitStateSet().getProbableRandomState();
 		}
 		Map<String,Double> exits = paths.getPaths(s.key);
@@ -306,7 +306,7 @@ public class StateSet extends AbstractStateSet {
 			if(!exitStates.contains(s1)) continue;
 			if(point<sum) return new State(exitStates.getState(s1).state,s.probability*v);
 		}
-		System.out.println("#exits:"+exitStates.size());
+		//System.out.println("#exits:"+exitStates.size());
 		//never reached
 		for(String s1 : exits.keySet()){
 			if(exitStates.contains(s1)) 

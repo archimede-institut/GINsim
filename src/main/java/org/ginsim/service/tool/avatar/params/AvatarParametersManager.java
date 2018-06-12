@@ -53,7 +53,7 @@ public class AvatarParametersManager extends BasicGraphAssociatedManager<AvatarP
 		AvatarParameterList paramList = (AvatarParameterList) ObjectAssociationManager.getInstance().getObject(graph,
 				KEY, false);
 		// for(AvatarParameters pi : paramList) System.out.println(pi.toFullString());
-		System.out.println("do save");
+		//System.out.println("do save");
 
 		List nodeOrder = ((RegulatoryGraph) graph).getNodeOrder();
 		try {
@@ -154,12 +154,14 @@ public class AvatarParametersManager extends BasicGraphAssociatedManager<AvatarP
 	}
 
 	private List<byte[]> getStatesList(String value, Map<String, Integer> nodes) {
+		value = value.replace('-','_');
 		List<byte[]> result = new ArrayList<byte[]>();
 		List<Map<String, Byte>> states = getStateMap(value);
 		for (Map<String, Byte> state : states) {
 			byte[] s = AvatarUtils.getFreeState(nodes.size());
-			for (String key : state.keySet())
+			for (String key : state.keySet()) {
 				s[nodes.get(key)] = state.get(key);
+			}
 			result.add(s);
 		}
 		return result;
