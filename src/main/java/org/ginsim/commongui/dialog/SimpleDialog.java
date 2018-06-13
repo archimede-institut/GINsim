@@ -81,7 +81,7 @@ public abstract class SimpleDialog extends JDialog {
         if (gui != null) {
             gui.save();
         } else {
-            System.out.println("no GUI to save!!");
+            //System.out.println("no GUI to save!!");
         }
     }
 
