@@ -126,7 +126,7 @@ public class AllTests extends TestCase {
 			byte[] istate = AvatarUtils.getFreeState(nodes.size());
 			for(int i=0, l=state.length; i<l; i++) istate[i]=state[i];
 				//if(state[i]>=0) istate[nodes.indexOf(names[i])]=state[i];
-			StatefulLogicalModel model = new StatefulLogicalModelImpl(((RegulatoryGraph)graph).getModel(),Arrays.asList(istate));
+			StatefulLogicalModel model = new StatefulLogicalModelImpl(((RegulatoryGraph)graph).getModel(),Arrays.asList(istate), "");
 			testAvatar(model,AvatarStrategy.RandomExit,true);
 			/*testMonteCarlo(model);
 			testAvatar(model,AvatarStrategy.MatrixInversion,true);

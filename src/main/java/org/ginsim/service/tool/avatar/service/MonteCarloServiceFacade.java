@@ -113,7 +113,7 @@ public class MonteCarloServiceFacade implements Service {
 			NamedStatesHandler nstatesHandler = (NamedStatesHandler) ObjectAssociationManager.getInstance()
 					.getObject(graph, NamedStatesManager.KEY, true);
 			model = new StatefulLogicalModelImpl(graph.getModel(),
-					MDDUtils.getStates(nstatesHandler, graph.getNodeInfos()));
+					MDDUtils.getStates(nstatesHandler, graph.getNodeInfos()), "");
 		}
 		sim.addModel(model);
 		return sim;
