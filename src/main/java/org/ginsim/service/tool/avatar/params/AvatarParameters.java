@@ -175,7 +175,7 @@ public class AvatarParameters implements XMLize, NamedObject {
             perturbation.toXML(out);
             out.closeTag();
 		}            
-		System.out.println("after perturbations");
+		//System.out.println("after perturbations");
 		
 		out.openTag("stateList");
 		out.addAttr("states", this.getStates(statestore.nstates));

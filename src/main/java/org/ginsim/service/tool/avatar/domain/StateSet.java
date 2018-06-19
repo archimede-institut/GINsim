@@ -265,8 +265,11 @@ public class StateSet extends AbstractStateSet {
 		paths = exit;
 	}
 
-	public boolean hasPathsAndExits() {
-		return paths != null && (exitStates.size()>0);
+	public boolean hasExits() {
+		return exitStates != null && (exitStates.size()>0);
+	}
+	public boolean hasPaths() {
+		return paths != null;
 	}
 
 	/**
@@ -307,12 +310,13 @@ public class StateSet extends AbstractStateSet {
 			if(point<sum) return new State(exitStates.getState(s1).state,s.probability*v);
 		}
 		//System.out.println("#exits:"+exitStates.size());
-		//never reached
+		/*never reached
 		for(String s1 : exits.keySet()){
 			if(exitStates.contains(s1)) 
 				return new State(exitStates.getState(s1).state,s.probability*exits.get(s1));
-		}
-		return null;
+		}*/
+		//System.out.println("Warning: #"+exitStates.size());
+		return getExitStateSet().getProbableRandomState();
 	}	
 
 }

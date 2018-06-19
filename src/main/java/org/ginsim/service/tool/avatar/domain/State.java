@@ -5,6 +5,7 @@ import org.colomoto.biolqm.io.avatar.AvatarUtils;
 public class State {
 
 	public String key = "";
+	public boolean btrans;
 	public byte[] state;
 	public double probability;
 

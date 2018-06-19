@@ -92,7 +92,7 @@ public class SensitivityAvatarTests extends TestCase {
 			System.out.println("State:"+AvatarUtils.toString(state)+ "I:"+(k++));
 			byte[] istate = AvatarUtils.getFreeState(nodes.size());
 			for(int i=0, l=state.length; i<l; i++) istate[i]=state[i];
-			StatefulLogicalModel model = new StatefulLogicalModelImpl(((RegulatoryGraph)graph).getModel(),Arrays.asList(istate));
+			StatefulLogicalModel model = new StatefulLogicalModelImpl(((RegulatoryGraph)graph).getModel(),Arrays.asList(istate),graph.getGraphName());
 			int[] minTransientSizes = new int[]{0};//,10000};//,50,200,1000}; //synth2,random1,sp2
 			int[] minStatesToRewires = new int[]{200000}; //synth2,random1,sp2
 			//int[] maxDepth = new int[]{100,1000,10000}; //sp2,sp4

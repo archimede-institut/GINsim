@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.PriorityQueue;
 import java.util.Set;
 
 import org.apache.commons.math3.linear.LUDecomposition;
@@ -32,7 +33,11 @@ import org.ginsim.service.tool.avatar.service.EnumAlgorithm;
 import org.ginsim.service.tool.avatar.utils.AvaException;
 import org.ginsim.service.tool.avatar.utils.AvaMath;
 import org.ginsim.service.tool.avatar.utils.ChartGNUPlot;
+import org.ginsim.service.tool.avatar.utils.StateSetComparator;
 
+//import org.ujmp.core.DenseMatrix;
+//import org.ujmp.core.SparseMatrix;
+//import Jama.Matrix;
 import com.panayotis.gnuplot.JavaPlot;
 
 /**
@@ -115,9 +120,11 @@ public class AvatarSimulation extends Simulation {
 		int maxExits = (minTransientSize >= 300) ? minTransientSize : 300;
 		for (NodeInfo comp : model.getComponents())
 			stateSpaceSize *= comp.getMax() + 1;
-		List<AbstractStateSet> savedTransients = new ArrayList<AbstractStateSet>();
 		int largestFoundTransient = -1;
+		int limitTransients = 10;
 		Map<String, List<Double>> plotProbs = new HashMap<String, List<Double>>();
+		PriorityQueue<StateSet> savedTransients = new PriorityQueue<StateSet>(new StateSetComparator());
+		
 		if (!quiet)
 			output("Quiet=" + quiet + "\nNode order: " + model.getComponents() + "\nPSize=" + psize + ",maxPSize="
 					+ maxPSize);
@@ -125,64 +132,83 @@ public class AvatarSimulation extends Simulation {
 		/** II: Simulation **/
 
 		for (int sn = 1, time = 0, tau = tauInit; sn <= runs; sn++, time = 0, avgSteps = 0, minSteps = 0, psize = 0, tau = tauInit) {
+		    if(keepTransients && savedTransients.size() > limitTransients) {
+		    	PriorityQueue<StateSet> pqnew = new PriorityQueue<StateSet>(new StateSetComparator());
+		    	while(pqnew.size() < 10) pqnew.add(savedTransients.poll());
+		    	savedTransients = pqnew;
+			}
 
+			List<StateSet> temporaryTransients = new ArrayList<StateSet>();
 			State istate = SimulationUtils.getRandomState(model, model.getInitialStates(), false);
 			Map<String, Integer> discoveryTime = new HashMap<String, Integer>();
 			output("Iteration " + sn + "/" + runs + " state=" + istate.toShortString());
-//			if (isGUI)
-//				publish("Iteration " + sn + "/" + runs + " state=" + istate);
-
+			
+			/*System.out.println("Iteration " + sn + "/" + runs + " state=" + istate.toShortString());
+			System.out.print("Temporary:");
+			for (AbstractStateSet itrans : temporaryTransients) System.out.print(itrans.size()+",");
+			System.out.print("\nSaved:");
+			for (AbstractStateSet itrans : savedTransients) System.out.print(itrans.size()+",");
+			System.out.println();*/
+			
 			/** A: Initialize Simulation **/
 
-			FinalPaths exitProbs = strategy.equals(AvatarStrategy.RandomExit) ? new ApproximateFinalPaths()
-					: new ExhaustiveFinalPaths();
+			FinalPaths exitProbs = strategy.equals(AvatarStrategy.RandomExit) ? new ApproximateFinalPaths() : new ExhaustiveFinalPaths();
 			StateSet D = new StateSet(), F = new StateSet(istate), exitStates = new StateSet();
-			List<StateSet> temporaryTransients = new ArrayList<StateSet>(); // C = new ArrayList<StateSet>(): C cycles
-																			// in incarnation t - no need! just Call and
-																			// Ct
-			// boolean inflation = stateSpaceSize<=smallStateSpace; //constitutive
-			// inflationary mode for small state spaces
+			// boolean inflation = stateSpaceSize<=smallStateSpace; //constitutive inflationary mode for small state spaces
 
 			/** B: Do Reincarnations **/
 
+			StateSet localTransient = null;
 			while (!F.isEmpty()) {
 				State s = F.getProbableRandomState();
-
+				//System.out.println("new state: "+s.toShortString());
+				
 				if (!quiet)
 					output("  Popped state=" + s + " Sim=" + sn + ", Reincarnation=" + time + ", #F="
 							+ F.size() + ", #D=" + D.size() + ", #A=" + result.attractorsCount.keySet().size());
 
 				/** C: Check whether state belongs a transient or terminal cycle **/
 
-				// State nv = null;
-				for (AbstractStateSet trans : temporaryTransients) {
+				// State nv = null; #1024
+				for (AbstractStateSet itrans : temporaryTransients) {
+					StateSet trans = (StateSet) itrans;
 					if (trans.contains(s)) {
+						//System.out.println("tempTransient #"+trans.size()+" "+trans.getKey()+" P"+trans.hasPaths()+" E"+trans.hasExits());
 						if (strategy.equals(AvatarStrategy.RandomExit))
-							s = ((StateSet) trans).getExitStateSet().getProbableRandomState();
+							s = trans.getExitStateSet().getProbableRandomState();
 						else {
-							if( !((StateSet)trans).hasPathsAndExits()) continue;
+							//System.out.println("lala0");
+							if(!trans.hasPaths() || !trans.hasExits()) {
+								//System.out.println("lala1");
+								continue;
+							}
+							//System.out.println("lala2");
 							s = ((StateSet) trans).getProbableExitState(s);
 						}
 						minSteps++;
 						avgSteps += Math.ceil((double) trans.size() / 2.0);
+						localTransient = trans;
 						if (!quiet)
 							output("  Identified transient and getting out of it through state = " + s);
 						break;
 					}
 				}
-				if(s == null) System.out.println("2state is null");
+				if(s == null) System.out.println("state is null");
 
 				if (keepTransients) {
-					for (AbstractStateSet trans : savedTransients) {
+					for (AbstractStateSet itrans : savedTransients) {
+						StateSet trans = (StateSet) itrans;
 						if (trans.contains(s)) {
+							//System.out.println("tempTransient #"+trans.size()+" "+trans.getKey()+" P"+trans.hasPaths()+" E"+trans.hasExits());
 							minSteps++;
 							avgSteps += Math.ceil((double) trans.size() / 2.0);
 							if (strategy.equals(AvatarStrategy.RandomExit))
-								s = ((StateSet) trans).getExitStateSet().getProbableRandomState();
+								s = trans.getExitStateSet().getProbableRandomState();
 							else {
-								if( !((StateSet)trans).hasPathsAndExits()) continue;
+								if(!trans.hasPaths() || !trans.hasExits()) continue;
 								s = ((StateSet) trans).getProbableExitState(s);
 							}
+							localTransient = trans;
 							if (!quiet)
 								output("  Identified transient and getting out of it through state = " + s);
 							break;
@@ -193,6 +219,7 @@ public class AvatarSimulation extends Simulation {
 				if (keepOracle) {
 					boolean complex = false;
 					for (AbstractStateSet trans : result.complexAttractors.values()) {
+						//System.out.println("attractor #"+trans.size()+" "+trans.getKey());
 						if (trans.contains(s)) {
 							result.incrementComplexAttractor(trans.getKey(), avgSteps);
 							complex = true;
@@ -225,6 +252,11 @@ public class AvatarSimulation extends Simulation {
 						if (discoveryTime.get(ds.key) >= time)
 							Ct.add(ds); // && dsTime<=i
 
+					boolean extending = localTransient != null && localTransient.contains(s);
+					if (extending) { 
+						for (State ds : localTransient.getStates())	Ct.add(ds); 
+					}
+
 					/** D1: Extend Cycle: check whether a larger cycle can be identified **/
 
 					int prev_cycle_size = 0;
@@ -233,6 +265,7 @@ public class AvatarSimulation extends Simulation {
 
 					StateSet cycleToRewire = new StateSet(Ct), exitStatesRewiring = new StateSet();
 					exitStates = null;
+					System.out.println("growing");
 					do {
 						prev_cycle_size = Ct.size();
 						if (!quiet)
@@ -269,8 +302,7 @@ public class AvatarSimulation extends Simulation {
 						if (exitStates == null)
 							exitStates = new StateSet();
 						for (State v : expand) {
-							for (State successor : generateSuccessors(v, exitProbs.getPaths(v.key), exitStates, Ct)
-									.getStates())
+							for (State successor : generateSuccessors(v, exitProbs.getPaths(v.key), exitStates, Ct).getStates())
 								if (!Ct.contains(successor))
 									exitStates.add(successor);
 						}
@@ -288,6 +320,7 @@ public class AvatarSimulation extends Simulation {
 						// memory=(int)Math.max(memory,Runtime.getRuntime().totalMemory()/1024);
 
 					} while (exitRatio > 0 && prev_cycle_size < Ct.size() && Ct.size() < maxPSize);
+					System.out.println("grown");
 
 					if (!quiet)
 						publish("Extended cycle with #" + Ct.size() + " states and exitRatio=" + exitRatio);
@@ -300,7 +333,7 @@ public class AvatarSimulation extends Simulation {
 						if (temporaryTransients.size() == 0)
 							result.add(new StateSet(Ct));
 						else
-							result.add(calculateComplexAttractor(Ct, temporaryTransients)); // //
+							result.add(calculateComplexAttractor(Ct, temporaryTransients, savedTransients)); 
 						break;
 					}
 
@@ -308,16 +341,23 @@ public class AvatarSimulation extends Simulation {
 					minSteps++;
 					largestFoundTransient = Math.max(largestFoundTransient, Ct.size());
 					Ct = cycleToRewire;
+					//System.out.println(exitStates.size()+"|"+exitStatesRewiring.size());
+					F = new StateSet(exitStates);
+					//F = generateSuccessors(s, exitProbs.getPaths(s.key), exitStates, Ct);
+					//System.out.println("B>"+F.size());
 					exitStates = exitStatesRewiring;
 					if (Ct.size() > minCSize) {
 						if (!quiet)
 							output("  Rewiring cycle  with #" + Ct.size() + " states");
+						System.out.println("To rewire");
 						rewriteGraph(Ct, exitStates, exitProbs);
+						System.out.println("Rewired");
 						if (!quiet)
 							output("  Cycle rewired");
 						if (Ct.size() > minTransientSize) {
 							StateSet transi = new StateSet(Ct);
 							transi.setExitStates(new StateSet(exitStates));
+							transi.setProbPaths(exitProbs);
 							temporaryTransients.add(transi);
 						}
 					}
@@ -326,8 +366,6 @@ public class AvatarSimulation extends Simulation {
 						discoveryTime.put(ds.key, time);
 					time++;
 					D.addAll(Ct);
-					// F = new StateSet(exitStates);
-					F = generateSuccessors(s, exitProbs.getPaths(s.key), exitStates, Ct);
 					if (!quiet)
 						output("  Successors of " + s.toString() + " => " + F.toString());
 					// if(F.isEmpty()) throw new AvaException("F is empty after re-writing a cycle
@@ -341,26 +379,27 @@ public class AvatarSimulation extends Simulation {
 					D.add(s);
 					discoveryTime.put(s.key, time++);
 					F = generateSuccessors(s, exitProbs.getPaths(s.key), exitStates, new StateSet());
+					//System.out.println("C>"+F.size());
+					
 					if (F.isEmpty()) {
 						result.add(s, avgSteps);
-						for (StateSet transi : temporaryTransients) {
-							if (!quiet)
-								output("  Saving transient (#" + transi.size() + ")");
-							if (!strategy.equals(AvatarStrategy.RandomExit)) {
-								transi.setProbPaths(exitProbs);
-							}
+						for (int k=temporaryTransients.size()-1; k>=0; k--) {
+							StateSet transi = temporaryTransients.remove(k);
+							if (!quiet) output("  Saving transient (#" + transi.size() + ")");
+							//if (!strategy.equals(AvatarStrategy.RandomExit)) transi.setProbPaths(exitProbs);
 							savedTransients.add(transi);
 						}
-						/*
-						 * if(t>0){ StateSet transi = calculateComplexAttractor(C,t-1); if(!quiet)
-						 * output("  Identified transient:"+transi); if(transi.size()>minTransientSize){
-						 * if(!quiet) output("  Saving transient (#"+transi.size()+")");
-						 * transi.setExitStates(exitStates);
-						 * if(!strategy.equals(AvatarStrategy.RandomExit))
-						 * transi.setProbPaths(exitProbs); savedTransients.add(transi); } }
-						 */
+							/*
+							 * if(t>0){ StateSet transi = calculateComplexAttractor(C,t-1); if(!quiet)
+							 * output("  Identified transient:"+transi); if(transi.size()>minTransientSize){
+							 * if(!quiet) output("  Saving transient (#"+transi.size()+")");
+							 * transi.setExitStates(exitStates);
+							 * if(!strategy.equals(AvatarStrategy.RandomExit))
+							 * transi.setProbPaths(exitProbs); savedTransients.add(transi); } }
+							 */
 					}
 				}
+				
 
 				/** F: Finish Iteration **/
 
@@ -514,6 +553,7 @@ public class AvatarSimulation extends Simulation {
 	/**
 	 * Calculates a complex attractor based on the knowledge of previous
 	 * incarnations
+	 * @param savedTransients 
 	 * 
 	 * @param C
 	 *            terminal cycles from all incarnations
@@ -521,7 +561,7 @@ public class AvatarSimulation extends Simulation {
 	 *            the current time
 	 * @return the revised complex attractor
 	 */
-	public StateSet calculateComplexAttractor(StateSet Ct, List<StateSet> temporaryTransients) {
+	public StateSet calculateComplexAttractor(StateSet Ct, List<StateSet> temporaryTransients, PriorityQueue<StateSet> savedTransients) {
 		StateSet Cstar = new StateSet();
 		StateSet L = new StateSet(Ct);
 		if (!quiet)
@@ -530,16 +570,17 @@ public class AvatarSimulation extends Simulation {
 			State s = L.getFirstState();
 			L.remove(s);
 			Cstar.add(s);
-			for (int k = 0, l = temporaryTransients.size(); k < l; k++) {
-				if (temporaryTransients.get(k).contains(s)) {
-					for (State v : temporaryTransients.get(k).getStates()) {
+			for (int k = temporaryTransients.size()-1; k >= 0; k--) {
+				StateSet transi = temporaryTransients.remove(k);
+				if (transi.contains(s)) {
+					for (State v : transi.getStates()) {
 						if (Cstar.contains(v))
 							continue;
 						if (!quiet)
 							output("  Adding state " + v.toString() + " from reincarnation " + k);
 						L.add(v);
 					}
-				}
+				} else savedTransients.add(transi);
 			}
 		}
 		return Cstar;
@@ -599,8 +640,6 @@ public class AvatarSimulation extends Simulation {
 					output("QMatrix\n" + AvatarUtils.toString(qMatrix));
 				if (!quiet)
 					output("RMatrix\n" + AvatarUtils.toString(rMatrix));
-				// System.out.println(">>Q\n"+AvatarUtils.toString(qMatrix));
-				// System.out.println(">>R\n"+AvatarUtils.toString(rMatrix));
 
 				/** B: Computing (I-q)^-1 * r **/
 
@@ -610,20 +649,44 @@ public class AvatarSimulation extends Simulation {
 				// System.out.println(">>" + qMatrix.length);
 				// System.out.println(">>" + rMatrix[0].length);
 				final double[][] rewrittenMatrix = new double[qMatrix.length][rMatrix[0].length];
+				
 				boolean ejml = true;
 				if (ejml) {
 					SimpleMatrix RMatrix = new SimpleMatrix(rMatrix);
+					
 					try {
 						RMatrix = new SimpleMatrix(qMatrix).invert().mult(RMatrix);
 					} catch (OutOfMemoryError e) {
 						throw new Exception(e);
 					}
+					
 					for (int i = 0, l1 = RMatrix.numRows(); i < l1; i++)
 						for (int j = 0, l2 = RMatrix.numCols(); j < l2; j++)
 							rewrittenMatrix[i][j] = RMatrix.get(i, j);
 					if (!quiet)
 						output("Final Matrix EJML:\n" + AvatarUtils.toString(rewrittenMatrix));
 				} else {
+					
+					/*System.out.println("First");
+					org.ujmp.core.Matrix RM1 = DenseMatrix.Factory.importFromArray(rMatrix);
+					org.ujmp.core.Matrix QM1 = SparseMatrix.Factory.importFromArray(qMatrix);
+					org.ujmp.core.Matrix resMatrixA = QM1.inv().mtimes(RM1);
+					RM1 = null;
+					QM1 = null;
+
+					System.out.println("Second");
+					Matrix RM2 = new Matrix(rMatrix);
+					Matrix QM2 = new Matrix(qMatrix);
+					Matrix resMatrixB = QM2.inverse().times(RM2);
+					RM2 = null;
+					QM2 = null;
+					
+					System.out.println("Third");
+					//double[][] resMatrix = MatrixUtils.blockInverse(QM, qMatrix.length/2).getData();
+					System.out.println("Fourth");
+					double[][] resMatrix = MatrixUtils.inverse(QM, qMatrix.length/2).getData();
+					System.out.println("Fifth");*/
+					
 					RealMatrix RM = MatrixUtils.createRealMatrix(rMatrix), QM = MatrixUtils.createRealMatrix(qMatrix);
 					double[][] resMatrix = new LUDecomposition(QM).getSolver().getInverse().multiply(RM).getData();
 					for (int i = 0, l1 = rewrittenMatrix.length; i < l1; i++)
