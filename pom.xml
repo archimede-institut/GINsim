@@ -412,4 +412,15 @@
     </plugins>
   </build>
 
+  <!--
+   deploy to a local repository using:
+     mvn deploy -Dlocal.repository.url=file:///path/to/your/repository -DperformRelease
+  -->
+  <distributionManagement>
+    <repository>
+      <id>local.repository</id>
+      <url>${local.repository.url}</url>
+    </repository>
+  </distributionManagement>
+
 </project>
