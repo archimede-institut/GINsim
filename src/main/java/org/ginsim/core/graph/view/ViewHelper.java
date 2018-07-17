@@ -108,10 +108,53 @@ public class ViewHelper {
 		return points;
 	}
 
+	/**
+	 * Pick points on the borders of two nodes to connect them
+	 *
+	 * @param srcBounds
+	 * @param targetBounds
+	 * @param w
+	 * @return
+	 */
 	private static PointList getPoints(Rectangle srcBounds, Rectangle targetBounds, int w) {
 		PointList points = new PointList();
 
-		Point p = new Point((int)targetBounds.getCenterX(), (int)targetBounds.getCenterY());
+		int srcX = (int)srcBounds.getCenterX();
+		int srcY = (int)srcBounds.getCenterY();
+		int tgtX = (int)targetBounds.getCenterX();
+		int tgtY = (int)targetBounds.getCenterY();
+
+		if (srcX > targetBounds.x && tgtX > srcBounds.x) {
+			int useX = (srcX + tgtX) / 2;
+			if (srcY < tgtY) {
+				// Move vertically downward
+				points.add( new Point(useX, srcBounds.y + srcBounds.height));
+				points.add( new Point(useX, targetBounds.y));
+				return points;
+			}
+
+			// Move vertically upward
+			points.add( new Point(useX, srcBounds.y));
+			points.add( new Point(useX, targetBounds.y + targetBounds.height));
+			return points;
+		}
+
+		if (srcY > targetBounds.y && tgtY > srcBounds.y) {
+			int useY = (srcY + tgtY) / 2;
+			if (srcX < tgtX) {
+				// Move horizontally rightward
+				points.add( new Point(srcBounds.x + srcBounds.width, useY));
+				points.add( new Point(targetBounds.x, useY));
+				return points;
+			}
+
+			// Move horizontally leftward
+			points.add( new Point(srcBounds.x, useY));
+			points.add( new Point(targetBounds.x + targetBounds.width, useY));
+			return points;
+		}
+
+		Point p = new Point(tgtX, tgtY);
 		p = getIntersection(srcBounds, p, true, 0);
 		points.add(p);
 		p = getIntersection(targetBounds, p, true, w);
@@ -366,13 +409,12 @@ public class ViewHelper {
         int dx = (x2-x1)/3;
         int dy = (y2-y1)/3;
 
-        double d = Math.sqrt(dx * dx + dy * dy) / 10;
+        double d = Math.sqrt(dx * dx + dy * dy) / 15;
 
         int x = x1 + dx + (int)(dy/d);
         int y = y1 + dy - (int)(dx/d);
 
         List<Point> points = new ArrayList<Point>(1);
-        points.add(new Point(x,y));
         points.add(new Point(x+dx,y+dy));
         return points;
     }

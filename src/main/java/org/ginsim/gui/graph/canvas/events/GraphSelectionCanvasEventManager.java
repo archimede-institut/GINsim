@@ -24,6 +24,7 @@ import org.ginsim.gui.shell.editpanel.SelectionType;
 public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventManager {
 
 	private static final boolean AUTOADDPOINTS = true;
+	private final int POINT_AREA = 10;
 	
 	private final GraphSelection selection;
 	private final Graph graph;
@@ -308,7 +309,7 @@ public class GraphSelectionCanvasEventManager extends AbstractHelpCanvasEventMan
 		
 		int i=0;
 		for (Point pt: points) {
-			if (Math.abs(pt.x-p.x) < 3 && Math.abs(pt.y-p.y) < 3) {
+			if (Math.abs(pt.x-p.x) < POINT_AREA && Math.abs(pt.y-p.y) < POINT_AREA) {
 				movingPoint = new MovingPoint(e, i);
 				return true;
 			}
