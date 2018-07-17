@@ -42,11 +42,10 @@ import org.ginsim.core.notification.resolvable.NotificationResolution;
 public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 
 	private final NodeInfo nodeInfo;
-	
+
 	private boolean isOutput = true;
 	private final LogicalParameterList v_logicalParameters = new LogicalParameterList();
 
-	private String 		name = "";
 	private Annotation	gsa = new Annotation();
 
 	private TreeInteractionsModel interactionsModel;
@@ -253,7 +252,7 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	 * @return the name
 	 */
 	public String getName() {
-		return name;
+		return nodeInfo.getName();
 	}
 
 	/**
@@ -261,9 +260,7 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	 * @param name the new name
 	 */
 	public void setName(String name) {
-		if (!this.name.equals(name)) {
-			this.name = name;
-		}
+		nodeInfo.setName(name);
 	}
 
 	/**
@@ -317,7 +314,7 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 
 	public String toToolTip() {
 		return    Txt.t(S_ID) + ":" + getId() + "|"
-				+ Txt.t(S_NAME) + ":" + name + "|"
+				+ Txt.t(S_NAME) + ":" + getName() + "|"
                 + Txt.t(S_MAX) + ":" + getMaxValue()
                 + (isOutput() ? "(output)" : "");
 	}
@@ -325,7 +322,8 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	public void toXML(XMLWriter out) throws IOException {
 
 	    	out.addAttr("id", getId());
-			if (name.length()>0) {
+	    	String name = getName();
+			if (name != null && name.length() > 0) {
 			    out.addAttr("name", name);
 			}
 		    out.addAttr("maxvalue", ""+getMaxValue());
@@ -354,7 +352,7 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	public RegulatoryNode clone(RegulatoryGraph graph) {
 		RegulatoryNode clone = new RegulatoryNode(nodeInfo.getNodeID(), graph);
 		clone.nodeInfo.setMax(nodeInfo.getMax());
-		clone.name = name;
+		clone.setName(getName());
 		clone.setGsa((Annotation)gsa.clone());
 		clone.setInput(isInput(), graph);
 		return clone;
@@ -394,6 +392,10 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
     public String toString() {
         return getId();
     }
+
+    public String getDisplayName() {
+		return nodeInfo.getDisplayName();
+	}
 
     /**
      * @param copyMap

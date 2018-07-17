@@ -13,6 +13,7 @@ import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.Edge;
+import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphBackend;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.NodeBorder;
@@ -70,6 +71,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 
 
 	private final GraphBackend<V,E> backend;
+    private final Graph<V,E> graph;
 	private final StyleManager<V, E> styleManager;
 	private final NodeStyle<V> defaultStyle;
 	private final Rectangle cachedBounds = new Rectangle();
@@ -88,7 +90,8 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
      * @param backend
      * @param backend
      */
-    public NodeAttributeReaderImpl(StyleManager<V, E> styleManager, GraphBackend<V, E> backend) {
+    public NodeAttributeReaderImpl(StyleManager<V, E> styleManager, Graph<V,E> graph, GraphBackend<V, E> backend) {
+    	this.graph = graph;
     	this.backend = backend;
     	this.styleManager = styleManager;
         this.defaultStyle = styleManager.getDefaultNodeStyle();
@@ -244,7 +247,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 		
 		Rectangle bounds = getBounds();
 		g.translate( bounds.x, bounds.y);
-		doRender(vertex.toString(), g, false);
+		doRender(graph.getDisplayName(vertex), g, false);
 		g.translate( -bounds.x,-bounds.y);
 	}
 
@@ -256,7 +259,7 @@ public class NodeAttributeReaderImpl<V,E extends Edge<V>> implements NodeAttribu
 		
 		Rectangle bounds = getBounds();
 		g.translate( movex+bounds.x, movey+bounds.y);
-		doRender(vertex.toString(), g, true);
+		doRender("", g, true);
 		g.translate( -movex-bounds.x, -movey-bounds.y);
 	}
 

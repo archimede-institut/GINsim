@@ -146,6 +146,10 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     	return obj;
     }
 
+    @Override
+    public String getDisplayName(RegulatoryNode node) {
+        return node.getDisplayName();
+    }
     
     @Override
 	protected String getGraphZipName(){

@@ -86,4 +86,12 @@ public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 	 */
 	void fireGraphChange(GraphChangeType type, Object data);
 
+	/**
+	 * Retrieve the name to use when displaying a graph node.
+	 *
+	 * @param node
+	 * @return
+	 */
+	String getDisplayName(V node);
+
 }

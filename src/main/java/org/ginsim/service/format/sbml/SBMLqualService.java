@@ -58,21 +58,6 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 			// TODO: add unused interactions and consistency checks
 
 
-			// Restore user-defined names which are not handled by bioLQM
-			for (RegulatoryNode node: lrg.getNodeOrder()) {
-				QualitativeSpecies sp = qbundle.qmodel.getQualitativeSpecies(node.getId());
-				String name = sp.getName();
-				if (name == null) {
-					continue;
-				}
-				name = name.trim();
-				if (name.length() < 1) {
-					continue;
-				}
-
-				node.setName(name);
-			}
-
 			// add layout information
 			if (qbundle.lmodel != null) {
 				ListOf<Layout> layouts = qbundle.lmodel.getListOfLayouts();
@@ -148,23 +133,6 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 		try {
 			SBMLqualExport sExport = new SBMLqualExport(model, true);
 			SBMLQualBundle qbundle = sExport.getSBMLBundle();
-
-
-			// Save user-defined names which are not handled by bioLQM
-			for (RegulatoryNode node: graph.getNodeOrder()) {
-				String name = node.getName();
-				if (name == null) {
-					continue;
-				}
-				name = name.trim();
-				if (name.length() < 1) {
-					continue;
-				}
-
-				// set the name
-				QualitativeSpecies sp = qbundle.qmodel.getQualitativeSpecies(node.getId());
-				sp.setName(name);
-			}
 
 			// set the initial state
             List<NodeInfo> nodes = model.getComponents();

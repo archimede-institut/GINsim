@@ -106,7 +106,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
      * changes (if success) the name associated with this graph.
      * By default only valid xmlid are accepted.
      *
-     * @param graphName the new name.
+     * @param graph_name the new name.
      * @throws GsException if the name is invalid.
      */
     public void setGraphName( String graph_name) throws GsException {
@@ -118,8 +118,11 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
         annoted = true;
         fireMetaChange();
     }
-	
-	
+
+    @Override
+	public String getDisplayName(V node) {
+    	return node.toString();
+	}
 
 //    //----------------------   GRAPH SAVING MANAGEMENT METHODS -------------------------------
 //    
@@ -397,7 +400,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	
 	@Override
 	public NodeAttributesReader getNodeAttributeReader() {
-		return new NodeAttributeReaderImpl(getStyleManager(), graphBackend);
+		return new NodeAttributeReaderImpl(getStyleManager(), this, graphBackend);
 	}
 	
 	protected EdgeAttributesReader getCachedEdgeAttributeReader() {
@@ -740,5 +743,5 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     public boolean isParsing() {
     	return isParsing;
     }
-	
+
 }
