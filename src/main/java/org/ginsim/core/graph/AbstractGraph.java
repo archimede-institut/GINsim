@@ -113,7 +113,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	}
 
 	@Override
-	public void setAttributes(String name, String value) {
+	public void setAttribute(String name, String value) {
 		attributes.put(name, value);
 	}
 

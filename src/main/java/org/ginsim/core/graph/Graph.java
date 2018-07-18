@@ -102,6 +102,6 @@ public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 	 */
 	Map<String,String> getAttributes();
 
-	void setAttributes(String name, String value);
+	void setAttribute(String name, String value);
 
 }

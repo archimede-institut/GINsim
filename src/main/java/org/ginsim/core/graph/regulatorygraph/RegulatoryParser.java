@@ -316,7 +316,7 @@ public final class RegulatoryParser extends GsXMLHelper {
 					String name = attributes.getValue("name");
 					String value = attributes.getValue("value");
 					if (name != null && value != null) {
-						graph.setAttributes(name, value);
+						graph.setAttribute(name, value);
 					}
                 }
                 break; // POS_OUT

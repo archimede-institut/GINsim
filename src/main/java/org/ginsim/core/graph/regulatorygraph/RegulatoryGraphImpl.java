@@ -157,8 +157,8 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     }
 
     @Override
-    public void setAttributes(String name, String value) {
-        super.setAttributes(name, value);
+    public void setAttribute(String name, String value) {
+        super.setAttribute(name, value);
 
         if ("display.node".equalsIgnoreCase(name)) {
             use_name = "name".equalsIgnoreCase(value);
