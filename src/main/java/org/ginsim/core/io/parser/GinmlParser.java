@@ -62,7 +62,7 @@ public final class GinmlParser extends XMLHelper {
         super.startElement(uri, localName, qName, attributes);
 
         if (qName.equals("graph")) {
-        	try{
+        	try {
 	            String s_class = attributes.getValue("class");
 	            Class parser_class = GSGraphManager.getInstance().getParserClass( s_class);
 	            if( parser_class != null){

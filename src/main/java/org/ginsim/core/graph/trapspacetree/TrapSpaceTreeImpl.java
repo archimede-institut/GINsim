@@ -19,8 +19,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 public class TrapSpaceTreeImpl extends AbstractDerivedGraph<TrapSpaceNode, TrapSpaceInclusion, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
 	implements TrapSpaceInclusionDiagram {
 
-	public TrapSpaceTreeImpl(GraphFactory factory, boolean parsing) {
-		super(factory, parsing);
+	public TrapSpaceTreeImpl(GraphFactory factory) {
+		super(factory);
 	}
 
 	@Override

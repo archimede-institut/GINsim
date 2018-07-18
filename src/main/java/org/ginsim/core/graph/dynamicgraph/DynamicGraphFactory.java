@@ -50,11 +50,6 @@ public class DynamicGraphFactory extends AbstractGraphFactory<DynamicGraph> {
 	}
 	
     
-	public DynamicGraph create( boolean bool){
-		return new DynamicGraphImpl( bool);
-	}
-	
-
 	public DynamicGraph create( List<RegulatoryNode> node_order){
     	return new DynamicGraphImpl( node_order);
 	}

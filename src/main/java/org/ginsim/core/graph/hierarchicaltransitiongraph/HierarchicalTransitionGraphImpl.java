@@ -52,9 +52,9 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 	 * create a new empty DynamicalHierarchicalGraph.
 	 */
 	public HierarchicalTransitionGraphImpl() {
-		this( false);
+		super(HierarchicalTransitionGraphFactory.getInstance());
 	}
-				
+
 	/**
 	 * create a new DynamicalHierarchicalGraph with a nodeOrder.
 	 * @param nodeOrder the node order
@@ -72,10 +72,6 @@ public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<Hierar
 			GraphChangeType type, Object data) {
 		// TODO Auto-generated method stub
 		return null;
-	}
-
-	public HierarchicalTransitionGraphImpl( boolean parsing) {
-        super(HierarchicalTransitionGraphFactory.getInstance(), parsing);
 	}
 
 	/**

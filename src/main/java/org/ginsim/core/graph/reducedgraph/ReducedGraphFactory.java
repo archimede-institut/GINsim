@@ -52,12 +52,6 @@ public class ReducedGraphFactory<G extends Graph<V,E>, V, E extends Edge<V>> ext
         return graph;
     }
     
-    public ReducedGraph create( boolean bool){
-    	
-    	return new ReducedGraphImpl( bool);
-    }
-    
-    
     public ReducedGraph create( Graph graph){
     	
     	return new ReducedGraphImpl( graph);

@@ -172,11 +172,12 @@ copyright by
 > 
 
 <!-- attr -->
-<!ELEMENT attr (type?, attr*, (%val;))>
+<!ELEMENT attr (type?, attr*, (%val;)?)>
 <!ATTLIST attr
 	id ID #IMPLIED
 	name NMTOKEN #REQUIRED
 	kind NMTOKEN #IMPLIED
+	value NMTOKEN #REQUIRED
 >
 <!-- locator -->
 <!ELEMENT locator EMPTY>

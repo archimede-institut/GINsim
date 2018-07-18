@@ -42,11 +42,6 @@ public class RegulatoryGraphFactory extends AbstractGraphFactory<RegulatoryGraph
         return graph;
     }
 	
-    public RegulatoryGraph create( boolean bool) {
-    	RegulatoryGraph graph = new RegulatoryGraphImpl( bool);
-        return graph;
-    }
-
 	@Override
     public Class getParser() {
     	return RegulatoryParser.class;

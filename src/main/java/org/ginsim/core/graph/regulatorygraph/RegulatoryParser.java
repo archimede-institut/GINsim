@@ -42,7 +42,7 @@ import org.xml.sax.SAXException;
 public final class RegulatoryParser extends GsXMLHelper {
 
     private static final int POS_OUTSIDE = -1;  // outside of the graph (or in an ignored one)
-    private static final int POS_OUT = 0;       // in the graph, outside of all vertices/edges
+	private static final int POS_OUT = 0;       // in the graph, outside of all vertices/edges
     private static final int POS_FILTERED = 50;
     private static final int POS_GRAPH_NOTES = 1;
     private static final int POS_GRAPH_NOTES_LINKLIST = 2;
@@ -78,7 +78,7 @@ public final class RegulatoryParser extends GsXMLHelper {
 
     /**
      */
-    public RegulatoryParser(){
+    public RegulatoryParser() {
     }
 
     /**
@@ -89,7 +89,7 @@ public final class RegulatoryParser extends GsXMLHelper {
      */
     public RegulatoryParser(Set set, Attributes attributes, String s_dtd) throws GsException {
     	
-        graph = GSGraphManager.getInstance().getNewGraph( RegulatoryGraph.class, true);
+        graph = GSGraphManager.getInstance().getNewGraph( RegulatoryGraph.class);
         this.set = set;
 		s_nodeOrder = attributes.getValue("nodeorder");
         if (s_nodeOrder == null) {
@@ -312,6 +312,12 @@ public final class RegulatoryParser extends GsXMLHelper {
                 } else if (qName.equals("annotation")) {
 	                	pos = POS_GRAPH_NOTES;
 	                	annotation = graph.getAnnotation();
+				} else if (qName.equals("attr")) {
+					String name = attributes.getValue("name");
+					String value = attributes.getValue("value");
+					if (name != null && value != null) {
+						graph.setAttributes(name, value);
+					}
                 }
                 break; // POS_OUT
             case POS_GRAPH_NOTES:

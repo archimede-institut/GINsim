@@ -2,6 +2,7 @@ package org.ginsim.core.graph;
 
 import java.awt.Dimension;
 import java.util.Collection;
+import java.util.Map;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -93,5 +94,14 @@ public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 	 * @return
 	 */
 	String getDisplayName(V node);
+
+	/**
+	 * Retrieve graph-level attributes
+	 *
+	 * @return a map of attribute values, it can be empty but should not be null
+	 */
+	Map<String,String> getAttributes();
+
+	void setAttributes(String name, String value);
 
 }

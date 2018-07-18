@@ -53,10 +53,6 @@ public class HierarchicalTransitionGraphFactory extends AbstractGraphFactory<Hie
 		return new HierarchicalTransitionGraphImpl( nodeOrder, transientCompaction);
 	}
     
-	public HierarchicalTransitionGraph create( boolean bool){
-		return new HierarchicalTransitionGraphImpl( bool);
-	}
-	
 	@Override
 	public NodeStyle<HierarchicalNode> createDefaultNodeStyle(HierarchicalTransitionGraph graph) {
 		return new DefaultHTGNodeStyle(graph);

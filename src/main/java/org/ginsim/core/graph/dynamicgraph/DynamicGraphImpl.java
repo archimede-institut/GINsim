@@ -44,21 +44,14 @@ public final class DynamicGraphImpl
     private MDDManager ddmanager = null;
     private int[] extraFunctions = null;
     
-	/**
-	 */
-	public DynamicGraphImpl() {
-		
-	    this( false);
 
-	}
-    
 	/**
 	 * create a new DynamicGraph.
 	 * @param nodeOrder
 	 */
 	protected DynamicGraphImpl(List<?> nodeOrder) {
 		
-	    this( false);
+	    this( );
 	    this.nodeOrder = new ArrayList<NodeInfo>();
 	    NodeInfo node_info;
 	    for (Object node: nodeOrder) {
@@ -74,11 +67,8 @@ public final class DynamicGraphImpl
 	    }
 	}
 	
-	/**
-	 * @param parsing
-	 */
-	protected DynamicGraphImpl( boolean parsing) {
-        super( DynamicGraphFactory.getInstance(), parsing);
+	protected DynamicGraphImpl() {
+        super( DynamicGraphFactory.getInstance());
 	}
 
 	@Override
@@ -94,7 +84,7 @@ public final class DynamicGraphImpl
 	 */
 	public DynamicGraphImpl(Set<String> set, File file)  throws GsException{
 		
-	    this( true);
+	    this();
         DynamicParser parser = new DynamicParser();
         parser.parse(file, set, this);
 	}

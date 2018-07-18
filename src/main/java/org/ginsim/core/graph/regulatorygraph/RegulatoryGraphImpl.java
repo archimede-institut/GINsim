@@ -1,10 +1,6 @@
 package org.ginsim.core.graph.regulatorygraph;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,18 +41,13 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     private List<byte[]> initialStates = null;
     private List<List<byte[]>> oracles = null;
 
-    /**
-     * Create a new Regulatory graph (not for parsing)
-     */
-    public RegulatoryGraphImpl() {
-        this( false);
-    }
+    private boolean use_name = false;
 
     /**
-     * @param parsing
+     * Create a new Regulatory graph
      */
-    public RegulatoryGraphImpl( boolean parsing) {
-        super( RegulatoryGraphFactory.getInstance(), parsing);
+    public RegulatoryGraphImpl() {
+        super( RegulatoryGraphFactory.getInstance());
     }
     
     @Override
@@ -148,9 +139,32 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 
     @Override
     public String getDisplayName(RegulatoryNode node) {
-        return node.getDisplayName();
+        if (use_name) {
+            return node.getDisplayName();
+        }
+        return node.getId();
     }
-    
+
+    @Override
+    public Map<String,String> getAttributes() {
+        if (use_name) {
+            attributes.put("display.node", "name");
+        } else {
+            attributes.remove("display.node");
+        }
+
+        return attributes;
+    }
+
+    @Override
+    public void setAttributes(String name, String value) {
+        super.setAttributes(name, value);
+
+        if ("display.node".equalsIgnoreCase(name)) {
+            use_name = "name".equalsIgnoreCase(value);
+        }
+    }
+
     @Override
 	protected String getGraphZipName(){
 		return GRAPH_ZIP_NAME;

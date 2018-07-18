@@ -3,6 +3,7 @@ package org.ginsim.core.io.parser;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Collection;
+import java.util.Map;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLWriter;
@@ -56,7 +57,17 @@ public class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 		out.addAttr("id", graph.getGraphName());
 		
 		hook_graphAttribute(out);
-		
+
+		Map<String,String> attributes = graph.getAttributes();
+		if (attributes != null) {
+			for (Map.Entry<String,String> e: attributes.entrySet()) {
+				out.openTag("attr");
+				out.addAttr("name", e.getKey());
+				out.addAttr("value", e.getValue());
+				out.closeTag();
+			}
+		}
+
 		styleManager.styles2ginml(out);
 		
 		saveNodes(out, vertices);

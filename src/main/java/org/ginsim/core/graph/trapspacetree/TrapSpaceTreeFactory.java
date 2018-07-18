@@ -25,7 +25,7 @@ public class TrapSpaceTreeFactory extends AbstractGraphFactory<TrapSpaceInclusio
 
 	@Override
 	public TrapSpaceInclusionDiagram create() {
-		return new TrapSpaceTreeImpl(this, false);
+		return new TrapSpaceTreeImpl(this);
 	}
 
 	

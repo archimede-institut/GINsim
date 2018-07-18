@@ -31,35 +31,23 @@ public class ReducedGraphImpl<G extends Graph<V,E>, V, E extends Edge<V>>  exten
 	 * @param parent
 	 */
 	public ReducedGraphImpl( G parent) {
-		
-	    this( false);
+	    this();
     	setAssociatedGraph( parent);
 	}
 
 	/**
-	 * @param map
+	 * @param set
 	 * @param file
 	 */
 	public ReducedGraphImpl(Set set, File file)  throws GsException{
-		
-	    this( true);
+	    this();
         ReducedGraphParser parser = new ReducedGraphParser();
         parser.parse(file, set, this);
 	}
 
-	/**
-	 * @param filename
-	 */
-	public ReducedGraphImpl( boolean parsing) {
-        super(ReducedGraphFactory.getInstance(), parsing);
+	public ReducedGraphImpl( ) {
+        super(ReducedGraphFactory.getInstance());
 	}
-	/**
-     * 
-     */
-    public ReducedGraphImpl() {
-    	
-        this( false);
-    }
 
     
 	/**

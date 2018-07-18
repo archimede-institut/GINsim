@@ -8,11 +8,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -60,33 +56,22 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     
 	// The name of the graph
 	protected String graphName = "default_name";
+
+	// Attributes
+	protected Map<String,String> attributes = new HashMap<>();
 	
     // The annotation associated with the graph
     protected Annotation graphAnnotation = null;
     
     private StyleManager<V, E> styleManager = null;
     
-    // TODO === List of variables that could be removed if a better solution is found =============
-    private boolean isParsing = false;
-    protected boolean annoted = false;
-    
-    private final String graphType;
-    
+
 	/**
 	 * Create a new graph with the default back-end.
 	 */
 	protected AbstractGraph(GraphFactory factory) {
-		this( factory, false);
-	}
-	
-    /**
-     * @param parsing
-     */
-    protected AbstractGraph(GraphFactory factory, boolean parsing) {
     	this.factory = factory;
     	this.graphBackend = (GraphBackend<V, E>)JgraphtBackendImpl.getGraphBackend(this);
-		this.graphType = factory.getGraphType();
-        this.isParsing = parsing;
         graphBackend.setViewListener(this);
 	}
 	
@@ -115,13 +100,21 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		    throw new GsException(GsException.GRAVITY_ERROR, "Invalid name");
 		}
         this.graphName = graph_name;
-        annoted = true;
         fireMetaChange();
     }
 
     @Override
 	public String getDisplayName(V node) {
     	return node.toString();
+	}
+
+	public Map<String,String> getAttributes() {
+		return attributes;
+	}
+
+	@Override
+	public void setAttributes(String name, String value) {
+		attributes.put(name, value);
 	}
 
 //    //----------------------   GRAPH SAVING MANAGEMENT METHODS -------------------------------
@@ -470,10 +463,10 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 
 	
     /**
-     * @return true is the graph is empty
+     * @return true if the graph is empty
      */
     public boolean isEmpty() {
-        return !annoted && getAnnotation().isEmpty() && getNodeCount() == 0;
+        return getAnnotation().isEmpty() && getNodeCount() == 0;
     }
 	
 	
@@ -704,9 +697,8 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * save implementation for a specific graph type.
 	 * 
 	 * @param osw		stream writer
-	 * @param vertices 	vertices that should be saved (can not be null)
+	 * @param nodes 	vertices that should be saved (can not be null)
 	 * @param edges		edges that should be saved (can not be null)
-	 * @param saveMode	save mode, will probably go away
 	 */
 	protected final void doSave(OutputStreamWriter osw, Collection<V> nodes, Collection<E> edges) throws GsException {
 		GINMLWriter writer = getGINMLWriter();
@@ -735,13 +727,5 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	public void fireGraphChange(GraphChangeType type, Object data) {
 		GSGraphManager.getInstance().fireGraphChange(this, type, data);
 	}
-
-    /**
-     * 
-     * @return True if parsing is active, Flase if not
-     */
-    public boolean isParsing() {
-    	return isParsing;
-    }
 
 }

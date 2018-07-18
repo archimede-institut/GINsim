@@ -25,11 +25,11 @@ abstract public class AbstractDerivedGraph<V, E extends Edge<V>, AG extends Grap
     protected String associatedID = null;
 
     
-    public AbstractDerivedGraph( GraphFactory factory, boolean parsing) {
-    	super(factory, parsing);
+    public AbstractDerivedGraph( GraphFactory factory) {
+    	super(factory);
     }
-    
-    
+
+
     /**
      * Associate the given graph to the current one
      * 
