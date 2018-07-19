@@ -19,6 +19,7 @@ import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
+import org.ginsim.core.graph.tree.TreeNode;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.service.*;
 import org.mangosdk.spi.ProviderFor;
@@ -264,8 +265,36 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 
 		XMLNode notes = elt.getNotes();
 		if (notes != null && notes.getChildCount() > 0) {
-			// TODO: handle text notes: convert from HTML to text, or enrich GINsim's capabilities?
-			System.out.println("Missing out on annotations");
+			StringBuffer sb = new StringBuffer();
+			fillNote(sb, notes);
+			gsnote.setComment(sb.toString());
+		}
+	}
+
+	private void fillNote(StringBuffer sb, XMLNode node) {
+		// TODO: proper note filtering
+		if (node.isText()) {
+			String text = node.getCharacters().trim();
+			if (text.length() > 0) {
+				sb.append(text);
+			}
+			return;
+		}
+
+		// TODO: handle more types of HTML tags
+		String name = node.getName();
+		if ("p".equals(name)) {
+			if (sb.length() > 0) {
+				sb.append("\n\n");
+			}
+		} else if ("br".equals(name)) {
+			if (sb.length() > 0) {
+				sb.append("\n");
+			}
+		}
+
+		for (int idx=0 ; idx<node.getChildCount() ; idx++) {
+			fillNote(sb, node.getChild(idx));
 		}
 	}
 }
