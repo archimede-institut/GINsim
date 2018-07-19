@@ -30,6 +30,8 @@ import org.sbml.jsbml.Model;
 import org.sbml.jsbml.SBase;
 import org.sbml.jsbml.ext.layout.*;
 import org.sbml.jsbml.ext.qual.QualitativeSpecies;
+import org.sbml.jsbml.util.StringTools;
+import org.sbml.jsbml.xml.XMLNode;
 
 @ProviderFor( Service.class)
 @Alias("SBML")
@@ -94,7 +96,7 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 			}
 			
 			// Handle annotations
-			importAnnotation(lrg, qbundle.document, lrg.getAnnotation());
+			importAnnotation(lrg, qbundle.document.getModel(), lrg.getAnnotation());
 			for (QualitativeSpecies sp: qbundle.qmodel.getListOfQualitativeSpecies()) {
 				RegulatoryNode node = lrg.getNodeByName(sp.getId());
 				importAnnotation(lrg, sp, node.getAnnotation());
@@ -225,9 +227,30 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 			CVTerm term = new CVTerm(Qualifier.BQB_UNKNOWN, link.getLink());
 			as.addCVTerm(term);
 		}
-		String txt = gsnote.getComment();
+		String txt = gsnote.getComment().trim();
 		if (txt != null && txt.length() > 0) {
-			elt.setNotes(txt);
+			String[] lines = txt.split("\n");
+			StringBuffer sb = new StringBuffer(txt.length() + 100);
+			sb.append("<notes><body xmlns=\"http://www.w3.org/1999/xhtml\">\n<p>");
+			boolean parStart = true;
+			for (String line: lines) {
+				line =  line.trim();
+				if (line.length() > 1) {
+					if (!parStart) {
+						sb.append("\n");
+					} else {
+						parStart = false;
+					}
+					sb.append(StringTools.encodeForHTML(line));
+				} else {
+					if (!parStart) {
+						sb.append("</p>\n<p>");
+						parStart = true;
+					}
+				}
+			}
+			sb.append("</p>\n</body></notes>");
+			elt.setNotes(sb.toString());
 		}
 	}
 	
@@ -238,11 +261,11 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 				gsnote.add(new AnnotationLink(s, lrg));
 			}
 		}
-		
-		String txt = elt.getNotesString();
-		if (txt != null && txt.length() > 0) {
+
+		XMLNode notes = elt.getNotes();
+		if (notes != null && notes.getChildCount() > 0) {
 			// TODO: handle text notes: convert from HTML to text, or enrich GINsim's capabilities?
-//			gsnote.setComment(txt);
+			System.out.println("Missing out on annotations");
 		}
 	}
 }
