@@ -113,6 +113,7 @@ public class FunctionPanelImpl extends BooleanFunctionTreePanel implements Funct
   	((TreeExpression)treeElement).setSelection(null, true);
   	textArea.getHighlighter().removeAllHighlights();
     treeElement.setEditable(true);
+    textArea.grabFocus();
   }
   public TreeExpression getTreeExpression() {
     return (TreeExpression)treeElement;
@@ -156,9 +157,7 @@ public class FunctionPanelImpl extends BooleanFunctionTreePanel implements Funct
 
   public void refresh() {
   	String s = textArea.getText().replaceAll(".", " ");
-  	//String s0 = textArea.getText();
   	textArea.setText(s);
-  	//textArea.setText(s0);
   	Enumeration exp_path = tree.getExpandedDescendants(tree.getPathForRow(0));
     TreePath sel_path = tree.getEditingPath();
     tree.stopEditing();
@@ -175,7 +174,7 @@ public class FunctionPanelImpl extends BooleanFunctionTreePanel implements Funct
   }
 
   public void validateText(String s) {
-		s = s.trim();
+    s = s.trim();
     TreeInteractionsModel interactionsModel;
     boolean ok;
     Enumeration exp_path = tree.getExpandedDescendants(tree.getPathForRow(0));
@@ -206,40 +205,22 @@ public class FunctionPanelImpl extends BooleanFunctionTreePanel implements Funct
     tree.setSelectionPath(sel_path);
   }
   public void keyPressed(KeyEvent e) {
+    char c = e.getKeyChar();
+    switch (e.getKeyChar()) {
+      case '\n':
+      case '\t':
+        e.consume();
+    }
   }
   public void keyReleased(KeyEvent e) {
   }
   public void keyTyped(KeyEvent e) {
     if (treeElement instanceof TreeExpression) {
       if ('\n' == e.getKeyChar()) {
-        try {
-          textArea.getDocument().remove(textArea.getCaretPosition() - 1, 1);
-        }
-        catch (Exception ex) {
-          ex.printStackTrace();
-        }
         validateText(textArea.getText());
         ((TreeExpression)treeElement).setEditorModel(null);
         ((TreeExpression)treeElement).setSelection(null, false);
-      }
-      else if ('\t' == e.getKeyChar()) {
-      	/*try {
-          textArea.getDocument().remove(textArea.getCaretPosition() - 1, 1);
-        }
-        catch (Exception ex) {
-          ex.printStackTrace();
-        }
-        ((TreeExpression)treeElement).setEditorModel(panel.getFunctionEditor().getModel());
-				panel.setEditEditorVisible(true);
-				setText(textArea.getText(), textArea.getCaretPosition());
-				tree.stopEditing();
-			  TreeInteractionsModel model = (TreeInteractionsModel)tree.getModel();
-        tree.setEditable(false);
-        panel.initEditor(model, this);
-				tree.setSelectionPath(null);;
-        treeElement.setProperty("autoedit", new Boolean(false));*/
-      }
-      else {
+      } else {
         text = textArea.getText();
         int nbCols = width / charWidth;
         int nbRows = (text.length() + 1) / nbCols + 1;
