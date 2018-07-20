@@ -103,9 +103,9 @@ public abstract class BaseGraphGUI<G extends Graph<V,E>, V, E extends Edge<V>>
 		
 		menu.add(layout);
 
-		menu.add(getZoomAction(this, -1));
-		menu.add(getZoomAction(this, +1));
-		menu.add(getZoomAction(this, 0));
+		for (ZoomEffect effect: ZoomEffect.values()) {
+			menu.add(getZoomAction(this, effect));
+		}
 
 		return menu;
 	}
@@ -242,10 +242,10 @@ public abstract class BaseGraphGUI<G extends Graph<V,E>, V, E extends Edge<V>>
 		return null;
 	}
 
-    protected abstract void setZoomLevel(int direction);
+    protected abstract void setZoomLevel(ZoomEffect effect);
 
-    protected Action getZoomAction(BaseGraphGUI<?, ?, ?> gui, int direction) {
-    	return new ZoomAction(gui, direction);
+    protected Action getZoomAction(BaseGraphGUI<?, ?, ?> gui, ZoomEffect effect) {
+    	return new ZoomAction(gui, effect);
     }
 }
 
@@ -253,26 +253,18 @@ class ZoomAction extends AbstractAction {
 	private static final long serialVersionUID = 8027606268716590825L;
 	
 	private final BaseGraphGUI<?, ?, ?> gui;
-	private final int direction;
+	private final ZoomEffect effect;
 	
-	public ZoomAction(BaseGraphGUI<?, ?, ?> gui, int direction) {
+	public ZoomAction(BaseGraphGUI<?, ?, ?> gui, ZoomEffect effect) {
 		this.gui = gui;
-		this.direction = direction;
-		
-		if (direction < 0) {
-			putValue(NAME, "Zoom out");
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_SUBTRACT, FrameActionManager.MASK));
-		} else if (direction > 0) {
-			putValue(NAME, "Zoom in");
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_ADD, FrameActionManager.MASK));
-		} else {
-			putValue(NAME, "Reset zoom level");
-			putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, FrameActionManager.MASK));
-		}
+		this.effect = effect;
+
+		putValue(NAME, effect.name);
+		putValue(ACCELERATOR_KEY, KeyStroke.getKeyStroke(effect.key, FrameActionManager.MASK));
 	}
 	
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		gui.setZoomLevel(direction);
+		gui.setZoomLevel(effect);
 	}
 }

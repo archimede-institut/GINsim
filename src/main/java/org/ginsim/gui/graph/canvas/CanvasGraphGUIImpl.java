@@ -8,6 +8,7 @@ import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.gui.graph.BaseGraphGUI;
 import org.ginsim.gui.graph.GraphGUIHelper;
+import org.ginsim.gui.graph.ZoomEffect;
 
 public class CanvasGraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> extends BaseGraphGUI<G, V, E> {
 
@@ -49,8 +50,8 @@ public class CanvasGraphGUIImpl<G extends Graph<V,E>, V, E extends Edge<V>> exte
 	}
 
 	@Override
-	protected void setZoomLevel(int direction) {
-		canvas.zoom(direction);
+	protected void setZoomLevel(ZoomEffect effect) {
+		canvas.zoom(effect);
 	}
 
     public double getZoomLevel() {

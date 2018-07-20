@@ -19,7 +19,6 @@ import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
-import org.ginsim.core.graph.tree.TreeNode;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.service.*;
 import org.mangosdk.spi.ProviderFor;

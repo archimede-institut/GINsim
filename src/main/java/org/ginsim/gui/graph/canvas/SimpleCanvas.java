@@ -1,6 +1,7 @@
 package org.ginsim.gui.graph.canvas;
 
 import org.ginsim.core.graph.view.ViewHelper;
+import org.ginsim.gui.graph.ZoomEffect;
 
 import java.awt.AlphaComposite;
 import java.awt.Color;
@@ -221,22 +222,41 @@ public class SimpleCanvas extends JComponent implements VirtualScrollable {
 		return visibleArea;
 	}
 	
-	public synchronized void zoom(int n) {
-		if (n > 0) {
-			if (zoom >= MAXZOOM) {
-				return;
-			}
-			zoom += .1;
-		} else if (n < 0) {
-			if (zoom <= MINZOOM) {
-				return;
-			}
-			zoom -= .1;
-		} else if (zoom == 1) {
-			return;
-		} else {
-			zoom = 1;
+	public synchronized void zoom(ZoomEffect effect) {
+		switch (effect) {
+			case ZOOM_IN:
+				if (zoom >= MAXZOOM) {
+					return;
+				}
+				zoom += .1;
+				break;
+			case ZOOM_OUT:
+				if (zoom <= MINZOOM) {
+					return;
+				}
+				zoom -= .1;
+				break;
+			case ZOOM_RESET:
+				if (zoom == 1) {
+					return;
+				}
+				zoom = 1;
+				break;
+			case ZOOM_FIT:
+				Dimension full = renderer.getBounds();
+				Dimension view = getSize();
+				double scale = ((double)view.width) / full.width;
+				double scaleh = ((double)view.height) / full.height;
+				if (scaleh < scale) {
+					scale = scaleh;
+				}
+				if (zoom == scale) {
+					return;
+				}
+				zoom = scale;
+				break;
 		}
+
 		img = null;
 		visibleAreaUpdated = true;
 		repaint();
@@ -463,43 +483,49 @@ class CanvasEventListener implements MouseInputListener, MouseWheelListener, Key
 			canvas.scroll(n, e.isAltDown());
 			return;
 		}
-		
-		canvas.zoom(-e.getWheelRotation());
+
+		ZoomEffect effect = e.getWheelRotation() > 0 ? ZoomEffect.ZOOM_OUT : ZoomEffect.ZOOM_IN;
+		canvas.zoom(effect);
 	}
 
 	@Override
 	public void keyTyped(KeyEvent e) {
 
-		if (e.isControlDown()) {
-			switch (e.getKeyCode()) {
-			case KeyEvent.VK_ADD:
-				canvas.zoom(1);
-				break;
-			case KeyEvent.VK_SUBTRACT:
-				canvas.zoom(-1);
-				break;
-			case KeyEvent.VK_MULTIPLY:
-			case KeyEvent.VK_EQUALS:
-				canvas.zoom(0);
-				break;
+		int code = e.getKeyCode();
+
+		switch (code) {
 			case KeyEvent.VK_F1:
 			case KeyEvent.VK_HELP:
 			case KeyEvent.VK_H:
 				canvas.help();
+				return;
+			case KeyEvent.VK_ESCAPE:
+				canvas.cancel();
+				return;
+		}
+
+		char c = e.getKeyChar();
+		switch (c) {
+			case '+':
+				canvas.zoom(ZoomEffect.ZOOM_IN);
 				break;
-			}
+			case '-':
+				canvas.zoom(ZoomEffect.ZOOM_OUT);
+				break;
+			case '*':
+				canvas.zoom(ZoomEffect.ZOOM_FIT);
+				break;
+				case '=':
+				case '/':
+				canvas.zoom(ZoomEffect.ZOOM_RESET);
+				break;
+			case '?':
+			case 'h':
+			case 'H':
+				canvas.help();
+				break;
 		}
 		
-		switch (e.getKeyChar()) {
-		case KeyEvent.VK_ESCAPE:
-			canvas.cancel();
-			break;
-		case '?':
-		case 'h':
-		case 'H':
-			canvas.help();
-			break;
-		}
 	}
 
 	@Override
