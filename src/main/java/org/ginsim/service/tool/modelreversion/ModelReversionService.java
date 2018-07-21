@@ -3,7 +3,7 @@ package org.ginsim.service.tool.modelreversion;
 import org.colomoto.biolqm.LQMServiceManager;
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.modifier.ModelModifier;
-import org.colomoto.biolqm.modifier.reverse.ModelReverserService;
+import org.colomoto.biolqm.modifier.reverse.ReverseService;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
@@ -20,7 +20,7 @@ import org.mangosdk.spi.ProviderFor;
 @ServiceStatus(EStatus.DEVELOPMENT)
 public class ModelReversionService implements Service {
 
-	private final ModelReverserService reverserService = LQMServiceManager.getModifier(ModelReverserService.class);
+	private final ReverseService reverserService = LQMServiceManager.get(ReverseService.class);
 	
 	public ModelModifier getModelReverser(LogicalModel model) {
 		return reverserService.getModifier(model);

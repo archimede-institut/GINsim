@@ -12,9 +12,8 @@ import javax.swing.event.ChangeListener;
 
 import org.colomoto.biolqm.LQMServiceManager;
 import org.colomoto.biolqm.LogicalModel;
-import org.colomoto.biolqm.modifier.reduction.ModelReductionService;
-import org.colomoto.biolqm.modifier.reduction.ReductionSettings;
-import org.colomoto.biolqm.settings.state.StatePattern;
+import org.colomoto.biolqm.modifier.reduction.ReductionModifier;
+import org.colomoto.biolqm.modifier.reduction.ReductionService;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.callable.ProgressListener;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
@@ -34,7 +33,7 @@ import org.ginsim.servicegui.tool.modelreduction.ReductionSelectionPanel;
 abstract public class LogicalModelActionDialog extends StackDialog implements ProgressListener, PerturbationHolder, ReductionHolder, ChangeListener {
 
 	private static final ObjectAssociationManager OManager = ObjectAssociationManager.getInstance();
-	private static final ModelReductionService reductionService = LQMServiceManager.getModifier(ModelReductionService.class);
+	private static final ReductionService reductionService = LQMServiceManager.get(ReductionService.class);
 	
 	protected final RegulatoryGraph lrg;
 	
@@ -215,21 +214,21 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         	model = getPerturbation().apply(model);
         }
 
-        ReductionSettings reductionSettings = reductionService.getSettings();
+        ReductionModifier reducer = reductionService.getModifier(model);
         if (cb_propagate.isSelected()) {
-        	reductionSettings.handleFixed = true;
-        	reductionSettings.purgeFixed = true;
+			reducer.handleFixed = true;
+			reducer.purgeFixed = true;
         }
         
         if (cb_simplify.isSelected()) {
-        	reductionSettings.handleOutputs = true;
+			reducer.handleOutputs = true;
         }
 
 		// Apply input pattern
 		if (pattern != null) {
-			reductionSettings.pattern = pattern.getStatePattern();
+			reducer.pattern = pattern.getStatePattern();
 		} else {
-			reductionSettings.pattern = null;
+			reducer.pattern = null;
 		}
 
 		// TODO: merge all reductions in a single pass
@@ -238,7 +237,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         	model = reduction.apply(model);
         }
 
-        model = reductionService.getModifier(model, reductionSettings).getModifiedModel();
+        model = reducer.getModifiedModel();
 
 		run(model);
 	}

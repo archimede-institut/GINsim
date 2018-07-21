@@ -21,7 +21,7 @@ import org.mangosdk.spi.ProviderFor;
 @ServiceStatus(EStatus.RELEASED)
 public class TrapSpaceService implements Service {
 
-	private static TrapSpaceTool TOOL = LQMServiceManager.getTool(TrapSpaceTool.class);
+	private static TrapSpaceTool TOOL = LQMServiceManager.get(TrapSpaceTool.class);
 	
 	/**
 	 * This constructor should be called by the service manager,

@@ -34,7 +34,7 @@ import org.mangosdk.spi.ProviderFor;
 @ServiceStatus(EStatus.RELEASED)
 public class StableStatesService implements Service {
 
-	public static FixpointTool tool = LQMServiceManager.getTool(FixpointTool.class);
+	public static FixpointTool tool = LQMServiceManager.get(FixpointTool.class);
 
 	/**
 	 * This constructor should be called by the service manager,

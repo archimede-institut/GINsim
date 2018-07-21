@@ -5,7 +5,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.colomoto.biolqm.LogicalModel;
-import org.colomoto.biolqm.modifier.booleanize.Booleanizer;
+import org.colomoto.biolqm.modifier.booleanize.BooleanizeModifier;
+import org.colomoto.biolqm.modifier.booleanize.BooleanizeService;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
@@ -28,7 +29,7 @@ import org.mangosdk.spi.ProviderFor;
 public class ModelBooleanizerService implements Service {
 
 	public LogicalModel booleanize(LogicalModel origModel) {
-		return Booleanizer.booleanize(origModel);
+		return new BooleanizeModifier(origModel).getModifiedModel();
 	}
 
 	public void copyNodeStyles(RegulatoryGraph src, RegulatoryGraph dest) {

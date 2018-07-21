@@ -10,7 +10,8 @@ import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.io.LogicalModelFormat;
 import org.colomoto.biolqm.io.OutputStreamProvider;
-import org.colomoto.biolqm.modifier.booleanize.Booleanizer;
+import org.colomoto.biolqm.modifier.booleanize.BooleanizeModifier;
+import org.colomoto.biolqm.modifier.booleanize.BooleanizeService;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 
@@ -74,7 +75,7 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 	public String export(LogicalModel model, OutputStreamProvider out) throws IOException {
 		String message = null;
 		if (!model.isBoolean() && format.getMultivaluedSupport() == LogicalModelFormat.MultivaluedSupport.BOOLEANIZED) {
-			model = Booleanizer.booleanize(model);
+			model = new BooleanizeModifier(model).getModifiedModel();
 			message = "Multivalued model was converted to Boolean";
 		}
 		format.export(model, out);

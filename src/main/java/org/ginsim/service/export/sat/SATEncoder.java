@@ -8,7 +8,8 @@ import java.util.Map;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.modifier.booleanize.Booleanizer;
+import org.colomoto.biolqm.modifier.booleanize.BooleanizeModifier;
+import org.colomoto.biolqm.modifier.booleanize.BooleanizeService;
 import org.colomoto.biolqm.tool.fixpoints.FixpointSearcher;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDVariable;
@@ -38,7 +39,7 @@ public class SATEncoder {
 			GsException {
 
 		LogicalModel multiValueModel = config.getModel();
-		LogicalModel model = Booleanizer.booleanize(multiValueModel);
+		LogicalModel model = new BooleanizeModifier(multiValueModel).getModifiedModel();
 		List<NodeInfo> coreNodes = model.getComponents();
 		StringBuffer sb = new StringBuffer();
 		int nSATrules = 0;
