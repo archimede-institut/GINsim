@@ -14,7 +14,7 @@ import javax.swing.table.TableColumn;
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.helper.clingo.ClingoLauncher;
 import org.colomoto.biolqm.tool.trapspaces.TrapSpaceList;
-import org.colomoto.biolqm.tool.trapspaces.TrapSpaceSettings;
+import org.colomoto.biolqm.tool.trapspaces.TrapSpaceTask;
 import org.colomoto.common.task.Task;
 import org.colomoto.common.task.TaskListener;
 import org.colomoto.common.task.TaskStatus;
@@ -26,7 +26,7 @@ import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.utils.dialog.stackdialog.LogicalModelActionDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
-import org.ginsim.service.tool.trapspace.TrapSpaceService;
+import org.ginsim.service.tool.trapspace.TrapSpaceServiceWrapper;
 import org.ginsim.servicegui.tool.stablestates.ColoredCellRenderer;
 
 
@@ -38,7 +38,7 @@ import org.ginsim.servicegui.tool.stablestates.ColoredCellRenderer;
 @SuppressWarnings("serial")
 public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskListener {
 
-	private static TrapSpaceService srv = GSServiceManager.getService(TrapSpaceService.class);
+	private static TrapSpaceServiceWrapper srv = GSServiceManager.getService(TrapSpaceServiceWrapper.class);
 	
 	TrapSpaceTableModel model;
 	EnhancedJTable tresult;
@@ -90,7 +90,7 @@ public class TrapSpaceSwingUI extends LogicalModelActionDialog implements TaskLi
         	settings.diag = false;
         	settings.terminal = true;
         }
-		m_identifier = srv.getTask(settings.getSettings(lmodel));
+		m_identifier = srv.getTask(lmodel);
 		m_identifier.background(this);
     }
 
@@ -160,14 +160,14 @@ class TrapSpaceParameters {
 	public boolean terminal = false;
 	public boolean diag = false;
 
-	public TrapSpaceSettings getSettings(LogicalModel model) {
-		TrapSpaceSettings settings = new TrapSpaceSettings(model);
+	public TrapSpaceTask getTask(LogicalModel model) {
+		TrapSpaceTask task = new TrapSpaceTask(model, null);
 
-		settings.bdd = this.bdd;
-		settings.reduce = this.reduce;
-		settings.terminal = this.terminal;
-		settings.diag = this.diag;
+		task.bdd = this.bdd;
+		task.reduce = this.reduce;
+		task.terminal = this.terminal;
+		task.diag = this.diag;
 
-		return settings;
+		return task;
 	}
 }
