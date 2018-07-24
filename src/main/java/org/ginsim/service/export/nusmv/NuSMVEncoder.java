@@ -660,7 +660,7 @@ public class NuSMVEncoder {
 		Set<String> sStrong = new HashSet<String>();
 		boolean bWeak = false;
 
-		String[] nodeIDs = fps.getNodeIDs();
+		NodeInfo[] nodeIDs = fps.getComponents();
 		int stateNodesSize = nodeIDs.length;
 
 		for (byte[] path: fps) {
@@ -675,7 +675,7 @@ public class NuSMVEncoder {
 				} else if (i < stateNodesSize) {
 					if (sSSdesc.length() > 0)
 						sSSdesc += " & ";
-					sSSdesc += avoidNuSMVNames(nodeIDs[i])
+					sSSdesc += avoidNuSMVNames(nodeIDs[i].getNodeID())
 							+ "=" + path[i];
 				}
 			}

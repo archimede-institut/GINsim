@@ -13,6 +13,8 @@ import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.settings.state.StateList;
+import org.colomoto.biolqm.tool.fixpoints.FixpointList;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Txt;
 import org.ginsim.core.annotation.Annotation;
@@ -97,10 +99,10 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
      * browse the graph, looking for stable states
      * @return the list of stable states found
      */
-    private List<byte[]> getStableStates( DynamicGraph graph) {
+    private StateList getStableStates(DynamicGraph graph) {
     	// TODO: use cache from the graph itself?
-    	
-    	List<byte[]> stables = new ArrayList<byte[]>();
+
+		FixpointList stables = new FixpointList(graph.getNodeOrder());
         for (DynamicNode node: graph.getNodes()) {
             if (node.isStable()) {
                 stables.add(node.state);
@@ -113,7 +115,7 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
 	@Override
 	public JPanel getInfoPanel( DynamicGraph graph) {
         JPanel pinfo = new JPanel();
-        List<byte[]> stables = getStableStates( graph);
+        StateList stables = getStableStates( graph);
 
         // just display the number of stable states here and a "View" button
         if (stables.size() > 0) {
@@ -146,9 +148,9 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
 class ViewStableAction extends AbstractAction {
 	
 	private final DynamicGraph graph;
-	private final List<byte[]> stables;
+	private final StateList stables;
 	
-	public ViewStableAction(DynamicGraph graph, List<byte[]> stables) {
+	protected ViewStableAction(DynamicGraph graph, StateList stables) {
 		super("View");
 		this.graph = graph;
 		this.stables = stables;
@@ -164,7 +166,7 @@ class ViewStableAction extends AbstractAction {
         JScrollPane scroll = new JScrollPane();
         StableTableModel model = new StableTableModel();
         try {
-	        model.setResult(stables, graph.getNodeOrder());
+	        model.setResult(stables);
 	        scroll.setViewportView(new EnhancedJTable(model));
 	        frame.setContentPane(scroll);
 	        frame.setVisible(true);

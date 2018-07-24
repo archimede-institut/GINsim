@@ -132,12 +132,16 @@ public class NamedStateList extends ListenableNamedList<NamedState> {
         return null;
     }
 
-	public String nameState(byte[] state, List<?> no) {
+    public String nameState(byte[] state, List<?> no) {
+        return nameState(state, no.toArray());
+    }
+
+	public String nameState(byte[] state, Object[] components) {
         for (NamedState istate: this) {
             Map<NodeInfo, List<Integer>> m_istate = istate.getMap();
             boolean ok = true;
-            for (int j=0 ; j<no.size() ; j++) {
-                List<Integer> values = m_istate.get(no.get(j));
+            for (int j=0 ; j<components.length ; j++) {
+                List<Integer> values = m_istate.get(components[j]);
                 if (values != null) {
                     ok = false;
                     int val = state[j];

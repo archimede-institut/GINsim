@@ -6,6 +6,7 @@ import java.util.List;
 import javax.swing.table.AbstractTableModel;
 
 import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.settings.state.StateList;
 import org.colomoto.biolqm.tool.fixpoints.FixpointList;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.PathSearcher;
@@ -21,9 +22,12 @@ import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
 @SuppressWarnings("serial")
 public class StableTableModel extends AbstractTableModel {
 
-	List<byte[]> result = null;
-	List<?> components = null;
+	StateList states = null;
+	NodeInfo[] components = null;
 	NamedStateList istates = null;
+	byte[] state = null;
+
+	boolean showOutputs = false;
 
 	public StableTableModel() {
 	}
@@ -35,55 +39,50 @@ public class StableTableModel extends AbstractTableModel {
 	}
 
 	public byte[] getState(int sel) {
-		if (sel < 0 || result == null | sel > result.size()) {
+		if (sel < 0 || states == null | sel > states.size()) {
 			return null;
 		}
-		return result.get(sel);
+		return states.fillState(null, sel);
 	}
 
-	public void setResult(FixpointList fixpoints) {
-		setResult(fixpoints, fixpoints.nodes);
-	}
-
-	public void setResult(List<byte[]> stables, List<?> components) {
-		this.result = stables;
-		this.components = components;
+	public void setResult(StateList states) {
+		this.states = states;
+		this.components = states.getComponents();
+		this.state = new byte[components.length];
 		fireTableStructureChanged();
 	}
 
 	@Override
 	public int getRowCount() {
-		if (result == null) {
+		if (states == null) {
 			return 0;
 		}
 
-		return result.size();
+		return states.size();
 	}
 
 	@Override
 	public int getColumnCount() {
-		if (result == null) {
+		if (components == null) {
 			return 0;
 		}
 
-		return components.size() + 1;
+		return components.length + 1;
 	}
 
 	@Override
 	public Object getValueAt(int rowIndex, int columnIndex) {
-		if (result == null) {
+		if (states == null) {
 			return "";
 		}
 		if (columnIndex == 0) {
 			if (istates != null) {
-				return istates.nameState(result.get(rowIndex), components);
+				state = states.fillState(state, rowIndex);
+				return istates.nameState(state, components);
 			}
 			return "";
 		}
-		int v = result.get(rowIndex)[columnIndex-1];
-		if (v == 0) {
-			return "0";
-		}
+		int v = states.get(rowIndex, columnIndex-1);
 		if (v < 0) {
 			return "*";
 		}
@@ -100,6 +99,6 @@ public class StableTableModel extends AbstractTableModel {
 			return null;
 		}
 		
-		return components.get(column-1).toString();
+		return components[column-1].getNodeID();
 	}
 }

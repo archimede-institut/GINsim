@@ -34,10 +34,9 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
 
 	private static StableStatesService sss = GSServiceManager.getService(StableStatesService.class);
 	
-	StableTableModel model;
-	EnhancedJTable tresult;
-
-	FixpointTask m_finder;
+	private StableTableModel model;
+	private EnhancedJTable tresult;
+	private FixpointTask m_finder;
 
     public StableStateSwingUI(JFrame f, RegulatoryGraph lrg) {
 		super(lrg, f, "stableStatesGUI", 600, 400);

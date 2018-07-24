@@ -226,7 +226,7 @@ class StableState extends TabComponantProvidingAState {
 		c.weighty = 1;
 		c.ipady = 0;
 		tableModel = new StableTableModel();
-		tableModel.setResult(null, g.getNodeInfos());
+		tableModel.setResult(null);
         table = new EnhancedJTable(tableModel);
         table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
         table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
