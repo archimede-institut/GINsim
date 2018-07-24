@@ -53,7 +53,7 @@ public class SATEncoder {
 				}
 				FixpointSearcher stableStateSearcher = GSServiceManager.get(
 						StableStatesService.class)
-						.getStableStateSearcher(model);
+						.getSearcher(model);
 				int root = stableStateSearcher.call();
 				MDDManager manager = stableStateSearcher.getMDDManager();
 				PathSearcher searcher = new PathSearcher(manager, 1);

@@ -13,7 +13,9 @@ import java.util.TreeMap;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.tool.fixpoints.FixpointList;
 import org.colomoto.biolqm.tool.fixpoints.FixpointSearcher;
+import org.colomoto.biolqm.tool.fixpoints.FixpointTask;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.common.application.GsException;
@@ -642,15 +644,8 @@ public class NuSMVEncoder {
 		}
 		String sRet = "";
 		try {
-			FixpointSearcher sss = GSServiceManager.getService(StableStatesService.class)
-					.getStableStateSearcher(model);
-			int omdds = sss.call();
-			MDDManager ddmanager = sss.getMDDManager().getManager(newNodeOrder);
-			PathSearcher psearcher = new PathSearcher(ddmanager, 1);
-			psearcher.setNode(omdds);
-
-			sRet = writeSSs(psearcher, newNodeOrder, newNodeOrder.size()
-					- inputs);
+			FixpointTask task = GSServiceManager.getService(StableStatesService.class).getTask(model);
+			sRet = writeSSs(task.call());
 			sRet += ";\n";
 		} catch (Exception e) {
 			sRet = "\nweakSS := FALSE;\nstrongSS := FALSE;";
@@ -660,28 +655,28 @@ public class NuSMVEncoder {
 		return sRet;
 	}
 
-	private String writeSSs(PathSearcher paths, List<NodeInfo> nodeOrder,
-			int stateNodesSize) {
+	private String writeSSs(FixpointList fps) {
 		Set<String> sWeak = new HashSet<String>();
 		Set<String> sStrong = new HashSet<String>();
 		boolean bWeak = false;
 
-		int[] iaSSPath = paths.getPath();
-		for (@SuppressWarnings("unused")
-		int v : paths) {
+		String[] nodeIDs = fps.getNodeIDs();
+		int stateNodesSize = nodeIDs.length;
+
+		for (byte[] path: fps) {
 			String sSSdesc = "";
 
-			for (int i = 0; i < nodeOrder.size(); i++) {
+			for (int i = 0 ; i < stateNodesSize ; i++) {
 				// if (nodeOrder.get(i).isOutput())
 				// continue;
-				if (iaSSPath[i] < 0) {
+				if (path[i] < 0) {
 					bWeak = true;
 					continue;
 				} else if (i < stateNodesSize) {
 					if (sSSdesc.length() > 0)
 						sSSdesc += " & ";
-					sSSdesc += avoidNuSMVNames(nodeOrder.get(i).getNodeID())
-							+ "=" + iaSSPath[i];
+					sSSdesc += avoidNuSMVNames(nodeIDs[i])
+							+ "=" + path[i];
 				}
 			}
 			if (bWeak)

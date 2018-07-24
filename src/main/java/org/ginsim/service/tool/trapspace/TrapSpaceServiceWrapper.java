@@ -2,10 +2,8 @@ package org.ginsim.service.tool.trapspace;
 
 import org.colomoto.biolqm.LQMServiceManager;
 import org.colomoto.biolqm.LogicalModel;
-import org.colomoto.biolqm.tool.trapspaces.TrapSpaceList;
 import org.colomoto.biolqm.tool.trapspaces.TrapSpaceService;
 import org.colomoto.biolqm.tool.trapspaces.TrapSpaceTask;
-import org.colomoto.common.task.Task;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;

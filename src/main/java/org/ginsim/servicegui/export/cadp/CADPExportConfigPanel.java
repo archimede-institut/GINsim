@@ -13,7 +13,9 @@ import java.util.Set;
 
 import javax.swing.JPanel;
 
+import org.colomoto.biolqm.tool.fixpoints.FixpointList;
 import org.colomoto.biolqm.tool.fixpoints.FixpointSearcher;
+import org.colomoto.biolqm.tool.fixpoints.FixpointTask;
 import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -284,33 +286,21 @@ public class CADPExportConfigPanel extends AbstractStackDialogHandler implements
 
 		// Determining the Stable States
 		// Needs to determine stable states of the individual model
-
-		FixpointSearcher ssSearcher = GSServiceManager.getService(StableStatesService.class)
-				.getStableStateSearcher(getGraph().getModel());
-
-		PathSearcher pathSearcher = ssSearcher.getPaths();
-
-		int path[] = pathSearcher.getPath();
-
-		for (@SuppressWarnings("unused")
-		int value : pathSearcher) {
-			// in this case, value will necessarily be 1
-			byte[] stableState = new byte[path.length];
-			for (int i = 0; i < path.length; i++) {
-				stableState[i] = (byte) path[i];
-				// undefined positions are -1
-			}
-
-			List<byte[]> multiplexedStableStates = multiplexStableState(stableState);
-
-			for (byte[] fullySpecifiedStableState : multiplexedStableStates)
-				stableStates.add(fullySpecifiedStableState);
+		try {
+			FixpointTask fpTask = GSServiceManager.getService(StableStatesService.class).getTask(getGraph().getModel());
+			fpTask.pattern = false; // unfold all states
+			return fpTask.call();
+		} catch (Exception e) {
+			System.err.println("Error while computing the fixed points");
 		}
-
-		return stableStates;
-
+		return null;
 	}
 
+	/**
+	 * No longer used as the FixpointTask above can already unfold patterns of stable states
+	 * FIXME: double check and delete
+	 * @deprecated
+	 */
 	private List<byte[]> multiplexStableState(byte[] stableState) {
 		List<byte[]> multiplexed = new ArrayList<byte[]>();
 		boolean needsMultiplex = true;

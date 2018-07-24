@@ -8,8 +8,6 @@ import org.colomoto.biolqm.tool.fixpoints.FixpointSearcher;
 import org.colomoto.biolqm.tool.fixpoints.FixpointService;
 import org.colomoto.biolqm.tool.fixpoints.FixpointTask;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.Alias;
@@ -18,15 +16,10 @@ import org.mangosdk.spi.ProviderFor;
 
 
 /**
- * This implements an analytic search of stable states. A state "x" is stable if, for every gene "i",
- * K(x) = x(i).
- * 
- * To find a stable state, one can build a MDD for each gene, giving the context under which 
- * THIS gene is stable.Then the stable states can be found by combining these diagrams.
- * 
- * To improve performances, the individuals "stability" MDD are not built independently 
- * but immediately assembled.
- * The order in which they are considerd is also chosen to keep them small as long as possible.
+ * This service provides an analytic search for stable states, implemented in bioLQM.
+ * A state "x" is stable if, for every gene "i", K(x) = x(i).
+ *
+ * @author Aurelien Naldi
  */
 @ProviderFor( Service.class)
 @Alias("stable")
@@ -48,20 +41,26 @@ public class StableStatesService implements Service {
 		return task;
 	}
 
-	public FixpointSearcher getSearcher(RegulatoryGraph graph) {
-		return getStableStateSearcher(graph.getModel());
-	}
-	
-	public FixpointSearcher getStableStateSearcher( RegulatoryGraph regGraph, List<RegulatoryNode> nodeOrder, Perturbation mutant) {
-		LogicalModel model = regGraph.getModel();
-		if (mutant != null) {
-			mutant.update(model);
-		}
-		return getStableStateSearcher(model);
+	public FixpointTask getTask(RegulatoryGraph graph) {
+		return getTask(graph.getModel());
 	}
 
-	public FixpointSearcher getStableStateSearcher( LogicalModel model) {
-		return new FixpointSearcher(model);
+	/**
+	 * @param model
+	 * @return a MDD-based stable-state searcher
+	 * @deprecated This low-level API could change or be removed
+	 */
+	public FixpointSearcher getSearcher( LogicalModel model) {
+		return new FixpointSearcher( model);
+	}
+
+	/**
+	 * @param graph
+	 * @return a MDD-based stable-state searcher
+	 * @deprecated This low-level API could change or be removed
+	 */
+	public FixpointSearcher getSearcher( RegulatoryGraph graph) {
+		return getSearcher( graph.getModel());
 	}
 
 }
