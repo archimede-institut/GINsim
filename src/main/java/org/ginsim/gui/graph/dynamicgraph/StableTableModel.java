@@ -1,18 +1,9 @@
 package org.ginsim.gui.graph.dynamicgraph;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.settings.state.StateList;
-import org.colomoto.biolqm.tool.fixpoints.FixpointList;
-import org.colomoto.mddlib.MDDManager;
-import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;
@@ -23,13 +14,12 @@ import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
  * Simple table model to view stable state search results.
  */
 @SuppressWarnings("serial")
-public class StableTableModel extends AbstractTableModel implements ChangeListener {
+public class StableTableModel extends AbstractTableModel {
 
 	StateList states = null;
 	NodeInfo[] components = null;
 	NamedStateList istates = null;
 	byte[] state = null;
-	JCheckBox cb_extra;
 
 	public StableTableModel() {
 	}
@@ -38,13 +28,6 @@ public class StableTableModel extends AbstractTableModel implements ChangeListen
 		NamedStatesHandler gsistates = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(lrg, NamedStatesManager.KEY, false);
 		if (gsistates != null) {
 			istates = gsistates.getInitialStates();
-		}
-	}
-
-	public void setExtraCheckbox(JCheckBox cb_extra) {
-		this.cb_extra = cb_extra;
-		if(cb_extra != null) {
-			cb_extra.addChangeListener(this);
 		}
 	}
 
@@ -98,16 +81,16 @@ public class StableTableModel extends AbstractTableModel implements ChangeListen
 			return "";
 		}
 		if (columnIndex > components.length) {
-			System.out.println("   out: "+columnIndex);
+			System.out.println("   out: " + columnIndex);
 		}
-		int v = states.get(rowIndex, columnIndex-1);
+		int v = states.get(rowIndex, columnIndex - 1);
 		if (v == -5) {
 			return "?";
 		}
 		if (v < 0) {
 			return "*";
 		}
-		return ""+v;
+		return "" + v;
 	}
 
 	@Override
@@ -119,18 +102,16 @@ public class StableTableModel extends AbstractTableModel implements ChangeListen
 		if (components == null) {
 			return null;
 		}
-		
-		return components[column-1].getNodeID();
+
+		return components[column - 1].getNodeID();
 	}
 
-	public void stateChanged(ChangeEvent e) {
-		if (states == null) {
+	public void setExtra(boolean b) {
+		if(states ==null) {
 			return;
 		}
-		boolean b = cb_extra.isSelected();
-		int l = getColumnCount() - 1;
-		states.setExtra(b);
-		if (states.getComponents().length != l) {
+
+		if(states.setExtra(b)) {
 			setResult(states);
 		}
 	}

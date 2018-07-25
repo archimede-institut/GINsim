@@ -17,9 +17,13 @@ import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.util.Enumeration;
 
 
@@ -30,7 +34,7 @@ import java.util.Enumeration;
  * @author Aurelien Naldi
  */
 @SuppressWarnings("serial")
-public class StableStateSwingUI extends LogicalModelActionDialog implements TaskListener {
+public class StableStateSwingUI extends LogicalModelActionDialog implements TaskListener, TableModelListener, ItemListener {
 
 	private static StableStatesService sss = GSServiceManager.getService(StableStatesService.class);
 	
@@ -45,6 +49,7 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
 		this.setTitle(Txt.t("STR_stableStates_title"));
 
 		model = new StableTableModel(lrg);
+		model.addTableModelListener(this);
 		tresult = new EnhancedJTable(model);
 		tresult.setCopyHeaders();
 		
@@ -71,7 +76,7 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
 		cst.gridx++;
 		cb_extra = new JCheckBox("Extra components");
 		panel.add(cb_extra, cst);
-		model.setExtraCheckbox(cb_extra);
+		cb_extra.addItemListener(this);
 
 		cst.gridx = 0;
 		cst.gridy++;
@@ -108,23 +113,6 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
 		try {
 			FixpointList result = m_finder.getResult();
 			model.setResult(result);
-
-			TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
-			Enumeration<TableColumn> columns = tresult.getColumnModel().getColumns();
-
-			if (columns.hasMoreElements()) {
-				TableColumn col = columns.nextElement();
-				col.setMinWidth(150);
-				col.setMaxWidth(400);
-			}
-			while (columns.hasMoreElements()) {
-				TableColumn col = columns.nextElement();
-				col.setHeaderRenderer(headerRenderer);
-				col.setMinWidth(20);
-				col.setMaxWidth(40);
-				col.setPreferredWidth(30);
-			}
-
 		} catch (Exception e) {
 			LogManager.error(e);
 		}
@@ -138,4 +126,37 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
         }
         return true;
     }
+
+    private void setTableHeader() {
+        TableCellRenderer headerRenderer = new VerticalTableHeaderCellRenderer();
+        Enumeration<TableColumn> columns = tresult.getColumnModel().getColumns();
+
+        if (columns.hasMoreElements()) {
+            TableColumn col = columns.nextElement();
+            col.setMinWidth(150);
+            col.setMaxWidth(400);
+        }
+        while (columns.hasMoreElements()) {
+            TableColumn col = columns.nextElement();
+            col.setHeaderRenderer(headerRenderer);
+            col.setMinWidth(20);
+            col.setMaxWidth(40);
+            col.setPreferredWidth(30);
+        }
+    }
+
+    @Override
+    public void tableChanged(TableModelEvent e) {
+        int t = e.getType();
+        int r = e.getFirstRow();
+        if (r == TableModelEvent.HEADER_ROW) {
+            setTableHeader();
+        }
+    }
+
+	@Override
+	public void itemStateChanged(ItemEvent itemEvent) {
+    	model.setExtra(cb_extra.isSelected());
+	}
+
 }
