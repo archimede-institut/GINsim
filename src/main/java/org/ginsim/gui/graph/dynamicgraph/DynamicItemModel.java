@@ -24,12 +24,14 @@ public class DynamicItemModel extends AbstractTableModel implements StateTableMo
 
     private static final long serialVersionUID = 8860415338236400531L;
     private List nodeOrder;
+    private String[] extraNames;
     DynamicGraph graph;
-    private byte[] state;
+    private byte[] state, extraState;
+    private byte[][] extraNext, extraPrev;
     private DynamicNode[] nextState;
     private DynamicNode[] prevState;
     private JButton[] go2Next;
-    private int len;
+    private int len, fullLength;
     private int nbNext;
     private int nbRelated;
     
@@ -37,6 +39,16 @@ public class DynamicItemModel extends AbstractTableModel implements StateTableMo
         this.graph = graph;
         this.nodeOrder = graph.getNodeOrder();
         len = nodeOrder.size()+1;
+        fullLength = len;
+
+        extraNames = graph.getExtraNames();
+        if (extraNames != null && extraNames.length > 0) {
+			extraState = new byte[extraNames.length];
+			fullLength += extraState.length;
+        } else {
+            extraState = null;
+        }
+
     }
     
     public int getRowCount() {
@@ -47,7 +59,7 @@ public class DynamicItemModel extends AbstractTableModel implements StateTableMo
     }
 
     public int getColumnCount() {
-        return len;
+        return fullLength;
     }
 
     public Class getColumnClass(int columnIndex) {
@@ -58,7 +70,7 @@ public class DynamicItemModel extends AbstractTableModel implements StateTableMo
     }
 
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (columnIndex >= len) {
+        if (columnIndex >= fullLength) {
             return null;
         }
         if (columnIndex == 0) {
@@ -68,6 +80,9 @@ public class DynamicItemModel extends AbstractTableModel implements StateTableMo
             return "";
         }
         if (rowIndex == 0) {
+            if (columnIndex >= len) {
+                return ""+extraState[columnIndex-len];
+            }
             return ""+state[columnIndex-1];
         }
         if (rowIndex > nbNext) {
@@ -75,14 +90,23 @@ public class DynamicItemModel extends AbstractTableModel implements StateTableMo
         	if (prevState == null || r > prevState.length) {
         		return null;
         	}
+            if (columnIndex >= len) {
+                return ""+extraPrev[r-1][columnIndex-len];
+            }
         	return ""+prevState[r-1].state[columnIndex-1];
+        }
+        if (columnIndex >= len) {
+            return ""+extraNext[rowIndex-1][columnIndex-len];
         }
         return ""+nextState[rowIndex-1].state[columnIndex-1];
     }
 
     public String getColumnName(int column) {
-        if (column >= len) {
+        if (column >= fullLength) {
             return null;
+        }
+        if (column >= len) {
+            return extraNames[column - len];
         }
         if (column == 0) {
             return "";
@@ -102,6 +126,14 @@ public class DynamicItemModel extends AbstractTableModel implements StateTableMo
             prevState = getRelatedNodes(graph.getIncomingEdges(node), false);
             nbNext = nextState != null ? nextState.length : 0;
             nbRelated = nbNext + ( prevState != null ? prevState.length : 0 );
+
+            // fill in the extra values
+            if (extraNames != null && extraNames.length > 0) {
+                graph.fillExtraValues(state, extraState);
+                extraNext = fillExtra(nextState);
+                extraPrev = fillExtra(prevState);
+            }
+
         } else if (obj instanceof Edge){
             Edge<DynamicNode> edge = (Edge)obj;
             state = edge.getSource().state;
@@ -131,7 +163,18 @@ public class DynamicItemModel extends AbstractTableModel implements StateTableMo
         }
         fireTableDataChanged();
     }
-    
+
+    private byte[][] fillExtra(DynamicNode[] states) {
+        if (states == null) {
+            return null;
+        }
+        byte[][] extraStates = new byte[states.length][extraNames.length];
+        for (int i=0 ; i< states.length ; i++) {
+            extraStates[i] = graph.fillExtraValues(states[i].state, extraStates[i]);
+        }
+        return extraStates;
+    }
+
     private DynamicNode[] getRelatedNodes(Collection<DynamicEdge> l_related, boolean target) {
         if (l_related == null || l_related.size() == 0) {
             return null;
