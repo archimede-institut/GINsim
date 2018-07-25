@@ -1,12 +1,15 @@
 package org.ginsim.core.graph.dynamicgraph;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.core.graph.AbstractGraphFactory;
 import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.NodeStyle;
+import org.ginsim.service.export.nusmv.NodeInfoSorter;
 import org.mangosdk.spi.ProviderFor;
 
 
@@ -50,8 +53,16 @@ public class DynamicGraphFactory extends AbstractGraphFactory<DynamicGraph> {
 	}
 	
     
-	public DynamicGraph create( List<RegulatoryNode> node_order){
-    	return new DynamicGraphImpl( node_order);
+	public DynamicGraph create( List<?> node_order){
+    	List<NodeInfo> nis = new ArrayList<>(node_order.size());
+    	for (Object node: node_order) {
+    		if (node instanceof NodeInfo) {
+				nis.add((NodeInfo) node);
+			} else if (node instanceof RegulatoryNode) {
+    			nis.add(((RegulatoryNode)node).getNodeInfo());
+			}
+		}
+    	return new DynamicGraphImpl( nis);
 	}
 
 	@Override

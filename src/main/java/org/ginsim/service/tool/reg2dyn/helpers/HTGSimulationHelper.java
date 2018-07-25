@@ -32,6 +32,7 @@ public class HTGSimulationHelper  implements SimulationHelper {
 		
 		// FIXME: associated graph based on LogicalModel
 		htg.setAssociatedGraph(params.param_list.graph);
+		htg.setLogicalModel(model);
 		
 		NodeAttributesReader vreader = htg.getNodeAttributeReader();
         htg.getAnnotation().setComment(params.getDescr(nodes)+"\n");

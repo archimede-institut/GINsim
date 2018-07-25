@@ -13,16 +13,16 @@ import org.ginsim.gui.graph.GraphGUI;
 /**
  * All parameter panels must extend this abstract class to be updated on selection changes
  */
-public abstract class AbstractParameterPanel<T> extends JPanel implements GUIEditor<T> {
+public abstract class AbstractParameterPanel<G extends Graph,T> extends JPanel implements GUIEditor<T> {
 	private static final long	serialVersionUID	= 8326061792159035277L;
 	
 	protected final GraphGUI<?, ?, ?> gui;
-    protected final Graph<?,?> graph;
+    protected final G graph;
     protected final Frame frame;
     
     protected AbstractParameterPanel(GraphGUI<?, ?, ?> gui) {
     	this.gui = gui;
-    	this.graph = gui.getGraph();
+    	this.graph = (G)gui.getGraph();
     	this.frame = GUIManager.getInstance().getFrame(graph);
     }
     

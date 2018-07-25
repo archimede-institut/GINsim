@@ -1,73 +1,94 @@
 package org.ginsim.gui.graph.hierarchicaltransitiongraph;
 
 import java.util.List;
-
 import javax.swing.table.AbstractTableModel;
 
-import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraph;
 
 
-
 public class HierarchicalTableModel extends AbstractTableModel {
-		private static final long serialVersionUID = 2922634659695976653L;
-		
-		private List<byte[]> content = null;
-		private int colCount;
-		
-		private HierarchicalTransitionGraph htg;
+	private static final long serialVersionUID = 2922634659695976653L;
 
-		public HierarchicalTableModel( Graph g) {
-			
-			super();
-			this.htg = (HierarchicalTransitionGraph) g;
-			colCount = g.getNodeOrderSize();
-		}
-		
-		/**
-		 * @return the number of row
-		 */
-		public int getRowCount() {
-			if (content == null) return 0;
-			return content.size();
-		}
+	private List<byte[]> content = null;
+	private byte[][] extraContent = null;
+	private int colCount;
+	private String[] extraNames;
+	private int len;
 
-		/**
-		 * @return the number of column
-		 */
-		public int getColumnCount() {
-			return colCount;
-		}
+	private HierarchicalTransitionGraph htg;
 
-		/**
-		 * @param rowIndex
-		 * @param columnIndex
-		 * 
-		 * @return the value at the specified position
-		 */
-		public Object getValueAt(int rowIndex, int columnIndex) {
-			if (rowIndex >= getRowCount() || columnIndex >= colCount) {
-				return null;
-			}
-			int i = ((byte[])content.get(rowIndex))[columnIndex];
-			if (i == -1 ) return "*";
-			return String.valueOf(i);
-		}
+	public HierarchicalTableModel( HierarchicalTransitionGraph g) {
 
-		/**
-		 * @param column a column number
-		 * 
-		 * @return the name of this column
-		 */	
-		public String getColumnName(int column) {
-			
-			return htg.getNodeOrder().get(column).getNodeID();
+		super();
+		this.htg = g;
+		len = colCount = g.getNodeOrderSize();
+		extraNames = g.getExtraNames();
+		if (extraNames != null && extraNames.length > 0) {
+			len += extraNames.length;
 		}
-
-		public void setContent(HierarchicalNode hnode) {
-			this.content = hnode.statesToList();
-	        fireTableStructureChanged();
-		}
-
 	}
+
+	@Override
+	public int getRowCount() {
+		if (content == null) {
+			return 0;
+		}
+		return content.size();
+	}
+
+	@Override
+	public int getColumnCount() {
+		return len;
+	}
+
+	@Override
+	public Object getValueAt(int rowIndex, int columnIndex) {
+		if (rowIndex >= getRowCount() || columnIndex >= len) {
+			return null;
+		}
+		int i = -10;
+		if (columnIndex >= colCount) {
+			i = extraContent[rowIndex][columnIndex - colCount];
+		} else {
+			i = content.get(rowIndex)[columnIndex];
+		}
+		if (i == -1 ) {
+			return "*";
+		}
+		return String.valueOf(i);
+	}
+
+	@Override
+	public String getColumnName(int column) {
+		if (column >= colCount) {
+			return extraNames[column-colCount];
+		}
+
+		return htg.getNodeOrder().get(column).getNodeID();
+	}
+
+	public void setContent(HierarchicalNode hnode) {
+		this.content = hnode.statesToList();
+		if (extraNames != null && extraNames.length > 0) {
+			// fill the extra content
+			extraContent = fillExtra();
+		}
+		fireTableDataChanged();
+	}
+
+	private byte[][] fillExtra() {
+		if (content == null || content.size() < 1) {
+			return null;
+		}
+
+		byte[][] extraStates = new byte[content.size()][extraNames.length];
+		int i=0;
+		for (byte[] state: content) {
+			extraStates[i] = htg.fillExtraValues(state, extraStates[i]);
+			i++;
+		}
+		return extraStates;
+	}
+
+}

@@ -7,16 +7,17 @@ import javax.swing.JLabel;
 
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.DecisionOnEdge;
+import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 
-public class HierarchicalEdgeParameterPanel  extends AbstractParameterPanel<DecisionOnEdge> {
+public class HierarchicalEdgeParameterPanel  extends AbstractParameterPanel<HierarchicalTransitionGraph, DecisionOnEdge> {
 	private static final long serialVersionUID = 3342245591953494375L;
 
 
 	private JLabel typeLabel;
 	
-	public HierarchicalEdgeParameterPanel( Graph g) {
+	public HierarchicalEdgeParameterPanel( HierarchicalTransitionGraph g) {
 		super(g);
 
         this.setLayout(new GridBagLayout());

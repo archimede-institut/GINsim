@@ -34,7 +34,7 @@ import org.ginsim.gui.shell.editpanel.EditTab;
  * @author Duncan Berenguier
  *
  */
-public class StatesToHierarchicalEditTab extends AbstractParameterPanel<DynamicNode>  implements EditTab {
+public class StatesToHierarchicalEditTab extends AbstractParameterPanel<DynamicGraph, DynamicNode>  implements EditTab {
 
 	private static final long serialVersionUID = -4906477197046628561L;
 	public static final String title = "HierarchicalNode";

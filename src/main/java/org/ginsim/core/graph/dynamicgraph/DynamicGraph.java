@@ -16,7 +16,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
  *
  * @author Aurelien Naldi
  */
-public interface DynamicGraph extends Graph<DynamicNode, DynamicEdge>, GraphAssociation<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> {
+public interface DynamicGraph extends TransitionGraph<DynamicNode, DynamicEdge>, GraphAssociation<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> {
 
 	public static final int MAXLEVEL = 9;
 	public static final int STARLEVEL = MAXLEVEL+1;
@@ -55,31 +55,4 @@ public interface DynamicGraph extends Graph<DynamicNode, DynamicEdge>, GraphAsso
      */
     List<Edge> shortestPath(byte[] source, byte[] target) ;
     
-    /**
-     * Get the list of known extra components names.
-     * These components have no explicitly assigned value in the STG,
-     * but their values can be retrieved based on a given state.
-     * 
-     * @return the list of names, or null if none
-     */
-    String[] getExtraNames();
-    
-    /**
-     * Retrieve the values for all extra components for a given state.
-     * If the provided array to fill is null or of the wrong size, a new array will be created and returned.
-     * Otherwise, extraValues will be filled and returned.
-     * 
-     * @param state
-     * @param extraValues array in which to put the values.
-     * 
-     * @return extraValues properly filled or a new array
-     */
-    byte[] fillExtraValues(byte[] state, byte[] extraValues);
-
-
-    /**
-     * Associate a logicalModel with this STG, notably to retrieve extra values.
-     * @param model
-     */
-	void setLogicalModel(LogicalModel model);
 }

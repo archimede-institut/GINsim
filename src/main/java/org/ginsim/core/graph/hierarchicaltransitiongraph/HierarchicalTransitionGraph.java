@@ -3,8 +3,8 @@ package org.ginsim.core.graph.hierarchicaltransitiongraph;
 import java.util.List;
 
 import org.colomoto.biolqm.NodeInfo;
-import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphAssociation;
+import org.ginsim.core.graph.dynamicgraph.TransitionGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -15,7 +15,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
  *
  * @author Duncan Berenguier
  */
-public interface HierarchicalTransitionGraph extends Graph<HierarchicalNode, DecisionOnEdge>, GraphAssociation<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>{
+public interface HierarchicalTransitionGraph extends TransitionGraph<HierarchicalNode, DecisionOnEdge>, GraphAssociation<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>{
 
 	/**
 	 * add an edge between source and target

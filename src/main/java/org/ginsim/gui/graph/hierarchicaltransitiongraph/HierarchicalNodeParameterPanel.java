@@ -10,12 +10,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import org.ginsim.common.application.Txt;
-import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
+import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 
 
-public class HierarchicalNodeParameterPanel extends AbstractParameterPanel<HierarchicalNode> {
+public class HierarchicalNodeParameterPanel extends AbstractParameterPanel<HierarchicalTransitionGraph, HierarchicalNode> {
 		private static final long serialVersionUID = 3342245591953494375L;
 
 		private HierarchicalNode node;
@@ -25,7 +25,7 @@ public class HierarchicalNodeParameterPanel extends AbstractParameterPanel<Hiera
 		private JLabel typeLabel;
 		private JLabel nameLabel;
 		
-		public HierarchicalNodeParameterPanel( Graph g) {
+		public HierarchicalNodeParameterPanel( HierarchicalTransitionGraph g) {
 			super(g);
 
 	        this.setLayout(new GridBagLayout());
@@ -45,9 +45,6 @@ public class HierarchicalNodeParameterPanel extends AbstractParameterPanel<Hiera
 	        this.setMinimumSize(new Dimension(20,20));
 		}
 		
-		/*
-		 * @see fr.univmrs.tagc.GINsim.gui.GsParameterPanel#setEditedObject(java.lang.Object)
-		 */
 		@Override
 		public void setEditedItem(HierarchicalNode obj) {
 			if (obj instanceof HierarchicalNode) {

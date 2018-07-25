@@ -8,6 +8,7 @@ import javax.swing.JTable;
 import javax.swing.table.TableModel;
 
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
+import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.gui.shell.editpanel.AbstractParameterPanel;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 
@@ -20,16 +21,14 @@ public class DynamicItemAttributePanel extends AbstractParameterPanel {
     private static final long serialVersionUID = 9208992495538557201L;
 
 	private final DynamicItemModel tableModel;
-	private final DynamicGraph stg;
 
 	/**
 	 * @param graph
 	 */
 	public DynamicItemAttributePanel(DynamicGraph graph) {
 		super(graph);
-		this.stg = graph;
-		
-		tableModel = new DynamicItemModel(stg);
+
+		tableModel = new DynamicItemModel(graph);
 
 		// assemble the panel content
         this.setLayout(new GridBagLayout());

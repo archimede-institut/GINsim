@@ -90,8 +90,7 @@ public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, Dynam
 	}
 
 	@Override
-	public GUIEditor<DynamicEdge> getEdgeEditionPanel(
-			DynamicGraph graph) {
+	public GUIEditor<DynamicEdge> getEdgeEditionPanel(DynamicGraph graph) {
 		return new DynamicItemAttributePanel(graph);
 	}
 

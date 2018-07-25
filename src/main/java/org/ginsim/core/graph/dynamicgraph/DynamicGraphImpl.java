@@ -9,16 +9,13 @@ import java.util.Set;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.graph.AbstractDerivedGraph;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.GraphEventCascade;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphImpl;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GINMLWriter;
@@ -30,45 +27,24 @@ import org.ginsim.core.io.parser.GINMLWriter;
  * @author Aurelien Naldi
  * @author Lionel Spinelli
  */
-public final class DynamicGraphImpl
-	extends AbstractDerivedGraph<DynamicNode, DynamicEdge, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
-	implements DynamicGraph {
+public final class DynamicGraphImpl	extends TransitionGraphImpl<DynamicNode, DynamicEdge> implements DynamicGraph {
 
 	public static final String GRAPH_ZIP_NAME = "stateTransitionGraph.ginml";
 	
 	protected List v_stables = null;
 
-    private List<NodeInfo> nodeOrder;
-    
-    private String[] extraNames = null;
-    private MDDManager ddmanager = null;
-    private int[] extraFunctions = null;
-    
-
 	/**
 	 * create a new DynamicGraph.
 	 * @param nodeOrder
 	 */
-	protected DynamicGraphImpl(List<?> nodeOrder) {
-		
-	    this( );
-	    this.nodeOrder = new ArrayList<NodeInfo>();
-	    NodeInfo node_info;
-	    for (Object node: nodeOrder) {
-	    	if (node instanceof NodeInfo) {
-	    		node_info = (NodeInfo)node;
-	    	} else if (node instanceof RegulatoryNode) {
-	    		RegulatoryNode regNode = (RegulatoryNode) node;
-	    		node_info = regNode.getNodeInfo();
-	    	} else {
-	    		node_info = new NodeInfo( node.toString());
-	    	}
-	    	this.nodeOrder.add( node_info);
-	    }
+	protected DynamicGraphImpl(List<NodeInfo> nodeOrder) {
+
+		this();
+		this.nodeOrder = nodeOrder;
 	}
-	
+
 	protected DynamicGraphImpl() {
-        super( DynamicGraphFactory.getInstance());
+		super( DynamicGraphFactory.getInstance());
 	}
 
 	@Override
@@ -78,17 +54,6 @@ public final class DynamicGraphImpl
 		return null;
 	}
 
-	/**
-	 * @param set
-	 * @param file
-	 */
-	public DynamicGraphImpl(Set<String> set, File file)  throws GsException{
-		
-	    this();
-        DynamicParser parser = new DynamicParser();
-        parser.parse(file, set, this);
-	}
-	
 	/**
 	 * Return the node order as a list of String
 	 * 
@@ -245,54 +210,5 @@ public final class DynamicGraphImpl
         }
         return RegulatoryGraphImpl.associationValid((RegulatoryGraph)graph, this);
     }
-
-	@Override
-	public String[] getExtraNames() {
-		return extraNames;
-	}
-
-	@Override
-	public byte[] fillExtraValues(byte[] state, byte[] extraValues) {
-		if (extraFunctions == null) {
-			return null;
-		}
-		
-		byte[] extra = extraValues;
-		
-		if (extra == null || extra.length != extraFunctions.length) {
-			extra = new byte[extraFunctions.length];
-		}
-		
-		for (int i=0 ; i<extra.length ; i++) {
-			extra[i] = ddmanager.reach(extraFunctions[i], state);
-		}
-		return extra;
-	}
-
-	@Override
-	public void setLogicalModel(LogicalModel model) {
-		List<NodeInfo> extraNodes = null;
-		if (model != null) {
-			extraNodes = model.getExtraComponents();
-			if (extraNodes == null || extraNodes.size() < 1) {
-				model = null;
-			}
-		}
-		if (model == null) {
-			// reset extra information
-			ddmanager = null;
-			extraNames = null;
-			extraFunctions = null;
-			return;
-		}
-		
-		ddmanager = model.getMDDManager();
-		extraFunctions = model.getExtraLogicalFunctions();
-		extraNames= new String[extraFunctions.length];
-
-		for (int i=0 ; i<extraNames.length ; i++) {
-			extraNames[i] = extraNodes.get(i).getNodeID();
-		}
-	}
 
 }

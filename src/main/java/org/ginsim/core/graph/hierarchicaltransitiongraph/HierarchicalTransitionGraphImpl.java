@@ -15,6 +15,7 @@ import org.ginsim.core.graph.AbstractDerivedGraph;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.GraphEventCascade;
+import org.ginsim.core.graph.dynamicgraph.TransitionGraphImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -25,8 +26,7 @@ import org.ginsim.core.io.parser.GINMLWriter;
  *
  * @author Duncan Berenguier
  */
-public class HierarchicalTransitionGraphImpl extends AbstractDerivedGraph<HierarchicalNode, DecisionOnEdge, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge>
-	implements HierarchicalTransitionGraph {
+public class HierarchicalTransitionGraphImpl extends TransitionGraphImpl<HierarchicalNode, DecisionOnEdge> implements HierarchicalTransitionGraph {
 
 	public static final String GRAPH_ZIP_NAME = "hierarchicalTransitionGraph.ginml";
 	
