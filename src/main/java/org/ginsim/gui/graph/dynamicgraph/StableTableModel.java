@@ -3,6 +3,9 @@ package org.ginsim.gui.graph.dynamicgraph;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.AbstractTableModel;
 
 import org.colomoto.biolqm.NodeInfo;
@@ -20,21 +23,28 @@ import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesManager;
  * Simple table model to view stable state search results.
  */
 @SuppressWarnings("serial")
-public class StableTableModel extends AbstractTableModel {
+public class StableTableModel extends AbstractTableModel implements ChangeListener {
 
 	StateList states = null;
 	NodeInfo[] components = null;
 	NamedStateList istates = null;
 	byte[] state = null;
-
-	boolean showOutputs = false;
+	JCheckBox cb_extra;
 
 	public StableTableModel() {
 	}
+
 	public StableTableModel(RegulatoryGraph lrg) {
 		NamedStatesHandler gsistates = (NamedStatesHandler) ObjectAssociationManager.getInstance().getObject(lrg, NamedStatesManager.KEY, false);
 		if (gsistates != null) {
 			istates = gsistates.getInitialStates();
+		}
+	}
+
+	public void setExtraCheckbox(JCheckBox cb_extra) {
+		this.cb_extra = cb_extra;
+		if(cb_extra != null) {
+			cb_extra.addChangeListener(this);
 		}
 	}
 
@@ -45,10 +55,15 @@ public class StableTableModel extends AbstractTableModel {
 		return states.fillState(null, sel);
 	}
 
-	public void setResult(StateList states) {
+	public synchronized void setResult(StateList states) {
+		if (states == null) {
+			this.components = null;
+			this.state = new byte[0];
+		} else {
+			this.components = states.getComponents();
+			this.state = new byte[components.length];
+		}
 		this.states = states;
-		this.components = states.getComponents();
-		this.state = new byte[components.length];
 		fireTableStructureChanged();
 	}
 
@@ -82,7 +97,13 @@ public class StableTableModel extends AbstractTableModel {
 			}
 			return "";
 		}
+		if (columnIndex > components.length) {
+			System.out.println("   out: "+columnIndex);
+		}
 		int v = states.get(rowIndex, columnIndex-1);
+		if (v == -5) {
+			return "?";
+		}
 		if (v < 0) {
 			return "*";
 		}
@@ -101,4 +122,17 @@ public class StableTableModel extends AbstractTableModel {
 		
 		return components[column-1].getNodeID();
 	}
+
+	public void stateChanged(ChangeEvent e) {
+		if (states == null) {
+			return;
+		}
+		boolean b = cb_extra.isSelected();
+		int l = getColumnCount() - 1;
+		states.setExtra(b);
+		if (states.getComponents().length != l) {
+			setResult(states);
+		}
+	}
+
 }

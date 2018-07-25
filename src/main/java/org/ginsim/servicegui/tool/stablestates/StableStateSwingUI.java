@@ -8,7 +8,6 @@ import org.colomoto.common.task.TaskListener;
 import org.colomoto.common.task.TaskStatus;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Txt;
-import org.ginsim.commongui.utils.MixedTableHeader;
 import org.ginsim.commongui.utils.VerticalTableHeaderCellRenderer;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.GSServiceManager;
@@ -20,6 +19,7 @@ import org.ginsim.service.tool.stablestates.StableStatesService;
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
+import java.awt.*;
 import java.util.Enumeration;
 
 
@@ -37,6 +37,7 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
 	private StableTableModel model;
 	private EnhancedJTable tresult;
 	private FixpointTask m_finder;
+	private JCheckBox cb_pattern, cb_extra;
 
     public StableStateSwingUI(JFrame f, RegulatoryGraph lrg) {
 		super(lrg, f, "stableStatesGUI", 600, 400);
@@ -58,12 +59,35 @@ public class StableStateSwingUI extends LogicalModelActionDialog implements Task
 //		new MixedTableHeader(tresult, 1);
 
 		JScrollPane pane = new JScrollPane(tresult);
-		setMainPanel(pane);
+
+		JPanel panel = new JPanel(new GridBagLayout());
+		GridBagConstraints cst = new GridBagConstraints();
+		cst.gridx = 0;
+		cst.gridy = 0;
+		cst.fill = GridBagConstraints.HORIZONTAL;
+		cb_pattern = new JCheckBox("Pattern");
+		panel.add(cb_pattern, cst);
+
+		cst.gridx++;
+		cb_extra = new JCheckBox("Extra components");
+		panel.add(cb_extra, cst);
+		model.setExtraCheckbox(cb_extra);
+
+		cst.gridx = 0;
+		cst.gridy++;
+		cst.gridwidth = 2;
+		cst.weightx = cst.weighty = 1;
+		cst.fill = GridBagConstraints.BOTH;
+		panel.add(pane, cst);
+		setMainPanel(panel);
 	}
 	
 	@Override
 	public void run(LogicalModel lmodel) {
 		m_finder = StableStatesService.getTask(lmodel);
+		m_finder.pattern = cb_pattern.isSelected();
+		m_finder.extra = cb_extra.isSelected();
+		model.setResult(null);
 		setRunning(true);
 		m_finder.background(this);
     }
