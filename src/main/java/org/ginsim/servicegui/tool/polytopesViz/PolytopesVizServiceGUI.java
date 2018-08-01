@@ -14,10 +14,10 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.StandaloneGUI;
 import org.ginsim.gui.shell.actions.ToolkitAction;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @StandaloneGUI
 @ServiceStatus( EStatus.DEVELOPMENT)
 public class PolytopesVizServiceGUI extends AbstractServiceGUI {

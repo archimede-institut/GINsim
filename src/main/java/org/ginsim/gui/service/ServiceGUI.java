@@ -10,7 +10,7 @@ import org.ginsim.core.graph.Graph;
  * This interface is the central interface for GUIs for GINsim services.
  * GUI services provide Actions depending on the type of graph.
  *  
- *  Each Service should declare the annotation "@ProviderFor(GsGUIService.class)"
+ *  Each Service should declare the annotation "@MetaInfServices(GsGUIService.class)"
  * 
  * @author Lionel Spinelli
  * @author Aurelien Naldi

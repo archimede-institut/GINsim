@@ -4,11 +4,11 @@ import org.ginsim.gui.guihelpers.GUIHelper;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.service.tool.modelreduction.ListOfReductionConfigs;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 import java.awt.*;
 
-@ProviderFor(GUIHelper.class)
+@MetaInfServices(GUIHelper.class)
 @GUIFor(ListOfReductionConfigs.class)
 public class ReductionGUIHelper implements GUIHelper<ListOfReductionConfigs> {
 

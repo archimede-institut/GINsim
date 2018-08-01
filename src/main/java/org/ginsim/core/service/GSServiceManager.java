@@ -14,7 +14,7 @@ import org.ginsim.core.graph.GINsimFormat;
  * The manager itself is managed as a singleton.
  * The instances of GsServices are managed through a List. Their instances are generated using 
  *  the Service Provider interface implying each GsServices extension have to declare 
- *  the annotation "@ProviderFor(Service.class)"
+ *  the annotation "@MetaInfServices(Service.class)"
  * 
  * A user may access statically to the manager singleton through the getFactory method and then call the
  * 	getAvailableServices method to obtain the List of suitable GsServices

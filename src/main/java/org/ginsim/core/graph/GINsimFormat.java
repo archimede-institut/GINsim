@@ -8,10 +8,10 @@ import org.colomoto.biolqm.io.AbstractFormat;
 import org.colomoto.biolqm.io.LogicalModelFormat;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 // TODO: enable autodiscovery for this format when service files are properly merged
-//@ProviderFor(LogicalModelFormat.class)
+//@MetaInfServices(LogicalModelFormat.class)
 public class GINsimFormat extends AbstractFormat {
 
 	public GINsimFormat() {

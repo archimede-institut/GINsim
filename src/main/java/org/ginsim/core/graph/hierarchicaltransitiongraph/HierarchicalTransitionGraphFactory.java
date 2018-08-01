@@ -6,7 +6,7 @@ import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.core.graph.AbstractGraphFactory;
 import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.view.style.NodeStyle;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
@@ -15,7 +15,7 @@ import org.mangosdk.spi.ProviderFor;
  * @author Duncan Berenguier
  * @author aurelien Naldi
  */
-@ProviderFor( GraphFactory.class)
+@MetaInfServices( GraphFactory.class)
 public class HierarchicalTransitionGraphFactory extends AbstractGraphFactory<HierarchicalTransitionGraph> {
 	
 	public static final String KEY = "hierarchical";

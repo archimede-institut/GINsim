@@ -12,7 +12,7 @@ import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GINsim export service for CADP including:
@@ -22,7 +22,7 @@ import org.mangosdk.spi.ProviderFor;
  * 
  * @author Nuno D. Mendes
  */
-@ProviderFor(Service.class)
+@MetaInfServices(Service.class)
 @Alias("CADP")
 @ServiceStatus(EStatus.DEVELOPMENT)
 public class CADPExportService implements Service {

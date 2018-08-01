@@ -12,7 +12,7 @@ import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.ServiceStatus;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
@@ -21,7 +21,7 @@ import org.mangosdk.spi.ProviderFor;
  *
  * @author Aurelien Naldi
  */
-@ProviderFor( Service.class)
+@MetaInfServices( Service.class)
 @Alias("stable")
 @ServiceStatus(EStatus.RELEASED)
 public class StableStatesService implements Service {

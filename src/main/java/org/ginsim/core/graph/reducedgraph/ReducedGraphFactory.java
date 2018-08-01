@@ -4,7 +4,7 @@ import org.ginsim.core.graph.AbstractGraphFactory;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphFactory;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
@@ -12,7 +12,7 @@ import org.mangosdk.spi.ProviderFor;
  *
  * @author Aurelien Naldi
  */
-@ProviderFor( GraphFactory.class)
+@MetaInfServices( GraphFactory.class)
 public class ReducedGraphFactory<G extends Graph<V,E>, V, E extends Edge<V>> extends AbstractGraphFactory<ReducedGraph<G,V,E>> {
 
 	public static final String KEY = "reduced";

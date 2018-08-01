@@ -9,21 +9,30 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import org.ginsim.common.utils.ArraySet;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.view.NodeViewInfo;
 import org.ginsim.core.graph.view.style.NodeStyle;
-import org.jgrapht.DirectedGraph;
 import org.jgrapht.EdgeFactory;
+import org.jgrapht.Graph;
+import org.jgrapht.GraphType;
 import org.jgrapht.graph.AbstractGraph;
+import org.jgrapht.graph.DefaultGraphType;
 
 /**
  * a "simple" jgrapht implementation using hashmap.
  * it aims at "low" memory consumption without getting too slow.
  */
-public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E> implements DirectedGraph<V,E>, EdgeFactory<V, E> {
-    
+public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E> implements Graph<V,E>, EdgeFactory<V, E> {
+
+    public static final GraphType TYPE;
+
+    static {
+        TYPE = DefaultGraphType.directedSimple();
+    }
+
     protected Map<V, VInfo<V,E>> m_vertices = new HashMap<V, VInfo<V,E>>(10);
     private Set<E> edgeSet = null;
     private Set<V> vertexSet = null;
@@ -51,6 +60,16 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
     @Override
     public EdgeFactory<V,E> getEdgeFactory() {
         return this;
+    }
+
+    @Override
+    public Supplier<V> getVertexSupplier() {
+        return null;
+    }
+
+    @Override
+    public Supplier<E> getEdgeSupplier() {
+        return null;
     }
 
     @Override
@@ -86,7 +105,12 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
         return false;
     }
 
-	@Override
+    @Override
+    public V addVertex() {
+        return null;
+    }
+
+    @Override
 	public E createEdge(V source, V target) {
 		return (E)new Edge<V>(null, getVertex(source), getVertex(target));
 	}
@@ -133,6 +157,11 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
             edgeSet = new EdgeSet(this);
         }
         return edgeSet;
+    }
+
+    @Override
+    public int degreeOf(V v) {
+        return inDegreeOf(v) + outDegreeOf(v);
     }
 
     @Override
@@ -241,12 +270,22 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
 		return e.getTarget();
 	}
 
-	@Override
+    @Override
+    public GraphType getType() {
+        return TYPE;
+    }
+
+    @Override
 	public double getEdgeWeight(E e) {
 		return 0;
 	}
 
-	protected int getEdgesCount() {
+    @Override
+    public void setEdgeWeight(E e, double v) {
+        throw new UnsupportedOperationException("No weight in this graph");
+    }
+
+    protected int getEdgesCount() {
 		return edgeCount;
 	}
 	protected Collection<VInfo<V, E>> getVInfoSet() {

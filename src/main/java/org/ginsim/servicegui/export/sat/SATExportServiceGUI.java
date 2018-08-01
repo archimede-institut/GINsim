@@ -20,7 +20,7 @@ import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.StandaloneGUI;
 import org.ginsim.service.export.sat.SATConfig;
 import org.ginsim.service.export.sat.SATExportService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GINsim export service capable of encoding the model properties into a SAT
@@ -28,7 +28,7 @@ import org.mangosdk.spi.ProviderFor;
  * 
  * @author Pedro T. Monteiro
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @StandaloneGUI
 @ServiceStatus(EStatus.RELEASED)
 public class SATExportServiceGUI extends AbstractServiceGUI {

@@ -22,7 +22,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.service.tool.modelreduction.ListOfReductionConfigs;
 import org.ginsim.service.tool.modelreduction.ReductionConfig;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Saves and opens the context of a simulation
@@ -30,7 +30,7 @@ import org.mangosdk.spi.ProviderFor;
  * @author Rui Henriques
  * @version 1.0
  */
-@ProviderFor(GraphAssociatedObjectManager.class)
+@MetaInfServices(GraphAssociatedObjectManager.class)
 public class AvatarParametersManager extends BasicGraphAssociatedManager<AvatarParameterList> {
 
 	/** Manager identifier */

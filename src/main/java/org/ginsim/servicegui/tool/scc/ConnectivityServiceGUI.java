@@ -31,13 +31,13 @@ import org.ginsim.gui.shell.actions.GenericGraphAction;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.scc.SCCGraphService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
  * register the scc service
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(SCCGraphService.class)
 @ServiceStatus( EStatus.RELEASED)
 public class ConnectivityServiceGUI extends AbstractServiceGUI {

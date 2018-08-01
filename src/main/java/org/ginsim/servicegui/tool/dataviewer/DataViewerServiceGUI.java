@@ -14,7 +14,7 @@ import org.ginsim.gui.shell.actions.GenericGraphAction;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.StandaloneGUI;
 import org.ginsim.gui.utils.dialog.stackdialog.HandledStackDialog;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
@@ -22,7 +22,7 @@ import org.mangosdk.spi.ProviderFor;
  * 
  * @author Aurelien Naldi
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @StandaloneGUI
 @ServiceStatus( EStatus.DEVELOPMENT)
 public class DataViewerServiceGUI extends AbstractServiceGUI {

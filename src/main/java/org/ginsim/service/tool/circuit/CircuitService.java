@@ -3,10 +3,10 @@ package org.ginsim.service.tool.circuit;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.service.*;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
-@ProviderFor( Service.class)
+@MetaInfServices( Service.class)
 @Alias("circuitAnalysis")
 @ServiceStatus(EStatus.RELEASED)
 public class CircuitService implements Service {

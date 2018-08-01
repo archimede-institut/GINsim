@@ -13,7 +13,7 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.gui.utils.widgets.Frame;
 import org.ginsim.service.tool.avatar.service.AvatarService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 import javax.swing.*;
 
@@ -26,7 +26,7 @@ import java.util.List;
  * @author Pedro T. Monteiro
  * @author Rui Henriques
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(AvatarService.class)
 @ServiceStatus(EStatus.RELEASED)
 public class AvatarServiceGUI extends AbstractServiceGUI {

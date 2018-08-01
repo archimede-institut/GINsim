@@ -30,14 +30,14 @@ import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.servicegui.tool.regulatorygraphanimation.LRGStateStyleProvider;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Export the graph view as image (PNG or SVG).
  *
  * @author Aurelien Naldi
  */
-@ProviderFor( Service.class)
+@MetaInfServices( Service.class)
 @Alias("image")
 @ServiceStatus(EStatus.RELEASED)
 public class ImageExportService implements Service {

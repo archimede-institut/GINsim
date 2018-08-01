@@ -9,9 +9,9 @@ import org.ginsim.core.graph.view.css.Colorizer;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
-@ProviderFor(Service.class)
+@MetaInfServices(Service.class)
 @ServiceStatus(EStatus.DEVELOPMENT)
 public class PolytopesService implements Service {
 

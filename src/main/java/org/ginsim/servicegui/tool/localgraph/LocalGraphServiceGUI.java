@@ -19,9 +19,9 @@ import org.ginsim.gui.shell.actions.GenericGraphAction;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.tool.localgraph.LocalGraphConfig;
 import org.ginsim.service.tool.localgraph.LocalGraphService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(LocalGraphService.class)
 @ServiceStatus(EStatus.RELEASED)
 public class LocalGraphServiceGUI extends AbstractServiceGUI {

@@ -17,13 +17,13 @@ import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.trapspace.TrapSpaceServiceWrapper;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
  * Define the action for stableStates service
  */
-@ProviderFor( ServiceGUI.class)
+@MetaInfServices( ServiceGUI.class)
 @GUIFor( TrapSpaceServiceWrapper.class)
 @ServiceStatus( EStatus.DEVELOPMENT)
 public class TrapSpaceServiceGUI extends AbstractServiceGUI {

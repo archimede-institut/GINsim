@@ -16,10 +16,10 @@ import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.widgets.Frame;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
-@ProviderFor( GraphGUIHelper.class)
+@MetaInfServices( GraphGUIHelper.class)
 public class TreeGUIHelper implements GraphGUIHelper<Tree, TreeNode, TreeEdge> {
 
 	

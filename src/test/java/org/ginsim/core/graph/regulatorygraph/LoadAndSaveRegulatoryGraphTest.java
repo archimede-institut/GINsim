@@ -1,8 +1,8 @@
 package org.ginsim.core.graph.regulatorygraph;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -14,10 +14,10 @@ import org.ginsim.TestUtils;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class LoadAndSaveRegulatoryGraphTest {
 
@@ -27,7 +27,7 @@ public class LoadAndSaveRegulatoryGraphTest {
 	 * Initialize the OptionStore is required
 	 * 
 	 */
-	@BeforeClass
+	@BeforeAll
 	public static void beforeAllTests(){
 		
 		TestUtils.initOptionStore();
@@ -37,7 +37,7 @@ public class LoadAndSaveRegulatoryGraphTest {
 	 * Clean the test file temp directory
 	 * 
 	 */
-	@Before
+	@BeforeEach
 	public void beforeEachTest(){
 		
 		TestFileUtils.cleanTempTestFileDirectory( module);
@@ -48,7 +48,7 @@ public class LoadAndSaveRegulatoryGraphTest {
 	 * Remove also the test files temporary directory
 	 * 
 	 */
-	@After
+	@AfterEach
 	public void afterEachTest(){
 		
 		Set<Graph> graph_list = GSGraphManager.getInstance().getAllGraphs();
@@ -105,7 +105,7 @@ public class LoadAndSaveRegulatoryGraphTest {
 		
 		// Create a new RegulatoryGraph
 		RegulatoryGraph graph = GSGraphManager.getInstance().getNewGraph();
-		assertNotNull( "Create graph : the created graph is null: creation failed.", graph);
+		assertNotNull( graph, "Create graph : the created graph is null: creation failed.");
 		try {
 			graph.setGraphName( "saveGraphTest");
 		} catch( GsException gse) {
@@ -121,7 +121,7 @@ public class LoadAndSaveRegulatoryGraphTest {
 		
 		// Add MultiEdge
 		RegulatoryMultiEdge me = graph.addEdge(node1, node2, RegulatoryEdgeSign.POSITIVE);
-		assertNotNull( "Add MultiEdge : the MultiEdge is null.", me);
+		assertNotNull( me, "Add MultiEdge : the MultiEdge is null.");
 		
 		// Add new edge on MultiEdge
 		try{
@@ -157,9 +157,9 @@ public class LoadAndSaveRegulatoryGraphTest {
 		
 		Graph graph = TestFileUtils.loadGraph(file);
 		
-		assertNotNull( "Load graph : graph is null", graph);
-		assertEquals( "Load graph : Graph node number is not correct", expectedNodes, graph.getNodeCount());
-		assertEquals( "Load graph : Graph edge number is not correct", expectedEdges, graph.getEdges().size());
+		assertNotNull( graph, "Load graph : graph is null");
+		assertEquals( expectedNodes, graph.getNodeCount(), "Load graph : Graph node number is not correct");
+		assertEquals( expectedEdges, graph.getEdges().size(), "Load graph : Graph edge number is not correct");
 	}
 
 }

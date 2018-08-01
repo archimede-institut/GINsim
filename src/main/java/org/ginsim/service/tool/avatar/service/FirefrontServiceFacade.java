@@ -18,7 +18,7 @@ import org.ginsim.service.tool.avatar.simulation.FirefrontSimulation;
 import org.ginsim.service.tool.avatar.simulation.MDDUtils;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
 import org.ginsim.service.tool.avatar.utils.AvaOptions;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Facade of a Firefront simulation.<br>
@@ -28,7 +28,7 @@ import org.mangosdk.spi.ProviderFor;
  * @author Pedro T. Monteiro
  * @author Rui Henriques
  */
-@ProviderFor(Service.class)
+@MetaInfServices(Service.class)
 @Alias(value = "firefrontservice")
 @ServiceStatus(EStatus.DEVELOPMENT)
 public class FirefrontServiceFacade implements Service {

@@ -5,7 +5,7 @@ import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.NodeStyle;
 import org.ginsim.core.graph.view.style.NodeStyleImpl;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
@@ -13,7 +13,7 @@ import org.mangosdk.spi.ProviderFor;
  *
  * @author Aurelien Naldi
  */
-@ProviderFor( GraphFactory.class)
+@MetaInfServices( GraphFactory.class)
 public class RegulatoryGraphFactory extends AbstractGraphFactory<RegulatoryGraph> {
 
 	public static final String KEY = "regulatory";

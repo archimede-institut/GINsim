@@ -10,7 +10,7 @@ import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GINsim export service capable of encoding the working model into a NuSMV
@@ -25,7 +25,7 @@ import org.mangosdk.spi.ProviderFor;
  * </p>
  * @author Pedro T. Monteiro
  */
-@ProviderFor(Service.class)
+@MetaInfServices(Service.class)
 @Alias("NuSMV")
 @ServiceStatus(EStatus.RELEASED)
 public class NuSMVExportService implements Service {

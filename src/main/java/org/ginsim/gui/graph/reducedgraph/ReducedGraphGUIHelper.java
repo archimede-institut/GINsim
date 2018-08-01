@@ -15,10 +15,10 @@ import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
 import org.ginsim.gui.utils.widgets.Frame;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
-@ProviderFor( GraphGUIHelper.class)
+@MetaInfServices( GraphGUIHelper.class)
 public class ReducedGraphGUIHelper implements GraphGUIHelper<ReducedGraph<?,?,?>, NodeReducedData, Edge<NodeReducedData>> {
 
 	

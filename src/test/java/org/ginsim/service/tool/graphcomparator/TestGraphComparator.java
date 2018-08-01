@@ -1,8 +1,5 @@
 package org.ginsim.service.tool.graphcomparator;
 
-import java.util.HashMap;
-import java.util.Iterator;
-
 import org.ginsim.TestUtils;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.GSGraphManager;
@@ -10,9 +7,13 @@ import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.dynamicgraph.DynamicNode;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryEdgeSign;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.junit.Assert;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import java.util.HashMap;
+import java.util.Iterator;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Compare two models.
@@ -38,7 +39,7 @@ public class TestGraphComparator {
 	 * Initialize the OptionStore is required
 	 * 
 	 */
-	@BeforeClass
+	@BeforeAll
 	public static void beforeAllTests(){
 		
 		TestUtils.initOptionStore();
@@ -89,9 +90,9 @@ public class TestGraphComparator {
             GraphComparatorResult result = (GraphComparatorResult)gc.call();
 
             int diffNodeCount = result.getDiffGraph().getNodeCount();
-            Assert.assertTrue("Wrong number of vertex in the diff graph.("+diffNodeCount+" out of "+vertexCount+")", diffNodeCount == vertexCount);
+            assertTrue(diffNodeCount == vertexCount, "Wrong number of vertex in the diff graph.("+diffNodeCount+" out of "+vertexCount+")");
             int diffEdgesCount = countEdges(gc);
-            Assert.assertTrue("Wrong number of edges in the diff graph.("+diffEdgesCount+" out of "+edgesCount+")", diffEdgesCount == edgesCount);
+            assertTrue(diffEdgesCount == edgesCount, "Wrong number of edges in the diff graph.("+diffEdgesCount+" out of "+edgesCount+")");
         } catch (Exception e) {
             throw new RuntimeException("Graph comparison failed");
         }

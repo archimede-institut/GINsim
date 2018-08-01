@@ -15,13 +15,13 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.GenericGraphAction;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.StandaloneGUI;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * offer some facilities to analyse the state transition graph.
  */
 @StandaloneGUI
-@ProviderFor( ServiceGUI.class)
+@MetaInfServices( ServiceGUI.class)
 @ServiceStatus( EStatus.DEPRECATED)
 public class DynamicAnalyserServiceGUI extends AbstractServiceGUI {
     

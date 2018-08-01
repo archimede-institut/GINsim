@@ -2,7 +2,7 @@ package org.ginsim.service.format;
 
 import org.colomoto.biolqm.io.maboss.MaBoSSFormat;
 import org.ginsim.core.service.*;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GINsim export service capable of encoding the working model into the MaBoSS format
@@ -12,7 +12,7 @@ import org.mangosdk.spi.ProviderFor;
  * 
  * @author Aurelien Naldi
  */
-@ProviderFor(Service.class)
+@MetaInfServices(Service.class)
 @Alias("maboss")
 @ServiceStatus(EStatus.RELEASED)
 public class MaBoSSExportService extends FormatSupportService<MaBoSSFormat> {

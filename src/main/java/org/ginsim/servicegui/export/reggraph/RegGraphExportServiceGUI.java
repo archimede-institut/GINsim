@@ -17,7 +17,7 @@ import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.service.export.reggraph.RegGraphExportService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GUI Action to export the regulatory graph interactions and corresponding
@@ -25,7 +25,7 @@ import org.mangosdk.spi.ProviderFor;
  * 
  * @author Pedro T. Monteiro
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(RegGraphExportService.class)
 @ServiceStatus(EStatus.RELEASED)
 public class RegGraphExportServiceGUI extends AbstractServiceGUI {

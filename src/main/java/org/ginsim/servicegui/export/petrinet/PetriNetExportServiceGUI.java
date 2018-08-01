@@ -15,14 +15,14 @@ import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.AbstractServiceGUI;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.StandaloneGUI;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GUI Action to export a LRG into Petri net
  * 
  * @author Aurelien Naldi
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @StandaloneGUI
 @ServiceStatus( EStatus.RELEASED)
 public class PetriNetExportServiceGUI extends AbstractServiceGUI {

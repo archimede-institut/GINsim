@@ -5,10 +5,10 @@ import org.ginsim.core.graph.AbstractGraphFactory;
 import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.NodeStyle;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
-@ProviderFor( GraphFactory.class)
+@MetaInfServices( GraphFactory.class)
 public class TreeFactory extends AbstractGraphFactory<Tree> {
 	
 	private static final String KEY = "tree";

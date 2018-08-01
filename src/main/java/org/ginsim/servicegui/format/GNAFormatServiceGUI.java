@@ -8,14 +8,14 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.format.GNAFormatService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GUI Action to export model to the GNA (non-xml) format
  * 
  * @author Pedro T. Monteiro
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(GNAFormatService.class)
 @ServiceStatus(EStatus.RELEASED)
 public class GNAFormatServiceGUI extends

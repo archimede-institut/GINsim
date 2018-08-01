@@ -8,7 +8,7 @@ import org.ginsim.core.graph.view.style.NodeStyle;
  * Implementations of this interface will be loaded by the GraphManager and used
  * to create new graph or load them from file.
  *
- * <br/>To be properly loaded, they must use the <code>@ProviderFor( GraphFactory.class)</code> annotation.
+ * <br/>To be properly loaded, they must use the <code>@MetaInfServices( GraphFactory.class)</code> annotation.
  *
  * @author Lionel Spinelli
  * @author Aurelien Naldi

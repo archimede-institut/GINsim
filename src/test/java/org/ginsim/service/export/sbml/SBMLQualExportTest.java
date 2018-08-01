@@ -1,8 +1,8 @@
 package org.ginsim.service.export.sbml;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.Color;
 import java.io.File;
@@ -22,9 +22,9 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.service.format.sbml.SBMLqualService;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 public class SBMLQualExportTest {
 
@@ -34,7 +34,7 @@ public class SBMLQualExportTest {
 	 * Initialize the Option store and define the test file directory
 	 * 
 	 */
-	@BeforeClass
+	@BeforeAll
 	public static void beforeAllTests(){
 		
 		try {
@@ -56,7 +56,7 @@ public class SBMLQualExportTest {
 	 * Clean the test file temp directory
 	 * 
 	 */
-	@Before
+	@BeforeEach
 	public void beforeEachTest(){
 		
 		TestFileUtils.cleanTempTestFileDirectory( module);
@@ -73,9 +73,9 @@ public class SBMLQualExportTest {
 		exportGraphToSBML( graph);
 		reimportGraphFromSBML( graph);
 		
-		assertNotNull( "Re-import graph : graph is null", graph);
-		assertEquals( "Re-import graph : Graph node number is not correct", 2, graph.getNodeCount());
-		assertEquals( "Re-import graph : Graph edge number is not correct", 1, graph.getEdges().size());
+		assertNotNull( graph, "Re-import graph : graph is null");
+		assertEquals( 2, graph.getNodeCount(), "Re-import graph : Graph node number is not correct");
+		assertEquals( 1, graph.getEdges().size(), "Re-import graph : Graph edge number is not correct");
 
 	}
 	
@@ -91,9 +91,9 @@ public class SBMLQualExportTest {
 		exportGraphToSBML( graph);
 		//reimportGraphFromSBML( graph);
 		
-		assertNotNull( "Re-import graph : graph is null", graph);
-		assertEquals( "Re-import graph : Graph node number is not correct", 4, graph.getNodeCount());
-		assertEquals( "Re-import graph : Graph edge number is not correct", 7, graph.getEdges().size());
+		assertNotNull( graph, "Re-import graph : graph is null");
+		assertEquals( 4, graph.getNodeCount(), "Re-import graph : Graph node number is not correct");
+		assertEquals( 7, graph.getEdges().size(), "Re-import graph : Graph edge number is not correct");
 
 	}
 	
@@ -106,7 +106,7 @@ public class SBMLQualExportTest {
 		
 		// Create a new RegulatoryGraph
 		RegulatoryGraph graph = GSGraphManager.getInstance().getNewGraph();
-		assertNotNull( "Create graph : the created graph is null: creation failed.", graph);
+		assertNotNull( graph, "Create graph : the created graph is null: creation failed.");
 		try {
 			graph.setGraphName( "saveGraphTest");
 		} catch( GsException gse) {
@@ -122,7 +122,7 @@ public class SBMLQualExportTest {
 		
 		// Add MultiEdge
 		RegulatoryMultiEdge me = graph.addEdge(node1, node2, RegulatoryEdgeSign.POSITIVE);
-		assertNotNull( "Add MultiEdge : the MultiEdge is null.", me);
+		assertNotNull( me, "Add MultiEdge : the MultiEdge is null.");
 		
 		// Add new edge on MultiEdge
 		try{
@@ -184,9 +184,9 @@ public class SBMLQualExportTest {
 		try{
 			RegulatoryGraph graph = (RegulatoryGraph) GSGraphManager.getInstance().open( file);
 			
-			assertNotNull( "Load graph : graph is null", graph);
-			assertEquals( "Load graph : Graph node number is not correct", 4, graph.getNodeCount());
-			assertEquals( "Load graph : Graph edge number is not correct", 7, graph.getEdges().size());
+			assertNotNull( graph, "Load graph : graph is null");
+			assertEquals( 4, graph.getNodeCount(), "Load graph : Graph node number is not correct");
+			assertEquals( 7, graph.getEdges().size(), "Load graph : Graph edge number is not correct");
 			return graph;
 		}
 		catch ( GsException gse) {

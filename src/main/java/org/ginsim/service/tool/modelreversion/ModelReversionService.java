@@ -8,14 +8,14 @@ import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Model reversion service.
  * 
  * @author Pedro T. Monteiro
  */
-@ProviderFor(Service.class)
+@MetaInfServices(Service.class)
 @Alias("reversion")
 @ServiceStatus(EStatus.DEVELOPMENT)
 public class ModelReversionService implements Service {

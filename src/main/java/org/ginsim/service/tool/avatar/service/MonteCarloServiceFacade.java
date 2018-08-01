@@ -17,7 +17,7 @@ import org.ginsim.service.tool.avatar.simulation.MonteCarloSimulation;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
 import org.ginsim.service.tool.avatar.utils.AvaException;
 import org.ginsim.service.tool.avatar.utils.AvaOptions;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Facade of a Monte Carlo simulation.<br>
@@ -27,7 +27,7 @@ import org.mangosdk.spi.ProviderFor;
  * @author Pedro T. Monteiro
  * @author Rui Henriques
  */
-@ProviderFor(Service.class)
+@MetaInfServices(Service.class)
 @Alias(value = "montecarloservice")
 @ServiceStatus(EStatus.DEVELOPMENT)
 public class MonteCarloServiceFacade implements Service {

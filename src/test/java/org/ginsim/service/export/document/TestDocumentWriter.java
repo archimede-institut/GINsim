@@ -15,7 +15,7 @@ import org.ginsim.TestFileUtils;
 import org.ginsim.common.document.DocumentStyle;
 import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.common.document.GenericDocumentFormat;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class TestDocumentWriter {
 

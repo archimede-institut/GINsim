@@ -10,13 +10,13 @@ import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
  * Save/open perturbation definitions along with the model.
  */
-@ProviderFor(GraphAssociatedObjectManager.class)
+@MetaInfServices(GraphAssociatedObjectManager.class)
 public class PerturbationManager extends BasicGraphAssociatedManager<ListOfPerturbations> {
 
 	public static final String KEY = "mutant";

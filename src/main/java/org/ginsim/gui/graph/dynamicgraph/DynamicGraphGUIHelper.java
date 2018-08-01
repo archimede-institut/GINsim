@@ -31,10 +31,10 @@ import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.data.GenericPropertyEditorPanel;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.gui.utils.widgets.Frame;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
-@ProviderFor( GraphGUIHelper.class)
+@MetaInfServices( GraphGUIHelper.class)
 public class DynamicGraphGUIHelper implements GraphGUIHelper<DynamicGraph, DynamicNode, DynamicEdge> {
 
 	static {

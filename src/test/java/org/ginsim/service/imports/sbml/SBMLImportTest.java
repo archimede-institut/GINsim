@@ -1,8 +1,8 @@
 package org.ginsim.service.imports.sbml;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.Color;
 import java.io.File;
@@ -15,8 +15,8 @@ import org.ginsim.core.graph.regulatorygraph.BasicRegulatoryGraphTest;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.service.format.sbml.SBMLqualService;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class SBMLImportTest {
 
@@ -27,7 +27,7 @@ public class SBMLImportTest {
 	 * Initialize the OPtion store and define the test file directory
 	 * 
 	 */
-	@BeforeClass
+	@BeforeAll
 	public static void beforeAllTests(){
 		
 		try {

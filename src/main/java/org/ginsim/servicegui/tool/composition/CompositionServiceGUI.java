@@ -17,14 +17,14 @@ import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.composition.CompositionService;
 
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Register the Composition Service
  * 
  * @author Nuno D. Mendes
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(CompositionService.class)
 @ServiceStatus(EStatus.DEVELOPMENT)
 public class CompositionServiceGUI extends AbstractServiceGUI {

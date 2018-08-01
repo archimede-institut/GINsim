@@ -1,17 +1,17 @@
 package org.ginsim.core.graph.view.css;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.Color;
 
 import org.ginsim.core.graph.view.NodeShape;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class CSSTest {
 	
-	@BeforeClass
+	@BeforeAll
 	public static void beforeAllTests(){
 		Selector.registerSelector(AllSelector.IDENTIFIER, AllSelector.class);
 	}
@@ -31,8 +31,7 @@ public class CSSTest {
 			e.printStackTrace();
 			fail();
 		}
-		assertEquals("Manually constructed and parsed css doesn't match", css.toString(), css2.toString());
-
+		assertEquals(css.toString(), css2.toString(), "Manually constructed and parsed css doesn't match");
 	}
 	
 }

@@ -10,7 +10,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.NodeStyle;
 import org.ginsim.service.export.nusmv.NodeInfoSorter;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
@@ -19,7 +19,7 @@ import org.mangosdk.spi.ProviderFor;
  * @author Lionel Spinelli
  * @author Aurelien Naldi
  */
-@ProviderFor( GraphFactory.class)
+@MetaInfServices( GraphFactory.class)
 public class DynamicGraphFactory extends AbstractGraphFactory<DynamicGraph> {
 
 	public static final String KEY = "dynamical";

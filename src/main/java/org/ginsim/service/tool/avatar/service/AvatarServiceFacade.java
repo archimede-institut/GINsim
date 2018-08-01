@@ -21,7 +21,7 @@ import org.ginsim.service.tool.avatar.simulation.Simulation;
 import org.ginsim.service.tool.avatar.simulation.SimulationUtils;
 import org.ginsim.service.tool.avatar.utils.AvaException;
 import org.ginsim.service.tool.avatar.utils.AvaOptions;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Facade of an Avatar simulation.<br>
@@ -31,7 +31,7 @@ import org.mangosdk.spi.ProviderFor;
  * @author Pedro T. Monteiro
  * @author Rui Henriques
  */
-@ProviderFor(Service.class)
+@MetaInfServices(Service.class)
 @Alias(value = "avatarservice")
 @ServiceStatus(EStatus.DEVELOPMENT)
 public class AvatarServiceFacade implements Service {

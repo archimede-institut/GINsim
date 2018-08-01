@@ -21,7 +21,7 @@ import org.ginsim.gui.service.StandaloneGUI;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 import org.ginsim.service.export.cadp.CADPExportConfig;
 import org.ginsim.service.export.cadp.CADPExportService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * CADP Export Service
@@ -29,7 +29,7 @@ import org.mangosdk.spi.ProviderFor;
  * @author Nuno D. Mendes
  */
 
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @StandaloneGUI
 @ServiceStatus(EStatus.RELEASED)
 public class CADPExportServiceGUI extends AbstractServiceGUI {

@@ -8,13 +8,13 @@ import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
  * Search for trap-spaces in Regulatory graphs.
  */
-@ProviderFor( Service.class)
+@MetaInfServices( Service.class)
 @Alias("trapspace")
 @ServiceStatus(EStatus.RELEASED)
 public class TrapSpaceServiceWrapper implements Service {

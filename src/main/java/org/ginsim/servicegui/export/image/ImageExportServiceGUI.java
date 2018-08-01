@@ -19,7 +19,7 @@ import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.export.image.ImageExportService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
@@ -27,7 +27,7 @@ import org.mangosdk.spi.ProviderFor;
  *
  * @author Aurelien Naldi
  */
-@ProviderFor( ServiceGUI.class)
+@MetaInfServices( ServiceGUI.class)
 @GUIFor( ImageExportService.class)
 @ServiceStatus( EStatus.RELEASED)
 public class ImageExportServiceGUI extends AbstractServiceGUI {

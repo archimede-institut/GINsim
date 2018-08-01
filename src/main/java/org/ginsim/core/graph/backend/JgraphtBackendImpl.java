@@ -1,12 +1,5 @@
 package org.ginsim.core.graph.backend;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphBackend;
@@ -14,11 +7,14 @@ import org.ginsim.core.graph.GraphViewListener;
 import org.ginsim.core.graph.view.EdgeViewInfo;
 import org.ginsim.core.graph.view.NodeViewInfo;
 import org.ginsim.core.graph.view.style.EdgeStyle;
-import org.jgrapht.alg.DijkstraShortestPath;
-import org.jgrapht.alg.StrongConnectivityInspector;
-import org.jgrapht.graph.ListenableDirectedGraph;
+import org.jgrapht.GraphPath;
+import org.jgrapht.alg.GabowStrongConnectivityInspector;
+import org.jgrapht.alg.shortestpath.DijkstraShortestPath;
+import org.jgrapht.graph.DefaultListenableGraph;
 
-public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirectedGraph<V, E> implements GraphBackend<V, E> {
+import java.util.*;
+
+public class JgraphtBackendImpl<V, E extends Edge<V>> extends DefaultListenableGraph<V, E> implements GraphBackend<V, E> {
 	private static final long serialVersionUID = -7766943723639796018L;
 	
 	public static GraphBackend getGraphBackend(Graph graph) {
@@ -150,8 +146,8 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	 */
 	@Override
     public List<E> getShortestPath(V source, V target) {
-		
-        return DijkstraShortestPath.findPathBetween( this, source, target);
+		GraphPath<V,E> shortest = DijkstraShortestPath.findPathBetween( this, source, target);
+		return shortest.getEdgeList();
     }
 
 	/**
@@ -161,8 +157,8 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends ListenableDirected
 	 */
 	@Override
 	public List<Set<V>> getStronglyConnectedComponents() {
-		
-		return new StrongConnectivityInspector<V, E>( this).stronglyConnectedSets();
+
+		return new GabowStrongConnectivityInspector<V,E>(this).stronglyConnectedSets();
 	}
 
 	@Override

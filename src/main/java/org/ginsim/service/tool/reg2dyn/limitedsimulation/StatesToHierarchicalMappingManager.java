@@ -10,7 +10,7 @@ import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalNode;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * An GraphAssociatedObjectManager providing an HashMap<DynamicNode, HierarchicalNode> storing a mapping between states and their corresponding HierarchicalNode
@@ -20,7 +20,7 @@ import org.mangosdk.spi.ProviderFor;
  *
  * @author Duncan Berenguier
  */
-@ProviderFor(GraphAssociatedObjectManager.class)
+@MetaInfServices(GraphAssociatedObjectManager.class)
 public class StatesToHierarchicalMappingManager extends BasicGraphAssociatedManager {
 
 	public static final String KEY = "statesToHierarchical";

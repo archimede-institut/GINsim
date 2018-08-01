@@ -1,8 +1,8 @@
 package org.ginsim.service.tool.composition;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -13,8 +13,8 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.service.GSServiceManager;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class TestComposition {
 
@@ -23,7 +23,7 @@ public class TestComposition {
 	private static CompositionService service;
 	private static File dir;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() {
 		// Txt.pushBundle("org.ginsim.messages");
 		dir = TestFileUtils.getTestFileDirectory("models");
@@ -44,7 +44,7 @@ public class TestComposition {
 		}
 
 		service = GSServiceManager.getService(CompositionService.class);
-		assertNotNull("CompositionService service is not available", service);
+		assertNotNull( service, "CompositionService service is not available");
 	}
 
 	@Test
@@ -78,10 +78,8 @@ public class TestComposition {
 
 			composedGraph = service.run(graph, config);
 
-			assertEquals(
-					"The composed graph should have has many components as the sum of the components of the instances",
-					composedGraph.getNodeOrderSize(),
-					4 * graph.getNodeOrderSize());
+			assertEquals(composedGraph.getNodeOrderSize(), 4 * graph.getNodeOrderSize(),
+					"The composed graph should have has many components as the sum of the components of the instances");
 			List<RegulatoryNode> inputs = new ArrayList<RegulatoryNode>();
 			List<RegulatoryNode> oldInputs = new ArrayList<RegulatoryNode>();
 			for (RegulatoryNode node : composedGraph.getNodeOrder()) {
@@ -92,13 +90,11 @@ public class TestComposition {
 
 			}
 
-			assertEquals(
-					"The composed graph (without reduction) should have as many old inputs as the inputs of the instances",
-					oldInputs.size(), 4);
+			assertEquals( 4, oldInputs.size(),
+					"The composed graph (without reduction) should have as many old inputs as the inputs of the instances");
 
-			assertEquals(
-					"The composed graph should not have any inputs, since all are mapped",
-					inputs.size(), 0);
+			assertEquals( 0, inputs.size(),
+					"The composed graph should not have any inputs, since all are mapped");
 
 			// other tests ??
 
@@ -106,10 +102,8 @@ public class TestComposition {
 
 			composedGraph = service.run(graph, config);
 
-			assertEquals(
-					"The composed graph should have 4 components less than the sum of the components of the instances",
-					composedGraph.getNodeOrderSize(),
-					4 * (graph.getNodeOrderSize() - 1));
+			assertEquals( 4 * (graph.getNodeOrderSize() - 1), composedGraph.getNodeOrderSize(),
+					"The composed graph should have 4 components less than the sum of the components of the instances");
 
 			inputs = new ArrayList<RegulatoryNode>();
 			oldInputs = new ArrayList<RegulatoryNode>();
@@ -121,13 +115,11 @@ public class TestComposition {
 
 			}
 
-			assertEquals(
-					"The composed graph (with reduction) should not have any old inputs",
-					oldInputs.size(), 0);
+			assertEquals( 0, oldInputs.size(),
+					"The composed graph (with reduction) should not have any old inputs");
 
-			assertEquals(
-					"The composed graph should not have any inputs, since all are mapped",
-					inputs.size(), 0);
+			assertEquals( 0, inputs.size(),
+					"The composed graph should not have any inputs, since all are mapped");
 
 		} catch (GsException e) {
 			fail(e.getMessage());
@@ -165,10 +157,8 @@ public class TestComposition {
 
 			composedGraph = service.run(graph, config);
 
-			assertEquals(
-					"The composed graph should have has many components as the sum of the components of the instances",
-					composedGraph.getNodeOrderSize(),
-					4 * graph.getNodeOrderSize());
+			assertEquals( 4 * graph.getNodeOrderSize(), composedGraph.getNodeOrderSize(),
+					"The composed graph should have has many components as the sum of the components of the instances");
 			List<RegulatoryNode> inputs = new ArrayList<RegulatoryNode>();
 			List<RegulatoryNode> oldInputs = new ArrayList<RegulatoryNode>();
 			for (RegulatoryNode node : composedGraph.getNodeOrder()) {
@@ -179,13 +169,11 @@ public class TestComposition {
 
 			}
 
-			assertEquals(
-					"The composed graph (without reduction) should have as many old inputs as the inputs of the instances",
-					oldInputs.size(), 4);
+			assertEquals( 4, oldInputs.size(),
+					"The composed graph (without reduction) should have as many old inputs as the inputs of the instances");
 
-			assertEquals(
-					"The composed graph should not have any inputs, since all are mapped",
-					inputs.size(), 0);
+			assertEquals( 0, inputs.size(),
+					"The composed graph should not have any inputs, since all are mapped");
 
 			// other tests ??
 
@@ -193,10 +181,8 @@ public class TestComposition {
 
 			composedGraph = service.run(graph, config);
 
-			assertEquals(
-					"The composed graph should have 4 components less than the sum of the components of the instances",
-					composedGraph.getNodeOrderSize(),
-					4 * (graph.getNodeOrderSize() - 1));
+			assertEquals( 4 * (graph.getNodeOrderSize() - 1), composedGraph.getNodeOrderSize(),
+					"The composed graph should have 4 components less than the sum of the components of the instances");
 
 			inputs = new ArrayList<RegulatoryNode>();
 			oldInputs = new ArrayList<RegulatoryNode>();
@@ -208,13 +194,11 @@ public class TestComposition {
 
 			}
 
-			assertEquals(
-					"The composed graph (with reduction) should not have any old inputs",
-					oldInputs.size(), 0);
+			assertEquals( 0, oldInputs.size(),
+					"The composed graph (with reduction) should not have any old inputs");
 
-			assertEquals(
-					"The composed graph should not have any inputs, since all are mapped",
-					inputs.size(), 0);
+			assertEquals( 0, inputs.size(),
+					"The composed graph should not have any inputs, since all are mapped");
 
 		} catch (GsException e) {
 			fail(e.getMessage());
@@ -257,10 +241,8 @@ public class TestComposition {
 
 			composedGraph = service.run(graph, config);
 
-			assertEquals(
-					"The composed graph should have has many components as the sum of the components of the instances",
-					composedGraph.getNodeOrderSize(),
-					4 * graph.getNodeOrderSize());
+			assertEquals( 4 * graph.getNodeOrderSize(), composedGraph.getNodeOrderSize(),
+					"The composed graph should have has many components as the sum of the components of the instances");
 			List<RegulatoryNode> inputs = new ArrayList<RegulatoryNode>();
 			List<RegulatoryNode> oldInputs = new ArrayList<RegulatoryNode>();
 			for (RegulatoryNode node : composedGraph.getNodeOrder()) {
@@ -271,13 +253,11 @@ public class TestComposition {
 
 			}
 
-			assertEquals(
-					"The composed graph (without reduction) should have as many old inputs as the inputs of the instances",
-					oldInputs.size(), 4);
+			assertEquals( 4, oldInputs.size(),
+					"The composed graph (without reduction) should have as many old inputs as the inputs of the instances");
 
-			assertEquals(
-					"The composed graph should not have any inputs, since all are mapped",
-					inputs.size(), 0);
+			assertEquals( 0, inputs.size(),
+					"The composed graph should not have any inputs, since all are mapped");
 
 			// other tests ??
 
@@ -285,10 +265,8 @@ public class TestComposition {
 
 			composedGraph = service.run(graph, config);
 
-			assertEquals(
-					"The composed graph should have 4 components less than the sum of the components of the instances",
-					composedGraph.getNodeOrderSize(),
-					4 * (graph.getNodeOrderSize() - 1));
+			assertEquals( 4 * (graph.getNodeOrderSize() - 1), composedGraph.getNodeOrderSize(),
+					"The composed graph should have 4 components less than the sum of the components of the instances");
 
 			inputs = new ArrayList<RegulatoryNode>();
 			oldInputs = new ArrayList<RegulatoryNode>();
@@ -300,13 +278,11 @@ public class TestComposition {
 
 			}
 
-			assertEquals(
-					"The composed graph (with reduction) should not have any old inputs",
-					oldInputs.size(), 0);
+			assertEquals( 0, oldInputs.size(),
+					"The composed graph (with reduction) should not have any old inputs");
 
-			assertEquals(
-					"The composed graph should not have any inputs, since all are mapped",
-					inputs.size(), 0);
+			assertEquals( 0, inputs.size(),
+					"The composed graph should not have any inputs, since all are mapped");
 
 		} catch (GsException e) {
 			fail(e.getMessage());
@@ -348,10 +324,8 @@ public class TestComposition {
 
 			composedGraph = service.run(graph, config);
 
-			assertEquals(
-					"The composed graph should have has many components as the sum of the components of the instances",
-					composedGraph.getNodeOrderSize(),
-					4 * graph.getNodeOrderSize());
+			assertEquals( 4 * graph.getNodeOrderSize(), composedGraph.getNodeOrderSize(),
+					"The composed graph should have has many components as the sum of the components of the instances");
 			List<RegulatoryNode> inputs = new ArrayList<RegulatoryNode>();
 			List<RegulatoryNode> oldInputs = new ArrayList<RegulatoryNode>();
 			for (RegulatoryNode node : composedGraph.getNodeOrder()) {
@@ -362,13 +336,11 @@ public class TestComposition {
 
 			}
 
-			assertEquals(
-					"The composed graph (without reduction) should have as many old inputs as the inputs of the instances",
-					oldInputs.size(), 4);
+			assertEquals( 4, oldInputs.size(),
+					"The composed graph (without reduction) should have as many old inputs as the inputs of the instances");
 
-			assertEquals(
-					"The composed graph should not have any inputs, since all are mapped",
-					inputs.size(), 0);
+			assertEquals( 0, inputs.size(),
+					"The composed graph should not have any inputs, since all are mapped");
 
 			// other tests ??
 
@@ -376,10 +348,8 @@ public class TestComposition {
 
 			composedGraph = service.run(graph, config);
 
-			assertEquals(
-					"The composed graph should have 4 components less than the sum of the components of the instances",
-					composedGraph.getNodeOrderSize(),
-					4 * (graph.getNodeOrderSize() - 1));
+			assertEquals( 4 * (graph.getNodeOrderSize() - 1), composedGraph.getNodeOrderSize(),
+					"The composed graph should have 4 components less than the sum of the components of the instances");
 
 			inputs = new ArrayList<RegulatoryNode>();
 			oldInputs = new ArrayList<RegulatoryNode>();
@@ -391,13 +361,11 @@ public class TestComposition {
 
 			}
 
-			assertEquals(
-					"The composed graph (with reduction) should not have any old inputs",
-					oldInputs.size(), 0);
+			assertEquals( 0, oldInputs.size(),
+					"The composed graph (with reduction) should not have any old inputs");
 
-			assertEquals(
-					"The composed graph should not have any inputs, since all are mapped",
-					inputs.size(), 0);
+			assertEquals( 0, inputs.size(),
+					"The composed graph should not have any inputs, since all are mapped");
 
 		} catch (GsException e) {
 			fail(e.getMessage());

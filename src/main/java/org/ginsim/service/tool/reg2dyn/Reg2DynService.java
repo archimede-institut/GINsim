@@ -8,9 +8,9 @@ import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.tool.reg2dyn.htg.HTGSimulation;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
-@ProviderFor( Service.class)
+@MetaInfServices( Service.class)
 @Alias("simulation")
 @ServiceStatus(EStatus.RELEASED)
 public class Reg2DynService implements Service {

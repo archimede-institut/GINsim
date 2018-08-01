@@ -16,10 +16,10 @@ import org.ginsim.gui.service.GUIFor;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.interactionanalysis.InteractionAnalysisService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(InteractionAnalysisService.class)
 @ServiceStatus( EStatus.RELEASED)
 public class InteractionAnalysisServiceGUI extends AbstractServiceGUI {

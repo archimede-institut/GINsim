@@ -14,14 +14,14 @@ import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
 /**
  * Save/open simulation parameters along with the model.
  */
-@ProviderFor(GraphAssociatedObjectManager.class)
+@MetaInfServices(GraphAssociatedObjectManager.class)
 public class ReductionConfigManager extends BasicGraphAssociatedManager<ListOfReductionConfigs> {
 
 	public static final String KEY = "modelSimplifier";

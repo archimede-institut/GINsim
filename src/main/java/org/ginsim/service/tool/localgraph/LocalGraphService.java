@@ -13,9 +13,9 @@ import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.tool.reg2dyn.updater.SynchronousSimulationUpdater;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
-@ProviderFor(Service.class)
+@MetaInfServices(Service.class)
 @Alias("localgraph")
 @ServiceStatus(EStatus.RELEASED)
 public class LocalGraphService implements Service {

@@ -16,9 +16,9 @@ import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.stableregions.StableRegionsService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(StableRegionsService.class)
 @ServiceStatus(EStatus.DEVELOPMENT)
 public class StableRegionsServiceGUI extends AbstractServiceGUI {

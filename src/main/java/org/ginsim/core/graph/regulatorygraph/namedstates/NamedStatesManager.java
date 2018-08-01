@@ -11,7 +11,7 @@ import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
  *
  * @author Aurelien Naldi
  */
-@ProviderFor(GraphAssociatedObjectManager.class)
+@MetaInfServices(GraphAssociatedObjectManager.class)
 public class NamedStatesManager extends BasicGraphAssociatedManager<NamedStatesHandler> {
 
 	public static final String KEY = "initialState";

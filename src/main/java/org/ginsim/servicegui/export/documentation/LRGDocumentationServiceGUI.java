@@ -15,7 +15,7 @@ import org.ginsim.gui.service.GUIFor;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.service.export.documentation.LRGDocumentationService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -30,7 +30,7 @@ import java.util.List;
  * 
  * @see DocumentWriter
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(LRGDocumentationService.class)
 @ServiceStatus( EStatus.RELEASED)
 public class LRGDocumentationServiceGUI extends AbstractServiceGUI {

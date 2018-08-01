@@ -1,7 +1,7 @@
 package org.ginsim.core.graph.hierarchicaltransitiongraph;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.Color;
 import java.util.Set;
@@ -20,15 +20,15 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 
 public class BasicHierarchicalTransitionGraphTest {
 
 	
-	@BeforeClass
+	@BeforeAll
 	public static void beforeAllTests(){
 		
 		try {
@@ -49,7 +49,7 @@ public class BasicHierarchicalTransitionGraphTest {
 	 * Try to remove all the registered graphs from the GraphManager after each test
 	 * 
 	 */
-	@After
+	@AfterEach
 	public void afterEachTest(){
 		
 		Set<Graph> graph_list = GSGraphManager.getInstance().getAllGraphs();
@@ -71,7 +71,7 @@ public class BasicHierarchicalTransitionGraphTest {
 		
 		// Create a new RegulatoryGraph
 		RegulatoryGraph regGraph = GSGraphManager.getInstance().getNewGraph();
-		assertNotNull( "Create graph : the graph is null.", regGraph);
+		assertNotNull( regGraph, "Create graph : the graph is null.");
 
 		// Add a node
 		RegulatoryNode node_g0 = regGraph.addNode();
@@ -109,7 +109,7 @@ public class BasicHierarchicalTransitionGraphTest {
 
 		// Create a new RegulatoryGraph
 		HierarchicalTransitionGraph htg = GSGraphManager.getInstance().getNewGraph(HierarchicalTransitionGraph.class);
-		assertNotNull( "Create graph : the graph is null.", htg);
+		assertNotNull( htg, "Create graph : the graph is null.");
 		
 		//TODO : Add the simulation part
 		

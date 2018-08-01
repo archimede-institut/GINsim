@@ -13,10 +13,10 @@ import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.shell.GsFileFilter;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
-@ProviderFor( GraphGUIHelper.class)
+@MetaInfServices( GraphGUIHelper.class)
 public class TrapSpaceTreeGUIHelper implements GraphGUIHelper<TrapSpaceInclusionDiagram, TrapSpaceNode, TrapSpaceInclusion> {
 
 	@Override

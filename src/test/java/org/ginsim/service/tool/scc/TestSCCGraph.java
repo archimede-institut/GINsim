@@ -1,11 +1,5 @@
 package org.ginsim.service.tool.scc;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
-import java.awt.Color;
-
 import org.ginsim.common.application.OptionStore;
 import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.backend.EdgeAttributeReaderImpl;
@@ -19,14 +13,18 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.service.GSServiceManager;
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import java.awt.*;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 public class TestSCCGraph {
 	static RegulatoryGraph regGraph;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() {
 		regGraph = GSGraphManager.getInstance().getNewGraph();
 		try {
@@ -44,14 +42,14 @@ public class TestSCCGraph {
 		}
 	}
 
-	@AfterClass
+	@AfterAll
 	public static void tearDown() {
 		GSGraphManager.getInstance().close(regGraph);
 	}
 
 	@Test
 	public void simpleConnectivityTest() {
-		assertNotNull("Create graph : the graph is null.", regGraph);
+		assertNotNull( regGraph, "Create graph : the graph is null.");
 
 		RegulatoryNode nodes[] = new RegulatoryNode[14];
 		for (int i = 0; i < nodes.length; i++) {
@@ -77,13 +75,13 @@ public class TestSCCGraph {
 
 		SCCGraphService service = GSServiceManager.get(SCCGraphService.class);
         ReducedGraph<?, ?, ?> reducedGraph = service.getSCCGraph(regGraph);
-		assertNotNull("The graph is null", reducedGraph);
+		assertNotNull( reducedGraph, "The graph is null");
 
 		// Count of SCC
-		assertEquals("Wrong number of SCC", 8, reducedGraph.getNodeCount());
+		assertEquals(8, reducedGraph.getNodeCount(), "Wrong number of SCC");
 
 		// Count of Edges
-		assertEquals("Wrong number of edges", 4, reducedGraph.getEdges().size());
+		assertEquals(4, reducedGraph.getEdges().size(), "Wrong number of edges");
 
 		// Count of Trivial SCC
 		int total = 0;
@@ -91,7 +89,7 @@ public class TestSCCGraph {
 			if (scc.isTrivial())
 				total++;
 		}
-		assertEquals("Wrong number of trivial SCC", 4, total);
+		assertEquals(4, total, "Wrong number of trivial SCC");
 
 		// Count of Transient SCC
 		total = 0;
@@ -99,14 +97,14 @@ public class TestSCCGraph {
 			if (scc.isTransient(regGraph))
 				total++;
 		}
-		assertEquals("Wrong number of transient SCC", 3, total);
+		assertEquals( 3, total, "Wrong number of transient SCC");
 
 		// Count of nodes in the SCC
 		total = 0;
 		for (NodeReducedData scc : reducedGraph.getNodes()) {
 			total += scc.getContent().size();
 		}
-		assertEquals("Wrong number of nodes in the SCC", 14, total);
+		assertEquals( 14, total, "Wrong number of nodes in the SCC");
 
 	}
 }

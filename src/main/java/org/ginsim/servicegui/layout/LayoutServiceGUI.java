@@ -17,9 +17,9 @@ import org.ginsim.gui.shell.actions.LayoutAction;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.layout.DynamicLayout3D;
 import org.ginsim.service.layout.LayoutService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(LayoutService.class)
 @ServiceStatus( EStatus.RELEASED)
 public class LayoutServiceGUI extends AbstractServiceGUI {

@@ -14,9 +14,9 @@ import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.Service;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
-@ProviderFor( Service.class)
+@MetaInfServices( Service.class)
 @Alias("htg-simulation")
 public class LimitedSimulationService implements Service {
 

@@ -8,14 +8,14 @@ import org.ginsim.gui.service.FormatSupportServiceGUI;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.service.format.CNetFormatService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GUI Action to export model to the CNET format
  * 
  * @author Aurelien Naldi
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(CNetFormatService.class)
 @ServiceStatus( EStatus.RELEASED)
 public class CNetFormatServiceGUI extends FormatSupportServiceGUI<CNetFormatService> {

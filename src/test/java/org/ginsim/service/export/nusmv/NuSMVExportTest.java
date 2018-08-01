@@ -1,8 +1,8 @@
 package org.ginsim.service.export.nusmv;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,8 +14,8 @@ import org.ginsim.common.application.Txt;
 import org.ginsim.common.utils.IOUtils;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.service.GSServiceManager;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class NuSMVExportTest {
 
@@ -26,7 +26,7 @@ public class NuSMVExportTest {
 	private static NuSMVExportService service = null;
 	private static File dir = null;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() {
 		// TODO: this should not be here...
 		// Should be either unnecessary or done Once before All tests
@@ -44,7 +44,7 @@ public class NuSMVExportTest {
 		}
 
 		service = GSServiceManager.getService(NuSMVExportService.class);
-		assertNotNull("NuSMVExportService service is not available", service);
+		assertNotNull( service, "NuSMVExportService service is not available");
 	}
 
 	private void runService(NuSMVConfig config, File tmpFile) {

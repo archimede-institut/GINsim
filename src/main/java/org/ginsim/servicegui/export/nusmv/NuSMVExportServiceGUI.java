@@ -20,14 +20,14 @@ import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.StandaloneGUI;
 import org.ginsim.service.export.nusmv.NuSMVConfig;
 import org.ginsim.service.export.nusmv.NuSMVExportService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GUI Action to export a NuSMV model description
  * 
  * @author Pedro T. Monteiro
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @StandaloneGUI
 @ServiceStatus(EStatus.RELEASED)
 public class NuSMVExportServiceGUI extends AbstractServiceGUI {

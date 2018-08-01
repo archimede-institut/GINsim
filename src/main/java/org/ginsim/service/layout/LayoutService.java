@@ -8,7 +8,7 @@ import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
@@ -18,7 +18,7 @@ import org.mangosdk.spi.ProviderFor;
  * @author Cecile Menahem
  * @author Aurelien Naldi
  */
-@ProviderFor(Service.class)
+@MetaInfServices(Service.class)
 @Alias("layout")
 @ServiceStatus(EStatus.RELEASED)
 public class LayoutService implements Service {

@@ -12,7 +12,6 @@ import org.colomoto.biolqm.io.avatar.AvatarUtils;
 import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.ginsim.service.tool.avatar.domain.AbstractStateSet;
 import org.ginsim.service.tool.avatar.domain.Result;
 import org.ginsim.service.tool.avatar.simulation.AvatarSimulation;
 import org.ginsim.service.tool.avatar.simulation.FirefrontSimulation;

@@ -6,14 +6,14 @@ import org.ginsim.gui.utils.data.ListEditionPanel;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 import java.awt.*;
 
 /**
  * GUI helper for the simulation parameters: provide edition and selection panels
  */
-@ProviderFor(GUIHelper.class)
+@MetaInfServices(GUIHelper.class)
 @GUIFor(SimulationParameterList.class)
 public class SimulationParametersGUIHelper implements GUIHelper<SimulationParameterList> {
 

@@ -20,7 +20,7 @@ import org.ginsim.gui.graph.EditAction;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.shell.GsFileFilter;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
@@ -28,7 +28,7 @@ import org.mangosdk.spi.ProviderFor;
  * 
  * @author Aurelien Naldi
  */
-@ProviderFor( GraphGUIHelper.class)
+@MetaInfServices( GraphGUIHelper.class)
 public class RegulatoryGraphGUIHelper implements GraphGUIHelper<RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> {
 
 	@Override

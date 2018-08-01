@@ -20,14 +20,14 @@ import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.StandaloneGUI;
 import org.ginsim.service.export.prism.PRISMConfig;
 import org.ginsim.service.export.prism.PRISMExportService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GUI Action to export a PRISM model description
  * 
  * @author Pedro T. Monteiro
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @StandaloneGUI
 @ServiceStatus(EStatus.RELEASED)
 public class PRISMExportServiceGUI extends AbstractServiceGUI {

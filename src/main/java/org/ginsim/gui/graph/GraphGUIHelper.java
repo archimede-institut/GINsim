@@ -17,7 +17,7 @@ import org.ginsim.core.graph.Graph;
  * Implementors must be called with the same pattern: '<GraphClassName>GUIHelper.java' in order to have
  * the GraphGUIHelperFactory able to create their instances through introspective access
  * 
- * Implementations must be annotated "@ProviderFor( GraphGUIHelper.class)" to be discovered at runtime
+ * Implementations must be annotated "@MetaInfServices( GraphGUIHelper.class)" to be discovered at runtime
  *
  * @author Aurelien Naldi
  *

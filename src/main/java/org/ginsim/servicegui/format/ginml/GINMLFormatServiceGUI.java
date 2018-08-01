@@ -20,14 +20,14 @@ import org.ginsim.gui.service.GUIFor;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.format.ginml.GINMLFormatConfig;
 import org.ginsim.service.format.ginml.GINMLFormatService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GINsim export service GUI for the GINML (model-only) format.
  * 
  * @author Pedro T. Monteiro
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(GINMLFormatService.class)
 @ServiceStatus(EStatus.RELEASED)
 public class GINMLFormatServiceGUI extends AbstractServiceGUI {

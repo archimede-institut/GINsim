@@ -1,9 +1,9 @@
 package org.ginsim.service.tool.localgraph;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -16,8 +16,8 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.service.GSServiceManager;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class TestLocalGraph {
 
@@ -26,7 +26,7 @@ public class TestLocalGraph {
 	private static LocalGraphService service;
 	private static File dir;
 
-	@BeforeClass
+	@BeforeAll
 	public static void setUp() {
 		// Txt.pushBundle("org.ginsim.messages");
 		dir = TestFileUtils.getTestFileDirectory("models");
@@ -41,7 +41,7 @@ public class TestLocalGraph {
 		}
 
 		service = GSServiceManager.getService(LocalGraphService.class);
-		assertNotNull("LocalGraphService service is not available", service);
+		assertNotNull( service, "LocalGraphService service is not available");
 	}
 
 	@Test
@@ -60,17 +60,15 @@ public class TestLocalGraph {
 
 			// CyclinE1 -> p21CIP
 			RegulatoryMultiEdge me = graph.getEdge(cyclinE1, p21CIP);
-			assertNotNull("Edge CyclinE1 -> p21CIP should not be null", me);
-			assertEquals("Edge ECyclinE1 -> p21CIP should be negative",
-					LocalGraphCategory.NEGATIVE, funct.get(me));
+			assertNotNull( me, "Edge CyclinE1 -> p21CIP should not be null");
+			assertEquals( LocalGraphCategory.NEGATIVE, funct.get(me), "Edge ECyclinE1 -> p21CIP should be negative");
 
 			state[2] = (byte) 0;
 			// State: 0010...00
 			funct = service.run(graph, alStates);
 
 			// CyclinE1 -> p21CIP
-			assertNull("Edge ECyclinE1 -> p21CIP should be non functional",
-					funct.get(me));
+			assertNull( funct.get(me), "Edge ECyclinE1 -> p21CIP should be non functional");
 		} catch (GsException e) {
 			fail(e.getMessage());
 		}
@@ -92,13 +90,13 @@ public class TestLocalGraph {
 
 			// gA -> gB
 			RegulatoryMultiEdge me = graph.getEdge(gA, gB);
-			assertNotNull("Edge gA -> gB should not be null", me);
-			assertEquals("Edge gA -> gB should be negative", LocalGraphCategory.NEGATIVE, funct.get(me));
+			assertNotNull( me, "Edge gA -> gB should not be null");
+			assertEquals( LocalGraphCategory.NEGATIVE, funct.get(me), "Edge gA -> gB should be negative");
 
 			// gB -> gA
 			me = saGraph[1].getEdge(gB, gA);
-			assertNotNull("Edge gB -> gA should not be null", me);
-			assertEquals("Edge gB -> gA should be positive", LocalGraphCategory.POSITIVE, funct.get(me));
+			assertNotNull( me, "Edge gB -> gA should not be null");
+			assertEquals( LocalGraphCategory.POSITIVE, funct.get(me), "Edge gB -> gA should be positive");
 		} catch (GsException e) {
 			fail(e.getMessage());
 		}

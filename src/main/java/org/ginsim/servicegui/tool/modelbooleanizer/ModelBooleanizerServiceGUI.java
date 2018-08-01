@@ -20,14 +20,14 @@ import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.modelbooleanizer.ModelBooleanizerService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Main method to Booleanize a Multivalued model
  * 
  * @author Pedro T. Monteiro
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(ModelBooleanizerService.class)
 @ServiceStatus(EStatus.RELEASED)
 public class ModelBooleanizerServiceGUI extends AbstractServiceGUI {

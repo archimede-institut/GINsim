@@ -2,14 +2,14 @@ package org.ginsim.service.format;
 
 import org.colomoto.biolqm.io.truthtable.TruthTableFormat;
 import org.ginsim.core.service.*;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GINsim import service for the TruthTable Format.
  * 
  * @author Pedro T. Monteiro
  */
-@ProviderFor(Service.class)
+@MetaInfServices(Service.class)
 @Alias("TruthTable")
 @ServiceStatus(EStatus.RELEASED)
 public class TruthTableFormatService extends FormatSupportService<TruthTableFormat> {

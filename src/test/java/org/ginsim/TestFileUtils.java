@@ -1,7 +1,7 @@
 package org.ginsim;
 
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 
@@ -81,7 +81,7 @@ public class TestFileUtils {
 		try{
 			RegulatoryGraph graph = (RegulatoryGraph) GSGraphManager.getInstance().open( file);
 			
-			assertNotNull( "Load graph : graph is null", graph);
+			assertNotNull( graph, "Load graph : graph is null");
 			return graph;
 		}
 		catch ( GsException gse) {

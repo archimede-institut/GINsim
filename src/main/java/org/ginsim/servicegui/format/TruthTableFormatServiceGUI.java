@@ -8,14 +8,14 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.format.TruthTableFormatService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GUI Action to import create a model specified in the TruthTable format
  * 
  * @author Pedro T. Monteiro
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(TruthTableFormatService.class)
 @ServiceStatus(EStatus.RELEASED)
 public class TruthTableFormatServiceGUI extends

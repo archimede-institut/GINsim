@@ -15,11 +15,11 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.GenericGraphAction;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.StandaloneGUI;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 @StandaloneGUI
-@ProviderFor( ServiceGUI.class)
+@MetaInfServices( ServiceGUI.class)
 @ServiceStatus( EStatus.RELEASED)
 public class StateInRegulatoryGraphServiceGUI extends AbstractServiceGUI {
 

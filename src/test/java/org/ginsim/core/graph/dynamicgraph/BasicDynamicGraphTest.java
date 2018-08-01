@@ -1,8 +1,8 @@
 package org.ginsim.core.graph.dynamicgraph;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.Color;
 import java.util.Set;
@@ -13,12 +13,12 @@ import org.ginsim.core.graph.backend.EdgeAttributeReaderImpl;
 import org.ginsim.core.graph.backend.NodeAttributeReaderImpl;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class BasicDynamicGraphTest {
 	
-	@BeforeClass
+	@BeforeAll
 	public static void beforeAllTests(){
 		
 		try {
@@ -44,7 +44,7 @@ public class BasicDynamicGraphTest {
 		
 		// Create a new DynamicGraph
 		DynamicGraph graph = GSGraphManager.getInstance().getNewGraph( DynamicGraph.class);
-		assertNotNull( "Create graph : the graph is null.", graph);
+		assertNotNull( graph,  "Create graph : the graph is null.");
 		
 		Set graph_list = GSGraphManager.getInstance().getAllGraphs();
 		if( !graph_list.contains( graph)){
@@ -70,19 +70,19 @@ public class BasicDynamicGraphTest {
 		
 		// Create a new DynamicGraph
 		DynamicGraph graph = GSGraphManager.getInstance().getNewGraph( DynamicGraph.class);
-		assertNotNull( "Create graph : the graph is null", graph);
+		assertNotNull( graph, "Create graph : the graph is null");
 		
 		// Add a node
 		DynamicNode node = new DynamicNode( "G1"); 
 		graph.addNode( node);
 		
 		int node_count = graph.getNodeCount();
-		assertEquals( "Add node : the graph does not contains the right number of node.", 1, node_count);
+		assertEquals( 1, node_count, "Add node : the graph does not contains the right number of node.");
 		
 		// Remove the node
 		graph.removeNode( node);
 		node_count = graph.getNodeCount();
-		assertEquals( "Remove node : the graph does not contains the right number of node.", 0, node_count);
+		assertEquals( 0, node_count, "Remove node : the graph does not contains the right number of node.");
 	}
 	
 	/**
@@ -95,7 +95,7 @@ public class BasicDynamicGraphTest {
 		
 		// Create a new RegulatoryGraph
 		DynamicGraph graph = GSGraphManager.getInstance().getNewGraph( DynamicGraph.class);
-		assertNotNull( "Create graph : the created graph is null: creation failed.", graph);
+		assertNotNull( graph, "Create graph : the created graph is null: creation failed.");
 		
 		// Add nodes
 		DynamicNode node1 = new DynamicNode( "G1"); 
@@ -108,7 +108,7 @@ public class BasicDynamicGraphTest {
 		graph.addEdge(node1, node2, false);
 		
 		int edge_count = graph.getEdges().size();
-		assertEquals( "Add Edge : the Graph does not contains the right number of edges.", 1, edge_count);			
+		assertEquals( 1, edge_count, "Add Edge : the Graph does not contains the right number of edges.");
 		
 	}
 	

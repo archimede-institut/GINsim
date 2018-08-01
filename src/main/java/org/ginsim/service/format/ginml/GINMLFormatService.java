@@ -4,14 +4,14 @@ import java.io.IOException;
 
 import org.colomoto.biolqm.io.ginml.GINMLFormat;
 import org.ginsim.core.service.*;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GINsim export service for the GINML (model-only) format.
  * 
  * @author Pedro T. Monteiro
  */
-@ProviderFor(Service.class)
+@MetaInfServices(Service.class)
 @Alias("GINML")
 @ServiceStatus(EStatus.RELEASED)
 public class GINMLFormatService extends FormatSupportService<GINMLFormat> {

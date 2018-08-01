@@ -17,13 +17,13 @@ import org.ginsim.gui.service.GUIFor;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.stablestates.StableStatesService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
  * Define the action for stableStates service
  */
-@ProviderFor( ServiceGUI.class)
+@MetaInfServices( ServiceGUI.class)
 @GUIFor( StableStatesService.class)
 @ServiceStatus( EStatus.RELEASED)
 public class StableStatesServiceGUI extends AbstractServiceGUI {

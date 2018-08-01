@@ -6,9 +6,9 @@ import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
-@ProviderFor( Service.class)
+@MetaInfServices( Service.class)
 @Alias("documentation")
 @ServiceStatus(EStatus.RELEASED)
 public class LRGDocumentationService implements Service {

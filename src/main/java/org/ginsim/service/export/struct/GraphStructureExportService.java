@@ -11,14 +11,14 @@ import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Export the structure of a graph to various formats: GraphViz, Biolayout, and cytoscape.
  *
  * @author Aurelien Naldi
  */
-@ProviderFor( Service.class)
+@MetaInfServices( Service.class)
 @Alias("structure-export")
 @ServiceStatus(EStatus.RELEASED)
 public class GraphStructureExportService implements Service {

@@ -17,14 +17,14 @@ import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.format.MaBoSSExportService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GUI Action to export model to the MaBoSS format
  * 
  * @author Aurelien Naldi
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(MaBoSSExportService.class)
 @ServiceStatus( EStatus.RELEASED)
 public class MaBoSSExportServiceGUI extends AbstractServiceGUI {

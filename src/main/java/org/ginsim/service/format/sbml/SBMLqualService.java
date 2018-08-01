@@ -21,7 +21,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.service.*;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 import org.sbml.jsbml.Annotation;
 import org.sbml.jsbml.CVTerm;
 import org.sbml.jsbml.CVTerm.Qualifier;
@@ -33,7 +33,7 @@ import org.sbml.jsbml.ext.qual.QualitativeSpecies;
 import org.sbml.jsbml.util.StringTools;
 import org.sbml.jsbml.xml.XMLNode;
 
-@ProviderFor( Service.class)
+@MetaInfServices( Service.class)
 @Alias("SBML")
 @ServiceStatus(EStatus.DEVELOPMENT)
 public class SBMLqualService extends FormatSupportService<SBMLFormat> {

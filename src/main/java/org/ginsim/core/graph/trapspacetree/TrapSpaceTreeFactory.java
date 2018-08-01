@@ -4,13 +4,13 @@ import org.colomoto.biolqm.tool.trapspaces.TrapSpace;
 import org.colomoto.biolqm.tool.trapspaces.TrapSpaceList;
 import org.ginsim.core.graph.AbstractGraphFactory;
 import org.ginsim.core.graph.GraphFactory;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * 
  * @author Aurelien Naldi
  */
-@ProviderFor( GraphFactory.class)
+@MetaInfServices( GraphFactory.class)
 public class TrapSpaceTreeFactory extends AbstractGraphFactory<TrapSpaceInclusionDiagram> {
 
 	public static final String KEY = "trapspacetree";

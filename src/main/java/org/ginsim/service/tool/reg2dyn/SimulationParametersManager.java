@@ -13,13 +13,13 @@ import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
  * Save/open simulation parameters along with the model.
  */
-@ProviderFor(GraphAssociatedObjectManager.class)
+@MetaInfServices(GraphAssociatedObjectManager.class)
 public class SimulationParametersManager extends BasicGraphAssociatedManager<SimulationParameterList> {
 
 	public static final String KEY = "reg2dyn_parameters";

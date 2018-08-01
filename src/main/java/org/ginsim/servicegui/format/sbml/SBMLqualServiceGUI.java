@@ -12,9 +12,9 @@ import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
 import org.ginsim.service.format.sbml.SBMLQualConfig;
 import org.ginsim.service.format.sbml.SBMLqualService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(SBMLqualService.class)
 @ServiceStatus( EStatus.RELEASED)
 public class SBMLqualServiceGUI extends FormatSupportServiceGUI<SBMLqualService> {

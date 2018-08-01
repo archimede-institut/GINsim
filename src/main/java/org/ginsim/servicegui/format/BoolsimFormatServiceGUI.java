@@ -8,14 +8,14 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.format.BoolsimFormatService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GUI Action to export model to the boolsim format
  * 
  * @author Aurelien Naldi
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(BoolsimFormatService.class)
 @ServiceStatus( EStatus.RELEASED)
 public class BoolsimFormatServiceGUI extends FormatSupportServiceGUI<BoolsimFormatService> {

@@ -15,10 +15,10 @@ import org.ginsim.gui.service.GUIFor;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.graphcomparator.GraphComparatorService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
-@ProviderFor( ServiceGUI.class)
+@MetaInfServices( ServiceGUI.class)
 @GUIFor( GraphComparatorService.class)
 @ServiceStatus( EStatus.DEVELOPMENT)
 public class GraphComparatorServiceGUI extends AbstractServiceGUI{

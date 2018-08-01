@@ -23,14 +23,14 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.modelbooleanizer.ModelBooleanizerService;
 import org.ginsim.service.tool.modelreversion.ModelReversionService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Main method for the model reversion plugin
  * 
  * @author Pedro T. Monteiro
  */
-@ProviderFor(ServiceGUI.class)
+@MetaInfServices(ServiceGUI.class)
 @GUIFor(ModelReversionService.class)
 @ServiceStatus(EStatus.RELEASED)
 public class ModelReversionServiceGUI extends AbstractServiceGUI {

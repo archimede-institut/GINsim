@@ -16,7 +16,7 @@ import org.ginsim.gui.graph.GraphGUIHelper;
 import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.widgets.Frame;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
@@ -24,7 +24,7 @@ import org.mangosdk.spi.ProviderFor;
  *
  */
 
-@ProviderFor( GraphGUIHelper.class)
+@MetaInfServices( GraphGUIHelper.class)
 public class HierarchicalTransitionGraphGUIHelper implements GraphGUIHelper<HierarchicalTransitionGraph, HierarchicalNode, DecisionOnEdge> {
 
 	

@@ -1,8 +1,8 @@
 package org.ginsim.service.tool.stablestates;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.Color;
 import java.util.Iterator;
@@ -25,13 +25,13 @@ import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
 import org.ginsim.core.graph.view.NodeBorder;
 import org.ginsim.core.graph.view.NodeShape;
 import org.ginsim.core.service.GSServiceManager;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 public class TestStableStates {
 
-	@BeforeClass
+	@BeforeAll
 	public static void beforeAllTests() {
 
 		try {
@@ -61,7 +61,7 @@ public class TestStableStates {
 	 * test
 	 * 
 	 */
-	@After
+	@AfterEach
 	public void afterEachTest() {
 
 		Vector<Graph> graph_list = new Vector(GSGraphManager.getInstance()
@@ -79,7 +79,7 @@ public class TestStableStates {
 	public void SimpleExampleTest() throws Exception {
 		// Create a new RegulatoryGraph
 		RegulatoryGraph regGraph = GSGraphManager.getInstance().getNewGraph();
-		assertNotNull("Create graph : the graph is null.", regGraph);
+		assertNotNull( regGraph, "Create graph : the graph is null.");
 
 		// Add a node
 		RegulatoryNode node_g0 = regGraph.addNode();
@@ -124,8 +124,7 @@ public class TestStableStates {
 		// Get the stable states
 		FixpointSearcher stableStateSearcher = GSServiceManager.get(
 				StableStatesService.class).getSearcher(regGraph);
-		assertNotNull("The service didn't return any result",
-				stableStateSearcher);
+		assertNotNull( stableStateSearcher, "The service didn't return any result");
 
 		// Get the OMDD containing the stable states
 		int root = stableStateSearcher.call();

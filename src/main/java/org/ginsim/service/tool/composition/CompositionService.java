@@ -24,13 +24,13 @@ import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.tool.modelreduction.ReductionConfig;
 import org.ginsim.service.tool.modelreduction.ReductionTask;
 import org.ginsim.service.tool.modelreduction.ReconstructionTask;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Module composition service
  * @author Nuno D. Mendes
  */
-@ProviderFor(Service.class)
+@MetaInfServices(Service.class)
 @Alias("composition")
 @ServiceStatus(EStatus.RELEASED)
 public class CompositionService implements Service {

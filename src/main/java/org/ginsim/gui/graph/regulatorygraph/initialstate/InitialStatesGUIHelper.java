@@ -6,9 +6,9 @@ import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStatesHandler;
 import org.ginsim.gui.guihelpers.GUIHelper;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
-@ProviderFor(GUIHelper.class)
+@MetaInfServices(GUIHelper.class)
 @GUIFor(NamedStatesHandler.class)
 public class InitialStatesGUIHelper implements GUIHelper {
 

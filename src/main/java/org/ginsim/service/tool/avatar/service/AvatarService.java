@@ -4,14 +4,14 @@ import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.tool.avatar.domain.Result;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * Provider of Avatar services in GINsim
  * @author Pedro T. Monteiro
  * @author Rui Henriques
  */
-@ProviderFor(Service.class)
+@MetaInfServices(Service.class)
 @ServiceStatus(EStatus.RELEASED)
 public class AvatarService implements Service {	
 	/**

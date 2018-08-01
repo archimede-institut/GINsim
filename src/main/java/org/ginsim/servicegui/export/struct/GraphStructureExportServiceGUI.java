@@ -18,7 +18,7 @@ import org.ginsim.gui.shell.actions.ExportAction;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.service.export.struct.GraphStructureExportService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
@@ -26,7 +26,7 @@ import org.mangosdk.spi.ProviderFor;
  *
  * @author Aurelien Naldi
  */
-@ProviderFor( ServiceGUI.class)
+@MetaInfServices( ServiceGUI.class)
 @ServiceStatus( EStatus.RELEASED)
 @GUIFor( GraphStructureExportService.class)
 public class GraphStructureExportServiceGUI extends AbstractServiceGUI {

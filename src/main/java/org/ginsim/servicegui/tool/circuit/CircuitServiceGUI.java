@@ -18,7 +18,7 @@ import org.ginsim.gui.service.GUIFor;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.circuit.CircuitService;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 
 /**
@@ -26,7 +26,7 @@ import org.mangosdk.spi.ProviderFor;
  * 
  * @author Aurelien Naldi
  */
-@ProviderFor( ServiceGUI.class)
+@MetaInfServices( ServiceGUI.class)
 @GUIFor( CircuitService.class)
 @ServiceStatus( EStatus.RELEASED)
 public class CircuitServiceGUI extends AbstractServiceGUI {

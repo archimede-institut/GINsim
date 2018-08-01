@@ -2,14 +2,14 @@ package org.ginsim.service.format;
 
 import org.colomoto.biolqm.io.boolsim.BoolSimFormat;
 import org.ginsim.core.service.*;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GINsim export service for the boolsim format.
  * 
  * @author Aurelien Naldi
  */
-@ProviderFor(Service.class)
+@MetaInfServices(Service.class)
 @Alias("boolsim")
 @ServiceStatus(EStatus.DEVELOPMENT)
 public class BoolsimFormatService extends FormatSupportService<BoolSimFormat> {

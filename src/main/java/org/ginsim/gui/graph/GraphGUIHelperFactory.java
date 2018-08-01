@@ -11,7 +11,7 @@ import org.ginsim.core.graph.Graph;
  * The instances of GraphGUIHelper are managed through a map establishing the correspondence 
  * 	between graph class and GraphGUIHelper instance. Theses instances are generated using 
  *  the Service Provider interface implying each GraphGUIHelper extension have to declare 
- *  the annotation "@ProviderFor(GraphGUIHelper)"
+ *  the annotation "@MetaInfServices(GraphGUIHelper)"
  * 
  * A user may access statically to the factory singleton through the getFactory method and then call the
  * 	getGraphGUIHelper method to obtain the helper instance

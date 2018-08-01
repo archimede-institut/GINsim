@@ -10,7 +10,7 @@ import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.objectassociation.BasicGraphAssociatedManager;
 import org.ginsim.core.graph.objectassociation.GraphAssociatedObjectManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 import org.xml.sax.Attributes;
 
 /**
@@ -18,7 +18,7 @@ import org.xml.sax.Attributes;
  * 
  * @author Aurelien Naldi
  */
-@ProviderFor(GraphAssociatedObjectManager.class)
+@MetaInfServices(GraphAssociatedObjectManager.class)
 public class BiblioManager extends BasicGraphAssociatedManager<BiblioList> {
 
 	public static final String KEY = "biblio";

@@ -10,8 +10,9 @@ import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.io.parser.GinmlParser;
 import org.ginsim.service.export.struct.CytoscapeEncoder;
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class TestExport {
 	RegulatoryGraph graph;
@@ -32,9 +33,10 @@ public class TestExport {
 			encoder.encode( graph, filename);
 		}
 		catch( GsException exception){
-			Assert.fail( "Exception occured during testCytoscape : " + exception);
+			fail( "Exception occured during testCytoscape : " + exception);
 		}
-		Assert.fail("TODO: finish cytoscape export test");
+
+		// TODO: finish cytoscape export test
 	}
 	
 }

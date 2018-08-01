@@ -15,13 +15,13 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.shell.actions.GenericGraphAction;
 import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.StandaloneGUI;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * register the aRegGraph plugin: animate the regulatory graph 
  * according to a path in the associated state transition graph.
  */
-@ProviderFor( ServiceGUI.class)
+@MetaInfServices( ServiceGUI.class)
 @StandaloneGUI
 @ServiceStatus( EStatus.RELEASED)
 public class RegulatoryGraphAnimationServiceGUI extends AbstractServiceGUI {

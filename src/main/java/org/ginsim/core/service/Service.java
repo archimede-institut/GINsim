@@ -13,7 +13,7 @@ package org.ginsim.core.service;
  *  - Action : those services correspond to various data management algorithm. They are represented by the
  *  		   GsActionService class
  *  
- *  Each new Service must extend one of these four abstract class and declare the annotation "@ProviderFor(Service.class)"
+ *  Each new Service must extend one of these four abstract class and declare the annotation "@MetaInfServices(Service.class)"
  * 
  * @author Lionel Spinelli
  *

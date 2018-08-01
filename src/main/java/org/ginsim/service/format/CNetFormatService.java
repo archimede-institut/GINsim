@@ -6,14 +6,14 @@ import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.FormatSupportService;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
-import org.mangosdk.spi.ProviderFor;
+import org.kohsuke.MetaInfServices;
 
 /**
  * GINsim export service for the CNET format used by the BNS tool.
  * 
  * @author Aurelien Naldi
  */
-@ProviderFor(Service.class)
+@MetaInfServices(Service.class)
 @Alias("cnet")
 @ServiceStatus(EStatus.DEVELOPMENT)
 public class CNetFormatService extends FormatSupportService<CNetFormat> {
