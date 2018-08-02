@@ -4,6 +4,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.ginsim.common.application.GsException;
@@ -55,8 +57,9 @@ public class BasicHierarchicalTransitionGraphTest {
 		Set<Graph> graph_list = GSGraphManager.getInstance().getAllGraphs();
 		
 		if( graph_list != null && !graph_list.isEmpty()){
-			
-			for( Graph graph : graph_list){
+			List<Graph> graphs = new ArrayList<>(graph_list.size());
+			graphs.addAll(graph_list);
+			for( Graph graph : graphs){
 				GSGraphManager.getInstance().close( graph);
 			}
 		}
