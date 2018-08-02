@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.io.AbstractFormat;
+import org.colomoto.biolqm.io.InputStreamProvider;
 import org.colomoto.biolqm.io.LogicalModelFormat;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -19,10 +20,10 @@ public class GINsimFormat extends AbstractFormat {
 	}
 
 	@Override
-	public LogicalModel importFile(File f) throws IOException {
+	public LogicalModel loadImpl(InputStreamProvider ip) throws IOException {
 		
 		try {
-			Graph g = GSGraphManager.getInstance().open(f);
+			Graph g = GSGraphManager.getInstance().open(ip.getFile());
 			if (g instanceof RegulatoryGraph) {
 				return ((RegulatoryGraph)g).getModel();
 			}

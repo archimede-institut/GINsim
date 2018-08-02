@@ -1,19 +1,20 @@
 package org.ginsim.core.service;
 
+import org.colomoto.biolqm.LQMServiceManager;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.io.InputStreamProviderFileImpl;
+import org.colomoto.biolqm.io.LogicalModelFormat;
+import org.colomoto.biolqm.io.OutputStreamProvider;
+import org.colomoto.biolqm.io.OutputStreamProviderFileImpl;
+import org.colomoto.biolqm.modifier.booleanize.BooleanizeModifier;
+import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
-
-import org.colomoto.biolqm.LQMServiceManager;
-import org.colomoto.biolqm.LogicalModel;
-import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.io.LogicalModelFormat;
-import org.colomoto.biolqm.io.OutputStreamProvider;
-import org.colomoto.biolqm.modifier.booleanize.BooleanizeModifier;
-import org.colomoto.biolqm.modifier.booleanize.BooleanizeService;
-import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 
 /**
  * Generic service to support format implemented in LogicalModel.
@@ -68,7 +69,7 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 	}
 
 	public String export(LogicalModel model, String filename) throws IOException {
-		OutputStreamProvider out = new OutputStreamProvider(filename);
+		OutputStreamProvider out = new OutputStreamProviderFileImpl(filename);
 		return export(model, out);
 	}
 	
@@ -83,11 +84,11 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 	}
 	
 	public LogicalModel importFile(File f) throws IOException {
-		return format.importFile(f);
+		return format.load( new InputStreamProviderFileImpl(f));
 	}
 	
 	public LogicalModel importFile(String filename) throws IOException {
-		return format.importFile(new File(filename));
+		return importFile( new File(filename));
 	}
 	
 	public RegulatoryGraph importLRG(String filename) throws IOException {
