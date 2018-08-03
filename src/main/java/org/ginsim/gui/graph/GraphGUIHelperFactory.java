@@ -2,7 +2,7 @@ package org.ginsim.gui.graph;
 
 import java.util.HashMap;
 
-import org.colomoto.biolqm.ExtensionLoader;
+import org.colomoto.biolqm.service.ExtensionLoader;
 import org.ginsim.core.graph.Graph;
 
 /**

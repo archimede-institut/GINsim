@@ -1,13 +1,14 @@
 package org.ginsim.core.service;
 
-import org.colomoto.biolqm.LQMServiceManager;
+import org.colomoto.biolqm.io.StreamProvider;
+import org.colomoto.biolqm.service.LQMServiceManager;
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.io.InputStreamProviderFileImpl;
 import org.colomoto.biolqm.io.LogicalModelFormat;
-import org.colomoto.biolqm.io.OutputStreamProvider;
-import org.colomoto.biolqm.io.OutputStreamProviderFileImpl;
+import org.colomoto.biolqm.io.StreamProviderFileImpl;
+import org.colomoto.biolqm.io.StreamProviderFileImpl;
 import org.colomoto.biolqm.modifier.booleanize.BooleanizeModifier;
+import org.colomoto.biolqm.service.MultivaluedSupport;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 
@@ -69,13 +70,13 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 	}
 
 	public String export(LogicalModel model, String filename) throws IOException {
-		OutputStreamProvider out = new OutputStreamProviderFileImpl(filename);
+		StreamProvider out = new StreamProviderFileImpl(filename);
 		return export(model, out);
 	}
 	
-	public String export(LogicalModel model, OutputStreamProvider out) throws IOException {
+	public String export(LogicalModel model, StreamProvider out) throws IOException {
 		String message = null;
-		if (!model.isBoolean() && format.getMultivaluedSupport() == LogicalModelFormat.MultivaluedSupport.BOOLEANIZED) {
+		if (!model.isBoolean() && format.getMultivaluedSupport() == MultivaluedSupport.BOOLEANIZED) {
 			model = new BooleanizeModifier(model).getModifiedModel();
 			message = "Multivalued model was converted to Boolean";
 		}
@@ -84,7 +85,7 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 	}
 	
 	public LogicalModel importFile(File f) throws IOException {
-		return format.load( new InputStreamProviderFileImpl(f));
+		return format.load( new StreamProviderFileImpl(f));
 	}
 	
 	public LogicalModel importFile(String filename) throws IOException {
@@ -101,7 +102,7 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 	}
 	
 	public boolean canImport() {
-		return format.canImport();
+		return format.canLoad();
 	}
 
     public boolean canExportModel(RegulatoryGraph graph) {
@@ -109,8 +110,8 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
             return false;
         }
 
-		LogicalModelFormat.MultivaluedSupport mvs = format.getMultivaluedSupport();
-        if (mvs == LogicalModelFormat.MultivaluedSupport.BOOLEAN_STRICT) {
+		MultivaluedSupport mvs = format.getMultivaluedSupport();
+        if (mvs == MultivaluedSupport.BOOLEAN_STRICT) {
             // check that the model is Boolean
             for (NodeInfo ni: graph.getNodeInfos()) {
                 if (ni.getMax() > 1) {

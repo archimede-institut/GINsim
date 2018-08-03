@@ -3,8 +3,8 @@ package org.ginsim.core.service;
 import java.util.HashMap;
 import java.util.Set;
 
-import org.colomoto.biolqm.ExtensionLoader;
-import org.colomoto.biolqm.LQMServiceManager;
+import org.colomoto.biolqm.service.ExtensionLoader;
+import org.colomoto.biolqm.service.LQMServiceManager;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.GINsimFormat;
 

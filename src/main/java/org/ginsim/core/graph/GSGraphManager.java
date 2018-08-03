@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-import org.colomoto.biolqm.ExtensionLoader;
+import org.colomoto.biolqm.service.ExtensionLoader;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.dynamicgraph.DynamicGraphImpl;

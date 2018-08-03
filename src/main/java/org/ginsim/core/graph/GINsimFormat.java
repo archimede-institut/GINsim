@@ -1,15 +1,14 @@
 package org.ginsim.core.graph;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.io.AbstractFormat;
-import org.colomoto.biolqm.io.InputStreamProvider;
-import org.colomoto.biolqm.io.LogicalModelFormat;
+import org.colomoto.biolqm.io.StreamProvider;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.kohsuke.MetaInfServices;
+
 
 // TODO: enable autodiscovery for this format when service files are properly merged
 //@MetaInfServices(LogicalModelFormat.class)
@@ -20,7 +19,7 @@ public class GINsimFormat extends AbstractFormat {
 	}
 
 	@Override
-	public LogicalModel loadImpl(InputStreamProvider ip) throws IOException {
+	public LogicalModel load(StreamProvider ip) throws IOException {
 		
 		try {
 			Graph g = GSGraphManager.getInstance().open(ip.getFile());

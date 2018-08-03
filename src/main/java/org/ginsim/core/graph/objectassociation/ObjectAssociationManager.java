@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.colomoto.biolqm.ExtensionLoader;
+import org.colomoto.biolqm.service.ExtensionLoader;
 import org.ginsim.common.utils.IntrospectionUtils;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.service.ServiceClassInfo;

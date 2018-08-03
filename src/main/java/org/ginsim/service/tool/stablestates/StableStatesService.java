@@ -2,7 +2,7 @@ package org.ginsim.service.tool.stablestates;
 
 import java.util.List;
 
-import org.colomoto.biolqm.LQMServiceManager;
+import org.colomoto.biolqm.service.LQMServiceManager;
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.tool.fixpoints.FixpointSearcher;
 import org.colomoto.biolqm.tool.fixpoints.FixpointService;

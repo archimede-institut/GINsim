@@ -1,33 +1,24 @@
 package org.ginsim;
 
-import java.io.File;
-import java.io.FileFilter;
-import java.io.IOException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.net.URLDecoder;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.colomoto.biolqm.LQMLauncher;
-import org.colomoto.biolqm.ExtensionLoader;
-import org.ginsim.common.application.CurrentOS;
-import org.ginsim.common.application.LogManager;
-import org.ginsim.common.application.OSXAdapter;
-import org.ginsim.common.application.OptionStore;
-import org.ginsim.common.application.Txt;
-import org.ginsim.core.service.ServiceClassInfo;
+import org.colomoto.biolqm.service.ExtensionLoader;
+import org.ginsim.common.application.*;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.commongui.utils.ImageLoader;
-import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.GSGraphManager;
+import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.service.GSServiceManager;
+import org.ginsim.core.service.ServiceClassInfo;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.GSServiceGUIManager;
 import org.ginsim.gui.shell.AboutDialog;
-
 import py4j.GatewayServer;
+
+import java.io.File;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

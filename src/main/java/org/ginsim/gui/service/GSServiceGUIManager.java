@@ -8,7 +8,7 @@ import java.util.Set;
 
 import javax.swing.Action;
 
-import org.colomoto.biolqm.ExtensionLoader;
+import org.colomoto.biolqm.service.ExtensionLoader;
 import org.ginsim.Launcher;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.core.service.ServiceClassInfo;

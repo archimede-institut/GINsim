@@ -1,6 +1,6 @@
 package org.ginsim.service.tool.modelreversion;
 
-import org.colomoto.biolqm.LQMServiceManager;
+import org.colomoto.biolqm.service.LQMServiceManager;
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.modifier.ModelModifier;
 import org.colomoto.biolqm.modifier.reverse.ReverseService;

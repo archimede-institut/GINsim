@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.colomoto.biolqm.ExtensionLoader;
+import org.colomoto.biolqm.service.ExtensionLoader;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.gui.service.GUIFor;
 

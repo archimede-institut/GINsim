@@ -14,8 +14,7 @@ import javax.swing.JPanel;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.io.OutputStreamProvider;
-import org.colomoto.biolqm.io.OutputStreamProviderFileImpl;
+import org.colomoto.biolqm.io.StreamProviderFileImpl;
 import org.colomoto.biolqm.io.petrinet.PNConfig;
 import org.colomoto.biolqm.io.petrinet.PNFormat;
 import org.ginsim.common.application.LogManager;
@@ -80,7 +79,7 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implemen
 
 		// call the selected export method to do the job
 		try {
-			format. export(model, config, new OutputStreamProviderFileImpl(filename));
+			format. export(model, config, new StreamProviderFileImpl(filename));
 		} catch (IOException e) {
 			LogManager.error(e);
 		}

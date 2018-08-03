@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.colomoto.biolqm.LQMServiceManager;
+import org.colomoto.biolqm.service.LQMServiceManager;
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.modifier.reduction.ReductionModifier;
 import org.colomoto.biolqm.modifier.reduction.ReductionService;
