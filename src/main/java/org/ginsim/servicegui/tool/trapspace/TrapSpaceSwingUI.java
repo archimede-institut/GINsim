@@ -161,7 +161,7 @@ class TrapSpaceParameters {
 	public boolean diag = false;
 
 	public TrapSpaceTask getTask(LogicalModel model) {
-		TrapSpaceTask task = new TrapSpaceTask(model, null);
+		TrapSpaceTask task = new TrapSpaceTask(model);
 
 		task.bdd = this.bdd;
 		task.reduce = this.reduce;
