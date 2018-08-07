@@ -162,13 +162,12 @@ public class LRGDocumentationWriter {
 	}
 
 	private void writeLogicalFunctionsTable() throws IOException {
-		doc.openTable(null, "table", new String[] { "", "", "", "" });
+		doc.openTable(null, "table", new String[] { "", "", ""});
 		doc.openTableRow(null);
 		doc.openTableCell("ID", true);
 		doc.openTableCell("Val", true);
 		doc.openTableCell("Logical function", true);
-		doc.openTableCell("Comment", true);
-		
+
 		for (RegulatoryNode vertex: graph.getNodeOrder()) {
 			TreeInteractionsModel lfunc = vertex.getInteractionsModel();
 			int nbval = 0;
@@ -206,21 +205,31 @@ public class LRGDocumentationWriter {
 				}
 			}
 			doc.openTableRow(null);
-			doc.openTableCell(1, nbrows, vertex.getId(), true); //ID
-			int currentValue = 0;
+			int nrows = nbrows > 0 ? nbrows : 1;
+			doc.openTableCell(1, nrows+1, vertex.getId(), true); //ID
+			;
 			if (nbrows > 0) {
-				// TODO: put a "0" if nothing is defined
-				for ( ; currentValue<t_val.length ; currentValue++) {
+				boolean first_value = true;
+				for ( int currentValue = 1 ; currentValue<t_val.length ; currentValue++) {
 					if (t_val[currentValue] != null) {
+						if (first_value) {
+							first_value = false;
+						} else {
+							doc.openTableRow(null);
+						}
 						doWriteParameters(currentValue, t_val[currentValue], lfunc);
-						break;
 					}
 				}
 			} else {
-				doc.openTableCell(null);//Values (empty)
-				doc.openTableCell("no function");//function
+				String text = "No function";
+				if (vertex.isInput()) {
+					text = "Input node";
+				}
+				doc.openTableCell(2, 1, text);
 			}
-			doc.openTableCell(1,nbrows, null, false);
+
+			doc.openTableRow();
+			doc.openTableCell(2,1, null, false);
 			writeAnnotation(vertex.getAnnotation());
 			
 			boolean hasRegulatorComment = false;
@@ -248,17 +257,7 @@ public class LRGDocumentationWriter {
 			}
 			doc.closeTableRow();
 			
-			// add the other functions
-			if (nbrows > 1) {
-				for (currentValue++ ; currentValue<t_val.length ; currentValue++) {
-					if (t_val[currentValue] != null) {
-						doc.openTableRow(null);
-						doWriteParameters(currentValue, t_val[currentValue], lfunc);
-						doc.closeTableRow();
-					}
-				}
-			} 
-		}		
+		}
 		doc.closeTable();		
 	}
 	
