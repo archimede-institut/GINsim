@@ -13,7 +13,6 @@ import javax.swing.JPanel;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.io.StreamProviderFileImpl;
 import org.colomoto.biolqm.io.petrinet.AbstractPNEncoder;
 import org.colomoto.biolqm.io.petrinet.PetriNetFormat;
 import org.ginsim.common.application.LogManager;

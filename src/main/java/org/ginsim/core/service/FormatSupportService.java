@@ -4,7 +4,6 @@ import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.io.LogicalModelFormat;
 import org.colomoto.biolqm.io.StreamProvider;
-import org.colomoto.biolqm.io.StreamProviderFileImpl;
 import org.colomoto.biolqm.modifier.booleanize.BooleanizeModifier;
 import org.colomoto.biolqm.service.LQMServiceManager;
 import org.colomoto.biolqm.service.MultivaluedSupport;
@@ -68,8 +67,7 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 	}
 
 	public String export(LogicalModel model, String filename) throws Exception {
-		StreamProvider out = new StreamProviderFileImpl(filename);
-		return export(model, out);
+		return export(model, StreamProvider.create(filename));
 	}
 	
 	public String export(LogicalModel model, StreamProvider out) throws Exception {
@@ -83,7 +81,7 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 	}
 	
 	public LogicalModel importFile(File f) throws Exception {
-		return format.load( new StreamProviderFileImpl(f));
+		return format.load( f);
 	}
 	
 	public LogicalModel importFile(String filename) throws Exception {
