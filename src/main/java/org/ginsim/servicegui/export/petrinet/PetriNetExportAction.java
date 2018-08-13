@@ -3,7 +3,6 @@ package org.ginsim.servicegui.export.petrinet;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +14,8 @@ import javax.swing.JPanel;
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.io.StreamProviderFileImpl;
-import org.colomoto.biolqm.io.petrinet.PNConfig;
-import org.colomoto.biolqm.io.petrinet.PNFormat;
+import org.colomoto.biolqm.io.petrinet.AbstractPNEncoder;
+import org.colomoto.biolqm.io.petrinet.PetriNetFormat;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.utils.FileFormatDescription;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -33,18 +32,22 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implemen
 
 	static final String PNFORMAT = "export.petriNet.defaultFormat";
 
-	private final PNFormat format;
+	private final PetriNetFormat format;
+	private final AbstractPNEncoder encoder;
 	private LogicalModel model = null;
-	PNConfig config = null;
 	Map m_init = null;
 	Map m_input = null;
-	
-	public PetriNetExportAction(RegulatoryGraph graph, PNFormat format) {
+
+	public PetriNetExportAction(RegulatoryGraph graph, PetriNetFormat format) {
 		super(graph, "STR_PetriNet_"+format.getID(), "STR_PetriNet_"+format.getID()+"_descr", null);
 		this.format = format;
+		this.encoder = format.getExporter(model);
 	}
 
 	protected void doExport( String filename) {
+
+		encoder.setDestination(filename);
+
 		// retrieve the selected initial state if needed
 		byte[] initialstate = null;
 		Map<NodeInfo,List<Integer>> m_init_values = null;
@@ -74,13 +77,13 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implemen
 				}
 				i++;
 			}
-			config.setInitialState(initialstate);
+			encoder.setInitialState(initialstate);
 		}
 
 		// call the selected export method to do the job
 		try {
-			format. export(model, config, new StreamProviderFileImpl(filename));
-		} catch (IOException e) {
+			encoder.call();
+		} catch (Exception e) {
 			LogManager.error(e);
 		}
 	}
@@ -95,9 +98,8 @@ public class PetriNetExportAction extends ExportAction<RegulatoryGraph> implemen
 		new PetriNetExportFrame(null, graph, this);
 	}
 
-	public void selectFile(LogicalModel model, PNConfig config) {
+	public void selectFile(LogicalModel model) {
 		this.model = model;
-		this.config = config;
 		selectFile();
 	}
 
@@ -127,8 +129,6 @@ class PetriNetExportFrame extends LogicalModelActionDialog {
 	private PrioritySelectionPanel priorityPanel = null;
 	private InitialStatePanel initStatePanel = null;
 
-	PNConfig config = new PNConfig();
-	
 	public PetriNetExportFrame(JFrame f, RegulatoryGraph lrg, PetriNetExportAction action) {
 		super(lrg, f, "PNGUI", 600, 400);
 		this.action = action;
@@ -163,7 +163,7 @@ class PetriNetExportFrame extends LogicalModelActionDialog {
 
 	@Override
 	public void run(LogicalModel model) {
-		action.selectFile(model, config);
+		action.selectFile(model);
 		cancel();
 	}
 

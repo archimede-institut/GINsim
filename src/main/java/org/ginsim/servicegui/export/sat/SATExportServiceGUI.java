@@ -77,7 +77,7 @@ class SATExportAction extends ExportAction<RegulatoryGraph> {
 	}
 
 	@Override
-	protected void doExport(String filename) throws GsException, IOException {
+	protected void doExport(String filename) throws Exception {
 		if (config == null) {
 			throw new GsException(GsException.GRAVITY_ERROR, "Nothing to export: SATConfig must be specified");
 		}

@@ -1,14 +1,7 @@
 package org.ginsim.service.export.documentation;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.colomoto.common.task.AbstractTask;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.common.document.XHTMLDocumentWriter;
 import org.ginsim.common.utils.IOUtils;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
@@ -18,6 +11,15 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.service.export.image.ImageExportService;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Export the documentation of a model into an interactive web page.
@@ -221,7 +223,7 @@ public class JSONDocumentationWriter extends AbstractTask {
 
 
     @Override
-    public Object doGetResult() {
+    public Object performTask() {
         try {
             ImageExportService service = GSServiceManager.getService(ImageExportService.class);
             service.exportSVG(graph, null, null, export_name+".svg");

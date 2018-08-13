@@ -28,8 +28,8 @@ import org.kohsuke.MetaInfServices;
 @ServiceStatus(EStatus.DEVELOPMENT)
 public class ModelBooleanizerService implements Service {
 
-	public LogicalModel booleanize(LogicalModel origModel) {
-		return new BooleanizeModifier(origModel).getModifiedModel();
+	public LogicalModel booleanize(LogicalModel origModel) throws Exception {
+		return new BooleanizeModifier(origModel).call();
 	}
 
 	public void copyNodeStyles(RegulatoryGraph src, RegulatoryGraph dest) {

@@ -39,7 +39,7 @@ public class CircuitSearcher extends AbstractTask<List<CircuitDescrInTree>> {
     }
 
     @Override
-    public List<CircuitDescrInTree> doGetResult() {
+    public List<CircuitDescrInTree> performTask() {
         List<NodeReducedData> sccs = connectivity.getComponents(graph);
 
         List<CircuitDescrInTree> circuits = getCircuits(sccs);

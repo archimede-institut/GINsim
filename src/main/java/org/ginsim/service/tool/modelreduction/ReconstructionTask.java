@@ -68,8 +68,9 @@ public class ReconstructionTask extends AbstractTask<RegulatoryGraph>
             }
         }
 	}
-	
-    public RegulatoryGraph doGetResult() {
+
+	@Override
+    public RegulatoryGraph performTask() {
         List<RegulatoryNode> oldNodeOrder = graph.getNodeOrder();
 
         // create the new regulatory graph

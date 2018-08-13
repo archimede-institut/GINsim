@@ -35,11 +35,10 @@ public class SATEncoder {
 	 * @param out
 	 *            the writer receiving the encoded model description
 	 */
-	public void write(SATConfig config, Writer out) throws IOException,
-			GsException {
+	public void write(SATConfig config, Writer out) throws Exception {
 
 		LogicalModel multiValueModel = config.getModel();
-		LogicalModel model = new BooleanizeModifier(multiValueModel).getModifiedModel();
+		LogicalModel model = new BooleanizeModifier(multiValueModel).call();
 		List<NodeInfo> coreNodes = model.getComponents();
 		StringBuffer sb = new StringBuffer();
 		int nSATrules = 0;

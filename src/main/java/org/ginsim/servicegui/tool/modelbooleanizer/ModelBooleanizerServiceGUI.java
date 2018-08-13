@@ -63,15 +63,21 @@ public class ModelBooleanizerServiceGUI extends AbstractServiceGUI {
 				GUIMessageUtils.openErrorDialog("STR_booleanize_isBoolean");
 				return;
 			}
-			ModelBooleanizerService service = GSServiceManager.getService(ModelBooleanizerService.class);
-			LogicalModel bModel = service.booleanize(this.graph.getModel());
 
-			RegulatoryGraph bGraph = LogicalModel2RegulatoryGraph
-					.importModel(bModel);
-			service.copyNodeStyles(this.graph, bGraph);
+			try {
+				ModelBooleanizerService service = GSServiceManager.getService(ModelBooleanizerService.class);
+				LogicalModel bModel = service.booleanize(this.graph.getModel());
 
-			// Show the Booleanized graph
-			GUIManager.getInstance().whatToDoWithGraph(bGraph);
+				RegulatoryGraph bGraph = LogicalModel2RegulatoryGraph
+						.importModel(bModel);
+				service.copyNodeStyles(this.graph, bGraph);
+
+				// Show the Booleanized graph
+				GUIManager.getInstance().whatToDoWithGraph(bGraph);
+			} catch (Exception e) {
+				e.printStackTrace();
+				// TODO: error dialog
+			}
 		}
 	}
 }

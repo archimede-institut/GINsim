@@ -28,7 +28,7 @@ public class StronglyConnectedComponentTask extends AbstractTask<List<NodeReduce
 	}
 
     @Override
-    protected List<NodeReducedData> doGetResult() {
+    protected List<NodeReducedData> performTask() {
 		List<Collection<?>> jcp = graph.getStronglyConnectedComponents();
 		List<NodeReducedData> components = new ArrayList<NodeReducedData>(jcp.size());
 		int id = 0;

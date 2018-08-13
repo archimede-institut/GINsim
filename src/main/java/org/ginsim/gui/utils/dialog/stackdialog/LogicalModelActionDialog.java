@@ -237,7 +237,11 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         	model = reduction.apply(model);
         }
 
-        model = reducer.getModifiedModel();
+        try {
+        	model = reducer.call();
+		} catch (Exception e) {
+        	throw new GsException("Error applying model reduction", e);
+		}
 
 		run(model);
 	}

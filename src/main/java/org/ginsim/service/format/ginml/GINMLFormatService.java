@@ -1,7 +1,5 @@
 package org.ginsim.service.format.ginml;
 
-import java.io.IOException;
-
 import org.colomoto.biolqm.io.ginml.GINMLFormat;
 import org.ginsim.core.service.*;
 import org.kohsuke.MetaInfServices;
@@ -20,8 +18,7 @@ public class GINMLFormatService extends FormatSupportService<GINMLFormat> {
 		super(new GINMLFormat());
 	}
 
-	public void run(GINMLFormatConfig config, String filename)
-			throws IOException {
+	public void run(GINMLFormatConfig config, String filename) throws Exception {
 		super.export(config.getModel(), filename);
 	}
 }

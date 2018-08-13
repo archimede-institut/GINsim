@@ -44,7 +44,7 @@ public abstract class GraphComparator<V, E extends Edge<V>, G extends Graph<V,E>
      *  3) addEdgesFromGraph on each node on both graphs
      */
     @Override
-    protected GraphComparatorResult<V,E,G> doGetResult() throws Exception {
+    protected GraphComparatorResult<V,E,G> performTask() throws Exception {
 		log("Comparing graphs : \n");
 		setDiffGraphName();
 		log("\n");

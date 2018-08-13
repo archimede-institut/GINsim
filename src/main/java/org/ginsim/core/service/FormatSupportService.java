@@ -1,19 +1,17 @@
 package org.ginsim.core.service;
 
-import org.colomoto.biolqm.io.StreamProvider;
-import org.colomoto.biolqm.service.LQMServiceManager;
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.io.LogicalModelFormat;
-import org.colomoto.biolqm.io.StreamProviderFileImpl;
+import org.colomoto.biolqm.io.StreamProvider;
 import org.colomoto.biolqm.io.StreamProviderFileImpl;
 import org.colomoto.biolqm.modifier.booleanize.BooleanizeModifier;
+import org.colomoto.biolqm.service.LQMServiceManager;
 import org.colomoto.biolqm.service.MultivaluedSupport;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -65,34 +63,34 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 		registerFormat(format);
 	}
 
-	public String export(RegulatoryGraph graph, String filename) throws IOException {
+	public String export(RegulatoryGraph graph, String filename) throws Exception {
 		return export(graph.getModel(), filename);
 	}
 
-	public String export(LogicalModel model, String filename) throws IOException {
+	public String export(LogicalModel model, String filename) throws Exception {
 		StreamProvider out = new StreamProviderFileImpl(filename);
 		return export(model, out);
 	}
 	
-	public String export(LogicalModel model, StreamProvider out) throws IOException {
+	public String export(LogicalModel model, StreamProvider out) throws Exception {
 		String message = null;
 		if (!model.isBoolean() && format.getMultivaluedSupport() == MultivaluedSupport.BOOLEANIZED) {
-			model = new BooleanizeModifier(model).getModifiedModel();
+			model = new BooleanizeModifier(model).call();
 			message = "Multivalued model was converted to Boolean";
 		}
 		format.export(model, out);
 		return message;
 	}
 	
-	public LogicalModel importFile(File f) throws IOException {
+	public LogicalModel importFile(File f) throws Exception {
 		return format.load( new StreamProviderFileImpl(f));
 	}
 	
-	public LogicalModel importFile(String filename) throws IOException {
+	public LogicalModel importFile(String filename) throws Exception {
 		return importFile( new File(filename));
 	}
 	
-	public RegulatoryGraph importLRG(String filename) throws IOException {
+	public RegulatoryGraph importLRG(String filename) throws Exception {
 		LogicalModel model = importFile(filename);
 		return LogicalModel2RegulatoryGraph.importModel(model);
 	}

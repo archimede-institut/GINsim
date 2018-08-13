@@ -87,7 +87,7 @@ public class FormatSupportServiceGUI<S extends FormatSupportService> extends Abs
 			if (message != null) {
 				action.notifyWarning(message);
 			}
-		} catch (IOException e) {
+		} catch (Exception e) {
 			LogManager.error("Error in "+format_name+" export:\n"+e);
 		}
 

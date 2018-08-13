@@ -55,7 +55,7 @@ public class SVGEncoder extends AbstractTask {
     }
 
     @Override
-    protected Object doGetResult() throws Exception {
+    protected Object performTask() throws Exception {
 
         Dimension dim = graph.getDimension();
         SVGWriter out = new SVGWriter(fileName, dim);

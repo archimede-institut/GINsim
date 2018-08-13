@@ -22,12 +22,12 @@ import org.kohsuke.MetaInfServices;
 @ServiceStatus(EStatus.RELEASED)
 public class SATExportService implements Service {
 
-	public void run(SATConfig config, String filename) throws IOException, GsException {
+	public void run(SATConfig config, String filename) throws Exception {
 		File f = new File(filename);
 		export(config, f);
 	}
 
-	public void export(SATConfig config, File file) throws IOException, GsException {
+	public void export(SATConfig config, File file) throws Exception {
 		FileWriter writer = new FileWriter(file);
 
 		SATEncoder encoder = new SATEncoder();

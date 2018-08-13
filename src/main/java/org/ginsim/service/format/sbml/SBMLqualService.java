@@ -51,8 +51,9 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 	public RegulatoryGraph importLRG( String filename) {
 
 		try {
-			SBMLqualImport simport = new SBMLqualImport(new File(filename));
-			LogicalModel model = simport.getModel();
+			SBMLqualImport simport = new SBMLqualImport();
+			simport.setSource(filename);
+			LogicalModel model = simport.call();
 			RegulatoryGraph lrg = LogicalModel2RegulatoryGraph.importModel(model);
 			
 			SBMLQualBundle qbundle = simport.getQualBundle();
@@ -131,7 +132,6 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 	public String export( SBMLQualConfig config, String filename) throws IOException{
         RegulatoryGraph graph = config.getGraph();
 		LogicalModel model = graph.getModel();
-		OutputStream out = new FileOutputStream(new File(filename));
 		try {
 			SBMLqualExport sExport = new SBMLqualExport(model, true);
 			SBMLQualBundle qbundle = sExport.getSBMLBundle();
@@ -213,10 +213,11 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 				}
 			}
 			
-			
-			sExport.export(out);
+
+			sExport.setDestination(filename);
+			sExport.export();
 			return null;
-		} catch (XMLStreamException e) {
+		} catch (Exception e) {
 			throw new IOException(e);
 		}
 	}

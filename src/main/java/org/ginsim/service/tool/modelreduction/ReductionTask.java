@@ -63,7 +63,7 @@ public class ReductionTask extends AbstractTask<LogicalModel> {
 	}
 	
     @Override
-    public LogicalModel doGetResult() {
+    public LogicalModel performTask() {
     	// prepare the list of removal requests
 		List<NodeInfo> l_todo = new ArrayList<NodeInfo>();
 		for (NodeInfo ni: to_remove) {

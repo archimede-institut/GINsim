@@ -60,7 +60,7 @@ class MaBoSSExportAction extends ExportAction<RegulatoryGraph> {
 	}
 
 	@Override
-	protected void doExport(String filename) throws IOException {
+	protected void doExport(String filename) throws Exception {
 
 		MaBoSSExportService service = GSServiceManager.getService(
 				MaBoSSExportService.class);
