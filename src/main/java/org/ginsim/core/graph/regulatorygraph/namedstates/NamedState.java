@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.settings.state.Range;
-import org.colomoto.biolqm.settings.state.StatePattern;
+import org.colomoto.biolqm.helper.state.Range;
+import org.colomoto.biolqm.helper.state.StatePattern;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.NamedObject;

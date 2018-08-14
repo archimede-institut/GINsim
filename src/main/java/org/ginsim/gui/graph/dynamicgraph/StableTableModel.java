@@ -3,7 +3,7 @@ package org.ginsim.gui.graph.dynamicgraph;
 import javax.swing.table.AbstractTableModel;
 
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.settings.state.StateList;
+import org.colomoto.biolqm.helper.state.StateList;
 import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;

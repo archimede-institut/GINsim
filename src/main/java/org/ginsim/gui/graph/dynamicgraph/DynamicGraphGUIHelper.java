@@ -13,7 +13,7 @@ import javax.swing.JScrollPane;
 import javax.swing.filechooser.FileFilter;
 
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.settings.state.StateList;
+import org.colomoto.biolqm.helper.state.StateList;
 import org.colomoto.biolqm.tool.fixpoints.FixpointList;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Txt;
