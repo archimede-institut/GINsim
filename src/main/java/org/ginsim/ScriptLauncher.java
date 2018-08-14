@@ -8,8 +8,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.colomoto.biolqm.LQMLauncher;
 import org.colomoto.biolqm.service.ExtensionLoader;
-import org.colomoto.biolqm.LQMScriptLauncher;
+import org.colomoto.biolqm.service.LQMServiceManager;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
@@ -61,7 +62,7 @@ public class ScriptLauncher {
 	public String[] args;
 	
 	/** Access the LQM launcher as well */
-    private LQMScriptLauncher lqm_launcher = null;
+    private LQMServiceManager lqm_launcher = null;
 	
 	/**
 	 * Initialisation method for the script helper to ensure a working OptionStore.
@@ -149,7 +150,7 @@ public class ScriptLauncher {
 		// Generic scripting support through ScriptEngine
 		// This method also supports python scripts, but is slower and allows less tweaks
 		try {
-			ScriptEngine engine = LQMScriptLauncher.loadEngine(filename);
+			ScriptEngine engine = LQMLauncher.loadEngine(filename);
 			engine.put("gs", this);
 			engine.put("lm", LQM());
 			engine.put("lqm", LQM());
@@ -168,9 +169,9 @@ public class ScriptLauncher {
 	 * 
 	 * @return a LQM script launcher
 	 */
-	public LQMScriptLauncher LQM() {
+	public LQMServiceManager LQM() {
 		if (lqm_launcher == null) {
-			lqm_launcher = new LQMScriptLauncher(args);
+			lqm_launcher = new LQMServiceManager(args);
 		}
 		return lqm_launcher;
 	}
