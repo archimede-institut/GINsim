@@ -1,16 +1,11 @@
 package org.ginsim.servicegui.export.nusmv;
 
 import java.awt.BorderLayout;
-import java.awt.Font;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
+import javax.swing.ButtonGroup;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
+import javax.swing.JRadioButton;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
@@ -33,8 +28,8 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 	private JPanel mainPanel;
 	private PrioritySelectionPanel priorityPanel;
 	private InitialStatePanel initPanel;
-	private List<JCheckBox> listCTLFixedInputs;
-	private JCheckBox mcCheckBox;
+	private JRadioButton jrbCTL;
+	private JRadioButton jrbARCTL;
 	private boolean hasInputs;
 
 	public NuSMVExportConfigPanel(RegulatoryGraph graph, NuSMVConfig config, NuSMVExportAction action) {
@@ -68,45 +63,23 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 				break;
 			}
 		}
-
+		
 		if (this.hasInputs) {
 			JPanel stateInputsPanel = new JPanel(new BorderLayout());
 			stateInputsPanel.setBorder(BorderFactory.createCompoundBorder(
 					BorderFactory.createTitledBorder("State inputs"), stateInputsPanel.getBorder()));
 
-			JTextArea jtaCTL = new JTextArea();
-			jtaCTL.setBackground(mainPanel.getBackground());
-			jtaCTL.setLineWrap(true);
-			jtaCTL.setEditable(false);
-			jtaCTL.setFont(new Font("Default", Font.BOLD, 12));
-			jtaCTL.setText("Selected inputs will be part of the state, fixed with a user defined initial state.\n"
-					+ "Non selected input components will freely vary, unless restricted by ARCTL operators.");
-			stateInputsPanel.add(jtaCTL, BorderLayout.NORTH);
+			this.jrbCTL   = new JRadioButton("Fix - All inputs are fix and part of the state representation");
+			this.jrbARCTL = new JRadioButton("Vary - All inputs freely vary unless restricted by ARCTL operators");
 
-			JPanel fixInputsPanel = new JPanel();
-			fixInputsPanel.setLayout(new BoxLayout(fixInputsPanel, BoxLayout.LINE_AXIS));
-			this.listCTLFixedInputs = new ArrayList<JCheckBox>();
-			for (NodeInfo node : this.config.getModel().getComponents()) {
-				if (node.isInput()) {
-					JCheckBox jcb = new JCheckBox(node.getNodeID());
-					fixInputsPanel.add(jcb);
-					this.listCTLFixedInputs.add(jcb);
-				}
-			}
-			JScrollPane fixInputsScroll = new JScrollPane(fixInputsPanel, JScrollPane.VERTICAL_SCROLLBAR_NEVER,
-					JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
-			stateInputsPanel.add(fixInputsScroll, BorderLayout.SOUTH);
-			fixInputsScroll.setBorder(BorderFactory.createEmptyBorder());
-
+			stateInputsPanel.add(this.jrbCTL, BorderLayout.NORTH);
+			stateInputsPanel.add(this.jrbARCTL, BorderLayout.SOUTH);
+			ButtonGroup bg = new ButtonGroup();
+			bg.add(jrbCTL);
+			bg.add(jrbARCTL);
+			this.jrbCTL.setSelected(true);
 			bottomPanel.add(stateInputsPanel, BorderLayout.NORTH);
 		}
-
-		JPanel ssPanel = new JPanel(new BorderLayout());
-		ssPanel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createTitledBorder("Stable states"),
-				ssPanel.getBorder()));
-		mcCheckBox = new JCheckBox("Compute & include the stable states in the export?");
-		ssPanel.add(mcCheckBox, BorderLayout.LINE_START);
-		bottomPanel.add(ssPanel, BorderLayout.SOUTH);
 
 		mainPanel.add(bottomPanel, BorderLayout.SOUTH);
 		setMainPanel(mainPanel);
@@ -122,13 +95,8 @@ public class NuSMVExportConfigPanel extends LogicalModelActionDialog {
 		}
 		config.updateModel(model);
 		if (this.hasInputs) {
-			for (JCheckBox jcb : this.listCTLFixedInputs) {
-				if (jcb.isSelected()) {
-					config.addFixedInput(jcb.getText());
-				}
-			}
+			config.setFixedInputs(this.jrbCTL.isSelected());
 		}
-		config.setExportStableStates(this.mcCheckBox.isSelected());
 		action.selectFile();
 		cancel();
 	}

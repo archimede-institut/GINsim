@@ -1,12 +1,9 @@
 package org.ginsim.service.export.nusmv;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.colomoto.biolqm.LogicalModel;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedState;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateStore;
 import org.ginsim.service.tool.reg2dyn.priorityclass.PrioritySetDefinition;
@@ -26,10 +23,9 @@ public class NuSMVConfig implements NamedStateStore, UpdaterDefinitionStore {
 	private Map<NamedState, Object> m_initStates;
 	private Map<NamedState, Object> m_input;
 
-	private boolean exportStableStates;
 	private UpdaterDefinition updater;
 	private int updatePolicy;
-	private Set<String> setFixedInputs;
+	private boolean bFixedInputs;
 
 	/**
 	 * @param model
@@ -39,8 +35,7 @@ public class NuSMVConfig implements NamedStateStore, UpdaterDefinitionStore {
 		this.m_input = new HashMap<NamedState, Object>();
 		this.model = model;
 		this.updatePolicy = CFG_ASYNC; // Default update policy
-		this.setFixedInputs = new HashSet<String>();
-		this.exportStableStates = false; 
+		this.bFixedInputs = true;
 	}
 
 	public void setUpdatePolicy() {
@@ -76,14 +71,6 @@ public class NuSMVConfig implements NamedStateStore, UpdaterDefinitionStore {
 		return updatePolicy;
 	}
 	
-	public void setExportStableStates(boolean export) {
-		this.exportStableStates = export;
-	}
-	
-	public boolean exportStableStates() {
-		return this.exportStableStates;
-	}
-
 	public Map<NamedState, Object> getInitialState() {
 		return m_initStates;
 	}
@@ -96,12 +83,12 @@ public class NuSMVConfig implements NamedStateStore, UpdaterDefinitionStore {
 		return model;
 	}
 
-	public void addFixedInput(String nodeID) {
-		this.setFixedInputs.add(nodeID);
+	public void setFixedInputs(boolean isFixed) {
+		this.bFixedInputs = isFixed;
 	}
-
-	public boolean hasFixedInput(String nodeID) {
-		return this.setFixedInputs.contains(nodeID);
+	
+	public boolean isFixedInputs() {
+		return this.bFixedInputs;
 	}
 
 	@Override
