@@ -339,7 +339,7 @@ public class NuSMVEncoder {
 
 		if (config.getUpdatePolicy() == NuSMVConfig.CFG_PCLASS && iaTmp != null && iaTmp.length > 1
 				&& tmPcNum2Rank.size() > 1) {
-			out.write("\n-- Establishing priorities\n");
+			out.write("-- Establishing priorities\n");
 			out.write("PCrank :=\n  case\n");
 			for (int c = 0; c < iaTmp.length; c++) {
 				sTmp = "";
@@ -348,7 +348,7 @@ public class NuSMVEncoder {
 				} else {
 					for (int v = 2; v < iaTmp[c].length; v += 2) {
 						if (aNodeOrder[iaTmp[c][v]].isInput())
-							continue; // Input variables cannot FIXME
+							continue;
 						if (sTmp.length() > 0)
 							sTmp += " | ";
 						switch (iaTmp[c][v + 1]) {
@@ -365,9 +365,9 @@ public class NuSMVEncoder {
 					if (sTmp.length() == 0)
 						sTmp = "FALSE";
 				}
-				out.write("      " + sTmp + " : " + tmPcNum2Rank.get(c + 1) + ";\n");
+				out.write("    " + sTmp + " : " + tmPcNum2Rank.get(c + 1) + ";\n");
 			}
-			out.write("  esac;\n");
+			out.write("  esac;\n\n");
 		}
 		for (int v = 0; v < coreNodes.size(); v++) {
 			if (coreNodes.get(v).isInput())

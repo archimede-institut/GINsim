@@ -1,4 +1,4 @@
--- December 13, 2017 10:44:49 PM WET
+-- September 4, 2018 at 12:58:20 AM WEST
 --
 -- NuSMV implicit representation of a logical model exported by GINsim
 --
@@ -18,9 +18,6 @@ IVAR
 
 VAR
 
--- Priority definition
-  PCrank : { rank1_PC_class, rank2_PC_class1 };
-
 -- State variables declaration
   gA : {0, 1};
   gB : {0, 1};
@@ -28,13 +25,6 @@ VAR
   gD : {0, 1};
 
 ASSIGN
--- Establishing priorities
-  PCrank :=
-    case
-      !gA_std | !gB_std : rank1_PC_class;
-      TRUE : rank2_PC_class1;
-    esac;
-
 -- Variable update if conditions are met
 next(gA) := 
   case
@@ -102,17 +92,22 @@ gD_inc := gD_focal > gD;
 gD_dec := gD_focal < gD;
 gD_std := gD_focal = gD;
 
-update_gA_OK := (PCs = PC_class) & (PC_class_vars = PC_class_gA_gB) & (PCrank = rank1_PC_class);
-update_gB_OK := (PCs = PC_class) & (PC_class_vars = PC_class_gA_gB) & (PCrank = rank1_PC_class);
-update_gC_OK := (PCs = PC_class1) & (PC_class1_vars = PC_class1_gC) & (PCrank = rank2_PC_class1);
-update_gD_OK := (PCs = PC_class1) & (PC_class1_vars = PC_class1_gD) & (PCrank = rank2_PC_class1);
+-- Establishing priorities
+PCrank :=
+  case
+    !gA_std | !gB_std : 1;
+    TRUE : 2;
+  esac;
+
+update_gA_OK := (PCs=PC_class) & (PC_class_vars=PC_class_gA_gB) & (PCrank=1);
+update_gB_OK := (PCs=PC_class) & (PC_class_vars=PC_class_gA_gB) & (PCrank=1);
+update_gC_OK := (PCs=PC_class1) & (PC_class1_vars=PC_class1_gC) & (PCrank=2);
+update_gD_OK := (PCs=PC_class1) & (PC_class1_vars=PC_class1_gD) & (PCrank=2);
 
 -- DISCLAIMER: There are no INput nor OUTput variables in the weak/strong stable states description
-stableStates := weakSS | strongSS;
-
--- ATTENTION: This export does not include the stable states enumeration
-weakSS := FALSE;
-strongSS := FALSE;
+-- It is stable if core components are stable
+stableState := 
+gA_std & gB_std & gC_std & gD_std;
 
 -- Declaration of output variables
 -- Empty !
@@ -123,7 +118,7 @@ next(gA) != gA |
 next(gB) != gB |
 next(gC) != gC |
 next(gD) != gD |
-(gA_std & gB_std & gC_std & gD_std); -- or it is a steady state
+stableState;
 
 DEFINE
 -- Declaration of core variables restriction list

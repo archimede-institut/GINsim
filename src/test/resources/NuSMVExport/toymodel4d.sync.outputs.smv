@@ -1,4 +1,4 @@
--- May 12, 2014 12:33:04 AM WEST
+-- September 4, 2018 at 1:07:48 AM WEST
 --
 -- NuSMV implicit representation of a logical model exported by GINsim
 --
@@ -96,17 +96,15 @@ gD_inc := gD_focal > gD;
 gD_dec := gD_focal < gD;
 gD_std := gD_focal = gD;
 
-update_gA_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_gA_gB_gC_gD);
-update_gB_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_gA_gB_gC_gD);
-update_gC_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_gA_gB_gC_gD);
-update_gD_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_gA_gB_gC_gD);
+update_gA_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_gA_gB_gC_gD);
+update_gB_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_gA_gB_gC_gD);
+update_gC_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_gA_gB_gC_gD);
+update_gD_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_gA_gB_gC_gD);
 
 -- DISCLAIMER: There are no INput nor OUTput variables in the weak/strong stable states description
-stableStates := weakSS | strongSS;
-
--- ATTENTION: This export does not include the stable states enumeration
-weakSS := FALSE;
-strongSS := FALSE;
+-- It is stable if core components are stable
+stableState := 
+gA_std & gB_std & gC_std & gD_std;
 
 -- Declaration of output variables
 -- Empty !
@@ -117,7 +115,7 @@ next(gA) != gA |
 next(gB) != gB |
 next(gC) != gC |
 next(gD) != gD |
-(gA_std & gB_std & gC_std & gD_std); -- or it is a steady state
+stableState;
 
 DEFINE
 -- Declaration of core variables restriction list

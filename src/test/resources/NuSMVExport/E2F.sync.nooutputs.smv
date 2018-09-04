@@ -1,4 +1,4 @@
--- May 11, 2014 10:28:37 PM WEST
+-- September 4, 2018 at 12:17:02 PM WEST
 --
 -- NuSMV implicit representation of a logical model exported by GINsim
 --
@@ -16,11 +16,11 @@ IVAR
   PC_c1_vars : { PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF };
 
 -- Input variables declaration
+
+VAR
   DNAdamage : { 0, 1};
   GrowthFactors : { 0, 1};
   GrowthInhibitors : { 0, 1};
-
-VAR
 
 -- State variables declaration
   HRAS : {0, 1};
@@ -42,6 +42,18 @@ VAR
 
 ASSIGN
 -- Variable update if conditions are met
+next(DNAdamage) := 
+  case
+    TRUE: DNAdamage;
+  esac;
+next(GrowthFactors) := 
+  case
+    TRUE: GrowthFactors;
+  esac;
+next(GrowthInhibitors) := 
+  case
+    TRUE: GrowthInhibitors;
+  esac;
 next(HRAS) := 
   case
     update_HRAS_OK & (HRAS_inc) : 1;
@@ -321,29 +333,27 @@ p14ARF_inc := p14ARF_focal > p14ARF;
 p14ARF_dec := p14ARF_focal < p14ARF;
 p14ARF_std := p14ARF_focal = p14ARF;
 
-update_HRAS_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_E2F1_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_E2F3_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_CyclinD1_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_CyclinE1_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_CyclinA_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_CDC25A_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_p16INK4a_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_RB1_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_RBL2_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_p21CIP_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_ATM_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_CHEK1_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_MDM2_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_TP53_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
-update_p14ARF_OK := (PCs = PC_c1) & (PC_c1_vars = PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_HRAS_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_E2F1_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_E2F3_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_CyclinD1_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_CyclinE1_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_CyclinA_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_CDC25A_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_p16INK4a_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_RB1_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_RBL2_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_p21CIP_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_ATM_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_CHEK1_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_MDM2_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_TP53_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
+update_p14ARF_OK := (PCs=PC_c1) & (PC_c1_vars=PC_c1_DNAdamage_GrowthFactors_GrowthInhibitors_HRAS_E2F1_E2F3_CyclinD1_CyclinE1_CyclinA_CDC25A_p16INK4a_RB1_RBL2_p21CIP_ATM_CHEK1_MDM2_TP53_p14ARF);
 
 -- DISCLAIMER: There are no INput nor OUTput variables in the weak/strong stable states description
-stableStates := weakSS | strongSS;
-
--- ATTENTION: This export does not include the stable states enumeration
-weakSS := FALSE;
-strongSS := FALSE;
+-- It is stable if core components are stable
+stableState := 
+HRAS_std & E2F1_std & E2F3_std & CyclinD1_std & CyclinE1_std & CyclinA_std & CDC25A_std & p16INK4a_std & RB1_std & RBL2_std & p21CIP_std & ATM_std & CHEK1_std & MDM2_std & TP53_std & p14ARF_std;
 
 -- Declaration of output variables
 E2F1_Apoptosis :=
@@ -391,7 +401,7 @@ next(CHEK1) != CHEK1 |
 next(MDM2) != MDM2 |
 next(TP53) != TP53 |
 next(p14ARF) != p14ARF |
-(HRAS_std & E2F1_std & E2F3_std & CyclinD1_std & CyclinE1_std & CyclinA_std & CDC25A_std & p16INK4a_std & RB1_std & RBL2_std & p21CIP_std & ATM_std & CHEK1_std & MDM2_std & TP53_std & p14ARF_std); -- or it is a steady state
+stableState;
 
 DEFINE
 -- Declaration of core variables restriction list

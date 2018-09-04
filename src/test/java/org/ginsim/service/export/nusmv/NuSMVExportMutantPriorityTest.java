@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.colomoto.biolqm.LogicalModel;
-import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.modifier.reduction.ModelReducer;
 import org.ginsim.TestFileUtils;
 import org.ginsim.common.application.GsException;
