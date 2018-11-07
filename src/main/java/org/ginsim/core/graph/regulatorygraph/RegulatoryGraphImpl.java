@@ -195,11 +195,9 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         if (idExists(newId)) {
         	throw  new GsException(GsException.GRAVITY_ERROR, "id already exists");
         }
-        if (!rvertex.setId(newId)) {
+        if (!rvertex.setId(newId, this)) {
         	throw  new GsException(GsException.GRAVITY_ERROR, "invalid id");
         }
-        refresh(node);
-        fireMetaChange();
     }
 
     @Override
@@ -239,7 +237,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     	}
         RegulatoryNode vertex = new RegulatoryNode(id, this);
         if (name != null) {
-            vertex.setName(name);
+            vertex.setName(name, this);
         }
         vertex.setMaxValue(max, this);
         addNode(vertex);
@@ -358,13 +356,13 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         while ( getNodeByName(id+"_"+addon) != null) {
             addon++;
         }
-        node.setId(id+"_"+addon);
+        node.setId(id+"_"+addon, this);
         addNode(node);
     }
 
     @Override
     public Graph getSubgraph(Collection<RegulatoryNode> v_vertex, Collection<RegulatoryMultiEdge> v_edges) {
-    	
+
         RegulatoryGraph copiedGraph = GSGraphManager.getInstance().getNewGraph();
         NodeAttributesReader vReader = getNodeAttributeReader();
         NodeAttributesReader cvreader = copiedGraph.getNodeAttributeReader();

@@ -84,8 +84,8 @@ public class LogicalModel2RegulatoryGraph {
                 continue;
             }
     		RegulatoryNode node = lrg.addNode( );
-    		node.setId(ni.getNodeID());
-    		node.setName(ni.getName());
+    		node.setId(ni.getNodeID(), lrg);
+    		node.setName(ni.getName(), lrg);
     		node.setMaxValue(ni.getMax(), lrg);
     		node2node.put(ni, node);
     	}

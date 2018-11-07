@@ -188,9 +188,10 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	 * change the id of this node.
 	 * @param id the new id.
 	 */
-	public boolean setId(String id) {
+	public boolean setId(String id, RegulatoryGraph graph) {
 		if (XMLWriter.isValidId(id)) {
 			nodeInfo.setNodeID(id);
+			graph.fireGraphChange(GraphChangeType.NODEUPDATED, this);
 			return true;
 		}
 		return false;
@@ -259,8 +260,9 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	 * set the name of the gene.
 	 * @param name the new name
 	 */
-	public void setName(String name) {
+	public void setName(String name, RegulatoryGraph graph) {
 		nodeInfo.setName(name);
+		graph.fireGraphChange(GraphChangeType.NODEUPDATED, this);
 	}
 
 	/**
@@ -352,7 +354,7 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	public RegulatoryNode clone(RegulatoryGraph graph) {
 		RegulatoryNode clone = new RegulatoryNode(nodeInfo.getNodeID(), graph);
 		clone.nodeInfo.setMax(nodeInfo.getMax());
-		clone.setName(getName());
+		clone.setName(getName(), graph);
 		clone.setGsa((Annotation)gsa.clone());
 		clone.setInput(isInput(), graph);
 		return clone;

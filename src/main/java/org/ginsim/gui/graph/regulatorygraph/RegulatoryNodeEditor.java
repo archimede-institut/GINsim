@@ -125,7 +125,7 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
 					graph.changeNodeId(o, value);
 					return true;
 				case PROP_NAME:
-					o.setName(value);
+					o.setName(value, graph);
 					return true;
 			}
 		} catch (Exception e) {

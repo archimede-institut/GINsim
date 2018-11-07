@@ -118,7 +118,7 @@ public class CompositionService implements Service {
 				newNode.getNodeInfo().setNodeID(
 						computeNewName(node.getNodeInfo().getNodeID(), i));
 				newNode.setName(computeNewName(node.getNodeInfo().getNodeID(),
-						i));
+						i), composedGraph);
 				newNode.setGsa((Annotation) (node.getAnnotation().clone()));
 
 				// mapped inputs with neighbours will no longer be inputs
