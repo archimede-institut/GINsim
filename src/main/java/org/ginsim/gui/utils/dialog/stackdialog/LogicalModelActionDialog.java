@@ -214,6 +214,12 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         	model = getPerturbation().apply(model);
         }
 
+		// TODO: merge all reductions in a single pass
+		ReductionConfig reduction = getReduction();
+		if (reduction != null) {
+			model = reduction.apply(model);
+		}
+
         ReductionModifier reducer = reductionService.getModifier(model);
         if (cb_propagate.isSelected()) {
 			reducer.handleFixed = true;
@@ -230,12 +236,6 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 		} else {
 			reducer.pattern = null;
 		}
-
-		// TODO: merge all reductions in a single pass
-        ReductionConfig reduction = getReduction();
-        if (reduction != null) {
-        	model = reduction.apply(model);
-        }
 
         try {
         	model = reducer.call();
