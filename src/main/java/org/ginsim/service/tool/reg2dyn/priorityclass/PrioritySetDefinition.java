@@ -10,15 +10,10 @@ import java.util.Set;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.tool.simulation.multiplesuccessor.PriorityClasses;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.ListenableNamedList;
-import org.ginsim.service.tool.reg2dyn.updater.BaseSimulationUpdater;
-import org.ginsim.service.tool.reg2dyn.updater.SimulationUpdater;
-import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinition;
-import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinitionAsynchronous;
-import org.ginsim.service.tool.reg2dyn.updater.UpdaterDefinitionSynchronous;
+import org.ginsim.service.tool.reg2dyn.updater.*;
 
 /**
  * Definition of a set of priority classes: store a list of classes
@@ -38,23 +33,23 @@ public class PrioritySetDefinition extends ListenableNamedList<PriorityClass> im
 	public PrioritySetDefinition(List<RegulatoryNode> elts, String name) {
 		setName(name);
 		add();
-		m_elt = new HashMap<RegulatoryNode, PriorityClass[]>();
+		m_elt = new HashMap<>();
 		PriorityClass newclass = get(0);
 		for (RegulatoryNode v: elts) {
 			m_elt.put(v, new PriorityClass[] {newclass});
 		}
 	}
 
-	@Override
-	public SimulationUpdater getUpdater(LogicalModel model) {
-		if (USE_BIOLQM_UPDATERS) {
-			PriorityClasses pcs = null;
-			// TODO: refactor the editing structure of priority classes to use bioLQM's updater 
-//			MultipleSuccessorsUpdater lqmUpdater = new PriorityUpdater(model, pcs);
-//			return new GenericSimulationUpdater(lqmUpdater);
-		}
-		return BaseSimulationUpdater.getInstance(model, this);
-	}
+    @Override
+    public SimulationUpdater getUpdater(LogicalModel model) {
+        if (USE_BIOLQM_UPDATERS) {
+            // FIXME: refactor the editing structure of priority classes to use bioLQM's updater
+//            ModelPriorityClasses pcs = new ModelPriorityClasses(model);
+//            MultipleSuccessorsUpdater lqmUpdater = new PriorityUpdater(model, pcs);
+//            return new GenericSimulationUpdater(lqmUpdater);
+        }
+        return BaseSimulationUpdater.getInstance(model, this);
+    }
 
 	@Override
 	public void setName(String name) {

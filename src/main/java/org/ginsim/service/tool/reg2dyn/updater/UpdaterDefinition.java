@@ -9,7 +9,7 @@ import org.ginsim.core.utils.data.NamedObject;
 
 public interface UpdaterDefinition extends NamedObject, XMLize {
 
-	public final static boolean USE_BIOLQM_UPDATERS = true;
+	boolean USE_BIOLQM_UPDATERS = true;
 
 	SimulationUpdater getUpdater(LogicalModel model);
 
