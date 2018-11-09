@@ -228,6 +228,7 @@
         <version>2.22.0</version>
         <configuration>
           <forkCount>1</forkCount>
+          <useSystemClassLoader>false</useSystemClassLoader>
         </configuration>
         <dependencies>
           <dependency>
