@@ -58,7 +58,7 @@ public class TrapSpaceTableModel extends AbstractTableModel {
 			return null;
 		}
 
-		return solutions.nodes.get(column-1).toString();
+		return solutions.nodes[column-1].toString();
 	}
 
 }
