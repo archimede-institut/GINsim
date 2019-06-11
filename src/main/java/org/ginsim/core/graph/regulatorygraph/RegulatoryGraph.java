@@ -144,6 +144,15 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
 	 */
 	LogicalModel getModel(NodeOrderer orderer);
 
+	/**
+	 * Get a ready-to-be-used model (list of nodes and functions, no graph structure)
+	 *
+	 * @param orderer helper providing the desired node order
+	 * @param withLayout flag to add layout information
+	 *
+	 * @return a model matching this RegulatoryGraph
+	 */
+	LogicalModel getModel(NodeOrderer orderer, boolean withLayout);
 
 
 	/***********************/

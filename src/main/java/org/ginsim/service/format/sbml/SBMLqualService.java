@@ -9,6 +9,7 @@ import java.util.List;
 import javax.xml.stream.XMLStreamException;
 
 import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.ModelLayout;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.io.sbml.SBMLFormat;
 import org.colomoto.biolqm.io.sbml.SBMLQualBundle;
@@ -62,36 +63,26 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 
 
 			// add layout information
-			if (qbundle.lmodel != null) {
-				ListOf<Layout> layouts = qbundle.lmodel.getListOfLayouts();
-				if (layouts != null && layouts.size() > 0) {
-					Layout layout = layouts.get(0);
-					NodeAttributesReader nreader = lrg.getNodeAttributeReader();
-					List<RegulatoryNode> nodes = lrg.getNodeOrder();
-					for (GraphicalObject graphics: layout.getListOfAdditionalGraphicalObjects()) {
-						if (!(graphics instanceof GeneralGlyph)) {
-							continue;
-						}
-						GeneralGlyph glyph = (GeneralGlyph)graphics;
-						String sid = glyph.getReference();
-						int index = simport.getIndexForName(sid);
-						if (index < 0) {
-							continue;
-						}
-						try {
-							nreader.setNode( nodes.get( index));
-							BoundingBox bb = glyph.getBoundingBox();
-							Point pos = bb.getPosition();
-							if (pos != null) {
-								nreader.setPos((int)pos.getX(), (int)pos.getY());
-							}
-							Dimensions dim = bb.getDimensions();
-							if (dim != null) {
-								// FIXME: turn layout information into styling?
-							}
-						} catch (Exception e) {
-							
-						}
+			if (model.hasLayout()) {
+				ModelLayout layout = model.getLayout();
+				NodeAttributesReader nreader = lrg.getNodeAttributeReader();
+				List<RegulatoryNode> nodes = lrg.getNodeOrder();
+				for (NodeInfo ni: model.getComponents()) {
+					ModelLayout.LayoutInfo li = layout.getInfo(ni);
+					if (li == null) {
+						continue;
+					}
+					RegulatoryNode node = lrg.getNodeByName(ni.getNodeID());
+					if (node == null) {
+						continue;
+					}
+					try {
+
+						nreader.setNode( node);
+						nreader.setPos(li.x, li.y);
+						// TODO: also import size information
+					} catch (Exception e) {
+
 					}
 				}
 			}
@@ -131,7 +122,7 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 	 */
 	public String export( SBMLQualConfig config, String filename) throws IOException{
         RegulatoryGraph graph = config.getGraph();
-		LogicalModel model = graph.getModel();
+		LogicalModel model = graph.getModel(null, true);
 		try {
 			SBMLqualExport sExport = new SBMLqualExport(model, true);
 			SBMLQualBundle qbundle = sExport.getSBMLBundle();
@@ -155,47 +146,6 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
             }
             sExport.setInitialCondition(state);
 
-			// add basic layout information
-			if (qbundle.lmodel != null) {
-				Layout layout = new Layout();
-				layout.setId("__layout__");
-				qbundle.lmodel.addLayout(layout);
-				NodeAttributesReader nreader = graph.getNodeAttributeReader();
-				double width = 0;
-				double height = 0;
-				for (RegulatoryNode node: graph.getNodeOrder()) {
-					nreader.setNode(node);
-					int x = nreader.getX();
-					int w = nreader.getWidth();
-					int y = nreader.getY();
-					int h = nreader.getHeight();
-					String id = sExport.getSpecies(node.getNodeInfo()).getId();
-					GeneralGlyph glyph = new GeneralGlyph();
-					glyph.setReference(id);
-					glyph.setId("_ly_"+id);
-					BoundingBox bb = new BoundingBox();
-					Point pos = bb.createPosition();
-					pos.setX(x);
-					pos.setY(y);
-					Dimensions dim = bb.createDimensions();
-					dim.setWidth(w);
-					dim.setHeight(h);
-
-					if (x+w > width) {
-						width = x + w;
-					}
-					if (y+h > height) {
-						height = y + h;
-					}
-					glyph.setBoundingBox(bb);
-					layout.addGeneralGlyph(glyph);
-				}
-				Dimensions dims = new Dimensions();
-				dims.setWidth(width);
-				dims.setHeight(height);
-				layout.setDimensions(dims);
-			}
-			
 			// Add annotations
 			Model smodel = qbundle.document.getModel();
 			try {

@@ -4,10 +4,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.colomoto.biolqm.LogicalModel;
-import org.colomoto.biolqm.LogicalModelImpl;
-import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.StatefulLogicalModelImpl;
+import org.colomoto.biolqm.*;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDManagerFactory;
 import org.colomoto.mddlib.MDDVariableFactory;
@@ -484,8 +481,12 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 		return getModel(null);
 	}
 
-	@Override
-	public LogicalModel getModel(NodeOrderer orderer) {
+    @Override
+    public LogicalModel getModel(NodeOrderer orderer) {
+        return getModel(orderer, false);
+    }
+    @Override
+    public LogicalModel getModel(NodeOrderer orderer, boolean withLayout) {
         //System.out.println(">>I3:"+AvatarUtils.toString(getState()));
 		List<NodeInfo> order = null;
 		if (orderer == null) {
@@ -500,7 +501,26 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 		MDDManager factory = getMDDFactory(order);
 		int[] functions = getMDDs(factory);
 		if(isStateful()) return new StatefulLogicalModelImpl(order, factory, functions, initialStates, graphName);
-		return new LogicalModelImpl(order, factory, functions);
+
+		LogicalModel model = new LogicalModelImpl(order, factory, functions);
+
+		// Include layout information if needed
+		if (withLayout) {
+            ModelLayout mlayout = model.getLayout();
+            NodeAttributesReader nreader = this.getNodeAttributeReader();
+            for (RegulatoryNode node: this.getNodeOrder()) {
+                nreader.setNode(node);
+                int x = nreader.getX();
+                int y = nreader.getY();
+
+                ModelLayout.LayoutInfo li = mlayout.setPosition(node.getNodeInfo(), x,y);
+                li.width = nreader.getWidth();
+                li.height = nreader.getHeight();
+            }
+
+        }
+
+		return model;
 	}
 
 	private List<NodeInfo> getNodeInfos(List<RegulatoryNode> order) {
