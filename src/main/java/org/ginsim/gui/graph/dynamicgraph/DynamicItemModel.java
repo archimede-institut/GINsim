@@ -81,7 +81,7 @@ public class DynamicItemModel extends AbstractTableModel implements StateTableMo
         }
         if (rowIndex == 0) {
             if (columnIndex >= len) {
-                return ""+extraState[columnIndex-len];
+                return "~"+extraState[columnIndex-len];
             }
             return ""+state[columnIndex-1];
         }
@@ -91,12 +91,12 @@ public class DynamicItemModel extends AbstractTableModel implements StateTableMo
         		return null;
         	}
             if (columnIndex >= len) {
-                return ""+extraPrev[r-1][columnIndex-len];
+                return "~"+extraPrev[r-1][columnIndex-len];
             }
         	return ""+prevState[r-1].state[columnIndex-1];
         }
         if (columnIndex >= len) {
-            return ""+extraNext[rowIndex-1][columnIndex-len];
+            return "~"+extraNext[rowIndex-1][columnIndex-len];
         }
         return ""+nextState[rowIndex-1].state[columnIndex-1];
     }
@@ -106,7 +106,7 @@ public class DynamicItemModel extends AbstractTableModel implements StateTableMo
             return null;
         }
         if (column >= len) {
-            return extraNames[column - len];
+            return "~"+extraNames[column - len];
         }
         if (column == 0) {
             return "";
@@ -142,6 +142,13 @@ public class DynamicItemModel extends AbstractTableModel implements StateTableMo
             prevState = null;
             nbNext = nextState != null ? nextState.length : 0;
             nbRelated = nbNext;
+
+            // fill in the extra values
+            if (extraNames != null && extraNames.length > 0) {
+                graph.fillExtraValues(state, extraState);
+                extraNext = fillExtra(nextState);
+                extraPrev = null;
+            }
         } else if (obj != null) {
         	LogManager.error("Invalid type of dynamic item: "+obj.getClass());
         }
