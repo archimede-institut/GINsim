@@ -26,7 +26,9 @@ public class HierarchicalCellRenderer extends DefaultTableCellRenderer implement
         if(table != null) {
             String state = (String)table.getModel().getValueAt(row, column); 
             if (state.equals("*")) {
-            	cmp.setBackground( backgrounds[1] );
+                cmp.setBackground( backgrounds[1] );
+            } else if (state.startsWith("~")) {
+                cmp.setBackground( Color.GRAY );
             }
         }
         return cmp;

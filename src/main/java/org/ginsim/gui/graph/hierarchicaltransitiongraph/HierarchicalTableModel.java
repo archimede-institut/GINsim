@@ -13,8 +13,9 @@ public class HierarchicalTableModel extends AbstractTableModel {
 	private List<byte[]> content = null;
 	private byte[][] extraContent = null;
 	private int colCount;
-	private String[] extraNames;
+	private String[] extraNames = null;
 	private int len;
+	private boolean showExtra = true;
 
 	private HierarchicalTransitionGraph htg;
 
@@ -23,9 +24,11 @@ public class HierarchicalTableModel extends AbstractTableModel {
 		super();
 		this.htg = g;
 		len = colCount = g.getNodeOrderSize();
-		extraNames = g.getExtraNames();
-		if (extraNames != null && extraNames.length > 0) {
-			len += extraNames.length;
+		if (showExtra) {
+			extraNames = g.getExtraNames();
+			if (extraNames != null && extraNames.length > 0) {
+				len += extraNames.length;
+			}
 		}
 	}
 
@@ -50,9 +53,13 @@ public class HierarchicalTableModel extends AbstractTableModel {
 		int i = -10;
 		if (columnIndex >= colCount) {
 			i = extraContent[rowIndex][columnIndex - colCount];
-		} else {
-			i = content.get(rowIndex)[columnIndex];
+			if (i < 0 ) {
+				return "~*";
+			}
+			return "~" + String.valueOf(i);
 		}
+
+		i = content.get(rowIndex)[columnIndex];
 		if (i == -1 ) {
 			return "*";
 		}
@@ -62,7 +69,7 @@ public class HierarchicalTableModel extends AbstractTableModel {
 	@Override
 	public String getColumnName(int column) {
 		if (column >= colCount) {
-			return extraNames[column-colCount];
+			return "["+extraNames[column-colCount]+"]";
 		}
 
 		return htg.getNodeOrder().get(column).getNodeID();
