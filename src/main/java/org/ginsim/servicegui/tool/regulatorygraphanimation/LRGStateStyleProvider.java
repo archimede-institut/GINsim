@@ -84,7 +84,12 @@ enum ActivityType {
 class StateColoredNodeStyle extends NodeStyleOverride<RegulatoryNode> {
 
 	private ActivityType activity = ActivityType.INACTIVE;
-	
+
+	private static Color FREE         = new Color(255, 220, 150);
+	private static Color INACTIVE     = new Color(255, 255, 255);
+	private static Color ACTIVE       = new Color(50, 50, 150);
+	private static Color INTERMEDIATE = new Color(50, 150, 200);;
+
 	public StateColoredNodeStyle(NodeStyle<RegulatoryNode> style) {
 		super(style);
 	}
@@ -98,13 +103,13 @@ class StateColoredNodeStyle extends NodeStyleOverride<RegulatoryNode> {
 	public Color getBackground(RegulatoryNode obj) {
 		switch (activity) {
 		case UNDEFINED:
-			return Color.CYAN;
+			return FREE;
 		case ACTIVE:
-			return Color.ORANGE;
+			return ACTIVE;
 		case PARTIAL:
-			return Color.YELLOW;
+			return INTERMEDIATE;
 		default:
-			return Color.WHITE;
+			return INACTIVE;
 		}
 	}
 
@@ -115,7 +120,12 @@ class StateColoredNodeStyle extends NodeStyleOverride<RegulatoryNode> {
 
 	@Override
 	public Color getTextColor(RegulatoryNode obj) {
-		return Color.BLACK;
+		switch (activity) {
+			case ACTIVE:
+				return Color.WHITE;
+			default:
+				return Color.BLACK;
+		}
 	}
 }
 
