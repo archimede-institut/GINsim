@@ -29,6 +29,7 @@ import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
 import org.ginsim.core.service.ServiceStatus;
+import org.ginsim.servicegui.tool.regulatorygraphanimation.LRGCustomStyleProvider;
 import org.ginsim.servicegui.tool.regulatorygraphanimation.LRGStateStyleProvider;
 import org.kohsuke.MetaInfServices;
 
@@ -74,6 +75,17 @@ public class ImageExportService implements Service {
         LRGStateStyleProvider provider = new LRGStateStyleProvider(lrg);
         provider.setState(state);
         lrg.getStyleManager().setStyleProvider(provider);
+        byte[] img = rawPNG(lrg);
+        lrg.getStyleManager().setStyleProvider(null);
+        return img;
+    }
+
+    public LRGCustomStyleProvider customStyleProvider(RegulatoryGraph lrg) {
+        return new LRGCustomStyleProvider(lrg);
+    }
+
+    public byte[] rawPNG(RegulatoryGraph lrg, LRGCustomStyleProvider styleProvider) throws IOException {
+        lrg.getStyleManager().setStyleProvider(styleProvider);
         byte[] img = rawPNG(lrg);
         lrg.getStyleManager().setStyleProvider(null);
         return img;

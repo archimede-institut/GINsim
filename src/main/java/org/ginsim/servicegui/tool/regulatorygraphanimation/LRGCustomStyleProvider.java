@@ -4,7 +4,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.graph.view.style.*;
-import scala.util.control.Exception;
 
 import java.awt.*;
 import java.util.HashMap;
@@ -41,7 +40,11 @@ public class LRGCustomStyleProvider implements StyleProvider<RegulatoryNode, Reg
 	public void mapState2Color(byte state, Color color) {
 		this.colormap.put(state, color);
 	}
-	
+
+	public void mapState2Color(byte state, int r, int g, int b) {
+		this.mapState2Color(state, new Color(r,g,b));
+	}
+
 	@Override
 	public NodeStyle<RegulatoryNode> getNodeStyle(RegulatoryNode node, NodeStyle<RegulatoryNode> baseStyle) {
 		if (state == null) {
