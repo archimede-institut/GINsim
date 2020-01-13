@@ -9,7 +9,6 @@ import java.util.List;
 import javax.xml.stream.XMLStreamException;
 
 import org.colomoto.biolqm.LogicalModel;
-import org.colomoto.biolqm.ModelLayout;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.io.sbml.SBMLFormat;
 import org.colomoto.biolqm.io.sbml.SBMLQualBundle;
@@ -62,31 +61,7 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 			// TODO: add unused interactions and consistency checks
 
 
-			// add layout information
-			if (model.hasLayout()) {
-				ModelLayout layout = model.getLayout();
-				NodeAttributesReader nreader = lrg.getNodeAttributeReader();
-				List<RegulatoryNode> nodes = lrg.getNodeOrder();
-				for (NodeInfo ni: model.getComponents()) {
-					ModelLayout.LayoutInfo li = layout.getInfo(ni);
-					if (li == null) {
-						continue;
-					}
-					RegulatoryNode node = lrg.getNodeByName(ni.getNodeID());
-					if (node == null) {
-						continue;
-					}
-					try {
 
-						nreader.setNode( node);
-						nreader.setPos(li.x, li.y);
-						// TODO: also import size information
-					} catch (Exception e) {
-
-					}
-				}
-			}
-			
 			// Handle annotations
 			importAnnotation(lrg, qbundle.document.getModel(), lrg.getAnnotation());
 			for (QualitativeSpecies sp: qbundle.qmodel.getListOfQualitativeSpecies()) {

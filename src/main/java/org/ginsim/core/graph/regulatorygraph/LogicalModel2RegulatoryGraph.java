@@ -4,12 +4,14 @@ import java.util.*;
 
 import org.colomoto.biolqm.ConnectivityMatrix;
 import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.ModelLayout;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.StatefulLogicalModel;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.PathSearcher;
 import org.colomoto.mddlib.VariableEffect;
 import org.ginsim.core.graph.regulatorygraph.logicalfunction.LogicalParameter;
+import org.ginsim.core.graph.view.NodeAttributesReader;
 
 /**
  * Create a RegulatoryGraph based on a LogicalModel.
@@ -72,6 +74,32 @@ public class LogicalModel2RegulatoryGraph {
 			lrg.setStates(((StatefulLogicalModel)model).getInitialStates());
 			lrg.setOracles(((StatefulLogicalModel)model).getOracles());
 		}
+
+		// add layout information
+		if (model.hasLayout()) {
+			ModelLayout layout = model.getLayout();
+			NodeAttributesReader nreader = lrg.getNodeAttributeReader();
+			List<RegulatoryNode> nodes = lrg.getNodeOrder();
+			for (NodeInfo ni: model.getComponents()) {
+				ModelLayout.LayoutInfo li = layout.getInfo(ni);
+				if (li == null) {
+					continue;
+				}
+				RegulatoryNode node = lrg.getNodeByName(ni.getNodeID());
+				if (node == null) {
+					continue;
+				}
+				try {
+
+					nreader.setNode( node);
+					nreader.setPos(li.x, li.y);
+					// TODO: also import size information
+				} catch (Exception e) {
+
+				}
+			}
+		}
+
 	}
 	
 	private RegulatoryGraph getRegulatoryGraph() {

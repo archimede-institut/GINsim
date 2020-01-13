@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.colomoto.biolqm.LQMLauncher;
+import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.service.ExtensionLoader;
 import org.colomoto.biolqm.service.LQMServiceManager;
 import org.ginsim.common.application.GsException;
@@ -19,6 +20,7 @@ import org.ginsim.common.document.DocumentWriter;
 import org.ginsim.common.document.LaTeXDocumentWriter;
 import org.ginsim.common.document.OOoDocumentWriter;
 import org.ginsim.common.document.XHTMLDocumentWriter;
+import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.service.ServiceClassInfo;
 import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.GSGraphManager;
@@ -186,6 +188,10 @@ public class ScriptLauncher {
 	public Graph<?, ?> load(String filename) throws GsException {
 		File file = new File(filename);
 		return GSGraphManager.getInstance().open( file);
+	}
+
+	public RegulatoryGraph load(LogicalModel model) throws GsException {
+		return LogicalModel2RegulatoryGraph.importModel(model);
 	}
 
 	/**
