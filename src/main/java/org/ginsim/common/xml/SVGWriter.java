@@ -2,6 +2,7 @@ package org.ginsim.common.xml;
 
 import java.awt.*;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 
 /**
  * XMLWriter extension with some SVG-specific methods.
@@ -14,7 +15,15 @@ public class SVGWriter extends XMLWriter {
 
     public SVGWriter(String filename, Dimension dim) throws IOException {
         super(filename, DOCTYPE);
+        start(dim);
+    }
 
+    public SVGWriter(OutputStreamWriter writer, Dimension dim) throws IOException {
+        super(writer, DOCTYPE);
+        start(dim);
+    }
+    
+    void start(Dimension dim) throws IOException {
         String[] attrs = {
                 "width", ""+dim.getWidth(),
                 "height", ""+dim.getHeight(),

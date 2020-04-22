@@ -1,5 +1,6 @@
 package org.ginsim.servicegui.tool.regulatorygraphanimation;
 
+import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -52,7 +53,7 @@ public class LRGCustomStyleProvider implements StyleProvider<RegulatoryNode, Reg
 		}
 		
 		Integer i = nodeIndex.get(node);
-		nodeStyle.setBackground(colormap.get(this.state[i]));
+		nodeStyle.config(this.state[i], colormap.get(this.state[i]));
 		return nodeStyle;
 	}
 
@@ -67,11 +68,23 @@ public class LRGCustomStyleProvider implements StyleProvider<RegulatoryNode, Reg
 		edgeStyle.setBaseStyle(baseStyle, isActive);
 		return edgeStyle;
 	}
+
+	@Override
+	public String getCSS() {
+		StringBuffer sb = new StringBuffer();
+		for (Map.Entry<Byte, Color> e: colormap.entrySet()) {
+			String bg = ColorPalette.getColorCode(e.getValue());
+			String key = (""+e.getKey()).replace("-", "m");
+			sb.append(".custom_"+key+" .shape { fill: "+bg+"; }\n");
+		}
+		return sb.toString();
+	}
 }
 
 class CustomColoredNodeStyle extends NodeStyleOverride<RegulatoryNode> {
 
 	private Color bg = null;
+	private byte value = 0;
 
 	public CustomColoredNodeStyle(NodeStyle<RegulatoryNode> style) {
 		super(style);
@@ -81,7 +94,8 @@ class CustomColoredNodeStyle extends NodeStyleOverride<RegulatoryNode> {
 		super.setBaseStyle(style);
 	}
 
-	void setBackground(Color bg) {
+	void config(byte value, Color bg) {
+		this.value = value;
 		this.bg = bg;
 	}
 
@@ -101,6 +115,11 @@ class CustomColoredNodeStyle extends NodeStyleOverride<RegulatoryNode> {
 	@Override
 	public Color getTextColor(RegulatoryNode obj) {
 		return Color.BLACK;
+	}
+
+	@Override
+	public String getCSSClass(RegulatoryNode node) {
+		return "node custom_"+this.value;
 	}
 }
 

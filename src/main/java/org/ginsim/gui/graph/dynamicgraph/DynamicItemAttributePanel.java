@@ -5,6 +5,8 @@ import java.awt.GridBagLayout;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.JPopupMenu;
+import javax.swing.JMenuItem;
 import javax.swing.table.TableModel;
 
 import org.ginsim.core.graph.dynamicgraph.DynamicGraph;
@@ -66,4 +68,11 @@ public class DynamicItemAttributePanel extends AbstractParameterPanel {
 		jScrollPane.setSize(88, 104);
 		return jScrollPane;
 	}
+
+    public JPopupMenu getMenu() {
+        JPopupMenu menu = new JPopupMenu();
+        menu.add( new JMenuItem("TODO: some entries") );
+        return menu;
+    }
+
 }

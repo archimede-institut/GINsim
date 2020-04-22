@@ -25,6 +25,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.ViewHelper;
+import org.ginsim.core.graph.view.style.StyleProvider;
 import org.ginsim.core.service.Alias;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.Service;
@@ -84,10 +85,11 @@ public class ImageExportService implements Service {
         return new LRGCustomStyleProvider(lrg);
     }
 
-    public byte[] rawPNG(RegulatoryGraph lrg, LRGCustomStyleProvider styleProvider) throws IOException {
+    public byte[] rawPNG(Graph lrg, StyleProvider styleProvider) throws IOException {
+        StyleProvider oldStyler = lrg.getStyleManager().getStyleProvider();
         lrg.getStyleManager().setStyleProvider(styleProvider);
         byte[] img = rawPNG(lrg);
-        lrg.getStyleManager().setStyleProvider(null);
+        lrg.getStyleManager().setStyleProvider(oldStyler);
         return img;
     }
 
@@ -195,6 +197,61 @@ public class ImageExportService implements Service {
 
         // f is 1 or it failed somewhere: fallback to the DPI-free method
         saveImage(img, filename);
+    }
+
+    /**
+     * Get a SVG representation of the graph with a custom style
+     *
+     * @param graph the graph to export
+     * @param styler provide styling rules
+     */
+    public String getSVG( Graph graph, StyleProvider styler) throws IOException {
+        StyleProvider oldStyler = graph.getStyleManager().getStyleProvider();
+        graph.getStyleManager().setStyleProvider(styler);
+        String result = getSVG(graph);
+        graph.getStyleManager().setStyleProvider(oldStyler);
+
+        return result;
+    }
+
+    /**
+     * Get a SVG representation of the graph
+     *
+     * @param graph the graph to export
+     */
+    public String getSVG( Graph graph) throws IOException{
+        SVGEncoder encoder = new SVGEncoder(graph, null, null, null);
+        try {
+            encoder.call();
+        } catch (Exception e) {
+            LogManager.error(e);
+        }
+
+        return encoder.getString();
+    }
+
+    /**
+     * Export the graph to a SVG file
+     *
+     * @param graph the graph to export
+     * @param fileName the path to the output file
+     */
+    public void exportSVG( Graph graph, String fileName) throws IOException{
+        exportSVG(graph, null, null, fileName);
+    }
+
+    /**
+     * Export the graph to a SVG file
+     *
+     * @param graph the graph to export
+     * @param styler custom style
+     * @param fileName the path to the output file
+     */
+    public void exportSVG(Graph graph, StyleProvider styler, String fileName) throws IOException{
+        StyleProvider oldStyler = graph.getStyleManager().getStyleProvider();
+        graph.getStyleManager().setStyleProvider(styler);
+        exportSVG(graph, null, null, fileName);
+        graph.getStyleManager().setStyleProvider(oldStyler);
     }
 
     /**

@@ -29,4 +29,8 @@ public interface StyleProvider<V, E extends Edge<V>> {
 	 * @return the style to use, or null to use the graph's style
 	 */
 	EdgeStyle<V, E> getEdgeStyle(E edge, EdgeStyle<V, E> baseStyle);
+
+	default String getCSS() {
+		return "";
+	}
 }

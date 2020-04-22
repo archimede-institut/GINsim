@@ -17,7 +17,7 @@ import org.ginsim.gui.shell.actions.BaseAction;
 
 public class StateActionPanel extends JPanel {
 
-	Action exportAction;
+	Action exportAction, extraAction;
 	
 	public StateActionPanel(DynamicItemModel tableModel) {
 		super(new GridBagLayout());
@@ -27,6 +27,12 @@ public class StateActionPanel extends JPanel {
 		GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.EAST;
 		add( new JButton(exportAction), c);
+
+		if (false) { // TODO: offer to extrapolate reduced components when needed
+			extraAction = new ExtraSwitchAction(tableModel);
+			c.gridx++;
+			add( new JButton(extraAction), c);
+		}
 	}
 }
 
@@ -75,5 +81,20 @@ class ExportAction extends BaseAction {
 		} catch (IOException ex) {
 			// TODO: handle errors
 		}
+	}
+}
+
+class ExtraSwitchAction extends BaseAction {
+
+	StateTableModel model;
+
+	public ExtraSwitchAction(DynamicItemModel tableModel) {
+		super("Extra components", null, "Show/hide extra components", null, null);
+		this.model = tableModel;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO
 	}
 }

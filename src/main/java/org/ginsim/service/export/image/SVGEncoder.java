@@ -1,16 +1,5 @@
 package org.ginsim.service.export.image;
 
-import java.awt.*;
-import java.awt.geom.Point2D;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.colomoto.common.task.AbstractTask;
 import org.ginsim.common.utils.ColorPalette;
 import org.ginsim.common.xml.SVGWriter;
@@ -20,6 +9,15 @@ import org.ginsim.core.graph.view.*;
 import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.graph.view.style.NodeStyle;
 import org.ginsim.core.graph.view.style.StyleManager;
+import org.ginsim.core.graph.view.style.StyleProvider;
+
+import java.awt.*;
+import java.awt.geom.Point2D;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.List;
+import java.util.*;
 
 
 /**
@@ -35,6 +33,7 @@ public class SVGEncoder extends AbstractTask {
     private final Collection<Edge> edges;
     private final String fileName;
     private final StyleManager manager;
+    private ByteArrayOutputStream bout;
 
 
     public SVGEncoder(Graph graph, Collection nodes,  Collection<Edge> edges, String fileName) {
@@ -54,11 +53,21 @@ public class SVGEncoder extends AbstractTask {
         this.fileName = fileName;
     }
 
+    public String getString() {
+        return bout.toString();
+    }
+
     @Override
     protected Object performTask() throws Exception {
 
         Dimension dim = graph.getDimension();
-        SVGWriter out = new SVGWriter(fileName, dim);
+        SVGWriter out;
+        if (fileName == null) {
+            bout = new ByteArrayOutputStream();
+            out = new SVGWriter(new OutputStreamWriter(bout), dim);
+        } else {
+            out = new SVGWriter(fileName, dim);
+        }
         Font font = ViewHelper.GRAPHFONT;
 
         // write CSS code for the styles
@@ -77,6 +86,12 @@ public class SVGEncoder extends AbstractTask {
         for (EdgeStyle style: estyles) {
             out.addContent(style.getCSS());
         }
+
+        StyleProvider styler = manager.getStyleProvider();
+        if (null != styler) {
+            out.addContent(styler.getCSS());
+        }
+
         out.closeTag(); // style
 
         NodeAttributesReader vreader = graph.getNodeAttributeReader();

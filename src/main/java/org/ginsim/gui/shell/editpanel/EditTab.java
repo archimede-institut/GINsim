@@ -2,6 +2,8 @@ package org.ginsim.gui.shell.editpanel;
 
 import java.awt.Component;
 
+import javax.swing.JPopupMenu;
+
 import org.ginsim.gui.graph.GraphSelection;
 
 /**
@@ -18,4 +20,9 @@ public interface EditTab {
 	public Component getComponent();
 	
 	public boolean isActive( GraphSelection<?, ?> selection);
+
+    default JPopupMenu getMenu() {
+        return null;
+    }
+
 }
