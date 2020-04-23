@@ -72,13 +72,22 @@ public class ImageExportService implements Service {
         return os.toByteArray();
     }
 
-    public byte[] rawPNG(RegulatoryGraph lrg, byte[] state) throws IOException {
+    public StyleProvider getStyle(RegulatoryGraph lrg, byte[] state) {
         LRGStateStyleProvider provider = new LRGStateStyleProvider(lrg);
         provider.setState(state);
-        lrg.getStyleManager().setStyleProvider(provider);
-        byte[] img = rawPNG(lrg);
-        lrg.getStyleManager().setStyleProvider(null);
-        return img;
+        return provider;
+    }
+
+    public StyleProvider getStyle(RegulatoryGraph lrg, int[] state) {
+        byte[] bstate = new byte[state.length];
+        for (int i=0 ; i<state.length ; i++) {
+            bstate[i] = (byte)state[i];
+        }
+        return getStyle(lrg, bstate);
+    }
+
+    public StyleProvider getStyle(RegulatoryGraph lrg, TrapSpace trap) {
+        return getStyle(lrg, trap.pattern);
     }
 
     public LRGCustomStyleProvider customStyleProvider(RegulatoryGraph lrg) {
@@ -93,24 +102,12 @@ public class ImageExportService implements Service {
         return img;
     }
 
-    public byte[] rawPNG(RegulatoryGraph lrg, TrapSpace trap) throws IOException {
-        return rawPNG(lrg, trap.pattern);
-    }
-
-    public byte[] rawPNG(RegulatoryGraph lrg, int[] state) throws IOException {
-        byte[] bstate = new byte[state.length];
-        for (int i=0 ; i<state.length ; i++) {
-            bstate[i] = (byte)state[i];
-        }
-        return rawPNG(lrg, bstate);
-    }
-
-        /**
-         * Export a model view as PNG image.
-         *
-         * @param graph
-         * @param fileName
-         */
+    /**
+     * Export a model view as PNG image.
+     *
+     * @param graph
+     * @param fileName
+     */
     public void exportPNG( Graph<?, Edge<?>> graph, String fileName) {
         exportPNG(graph, fileName, 4);
     }
