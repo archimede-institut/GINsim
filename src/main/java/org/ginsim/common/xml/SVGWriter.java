@@ -27,6 +27,7 @@ public class SVGWriter extends XMLWriter {
         String[] attrs = {
                 "width", ""+dim.getWidth(),
                 "height", ""+dim.getHeight(),
+                "viewbox", "0 0 "+dim.getWidth() + " "+dim.getHeight(),
                 "xmlns", "http://www.w3.org/2000/svg",
                 "version", "1.1"
         };

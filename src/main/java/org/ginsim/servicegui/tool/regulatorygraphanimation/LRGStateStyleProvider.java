@@ -193,9 +193,9 @@ class StateColoredEdgeStyle extends EdgeStyleOverride<RegulatoryNode,RegulatoryM
 	@Override
 	public String getCSSClass(RegulatoryMultiEdge edge) {
 		if (isActive) {
-			return "edge_active";
+			return "edge edge_active";
 		}
-		return "edge_inactive";
+		return "edge edge_inactive";
 	}
 
 }
