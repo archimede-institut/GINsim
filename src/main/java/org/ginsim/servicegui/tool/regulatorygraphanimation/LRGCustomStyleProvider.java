@@ -77,6 +77,9 @@ public class LRGCustomStyleProvider implements StyleProvider<RegulatoryNode, Reg
 			String key = (""+e.getKey()).replace("-", "m");
 			sb.append(".custom_"+key+" .shape { fill: "+bg+"; }\n");
 		}
+
+		sb.append(".custom_active { stroke: "+ColorPalette.getColorCode(CustomColoredEdgeStyle.ACTIVE_COLOR)+";}\n");
+		sb.append(".custom_inactive {stroke: "+ColorPalette.getColorCode(CustomColoredEdgeStyle.INACTIVE_COLOR)+";}\n");
 		return sb.toString();
 	}
 }
@@ -119,11 +122,17 @@ class CustomColoredNodeStyle extends NodeStyleOverride<RegulatoryNode> {
 
 	@Override
 	public String getCSSClass(RegulatoryNode node) {
+		if (this.value < 0) {
+			return "node custom_m"+(-this.value);
+		}
 		return "node custom_"+this.value;
 	}
 }
 
 class CustomColoredEdgeStyle extends EdgeStyleOverride<RegulatoryNode,RegulatoryMultiEdge> {
+
+	static Color ACTIVE_COLOR = Color.GRAY;
+	static Color INACTIVE_COLOR = Color.GRAY;
 
 	private boolean isActive = false;
 
@@ -136,12 +145,20 @@ class CustomColoredEdgeStyle extends EdgeStyleOverride<RegulatoryNode,Regulatory
 		this.isActive = isActive;
 	}
 
+
 	@Override
 	public Color getColor(RegulatoryMultiEdge obj) {
 		if (isActive) {
-			return Color.BLUE;
+			return ACTIVE_COLOR;
 		}
-		return Color.GRAY;
+		return INACTIVE_COLOR;
 	}
 
+	@Override
+	public String getCSSClass(RegulatoryMultiEdge edge) {
+		if (isActive) {
+			return "edge custom_active";
+		}
+		return "edge custom_inactive";
+	}
 }
