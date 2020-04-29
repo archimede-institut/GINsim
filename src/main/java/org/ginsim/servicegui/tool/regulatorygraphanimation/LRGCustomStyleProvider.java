@@ -53,6 +53,7 @@ public class LRGCustomStyleProvider implements StyleProvider<RegulatoryNode, Reg
 		}
 		
 		Integer i = nodeIndex.get(node);
+		nodeStyle.setBaseStyle(baseStyle);
 		nodeStyle.config(this.state[i], colormap.get(this.state[i]));
 		return nodeStyle;
 	}
