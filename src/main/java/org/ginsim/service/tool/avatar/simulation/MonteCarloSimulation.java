@@ -19,9 +19,6 @@ import org.ginsim.service.tool.avatar.domain.State;
 import org.ginsim.service.tool.avatar.service.EnumAlgorithm;
 import org.ginsim.service.tool.avatar.utils.AvaMath;
 import org.ginsim.service.tool.avatar.utils.ChartGNUPlot;
-import org.ginsim.service.tool.avatar.utils.ConfidenceInterval;
-
-import com.panayotis.gnuplot.JavaPlot;
 
 /**
  * Monte Carlo simulation for the analysis of point attractors
@@ -147,9 +144,8 @@ public class MonteCarloSimulation extends Simulation {
 				else
 					names.put(att, att);
 			}
-			JavaPlot chart = ChartGNUPlot.getErrorBars(result.attractorsDepths, names, title, "Attractors",
-					"Trajectory length");
-			BufferedImage img2 = ChartGNUPlot.getImage(chart);
+			BufferedImage img2 = ChartGNUPlot.getErrorBars(result.attractorsDepths, names, title, "Attractors",
+					"Trajectory length").asImage();
 			result.addPlot(title, img2);
 			if (!isGUI) {
 				String filename = outputDir + "mc_" + model.getName() + "_depths.png";

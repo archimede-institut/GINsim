@@ -35,10 +35,6 @@ import org.ginsim.service.tool.avatar.utils.AvaMath;
 import org.ginsim.service.tool.avatar.utils.ChartGNUPlot;
 import org.ginsim.service.tool.avatar.utils.StateSetComparator;
 
-//import org.ujmp.core.DenseMatrix;
-//import org.ujmp.core.SparseMatrix;
-//import Jama.Matrix;
-import com.panayotis.gnuplot.JavaPlot;
 
 /**
  * Avatar simulation for the discovery of point and complex attractors.<br>
@@ -465,9 +461,8 @@ public class AvatarSimulation extends Simulation {
 //				i++;
 //			}
 			String title = "Plot: convergence of probability estimates";
-			JavaPlot chart = ChartGNUPlot.getConvergence(AvaMath.normalizeColumns(dataset), names, space, title,
-					"#Iterations", "Probability");
-			BufferedImage img = ChartGNUPlot.getImage(chart);
+			BufferedImage img = ChartGNUPlot.getConvergence(AvaMath.normalizeColumns(dataset), names, space, title,
+					"#Iterations", "Probability").asImage();
 			result.addPlot(title, img);
 			if (!isGUI) {
 				outputDir = (outputDir.startsWith("/")) ? new File("").getAbsolutePath() + outputDir + "/"

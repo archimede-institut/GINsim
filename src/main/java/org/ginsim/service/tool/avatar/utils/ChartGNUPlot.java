@@ -1,19 +1,17 @@
 package org.ginsim.service.tool.avatar.utils;
 
+import org.knowm.xchart.*;
+import org.knowm.xchart.internal.chartpart.Chart;
+import org.knowm.xchart.style.Styler;
+import org.knowm.xchart.style.markers.Marker;
+import org.knowm.xchart.style.markers.None;
+
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-
-import javax.imageio.ImageIO;
-
-import com.panayotis.gnuplot.JavaPlot;
-import com.panayotis.gnuplot.plot.DataSetPlot;
-import com.panayotis.gnuplot.style.NamedPlotColor;
-import com.panayotis.gnuplot.style.PlotStyle;
-import com.panayotis.gnuplot.style.Style;
-import com.panayotis.gnuplot.terminal.ImageTerminal;
 
 /**
  * Plotting facilities using JavaPlot library
@@ -22,22 +20,6 @@ import com.panayotis.gnuplot.terminal.ImageTerminal;
  */
 public class ChartGNUPlot {
 	
-	private static NamedPlotColor[] colors = null; // singleton
-
-	/**
-	 * Creates an image from a given JavaPlot
-	 * 
-	 * @param p
-	 *            the JavaPlot to be plotted
-	 * @return the associated image
-	 */
-	public static BufferedImage getImage(JavaPlot p) {
-		ImageTerminal png = new ImageTerminal();
-		p.setTerminal(png);
-		p.plot();
-		return png.getImage();
-	}
-
 	/**
 	 * Saves a given image in a PNG file
 	 * 
@@ -58,7 +40,6 @@ public class ChartGNUPlot {
 	 * 
 	 * @param depths
 	 *            the list of depths at which an attractor was found
-	 * @param pointAttractors
 	 * @param title
 	 *            the title of the plot
 	 * @param xaxis
@@ -68,67 +49,43 @@ public class ChartGNUPlot {
 	 * @return the associated plot with the mean depth and error bars associated
 	 *         with the list of attractors
 	 */
-	public static JavaPlot getErrorBars(Map<String, List<Integer>> depths, Map<String, String> names, String title,
+	public static GINsimPlot getErrorBars(Map<String, List<Integer>> depths, Map<String, String> names, String title,
 			String xaxis, String yaxis) {
-		JavaPlot p = new JavaPlot();
-		p.setTitle(title);
-		p.setKey(JavaPlot.Key.TOP_RIGHT);
-		PlotStyle myPlotStyle = new PlotStyle();
-		myPlotStyle.setStyle(Style.CANDLESTICKS);
-		myPlotStyle.setLineWidth(6);
+
+		OHLCChart chart = new OHLCChartBuilder().width(800).height(600).title(title).xAxisTitle(xaxis).yAxisTitle(yaxis).build();
+		chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNE);
+//		myPlotStyle.setStyle(Style.CANDLESTICKS);
+//		myPlotStyle.setLineWidth(6);
+
 		int k = 0, it = 0;
 		double overallMax = 0;
 		for (String att : depths.keySet()) {
-			double[][] datapoints = new double[1][6]; // new
+			double[] datapoints = new double[6]; // new
 														// double[][]{{0,5,1,8,2,0.4},{1,4,1,8,2,0.4},{2,6,1,8,3,0.4}};
 			double mean = AvaMath.mean(depths.get(att)), std = AvaMath.std(depths.get(att));
 			double min = AvaMath.min(depths.get(att)), max = AvaMath.max(depths.get(att));
 			overallMax = Math.max(max, overallMax);
-			datapoints[k][0] = it++;
-			datapoints[k][1] = Math.max(min, mean - std);
-			datapoints[k][2] = min;
-			datapoints[k][3] = max;
-			datapoints[k][4] = Math.min(max, mean + std);
-			datapoints[k][5] = 0.4;
+			datapoints[0] = it++;
+			datapoints[1] = Math.max(min, mean - std);
+			datapoints[2] = min;
+			datapoints[3] = max;
+			datapoints[4] = Math.min(max, mean + std);
+			datapoints[5] = 0.4;
+/*
+			OHLCSeries s = chart.addSeries(names.get(att), );
+			s.setLineWidth(3);
+
 			DataSetPlot s = new DataSetPlot(datapoints);
 			s.setTitle(names.get(att));
 			s.setPlotStyle(myPlotStyle);
 			p.addPlot(s);
+ */
 		}
-		p.getAxis("x").setLabel(xaxis);
-		p.getAxis("y").setLabel(yaxis);
-		p.getAxis("x").setBoundaries(-1, depths.size());
-		p.getAxis("y").setBoundaries(0, overallMax * 1.1 + 1);
-		return p;
-	}
 
-	private static NamedPlotColor[] colorPalette() {
-		if (colors == null) {
-			colors = new NamedPlotColor[] {
-					NamedPlotColor.RED,
-					NamedPlotColor.GREEN,
-					NamedPlotColor.YELLOW,
-					NamedPlotColor.BLUE,
-					NamedPlotColor.ORANGE,
-					NamedPlotColor.PURPLE,
-					NamedPlotColor.CYAN,
-					NamedPlotColor.MAGENTA,
-					NamedPlotColor.SEA_GREEN, //Lime
-					NamedPlotColor.PINK,
-					NamedPlotColor.DARK_CYAN, // Teal
-					NamedPlotColor.LIGHT_TURQUOISE, // Lavender
-					NamedPlotColor.BROWN,
-					NamedPlotColor.BEIGE,
-					NamedPlotColor.PLUM, // Maroon
-					NamedPlotColor.DARK_KHAKI, // Mint
-					NamedPlotColor.LIGHT_GREEN, //Olive
-					NamedPlotColor.CORAL,
-					NamedPlotColor.NAVY,
-					NamedPlotColor.GREY,
-					NamedPlotColor.BLACK
-			};
-		}
-		return colors;
+		chart.getStyler()
+				.setXAxisMin(-1.0).setXAxisMax((double)depths.size())
+				.setYAxisMin(0.0).setYAxisMax(overallMax * 1.1 + 1);
+		return new InnerPlotX(chart);
 	}
 
 	/**
@@ -149,30 +106,28 @@ public class ChartGNUPlot {
 	 * @return the associated plot with the convergence of probabilities per
 	 *         attractor across iterations
 	 */
-	public static JavaPlot getConvergence(double[][] dataset, List<String> names, int space, String title, String xaxis,
+	public static GINsimPlot getConvergence(double[][] dataset, List<String> names, int space, String title, String xaxis,
 			String yaxis) {
-		JavaPlot p = new JavaPlot();
-		p.setTitle(title);
-		p.getAxis("x").setLabel(xaxis);
-		p.getAxis("y").setLabel(yaxis);
-		p.getAxis("y").setBoundaries(0, 1);
-		p.setKey(JavaPlot.Key.TOP_RIGHT);
+		XYChart chart = new XYChartBuilder().width(600).height(500).title(title).xAxisTitle(xaxis).yAxisTitle(yaxis).build();
+		chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNE);
+		chart.getStyler().setYAxisMin(0.0).setYAxisMax(1.0);
+
+		Marker nomarker = new None();
 		for (int i = 0; i < dataset.length; i++) {
-			double[][] datapoints = new double[dataset[i].length][2];
+			double[] xdata = new double[dataset[i].length];
+			double[] ydata = new double[dataset[i].length];
 			for (int j = 0, l2 = dataset[i].length; j < l2; j++) {
-				datapoints[j][0] = j * space;
-				datapoints[j][1] = dataset[i][j];
+				xdata[j] = j * space;
+				ydata[j] = dataset[i][j];
 			}
-			DataSetPlot s = new DataSetPlot(datapoints);
-			s.setTitle(names.get(i));
-			PlotStyle myPlotStyle = new PlotStyle();
-			myPlotStyle.setStyle(Style.LINES);
-			myPlotStyle.setLineWidth(3);
-			myPlotStyle.setLineType(colorPalette()[i % colors.length]);
-			s.setPlotStyle(myPlotStyle);
-			p.addPlot(s);
+			XYSeries s = chart.addSeries(names.get(i), xdata, ydata);
+			s.setLineWidth(3);
+			s.setMarker(nomarker);
+
+			// TODO: adapt more styling from JavaPlot ?
+//			myPlotStyle.setLineType(colorPalette()[i % colors.length]);
 		}
-		return p;
+		return new InnerPlotX(chart);
 	}
 
 	/**
@@ -191,27 +146,34 @@ public class ChartGNUPlot {
 	 * @return the associated plot with the progression of probabilities on
 	 *         state-sets across iterations
 	 */
-	public static JavaPlot getProgression(List<double[]> progression, String title, String xaxis, String yaxis) {
-		JavaPlot p = new JavaPlot();
-		p.setTitle(title);
-		p.getAxis("x").setLabel(xaxis);
-		p.getAxis("y").setLabel(yaxis);
-		p.setKey(JavaPlot.Key.TOP_RIGHT);
-		PlotStyle myPlotStyle = new PlotStyle();
-		myPlotStyle.setStyle(Style.LINES);
-		myPlotStyle.setLineWidth(3);
+	public static GINsimPlot getProgression(List<double[]> progression, String title, String xaxis, String yaxis) {
 
+		XYChart chart = new XYChartBuilder().width(600).height(500).title(title).xAxisTitle(xaxis).yAxisTitle(yaxis).build();
+		chart.getStyler().setLegendPosition(Styler.LegendPosition.InsideNE);
+
+		Marker nomarker = new None();
 		for (int i = 0; i < 3; i++) {
-			double[][] array = new double[progression.size()][2];
+			double[] ydata = new double[progression.size()];
 			for (int k = 0, l = progression.size(); k < l; k++) {
-				array[k][0] = k;
-				array[k][1] = progression.get(k)[i];
+				ydata[k] = progression.get(k)[i];
 			}
-			DataSetPlot s = new DataSetPlot(array);
-			s.setTitle((i == 0) ? "F" : ((i == 1) ? "N" : "A"));
-			s.setPlotStyle(myPlotStyle);
-			p.addPlot(s);
+			XYSeries s = chart.addSeries((i == 0) ? "F" : ((i == 1) ? "N" : "A"), ydata);
+			s.setMarker(nomarker);
+			s.setLineWidth(3);
 		}
-		return p;
+		return new InnerPlotX(chart);
+	}
+}
+
+
+class InnerPlotX implements GINsimPlot {
+	Chart inner;
+
+	InnerPlotX(Chart chart) {
+		this.inner = chart;
+	}
+
+	public BufferedImage asImage() {
+		return BitmapEncoder.getBufferedImage(inner);
 	}
 }

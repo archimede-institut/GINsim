@@ -11,7 +11,7 @@
   <description>Edition, simulation and analysis of logical models</description>
   <inceptionYear>2005</inceptionYear>
   <packaging>jar</packaging>
-  <url>TODO</url>
+  <url>http://www.ginsim.org</url>
 
   <properties>
     <project.java.version>1.8</project.java.version>
@@ -20,23 +20,6 @@
   </properties>
 
   <repositories>
-    <!-- GINsim repository provides ready-to-use jars for MDDlib, JSBML and mangosdk.spi  -->
-    <repository>
-       <id>ginsim_snapshot</id>
-       <snapshots><enabled>true</enabled></snapshots>
-       <releases><enabled>false</enabled></releases>
-
-       <name>GINsim snapshot repository</name>
-       <url>http://ginsim.org/maven/snapshot</url>
-    </repository>
-    <repository>
-       <id>ginsim_stable</id>
-       <snapshots><enabled>false</enabled></snapshots>
-       <releases><enabled>true</enabled></releases>
-       <name>GINsim deps</name>
-       <url>http://ginsim.org/maven/stable</url>
-    </repository>
-
     <!-- BIBsonomy: a maintained bibtex parser  -->
     <repository>
        <id>bibsonomy</id>
@@ -88,7 +71,7 @@
     <dependency>
       <groupId>org.colomoto</groupId>
       <artifactId>bioLQM</artifactId>
-      <version>0.7.1-SNAPSHOT</version>
+      <version>0.7.1</version>
     </dependency>
 
     <dependency>
@@ -104,22 +87,17 @@
     </dependency>
 
     <dependency>
-        <groupId>com.panayotis.gnuplot</groupId>
-        <artifactId>JavaPlot</artifactId>
-        <version>1.0</version>
-    </dependency>
-
-    <dependency>
       <groupId>org.ejml</groupId>
       <artifactId>ejml-simple</artifactId>
-      <version>0.34</version>
+      <version>0.39</version>
     </dependency>
 
     <dependency>
-          <groupId>org.antlr</groupId>
-          <artifactId>antlr-runtime</artifactId>
-          <version>3.5.2</version>
+        <groupId>org.knowm.xchart</groupId>
+        <artifactId>xchart</artifactId>
+        <version>3.6.3</version>
     </dependency>
+
   </dependencies>
 
 

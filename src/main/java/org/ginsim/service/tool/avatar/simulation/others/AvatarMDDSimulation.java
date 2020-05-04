@@ -32,8 +32,6 @@ import org.ginsim.service.tool.avatar.utils.AvaException;
 import org.ginsim.service.tool.avatar.utils.AvaMath;
 import org.ginsim.service.tool.avatar.utils.ChartGNUPlot;
 
-import com.panayotis.gnuplot.JavaPlot;
-
 /**
  * Avatar simulation for the discovery of point and complex attractors.<br>
  * Class providing all the functionalities to explore STGs, extend and rewire
@@ -320,9 +318,8 @@ public class AvatarMDDSimulation extends AvatarSimulation {
 				i++;
 			}
 			String title = "Convergence of probability estimates";
-			JavaPlot chart = ChartGNUPlot.getConvergence(AvaMath.normalizeColumns(dataset), null, space, title,
-					"#Iterations", "Attractors");
-			BufferedImage img = ChartGNUPlot.getImage(chart);
+			BufferedImage img = ChartGNUPlot.getConvergence(AvaMath.normalizeColumns(dataset), null, space, title,
+					"#Iterations", "Attractors").asImage();
 			result.addPlot(title, img);
 			if (!isGUI) {
 				outputDir = (outputDir.startsWith("/")) ? new File("").getAbsolutePath() + outputDir + "/"

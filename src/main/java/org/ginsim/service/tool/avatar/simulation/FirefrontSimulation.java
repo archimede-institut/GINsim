@@ -22,11 +22,8 @@ import org.ginsim.service.tool.avatar.domain.State;
 import org.ginsim.service.tool.avatar.domain.StateSet;
 import org.ginsim.service.tool.avatar.service.EnumAlgorithm;
 import org.ginsim.service.tool.avatar.utils.AvaException;
-import org.ginsim.service.tool.avatar.utils.AvaMath;
 import org.ginsim.service.tool.avatar.utils.ChartGNUPlot;
 import org.ginsim.service.tool.avatar.utils.StateProbComparator;
-
-import com.panayotis.gnuplot.JavaPlot;
 
 /**
  * Firefront simulation for the quasi-exact analysis of point attractors
@@ -260,8 +257,7 @@ public class FirefrontSimulation extends Simulation {
 		
 		String title = "Plot: F, N and A cardinal evolutions";
 		// pStates.add(new double[]{F.size(),N.size(),A.size()});
-		JavaPlot chartStates = ChartGNUPlot.getProgression(pStates, title, "#Iterations", "#states");
-		BufferedImage img = ChartGNUPlot.getImage(chartStates);
+		BufferedImage img = ChartGNUPlot.getProgression(pStates, title, "#Iterations", "#states").asImage();
 		result.addPlot(title, img);
 		if (!isGUI) {
 			String filename = outputDir + model.getName() + "_states.png";
@@ -270,8 +266,7 @@ public class FirefrontSimulation extends Simulation {
 		String title2 = "Plot: F, N and A cumulative probability evolutions";
 		// pProbs.add(new
 		// double[]{F.totalProbability(),N.totalProbability(),A.totalProbability()});
-		JavaPlot chartProbs = ChartGNUPlot.getProgression(pProbs, title2, "#Iterations", "probability");
-		BufferedImage img2 = ChartGNUPlot.getImage(chartProbs);
+		BufferedImage img2 = ChartGNUPlot.getProgression(pProbs, title2, "#Iterations", "probability").asImage();
 		result.addPlot(title2, img2);
 		if (!isGUI) {
 			String filename = outputDir + model.getName() + "_probs.png";

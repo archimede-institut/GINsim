@@ -23,8 +23,6 @@ import org.ginsim.service.tool.avatar.utils.AvaException;
 import org.ginsim.service.tool.avatar.utils.ChartGNUPlot;
 import org.ginsim.service.tool.avatar.utils.StateProbComparator;
 
-import com.panayotis.gnuplot.JavaPlot;
-
 /**
  * Firefront simulation for the quasi-exact analysis of point attractors
  * 
@@ -215,8 +213,7 @@ public class FirefrontMDDSimulation extends FirefrontSimulation {
 		// Plots
 		String title = "Progression of F/N/A #states";
 		pStates.add(new double[] { F.size(), N.size(), A.size() });
-		JavaPlot chartStates = ChartGNUPlot.getProgression(pStates, title, "#Iterations", "#states");
-		BufferedImage img = ChartGNUPlot.getImage(chartStates);
+		BufferedImage img = ChartGNUPlot.getProgression(pStates, title, "#Iterations", "#states").asImage();
 		result.addPlot(title, img);
 		if (!isGUI) {
 			String filename = outputDir + model.getName() + "_states.png";
@@ -224,8 +221,7 @@ public class FirefrontMDDSimulation extends FirefrontSimulation {
 		}
 		String title2 = "Progression of F/N/A cumulative probability";
 		pProbs.add(new double[] { F.totalProbability(), N.totalProbability(), A.totalProbability() });
-		JavaPlot chartProbs = ChartGNUPlot.getProgression(pProbs, title2, "#Iterations", "probability");
-		BufferedImage img2 = ChartGNUPlot.getImage(chartProbs);
+		BufferedImage img2 = ChartGNUPlot.getProgression(pProbs, title2, "#Iterations", "probability").asImage();
 		result.addPlot(title2, img2);
 		if (!isGUI) {
 			String filename = outputDir + model.getName() + "_probs.png";
