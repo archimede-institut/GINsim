@@ -8,6 +8,7 @@ import javax.swing.JTabbedPane;
 
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphChangeType;
+import org.ginsim.gui.annotation.AnnotationTab;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphGUIListener;
 import org.ginsim.gui.graph.GraphSelection;
@@ -31,6 +32,10 @@ public class EditPanel extends JTabbedPane implements GraphGUIListener {
 		gui.addGraphGUIListener(this);
 		addTab(new MainEditTab(gui));
 		addTab(new StyleTab(gui));
+		EditTab t = AnnotationTab.prepareTab(gui);
+		if (t != null) {
+			addTab(t);
+		}
 	}
 	
 	/**
