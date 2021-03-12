@@ -29,7 +29,7 @@ import org.ginsim.core.notification.resolvable.NotificationResolution;
  * @author Aurelien Naldi
  */
 public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, RegulatoryMultiEdge> 
-	implements RegulatoryGraph{
+	implements RegulatoryGraph {
 
 	public static final String GRAPH_ZIP_NAME = "regulatoryGraph.ginml";
 	

@@ -35,7 +35,7 @@ public class AnnotationTab extends JPanel implements EditTab {
 		this.gbc.gridy = 0;
 		
 		try {
-			this.add(new AnnotationsComponent(this.getMetadataOfModel(), false), this.gbc);
+			this.add(new AnnotationsComponent(this.annotationModule.getMetadataOfModel(), false), this.gbc);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -81,7 +81,7 @@ public class AnnotationTab extends JPanel implements EditTab {
         
         switch (selection.getSelectionType()) {
             case SEL_NONE:
-            	Metadata metadataModel = this.getMetadataOfModel();
+            	Metadata metadataModel = this.annotationModule.getMetadataOfModel();
             	updateMetadata(metadataModel);
             	return true;
             case SEL_NODE:
@@ -89,7 +89,7 @@ public class AnnotationTab extends JPanel implements EditTab {
             	NodeInfo node = interNode.getNodeInfo();
             	String nodeId = node.getNodeID();
 				try {
-					Metadata metadataNode = this.getMetadataOfNode(nodeId);
+					Metadata metadataNode = this.annotationModule.getMetadataOfNode(nodeId);
 					updateMetadata(metadataNode);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -103,30 +103,4 @@ public class AnnotationTab extends JPanel implements EditTab {
         }
         return false;
     }
-    
-	public Metadata getMetadataOfModel() {
-		
-		return this.annotationModule.modelConstants.getListMetadata().get(this.annotationModule.modelIndex);
-	}
-	
-	public boolean isSetMetadataOfNode(String nodeId) {
-		if (this.annotationModule.nodesIndex.containsKey(nodeId)) {
-			return true;
-		}
-		return false;
-	}
-	
-	public Metadata getMetadataOfNode(String nodeId) throws Exception {
-		try {
-			if (this.annotationModule.nodesIndex.containsKey(nodeId)) {
-				return this.annotationModule.modelConstants.getListMetadata().get(this.annotationModule.nodesIndex.get(nodeId));
-			}
-			else {
-				return this.annotationModule.createMetadataOfNode(nodeId);
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
-		}
-	}
 }
