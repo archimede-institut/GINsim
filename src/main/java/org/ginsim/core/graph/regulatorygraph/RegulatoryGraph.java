@@ -24,7 +24,7 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
     List<RegulatoryNode> getNodeOrder();
     
     List<NodeInfo> getNodeInfos();
-
+    
     /**
      * add a node from textual parameters (for the parser).
      *

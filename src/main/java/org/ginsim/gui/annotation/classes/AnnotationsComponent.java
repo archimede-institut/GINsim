@@ -406,6 +406,51 @@ public class AnnotationsComponent extends JPanel {
 	    }
 	}
 	
+	private void hideAction(JPanel notNestedElements) {
+		JPanel qualifierElements = (JPanel) notNestedElements.getParent();
+		JPanel paneQualifier = (JPanel) qualifierElements.getParent();
+		JPanel paneCreation = (JPanel) paneQualifier.getComponent(1);
+		
+		JPanel completePaneTitle = (JPanel) paneCreation.getComponent(0);
+		JPanel paneTitle = (JPanel) completePaneTitle.getComponent(0);
+		TriangleButton hideButton = (TriangleButton) paneTitle.getComponent(0);
+		
+		JPanel paneCards = (JPanel) paneCreation.getComponent(1);
+    	CardLayout cl = (CardLayout)(paneCards.getLayout());
+    	JPanel paneInformation = (JPanel) paneCards.getComponent(1);
+    	JLabel info = (JLabel) paneInformation.getComponent(0);
+    	
+		qualifierElements.setVisible(false);
+		hideButton.setShow();
+        hideButton.repaint();
+        
+		QualifierProperties entry = caracsQualifiers.get(notNestedElements);
+		String qualifier = entry.getQualifier();
+		AtomicInteger alternative = entry.getAlternative();
+        
+        info.setText(metadata.getShortDescriptionAlternative(qualifier, alternative.intValue()));
+        cl.show(paneCards, "INFOPANEL");
+	}
+	
+	private void showAction(JPanel notNestedElements) {
+		JPanel qualifierElements = (JPanel) notNestedElements.getParent();
+		JPanel paneQualifier = (JPanel) qualifierElements.getParent();
+		JPanel paneCreation = (JPanel) paneQualifier.getComponent(1);
+		
+		JPanel completePaneTitle = (JPanel) paneCreation.getComponent(0);
+		JPanel paneTitle = (JPanel) completePaneTitle.getComponent(0);
+		TriangleButton hideButton = (TriangleButton) paneTitle.getComponent(0);
+		
+		JPanel paneCards = (JPanel) paneCreation.getComponent(1);
+    	CardLayout cl = (CardLayout)(paneCards.getLayout());
+		
+		qualifierElements.setVisible(true);
+		hideButton.setShow();
+        hideButton.repaint();
+        
+        cl.show(paneCards, "ADDPANEL");
+	}
+	
 	private void changeOfQualifierBloc(JPanel currentPaneQualifier, boolean sense) {
 		int change = 1;
 		if (!sense) {
@@ -833,27 +878,14 @@ public class AnnotationsComponent extends JPanel {
 				private static final long serialVersionUID = 1L;
 
 				public void actionPerformed(ActionEvent e) {
-                	CardLayout cl = (CardLayout)(paneCards.getLayout());
-                	
 		    		if (qualifierElements.isVisible()) {
-		    			qualifierElements.setVisible(false);
-		    			hideButton.setShow();
-		                hideButton.repaint();
-		                
-			    		QualifierProperties entry = caracsQualifiers.get(notNestedElements);
-			    		String qualifier = entry.getQualifier();
-			    		AtomicInteger alternative = entry.getAlternative();
-		                
-		                info.setText(metadata.getShortDescriptionAlternative(qualifier, alternative.intValue()));
-		                cl.show(paneCards, "INFOPANEL");
+		    			hideAction(notNestedElements);
 		    		}
 		    		else {
-		    			qualifierElements.setVisible(true);
-		    			hideButton.setShow();
-		                hideButton.repaint();
-		                
-		                cl.show(paneCards, "ADDPANEL");
+		    			showAction(notNestedElements);
 		    		}
+		    		
+					
 		        }
 		    };
 		    paneQualifier.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_H, 0), "hideAction");
@@ -874,49 +906,14 @@ public class AnnotationsComponent extends JPanel {
 					
 					if (allVisible) {
 						for (JPanel localNotNestedElements: caracsQualifiers.keySet()) {
-							JPanel localQualifierElements = (JPanel) localNotNestedElements.getParent();
-							localQualifierElements.setVisible(false);
-							
-							JPanel localPaneQualifier = (JPanel) localQualifierElements.getParent();
-							JPanel localPaneCreation = (JPanel) localPaneQualifier.getComponent(1);
-							JPanel localCompletePaneTitle = (JPanel) localPaneCreation.getComponent(0);
-							JPanel localPaneTitle = (JPanel) localCompletePaneTitle.getComponent(0);
-							TriangleButton localHideButton = (TriangleButton) localPaneTitle.getComponent(0);
-							
-							JPanel localPaneCards = (JPanel) localPaneCreation.getComponent(1);
-							
-							localHideButton.setShow();
-							localHideButton.repaint();
-			                
-				    		QualifierProperties localEntry = caracsQualifiers.get(localNotNestedElements);
-				    		String localQualifier = localEntry.getQualifier();
-				    		AtomicInteger localAlternative = localEntry.getAlternative();
-			                
-			                info.setText(metadata.getShortDescriptionAlternative(localQualifier, localAlternative.intValue()));
-			                
-			                CardLayout localCl = (CardLayout)(localPaneCards.getLayout());
-			                localCl.show(localPaneCards, "INFOPANEL");
+							hideAction(localNotNestedElements);
 						}
 					} else {
 						for (JPanel localNotNestedElements: caracsQualifiers.keySet()) {
 							JPanel localQualifierElements = (JPanel) localNotNestedElements.getParent();
 							
 							if (!localQualifierElements.isVisible()) {
-								localQualifierElements.setVisible(true);
-								
-								JPanel localPaneQualifier = (JPanel) localQualifierElements.getParent();
-								JPanel localPaneCreation = (JPanel) localPaneQualifier.getComponent(1);
-								JPanel localCompletePaneTitle = (JPanel) localPaneCreation.getComponent(0);
-								JPanel localPaneTitle = (JPanel) localCompletePaneTitle.getComponent(0);
-								TriangleButton localHideButton = (TriangleButton) localPaneTitle.getComponent(0);
-								
-								JPanel localPaneCards = (JPanel) localPaneCreation.getComponent(1);
-								
-								localHideButton.setShow();
-								localHideButton.repaint();
-				                
-								CardLayout localCl = (CardLayout)(localPaneCards.getLayout());
-				                localCl.show(localPaneCards, "ADDPANEL");
+								showAction(localNotNestedElements);
 							}
 						}
 					}
