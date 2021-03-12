@@ -5,6 +5,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.colomoto.biolqm.*;
+import org.colomoto.biolqm.metadata.AnnotationModule;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDManagerFactory;
 import org.colomoto.mddlib.MDDVariableFactory;
@@ -39,12 +40,21 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     private List<List<byte[]>> oracles = null;
 
     private boolean use_name = false;
+    
+    private AnnotationModule annotationModule;
 
     /**
      * Create a new Regulatory graph
      */
     public RegulatoryGraphImpl() {
         super( RegulatoryGraphFactory.getInstance());
+        
+        try {
+			this.annotationModule = new AnnotationModule();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     @Override
@@ -519,6 +529,8 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
             }
 
         }
+		
+		model.setAnnotationModule(annotationModule);
 
 		return model;
 	}
@@ -571,6 +583,16 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     public Collection<RegulatoryNode> getNodes() {
         return nodeOrder;
     }
+    
+	@Override
+	public void setAnnotationModule(AnnotationModule newAnnotationModule) {
+		this.annotationModule = newAnnotationModule;
+	}
+    
+	@Override
+	public AnnotationModule getAnnotationModule() {
+		return this.annotationModule;
+	}
 
     
 	/**********************/

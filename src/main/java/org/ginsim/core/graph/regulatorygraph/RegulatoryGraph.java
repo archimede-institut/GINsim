@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.metadata.AnnotationModule;
 import org.colomoto.mddlib.MDDManager;
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.Graph;
@@ -153,6 +154,10 @@ public interface RegulatoryGraph extends Graph<RegulatoryNode, RegulatoryMultiEd
 	 * @return a model matching this RegulatoryGraph
 	 */
 	LogicalModel getModel(NodeOrderer orderer, boolean withLayout);
+	
+	void setAnnotationModule(AnnotationModule newAnnotationModule);
+	
+	AnnotationModule getAnnotationModule();
 
 
 	/***********************/

@@ -2,6 +2,7 @@ package org.ginsim.gui.annotation;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.metadata.AnnotationModule;
 import org.colomoto.biolqm.metadata.annotations.Metadata;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
@@ -17,11 +18,11 @@ import java.awt.*;
 public class AnnotationTab extends JPanel implements EditTab {
 	
 	private static final long serialVersionUID = 1L;
-	private LogicalModel model;
+	private AnnotationModule annotationModule;
 	private GridBagConstraints gbc;
 
-	public AnnotationTab(LogicalModel newModel) {
-		this.model = newModel;
+	public AnnotationTab(AnnotationModule newAnnotationModule) {
+		this.annotationModule = newAnnotationModule;
 		
 		this.setLayout(new GridBagLayout());
 		
@@ -34,7 +35,7 @@ public class AnnotationTab extends JPanel implements EditTab {
 		this.gbc.gridy = 0;
 		
 		try {
-			this.add(new AnnotationsComponent(this.model.getMetadataOfModel(), false), this.gbc);
+			this.add(new AnnotationsComponent(this.getMetadataOfModel(), false), this.gbc);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -42,15 +43,13 @@ public class AnnotationTab extends JPanel implements EditTab {
 	}
 
     public static AnnotationTab prepareTab(GraphGUI<?,?,?> gui) {
-    	System.out.println("coucou");
-    	
         Graph graph = gui.getGraph();
 
         // TODO: create the panel only of the graph supports annotations
         if (graph instanceof RegulatoryGraph) {
-        	LogicalModel newModel = ((RegulatoryGraph) graph).getModel();
+        	AnnotationModule newAnnotationModule = ((RegulatoryGraph) graph).getAnnotationModule();
         	
-            return new AnnotationTab(newModel);
+            return new AnnotationTab(newAnnotationModule);
         }
 
         return null;
@@ -82,7 +81,7 @@ public class AnnotationTab extends JPanel implements EditTab {
         
         switch (selection.getSelectionType()) {
             case SEL_NONE:
-            	Metadata metadataModel = this.model.getMetadataOfModel();
+            	Metadata metadataModel = this.getMetadataOfModel();
             	updateMetadata(metadataModel);
             	return true;
             case SEL_NODE:
@@ -90,7 +89,7 @@ public class AnnotationTab extends JPanel implements EditTab {
             	NodeInfo node = interNode.getNodeInfo();
             	String nodeId = node.getNodeID();
 				try {
-					Metadata metadataNode = this.model.getMetadataOfNode(nodeId);
+					Metadata metadataNode = this.getMetadataOfNode(nodeId);
 					updateMetadata(metadataNode);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
@@ -104,4 +103,30 @@ public class AnnotationTab extends JPanel implements EditTab {
         }
         return false;
     }
+    
+	public Metadata getMetadataOfModel() {
+		
+		return this.annotationModule.modelConstants.getListMetadata().get(this.annotationModule.modelIndex);
+	}
+	
+	public boolean isSetMetadataOfNode(String nodeId) {
+		if (this.annotationModule.nodesIndex.containsKey(nodeId)) {
+			return true;
+		}
+		return false;
+	}
+	
+	public Metadata getMetadataOfNode(String nodeId) throws Exception {
+		try {
+			if (this.annotationModule.nodesIndex.containsKey(nodeId)) {
+				return this.annotationModule.modelConstants.getListMetadata().get(this.annotationModule.nodesIndex.get(nodeId));
+			}
+			else {
+				return this.annotationModule.createMetadataOfNode(nodeId);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 }

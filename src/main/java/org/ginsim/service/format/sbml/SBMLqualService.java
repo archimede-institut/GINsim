@@ -55,6 +55,7 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 			simport.setSource(filename);
 			LogicalModel model = simport.call();
 			RegulatoryGraph lrg = LogicalModel2RegulatoryGraph.importModel(model);
+			lrg.setAnnotationModule(model.getAnnotationModule());
 			
 			SBMLQualBundle qbundle = simport.getQualBundle();
 			
