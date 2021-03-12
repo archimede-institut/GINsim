@@ -1,7 +1,9 @@
 package org.ginsim.gui.annotation;
 
+import org.colomoto.biolqm.metadata.annotations.Metadata;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.gui.annotation.classes.AnnotationsComponent;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.graph.GraphSelection;
 import org.ginsim.gui.shell.editpanel.EditTab;
@@ -10,6 +12,15 @@ import javax.swing.*;
 import java.awt.*;
 
 public class AnnotationTab extends JPanel implements EditTab {
+	
+	public AnnotationTab() {
+		try {
+			this.add(new AnnotationsComponent(new Metadata(null, "node"), false));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 
     public static AnnotationTab prepareTab(GraphGUI<?,?,?> gui) {
         Graph graph = gui.getGraph();
