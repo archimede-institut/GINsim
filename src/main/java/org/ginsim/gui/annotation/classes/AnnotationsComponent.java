@@ -30,6 +30,7 @@ public class AnnotationsComponent extends JPanel {
 	
 	private ArrayList<String> indexQualifiers = new ArrayList<String>();
 	private Map<JPanel, QualifierProperties> caracsQualifiers = new HashMap<JPanel, QualifierProperties>();
+	private Map<String, String> typeQualifiers = new HashMap<String, String>();
 	private Metadata metadata;
 	private boolean nested;
 	
@@ -337,7 +338,41 @@ public class AnnotationsComponent extends JPanel {
 		return this.metadata.suitedJavaClass(qualifier);
 	}
 	
-	private ArrayList<String> breakElement(String element) {
+	public void hasQualifierTypeChanged(String qualString) {
+		if (typeQualifiers.containsKey(qualString) && getTypeQualifier(qualString) == null) {
+			JOptionPane.showMessageDialog(null,
+    				"The qualifier "+qualString+" is not used in any "+metadata.getType()+" anymore. Its blocs are removed so that its type can be redefined.", "Information Message",
+    				JOptionPane.INFORMATION_MESSAGE);
+			
+			typeQualifiers.remove(qualString);
+			
+			ArrayList<JPanel> elementsToRemove = new ArrayList<JPanel>();
+			for (Entry<JPanel, QualifierProperties> entry: caracsQualifiers.entrySet()) {
+				JPanel localNotNestedElements = entry.getKey();
+				QualifierProperties localQualifier = entry.getValue();
+				
+				if (localQualifier.getQualifier().equals(qualString)) {
+					elementsToRemove.add(localNotNestedElements);
+				}
+			}
+			
+			for (JPanel localNotNestedElements: elementsToRemove) {
+				JPanel localQualifierElements = (JPanel) localNotNestedElements.getParent();
+				JPanel localPaneQualifier = (JPanel) localQualifierElements.getParent();
+				JPanel localPaneCreation = (JPanel) localPaneQualifier.getComponent(1);
+				JPanel localCompletePaneTitle = (JPanel) localPaneCreation.getComponent(0);
+				JButton localEraseButton = (JButton) localCompletePaneTitle.getComponent(1);
+				
+				localEraseButton.doClick();
+			}
+		}
+		// if we don't have a type for this qualifier yet and there is a new value not null we save it
+		else if (!typeQualifiers.containsKey(qualString) && getTypeQualifier(qualString) != null) {
+			typeQualifiers.put(qualString, getTypeQualifier(qualString));
+		}
+	}
+	
+	public ArrayList<String> breakElement(String element) {
 		ArrayList<String> array = new ArrayList<String>();
 		
 		if (element.matches(".+:.+")) {
@@ -659,6 +694,7 @@ public class AnnotationsComponent extends JPanel {
 					QualifierProperties entry = caracsQualifiers.get(notNestedElements);
 		    		String qualifier = entry.getQualifier();
 		    		AtomicInteger alternative = entry.getAlternative();
+		    		
 					// if the type of the qualifier was not defined then it was brand new and we don't have to imply Metadata
 		    		if (getTypeQualifier(qualifier) != null && alternative.intValue()<metadata.getNumberOfAlternatives(qualifier)) {
 			    		boolean notlast = metadata.removeAlternative(qualifier, alternative.intValue());
@@ -676,13 +712,16 @@ public class AnnotationsComponent extends JPanel {
 			    		}
 		    		}
 		    		
-		    		caracsQualifiers.remove(surroundingsQualifier);
+		    		caracsQualifiers.remove(notNestedElements);
 		    		
 		    		paneQualifiers.remove(surroundingsQualifier);
 		    		paneQualifiers.revalidate();
 		    		paneQualifiers.repaint();
 		    		
 		    		indexQualifiers.remove(qualifier);
+		    		
+		    		// if the type of the qualifier has changed we update the blocs accordingly
+					hasQualifierTypeChanged(qualifier);
 		    	}
 		    });
 		    
@@ -804,7 +843,7 @@ public class AnnotationsComponent extends JPanel {
 				    			paneQualifier.repaint();
 				    		} else {
 				    			JOptionPane.showMessageDialog(null,
-				    				"Error: This qualifier is of type "+typeAsked+" not of type "+typeGiven+".", "Error Message",
+				    				"Error: This qualifier is of type "+typeAsked+" not of type "+typeGiven+" for a "+metadata.getType()+".", "Error Message",
 				    				JOptionPane.ERROR_MESSAGE);
 				    		}
 			    		}
@@ -836,6 +875,9 @@ public class AnnotationsComponent extends JPanel {
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
+					
+					// if the type of the qualifier has changed we update the blocs accordingly
+					hasQualifierTypeChanged(qualString);
 				}
 
 				@Override

@@ -301,7 +301,7 @@ class ImportJSONAction extends AbstractAction {
 		    	System.out.println("You chose to open this file: " +
 		            chooser.getSelectedFile().getName());
 		    	
-		       	this.g.getAnnotationModule().importMetadata(chooser.getSelectedFile().getAbsolutePath());
+		       	this.g.getAnnotationModule().importMetadata(chooser.getSelectedFile().getAbsolutePath(), this.g.getNodeInfos(), null);
 		    }
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block

@@ -1,9 +1,9 @@
 package org.ginsim.gui.annotation;
 
-import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.metadata.AnnotationModule;
 import org.colomoto.biolqm.metadata.annotations.Metadata;
+import org.colomoto.biolqm.metadata.constants.Index;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -14,6 +14,7 @@ import org.ginsim.gui.shell.editpanel.EditTab;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
 public class AnnotationTab extends JPanel implements EditTab {
 	
@@ -75,7 +76,8 @@ public class AnnotationTab extends JPanel implements EditTab {
     @Override
     public boolean isActive(GraphSelection<?, ?> selection) {
         if (selection == null) {
-            // No selection: annotate the graph
+        	Metadata metadataModel = this.annotationModule.getMetadataOfModel();
+        	updateMetadata(metadataModel);
             return true;
         }
         
@@ -87,9 +89,17 @@ public class AnnotationTab extends JPanel implements EditTab {
             case SEL_NODE:
             	RegulatoryNode interNode = (RegulatoryNode) selection.getSelectedNodes().get(0);
             	NodeInfo node = interNode.getNodeInfo();
-            	String nodeId = node.getNodeID();
+            	
+            	Map<NodeInfo, Index> elementNodes = this.annotationModule.nodesIndex;
+            	for (NodeInfo element: elementNodes.keySet()) {
+            		if(node.equals(element)) {
+            			node = element;
+            		}
+            	}
+            	
 				try {
-					Metadata metadataNode = this.annotationModule.getMetadataOfNode(nodeId);
+					Metadata metadataNode = this.annotationModule.getMetadataOfNode(node);
+					
 					updateMetadata(metadataNode);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
