@@ -1,17 +1,22 @@
 package org.ginsim.gui.shell;
 
+import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JSeparator;
 import javax.swing.JToolBar;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.gui.graph.EditActionManager;
 import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.service.ServiceGUI;
@@ -108,6 +113,7 @@ public class MainFrameActionManager implements FrameActionManager {
 		if (!menus.containsKey(key)) {
 			menus.put(key, new JMenu(key));
 		}
+		
 		return menus.get(key);
 	}
 	

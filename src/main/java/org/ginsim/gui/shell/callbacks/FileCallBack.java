@@ -57,7 +57,8 @@ public class FileCallBack {
 		menu.add(recent);
 		menu.add(importMenu);
 		if (g instanceof RegulatoryGraph) {
-			menu.add(new ImportJSONAction(g));
+			importMenu.add(new JSeparator());
+			importMenu.add(new ImportJSONAction(g));
 		}
 
 		menu.add(new JSeparator());
@@ -66,7 +67,8 @@ public class FileCallBack {
 		menu.add(new SaveAsAction(g));
 		menu.add(exportMenu);
 		if (g instanceof RegulatoryGraph) {
-			menu.add(new ExportJSONAction(g));
+			exportMenu.add(new JSeparator());
+			exportMenu.add(new ExportJSONAction(g));
 		}
 
         menu.add(new JSeparator());
