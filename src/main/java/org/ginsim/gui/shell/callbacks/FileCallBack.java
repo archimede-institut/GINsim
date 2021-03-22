@@ -16,6 +16,9 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.colomoto.biolqm.ConnectivityMatrix;
+import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.service.LQMServiceManager;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
@@ -333,7 +336,12 @@ class ExportJSONAction extends AbstractAction {
 		    	System.out.println("You chose to save the annotations under the name: " +
 		            chooser.getSelectedFile().getName());
 		    	
-		       	this.g.getAnnotationModule().exportMetadata(chooser.getSelectedFile().getAbsolutePath());
+		    	LogicalModel model = this.g.getModel();
+		    	List<NodeInfo> coreNodes = model.getComponents();
+		    	List<NodeInfo> extraNodes = model.getExtraComponents();
+		    	ConnectivityMatrix matrix = new ConnectivityMatrix(model);
+		    	
+		       	this.g.getAnnotationModule().exportMetadata(chooser.getSelectedFile().getAbsolutePath(), coreNodes, extraNodes, matrix);
 		    }
 		} catch (Exception e1) {
 			e1.printStackTrace();

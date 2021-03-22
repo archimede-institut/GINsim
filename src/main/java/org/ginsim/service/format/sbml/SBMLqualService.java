@@ -60,9 +60,9 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 			SBMLQualBundle qbundle = simport.getQualBundle();
 			
 			// TODO: add unused interactions and consistency checks
-
-
-
+			
+			
+			
 			// Handle annotations
 			importAnnotation(lrg, qbundle.document.getModel(), lrg.getAnnotation());
 			for (QualitativeSpecies sp: qbundle.qmodel.getListOfQualitativeSpecies()) {

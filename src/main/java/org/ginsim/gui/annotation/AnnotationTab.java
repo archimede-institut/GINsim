@@ -4,6 +4,7 @@ import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.metadata.AnnotationModule;
 import org.colomoto.biolqm.metadata.annotations.Metadata;
 import org.colomoto.biolqm.metadata.constants.Index;
+import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -94,6 +95,7 @@ public class AnnotationTab extends JPanel implements EditTab {
             	for (NodeInfo element: elementNodes.keySet()) {
             		if(node.equals(element)) {
             			node = element;
+            			break;
             		}
             	}
             	
@@ -107,7 +109,27 @@ public class AnnotationTab extends JPanel implements EditTab {
 				}
                 return true;
             case SEL_EDGE:
-            	break;
+            	Edge<Object> interEdge = (Edge<Object>) selection.getSelectedEdges().get(0);
+            	
+            	RegulatoryNode interNode1 = (RegulatoryNode) interEdge.getSource();
+            	NodeInfo node1 = interNode1.getNodeInfo();
+            	
+            	RegulatoryNode interNode2 = (RegulatoryNode) interEdge.getTarget();
+            	NodeInfo node2 = interNode2.getNodeInfo();
+            	
+            	System.out.println("node1");
+            	System.out.println(node1);
+            	System.out.println(node2);
+            	
+				try {
+					Metadata metadataNode = this.annotationModule.getMetadataOfEdge(node1, node2);
+					
+					updateMetadata(metadataNode);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+                return true;
             case SEL_MULTIPLE:
                 return false;
         }
