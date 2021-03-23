@@ -1,11 +1,15 @@
 package org.ginsim.core.graph.regulatorygraph;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.colomoto.biolqm.*;
 import org.colomoto.biolqm.metadata.AnnotationModule;
+import org.colomoto.biolqm.metadata.NodeInfoPair;
+import org.colomoto.biolqm.metadata.annotations.Metadata;
+import org.colomoto.biolqm.metadata.constants.Index;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDManagerFactory;
 import org.colomoto.mddlib.MDDVariableFactory;
@@ -585,8 +589,67 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     }
     
 	@Override
-	public void setAnnotationModule(AnnotationModule newAnnotationModule) {
-		this.annotationModule = newAnnotationModule;
+	public void setAnnotationModule(AnnotationModule oldAnnotationModule) {
+		this.annotationModule = oldAnnotationModule;
+		
+		Map<NodeInfo, Index> oldNodesIndex = oldAnnotationModule.getNodesIndex();
+		Map<NodeInfoPair, Index> oldEdgesIndex = oldAnnotationModule.getEdgesIndex();
+		
+		Map<NodeInfo, Index> newNodesIndex = new HashMap<NodeInfo, Index>();
+		Map<NodeInfoPair, Index> newEdgesIndex = new HashMap<NodeInfoPair, Index>();
+		
+		Map<String, NodeInfo> oldIdsNodes = new HashMap<String, NodeInfo>();
+		Map<ArrayList<String>, NodeInfoPair> oldIdsEdges = new HashMap<ArrayList<String>, NodeInfoPair>();
+		
+		// update nodesIndex with the nodes of the GINsim model
+		for (Entry<NodeInfo, Index> oldEntry: oldAnnotationModule.getNodesIndex().entrySet()) {
+			NodeInfo node = oldEntry.getKey();
+			oldIdsNodes.put(node.getNodeID(), node);
+		}
+		
+		for (NodeInfo newNodeInfo: this.getNodeInfos()) {
+			String newId = newNodeInfo.getNodeID();
+		
+			if (oldIdsNodes.containsKey(newId)) {
+    			Index newIndex = oldNodesIndex.get(oldIdsNodes.get(newId));
+    			newNodesIndex.put(newNodeInfo, newIndex);
+    		}
+		}
+		
+		// update edgesIndex with the nodes of the GINsim model
+		for (Entry<NodeInfoPair, Index> oldEntry: oldAnnotationModule.getEdgesIndex().entrySet()) {
+			NodeInfoPair pair = oldEntry.getKey();
+			
+			String id1 = pair.getNode1().getNodeID();
+			String id2 = pair.getNode2().getNodeID();
+			ArrayList<String> ids = new ArrayList<String>();
+			ids.add(id1);
+			ids.add(id2);
+			
+			oldIdsEdges.put(ids, pair);
+		}
+		
+		for (RegulatoryMultiEdge newEdge: this.getEdges()) {
+			RegulatoryNode interNode1 = (RegulatoryNode) newEdge.getSource();
+        	NodeInfo newNodeInfo1 = interNode1.getNodeInfo();
+        	String newId1 = newNodeInfo1.getNodeID();
+        	
+        	RegulatoryNode interNode2 = (RegulatoryNode) newEdge.getTarget();
+        	NodeInfo newNodeInfo2 = interNode2.getNodeInfo();
+			String newId2 = newNodeInfo2.getNodeID();
+			
+			ArrayList<String> newIds = new ArrayList<String>();
+			newIds.add(newId1);
+			newIds.add(newId2);
+		
+			if (oldIdsEdges.containsKey(newIds)) {
+    			Index newIndex = oldEdgesIndex.get(oldIdsEdges.get(newIds));
+    			newEdgesIndex.put(new NodeInfoPair(newNodeInfo1, newNodeInfo2), newIndex);
+    		}
+		}
+		
+		this.annotationModule.setNodesIndex(newNodesIndex);
+		this.annotationModule.setEdgesIndex(newEdgesIndex);
 	}
     
 	@Override

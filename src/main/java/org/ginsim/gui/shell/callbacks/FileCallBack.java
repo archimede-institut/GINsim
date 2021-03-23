@@ -331,17 +331,17 @@ class ExportJSONAction extends AbstractAction {
 		    FileNameExtensionFilter filter = new FileNameExtensionFilter(
 		        "JSON files", "json");
 		    chooser.setFileFilter(filter);
-		    int returnVal = chooser.showOpenDialog(null);
+		    int returnVal = chooser.showSaveDialog(null);
 		    if (returnVal == JFileChooser.APPROVE_OPTION) {
 		    	System.out.println("You chose to save the annotations under the name: " +
-		            chooser.getSelectedFile().getName());
+		            chooser.getSelectedFile().getName()+".json");
 		    	
 		    	LogicalModel model = this.g.getModel();
 		    	List<NodeInfo> coreNodes = model.getComponents();
 		    	List<NodeInfo> extraNodes = model.getExtraComponents();
 		    	ConnectivityMatrix matrix = new ConnectivityMatrix(model);
 		    	
-		       	this.g.getAnnotationModule().exportMetadata(chooser.getSelectedFile().getAbsolutePath(), coreNodes, extraNodes, matrix);
+		       	this.g.getAnnotationModule().exportMetadata(chooser.getSelectedFile().getAbsolutePath()+".json", coreNodes, extraNodes, matrix);
 		    }
 		} catch (Exception e1) {
 			e1.printStackTrace();

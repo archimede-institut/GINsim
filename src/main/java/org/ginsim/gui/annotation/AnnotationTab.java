@@ -91,14 +91,6 @@ public class AnnotationTab extends JPanel implements EditTab {
             	RegulatoryNode interNode = (RegulatoryNode) selection.getSelectedNodes().get(0);
             	NodeInfo node = interNode.getNodeInfo();
             	
-            	Map<NodeInfo, Index> elementNodes = this.annotationModule.nodesIndex;
-            	for (NodeInfo element: elementNodes.keySet()) {
-            		if(node.equals(element)) {
-            			node = element;
-            			break;
-            		}
-            	}
-            	
 				try {
 					Metadata metadataNode = this.annotationModule.getMetadataOfNode(node);
 					
@@ -116,10 +108,6 @@ public class AnnotationTab extends JPanel implements EditTab {
             	
             	RegulatoryNode interNode2 = (RegulatoryNode) interEdge.getTarget();
             	NodeInfo node2 = interNode2.getNodeInfo();
-            	
-            	System.out.println("node1");
-            	System.out.println(node1);
-            	System.out.println(node2);
             	
 				try {
 					Metadata metadataNode = this.annotationModule.getMetadataOfEdge(node1, node2);
