@@ -10,15 +10,20 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import org.colomoto.biolqm.metadata.annotations.Metadata;
+import org.ginsim.gui.annotation.classes.autocomplete.SuggestionDropDownDecorator;
+import org.ginsim.gui.annotation.classes.autocomplete.TextComponentSuggestionClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 /**
  * Produces a GUI to modify the metadata of an object (model, nodes, annotations with nested parts...)
@@ -1031,6 +1036,18 @@ public class AnnotationsComponent extends JPanel {
 		return null;
 	}
 	
+	private List<String> getSuggestions(String input) {
+		// the suggestion provider can control text search related stuff, e.g case
+		// insensitive match, the search limit etc.
+		if (input.isEmpty() || input.length() < 3) {
+			return null;
+		}
+
+		Set<String> words = this.metadata.getListOfQualifiersAvailable();
+
+		return words.stream().filter(s -> s.startsWith(input)).limit(20).collect(Collectors.toList());
+	}
+
 	private JPanel createPaneAnnotations() {
 		JPanel paneAnnotations = new JPanel();
 		paneAnnotations.setLayout(new GridBagLayout());
@@ -1078,6 +1095,9 @@ public class AnnotationsComponent extends JPanel {
 	        paneCreation.add(innerPaneCreation, BorderLayout.EAST);
         	
             final JTextField qualifierName = new JTextField(15);
+            SuggestionDropDownDecorator.decorate(qualifierName,
+                    new TextComponentSuggestionClient(this::getSuggestions));
+            
             innerPaneCreation.add(qualifierName);
             
             EventQueue.invokeLater(new Runnable() {
