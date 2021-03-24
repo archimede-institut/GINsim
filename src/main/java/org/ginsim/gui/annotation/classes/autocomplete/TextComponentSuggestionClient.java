@@ -1,7 +1,7 @@
 package org.ginsim.gui.annotation.classes.autocomplete;
 
 import java.awt.Point;
-import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 
 import javax.swing.text.JTextComponent;
@@ -11,9 +11,9 @@ import javax.swing.text.JTextComponent;
  */
 public class TextComponentSuggestionClient implements SuggestionClient<JTextComponent> {
 
-	private Function<String, List<String>> suggestionProvider;
+	private Function<String, Map<String, String>> suggestionProvider;
 
-	public TextComponentSuggestionClient(Function<String, List<String>> suggestionProvider) {
+	public TextComponentSuggestionClient(Function<String, Map<String, String>> suggestionProvider) {
 		this.suggestionProvider = suggestionProvider;
 	}
 
@@ -28,7 +28,7 @@ public class TextComponentSuggestionClient implements SuggestionClient<JTextComp
 	}
 	
 	@Override
-	public List<String> getSuggestions(JTextComponent invoker) {
+	public Map<String, String> getSuggestions(JTextComponent invoker) {
 		return suggestionProvider.apply(invoker.getText().trim());
 	}
 }

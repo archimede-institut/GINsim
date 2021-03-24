@@ -3,7 +3,8 @@ package org.ginsim.gui.annotation.classes.autocomplete;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -21,6 +22,7 @@ public class SuggestionDropDownDecorator<C extends JComponent> {
 	private JPopupMenu popupMenu;
 	private JList<String> listComp;
 	DefaultListModel<String> listModel;
+	private Map<String, String> associativeListModel;
 	private boolean disableTextEvent;
 
 	public SuggestionDropDownDecorator(C invoker, SuggestionClient<C> suggestionClient) {
@@ -42,6 +44,7 @@ public class SuggestionDropDownDecorator<C extends JComponent> {
 	private void initPopup() {
 		popupMenu = new JPopupMenu();
 		listModel = new DefaultListModel<>();
+		associativeListModel = new HashMap<String, String>();
 		listComp = new JList<>(listModel);
 		listComp.setBorder(BorderFactory.createEmptyBorder(0, 2, 5, 2));
 		listComp.setFocusable(false);
@@ -73,7 +76,7 @@ public class SuggestionDropDownDecorator<C extends JComponent> {
 						return;
 					}
 					SwingUtilities.invokeLater(() -> {
-						List<String> suggestions = suggestionClient.getSuggestions(invoker);
+						Map<String, String> suggestions = suggestionClient.getSuggestions(invoker);
 						if (suggestions != null && !suggestions.isEmpty()) {
 							showPopup(suggestions);
 						} else {
@@ -85,9 +88,10 @@ public class SuggestionDropDownDecorator<C extends JComponent> {
 		} // todo init invoker components other than text components
 	}
 
-	private void showPopup(List<String> suggestions) {
+	private void showPopup(Map<String, String> suggestions) {
 		listModel.clear();
-		suggestions.forEach(listModel::addElement);
+		suggestions.keySet().forEach(listModel::addElement);
+		associativeListModel = suggestions;
 		Point p = suggestionClient.getPopupLocation(invoker);
 		if (p == null) {
 			return;
@@ -122,10 +126,10 @@ public class SuggestionDropDownDecorator<C extends JComponent> {
 				popupMenu.setVisible(false);
 				String selectedValue = listComp.getSelectedValue();
 				
-				
+				String associatedValue = associativeListModel.get(selectedValue);
 				
 				disableTextEvent = true;
-				suggestionClient.setSelectedText(invoker, selectedValue);
+				suggestionClient.setSelectedText(invoker, associatedValue);
 				disableTextEvent = false;
 				e.consume();
 			}

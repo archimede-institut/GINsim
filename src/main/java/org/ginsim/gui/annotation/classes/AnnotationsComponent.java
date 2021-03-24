@@ -20,12 +20,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * Produces a GUI to modify the metadata of an object (model, nodes, annotations with nested parts...)
@@ -1522,7 +1522,7 @@ public class AnnotationsComponent extends JPanel {
     }
     
 	// functions for the autocomplete
-	private List<String> getQualifiersSuggestions(String input) {
+	private Map<String, String> getQualifiersSuggestions(String input) {
 		// the suggestion provider can control text search related stuff, e.g case
 		// insensitive match, the search limit etc.
 		if (input.isEmpty() || input.length() < 3) {
@@ -1530,28 +1530,30 @@ public class AnnotationsComponent extends JPanel {
 		}
 
 		Set<String> qualifiers = this.metadata.getListOfQualifiersAvailable();
-
-		return qualifiers.stream().filter(s -> s.startsWith(input)).limit(20).collect(Collectors.toList());
+		List<String> usefulQualifiers = qualifiers.stream().filter(s -> s.startsWith(input)).limit(20).collect(Collectors.toList());
+		
+		return IntStream.range(0, usefulQualifiers.size()).boxed().collect(Collectors.toMap(usefulQualifiers::get, usefulQualifiers::get));
 	}
 	
-	private List<String> getElementsSuggestions(String input) {
-		// the suggestion provider can control text search related stuff, e.g case
-		// insensitive match, the search limit etc.
+	private Map<String, String> getElementsSuggestions(String input) {
+		// if this a reference special treatment
+		if (input.matches("^\\s*doi:.*")) {
+			String inputTrimmed = input.split("doi:", 2)[1].trim();
+			
+			return this.metadata.getListOfReferencesAvailable(inputTrimmed);
+		}
+		
+		// else no suggestions unless there is at least 3 characters typed
 		if (input.isEmpty() || input.length() < 3) {
 			return null;
 		}
 		
 		if (input.matches("^\\s*#.+")) {
 			Set<String> tags = this.metadata.getListOfTagsAvailable();
-			
-			return tags.stream().map(s -> "#" + s).filter(s -> s.startsWith(input)).limit(20).collect(Collectors.toList());
-		} else if (input.matches("^\\sdoi:.+")) {
-			Set<String> references = this.metadata.getListOfReferencesAvailable();
-			
-			System.out.println(references);
-			
-			return references.stream().limit(20).collect(Collectors.toList());
-		} else {
+			List<String> usefulTags = tags.stream().map(s -> "#" + s).filter(s -> s.startsWith(input)).limit(20).collect(Collectors.toList());
+
+			return IntStream.range(0, usefulTags.size()).boxed().collect(Collectors.toMap(usefulTags::get, usefulTags::get));
+		} else if (!input.contains(":") && !input.contains("=")) {
 			Set<String> collections = this.metadata.getListOfCollectionsAvailable();
 			Set<String> keys = this.metadata.getListOfKeysAvailable();
 			
@@ -1559,7 +1561,11 @@ public class AnnotationsComponent extends JPanel {
 			collections.forEach((String s) -> combined.add(s + ":"));
 			keys.forEach((String s) -> combined.add(s + "="));
 			
-			return combined.stream().filter(s -> s.startsWith(input)).limit(20).collect(Collectors.toList());
+			List<String> usefulCombined = combined.stream().filter(s -> s.startsWith(input)).limit(20).collect(Collectors.toList());
+			
+			return IntStream.range(0, usefulCombined.size()).boxed().collect(Collectors.toMap(usefulCombined::get, usefulCombined::get));
 		}
+		
+		return null;
 	}
 }
