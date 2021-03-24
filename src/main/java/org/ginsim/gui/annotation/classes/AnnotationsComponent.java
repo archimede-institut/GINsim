@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -606,6 +608,9 @@ public class AnnotationsComponent extends JPanel {
 	        gbcElement.gridy = 0;
 	        paneElement.add(modificationField, gbcElement);
 	        
+			SuggestionDropDownDecorator.decorate(modificationField,
+					new TextComponentSuggestionClient(this::getElementsSuggestions));
+	        
 	        if (!initial) {
 		        EventQueue.invokeLater(new Runnable() {
 		        	@Override
@@ -1035,18 +1040,6 @@ public class AnnotationsComponent extends JPanel {
 		}
 		return null;
 	}
-	
-	private List<String> getSuggestions(String input) {
-		// the suggestion provider can control text search related stuff, e.g case
-		// insensitive match, the search limit etc.
-		if (input.isEmpty() || input.length() < 3) {
-			return null;
-		}
-
-		Set<String> words = this.metadata.getListOfQualifiersAvailable();
-
-		return words.stream().filter(s -> s.startsWith(input)).limit(20).collect(Collectors.toList());
-	}
 
 	private JPanel createPaneAnnotations() {
 		JPanel paneAnnotations = new JPanel();
@@ -1094,10 +1087,10 @@ public class AnnotationsComponent extends JPanel {
 	        JPanel innerPaneCreation = new JPanel();
 	        paneCreation.add(innerPaneCreation, BorderLayout.EAST);
         	
-            final JTextField qualifierName = new JTextField(15);
-            SuggestionDropDownDecorator.decorate(qualifierName,
-                    new TextComponentSuggestionClient(this::getSuggestions));
-            
+			final JTextField qualifierName = new JTextField(15);
+			SuggestionDropDownDecorator.decorate(qualifierName,
+					new TextComponentSuggestionClient(this::getQualifiersSuggestions));
+
             innerPaneCreation.add(qualifierName);
             
             EventQueue.invokeLater(new Runnable() {
@@ -1527,4 +1520,40 @@ public class AnnotationsComponent extends JPanel {
 		areaNotes.setText(metadata.getNotes());
 		areaNotes.setBackground(Color.WHITE);
     }
+    
+	// functions for the autocomplete
+	private List<String> getQualifiersSuggestions(String input) {
+		// the suggestion provider can control text search related stuff, e.g case
+		// insensitive match, the search limit etc.
+		if (input.isEmpty() || input.length() < 3) {
+			return null;
+		}
+
+		Set<String> qualifiers = this.metadata.getListOfQualifiersAvailable();
+
+		return qualifiers.stream().filter(s -> s.startsWith(input)).limit(20).collect(Collectors.toList());
+	}
+	
+	private List<String> getElementsSuggestions(String input) {
+		// the suggestion provider can control text search related stuff, e.g case
+		// insensitive match, the search limit etc.
+		if (input.isEmpty() || input.length() < 3) {
+			return null;
+		}
+		
+		if (input.matches("^\\s*#.+")) {
+			Set<String> tags = this.metadata.getListOfTagsAvailable();
+			
+			return tags.stream().map(s -> "#" + s).filter(s -> s.startsWith(input)).limit(20).collect(Collectors.toList());
+		} else {
+			Set<String> collections = this.metadata.getListOfCollectionsAvailable();
+			Set<String> keys = this.metadata.getListOfKeysAvailable();
+			
+			Set<String> combined = new HashSet<String>();
+			collections.forEach((String s) -> combined.add(s + ":"));
+			keys.forEach((String s) -> combined.add(s + "="));
+			
+			return combined.stream().filter(s -> s.startsWith(input)).limit(20).collect(Collectors.toList());
+		}
+	}
 }
