@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import org.colomoto.biolqm.metadata.annotations.KeyValueException;
 import org.colomoto.biolqm.metadata.annotations.Metadata;
 import org.ginsim.gui.annotation.classes.autocomplete.SuggestionDropDownDecorator;
 import org.ginsim.gui.annotation.classes.autocomplete.TextComponentSuggestionClient;
@@ -235,8 +236,12 @@ public class AnnotationsComponent extends JPanel {
 				        	urisPanel.addElement(bricks.get(2)+":"+bricks.get(3));
 				        	
 				        	return true;
-						} catch (Exception e) {
-			    			JOptionPane.showMessageDialog(null, e.getMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);
+						} catch (KeyValueException e1) {
+				        	JPanel keysvaluesExternalPanel = (JPanel) content.getComponent(2);
+				        	KeysValuesPanel keysvaluesPanel = (KeysValuesPanel) keysvaluesExternalPanel.getComponent(0);
+				        	keysvaluesPanel.addKeyValue(bricks.get(2)+"="+bricks.get(3));
+						} catch (Exception e2) {
+			    			JOptionPane.showMessageDialog(null, e2.getMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);
 						}
 			        	break;
 			        case "tag":
