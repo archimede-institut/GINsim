@@ -1545,6 +1545,12 @@ public class AnnotationsComponent extends JPanel {
 			Set<String> tags = this.metadata.getListOfTagsAvailable();
 			
 			return tags.stream().map(s -> "#" + s).filter(s -> s.startsWith(input)).limit(20).collect(Collectors.toList());
+		} else if (input.matches("^\\sdoi:.+")) {
+			Set<String> references = this.metadata.getListOfReferencesAvailable();
+			
+			System.out.println(references);
+			
+			return references.stream().limit(20).collect(Collectors.toList());
 		} else {
 			Set<String> collections = this.metadata.getListOfCollectionsAvailable();
 			Set<String> keys = this.metadata.getListOfKeysAvailable();

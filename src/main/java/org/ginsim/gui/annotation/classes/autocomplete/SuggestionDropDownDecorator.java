@@ -121,6 +121,9 @@ public class SuggestionDropDownDecorator<C extends JComponent> {
 			if (selectedIndex != -1) {
 				popupMenu.setVisible(false);
 				String selectedValue = listComp.getSelectedValue();
+				
+				
+				
 				disableTextEvent = true;
 				suggestionClient.setSelectedText(invoker, selectedValue);
 				disableTextEvent = false;
