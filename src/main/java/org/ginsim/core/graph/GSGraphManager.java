@@ -382,6 +382,7 @@ public class GSGraphManager {
 	                        }
 	                    }
 	                }
+	                graph.parseAssociated(f, usePrefix ? AbstractGraph.ZIP_PREFIX:"");
 	                v_omanager = ObjectAssociationManager.getInstance().getObjectManagerList( graph.getClass());
 	                if (v_omanager != null) {
 	                    for (int i=0 ; i<v_omanager.size() ; i++) {
