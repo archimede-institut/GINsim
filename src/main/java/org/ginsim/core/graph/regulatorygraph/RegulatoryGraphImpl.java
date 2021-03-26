@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 import org.colomoto.biolqm.*;
 import org.colomoto.biolqm.metadata.AnnotationModule;
 import org.colomoto.biolqm.metadata.NodeInfoPair;
-import org.colomoto.biolqm.metadata.annotations.Metadata;
 import org.colomoto.biolqm.metadata.constants.Index;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDManagerFactory;
