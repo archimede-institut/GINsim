@@ -233,7 +233,7 @@ public class AnnotationsComponent extends JPanel {
 		        			
 							JPanel urisExternalPanel = (JPanel) content.getComponent(0);
 				        	ElementsPanel urisPanel = (ElementsPanel) urisExternalPanel.getComponent(0);
-				        	urisPanel.addElement(bricks.get(2)+":"+bricks.get(3));
+				        	urisPanel.addURI(bricks.get(2)+":"+bricks.get(3));
 				        	
 				        	return true;
 						} catch (KeyValueException e1) {
@@ -1535,15 +1535,17 @@ public class AnnotationsComponent extends JPanel {
 		}
 
 		Set<String> qualifiers = this.metadata.getListOfQualifiersAvailable();
-		List<String> usefulQualifiers = qualifiers.stream().filter(s -> s.startsWith(input)).limit(20).collect(Collectors.toList());
+		List<String> usefulQualifiers = qualifiers.stream().filter(s -> s.startsWith(input)).limit(10).collect(Collectors.toList());
 		
 		return IntStream.range(0, usefulQualifiers.size()).boxed().collect(Collectors.toMap(usefulQualifiers::get, usefulQualifiers::get));
 	}
 	
 	private Map<String, String> getElementsSuggestions(String input) {
+		String lowInput = input.toLowerCase();
+		
 		// if this a reference special treatment
 		if (input.matches("^\\s*doi:.*")) {
-			String inputTrimmed = input.split("doi:", 2)[1].trim();
+			String inputTrimmed = lowInput.split("doi:", 2)[1].trim();
 			
 			return this.metadata.getListOfReferencesAvailable(inputTrimmed);
 		}
@@ -1555,7 +1557,7 @@ public class AnnotationsComponent extends JPanel {
 		
 		if (input.matches("^\\s*#.+")) {
 			Set<String> tags = this.metadata.getListOfTagsAvailable();
-			List<String> usefulTags = tags.stream().map(s -> "#" + s).filter(s -> s.startsWith(input)).limit(20).collect(Collectors.toList());
+			List<String> usefulTags = tags.stream().map(s -> "#" + s).filter(s -> s.toLowerCase().startsWith(lowInput)).limit(10).collect(Collectors.toList());
 
 			return IntStream.range(0, usefulTags.size()).boxed().collect(Collectors.toMap(usefulTags::get, usefulTags::get));
 		} else if (!input.contains(":") && !input.contains("=")) {
@@ -1566,7 +1568,7 @@ public class AnnotationsComponent extends JPanel {
 			collections.forEach((String s) -> combined.add(s + ":"));
 			keys.forEach((String s) -> combined.add(s + "="));
 			
-			List<String> usefulCombined = combined.stream().filter(s -> s.startsWith(input)).limit(20).collect(Collectors.toList());
+			List<String> usefulCombined = combined.stream().filter(s -> s.toLowerCase().startsWith(lowInput)).limit(10).collect(Collectors.toList());
 			
 			return IntStream.range(0, usefulCombined.size()).boxed().collect(Collectors.toMap(usefulCombined::get, usefulCombined::get));
 		}

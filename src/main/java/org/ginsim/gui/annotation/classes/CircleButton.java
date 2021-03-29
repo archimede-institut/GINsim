@@ -46,8 +46,7 @@ class CircleButton extends JButton {
 	    	else {
 	    		g.setColor(new Color(0,255,0));
 	    	}
-    	}
-    	else {
+    	} else {
 	    	if (getModel().isPressed()) {
 	            g.setColor(new Color(205,50,50));
 	    	}

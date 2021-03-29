@@ -1,10 +1,15 @@
 package org.ginsim.gui.annotation.classes;
 
 import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -61,8 +66,8 @@ class ElementsPanel extends JPanel {
 		}
 	}
 	
-	void addElement (String element) {
-		JPanel panelElement = new JPanel();
+	private void addElement(JPanel panelElement, String element) {
+		
 		panelElement.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 1));
         
         JLabel labelElement = new JLabel(element);
@@ -72,8 +77,6 @@ class ElementsPanel extends JPanel {
         
         final CircleButton buttonElement = new CircleButton("-", false);
         panelElement.add(buttonElement);
-        
-        panelElement.add(Box.createHorizontalStrut(4));
         
 	    buttonElement.addActionListener(new ActionListener(){
 	    	public void actionPerformed(ActionEvent event) {
@@ -116,5 +119,63 @@ class ElementsPanel extends JPanel {
 		if (panelElements.getComponents().length == 1) {
 			panelExternal.add(Box.createVerticalStrut(4));
 		}
+	}
+	
+	void addElement(String element) {
+		JPanel panelElement = new JPanel();
+		this.addElement(panelElement, element);
+		panelElement.add(Box.createHorizontalStrut(4));
+	}
+	
+	void addURI(String element) {
+		JPanel panelElement = new JPanel();
+		this.addElement(panelElement, element);
+		
+		JLabel labelElement = (JLabel) panelElement.getComponent(0);
+		
+		labelElement.setForeground(Color.BLUE.darker());
+		labelElement.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+		
+		labelElement.addMouseListener(new MouseListener() {
+			
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				try {
+	    	        Desktop.getDesktop().browse(new URL("https://identifiers.org/"+element).toURI());
+	    	    } catch (Exception e1) {
+	    	        e1.printStackTrace();
+	    	    }
+			}
+
+			@Override
+			public void mousePressed(MouseEvent e) { }
+
+			@Override
+			public void mouseReleased(MouseEvent e) { }
+
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				labelElement.setText("<html><a href=''>"+element+"</a></html>");
+			}
+
+			@Override
+			public void mouseExited(MouseEvent e) {
+				labelElement.setText(element);
+			}
+		});
+	    
+	    Action uriAction = new AbstractAction() {
+			private static final long serialVersionUID = 1L;
+
+			public void actionPerformed(ActionEvent e) {
+				try {
+	    	        Desktop.getDesktop().browse(new URL("https://identifiers.org/"+element).toURI());
+	    	    } catch (Exception e1) {
+	    	        e1.printStackTrace();
+	    	    }
+	        }
+	    };
+	    panelElement.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "uriAction");
+	    panelElement.getActionMap().put("uriAction", uriAction);
 	}
 }
