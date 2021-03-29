@@ -1,8 +1,12 @@
 package org.ginsim.core.graph;
 
 import java.awt.Dimension;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.Map;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
@@ -62,6 +66,9 @@ public interface Graph<V,E extends Edge<V>> extends GraphModel<V,E>{
 	 */
 	void save(String path, Collection<V> nodes, Collection<E> edges) throws GsException;
 
+	default void saveAssociated(ZipOutputStream zos, OutputStreamWriter osw) throws IOException {}
+
+	default void parseAssociated(ZipFile f, String prefix) throws GsException {}
 
 	/**
 	 * Add a listener for view change events.

@@ -1,9 +1,15 @@
 package org.ginsim.core.graph.regulatorygraph;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 import org.colomoto.biolqm.*;
 import org.colomoto.biolqm.metadata.AnnotationModule;
@@ -13,6 +19,7 @@ import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDManagerFactory;
 import org.colomoto.mddlib.MDDVariableFactory;
 import org.ginsim.common.application.GsException;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.annotation.AnnotationLink;
 import org.ginsim.core.graph.AbstractGraph;
@@ -656,6 +663,25 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 		return this.annotationModule;
 	}
 
+    public void saveAssociated(ZipOutputStream zos, OutputStreamWriter osw) throws IOException {
+        zos.putNextEntry(new ZipEntry(ZIP_PREFIX+"annotations.json"));
+        // TODO: Write to osw
+        osw.flush();
+        zos.closeEntry();
+    }
+
+    public void parseAssociated(ZipFile f, String prefix) throws GsException {
+        ZipEntry ze = f.getEntry(prefix+"annotations.json");
+        if (ze != null) {
+            try {
+                InputStream is = f.getInputStream(ze);
+                // TODO: parse JSON from is
+                is.close();
+            } catch (Exception e) {
+                LogManager.error(e);
+            }
+        }
+    }
     
 	/**********************/
 	/*** STATEFUL GRAPH ***/

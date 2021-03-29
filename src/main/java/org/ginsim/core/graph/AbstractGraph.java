@@ -588,6 +588,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 			osw.flush();
 			zos.closeEntry();
 			// now save associated objects
+			this.saveAssociated(zos, osw);
 			if (v_OManager != null) {
 				for (GraphAssociatedObjectManager manager: v_OManager) {
 					if (manager == null) {
