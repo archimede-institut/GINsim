@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.colomoto.biolqm.metadata.annotations.Metadata;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.xml.XMLWriter;
@@ -63,7 +64,10 @@ public final class RegulatoryParser extends GsXMLHelper {
     private EdgeAttributesReader ereader = null;
     private StyleManager<RegulatoryNode, RegulatoryMultiEdge> styleManager;
     private RegulatoryEdge edge = null;
+    
     private Annotation annotation = null;
+    private Metadata metadata = null;
+    
 	private Map<String, RegulatoryEdge> m_edges = new HashMap();
 	private Map<String, String> m_validIDs = new HashMap();
     private List v_waitingInteractions = new ArrayList();
@@ -143,6 +147,8 @@ public final class RegulatoryParser extends GsXMLHelper {
 			    		pos = POS_OUT;
 			    } else if (qName.equals("comment")) {
 			        annotation.setComment(curval);
+			        
+			        metadata.setNotes(curval);
 			        curval = null;
 			    }
 			    break; // POS_GRAPH_NOTES
@@ -171,6 +177,8 @@ public final class RegulatoryParser extends GsXMLHelper {
 			        pos = POS_VERTEX;
 			    } else if (qName.equals("comment")) {
 			        annotation.setComment(curval);
+			        
+			        metadata.setNotes(curval);
 			        curval = null;
 			    }
 			    break; // POS_VERTEX_NOTES
@@ -179,6 +187,8 @@ public final class RegulatoryParser extends GsXMLHelper {
 			        pos = POS_EDGE;
 			    } else if (qName.equals("comment")) {
 		    		annotation.appendToComment(curval);
+		    		
+		    		metadata.setNotes(curval);
 			        curval = null;
 			    }
 			    break; // POS_EDGE_NOTES
@@ -312,6 +322,8 @@ public final class RegulatoryParser extends GsXMLHelper {
                 } else if (qName.equals("annotation")) {
 	                	pos = POS_GRAPH_NOTES;
 	                	annotation = graph.getAnnotation();
+	                	
+	                	metadata = graph.getAnnotationModule().getMetadataOfModel();
 				} else if (qName.equals("attr")) {
 					String name = attributes.getValue("name");
 					String value = attributes.getValue("value");
@@ -326,13 +338,24 @@ public final class RegulatoryParser extends GsXMLHelper {
 			    } else if (qName.equals("comment")) {
 			        curval = "";
 			    }
-            		break; // POS_GRAPH_NOTES
+            	break; // POS_GRAPH_NOTES
             case POS_GRAPH_NOTES_LINKLIST:
                 if (qName.equals("link")) {
                     annotation.addLink(attributes.getValue("xlink:href"), graph);
+                    
+                    String uriString = attributes.getValue("xlink:href");
+                    
+                    if (uriString.contains(":")) {
+                        String[] uriPieces = uriString.split(":");
+                        try {
+    						metadata.addURI("GINsimQualifier", uriPieces[0], uriPieces[1]);
+    					} catch (Exception e) {
+    						e.printStackTrace();
+    					}
+                    }
                 }
                 break; // POS_GRAPH_NOTES_LINKLIST
-
+                
             case POS_VERTEX:
                 if (vareader != null && qName.equals("nodevisualsetting")) {
             		vareader.setNode(vertex);
@@ -342,6 +365,12 @@ public final class RegulatoryParser extends GsXMLHelper {
                 } else if (qName.equals("annotation")) {
                     pos = POS_VERTEX_NOTES;
                     annotation = vertex.getAnnotation();
+                    
+                    try {
+						metadata = graph.getAnnotationModule().getMetadataOfNode(vertex.getNodeInfo());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
                 } else if (qName.equals("parameter")) {
                 		v_waitingInteractions.add(vertex);
                 		v_waitingInteractions.add(attributes.getValue("val"));
@@ -363,6 +392,14 @@ public final class RegulatoryParser extends GsXMLHelper {
                 } else if (qName.equals("annotation")) {
                     pos = POS_EDGE_NOTES;
                     annotation = edge.me.getAnnotation();
+                    
+                    try {
+                    	RegulatoryNode node1 = edge.me.getSource();
+                    	RegulatoryNode node2 = edge.me.getTarget();
+						metadata = graph.getAnnotationModule().getMetadataOfEdge(node1.getNodeInfo(), node2.getNodeInfo());
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
                 }
                 break; // POS_EDGE
 
@@ -389,11 +426,33 @@ public final class RegulatoryParser extends GsXMLHelper {
             case POS_VERTEX_NOTES_LINKLIST:
                 if (qName.equals("link")) {
                     annotation.addLink(attributes.getValue("xlink:href"), graph);
+                    
+                    String uriString = attributes.getValue("xlink:href");
+                    
+                    if (uriString.contains(":")) {
+                        String[] uriPieces = uriString.split(":");
+                        try {
+    						metadata.addURI("GINsimQualifier", uriPieces[0], uriPieces[1]);
+    					} catch (Exception e) {
+    						e.printStackTrace();
+    					}
+                    }
                 }
                 break; // POS_VERTEX_NOTES
             case POS_EDGE_NOTES_LINKLIST:
                 if (qName.equals("link")) {
                     annotation.addLink(attributes.getValue("xlink:href"), graph);
+                    
+                    String uriString = attributes.getValue("xlink:href");
+                    
+                    if (uriString.contains(":")) {
+                    	String[] uriPieces = uriString.split(":");
+                        try {
+    						metadata.addURI("GINsimQualifier", uriPieces[0], uriPieces[1]);
+    					} catch (Exception e) {
+    						e.printStackTrace();
+    					}
+                    }
                 }
                 break; // POS_EDGE_NOTES
         }
