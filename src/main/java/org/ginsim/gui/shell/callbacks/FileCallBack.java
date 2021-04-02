@@ -34,7 +34,6 @@ import org.ginsim.gui.graph.GraphGUI;
 import org.ginsim.gui.shell.FileSelectionHelper;
 import org.ginsim.gui.shell.FrameActionManager;
 import org.ginsim.gui.shell.GsFileFilter;
-import org.json.JSONException;
 
 
 /**

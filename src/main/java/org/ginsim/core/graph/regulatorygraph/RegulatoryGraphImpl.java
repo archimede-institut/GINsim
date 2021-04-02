@@ -14,6 +14,7 @@ import java.util.zip.ZipOutputStream;
 import org.colomoto.biolqm.*;
 import org.colomoto.biolqm.metadata.AnnotationModule;
 import org.colomoto.biolqm.metadata.NodeInfoPair;
+import org.colomoto.biolqm.metadata.annotations.JsonReader;
 import org.colomoto.biolqm.metadata.constants.Index;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDManagerFactory;
@@ -32,6 +33,7 @@ import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GINMLWriter;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.NotificationResolution;
+import org.json.JSONObject;
 
 /**
  * Implementation of the RegulatoryGraph interface.
@@ -665,7 +667,16 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 
     public void saveAssociated(ZipOutputStream zos, OutputStreamWriter osw) throws IOException {
         zos.putNextEntry(new ZipEntry(ZIP_PREFIX+"annotations.json"));
-        // TODO: Write to osw
+        
+        // write JSON to osw
+        LogicalModel model = this.getModel();
+    	List<NodeInfo> coreNodes = model.getComponents();
+    	List<NodeInfo> extraNodes = model.getExtraComponents();
+    	ConnectivityMatrix matrix = new ConnectivityMatrix(model);
+    	
+        JSONObject json = this.getAnnotationModule().writeAnnotationsInJSON(coreNodes, extraNodes, matrix);
+        osw.write(json.toString());
+        
         osw.flush();
         zos.closeEntry();
     }
@@ -675,7 +686,15 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         if (ze != null) {
             try {
                 InputStream is = f.getInputStream(ze);
-                // TODO: parse JSON from is
+                
+                // parse JSON from is
+                JSONObject json = JsonReader.readInputStream(is);
+                LogicalModel model = this.getModel();
+            	List<NodeInfo> coreNodes = model.getComponents();
+            	List<NodeInfo> extraNodes = model.getExtraComponents();
+            	
+            	this.getAnnotationModule().readAnnotationsFromJSON(json, coreNodes, extraNodes);
+                
                 is.close();
             } catch (Exception e) {
                 LogManager.error(e);
