@@ -28,6 +28,7 @@ public class SVGWriter extends XMLWriter {
                 "width", ""+dim.getWidth(),
                 "height", ""+dim.getHeight(),
                 "xmlns", "http://www.w3.org/2000/svg",
+                "xmlns:inkscape", "http://www.inkscape.org/namespaces/inkscape",
                 "version", "1.1"
         };
         openTag("svg", attrs);
