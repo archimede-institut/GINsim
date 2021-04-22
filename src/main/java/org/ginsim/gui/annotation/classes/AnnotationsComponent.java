@@ -252,7 +252,7 @@ public class AnnotationsComponent extends JPanel {
 				        	
 				        	JPanel tagsExternalPanel = (JPanel) content.getComponent(1);
 				        	ElementsPanel tagsPanel = (ElementsPanel) tagsExternalPanel.getComponent(0);
-				        	tagsPanel.addElement("#"+bricks.get(2));
+				        	tagsPanel.addTag("#"+bricks.get(2));
 				        	
 				        	return true;
 						} catch (Exception e) {
@@ -284,7 +284,7 @@ public class AnnotationsComponent extends JPanel {
 			        
 		        	JPanel authorsExternalPanel = (JPanel) content.getComponent(0);
 		        	ElementsPanel authorsPanel = (ElementsPanel) authorsExternalPanel.getComponent(0);
-			        authorsPanel.addElement(bricks.get(1)+";"+bricks.get(2)+";"+bricks.get(3)+";"+bricks.get(4)+";"+bricks.get(5));
+			        authorsPanel.addAuthor(bricks.get(1), bricks.get(2), bricks.get(3), bricks.get(4), bricks.get(5));
 			        
 			        return true;
 				} catch (Exception e) {

@@ -345,14 +345,7 @@ public final class RegulatoryParser extends GsXMLHelper {
                     
                     String uriString = attributes.getValue("xlink:href");
                     
-                    if (uriString.contains(":")) {
-                        String[] uriPieces = uriString.split(":");
-                        try {
-    						metadata.addURI("GINsimQualifier", uriPieces[0], uriPieces[1]);
-    					} catch (Exception e) {
-    						e.printStackTrace();
-    					}
-                    }
+                    metadata.addElement("GINsimQualifier", 0, uriString);
                 }
                 break; // POS_GRAPH_NOTES_LINKLIST
                 

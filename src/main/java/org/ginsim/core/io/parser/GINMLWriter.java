@@ -8,6 +8,7 @@ import java.util.Map;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
+import org.ginsim.core.annotation.AnnotationLink;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphAssociation;
@@ -104,7 +105,7 @@ public class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 			// save visual settings
 			nReader.setNode(node);
 			nReader.writeGINML(out);
-
+			
 			out.closeTag();
 		}
 	}
