@@ -345,7 +345,12 @@ public final class RegulatoryParser extends GsXMLHelper {
                     
                     String uriString = attributes.getValue("xlink:href");
                     
-                    metadata.addElement("GINsimQualifier", 0, uriString);
+                    try {
+						metadata.addElement("GINsimQualifier", 0, uriString);
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
                 }
                 break; // POS_GRAPH_NOTES_LINKLIST
                 
@@ -422,14 +427,11 @@ public final class RegulatoryParser extends GsXMLHelper {
                     
                     String uriString = attributes.getValue("xlink:href");
                     
-                    if (uriString.contains(":")) {
-                        String[] uriPieces = uriString.split(":");
-                        try {
-    						metadata.addURI("GINsimQualifier", uriPieces[0], uriPieces[1]);
-    					} catch (Exception e) {
-    						e.printStackTrace();
-    					}
-                    }
+                    try {
+						metadata.addElement("GINsimQualifier", 0, uriString);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
                 }
                 break; // POS_VERTEX_NOTES
             case POS_EDGE_NOTES_LINKLIST:
@@ -438,14 +440,11 @@ public final class RegulatoryParser extends GsXMLHelper {
                     
                     String uriString = attributes.getValue("xlink:href");
                     
-                    if (uriString.contains(":")) {
-                    	String[] uriPieces = uriString.split(":");
-                        try {
-    						metadata.addURI("GINsimQualifier", uriPieces[0], uriPieces[1]);
-    					} catch (Exception e) {
-    						e.printStackTrace();
-    					}
-                    }
+                    try {
+						metadata.addElement("GINsimQualifier", 0, uriString);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
                 }
                 break; // POS_EDGE_NOTES
         }

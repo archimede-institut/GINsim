@@ -9,7 +9,6 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.colomoto.biolqm.metadata.annotations.KeyValueException;
 import org.colomoto.biolqm.metadata.annotations.Metadata;
 import org.ginsim.gui.annotation.classes.autocomplete.SuggestionDropDownDecorator;
 import org.ginsim.gui.annotation.classes.autocomplete.TextComponentSuggestionClient;
@@ -227,19 +226,34 @@ public class AnnotationsComponent extends JPanel {
 		        switch (subtype) {
 			        case "uri":
 		        		try {
+		        			String typeURI = bricks.get(2);
+		        			String contentURI = bricks.get(3);
+		        			
 		        			if (creation) {
-		        				this.metadata.addURI(qualifier, alternative.intValue(), bricks.get(2), bricks.get(3));
+		        				String result = this.metadata.addURI(qualifier, alternative.intValue(), contentURI);
+		        				String[] resultArray = result.split("=");
+		        				typeURI = resultArray[0];
+		        				contentURI = resultArray[1];
 		        			}
 		        			
 							JPanel urisExternalPanel = (JPanel) content.getComponent(0);
 				        	ElementsPanel urisPanel = (ElementsPanel) urisExternalPanel.getComponent(0);
-				        	urisPanel.addURI(bricks.get(2)+":"+bricks.get(3));
+				        	
+				        	switch (typeURI) {
+				        		case "miriam":
+				        			urisPanel.addURI(typeURI, contentURI);
+				        			break;
+				        		case "urn":
+				        			urisPanel.addURI(typeURI, contentURI);
+				        			break;
+				        		case "url":
+				        			urisPanel.addURI(typeURI, contentURI);
+				        			break;
+				        	}
+				        	
 				        	
 				        	return true;
-						} catch (KeyValueException e1) {
-				        	JPanel keysvaluesExternalPanel = (JPanel) content.getComponent(2);
-				        	KeysValuesPanel keysvaluesPanel = (KeysValuesPanel) keysvaluesExternalPanel.getComponent(0);
-				        	keysvaluesPanel.addKeyValue(bricks.get(2)+"="+bricks.get(3));
+				        	
 						} catch (Exception e2) {
 			    			JOptionPane.showMessageDialog(null, e2.getMessage(), "Error Message", JOptionPane.ERROR_MESSAGE);
 						}
@@ -390,23 +404,30 @@ public class AnnotationsComponent extends JPanel {
 		if (element.matches(".+:.+")) {
 			array.add("GenericAnnotation");
 			array.add("uri");
+			array.add("miriam");
 			String[] elementBroken = element.split(":", 2);
-			array.add(elementBroken[0].trim());
-			array.add(elementBroken[1].trim());
-		}
-		else if (element.matches("^\\s*#.+")) {
+			array.add(elementBroken[0].trim()+":"+elementBroken[1].trim());
+		} else if (element.matches("^urn:([a-zA-Z_.][a-zA-Z0-9_.]*):(([a-zA-Z_.][a-zA-Z0-9_.]*(:[a-zA-Z_.][a-zA-Z0-9_.]*)*):)?(.*)$")) {
+			array.add("GenericAnnotation");
+			array.add("uri");
+			array.add("urn");
+			array.add(element);
+		} else if (element.matches("^(http:\\\\/\\\\/www\\\\.|https:\\\\/\\\\/www\\\\.|http:\\\\/\\\\/|https:\\\\/\\\\/)?[a-z0-9]+([\\\\-\\\\.]{1}[a-z0-9]+)*\\\\.[a-z]{2,5}(:[0-9]{1,5})?(\\\\/.*)?$")) {
+			array.add("GenericAnnotation");
+			array.add("uri");
+			array.add("url");
+			array.add(element);
+		} else if (element.matches("^\\s*#.+")) {
 			array.add("GenericAnnotation");
 			array.add("tag");
 			array.add(element.split("#", 2)[1].trim());
-		}
-		else if (element.matches(".+=.+")) {
+		} else if (element.matches(".+=.+")) {
 			array.add("GenericAnnotation");
 			array.add("keyvalue");
 			String[] elementBroken = element.split("=", 2);
 			array.add(elementBroken[0].trim());
 			array.add(elementBroken[1].trim());
-		}
-		else if (element.matches(".*;.*;.*;.*;.*")) {
+		} else if (element.matches(".*;.*;.*;.*;.*")) {
 			array.add("AuthorsAnnotation");
 			String[] elementBroken = element.split(";", 5);
 			for (String piece: elementBroken) {
@@ -416,18 +437,15 @@ public class AnnotationsComponent extends JPanel {
 					array.add(piece.trim());
 				}
 			}
-		}
-		else if (element.matches("^\\s*\\d{1,4}\\-\\d{1,2}\\-\\d{1,2}\\s*$")) {
+		} else if (element.matches("^\\s*\\d{1,4}\\-\\d{1,2}\\-\\d{1,2}\\s*$")) {
 			array.add("DateAnnotation");
 			array.add(element.trim());
-		}
-		else if (element.matches("^\\s*\\(.*\\)\\s*$")) {
+		} else if (element.matches("^\\s*\\(.*\\)\\s*$")) {
 			array.add("NestedQualifier");
 			String shortElement = element.trim();
 			String qualifier = shortElement.substring(1, shortElement.length()-1);
 			array.add(qualifier.trim());
-		}
-		else {
+		} else {
 			array.add("DistributionAnnotation");
 			array.add(element.trim());
 		}
@@ -1398,11 +1416,11 @@ public class AnnotationsComponent extends JPanel {
 								
 								JSONObject jsonURI = arrayURIs.getJSONObject(idUri);
 								
-								String collection = jsonURI.getString("collection");
-								String identifier = jsonURI.getString("identifier");
+								String type = jsonURI.getString("type");
+								String content = jsonURI.getString("content");
 								array.add("uri");
-								array.add(collection);
-								array.add(identifier);
+								array.add(type);
+								array.add(content);
 								
 				    			populateElementsBloc(notNestedElements, array, false);
 							}

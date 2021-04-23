@@ -44,14 +44,9 @@ class ElementsPanel extends JPanel {
 	}
 	
 	void removeElement(String element) {
-		if (element.matches(".+:.+")) {
-			String[] elementBroken = element.split(":", 2);
-			metadata.removeURI(qualifier, alternative.intValue(), elementBroken[0], elementBroken[1]);
-		}
-		else if (element.matches("^#.+")) {
+		if (element.matches("^#.+")) {
 			metadata.removeTag(qualifier, alternative.intValue(), element.split("#", 2)[1]);
-		}
-		else if (element.matches(".*;.*;.*;.*;.*")) {
+		} else if (element.matches(".*;.*;.*;.*;.*")) {
 			ArrayList<String> array = new ArrayList<String>();
 			
 			String[] elementBroken = element.split(";", 5);
@@ -63,6 +58,8 @@ class ElementsPanel extends JPanel {
 				}
 			}
 			metadata.removeAuthor(qualifier, array.get(0), array.get(1), array.get(2), array.get(3), array.get(4));
+		} else {
+			metadata.removeURI(qualifier, alternative.intValue(), element);
 		}
 	}
 	
@@ -176,13 +173,23 @@ class ElementsPanel extends JPanel {
 		panelElement.add(Box.createHorizontalStrut(4));
 	}
 	
-	void addURI(String element) {
+	void addURI(String type, String element) {
 		JPanel panelElement = new JPanel();
         
 		this.addElement(panelElement, element);
 		
 		JLabel labelElement = (JLabel) panelElement.getComponent(0);
-		this.setLinkLabel(panelElement, labelElement, "https://identifiers.org/");
+		
+		switch (type) {
+			case "miriam":
+				this.setLinkLabel(panelElement, labelElement, "https://identifiers.org/");
+				break;
+			case "url":
+				this.setLinkLabel(panelElement, labelElement, "");
+				break;
+		}
+		
+		
 	}
 	
 	void addAuthor(String name, String surname, String organisation, String email, String orcid) {
