@@ -12,6 +12,7 @@ import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -302,8 +303,7 @@ class ImportJSONAction extends AbstractAction {
 		    chooser.setFileFilter(filter);
 		    int returnVal = chooser.showOpenDialog(null);
 		    if (returnVal == JFileChooser.APPROVE_OPTION) {
-		    	System.out.println("You chose to open this file: " +
-		            chooser.getSelectedFile().getName());
+		    	System.out.println("You chose to open this file: " + chooser.getSelectedFile().getName());
 		    	
 		       	this.g.getAnnotationModule().importMetadata(chooser.getSelectedFile().getAbsolutePath(), this.g.getNodeInfos(), null);
 		    }
@@ -337,6 +337,14 @@ class ExportJSONAction extends AbstractAction {
 		    	if (!nameFile.substring(nameFile.length()-5).equals(".json")) {
 		    		nameFile = nameFile + ".json";
 		    	}
+		    	
+		    	File f = chooser.getSelectedFile();
+		    	if (f.exists()) {
+					int confirm = JOptionPane.showConfirmDialog(null, "The file exists, do you want to overwrite it?");
+					if (confirm != JOptionPane.OK_OPTION) {
+						return;
+					}
+				}
 		    	
 		    	System.out.println("You chose to save the annotations under the name: " + nameFile);
 		    	
