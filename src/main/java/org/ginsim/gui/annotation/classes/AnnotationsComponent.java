@@ -1553,7 +1553,7 @@ public class AnnotationsComponent extends JPanel {
 		}
 
 		Set<String> qualifiers = this.metadata.getListOfQualifiersAvailable();
-		List<String> usefulQualifiers = qualifiers.stream().filter(s -> s.startsWith(input)).limit(10).collect(Collectors.toList());
+		List<String> usefulQualifiers = qualifiers.stream().filter(s -> s.toLowerCase().startsWith(input)).limit(10).collect(Collectors.toList());
 		
 		return IntStream.range(0, usefulQualifiers.size()).boxed().collect(Collectors.toMap(usefulQualifiers::get, usefulQualifiers::get));
 	}
