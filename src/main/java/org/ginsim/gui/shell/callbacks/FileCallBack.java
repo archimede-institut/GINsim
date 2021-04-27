@@ -80,7 +80,7 @@ public class FileCallBack {
 	}
 
     public static JMenu getMainMenu() {
-        JMenu menu = new JMenu( "GINsim");
+        JMenu menu = new JMenu("GINsim");
 
         for (Action a: HelpCallBack.getActions()) {
             menu.add(a);
@@ -332,15 +332,20 @@ class ExportJSONAction extends AbstractAction {
 		    chooser.setFileFilter(filter);
 		    int returnVal = chooser.showSaveDialog(null);
 		    if (returnVal == JFileChooser.APPROVE_OPTION) {
-		    	System.out.println("You chose to save the annotations under the name: " +
-		            chooser.getSelectedFile().getName()+".json");
+		    	String nameFile = chooser.getSelectedFile().getName();
+		    	
+		    	if (!nameFile.substring(nameFile.length()-5).equals(".json")) {
+		    		nameFile = nameFile + ".json";
+		    	}
+		    	
+		    	System.out.println("You chose to save the annotations under the name: " + nameFile);
 		    	
 		    	LogicalModel model = this.g.getModel();
 		    	List<NodeInfo> coreNodes = model.getComponents();
 		    	List<NodeInfo> extraNodes = model.getExtraComponents();
 		    	ConnectivityMatrix matrix = new ConnectivityMatrix(model);
 		    	
-		       	this.g.getAnnotationModule().exportMetadata(chooser.getSelectedFile().getAbsolutePath()+".json", coreNodes, extraNodes, matrix);
+		       	this.g.getAnnotationModule().exportMetadata(nameFile, coreNodes, extraNodes, matrix);
 		    }
 		} catch (Exception e1) {
 			e1.printStackTrace();
