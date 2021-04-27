@@ -99,25 +99,25 @@ public class Annotation extends ArrayList<AnnotationLink> implements XMLize, Lis
 
 	@Override
 	public void toXML(XMLWriter out) throws IOException {
-			if (comment.equals("") && size()==0) {
-			    return;         
-            }
-			out.openTag("annotation");
-            if (size() > 0) {
-                out.openTag("linklist");
-                for (int i=0 ; i<size() ; i++) {
-                    out.openTag("link");
-                    out.addAttr("xlink:href", get(i).toString());
-                    out.closeTag();
-                }
+		if (comment.equals("") && size()==0) {
+		    return;         
+        }
+		out.openTag("annotation");
+        if (size() > 0) {
+            out.openTag("linklist");
+            for (int i=0 ; i<size() ; i++) {
+                out.openTag("link");
+                out.addAttr("xlink:href", get(i).toString());
                 out.closeTag();
             }
-			if (!comment.equals("")) {
-				out.openTag("comment");
-				out.addContent(comment);
-				out.closeTag();
-			}
             out.closeTag();
+        }
+		if (!comment.equals("")) {
+			out.openTag("comment");
+			out.addContent(comment);
+			out.closeTag();
+		}
+        out.closeTag();
 	}
 	
 	public Object clone() {

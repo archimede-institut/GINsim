@@ -693,6 +693,10 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
             	List<NodeInfo> coreNodes = model.getComponents();
             	List<NodeInfo> extraNodes = model.getExtraComponents();
             	
+            	// we reinitialize the annotation module to get rid of the old annotations extracted from the GINML file
+            	this.setAnnotationModule(new AnnotationModule());
+            	
+            	// then we put the annotations from the JSON file in the new annotation module
             	this.getAnnotationModule().readAnnotationsFromJSON(json, coreNodes, extraNodes);
                 
                 is.close();

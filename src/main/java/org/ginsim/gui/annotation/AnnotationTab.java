@@ -114,7 +114,6 @@ public class AnnotationTab extends JPanel implements EditTab {
 					
 					updateMetadata(metadataNode);
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
                 return true;

@@ -2,9 +2,12 @@ package org.ginsim.core.io.parser;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+import org.colomoto.biolqm.metadata.AnnotationModule;
+import org.colomoto.biolqm.metadata.annotations.Metadata;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
@@ -12,9 +15,11 @@ import org.ginsim.core.annotation.AnnotationLink;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphAssociation;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.style.StyleManager;
+import org.ginsim.gui.annotation.AnnotationTab;
 
 /**
  * Base GINMLWriter class: it provides the common parts of a GINML file and hooks
@@ -74,14 +79,23 @@ public class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 		saveNodes(out, vertices);
 		saveEdges(out, edges);
 		
+		// old ginml annotations
 		Annotation annot = graph.getAnnotation();
 		if (annot != null) {
-			annot.toXML(out);
+			annot.toXML(out);	
 		}
+		
+		// new ginml annotations
+		if (graph instanceof RegulatoryGraph) {
+        	Metadata modelMetadata = ((RegulatoryGraph) graph).getAnnotationModule().getMetadataOfModel();
+        	String notesModel = modelMetadata.getNotes();
+        	ArrayList<String> modelResources = modelMetadata.getListOfResources();
+        	annotationsToXML(out, notesModel, modelResources);
+        }
 
 		// handle associated graphs!
 		if (graph instanceof GraphAssociation) {
-			GraphAssociation ga = (GraphAssociation)graph;
+			GraphAssociation ga = (GraphAssociation) graph;
 			try {
 				String associatedID = ga.getAssociatedGraphID();
 	            if (associatedID != null) {
@@ -181,5 +195,32 @@ public class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 		}
 		return s.trim();
 	}
-
+	
+	protected void annotationsToXML(XMLWriter out, String notes, ArrayList<String> resources) throws IOException {
+		
+		if (notes.equals("") && resources.size()==0) {
+		    return;         
+        }
+		
+		// we put the resources
+		out.openTag("annotation");
+        if (resources.size() > 0) {
+            out.openTag("linklist");
+            for (int i=0 ; i<resources.size() ; i++) {
+                out.openTag("link");
+                out.addAttr("xlink:href", resources.get(i));
+                out.closeTag();
+            }
+            out.closeTag();
+        }
+        
+     // we put the notes
+		if (!notes.equals("")) {
+			out.openTag("comment");
+			out.addContent(notes);
+			out.closeTag();
+		}
+		
+        out.closeTag();
+	}
 }
