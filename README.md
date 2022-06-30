@@ -23,7 +23,7 @@ Generate javadoc (in the "target/site" folder) using "mvn javadoc:javadoc".
 	
 
   
-## PLUGINS
+## Plugins
 
 Most features in GINsim are implemented as internal extensions and declared using java annotations.
 See the developer documentation for more details.
