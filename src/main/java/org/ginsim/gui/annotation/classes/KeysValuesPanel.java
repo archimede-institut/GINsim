@@ -37,7 +37,8 @@ class KeysValuesPanel extends JPanel {
 	}
 	
 	void removeKeyValue(String key, String value) {
-		metadata.removeKeyValue(qualifier, alternative.intValue(), key, value);
+		// FIXME: remove value
+//		metadata.removeKeyValue(qualifier, alternative.intValue(), key, value);
 	}
 	
 	void addKeyValue (String element) {

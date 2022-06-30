@@ -49,7 +49,7 @@ public class LogicalModel2RegulatoryGraph {
     
     
     private LogicalModel2RegulatoryGraph( LogicalModel model) {
-        this(model, new ArrayList<NodeInfo>());
+        this(model, new ArrayList<>());
     }
 
     private LogicalModel2RegulatoryGraph( LogicalModel model, Collection<NodeInfo> to_remove) {
@@ -100,6 +100,7 @@ public class LogicalModel2RegulatoryGraph {
 			}
 		}
 
+		// FIXME: handle annotations!
 	}
 	
 	private RegulatoryGraph getRegulatoryGraph() {

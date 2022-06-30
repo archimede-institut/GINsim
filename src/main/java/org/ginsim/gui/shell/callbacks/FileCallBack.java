@@ -1,15 +1,18 @@
 package org.ginsim.gui.shell.callbacks;
 
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JOptionPane;
@@ -17,10 +20,6 @@ import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.colomoto.biolqm.ConnectivityMatrix;
-import org.colomoto.biolqm.LogicalModel;
-import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.service.LQMServiceManager;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.OptionStore;
@@ -304,8 +303,8 @@ class ImportJSONAction extends AbstractAction {
 		    int returnVal = chooser.showOpenDialog(null);
 		    if (returnVal == JFileChooser.APPROVE_OPTION) {
 		    	System.out.println("You chose to open this file: " + chooser.getSelectedFile().getName());
-		    	
-		       	this.g.getAnnotationModule().importMetadata(chooser.getSelectedFile().getAbsolutePath(), this.g.getNodeInfos(), null);
+
+				this.g.getAnnotator().importMetadata(chooser.getSelectedFile().getAbsolutePath(), this.g.getNodeInfos());
 		    }
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
@@ -347,14 +346,12 @@ class ExportJSONAction extends AbstractAction {
 				}
 		    	
 		    	System.out.println("You chose to save the annotations under the name: " + nameFile);
-		    	
-		    	LogicalModel model = this.g.getModel();
-		    	List<NodeInfo> coreNodes = model.getComponents();
-		    	List<NodeInfo> extraNodes = model.getExtraComponents();
-		    	ConnectivityMatrix matrix = new ConnectivityMatrix(model);
-		    	
-		       	this.g.getAnnotationModule().exportMetadata(nameFile, coreNodes, extraNodes, matrix);
-		    }
+				Writer out = new OutputStreamWriter(Files.newOutputStream(Paths.get(nameFile)), StandardCharsets.UTF_8);
+				out.write(this.g.getAnnotator().writeAnnotationsInJSON().toString());
+				out.flush();
+				out.close();
+
+			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
 		}

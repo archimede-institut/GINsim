@@ -2,11 +2,13 @@ package org.ginsim.gui.annotation;
 
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.metadata.AnnotationModule;
+import org.colomoto.biolqm.metadata.Annotator;
 import org.colomoto.biolqm.metadata.annotations.Metadata;
-import org.colomoto.biolqm.metadata.constants.Index;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.annotation.classes.AnnotationsComponent;
 import org.ginsim.gui.graph.GraphGUI;
@@ -15,17 +17,16 @@ import org.ginsim.gui.shell.editpanel.EditTab;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.Map;
 
 public class AnnotationTab extends JPanel implements EditTab {
 	
 	private static final long serialVersionUID = 1L;
-	private AnnotationModule annotationModule;
+	private AnnotationsComponent<NodeInfo> annotCpt;
 	private GridBagConstraints gbc;
 
-	public AnnotationTab(AnnotationModule newAnnotationModule) {
-		this.annotationModule = newAnnotationModule;
-		
+
+	public AnnotationTab(Annotator<NodeInfo> annotator) {
+
 		this.setLayout(new GridBagLayout());
 		
 		this.gbc = new GridBagConstraints();
@@ -35,25 +36,19 @@ public class AnnotationTab extends JPanel implements EditTab {
 		this.gbc.anchor = GridBagConstraints.CENTER;
 		this.gbc.gridx = 0;
 		this.gbc.gridy = 0;
-		
-		try {
-			this.add(new AnnotationsComponent(this.annotationModule.getMetadataOfModel(), false), this.gbc);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
+		this.annotCpt = new AnnotationsComponent(annotator);
+		this.add(annotCpt, this.gbc);
 	}
 
     public static AnnotationTab prepareTab(GraphGUI<?,?,?> gui) {
         Graph graph = gui.getGraph();
 
-        // TODO: create the panel only of the graph supports annotations
+        // Create the panel only if the graph supports annotations
         if (graph instanceof RegulatoryGraph) {
-        	AnnotationModule newAnnotationModule = ((RegulatoryGraph) graph).getAnnotationModule();
-        	
-            return new AnnotationTab(newAnnotationModule);
+        	Annotator<NodeInfo> annotator = ((RegulatoryGraph) graph).getAnnotator();
+            return new AnnotationTab(annotator);
         }
-
         return null;
     }
 
@@ -66,56 +61,28 @@ public class AnnotationTab extends JPanel implements EditTab {
     public Component getComponent() {
         return this;
     }
-    
-    public void updateMetadata(Metadata meta) {
-    	this.remove(0);
-    	this.add(new AnnotationsComponent(meta, false), this.gbc);
-    	this.revalidate();
-    	this.repaint();
-    }
 
     @Override
     public boolean isActive(GraphSelection<?, ?> selection) {
         if (selection == null) {
-        	Metadata metadataModel = this.annotationModule.getMetadataOfModel();
-        	updateMetadata(metadataModel);
+			this.annotCpt.onModel();
             return true;
         }
         
         switch (selection.getSelectionType()) {
             case SEL_NONE:
-            	Metadata metadataModel = this.annotationModule.getMetadataOfModel();
-            	updateMetadata(metadataModel);
+				this.annotCpt.onModel();
             	return true;
             case SEL_NODE:
             	RegulatoryNode interNode = (RegulatoryNode) selection.getSelectedNodes().get(0);
             	NodeInfo node = interNode.getNodeInfo();
-            	
-				try {
-					Metadata metadataNode = this.annotationModule.getMetadataOfNode(node);
-					
-					updateMetadata(metadataNode);
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+            	this.annotCpt.onNode(node);
                 return true;
             case SEL_EDGE:
-            	Edge<Object> interEdge = (Edge<Object>) selection.getSelectedEdges().get(0);
-            	
-            	RegulatoryNode interNode1 = (RegulatoryNode) interEdge.getSource();
-            	NodeInfo node1 = interNode1.getNodeInfo();
-            	
-            	RegulatoryNode interNode2 = (RegulatoryNode) interEdge.getTarget();
-            	NodeInfo node2 = interNode2.getNodeInfo();
-            	
-				try {
-					Metadata metadataNode = this.annotationModule.getMetadataOfEdge(node1, node2);
-					
-					updateMetadata(metadataNode);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+            	RegulatoryMultiEdge interEdge = (RegulatoryMultiEdge) selection.getSelectedEdges().get(0);
+				NodeInfo node1 = interEdge.getSource().getNodeInfo();
+				NodeInfo node2 = interEdge.getTarget().getNodeInfo();
+				this.annotCpt.onEdge(node1, node2);
                 return true;
             case SEL_MULTIPLE:
                 return false;

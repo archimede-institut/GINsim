@@ -55,8 +55,7 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 			simport.setSource(filename);
 			LogicalModel model = simport.call();
 			RegulatoryGraph lrg = LogicalModel2RegulatoryGraph.importModel(model);
-			lrg.setAnnotationModule(model.getAnnotationModule());
-			
+
 			SBMLQualBundle qbundle = simport.getQualBundle();
 			
 			// TODO: add unused interactions and consistency checks
@@ -98,7 +97,7 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 	 */
 	public String export( SBMLQualConfig config, String filename) throws IOException{
         RegulatoryGraph graph = config.getGraph();
-		LogicalModel model = graph.getModel(null, true);
+		LogicalModel model = graph.getModel(null, true, true);
 		try {
 			SBMLqualExport sExport = new SBMLqualExport(model, true);
 			SBMLQualBundle qbundle = sExport.getSBMLBundle();

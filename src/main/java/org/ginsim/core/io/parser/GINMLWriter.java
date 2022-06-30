@@ -6,7 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
 
+import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.biolqm.metadata.AnnotationModule;
+import org.colomoto.biolqm.metadata.Annotator;
 import org.colomoto.biolqm.metadata.annotations.Metadata;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLWriter;
@@ -87,10 +89,8 @@ public class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 		
 		// new ginml annotations
 		if (graph instanceof RegulatoryGraph) {
-        	Metadata modelMetadata = ((RegulatoryGraph) graph).getAnnotationModule().getMetadataOfModel();
-        	String notesModel = modelMetadata.getNotes();
-        	ArrayList<String> modelResources = modelMetadata.getListOfResources();
-        	annotationsToXML(out, notesModel, modelResources);
+			Annotator<NodeInfo> annotator = ((RegulatoryGraph)graph).getAnnotator().onModel();
+        	annotationsToXML(out, annotator);
         }
 
 		// handle associated graphs!
@@ -196,26 +196,26 @@ public class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 		return s.trim();
 	}
 	
-	protected void annotationsToXML(XMLWriter out, String notes, ArrayList<String> resources) throws IOException {
-		
-		if (notes.equals("") && resources.size()==0) {
-		    return;         
-        }
-		
-		// we put the resources
+	protected void annotationsToXML(XMLWriter out, Annotator annotator) throws IOException {
+
+		if (!annotator.hasData()) {
+			return;
+		}
+
+		// FIXME: write unqualified annotations to the GINML
 		out.openTag("annotation");
-        if (resources.size() > 0) {
-            out.openTag("linklist");
-            for (int i=0 ; i<resources.size() ; i++) {
-                out.openTag("link");
-                out.addAttr("xlink:href", resources.get(i));
-                out.closeTag();
-            }
-            out.closeTag();
-        }
-        
-     // we put the notes
-		if (!notes.equals("")) {
+//        if (resources.size() > 0) {
+//            out.openTag("linklist");
+//            for (int i=0 ; i<resources.size() ; i++) {
+//                out.openTag("link");
+//                out.addAttr("xlink:href", resources.get(i));
+//                out.closeTag();
+//            }
+//            out.closeTag();
+//        }
+		// we put the notes
+		String notes = annotator.getNotes();
+		if (notes != null && !notes.trim().isEmpty()) {
 			out.openTag("comment");
 			out.addContent(notes);
 			out.closeTag();

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.metadata.Annotator;
 import org.colomoto.biolqm.metadata.annotations.Metadata;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.io.parser.GINMLWriter;
@@ -25,40 +26,14 @@ public class RegulatoryGINMLWriter extends GINMLWriter<RegulatoryGraph, Regulato
 	
 	protected void hook_nodeAttribute(XMLWriter out, RegulatoryNode node) throws IOException {
         node.toXML(out);
-        
-        // new ginml annotations
-        if (graph instanceof RegulatoryGraph) {
-        	NodeInfo nodeInfo = node.getNodeInfo();
-			try {
-				Metadata nodeMetadata = ((RegulatoryGraph) graph).getAnnotationModule().getMetadataOfNode(nodeInfo);
-				String nodeNotes = nodeMetadata.getNotes();
-				ArrayList<String> nodeResources = nodeMetadata.getListOfResources();
-				annotationsToXML(out, nodeNotes, nodeResources);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		NodeInfo ni = node.getNodeInfo();
+		annotationsToXML(out, graph.getAnnotator().node(ni));
 	}
 	
 	protected void hook_edgeAttribute(XMLWriter out, RegulatoryMultiEdge edge) throws IOException {
         edge.toXML(out);
-        
-        // new ginml annotations
-        if (graph instanceof RegulatoryGraph) {
-        	RegulatoryNode interNode1 = (RegulatoryNode) edge.getSource();
-        	NodeInfo node1 = interNode1.getNodeInfo();
-        	
-        	RegulatoryNode interNode2 = (RegulatoryNode) edge.getTarget();
-        	NodeInfo node2 = interNode2.getNodeInfo();
-        	
-        	try {
-				Metadata edgeMetadata = ((RegulatoryGraph) graph).getAnnotationModule().getMetadataOfEdge(node1, node2);
-				String edgeNotes = edgeMetadata.getNotes();
-				ArrayList<String> edgeResources = edgeMetadata.getListOfResources();
-				annotationsToXML(out, edgeNotes, edgeResources);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+		NodeInfo node1 = edge.getSource().getNodeInfo();
+		NodeInfo node2 = edge.getTarget().getNodeInfo();
+		annotationsToXML(out, graph.getAnnotator().edge(node1, node2));
 	}
 }
