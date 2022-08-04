@@ -1,12 +1,8 @@
 package org.ginsim.gui.annotation;
 
 import org.colomoto.biolqm.NodeInfo;
-import org.colomoto.biolqm.metadata.AnnotationModule;
 import org.colomoto.biolqm.metadata.Annotator;
-import org.colomoto.biolqm.metadata.annotations.Metadata;
-import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
@@ -43,8 +39,7 @@ public class AnnotationTab extends JPanel implements EditTab {
 
     public static AnnotationTab prepareTab(GraphGUI<?,?,?> gui) {
         Graph graph = gui.getGraph();
-
-        // Create the panel only if the graph supports annotations
+        // TODO: enable the annotation panel for other graph types?
         if (graph instanceof RegulatoryGraph) {
         	Annotator<NodeInfo> annotator = ((RegulatoryGraph) graph).getAnnotator();
             return new AnnotationTab(annotator);

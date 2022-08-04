@@ -1,13 +1,6 @@
 package org.ginsim.gui.annotation.classes;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.Map;
 
 import javax.swing.*;
@@ -53,7 +46,7 @@ class ElementsPanel extends JPanel {
 		gbc.insets = new Insets(2,5,2,5);
 		gbc.gridx = 1;
 		gbc.anchor = GridBagConstraints.WEST;
-		header.add(new TriangleButton(), gbc);
+//		header.add(new TriangleButton(), gbc);
 		gbc.gridx = 2;
 		header.add(qualifierLabel, gbc);
 		gbc.anchor = GridBagConstraints.EAST;
@@ -68,6 +61,7 @@ class ElementsPanel extends JPanel {
 		gbc.weightx = 1;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 
+		content.setLayout(new GridBagLayout());
 		this.add(header, gbc);
 		gbc.gridy++;
 		this.add(content, gbc);
@@ -77,6 +71,12 @@ class ElementsPanel extends JPanel {
 
 	private void refresh() {
 		this.content.removeAll();
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.weightx = 1;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+		gbc.insets = new Insets(2,2,2,2);
+		gbc.anchor = GridBagConstraints.WEST;
+		int c = 0;
 
 		if (this.annotation.qualifier == null) {
 			this.qualifierLabel.setText("(no qualifier)");
@@ -87,22 +87,22 @@ class ElementsPanel extends JPanel {
 		summaryLabel.setText(annotation.getShortDescription());
 
 		for (URI uri: annotation.uris) {
-			Collection col = uri.getCollection();
-			if (col == null) {
-				content.add(new JLabel(uri.getValue()));
-			} else {
-				content.add(new JLabel(col.name+":"+ uri.getValue()));
-			}
+			gbc.gridy = c++;
+			content.add(ItemLabel.uri(this, uri), gbc);
 		}
-
 		for (Map.Entry<String,String> e: annotation.keyValues.entrySet()) {
-			content.add(new JLabel(e.getKey() +":"+e.getValue()));
+			gbc.gridy = c++;
+			content.add(ItemLabel.key_value(this, e.getKey(), e.getValue()), gbc);
 		}
-
 		for (String tag: annotation.tags) {
-			content.add(new JLabel("#"+tag));
+			gbc.gridy = c++;
+			content.add(ItemLabel.tag(this, tag), gbc);
 		}
+	}
 
+	protected void removeItem(String value) {
+		this.annotation.remove(value);
+		this.refresh();
 	}
 
 	protected void setSelection(Annotation select) {
@@ -114,239 +114,38 @@ class ElementsPanel extends JPanel {
 			this.header.setBackground(NORMAL);
 		}
 	}
-	
-	void removeElement(String element) {
-		// FIXME: remove element?
+}
 
-		if (element.matches("^#.+")) {
-//			metadata.removeTag(qualifier, alternative.intValue(), element.split("#", 2)[1]);
-		} else if (element.matches(".*;.*;.*;.*;.*")) {
-			ArrayList<String> array = new ArrayList<String>();
-			
-			String[] elementBroken = element.split(";", 5);
-			for (String piece: elementBroken) {
-				if (piece.equals("") || piece.equals("null")) {
-					array.add(null);
-				} else {
-					array.add(piece);
-				}
-			}
-//			metadata.removeAuthor(qualifier, array.get(0), array.get(1), array.get(2), array.get(3), array.get(4));
+enum ItemType {
+	URL, KEY_VALUE, TAG
+}
+
+class ItemLabel extends JPanel {
+	private static final Color BACKGROUND = new Color(200, 200, 255);
+	protected static ItemLabel tag(ElementsPanel parent, String tag) {
+		return new ItemLabel(parent, ItemType.TAG, "#"+tag);
+	}
+
+	protected static ItemLabel uri(ElementsPanel parent, URI uri) {
+		Collection col = uri.getCollection();
+		if (col == null) {
+			return new ItemLabel(parent, ItemType.URL, uri.getValue());
 		} else {
-//			metadata.removeURI(qualifier, alternative.intValue(), element);
+			return new ItemLabel(parent, ItemType.URL, col.name + ":" + uri.getValue());
 		}
 	}
-	
-	private void addElement(JPanel panelElement, String element) {
-		panelElement.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 1));
-        
-        JLabel labelElement = new JLabel(element);
-        panelElement.add(labelElement);
-        
-        panelElement.add(Box.createHorizontalStrut(2));
-        
-        final CircleButton buttonElement = new CircleButton("-", false);
-        panelElement.add(buttonElement);
-        
-	    buttonElement.addActionListener(new ActionListener(){
-	    	public void actionPerformed(ActionEvent event) {
-	    		JComponent button = (JComponent) event.getSource();
-	    		JPanel panelElement = (JPanel) button.getParent();
-	    		JPanel panelElements = (JPanel) panelElement.getParent();
-	    		JPanel panelExternal = (JPanel) panelElements.getParent();
-	    		
-	    		JLabel labelElement = (JLabel) panelElement.getComponent(0);
-	    		String element = labelElement.getText();
-	    		removeElement(element);
-	    		
-	    		panelElements.remove(panelElement);
-	    		panelElements.revalidate();
-	    		panelElements.repaint();
-	    		
-	    		if (panelElements.getComponents().length == 0) {
-	    			panelExternal.remove(1);
-	    		}
-	    	}
-	    });
-	    
-	    panelElement.setFocusable(true);
-	    panelElement.addFocusListener(new FocusListenerUpdatingBorders(Color.black, null));
-	    
-	    Action eraseAction = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
 
-			public void actionPerformed(ActionEvent e) {
-				buttonElement.doClick();
-	        }
-	    };
-	    panelElement.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "eraseAction");
-	    panelElement.getActionMap().put("eraseAction", eraseAction);
-        
-        add(panelElement);
-        
-        JPanel panelElements = (JPanel) panelElement.getParent();
-        JPanel panelExternal = (JPanel) panelElements.getParent();
-		if (panelElements.getComponents().length == 1) {
-			panelExternal.add(Box.createVerticalStrut(4));
-		}
+	protected static ItemLabel key_value(ElementsPanel parent, String key, String value) {
+		return new ItemLabel(parent, ItemType.KEY_VALUE, key + "=" + value);
 	}
-	
-	private void setLinkLabel(JPanel panelElement, JLabel labelElement, String startURL) {
-		String element = labelElement.getText();
-		
-		labelElement.setForeground(Color.BLUE.darker());
-		labelElement.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-		
-		labelElement.addMouseListener(new MouseListener() {
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				try {
-	    	        Desktop.getDesktop().browse(new URL(startURL+element).toURI());
-	    	    } catch (Exception e1) {
-	    	        e1.printStackTrace();
-	    	    }
-			}
 
-			@Override
-			public void mousePressed(MouseEvent e) { }
+	private ItemLabel(ElementsPanel parent, ItemType type, String text) {
+		this.setBackground(BACKGROUND);
 
-			@Override
-			public void mouseReleased(MouseEvent e) { }
-
-			@Override
-			public void mouseEntered(MouseEvent e) {
-				labelElement.setText("<html><a href=''>"+element+"</a></html>");
-			}
-
-			@Override
-			public void mouseExited(MouseEvent e) {
-				labelElement.setText(element);
-			}
-		});
-	    
-	    Action uriAction = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
-
-			public void actionPerformed(ActionEvent e) {
-				try {
-	    	        Desktop.getDesktop().browse(new URL("https://identifiers.org/"+element).toURI());
-	    	    } catch (Exception e1) {
-	    	        e1.printStackTrace();
-	    	    }
-	        }
-	    };
-	    panelElement.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0), "uriAction");
-	    panelElement.getActionMap().put("uriAction", uriAction);
+		CircleButton b_remove = new CircleButton("x", false);
+		b_remove.addActionListener(actionEvent -> parent.removeItem(text));
+		this.add(b_remove);
+		this.add(new JLabel(text));
 	}
-	
-	void addTag(String element) {
-		JPanel panelElement = new JPanel();
-        
-		this.addElement(panelElement, element);
-		panelElement.add(Box.createHorizontalStrut(4));
-	}
-	
-	void addURI(String type, String element) {
-		JPanel panelElement = new JPanel();
-        
-		this.addElement(panelElement, element);
-		
-		JLabel labelElement = (JLabel) panelElement.getComponent(0);
-		
-		switch (type) {
-			case "miriam":
-				this.setLinkLabel(panelElement, labelElement, "https://identifiers.org/");
-				break;
-			case "url":
-				this.setLinkLabel(panelElement, labelElement, "");
-				break;
-		}
-		
-		
-	}
-	
-	void addAuthor(String name, String surname, String organisation, String email, String orcid) {
-		JPanel panelElement = new JPanel();
-		panelElement.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 1));
-		
-		JLabel labelElement = null;
-		JLabel labelOrcid = null;
-		JLabel labelFinal = null;
-		
-		String strAuthor = surname+" "+name;
-		if (organisation != null) {
-			strAuthor += " - "+organisation;
-		}
-		if (email != null || orcid != null) {
-			strAuthor += " (";
-			if (email != null) {
-				strAuthor += email;
-				if (orcid != null) {
-					strAuthor += " - ";
-				}
-			}
-			if (orcid != null) {
-				labelElement = new JLabel(strAuthor);
-				panelElement.add(labelElement);
-				strAuthor = "";
-				
-				labelOrcid = new JLabel(orcid);
-				panelElement.add(labelOrcid);
-			}
-			strAuthor += ")";
-			labelFinal = new JLabel(strAuthor);
-			panelElement.add(labelFinal);
-		}
-		
-		if (labelOrcid != null) {
-			this.setLinkLabel(panelElement, labelOrcid, "https://orcid.org/");
-		}
-        
-        panelElement.add(Box.createHorizontalStrut(2));
-        
-        final CircleButton buttonElement = new CircleButton("-", false);
-        panelElement.add(buttonElement);
-        
-	    buttonElement.addActionListener(new ActionListener(){
-	    	public void actionPerformed(ActionEvent event) {
-	    		String author = name+";"+surname+";"+organisation+";"+email+";"+orcid;
-	    		removeElement(author);
-	    		
-	    		JComponent button = (JComponent) event.getSource();
-	    		JPanel panelElement = (JPanel) button.getParent();
-	    		JPanel panelElements = (JPanel) panelElement.getParent();
-	    		JPanel panelExternal = (JPanel) panelElements.getParent();
-	    		
-	    		panelElements.remove(panelElement);
-	    		panelElements.revalidate();
-	    		panelElements.repaint();
-	    		
-	    		if (panelElements.getComponents().length == 0) {
-	    			panelExternal.remove(1);
-	    		}
-	    	}
-	    });
-	    
-	    panelElement.setFocusable(true);
-	    panelElement.addFocusListener(new FocusListenerUpdatingBorders(Color.black, null));
-	    
-	    Action eraseAction = new AbstractAction() {
-			private static final long serialVersionUID = 1L;
 
-			public void actionPerformed(ActionEvent e) {
-				buttonElement.doClick();
-	        }
-	    };
-	    panelElement.getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0), "eraseAction");
-	    panelElement.getActionMap().put("eraseAction", eraseAction);
-        
-        add(panelElement);
-        
-        JPanel panelElements = (JPanel) panelElement.getParent();
-        JPanel panelExternal = (JPanel) panelElements.getParent();
-		if (panelElements.getComponents().length == 1) {
-			panelExternal.add(Box.createVerticalStrut(4));
-		}
-	}
 }
