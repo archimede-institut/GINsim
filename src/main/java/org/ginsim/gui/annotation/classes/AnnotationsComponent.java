@@ -13,6 +13,7 @@ import org.colomoto.biolqm.metadata.validations.PatternValidator;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 
 /**
@@ -22,7 +23,6 @@ import java.util.Optional;
  */
 public class AnnotationsComponent<T> extends JSplitPane implements KeyListener, DocumentListener {
 	private static final long serialVersionUID = 1L;
-
 	private static final Color BG_TAG = new Color(170, 170, 255);
 	private static final Color BG_QUALIFIER = new Color(200, 255, 150);
 	private static final Color BG_INVALID = new Color(255, 150, 150);
@@ -140,7 +140,7 @@ public class AnnotationsComponent<T> extends JSplitPane implements KeyListener, 
 
 			Annotation selected = this.annotator.getSelectedAnnotation();
 			for (Annotation annot: annots) {
-				ElementsPanel panel = new ElementsPanel(annot);
+				ElementsPanel panel = new ElementsPanel(this, annot);
 				panel.setSelection(selected);
 				gbc.gridy++;
 				this.annotation_panel.add(panel, gbc);
@@ -166,19 +166,31 @@ public class AnnotationsComponent<T> extends JSplitPane implements KeyListener, 
 	}
 
 	public void show_help() {
+		// TODO: better menu, filter based on the text field
 		JPopupMenu menu = new JPopupMenu();
-		menu.add("TODO: populate available items");
-
+		menu.add(populateAction("@"));
 		menu.add(populateAction("@is"));
-		menu.addSeparator();
-		menu.add(populateAction("#test"));
+		Set<String> tags = annotator.availableTags();
+		if (tags != null && tags.size() > 0) {
+			menu.addSeparator();
+			tags.stream().limit(4).forEach(t -> menu.add(populateAction("#"+t)));
+		}
+		Set<String> keys = annotator.availableKeys();
+		if (keys != null && keys.size() > 0) {
+			menu.addSeparator();
+			keys.stream().limit(4).forEach(k -> menu.add(fillAction(k+"=")));
+		}
 		menu.addSeparator();
 		menu.add(fillAction("pubmed:"));
 		menu.add(fillAction("uniprot:"));
 
 		menu.show(annotation_field, 0, 0);
-		// TODO: extract available qualifiers, tests and collections from the annotator
-		validateAnnotation("@is");
+	}
+
+	public void selectBlock(Annotation annot) {
+		if (this.annotator.selectBlock(annot)) {
+			refresh();
+		}
 	}
 
 	private Action populateAction(String txt) {
