@@ -29,6 +29,7 @@ public class AnnotationsComponent<T> extends JSplitPane implements KeyListener, 
 
 	private final Annotator<T> annotator;
 
+	JButton annotation_help = new JButton("?");
 	JTextField annotation_field = new JTextField();
 	JTextArea areaNotes = new JTextArea();
 	ScrollablePanel annotation_panel = new ScrollablePanel();
@@ -51,6 +52,7 @@ public class AnnotationsComponent<T> extends JSplitPane implements KeyListener, 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = gbc.gridy = 1;
 		gbc.fill = GridBagConstraints.BOTH;
+		gbc.gridwidth = 3;
 		gbc.weightx = gbc.weighty = 1;
 		JScrollPane sp = new JScrollPane();
 		sp.setViewportView(annotation_panel);
@@ -58,8 +60,16 @@ public class AnnotationsComponent<T> extends JSplitPane implements KeyListener, 
 
 		// Add a combo box and a text field to add new annotations
 		gbc.insets = new Insets(2, 3, 2, 3);
+		gbc.gridwidth = 1;
 		gbc.gridy++;
-		gbc.weighty = 0;
+		gbc.fill = GridBagConstraints.NONE;
+		gbc.weightx = gbc.weighty = 0;
+		panel.add(annotation_help, gbc);
+		annotation_help.addActionListener(e -> show_help());
+
+		gbc.gridwidth = 2;
+		gbc.weightx = 1;
+		gbc.gridx++;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		panel.add(annotation_field, gbc);
 
@@ -155,6 +165,42 @@ public class AnnotationsComponent<T> extends JSplitPane implements KeyListener, 
 		refresh();
 	}
 
+	public void show_help() {
+		JPopupMenu menu = new JPopupMenu();
+		menu.add("TODO: populate available items");
+
+		menu.add(populateAction("@is"));
+		menu.addSeparator();
+		menu.add(populateAction("#test"));
+		menu.addSeparator();
+		menu.add(fillAction("pubmed:"));
+		menu.add(fillAction("uniprot:"));
+
+		menu.show(annotation_field, 0, 0);
+		// TODO: extract available qualifiers, tests and collections from the annotator
+		validateAnnotation("@is");
+	}
+
+	private Action populateAction(String txt) {
+		return new AbstractAction(txt) {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				validateAnnotation(txt);
+			}
+		};
+	}
+
+	private Action fillAction(String txt) {
+		return new AbstractAction(txt) {
+			@Override
+			public void actionPerformed(ActionEvent actionEvent) {
+				annotation_field.setText(txt);
+				annotation_field.grabFocus();
+			}
+		};
+	}
+
+
 	@Override
 	public void keyTyped(KeyEvent keyEvent) {
 	}
@@ -171,21 +217,27 @@ public class AnnotationsComponent<T> extends JSplitPane implements KeyListener, 
 				refresh();
 				break;
 			case KeyEvent.VK_ENTER:
-				String txt = this.annotation_field.getText();
-				Optional<String> qf = PatternValidator.asQualifier(txt);
-				if (qf.isPresent()) {
-					this.annotator.openBlock(qf.get());
+				if (validateAnnotation(this.annotation_field.getText())) {
 					this.annotation_field.setText("");
-					refresh();
-					return;
-				}
-
-				if (this.annotator.annotate(txt)) {
-					this.annotation_field.setText("");
-					refresh();
 				}
 				break;
 		}
+	}
+
+	private boolean validateAnnotation(String txt) {
+		Optional<String> qf = PatternValidator.asQualifier(txt);
+		if (qf.isPresent()) {
+			this.annotator.openBlock(qf.get());
+			refresh();
+			return true;
+		}
+
+		if (this.annotator.annotate(txt)) {
+			this.annotation_field.setText("");
+			refresh();
+			return true;
+		}
+		return false;
 	}
 
 	protected void refresh_annotation_field() {

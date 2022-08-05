@@ -14,15 +14,18 @@ import javax.swing.JButton;
 class CircleButton extends JButton {
 	private static final long serialVersionUID = 1L;
 
+	public static final int CREATE = 0;
+	public static final int DELETE = 1;
+	public static final int OPEN = 2;
+	private static final Font FONT = new Font("Sans", Font.BOLD, 11);
 	private static final Color CREATE_NORMAL = new Color(40,130,70);
+	private static final Color OPEN_NORMAL = new Color(40,50,150);
 	private static final Color DELETE_NORMAL = new Color(190,20,20);
-	private boolean create;
-	
-    CircleButton(String label, boolean createValue) {
+
+    CircleButton(String label, int type) {
 		super(label);
 		Dimension size = getPreferredSize();
 		
-		create = createValue;
 		int max = Math.max(size.width, size.height);
 		size.width = size.height = (int) (max/2.5);
 		setPreferredSize(size);
@@ -30,15 +33,22 @@ class CircleButton extends JButton {
 		
 		setBorder(null);
 	    setFocusPainted(false);
-	    setFont(new Font("Arial", Font.BOLD, 14));
+	    setFont(FONT);
 		setFocusable(false);
 
-		if (create) {
-			setForeground(CREATE_NORMAL);
-			setToolTipText("Create");
-		} else {
-			setForeground(DELETE_NORMAL);
-			setToolTipText("Delete");
+		switch (type) {
+			case CREATE:
+				setForeground(CREATE_NORMAL);
+				setToolTipText("Create");
+				break;
+			case DELETE:
+				setForeground(DELETE_NORMAL);
+				setToolTipText("Delete");
+				break;
+			case OPEN:
+				setForeground(OPEN_NORMAL);
+				setToolTipText("Open");
+				break;
 		}
     }
 }

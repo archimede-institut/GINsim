@@ -10,6 +10,8 @@ import javax.swing.border.Border;
 import org.colomoto.biolqm.metadata.annotations.Annotation;
 import org.colomoto.biolqm.metadata.annotations.URI;
 import org.colomoto.biolqm.metadata.constants.Collection;
+import org.ginsim.common.utils.OpenHelper;
+import org.ginsim.common.utils.OpenUtils;
 
 /**
  * Display the content of a single (qualified) annotation block,
@@ -44,9 +46,7 @@ class ElementsPanel extends JPanel {
 		header.setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.insets = new Insets(2,5,2,5);
-		gbc.gridx = 1;
 		gbc.anchor = GridBagConstraints.WEST;
-//		header.add(new TriangleButton(), gbc);
 		gbc.gridx = 2;
 		header.add(qualifierLabel, gbc);
 		gbc.anchor = GridBagConstraints.EAST;
@@ -77,6 +77,7 @@ class ElementsPanel extends JPanel {
 		gbc.insets = new Insets(2,2,2,2);
 		gbc.anchor = GridBagConstraints.WEST;
 		int c = 0;
+
 
 		if (this.annotation.qualifier == null) {
 			this.qualifierLabel.setText("(no qualifier)");
@@ -121,31 +122,50 @@ enum ItemType {
 }
 
 class ItemLabel extends JPanel {
+
+	private static final Font FONT = new Font("Sans", Font.PLAIN, 12);
 	private static final Color BACKGROUND = new Color(200, 200, 255);
 	protected static ItemLabel tag(ElementsPanel parent, String tag) {
-		return new ItemLabel(parent, ItemType.TAG, "#"+tag);
+		return new ItemLabel(parent, null, "#"+tag);
 	}
 
 	protected static ItemLabel uri(ElementsPanel parent, URI uri) {
 		Collection col = uri.getCollection();
+		String link = uri.getLink();
 		if (col == null) {
-			return new ItemLabel(parent, ItemType.URL, uri.getValue());
+			return new ItemLabel(parent, link, uri.getValue());
 		} else {
-			return new ItemLabel(parent, ItemType.URL, col.name + ":" + uri.getValue());
+			return new ItemLabel(parent, link, col.name + ":" + uri.getValue());
 		}
 	}
 
 	protected static ItemLabel key_value(ElementsPanel parent, String key, String value) {
-		return new ItemLabel(parent, ItemType.KEY_VALUE, key + "=" + value);
+		return new ItemLabel(parent, null, key + "=" + value);
 	}
 
-	private ItemLabel(ElementsPanel parent, ItemType type, String text) {
-		this.setBackground(BACKGROUND);
-
-		CircleButton b_remove = new CircleButton("x", false);
+	private ItemLabel(ElementsPanel parent, String link, String text) {
+		this.setLayout(new BorderLayout());
+		this.setBorder(null);
+		CircleButton b_remove = new CircleButton("x", CircleButton.DELETE);
 		b_remove.addActionListener(actionEvent -> parent.removeItem(text));
-		this.add(b_remove);
-		this.add(new JLabel(text));
+		this.add(b_remove, BorderLayout.WEST);
+		if (link == null) {
+			JLabel label = new JLabel(text);
+			label.setFont(FONT);
+			label.setBackground(BACKGROUND);
+			this.add(label);
+		} else {
+			JButton label = new JButton(text);
+			label.setFont(FONT);
+			label.setBackground(BACKGROUND);
+			label.setForeground(Color.BLUE);
+			label.setBorder(null);
+			label.addActionListener(e -> {
+				System.err.println("opening link: "+link);
+				OpenUtils.openURI(link);
+			});
+			this.add(label);
+		}
 	}
 
 }
