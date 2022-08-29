@@ -65,7 +65,6 @@ public final class RegulatoryParser extends GsXMLHelper {
     private StyleManager<RegulatoryNode, RegulatoryMultiEdge> styleManager;
     private RegulatoryEdge edge = null;
     
-    private Annotation annotation = null;
     private Annotator<NodeInfo> annotator = null;
     
 	private Map<String, RegulatoryEdge> m_edges = new HashMap();
@@ -148,8 +147,6 @@ public final class RegulatoryParser extends GsXMLHelper {
 			    if (qName.equals("annotation")) {
 			    		pos = POS_OUT;
 			    } else if (qName.equals("comment")) {
-			        annotation.setComment(curval);
-			        
 			        annotator.setNotes(curval);
 			        curval = null;
 			    }
@@ -178,8 +175,6 @@ public final class RegulatoryParser extends GsXMLHelper {
 			    if (qName.equals("annotation")) {
 			        pos = POS_VERTEX;
 			    } else if (qName.equals("comment")) {
-			        annotation.setComment(curval);
-			        
 			        annotator.setNotes(curval);
 			        curval = null;
 			    }
@@ -188,8 +183,6 @@ public final class RegulatoryParser extends GsXMLHelper {
 			    if (qName.equals("annotation")) {
 			        pos = POS_EDGE;
 			    } else if (qName.equals("comment")) {
-		    		annotation.appendToComment(curval);
-		    		
 		    		annotator.setNotes(curval);
 			        curval = null;
 			    }
@@ -326,7 +319,6 @@ public final class RegulatoryParser extends GsXMLHelper {
 						break;
 					case "annotation":
 						pos = POS_GRAPH_NOTES;
-						annotation = graph.getAnnotation();
 						annotator.onModel();
 						break;
 					case "attr":
@@ -347,11 +339,8 @@ public final class RegulatoryParser extends GsXMLHelper {
             	break; // POS_GRAPH_NOTES
             case POS_GRAPH_NOTES_LINKLIST:
                 if (qName.equals("link")) {
-                    annotation.addLink(attributes.getValue("xlink:href"), graph);
-                    
-                    String uriString = attributes.getValue("xlink:href");
-                    
                     try {
+						String uriString = attributes.getValue("xlink:href");
 						annotator.annotate( uriString);
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
@@ -368,8 +357,6 @@ public final class RegulatoryParser extends GsXMLHelper {
             		}
                 } else if (qName.equals("annotation")) {
                     pos = POS_VERTEX_NOTES;
-                    annotation = vertex.getAnnotation();
-
 					annotator.node(vertex.getNodeInfo());
                 } else if (qName.equals("parameter")) {
                 		v_waitingInteractions.add(vertex);
@@ -391,8 +378,6 @@ public final class RegulatoryParser extends GsXMLHelper {
                 	}
                 } else if (qName.equals("annotation")) {
                     pos = POS_EDGE_NOTES;
-                    annotation = edge.me.getAnnotation();
-                    
                     try {
                     	RegulatoryNode node1 = edge.me.getSource();
                     	RegulatoryNode node2 = edge.me.getTarget();
@@ -426,7 +411,6 @@ public final class RegulatoryParser extends GsXMLHelper {
             case POS_VERTEX_NOTES_LINKLIST:
 			case POS_EDGE_NOTES_LINKLIST:
                 if (qName.equals("link")) {
-                    annotation.addLink(attributes.getValue("xlink:href"), graph);
                     String uriString = attributes.getValue("xlink:href");
 					annotator.annotate(uriString);
                 }

@@ -119,7 +119,7 @@ public class CompositionService implements Service {
 						computeNewName(node.getNodeInfo().getNodeID(), i));
 				newNode.setName(computeNewName(node.getNodeInfo().getNodeID(),
 						i), composedGraph);
-				newNode.setGsa((Annotation) (node.getAnnotation().clone()));
+				// FIXME: transfer annotations
 
 				// mapped inputs with neighbours will no longer be inputs
 				// unmapped input remain free

@@ -21,7 +21,6 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
 	public static final int PROP_NAME = 1;
     public static final int PROP_MAX = 2;
     public static final int PROP_INPUT = 3;
-	public static final int PROP_ANNOTATION = 5;
 	public static final int PROP_RAW = 10;
 	
 	RegulatoryGraph graph;
@@ -153,8 +152,6 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
 
 	public Object getRawValue(int prop) {
 		switch (prop) {
-			case PROP_ANNOTATION:
-				return o.getAnnotation();
 			case PROP_RAW:
 				return o;
             case PROP_INPUT:

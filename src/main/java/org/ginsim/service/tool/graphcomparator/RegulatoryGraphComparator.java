@@ -63,8 +63,7 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryNode, R
         RegulatoryNode v = graph_new.addNewNode(id, v1.getName(), v1.getMaxValue());
 		v.setInput(v.isInput(), graph_new);
         setLogicalFunction(v, v1, graph_1);
-        Annotation gsa = v.getAnnotation();
-        gsa.copyFrom(v1.getAnnotation());
+		// FIXME: transfer annotations
         return v;
 	}
 
@@ -78,8 +77,7 @@ public class RegulatoryGraphComparator extends GraphComparator<RegulatoryNode, R
         }
 
         RegulatoryMultiEdge newEdge = new RegulatoryMultiEdge(graph_new, src, tgt, e.getSign(0));
-		Annotation gsa = newEdge.getAnnotation();
-		gsa.copyFrom(e.getAnnotation());
+		// FIXME: transfer annotations
         graph_new.addEdge(newEdge);
         return newEdge;
     }

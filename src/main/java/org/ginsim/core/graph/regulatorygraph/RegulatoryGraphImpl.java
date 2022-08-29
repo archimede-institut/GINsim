@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStreamWriter;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -15,14 +14,11 @@ import org.colomoto.biolqm.*;
 import org.colomoto.biolqm.metadata.AnnotationModule;
 import org.colomoto.biolqm.metadata.Annotator;
 import org.colomoto.biolqm.metadata.annotations.JsonReader;
-import org.colomoto.biolqm.metadata.constants.Index;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDManagerFactory;
 import org.colomoto.mddlib.MDDVariableFactory;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
-import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.annotation.AnnotationLink;
 import org.ginsim.core.graph.AbstractGraph;
 import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
@@ -34,7 +30,6 @@ import org.ginsim.core.io.parser.GINMLWriter;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.NotificationResolution;
 import org.json.JSONObject;
-import org.python.antlr.ast.Str;
 
 /**
  * Implementation of the RegulatoryGraph interface.
@@ -581,15 +576,8 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 				v.add(vertex);
 				continue;
 			}
-			
-			Annotation annot = vertex.getAnnotation();
-			for (AnnotationLink link: annot.getLinkList()) {
-				matcher = pattern.matcher(link.getLink());
-				if (matcher.find()) {
-					v.add(vertex);
-					break;
-				}
-			}
+
+            // FIXME: search in annotations
 		}
 		return v;
 	}

@@ -46,8 +46,6 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	private boolean isOutput = true;
 	private final LogicalParameterList v_logicalParameters = new LogicalParameterList();
 
-	private Annotation	gsa = new Annotation();
-
 	private TreeInteractionsModel interactionsModel;
 
     private static final String S_ID   = "STR_id";
@@ -266,14 +264,6 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 	}
 
 	/**
-	 * get notes on this gene.
-	 * @return the annotation associated to this node
-	 */
-	public Annotation getAnnotation() {
-		return gsa;
-	}
-
-	/**
 	 * @return the list of all interactions on this gene.
 	 */
 	public LogicalParameterList getV_logicalParameters() {
@@ -341,21 +331,12 @@ public class RegulatoryNode implements ToolTipsable, NodeInfoHolder {
 		 	} 
 		    // save logical function
 		 	saveInteractionsModel(out);
-		 	gsa.toXML(out);
-	}
-
-	/**
-	 * @param annotation for this node.
-	 */
-	public void setGsa(Annotation annotation) {
-		gsa = annotation;
 	}
 
 	public RegulatoryNode clone(RegulatoryGraph graph) {
 		RegulatoryNode clone = new RegulatoryNode(nodeInfo.getNodeID(), graph);
 		clone.nodeInfo.setMax(nodeInfo.getMax());
 		clone.setName(getName(), graph);
-		clone.setGsa((Annotation)gsa.clone());
 		clone.setInput(isInput(), graph);
 		return clone;
 	}
