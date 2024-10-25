@@ -89,7 +89,7 @@ public class TreeTableModelAdapter extends AbstractTableModel {
     	return treeTableModel.getColumnName(column);
     }
 
-    public Class getColgetEdgeViewInfoumnClass(int column) {
+    public Class getColumnClass(int column) {
     	return treeTableModel.getColumnClass(column);
     }
 
