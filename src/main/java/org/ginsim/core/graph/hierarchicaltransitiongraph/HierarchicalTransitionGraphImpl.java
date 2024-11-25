@@ -20,7 +20,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.io.parser.GINMLWriter;
-
+import org.ginsim.service.tool.modelreduction.ReductionConfig;
 /**
  * Implementation of the HTG interface
  *
@@ -38,7 +38,9 @@ public class HierarchicalTransitionGraphImpl extends TransitionGraphImpl<Hierarc
 	 * Mode is either SCC or HTG depending if we group the transients component by their atteignability of attractors.
 	 */
 	private boolean transientCompaction;
-	
+
+	private ReductionConfig reduction = null;
+
 	/**
 	 * An array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
 	 */
@@ -75,6 +77,17 @@ public class HierarchicalTransitionGraphImpl extends TransitionGraphImpl<Hierarc
 	}
 
 	/**
+	 * set reduction RedictionConfig if hth is making from reduction
+	 */
+     public void setReduction(ReductionConfig reduction){
+		 this.reduction = reduction;
+	 }
+
+	 public ReductionConfig getReduction(){
+		 return this.reduction;
+	 }
+
+	 /**
 	 * Return the node order as a List of NodeInfo
 	 * 
 	 * @return the node order as a List of NodeInfo
@@ -118,7 +131,10 @@ public class HierarchicalTransitionGraphImpl extends TransitionGraphImpl<Hierarc
         ddmanager = MDDManagerFactory.getManager(vbuilder, 10);
 	}
 
-
+	/**
+	 * Set the reduction boolean value if this htg is comes from a reduction calcultion
+	 * @param tue  or false
+	 */
 /* **************** EDITION OF VERTEX AND EDGE ************/	
 
 	/**

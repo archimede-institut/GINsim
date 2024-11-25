@@ -35,4 +35,5 @@ public interface TransitionGraph<V,E extends Edge<V>> extends Graph<V,E> {
      */
     void setLogicalModel(LogicalModel model);
 
-}
+    }
+

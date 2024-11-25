@@ -6,12 +6,14 @@ import java.util.List;
 
 import javax.swing.Action;
 
+import org.colomoto.biolqm.LogicalModel;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.service.AbstractServiceGUI;
@@ -53,8 +55,9 @@ public class DecisionAnalysisServiceGUI extends AbstractServiceGUI {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				RegulatoryGraph lrg = graph.getAssociatedGraph();
+                RegulatoryGraph lrg = graph.getAssociatedGraph();
 				new DecisionAnalysisFrame( GUIManager.getInstance().getFrame( graph), graph, lrg);
+
 			} catch( GsException ge){
 				GUIMessageUtils.openErrorDialog( "Unable to launch the analysis");
 				LogManager.error( "Unable to execute the service");

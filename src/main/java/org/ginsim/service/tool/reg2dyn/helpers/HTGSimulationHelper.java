@@ -13,7 +13,11 @@ import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionG
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
+import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.service.tool.modelreduction.ReductionConfig;
 
+//
 
 public class HTGSimulationHelper  implements SimulationHelper {
 	protected HierarchicalNode node;
@@ -21,7 +25,7 @@ public class HTGSimulationHelper  implements SimulationHelper {
 	public Map arcs;
 	protected LogicalModel model;
 	
-	public HTGSimulationHelper(LogicalModel model, SimulationParameters params) {
+	public HTGSimulationHelper(LogicalModel model, SimulationParameters params, ReductionConfig reduction) {
 		this.model = model;
 		boolean compacted = false;
 		if (params.simulationStrategy == SimulationParameters.STRATEGY_HTG) {
@@ -29,13 +33,17 @@ public class HTGSimulationHelper  implements SimulationHelper {
 		}
 		List<NodeInfo> nodes = model.getComponents();
 		this.htg = GSGraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, nodes, compacted);
-		
+
 		// FIXME: associated graph based on LogicalModel
+        //RegulatoryGraph lrg = LogicalModel2RegulatoryGraph.importModel(model);
+
 		htg.setAssociatedGraph(params.param_list.graph);
 		htg.setLogicalModel(model);
-		
 		NodeAttributesReader vreader = htg.getNodeAttributeReader();
         htg.getAnnotation().setComment(params.getDescr(nodes)+"\n");
+		if (reduction != null){
+			htg.setReduction(reduction);
+		}
         arcs = new HashMap();
 	}
 
