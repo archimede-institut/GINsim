@@ -2,7 +2,7 @@ package org.ginsim.servicegui.tool.decisionanalysis;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-
+import java.awt.Component;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -63,7 +63,8 @@ public class DecisionAnalysisFrame extends LogicalModelActionDialog  {
 			selectPriorityClass = new PrioritySelectionPanel(this, paramList.pcmanager);
 			this.currentParameter = paramList.get(0);
 			selectPriorityClass.setStore(currentParameter);
-			selectPriorityClass.setEnabled(false);
+			for (Component comp : selectPriorityClass.getComponents()){
+			    comp.setEnabled(false);}
 		}
 		return selectPriorityClass;
 	}

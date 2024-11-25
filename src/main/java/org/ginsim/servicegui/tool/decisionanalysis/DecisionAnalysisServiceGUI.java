@@ -22,7 +22,10 @@ import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.service.StandaloneGUI;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.kohsuke.MetaInfServices;
-
+import org.ginsim.service.tool.reg2dyn.SimulationParameterList;
+import org.ginsim.service.tool.reg2dyn.SimulationParameters;
+import org.ginsim.service.tool.reg2dyn.SimulationParametersManager;
+import org.ginsim.core.graph.objectassociation.ObjectAssociationManager;
 
 @StandaloneGUI
 @MetaInfServices( ServiceGUI.class)
@@ -54,9 +57,10 @@ public class DecisionAnalysisServiceGUI extends AbstractServiceGUI {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+
 			try {
                 RegulatoryGraph lrg = graph.getAssociatedGraph();
-				new DecisionAnalysisFrame( GUIManager.getInstance().getFrame( graph), graph, lrg);
+				new DecisionAnalysisFrame(GUIManager.getInstance().getFrame(graph), graph, lrg);
 
 			} catch( GsException ge){
 				GUIMessageUtils.openErrorDialog( "Unable to launch the analysis");
