@@ -12,6 +12,7 @@ import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
 
 
+
 /**
  * Search for strongly connected components, and build the SCC graph.
  *
@@ -44,6 +45,8 @@ public class SCCGraphAlgo extends AbstractTask<ReducedGraph> {
 	 * @return the reducedGraph
 	 */
 	private ReducedGraph constructGraph(List<NodeReducedData> components) {
+		boolean flagIn = false;
+		Collection<Edge<?>> exists = null;
 		ReducedGraph reducedGraph = GSGraphManager.getInstance().getNewGraph( ReducedGraph.class, (Graph)graph);
 		HashMap<Object, NodeReducedData> nodeParentSCC = new HashMap<Object, NodeReducedData>(); //Map the a node to its parent SCC
 		
@@ -58,20 +61,28 @@ public class SCCGraphAlgo extends AbstractTask<ReducedGraph> {
 
 			}
 		}
-		
+
 		for (NodeReducedData component : components) {		//For each component
 			for (Object node : component.getContent()) {	//  for each nodes in the component
 				Collection<Edge<?>> outgoingEdges = graph.getOutgoingEdges(node);
 				for (Edge edge: outgoingEdges) {									//    for each edge outgoing from this node
 					Object targetNode = edge.getTarget();
 					NodeReducedData targetParent = nodeParentSCC.get(targetNode);
-					if (nodeParentSCC.get(targetNode) != component) {			//      if the target of the edge is not in the SCC
-						reducedGraph.addEdge(component, targetParent);
+					if (nodeParentSCC.get(targetNode) != component) {            //      if the target of the edge is not in the SCC
+						exists = reducedGraph.getEdges();
+						flagIn = false;
+						for (Edge newedge : exists) {
+							if (newedge.getSource().equals(component) && newedge.getTarget().equals(targetParent)) {
+								flagIn = true;
+							}
+						}
+						if (!flagIn) {
+							reducedGraph.addEdge(component, targetParent);
+						}
 					}
 				}
 			}
 		}
-
 		return reducedGraph;
 	}
 }
