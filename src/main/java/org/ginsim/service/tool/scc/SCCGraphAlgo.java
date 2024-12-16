@@ -1,5 +1,6 @@
 package org.ginsim.service.tool.scc;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -46,6 +47,7 @@ public class SCCGraphAlgo extends AbstractTask<ReducedGraph> {
 	 */
 	private ReducedGraph constructGraph(List<NodeReducedData> components) {
 		boolean flagIn = false;
+		List<NodeReducedData> newcomponents = new ArrayList<NodeReducedData>(components.size());
 		Collection<Edge<?>> exists = null;
 		ReducedGraph reducedGraph = GSGraphManager.getInstance().getNewGraph( ReducedGraph.class, (Graph)graph);
 		HashMap<Object, NodeReducedData> nodeParentSCC = new HashMap<Object, NodeReducedData>(); //Map the a node to its parent SCC
@@ -74,9 +76,11 @@ public class SCCGraphAlgo extends AbstractTask<ReducedGraph> {
 						for (Edge newedge : exists) {
 							if (newedge.getSource().equals(component) && newedge.getTarget().equals(targetParent)) {
 								flagIn = true;
+								break;
 							}
 						}
 						if (!flagIn) {
+							// NodeReducedData newId_source = new NodeReducedData(component.getId().replaceAll("cc-", "ct#-"), component.getContent());
 							reducedGraph.addEdge(component, targetParent);
 						}
 					}
