@@ -42,6 +42,7 @@ public class JgraphtBackendImpl<V, E extends Edge<V>> extends DefaultListenableG
 	public boolean addEdgeInBackend(E edge) {
 		return super.addEdge(edge.getSource(), edge.getTarget(), edge);
 	}
+
 	
     /**
      * Add a vertex in the JGraphT graph

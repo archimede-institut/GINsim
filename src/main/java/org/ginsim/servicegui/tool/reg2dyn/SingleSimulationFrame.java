@@ -98,8 +98,9 @@ public class SingleSimulationFrame extends BaseSimulationFrame {
 
 		isrunning = true;
 		Reg2DynService service = GSServiceManager.getService( Reg2DynService.class);
-		sim = service.get( model, this, currentParameter);
+		sim = service.get( model, this, currentParameter, this.reduction);
 		new Thread(sim).start();
+
 	}
 
 

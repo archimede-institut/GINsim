@@ -8,7 +8,7 @@ import org.ginsim.core.graph.dynamicgraph.TransitionGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-
+import org.ginsim.service.tool.modelreduction.ReductionConfig;
 /**
  * Hierarchical Transition Graphs provide a compact representation of the dynamical behaviour.
  * Each node in this graph represent a set of states with a similar fate in the STG (cycle, linear path...)
@@ -81,4 +81,8 @@ public interface HierarchicalTransitionGraph extends TransitionGraph<Hierarchica
 	public boolean areTransientCompacted();
 
     StatesSet createStateSet();
+
+	public void setReduction(ReductionConfig reduction);
+
+	public ReductionConfig getReduction();
 }

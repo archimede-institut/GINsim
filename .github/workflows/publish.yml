@@ -5,7 +5,7 @@ name: Latest pre-release
 
 on:
   push:
-    branches: [ tag ]
+    branches: [ main ]
 
 jobs:
   build:

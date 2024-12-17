@@ -11,6 +11,10 @@ public class HierarchicalTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = 2922634659695976653L;
 
 	private List<byte[]> content = null;
+
+	private List<byte[]> contentNode = null;
+
+	private byte[] childsCount = null;
 	private byte[][] extraContent = null;
 	private int colCount;
 	private String[] extraNames = null;
@@ -50,19 +54,32 @@ public class HierarchicalTableModel extends AbstractTableModel {
 		if (rowIndex >= getRowCount() || columnIndex >= len) {
 			return null;
 		}
+
 		int i = -10;
 		if (columnIndex >= colCount) {
 			i = extraContent[rowIndex][columnIndex - colCount];
 			if (i < 0 ) {
 				return "~*";
+				//return a;
 			}
 			return "~" + String.valueOf(i);
 		}
 
 		i = content.get(rowIndex)[columnIndex];
 		if (i == -1 ) {
+			if (childsCount[columnIndex] < 3){
+				int minColl = contentNode.size();
+				int maxCol = 0;
+				for (int j=0 ; j < contentNode.size(); j++){
+					if (contentNode.get(j)[columnIndex] != -1 && contentNode.get(j)[columnIndex] <= minColl){
+						minColl = contentNode.get(j)[columnIndex];
+					}
+					if (contentNode.get(j)[columnIndex] != -1 && contentNode.get(j)[columnIndex] >= maxCol){ maxCol = contentNode.get(j)[columnIndex];}
+				}
+				return "" + String.valueOf(minColl) + "-" + String.valueOf(maxCol);
+			}
 			return "*";
-		}
+		    }
 		return String.valueOf(i);
 	}
 
@@ -76,7 +93,9 @@ public class HierarchicalTableModel extends AbstractTableModel {
 	}
 
 	public void setContent(HierarchicalNode hnode) {
-		this.content = hnode.statesToList();
+		this.content = hnode.statesToList();//hnode.statesSet.getChildsCount();
+		this.contentNode = hnode.statesSet.statesToFullList();
+		this.childsCount = hnode.statesSet.getChildsCount();
 		if (extraNames != null && extraNames.length > 0) {
 			// fill the extra content
 			extraContent = fillExtra();

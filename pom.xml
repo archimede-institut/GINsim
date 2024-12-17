@@ -73,7 +73,6 @@
       <artifactId>bioLQM</artifactId>
       <version>0.7.1</version>
     </dependency>
-
     <dependency>
       <groupId>org.bibsonomy</groupId>
       <artifactId>bibsonomy-bibtex-parser</artifactId>
@@ -102,6 +101,8 @@
 
 
   <build>
+    <sourceDirectory>src/main</sourceDirectory>
+    <testSourceDirectory>src/test</testSourceDirectory>
     <plugins>
 
       <plugin>
@@ -187,19 +188,19 @@
           </archive>
         </configuration>
        </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.0.1</version>
         <configuration>
-          <links>
-            <link>http://aurelien-naldi.github.com/gh-documentation/api/mddlib</link>
-            <link>http://aurelien-naldi.github.com/gh-documentation/api/bioLQM</link>
-          </links>
+          <docletPath>
+            ${project.basedir}/lib/bibsonomy-bibtex-parser-2.0.48.jar,
+            ${project.basedir}/lib/bibsonomy-common-2.0.48.jar,
+            ${project.basedir}/lib/bibsonomy-model-2.0.48.jar
+          </docletPath>
+          <excludePackageNames>java.org.*</excludePackageNames>
         </configuration>
       </plugin>
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -250,6 +251,8 @@
           </transformationSets>
         </configuration>
       </plugin>
+
+
 
     </plugins>
   </build>
