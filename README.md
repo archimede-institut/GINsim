@@ -5,7 +5,7 @@ of biological interaction networks.
 For more info see http://ginsim.org
 
 
-## Build and Install
+## Build and I nstall
 
 GINsim uses maven: ```mvn package``` will compile it and prepare a jar
 (executable Java archive) as well as dependancies into the ```target``` folder.
