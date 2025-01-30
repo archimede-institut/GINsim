@@ -2,8 +2,12 @@ package org.ginsim.core.graph.dynamicgraph;
 
 
 import org.colomoto.biolqm.LogicalModel;
+import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
+import org.colomoto.mddlib.MDDManager;
+
+import java.util.List;
 
 public interface TransitionGraph<V,E extends Edge<V>> extends Graph<V,E> {
 
@@ -16,6 +20,13 @@ public interface TransitionGraph<V,E extends Edge<V>> extends Graph<V,E> {
      */
     String[] getExtraNames();
 
+    int[] getExtraFunctions();
+
+    List<NodeInfo> getExtraNodes();
+
+    int[] getCoreFunctions();
+
+    MDDManager getMDDManager();
     /**
      * Retrieve the values for all extra components for a given state.
      * If the provided array to fill is null or of the wrong size, a new array will be created and returned.

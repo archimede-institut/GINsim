@@ -27,7 +27,6 @@ public class Reg2DynService implements Service {
 		} else {
 			sim = new HTGSimulation( model, plist, currentParameter, reduction );
 		}
-		
 		return sim;
 	}
 

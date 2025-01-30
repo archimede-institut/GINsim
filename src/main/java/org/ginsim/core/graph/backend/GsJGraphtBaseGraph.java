@@ -249,7 +249,12 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
 
     @Override
     public Set<E> outgoingEdgesOf(V vertex) {
-        Set<E> l = m_vertices.get(vertex).l_outgoing;
+        // BUG FIX ISSUE #18
+        VInfo<V, E> localVertex = m_vertices.get(vertex);
+        Set<E> l = null;
+        if(localVertex != null) {
+             l = localVertex.l_outgoing;
+        }
         if (l == null) {
             return emptySet;
         }

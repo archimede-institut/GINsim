@@ -377,7 +377,10 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 			fireGraphChange(GraphChangeType.NODEDAMAGED, o);
 		}
 	}
-
+    @Override
+	public void updateEvsmap(){
+		graphBackend.updateEvsmap();
+	}
 	@Override
 	public StyleManager<V, E> getStyleManager() {
 		if (styleManager == null) {

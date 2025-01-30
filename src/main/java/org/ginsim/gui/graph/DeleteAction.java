@@ -32,7 +32,6 @@ public class DeleteAction extends EditAction {
 			LogManager.debug("empty selection");
 			return;
 		}
-		
 		// extend selection for deletion (helps to mark them as damaged)
 		selection.extendSelectionToIncomingEdges();
 		selection.extendSelectionToOutgoingEdges();
@@ -56,9 +55,11 @@ public class DeleteAction extends EditAction {
 			for (Edge<?> e: selection.getSelectedEdges()) {
 				graph.removeEdge(e);
 			}
+
 		}
+
 		selection.unselectAll();
+        graph.updateEvsmap();
         gui.repaint();
 	}
-
 }

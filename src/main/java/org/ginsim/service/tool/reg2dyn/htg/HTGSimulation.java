@@ -102,7 +102,6 @@ public class HTGSimulation extends Simulation {
 		this.maxnodes = 0;
 
 		helper = new HTGSimulationHelper(model, params, reduction);
-
 	}
   
     

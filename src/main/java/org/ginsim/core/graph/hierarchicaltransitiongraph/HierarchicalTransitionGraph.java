@@ -49,8 +49,8 @@ public interface HierarchicalTransitionGraph extends TransitionGraph<Hierarchica
 	 * @return the node order as a List of NodeInfo
 	 */
 	public List<NodeInfo> getNodeOrder();
-	
-	
+
+
 	/**
 	 * @return an array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
 	 */
