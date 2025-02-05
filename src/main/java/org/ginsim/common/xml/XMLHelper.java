@@ -109,6 +109,9 @@ abstract public class XMLHelper extends DefaultHandler implements EntityResolver
         if (e.getMessage().startsWith("Attribute \"input\"") || e.getMessage().startsWith("Attribute \"pattern\"")) {
             return;
         }
+		if (e.getMessage().startsWith("La valeur d'attribut") && e.getMessage().endsWith("tre un nom.")) {
+			return;
+		}
         
         addWarning(e);
 	}
