@@ -92,6 +92,7 @@ public final class DynamicGraphImpl	extends TransitionGraphImpl<DynamicNode, Dyn
 		
 		nodeOrder = node_order;
 	}
+
     
 	/**
 	 * Return the zip extension for the graph type

@@ -415,11 +415,15 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 
         List regOrder = regGraph.getNodeOrder();
         List dynOrder = dynGraph.getNodeOrder();
-        if (regOrder == null || dynOrder == null || regOrder.size() != dynOrder.size()) {
+        int ext = 0;
+        if (dynGraph.getExtraNodes() != null) {
+            ext = dynGraph.getExtraNodes().size();
+        }
+        if (regOrder == null || dynOrder == null || regOrder.size() != dynOrder.size() + ext ) {
             return false;
         }
 
-        for (int i=0 ; i<regOrder.size() ; i++) {
+        for (int i=0 ; i<dynOrder.size() ; i++) {
             if (!dynOrder.get(i).equals( regOrder.get(i))) {
                 return false;
             }
