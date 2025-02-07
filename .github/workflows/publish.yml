@@ -28,3 +28,5 @@ jobs:
         prerelease: true
         title: "Development Build"
         files: target/GINsim-*-jar-with-dependencies.jar
+    env:
+      GITHUB_TOKEN: ${{ secrets.GINSIM }}
