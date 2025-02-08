@@ -3,7 +3,7 @@ package org.ginsim.gui.graph;
 import org.ginsim.core.graph.Edge;
 
 /**
- * class AddEdgeAction<
+ * class AddEdgeAction
  * @param <V>  vertex V
  * @param <E>  edge E
  */
