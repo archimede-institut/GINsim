@@ -17,6 +17,7 @@ import java.util.Map;
  * 
  * @author Aurelien Naldi
  * @param <T> the type of objects in the list
+ * @param <L> list to extend
  */
 public class ListPanelHelper<T, L extends List<T>> {
 	

@@ -40,34 +40,61 @@ import org.ginsim.core.io.parser.GINMLWriter;
  * @param <E>   the type of edges
  */
 abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>, GraphViewListener {
-	
+	/**
+	 * 	vd manager attribute
+ 	 */
     private static final List<GraphAssociatedObjectManager> v_OManager = new ArrayList<GraphAssociatedObjectManager>();
-    public static final String ZIP_PREFIX = "GINsim-data/";
-	
+	/**
+	 * 	ZIP prefix string
+ 	 */
+	public static final String ZIP_PREFIX = "GINsim-data/";
+	/**
+	 * 	graph backend attribute
+ 	 */
 	private final GraphBackend<V,E> graphBackend;
+	/**
+	 * 	factory attribute
+	 */
 	private final GraphFactory factory;
-	
-	// view data
+
+	/**
+	 * 	view data
+ 	 */
 	private GraphViewListener listener;
 
-    // cache attribute readers for internal usage
+	/**
+	 * 	cache attribute readers for internal usage
+ 	 */
     private EdgeAttributesReader cachedEReader = null;
-    private NodeAttributesReader cachedNReader = null;
-    
-	// The name of the graph
+	/**
+	 * 	cache NodeAttributesReader
+	 */
+	private NodeAttributesReader cachedNReader = null;
+
+	/**
+	 * 	The name of the graph
+	 */
 	protected String graphName = "default_name";
 
-	// Attributes
+	/**
+	 * Attributes Map of string string
+ 	 */
 	protected Map<String,String> attributes = new HashMap<>();
-	
-    // The annotation associated with the graph
-    protected Annotation graphAnnotation = null;
-    
+
+	/**
+	 * The annotation associated with the graph
+	 */
+
+	protected Annotation graphAnnotation = null;
+	/**
+	 * 	style manager attribute
+	 */
     private StyleManager<V, E> styleManager = null;
     
 
 	/**
 	 * Create a new graph with the default back-end.
+	 * @param factory the factory from construction
 	 */
 	protected AbstractGraph(GraphFactory factory) {
     	this.factory = factory;
@@ -157,7 +184,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	/**
 	 * Add a node to this graph structure
 	 * 
-	 * @param node
+	 * @param node the node V
 	 * @return the created node
 	 */
 	@Override
@@ -174,7 +201,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	/**
 	 * Add an edge to this graph structure.
 	 * 
-	 * @param edge
+	 * @param edge the edge E
 	 * @return the created edge
 	 */
 	@Override
@@ -190,7 +217,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     /**
      * Remove a node from the graph.
      * 
-     * @param node
+     * @param node the node
      * @return true if the node was effectively removed
      */ 
 	@Override
@@ -207,7 +234,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
     /**
      * Remove an edge from the graph.
      * 
-     * @param edge
+     * @param edge the edge E
      * @return true if the edge was effectively removed
      */
 	@Override
@@ -227,8 +254,8 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 
 	
     /**
-     * @param source
-     * @param target
+     * @param source the source edge V
+     * @param target the target edge v
      * @return the edge between source and target or null if not found.
      */
 	@Override
@@ -239,6 +266,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 
 	
     /**
+	 * getter for the collections of edges
      * @return a Collection of the graph edges.
      */
 	@Override
@@ -346,10 +374,10 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		this.listener = listener;
 	}
 	
-	/**
+	 /**
 	 * Declare an object visual setting change
 	 * 
-	 * @param o
+	 * @param o object
 	 */
 	public void refresh(Object o) {
 		if (listener != null) {
@@ -361,7 +389,9 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 			fireGraphChange(GraphChangeType.NODEUPDATED, o);
 		}
 	}
-
+    /*
+	* repaint function
+	*/
 	@Override
 	public void repaint() {
 		if (listener != null) {
@@ -369,6 +399,10 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		}
 	}
 
+	 /**
+	 * dammage function
+	 * @param o object to dammage
+	 */
 	public void damage(Object o) {
 		if (listener != null) {
 			listener.refresh(o);
@@ -378,6 +412,10 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 			fireGraphChange(GraphChangeType.NODEDAMAGED, o);
 		}
 	}
+	 /**
+	 * update Evsmap attribute function
+	 *
+	 */
     @Override
 	public void updateEvsmap(){
 		graphBackend.updateEvsmap();
@@ -399,21 +437,33 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	public NodeAttributesReader getNodeAttributeReader() {
 		return new NodeAttributeReaderImpl(getStyleManager(), this, graphBackend);
 	}
-	
+
+	/**
+	 * getter of the EdgeAttributesReader
+	 * @return the EdgeAttributesReader
+	 */
 	protected EdgeAttributesReader getCachedEdgeAttributeReader() {
 		if (cachedEReader == null) {
 			cachedEReader = getEdgeAttributeReader();
 		}
 		return cachedEReader;
 	}
-	
+
+	/**
+	 * getter of the NodeAttributesReader
+	 * @return the NodeAttributesReader
+	 */
 	protected NodeAttributesReader getCachedNodeAttributeReader() {
 		if (cachedNReader == null) {
 			cachedNReader = getNodeAttributeReader();
 		}
 		return cachedNReader;
 	}
-	
+
+	/**
+	 * getter of the dimension
+	 * @return the deimension
+	 */
 	public Dimension getDimension() {
     	int width = 0;
     	int height = 0;
@@ -467,6 +517,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 
 	
     /**
+	 * tes if empty
      * @return true if the graph is empty
      */
     public boolean isEmpty() {
@@ -479,7 +530,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
      * and fire a graph change event
      * 
      * @param graph the graph to merge with the current one
-     * @return 
+     * @return  list merged
      */
 	@Override
 	public List<?> merge( Graph<V, E> graph) {
@@ -499,8 +550,8 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * Specialized method that execute the merging of the given graph with the current one
 	 * Must be override at specialized graph level
 	 * 
-	 * @param graph
-	 * @return
+	 * @param graph the graph
+	 * @return the list
 	 */
 	abstract protected List<?> doMerge( Graph<V, E> graph);
 	
@@ -535,11 +586,23 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	
 	
 	// ----------------------   SAVING METHODS -----------------------------------------------
-	
+
+	/**
+	 * save function
+	 * @param save_path  the path to save
+	 * @throws GsException exception
+	 */
 	public void save(String save_path) throws GsException {
 		save(save_path, null, null);
 	}
 
+	/**
+	 * save partial function
+	 * @param save_path the save path
+	 * @param vertices  the vertice to save
+	 * @param edges the edge to save
+	 * @throws GsException exception
+	 */
 	public void save(String save_path, Collection<V> vertices, Collection<E> edges) throws GsException {
 
 		if (vertices == null) {
@@ -703,6 +766,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * @param osw		stream writer
 	 * @param nodes 	vertices that should be saved (can not be null)
 	 * @param edges		edges that should be saved (can not be null)
+	 * @throws GsException exception of graph
 	 */
 	protected final void doSave(OutputStreamWriter osw, Collection<V> nodes, Collection<E> edges) throws GsException {
 		GINMLWriter writer = getGINMLWriter();
@@ -716,12 +780,19 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
         }
 	}
 
+	/**
+	 * getter the  GINMLWriter
+	 * @return the  GINMLWriter  coponent
+	 */
 	protected GINMLWriter getGINMLWriter() {
 		return null;
 	}
 
 	// -------------------------  EVENT MANAGEMENT METHODS ---------------------------------
 
+	/**
+	 * firechange
+	 */
 	public void fireMetaChange() {
     	
         fireGraphChange(GraphChangeType.METADATACHANGE, null);

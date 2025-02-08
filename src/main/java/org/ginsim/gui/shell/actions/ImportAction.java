@@ -63,9 +63,6 @@ public abstract class ImportAction extends BaseAction {
 	/**
 	 * The action was launched, select a file and if all
 	 * went fine, call the import service gui
-	 * 
-	 * @param config
-	 * @throws GsException
 	 */
 	public void selectFile() {
 		String filename = FileSelectionHelper.selectOpenFilename(null,

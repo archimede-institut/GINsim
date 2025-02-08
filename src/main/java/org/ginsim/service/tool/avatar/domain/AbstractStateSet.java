@@ -20,7 +20,17 @@ public abstract class AbstractStateSet {
 	 * @return true if the given state is contained in the state-set
 	 */
 	public abstract boolean contains(State s);
+
+	/**
+	 * get the size
+	 * @return the size
+	 */
 	public abstract int size();
+
+	/**
+	 * getter og keys collection
+	 * @return collection of keys
+	 */
 	public abstract Collection<String> getKeys();
 	
 	/**
@@ -32,6 +42,10 @@ public abstract class AbstractStateSet {
 		return key;
 	}
 
+	/**
+	 * dsetter the key value
+	 * @param _key the key value
+	 */
 	public void setKey(String _key){
 		key = _key;
 	}

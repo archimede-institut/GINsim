@@ -46,8 +46,7 @@ public class AvatarMDDSimulation extends AvatarSimulation {
 
 	/**
 	 * Instantiates an Avatar simulation based on a logical model
-	 * 
-	 * @param _model
+	 *
 	 *            a stateful logical model possibly defining a set of initial states
 	 *            and oracles
 	 */

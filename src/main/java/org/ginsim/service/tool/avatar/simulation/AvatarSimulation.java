@@ -550,10 +550,8 @@ public class AvatarSimulation extends Simulation {
 	 * incarnations
 	 * @param savedTransients 
 	 * 
-	 * @param C
-	 *            terminal cycles from all incarnations
-	 * @param t
-	 *            the current time
+	 * @param Ct terminal cycles from all incarnations
+	 * @param temporaryTransients the current time
 	 * @return the revised complex attractor
 	 */
 	public StateSet calculateComplexAttractor(StateSet Ct, List<StateSet> temporaryTransients, PriorityQueue<StateSet> savedTransients) {
@@ -741,20 +739,14 @@ public class AvatarSimulation extends Simulation {
 	/**
 	 * Method for extending cycles before rewiring
 	 * 
-	 * @param v
-	 *            the state being expanded (null at the start)
-	 * @param cycle
-	 *            the state-set representing the initial cycle
-	 * @param result
-	 *            the extended cycle
-	 * @param i
-	 *            the current time
-	 * @param tau
-	 *            the expansion rate
-	 * @param time
-	 *            structure maintaining the time/depth of the included states
-	 * @param originalTime
-	 *            the original time
+	 * @param v the state being expanded (null at the start)
+	 * @param cycle the state-set representing the initial cycle
+	 * @param exits the extended cycle
+	 * @param i the current time
+	 * @param tau the expansion rate
+	 * @param time structure maintaining the time/depth of the included states
+	 * @param originalTime the original time
+	 * @param newstates the new state
 	 */
 	public void extendCycle(State v, StateSet cycle, StateSet exits, StateSet newstates, int i, int tau,
 			Map<String, Integer> time, int originalTime) {

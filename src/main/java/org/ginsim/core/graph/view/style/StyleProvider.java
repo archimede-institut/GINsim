@@ -8,15 +8,15 @@ import org.ginsim.core.graph.Edge;
  * 
  * @author Aurelien Naldi
  *
- * @param <V>
- * @param <E>
+ * @param <V> the vertex
+ * @param <E> the edge
  */
 public interface StyleProvider<V, E extends Edge<V>> {
 
 	/**
 	 * Get the style to use for a node.
 	 * 
-	 * @param node
+	 * @param node the node
 	 * @param baseStyle the style to use as fallback
 	 * @return the style to use or null to use the graph's style
 	 */

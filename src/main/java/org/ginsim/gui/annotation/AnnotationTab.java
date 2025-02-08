@@ -9,6 +9,9 @@ import org.ginsim.gui.shell.editpanel.EditTab;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * class AnnotationTab extends JPanel
+ */
 public class AnnotationTab extends JPanel implements EditTab {
 
     public static AnnotationTab prepareTab(GraphGUI<?,?,?> gui) {

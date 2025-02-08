@@ -30,9 +30,8 @@ public class MonteCarloPanel extends SimulationPanel {
 
 	/**
 	 * Instantiates the context of a simulation panel
-	 * 
-	 * @param img
-	 *            icon for the help tooltip
+	 *
+	 * icon for the help tooltip
 	 */
 	public MonteCarloPanel() {
 		this.setBorder(BorderFactory.createTitledBorder(EnumAlgorithm.MONTE_CARLO + " Parameters"));

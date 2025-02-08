@@ -43,7 +43,11 @@ public class AboutDialog extends Frame implements HyperlinkListener {
 	private static AboutData data;
 	private static String aboutText = "";
 	private static String contribText = "";
-	
+
+	/**
+	 * setter for file
+	 * @param path the path to set
+	 */
 	public static final void setDOAPFile(String path) {
 		data = new AboutData();
 		new DOAPParser(data, path);

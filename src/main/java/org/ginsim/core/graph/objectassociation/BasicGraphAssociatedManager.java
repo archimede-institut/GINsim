@@ -11,7 +11,7 @@ import org.ginsim.core.graph.Graph;
 
 /**
  * Base class to create managers for associated objects.
- *
+ * @param <T>  manager
  * @author Lionel Spinelli
  * @author Aurelien Naldi
  */

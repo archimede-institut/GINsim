@@ -35,7 +35,7 @@ public class GinmlHelper {
      * @param vareader
      * @param qName
      * @param attributes
-     * @return 1 if byte VS, 2 otherwise
+     * 1 if byte VS, 2 otherwise
      */
 	public static void applyNodeVisualSettings(NodeAttributesReader vareader, StyleManager stylemanager, String qName, Attributes attributes) {
         vareader.setPos(Integer.parseInt(attributes.getValue("x")),Integer.parseInt(attributes.getValue("y")));

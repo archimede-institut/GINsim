@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 /**
  * Help handling a list of named objects
+ * @param <T> NameObject
  */
 public class NamedList<T extends NamedObject> extends ArrayList<T> {
 

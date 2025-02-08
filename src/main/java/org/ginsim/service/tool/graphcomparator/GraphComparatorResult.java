@@ -11,7 +11,9 @@ import org.ginsim.core.graph.view.style.StyleProvider;
 /**
  * Contains the result of the comparison of two graphs graph_1 and graph_2 and the
  * proper methods to handle the display of theses results
- *
+ * @param <V>  a vertex V
+ * @param <E> a edge E
+ * @param <G> a graph g
  */
 public class GraphComparatorResult<V, E extends Edge<V>, G extends Graph<V,E>> {
 	private final G graph_new, graph_1, graph_2;

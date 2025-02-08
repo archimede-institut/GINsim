@@ -125,7 +125,7 @@ public abstract class Simulation {
 	 * Updates a simulation with parameterizations dynamically fixed based on the
 	 * properties of the input model
 	 * 
-	 * @return simulation with updated parameters (values dynamically selected based
+	 * simulation with updated parameters (values dynamically selected based
 	 *         on the input model)
 	 */
 	public abstract void dynamicUpdateValues();

@@ -17,6 +17,11 @@ public interface CanvasEventManager {
 	void cancel();
 	
 	void overlay(Graphics2D g, Rectangle area);
-	
+
+	/**
+	 * help function
+	 * @param g  the graph
+	 * @param area  the area
+	 */
 	void helpOverlay(Graphics2D g, Rectangle area);
 }

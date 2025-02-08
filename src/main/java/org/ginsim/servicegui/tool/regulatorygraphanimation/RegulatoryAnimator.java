@@ -59,7 +59,7 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
     
     /**
      * @param frame
-     * @param graph
+     * @param dynGraph
      */
     public static void animate(JFrame frame, DynamicGraph dynGraph) {
     	RegulatoryGraph regGraph = null;

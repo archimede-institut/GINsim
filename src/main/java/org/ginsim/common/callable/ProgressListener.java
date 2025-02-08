@@ -3,7 +3,7 @@ package org.ginsim.common.callable;
 /**
  * Define methods to listen for background task: 
  * Implementors must handle progress messages and the end of the task.
- * 
+ * @param <R>  from R
  * @author Aurelien Naldi
  */
 public interface ProgressListener<R> {

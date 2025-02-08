@@ -55,7 +55,6 @@ public final class DynamicParser extends GsXMLHelper {
      * @param set
      * @param attributes
      * @param s_dtd
-     * @param s_filename
      */
     public DynamicParser(Set<String> set, Attributes attributes, String s_dtd) throws GsException {
     	
@@ -83,7 +82,7 @@ public final class DynamicParser extends GsXMLHelper {
      * create a new dynamical graph from a file.
      * 
      * @param file the file to read.
-     * @param map "filter" to open only partially a graph
+     * @param set  "filter" to open only partially a graph
      * @param graph the graph to fill with this data.
      */
     public void parse(File file, Set<String> set, Graph graph)  throws GsException{

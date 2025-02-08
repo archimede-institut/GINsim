@@ -14,17 +14,21 @@ import org.ginsim.core.graph.Graph;
  * 
  * @author Aurelien Naldi
  *
- * @param <V>
- * @param <E>
+ * @param <V> the vertex V
+ * @param <E> the edge E
+ * @param <G> the graph
  */
 public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> extends SavingGUI {
 
 	/**
+	 * graph Getter
+	 *
 	 * @return the underlying graph
 	 */
 	Graph<V, E> getGraph();
 	
 	/**
+	 * getter graph component
 	 * @return the widget showing the graph
 	 */
 	Component getGraphComponent();
@@ -63,7 +67,7 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> extends Sa
 	/**
 	 * Set the graph has been saved or has not been modified since opened
 	 * 
-	 * @param isSaved
+	 * @param isSaved boolean true if isvaved
 	 */
 	void setSaved( boolean isSaved);
 	
@@ -87,21 +91,21 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> extends Sa
 	/**
 	 * Register a GraphGUIListener
 	 * 
-	 * @param listener
+	 * @param listener graph listener
 	 */
 	void addGraphGUIListener(GraphGUIListener<G, V, E> listener);
 
 	/**
 	 * Remove a listener.
 	 * 
-	 * @param listener
+	 * @param listener graph listener
 	 */
 	void removeGraphGUIListener(GraphGUIListener<G, V, E> listener);
 	
 	/**
 	 * Get an object to interact with the selection
 	 * 
-	 * @return
+	 * @return a graph selection
 	 */
 	GraphSelection<V, E> getSelection();
 	

@@ -25,7 +25,7 @@ import org.ginsim.gui.utils.dialog.stackdialog.StackDialogHandler;
  * 
  * @author Aurelien Naldi
  *
- * @param <S>
+ * @param <S> ormatSupportServ to extend
  */
 public class FormatSupportServiceGUI<S extends FormatSupportService> extends AbstractServiceGUI {
 

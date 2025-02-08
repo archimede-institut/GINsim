@@ -38,9 +38,8 @@ public class FirefrontPanel extends SimulationPanel {
 
 	/**
 	 * Instantiates the context of a simulation panel
-	 * 
-	 * @param img
-	 *            icon for the help tooltip
+	 *
+	 *  icon for the help tooltip
 	 */
 	public FirefrontPanel() {
 		this.setBorder(BorderFactory.createTitledBorder(EnumAlgorithm.FIREFRONT + " parameters"));

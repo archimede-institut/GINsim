@@ -34,9 +34,9 @@ import org.ginsim.gui.utils.widgets.Frame;
  * 
  * @author Aurelien Naldi
  *
- * @param <G>
- * @param <V>
- * @param <E>
+ * @param <G> the graph
+ * @param <V> the vertex
+ * @param <E> the edge
  */
 public abstract class BaseGraphGUI<G extends Graph<V,E>, V, E extends Edge<V>>
        implements GraphGUI<G, V, E>, GraphViewListener, GraphListener<G> {

@@ -188,7 +188,6 @@ public class AvatarStateStore implements NamedStateStore {
 	/**
 	 * Adds an oracle as a set of named state-patterns
 	 * @param oracle the list of named oracles as a map (name and the corresponding set of state-patterns)
-	 * @return 
 	 */
 	public void addOracle(Map<String,List<byte[]>> oracle) {
 		if(oracle==null) return;

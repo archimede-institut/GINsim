@@ -72,7 +72,7 @@ public interface ServiceGUI {
 	 *  - Export : data export to file of various format. Represented by the ExportAction class
 	 *  - Layout : Perform a graph layout. Represented by the LayoutAction class
 	 *  - Action : various data management algorithm. Represented by the GsMiscAction class
-	 * 
+	 * @param graph the graph
 	 * @return the list of actions provided by the service to the given graph type
 	 */
 	public List<Action> getAvailableActions(Graph<?, ?> graph);
@@ -93,7 +93,7 @@ public interface ServiceGUI {
 
 	/**
 	 * define the new weight of the service
-	 * @param new_weight
+	 * @param new_weight  the weight to set
 	 */
 	public void setWeight(int new_weight);
 

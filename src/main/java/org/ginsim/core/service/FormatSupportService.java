@@ -18,7 +18,7 @@ import java.util.Set;
  * Generic service to support format implemented in LogicalModel.
  * This provides an easy way to use the core capabilities provides by LogicalModel formats.
  * A static method allows to add automatic wrappers for all available formats.
- * 
+ * @param <F>  LogicalModelFormat
  * @author Aurelien Naldi
  */
 public class FormatSupportService<F extends LogicalModelFormat> implements Service {

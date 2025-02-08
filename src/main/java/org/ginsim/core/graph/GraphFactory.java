@@ -13,7 +13,7 @@ import org.ginsim.core.graph.view.style.NodeStyle;
  * @author Lionel Spinelli
  * @author Aurelien Naldi
  *
- * @param <G>
+ * @param <G>  graph
  */
 public interface GraphFactory<G extends Graph<?,?>> {
 	
@@ -46,7 +46,17 @@ public interface GraphFactory<G extends Graph<?,?>> {
      */
 	G create();
 
+	/**
+	 * create Node style
+	 * @param graph graph from Node style
+	 * @return the style NodeStyle
+	 */
 	NodeStyle createDefaultNodeStyle(G graph);
-	
+
+	/**
+	 * create a graph
+	 * @param graph graph to construct
+	 * @return edge style
+	 */
 	EdgeStyle createDefaultEdgeStyle(G graph);
 }

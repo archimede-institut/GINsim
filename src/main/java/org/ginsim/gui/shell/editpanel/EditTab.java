@@ -13,6 +13,7 @@ import org.ginsim.gui.graph.GraphSelection;
 public interface EditTab {
 
 	/**
+	 * title getter
 	 * @return the title to be used by this tab
 	 */
 	public String getTitle();

@@ -24,6 +24,8 @@ import org.jgrapht.graph.DefaultGraphType;
 /**
  * a "simple" jgrapht implementation using hashmap.
  * it aims at "low" memory consumption without getting too slow.
+ * @param <E> edge
+ * @param <V> vertex
  */
 public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E> implements Graph<V,E>, EdgeFactory<V, E> {
 
