@@ -26,7 +26,7 @@ public abstract class AddEdgeAction<V, E extends Edge<V>> extends EditAction {
 	}
 
 	/**
-	 *
+	 * add Edge
 	 * @param manager  edit action manager
 	 * @param from  vertex from
 	 * @param to  vetex to

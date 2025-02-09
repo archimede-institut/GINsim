@@ -36,8 +36,9 @@ public class AnimatorUI extends JDialog {
     private JButton bGP = null;
 
     /**
-     * @param frame
-     * @param animator
+     * Constructor
+     * @param frame a frame
+     * @param animator a RegulatoryAnimator
      */
     public AnimatorUI(JFrame frame, RegulatoryAnimator animator) {
         super(frame);
@@ -169,27 +170,39 @@ public class AnimatorUI extends JDialog {
         }
         return bRewind;
     }
-    
+
+    /**
+     * Close function
+     */
     protected void close() {
         pathModel.endAnim();
         this.setVisible(false);
     }
-    
+
+    /**
+     * play function
+     */
     protected void play() {
         pathModel.playPath(pathList.getSelectedIndex());
     }
-    
+
+    /**
+     * Rewind function
+     */
     protected void rewind() {
         pathModel.revertPath(pathList.getSelectedIndex());
     }
 
+    /**
+     * gnuplot function
+     */
     protected void gnuplot() {
         pathModel.saveGnuPlotPath();
     }
     
     /**
      * choose the selected item in the path list.
-     * @param i
+     * @param i indice
      */
     public void setSelected(int i) {
        pathList.setSelectedIndex(i);
