@@ -10,8 +10,8 @@ public class NamedList<T extends NamedObject> extends ArrayList<T> {
 
     /**
      * Pick a name (for a new object)
-     * @param prefix
-     * @return
+     * @param prefix the prefix
+     * @return name as string
      */
     public String findUniqueName(String prefix) {
         String name = prefix.trim();

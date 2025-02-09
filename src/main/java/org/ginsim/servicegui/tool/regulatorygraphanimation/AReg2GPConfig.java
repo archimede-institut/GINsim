@@ -133,6 +133,7 @@ public class AReg2GPConfig extends JDialog {
 	
 	/**
 	 * do the export.
+     * @throws  GsException graph exception
 	 */
 	protected void export() throws GsException{
 		if (combo_choice.getSelectedIndex() == 2) {

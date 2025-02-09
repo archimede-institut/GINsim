@@ -83,6 +83,7 @@ public class AvatarStateStore implements NamedStateStore {
 	 * @param inamestates list with the names of the previous states
 	 * @param graph the regulatory graph
 	 * @param _oracles states list
+	 * @param onames    list of output names
 	 */
 	public AvatarStateStore(List<byte[]> states, String[] namestates, List<byte[]> istates, String[] inamestates, List<byte[]> _oracles, String[] onames, RegulatoryGraph graph) {
 		this(states,istates,_oracles,graph);
@@ -236,7 +237,7 @@ public class AvatarStateStore implements NamedStateStore {
 	 * Adds a list of named states of common and input components
 	 * @param states the list of named states associated with non-input components
 	 * @param istates the list of named states associated with input components
-	 * @param _oracles
+	 * @param _oracles name state list
 	 */
 	public void addStateList(NamedStateList states, NamedStateList istates, NamedStateList _oracles){
 		for(NamedState state : states){

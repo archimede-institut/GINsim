@@ -26,7 +26,7 @@ public interface EditTab {
 
 	/**
 	 * Test if active
-	 * @param selection
+	 * @param selection graph selection
 	 * @return boolean if actif
 	 */
 	public boolean isActive( GraphSelection<?, ?> selection);

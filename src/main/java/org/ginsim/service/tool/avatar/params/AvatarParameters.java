@@ -28,16 +28,109 @@ import org.ginsim.service.tool.avatar.simulation.Simulation;
  */
 public class AvatarParameters implements XMLize, NamedObject {
 
+	/**
+	 * String name
+	 */
 	public String name = "new_parameter";
+	/**
+	 * AvatarStateStore statestore;
+	 */
 	public AvatarStateStore statestore;
-	public boolean[] statesSelected, istatesSelected; // oraclesSelected, ioraclesSelected, enabled, ienabled;
-	public boolean quiet, avaKeepTrans;
-	public int algorithm, avaStrategy;
-	public String avaRuns, avaTau, avaDepth, avaAproxDepth, avaMinTran, avaMinCycle, avaMaxPSize, avaMaxRewiringSize;
-	public String ffMaxExpand, ffDepth, ffAlpha, ffBeta, mcDepth, mcRuns;
+	/**
+	 * boolean array statesSelected,
+	 */
+	public boolean[] statesSelected,
+	/**
+	 *  boolean array  istatesSelected;
+	 */
+	istatesSelected; // oraclesSelected, ioraclesSelected, enabled, ienabled;
+	/**
+	 *  boolean quiet,
+	 */
+	public boolean quiet,
+	/**
+	 *  boolean avaKeepTrans
+	 */
+	avaKeepTrans;
+	/**
+	 * the int algorithm
+	 */
+	public int algorithm,
+	/**
+	 * int avaStrategy
+	 */
+	avaStrategy;
+	/**
+	 * String avaRuns
+	 */
+	public String avaRuns,
+	/**
+	 * String avaTau
+	 */
+	avaTau,
+	/**
+	 * String avaDeath
+	 */
+	avaDepth,
+	/**
+	 * String avaAproxDepth
+	 */
+	avaAproxDepth,
+	/**
+	 * string avaMinTran
+	 */
+	avaMinTran,
+	/**
+	 * String avaMinCycle
+	 */
+	avaMinCycle,
+	/**
+	 * String avaMaxPSize
+	 */
+	avaMaxPSize,
+	/**
+	 * String avaMaxRewiringSize
+	 */
+	avaMaxRewiringSize;
+	/**
+	 * String ffMaxExpand
+	 */
+	public String ffMaxExpand,
+	/**
+	 * String ffDepth,
+	 */
+	ffDepth,
+	/**
+	 * String  ffAlpha,
+	 */
+	ffAlpha,
+	/**
+	 * String ffBeta
+	 */
+	ffBeta,
+	/**
+	 * String mcDepth,
+	 */
+	mcDepth,
+	/**
+	 * String  mcRuns
+	 */
+	mcRuns;
+	/**
+	 * ListOfPerturbations perturbations;
+	 */
 	public ListOfPerturbations perturbations;
+	/**
+	 * ListOfReductionConfigs reductions;
+	 */
 	public ListOfReductionConfigs reductions;
+	/**
+	 * Perturbation perturbation;
+	 */
 	public Perturbation perturbation;
+	/**
+	 * ReductionConfig reduction;
+	 */
 	public ReductionConfig reduction;
 
 	/**
@@ -49,8 +142,7 @@ public class AvatarParameters implements XMLize, NamedObject {
 	/**
 	 * Updates the context with the parameters of a given simulation
 	 * 
-	 * @param sim
-	 *            simulation whose parameters are to be stored
+	 * @param sim simulation whose parameters are to be stored
 	 */
 	public void complete(Simulation sim) {
 		if (sim instanceof AvatarSimulation) {

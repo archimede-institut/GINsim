@@ -9,6 +9,10 @@ import java.util.List;
  */
 public interface ListPanelCompanion<T, L extends List<T>> {
 
+    /**
+     * Setter of parent list
+     * @param list the list to set
+     */
     void setParentList(L list);
 
     /**

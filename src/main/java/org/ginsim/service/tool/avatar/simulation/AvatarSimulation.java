@@ -50,7 +50,14 @@ public class AvatarSimulation extends Simulation {
 
 	/** enum specifying the different behavioral strategies of Avatar */
 	public enum AvatarStrategy {
-		MatrixInversion, RandomExit
+		/**
+		 * MatrixInversion
+		 */
+		MatrixInversion,
+		/**
+		 * RandomExit
+		 */
+		RandomExit
 	}
 
 	/****************/
@@ -551,7 +558,7 @@ public class AvatarSimulation extends Simulation {
 	/**
 	 * Calculates a complex attractor based on the knowledge of previous
 	 * incarnations
-	 * @param savedTransients 
+	 * @param savedTransients PriorityQueue saved
 	 * 
 	 * @param Ct terminal cycles from all incarnations
 	 * @param temporaryTransients the current time
@@ -585,14 +592,11 @@ public class AvatarSimulation extends Simulation {
 	/**
 	 * Method for rewiring a cycle
 	 * 
-	 * @param cycle
-	 *            the cycle (state-set) to be rewired
-	 * @param out
-	 *            the exit states
-	 * @param pi
-	 *            the transitions between cycle and exit states whose probability is
+	 * @param cycle the cycle (state-set) to be rewired
+	 * @param out the exit states
+	 * @param pi the transitions between cycle and exit states whose probability is
 	 *            to be adjusted
-	 * @throws Exception
+	 * @throws Exception an exception
 	 */
 	public void rewriteGraph(StateSet cycle, StateSet out, FinalPaths pi) throws Exception {
 

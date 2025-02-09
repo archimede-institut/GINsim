@@ -155,7 +155,9 @@ public abstract class Simulation {
 	/**********************************/
 	/** For dynamically updating GUI **/
 	/**********************************/
-
+	/**
+	 * boolean exit
+	 */
 	protected boolean exit = false;
 	protected Thread t1; // used for heavy tasks from external libraries
 	private JTextArea progress;

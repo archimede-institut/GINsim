@@ -44,13 +44,24 @@ public abstract class BaseGraphGUI<G extends Graph<V,E>, V, E extends Edge<V>>
 	private final GraphGUIHelper<G,V,E> helper;
 	private final EditActionManager editActionManager;
     private final List<GraphGUIListener<G, V, E>> listeners = new ArrayList<GraphGUIListener<G,V,E>>();
-    
+
+	/**
+	 * final G graph
+	 */
 	protected final G graph;
-    protected final GraphSelection<V, E> selection = new GraphSelection<V, E>(this);
-    
+	/**
+	 * final GraphSelection
+	 */
+	protected final GraphSelection<V, E> selection = new GraphSelection<V, E>(this);
     private boolean isSaved = true;
     private boolean canBeSaved = true;
 
+	/**
+	 * Constructor
+	 * @param g the graph G
+	 * @param helper  GraphGUIHelpe helper object
+	 * @param can_be_saved boolean
+	 */
 	public BaseGraphGUI(G g, GraphGUIHelper<G,V,E> helper, boolean can_be_saved) {
 		
 		this.graph = g;
@@ -222,11 +233,19 @@ public abstract class BaseGraphGUI<G extends Graph<V,E>, V, E extends Edge<V>>
 		return selection;
 	}
 
+	/**
+	 * Selection update function
+	 * @param nodes nodes list
+	 * @param edges edges list
+	 */
 	protected void updateSelection(List<V> nodes, List<E> edges) {
 		selection.backendSelectionUpdated(nodes, edges);
 		fireSelectionChange();
 	}
 
+	/**
+	 * Update function on change
+	 */
 	protected void fireSelectionChange() {
 		for (GraphGUIListener<G, V, E> listener: listeners) {
 			listener.graphSelectionChanged(this);
@@ -242,9 +261,19 @@ public abstract class BaseGraphGUI<G extends Graph<V,E>, V, E extends Edge<V>>
 		return null;
 	}
 
-    protected abstract void setZoomLevel(ZoomEffect effect);
+	/**
+	 * Set the zoom effet
+	 * @param effect zoom effect
+	 */
+	protected abstract void setZoomLevel(ZoomEffect effect);
 
-    protected Action getZoomAction(BaseGraphGUI<?, ?, ?> gui, ZoomEffect effect) {
+	/**
+	 * Getter for Action
+	 * @param gui the qui
+	 * @param effect the zoom effect
+	 * @return a Action
+	 */
+	protected Action getZoomAction(BaseGraphGUI<?, ?, ?> gui, ZoomEffect effect) {
     	return new ZoomAction(gui, effect);
     }
 }

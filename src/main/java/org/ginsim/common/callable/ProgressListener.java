@@ -11,14 +11,14 @@ public interface ProgressListener<R> {
     /**
      * Show task status/progress.
      * 
-     * @param text
+     * @param text string of text
      */
     void setProgress(String text);
 
     /**
      * Set a numeric progress counter
      * 
-     * @param n
+     * @param n number int
      */
     void setProgress(int n);
 
@@ -26,14 +26,14 @@ public interface ProgressListener<R> {
      * Inform about intermediate step or result.
      * Handling such events is not mandatory but can allow extensions
      * 
-     * @param data
+     * @param data object data
      */
     void milestone(Object data);
     
     /**
      * The task finished and returns its result.
      * 
-     * @param result
+     * @param result R result
      */
     void setResult(R result);
 }

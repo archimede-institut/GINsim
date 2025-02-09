@@ -73,7 +73,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 
     /**
      * Change the ID used to remember the selected perturbation (and other settings)
-     * @param userID
+     * @param userID string of user id
      */
     public void setUserID(String userID) {
     	this.userID = userID;
@@ -84,8 +84,12 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         cb_simplify.setSelected(reductions.isStrippingOutput(userID));
         cb_propagate.setSelected(reductions.isPropagatingFixed(userID));
     }
-    
-    protected JPanel getMainPanel() {
+
+	/**
+	 * Get the main panel
+	 * @return the JPanel
+	 */
+	protected JPanel getMainPanel() {
 
         GridBagConstraints c = new GridBagConstraints();
 
@@ -170,7 +174,6 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 //		}
 	}
 
-
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		if (userID != null) {
@@ -184,11 +187,10 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 		// empty implementation: not all derived classes will want to do something
 	}
 
-	
 	/**
 	 * Intercept the setMainPanel method to integrate with this frame's panel
 	 * 
-	 * @param panel
+	 * @param panel component panel
 	 */
 	@Override
 	public void setMainPanel(Component panel) {
@@ -248,7 +250,8 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	}
 
 	/**
-	 * @param model
+	 * Run function
+	 * @param model the model LogicalModel
 	 */
 	public abstract void run(LogicalModel model);
 }

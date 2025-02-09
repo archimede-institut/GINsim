@@ -111,7 +111,7 @@ public class Bezier {
 
 	/**
 	 * Returns the bezier points at position i.
-	 * @param i
+	 * @param i indice
 	 * @return the bezier point at position i
 	 */
 	public Point2D getPoint(int i) {

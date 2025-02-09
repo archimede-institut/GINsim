@@ -95,6 +95,9 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 	private JPanel outputPanel;
 	private String filename;
 	private JSplitPane horizontalPanel;
+	/**
+	 * JTextArea jtaOutput
+	 */
 	public JTextArea jtaOutput = new JTextArea();
 	private JButton forceStop = new JButton("Force exit");
 	private AvatarResults results;
@@ -111,11 +114,9 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 	/**
 	 * Creates the panel with avatar-based simulations from the current graph
 	 * 
-	 * @param graph
-	 *            regulatory graph (with possibly contextual information) on which
+	 * @param graph regulatory graph (with possibly contextual information) on which
 	 *            to apply the services
-	 * @param _parent
-	 *            pointer to the parent panel (to return upon closing the panel for
+	 * @param _parent pointer to the parent panel (to return upon closing the panel for
 	 *            the analysis of attractors)
 	 */
 	public AvatarConfigFrame(RegulatoryGraph graph, JFrame _parent) {
@@ -225,8 +226,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 	/**
 	 * Updates the parameters of the simulation panel given the new context
 	 * 
-	 * @param param
-	 *            the simulation context (parameters) to use to update the fields of
+	 * @param param the simulation context (parameters) to use to update the fields of
 	 *            the main panel
 	 */
 	public void refresh(AvatarParameters param) {
@@ -576,6 +576,10 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 		// parent.dispose();
 	}
 
+	/**
+	 * St the current parameter
+	 * @param p avatar parameter
+	 */
 	public void setCurrent(AvatarParameters p) {
 		editionPanel.setCurrent(p);
 	}

@@ -7,6 +7,10 @@ public interface ObjectPropertyEditorUI {
 	 * @param force boolean
 	 */
 	void refresh(boolean force);
+
+	/**
+	 * Apply function
+	 */
 	void apply();
 
 	/**

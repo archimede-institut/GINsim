@@ -9,6 +9,9 @@ package org.ginsim.common.callable;
  */
 public class BasicProgressListener<T> implements ProgressListener<T> {
 
+	/**
+	 * public T result
+	 */
 	public T result = null;
 	
 	@Override

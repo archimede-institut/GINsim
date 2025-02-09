@@ -28,7 +28,7 @@ public abstract class SimulationPanel extends JPanel {
 	 *            whether detailed logs of the behavior of the simulation are to be
 	 *            printed (default: true)
 	 * @return the parameterized simulation ready to be executed
-	 * @throws Exception
+	 * @throws Exception the exception
 	 */
 	public abstract Simulation getSimulation(StatefulLogicalModel model, boolean quiet) throws Exception;
 

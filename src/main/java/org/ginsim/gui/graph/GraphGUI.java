@@ -35,19 +35,45 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> extends Sa
 
 	/**
 	 * Fill the view menu with actions available on this graph GUI
+	 * @param layoutMenu  Jmenu input
+	 * @return JMenu
 	 */
 	JMenu getViewMenu(JMenu layoutMenu);
 
+	/**
+	 * Main Edit panel getter
+	 * @return GUIEditor of G
+	 */
 	GUIEditor<G> getMainEditionPanel();
 
+	/**
+	 * Getter for tab label
+	 * @return tab label edit
+	 */
 	String getEditingTabLabel();
 
+	/**
+	 * Node Edition panel getter
+	 * @return GUIEditor of V
+	 */
 	GUIEditor<V> getNodeEditionPanel();
 
+	/**
+	 * GuiEditor Getter
+	 * @return GUIEditor
+	 */
 	GUIEditor<E> getEdgeEditionPanel();
 
+	/**
+	 * Info Panel getter
+	 * @return info Jpanel
+	 */
 	JPanel getInfoPanel();
 
+	/**
+	 * getter of EditActionManager
+	 * @return the EditActionManager
+	 */
 	EditActionManager getEditActionManager();
 
 	/**
@@ -80,6 +106,7 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> extends Sa
 	
 	/**
 	 * Pick a destination and save the graph.
+	 * @return  boolean if saved
 	 */
 	boolean saveAs();
 
@@ -108,7 +135,11 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> extends Sa
 	 * @return a graph selection
 	 */
 	GraphSelection<V, E> getSelection();
-	
+
+	/**
+	 * test if edit allowed
+	 * @return boolean if edit allowed
+	 */
 	boolean isEditAllowed();
 	
 	/**
@@ -121,5 +152,9 @@ public interface GraphGUI<G extends Graph<V,E>, V, E extends Edge<V>> extends Sa
 	 */
 	void repaint();
 
-    double getZoomLevel();
+	/**
+	 * Zoom level getter
+	 * @return zoom level as double value
+	 */
+	double getZoomLevel();
 }
