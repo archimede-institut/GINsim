@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * <p>A wrapper of OMDDNode that adds the essentials methods to store states.</p>
  *
- * <p>Each path terminating with a value > 0 indicates the state is present in the set.<br>
+ * <p>Each path terminating with a value &gt; 0 indicates the state is present in the set.<br>
  * The value is used to indicates several status.</p>
  *
  * <h2>Working with the size</h2>
@@ -111,8 +111,8 @@ public class StatesSet {
      * Add <b>state</b> to the set with <b>status</b><br>
      * If the state was already there, the old status remains.<br>
      *  NB: use updateStatus to change the status.
-     * @param state
-     * @param newStatus
+     * @param state byte array for state
+     * @param newStatus new status int
      */
     public void addState(byte[] state, int newStatus) {
         int newState = stateFromArray(state, newStatus);
@@ -124,7 +124,7 @@ public class StatesSet {
      * If the state was already there, the old status remains.<br>
      * NB: use updateStatus to change the status.
      *
-     * @param newState
+     * @param newState indice
      * @param incSize the number of added state(s)
      */
     private void addMDD(int newState, int incSize) {
@@ -143,8 +143,8 @@ public class StatesSet {
      * Add <b>state</b> to the set with <b>status</b><br>
      * If the state was already there, the old status remains.<br>
      *  NB: use updateStatus to change the status.
-     * @param state
-     * @param newStatus
+     * @param state string
+     * @param newStatus the new status int
      */
     public void addState(String state, int newStatus) {
         addState(byteArrayFromString(state), newStatus);
@@ -440,11 +440,12 @@ public class StatesSet {
         return v;
     }
     /**
-     * @param v
+     *
      * Fill a list with all the states in the omdd
      * Each item of the returned list is a string representation using wildcard * (-1).
      * Note the order in the list is relative to the omdd structure.
      * a list made of all the states as schemata (using *)
+     * @param v list byte vertex
      */
     public void statesToFullList(List<byte[]> v) {
         byte[] t = new byte[childsCount.length];
