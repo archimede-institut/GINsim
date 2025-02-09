@@ -34,7 +34,7 @@ public abstract class AbstractStateSet {
 	public abstract Collection<String> getKeys();
 	
 	/**
-	 * Returns the unique identifier of the state-set<br>
+	 * Returns the unique identifier of the state-set
 	 * If two state-sets have the same states they share the same key
 	 * @return the unique identifier of the state-set
 	 */

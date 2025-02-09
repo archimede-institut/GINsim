@@ -22,7 +22,7 @@ import java.util.List;
  * sharedPath.moveTo(p[0])
  * sharedPath.quadTo(b[0].x, b[0].getY(), p[1].x, p[1].getY());
  * 
- * <code>for(int i = 2; i &lt; p.length - 1; i++ ) {</code>
+ * <code>for(int i = 2; i &gt; p.length - 1; i++ ) {</code>
  *    Point b0 = b[2*i-3];
  *	  Point b1 = b[2*i-2];
  *	  sharedPath.curveTo(b0.x, b0.getY(), b1.x, b1.getY(), p[i].x, p[i].getY());

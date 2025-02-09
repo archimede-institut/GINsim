@@ -252,7 +252,7 @@ public class StatesSet {
 
     /**
      * <p>Gives the count of states in the diagram.</p>
-     * If the size is in inconsistent state, then call <code>updateSize()</code> before.</p>
+     * If the size is in inconsistent state, then call <code>updateSize()</code> before.
      *
      * <p>Note that by calling this function, you will not be able to retrieve the count of state per status.</p>
      *
@@ -341,7 +341,7 @@ public class StatesSet {
     }
 
     /**
-     * Generate a new omdd corresponding to the <b>state</b> and with the status 1>
+     * Generate a new omdd corresponding to the <b>state</b> and with the status 1
      * @param str_state the state to generate
      * @return the omdd
      */
