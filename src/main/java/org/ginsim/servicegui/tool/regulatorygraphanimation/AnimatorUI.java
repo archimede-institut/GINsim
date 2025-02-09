@@ -218,7 +218,7 @@ public class AnimatorUI extends JDialog {
 
     /**
      * inform the user that the animator is ready to play.
-     * (with a play like button: "|>")
+     * (with a play like button: "|&gt;")
      */
     public void ready2play() {
         bPlay.setText("|>");
