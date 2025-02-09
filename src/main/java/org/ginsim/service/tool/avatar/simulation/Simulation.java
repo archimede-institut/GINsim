@@ -44,6 +44,10 @@ public abstract class Simulation {
 	protected ChartGNUPlot chart = new ChartGNUPlot();
 	protected int memory;
 
+	/**
+	 * Add the model function
+	 * @param _model StatefulLogicalModel model
+	 */
 	public void addModel(StatefulLogicalModel _model) {
 		model = _model;
 		List<NodeInfo> components = model.getComponents();
@@ -75,7 +79,7 @@ public abstract class Simulation {
 	 * 
 	 * @return the discovered attractors, their reachability, and remaining
 	 *         contextual information
-	 * @throws Exception
+	 * @throws Exception the exception
 	 */
 	public Result runSimulation() throws Exception {
 		long time = System.currentTimeMillis();
@@ -101,7 +105,7 @@ public abstract class Simulation {
 	 * 
 	 * @return the discovered attractors, their reachability, and remaining
 	 *         contextual information
-	 * @throws Exception
+	 * @throws Exception  the exception
 	 */
 	public abstract Result runSim() throws Exception;
 
@@ -112,6 +116,10 @@ public abstract class Simulation {
 	 */
 	public abstract String parametersToString();
 
+	/**
+	 * Name getter
+	 * @return the name as string
+	 */
 	public abstract String getName();
 
 	private String getNodes() {

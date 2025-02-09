@@ -14,6 +14,11 @@ import java.awt.*;
  */
 public class AnnotationTab extends JPanel implements EditTab {
 
+    /**
+     * init function
+     * @param gui  the gui
+     * @return a new AnnotationTab
+     */
     public static AnnotationTab prepareTab(GraphGUI<?,?,?> gui) {
         Graph graph = gui.getGraph();
 

@@ -48,9 +48,10 @@ public class AReg2GPConfig extends JDialog {
 	private List path;
 	
 	/**
-	 * @param frame
-	 * @param path
-	 * @param nodeOrder
+     * Constructor
+	 * @param frame the frame
+	 * @param path the path
+	 * @param nodeOrder node order list
 	 */
 	public AReg2GPConfig(JFrame frame, List path, List nodeOrder) {
 	    super(frame);
@@ -178,11 +179,13 @@ public class AReg2GPConfig extends JDialog {
 
 
 	/**
-	 * @param scriptfile
-     * @param datafile
+     * Save Plot
+	 * @param scriptfile file script
+     * @param datafile file
      * @param path the path to follow
-     * @param nodeOrder
-     * @param selected
+     * @param nodeOrder the node order
+     * @param selected as boolean array
+     * @throws    GsException graph exception
      */
     public static void doSaveGnuPlotArrowPath(File scriptfile, File datafile, List path, List nodeOrder, boolean[] selected) throws GsException{        
         int[] exported = new int[selected.length];
@@ -248,11 +251,13 @@ public class AReg2GPConfig extends JDialog {
         }
     }
     /**
-     * @param scriptfile
-     * @param datafile
-     * @param path
-     * @param nodeOrder
-     * @param selected
+     * sve plot from multi path
+     * @param scriptfile script file
+     * @param datafile  data file
+     * @param path list of path
+     * @param nodeOrder node order list
+     * @param selected boolean list
+     * @throws GsException graph exception
      */
     public static void doSaveGnuPlotMultiPath(File scriptfile, File datafile, List path, List nodeOrder, boolean[] selected) throws GsException{        
         int[] exported = new int[selected.length];

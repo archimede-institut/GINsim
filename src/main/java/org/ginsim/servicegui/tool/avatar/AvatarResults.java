@@ -69,22 +69,19 @@ public class AvatarResults {
 	/**
 	 * Creates the necessary context to run a simulation and display its results
 	 * 
-	 * @param _sim
-	 *            the simulation
-	 * @param _progress
-	 *            the component for posting updates during the execution of a
+	 * @param _sim the simulation
+	 * @param _progress the component for posting updates during the execution of a
 	 *            simulation
-	 * @param _parent
-	 *            the parent panel
-	 * @param _quiet
-	 *            whether detailed logs are to be printed (default: true)
-	 * @param _model
-	 *            the stateful logical model possibly defining a set of initial
+	 * @param _parent he parent panel
+	 * @param _quiet whether detailed logs are to be printed (default: true)
+	 * @param _model the stateful logical model possibly defining a set of initial
 	 *            states and oracles
-	 * @param _memFile
-	 *            the directory or file to save plots
-	 * @param _logFile
-	 *            the file to print logs
+	 * @param _memFile the directory or file to save plots
+	 * @param _logFile the file to print logs
+	 * @param _brun button
+	 * @param _csvFile cvs file
+	 * @param _resFile resultat file
+	 * @param _stop button stop
 	 */
 	public AvatarResults(Simulation _sim, JTextArea _progress, final AvatarConfigFrame _parent, boolean _quiet,
 			final StatefulLogicalModel _model, File _memFile, File _logFile, File _resFile, File _csvFile,
@@ -155,6 +152,10 @@ public class AvatarResults {
 		}
 	}
 
+	/**
+	 *  Kill function
+	 * @param dialog boolean not used
+	 */
 	public void kill(boolean dialog) {
 		sim.exit();
 	}
@@ -163,8 +164,7 @@ public class AvatarResults {
 	 * Creates the graphical display of the results from an executed simulation
 	 * (called after finishing 'runAvatarResults')
 	 * 
-	 * @param res
-	 *            the results to be displayed
+	 * @param res the results to be displayed
 	 */
 	public void showOutputFrame(final Result res) {
 		stop.setEnabled(false);
@@ -502,10 +502,8 @@ public class AvatarResults {
 	 * Displays a message of error whenever a simulation is not successfully
 	 * executed
 	 * 
-	 * @param errorMessage
-	 *            the message to be display
-	 * @param e
-	 *            the exception whose stack trace is to be printed in the log of
+	 * @param errorMessage the message to be display
+	 * @param e the exception whose stack trace is to be printed in the log of
 	 *            ginsim
 	 */
 	public static void errorDisplay(String errorMessage, Exception e) {

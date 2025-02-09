@@ -28,7 +28,11 @@ public class Annotation extends ArrayList<AnnotationLink> implements XMLize, Lis
 		comment = "";
 	}
 
-    public List<AnnotationLink> getLinkList() {
+	/**
+	 * Getter list link
+	 * @return list of annotation
+	 */
+	public List<AnnotationLink> getLinkList() {
         return this;
     }
     

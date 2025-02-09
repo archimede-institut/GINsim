@@ -85,6 +85,9 @@ public class AvatarSimulation extends Simulation {
 	/** maximum depth for the approximate rewiring strategy */
 	public int approxDepth = -1;
 
+	/**
+	 * AsynchronousUpdater exhaustiveUpdater
+	 */
 	protected AsynchronousUpdater exhaustiveUpdater;
 	// public AvatarUpdater sequentialUpdater;
 

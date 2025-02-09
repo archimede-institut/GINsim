@@ -39,8 +39,12 @@ public abstract class AbstractParameterPanel<G extends Graph,T> extends JPanel i
     	this.graph = (G)gui.getGraph();
     	this.frame = GUIManager.getInstance().getFrame(graph);
     }
-    
-    protected AbstractParameterPanel(Graph<?,?> graph) {
+
+	/**
+	 * Constructor
+	 * @param graph the graph
+	 */
+	protected AbstractParameterPanel(Graph<?,?> graph) {
 		this(GUIManager.getInstance().getGraphGUI(graph));
 	}
 

@@ -100,8 +100,10 @@ public class AnnotationPanel extends JPanel
         listenChanges = true;
     }
 
-
-        protected void applyComment() {
+    /**
+     * apply comment function
+      */
+    protected void applyComment() {
     	if (currentNote == null) {
     		return;
     	}

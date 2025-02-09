@@ -18,8 +18,17 @@ public interface EditTab {
 	 */
 	public String getTitle();
 
+	/**
+	 * Component getter
+	 * @return the component
+	 */
 	public Component getComponent();
-	
+
+	/**
+	 * Test if active
+	 * @param selection
+	 * @return boolean if actif
+	 */
 	public boolean isActive( GraphSelection<?, ?> selection);
 
     default JPopupMenu getMenu() {

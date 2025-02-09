@@ -11,5 +11,9 @@ public interface ListPanelCompanion<T, L extends List<T>> {
 
     void setParentList(L list);
 
+    /**
+     * Update selection function
+     * @param selection selection int array
+     */
     void selectionUpdated(int[] selection);
 }

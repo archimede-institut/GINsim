@@ -2,6 +2,10 @@ package org.ginsim.gui.utils.data;
 
 
 public interface ObjectPropertyEditorUI {
+	/**
+	 * refresh
+	 * @param force boolean
+	 */
 	void refresh(boolean force);
 	void apply();
 
@@ -11,5 +15,9 @@ public interface ObjectPropertyEditorUI {
 	 * @param panel property holder
 	 */
 	void setEditedProperty(GenericPropertyInfo pinfo, GenericPropertyHolder panel);
+
+	/**
+	 * Releas function
+	 */
 	void release();
 }
