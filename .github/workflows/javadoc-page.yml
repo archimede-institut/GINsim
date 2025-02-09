@@ -8,6 +8,8 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
     - name: Checkout du dépôt
@@ -19,6 +21,8 @@ jobs:
         java-version: '11'
     - name: make Javadoc
       run: mvn javadoc:javadoc
+    - name: Disable Jekyll
+      run: touch ./target/site/apidocs/.nojekyll
     - name: Deploye Javadoc on GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
