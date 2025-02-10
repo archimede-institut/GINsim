@@ -70,6 +70,10 @@ public interface Style {
      * @param source style source
      */
     void copy(Style source);
-    
-    Style getParent();
+
+	/**
+	 * Reteur the parent style
+	 * @return style object
+	 */
+	Style getParent();
 }

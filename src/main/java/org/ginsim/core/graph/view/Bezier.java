@@ -39,7 +39,7 @@ public class Bezier {
 
 	/**
 	 * Creates a new Bezier curve.
-	 * @param points
+	 * @param points list of point
 	 */
 	public Bezier(List<Point> points) {
 		int n = points.size();
