@@ -3,6 +3,8 @@ package org.ginsim.core.graph.dynamicgraph;
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
+import org.colomoto.mddlib.MDDVariable;
+import org.colomoto.mddlib.operators.MDDBaseOperators;
 import org.ginsim.core.graph.AbstractDerivedGraph;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.GraphFactory;
@@ -60,7 +62,6 @@ public abstract class TransitionGraphImpl<V,E extends Edge<V>> extends AbstractD
         for (int i=0 ; i<extra.length ; i++) {
             extra[i] = ddmanager.reach(extraFunctions[i], state);
         }
-
         return extra;
     }
 

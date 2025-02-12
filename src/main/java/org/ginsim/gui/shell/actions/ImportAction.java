@@ -43,13 +43,10 @@ public abstract class ImportAction extends BaseAction {
 	}
 
 	/**
-	 * 
-	 * @param name
-	 *            Entry to insert in the menu
-	 * @param icon
-	 *            icon image for menu and toolbar
-	 * @param tooltip
-	 *            Long description of the action
+	 * Constructor
+	 * @param name Entry to insert in the menu
+	 * @param icon icon image for menu and toolbar
+	 * @param tooltip Long description of the action
 	 * @param accelerator
 	 *            the keyboard bytecut
 	 */

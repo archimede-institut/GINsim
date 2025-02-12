@@ -195,7 +195,10 @@ public class ScriptLauncher {
 	}
 
 	/**
+	 * Open
 	 * @deprecated see {@link #load(String)}
+	 * @^param filename  the string filename
+	 * @throws GsException the exception graph
 	 */
 	@Deprecated
 	public Graph<?, ?> open(String filename) throws GsException {

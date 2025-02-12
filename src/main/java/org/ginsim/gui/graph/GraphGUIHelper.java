@@ -97,7 +97,7 @@ public interface GraphGUIHelper<G extends Graph<V,E>, V, E extends Edge<V>> {
 	/**
 	 * Does this graph type support copy/paste actions?
 	 * 
-	 * @param graph
+	 * @param graph the graph
 	 * @return true if copy/paste is supported, false otherwise.
 	 */
 	boolean canCopyPaste(G graph);

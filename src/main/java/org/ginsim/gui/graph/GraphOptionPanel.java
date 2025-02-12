@@ -12,6 +12,7 @@ public interface GraphOptionPanel {
      */
 	public int getSaveMode();
     /**
+     * Save if associated parameters
      * @return true if associated parameters should also be saved
      */
     public boolean isExtended() ;

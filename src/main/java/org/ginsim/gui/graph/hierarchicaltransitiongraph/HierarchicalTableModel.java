@@ -73,7 +73,7 @@ public class HierarchicalTableModel extends AbstractTableModel {
 		if (columnIndex >= colCount) {
 			i = extraContent[rowIndex][columnIndex - colCount];
 			if (i < 0) {
-				return "~*";
+				return "*";
 				//return extraContentString[rowIndex][columnIndex - colCount];
 				//return a;
 				//return extraContent[rowIndex];
@@ -91,7 +91,7 @@ public class HierarchicalTableModel extends AbstractTableModel {
 	@Override
 	public String getColumnName(int column) {
 		if (column >= colCount) {
-			return "~" + extraNames[column - colCount];
+			return  "~" + extraNames[column - colCount];
 		}
 		return htg.getNodeOrder().get(column).getNodeID();
 	}
