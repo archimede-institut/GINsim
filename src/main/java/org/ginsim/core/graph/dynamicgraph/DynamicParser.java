@@ -57,25 +57,28 @@ public final class DynamicParser extends GsXMLHelper {
      * @param s_dtd
      */
     public DynamicParser(Set<String> set, Attributes attributes, String s_dtd) throws GsException {
-    	
-        this.graph = GSGraphManager.getInstance().getNewGraph( DynamicGraph.class, true);
-    	this.set = set;
-		styleManager = graph.getStyleManager();
-		vareader = graph.getNodeAttributeReader();
-		ereader = graph.getEdgeAttributeReader();
-		
-		try {
-			graph.setGraphName(attributes.getValue("id"));
-		} catch (GsException e) {
-			throw new GsException(GsException.GRAVITY_ERROR, "invalidGraphName");
-		}
-		String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
-		List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>(t_nodeOrder.length);
-		for (int i=0 ; i<t_nodeOrder.length ; i++) {
-		    nodeOrder.add( new NodeInfo( t_nodeOrder[i]));
-		}
-		graph.setNodeOrder(nodeOrder);
 
+		///this.graph = GSGraphManager.getInstance().getNewGraph( DynamicGraph.class, true);
+		List<Object> list = new ArrayList<>();
+		this.graph = GSGraphManager.getInstance().getNewGraph(DynamicGraph.class, list);
+    	this.set = set;
+		if (this.graph != null) {
+			styleManager = graph.getStyleManager();
+			vareader = graph.getNodeAttributeReader();
+			ereader = graph.getEdgeAttributeReader();
+
+			try {
+				graph.setGraphName(attributes.getValue("id"));
+			} catch (GsException e) {
+				throw new GsException(GsException.GRAVITY_ERROR, "invalidGraphName");
+			}
+			String[] t_nodeOrder = attributes.getValue("nodeorder").split(" ");
+			List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>(t_nodeOrder.length);
+			for (int i = 0; i < t_nodeOrder.length; i++) {
+				nodeOrder.add(new NodeInfo(t_nodeOrder[i]));
+			}
+			graph.setNodeOrder(nodeOrder);
+		}
     }
 
     /**
