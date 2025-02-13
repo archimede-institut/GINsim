@@ -35,8 +35,14 @@ public class FormatSupportServiceGUI<S extends FormatSupportService> extends Abs
 
 	protected String import_tip = "";
 	protected String export_tip = "";
-	
-	
+
+
+	/**
+	 * Constructor
+	 * @param name the string name
+	 * @param service The s service
+	 * @param format the file  FileFormatDescription
+	 */
 	public FormatSupportServiceGUI(String name, S service, FileFormatDescription format) {
 		this.format_name = name;
 		this.format = format;

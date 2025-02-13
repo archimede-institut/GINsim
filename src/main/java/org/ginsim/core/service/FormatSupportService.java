@@ -130,7 +130,7 @@ public class FormatSupportService<F extends LogicalModelFormat> implements Servi
 
 	/**
 	 * load File
-	 * @param filename
+	 * @param filename the string filename
 	 * @return the RegulatoryGraph graph
 	 * @throws Exception the exception
 	 */
