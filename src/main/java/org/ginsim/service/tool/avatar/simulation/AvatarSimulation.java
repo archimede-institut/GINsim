@@ -271,7 +271,7 @@ public class AvatarSimulation extends Simulation {
 
 					StateSet cycleToRewire = new StateSet(Ct), exitStatesRewiring = new StateSet();
 					exitStates = null;
-					System.out.println("growing");
+					//System.out.println("growing");
 					do {
 						prev_cycle_size = Ct.size();
 						if (!quiet)
@@ -326,7 +326,7 @@ public class AvatarSimulation extends Simulation {
 						// memory=(int)Math.max(memory,Runtime.getRuntime().totalMemory()/1024);
 
 					} while (exitRatio > 0 && prev_cycle_size < Ct.size() && Ct.size() < maxPSize);
-					System.out.println("grown");
+					//System.out.println("grown");
 
 					if (!quiet)
 						publish("Extended cycle with #" + Ct.size() + " states and exitRatio=" + exitRatio);
@@ -355,9 +355,9 @@ public class AvatarSimulation extends Simulation {
 					if (Ct.size() > minCSize) {
 						if (!quiet)
 							output("  Rewiring cycle  with #" + Ct.size() + " states");
-						System.out.println("To rewire");
+						//System.out.println("To rewire");
 						rewriteGraph(Ct, exitStates, exitProbs);
-						System.out.println("Rewired");
+						//System.out.println("Rewired");
 						if (!quiet)
 							output("  Cycle rewired");
 						if (Ct.size() > minTransientSize) {
