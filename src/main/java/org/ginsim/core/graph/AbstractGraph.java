@@ -123,8 +123,8 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
      */
     public void setGraphName( String graph_name) throws GsException {
         // FIX #15
-		//if (!graph_name.matches("[a-zA-Z_]+[a-zA-Z0-9_-]*")) {
-		if (!graph_name.matches("[a-zA-Z0-9_-]*")) {
+		if (!graph_name.matches("[a-zA-Z_]+[a-zA-Z0-9_-]*")) {
+		//if (!graph_name.matches("[a-zA-Z0-9_-]*")) {
 		    throw new GsException(GsException.GRAVITY_ERROR, "Invalid name");
 		}
         this.graphName = graph_name;

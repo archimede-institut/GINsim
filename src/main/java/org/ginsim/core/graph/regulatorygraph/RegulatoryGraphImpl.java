@@ -38,7 +38,8 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     private List<byte[]> initialStates = null;
     private List<List<byte[]>> oracles = null;
 
-    private boolean use_name = false;
+    private boolean use_name_test = false;
+    private  boolean use_name = true;
 
     /**
      * Create a new Regulatory graph
@@ -136,7 +137,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 
     @Override
     public String getDisplayName(RegulatoryNode node) {
-        if (use_name) {
+        if (use_name_test) {
             return node.getDisplayName();
         }
         return node.getId();

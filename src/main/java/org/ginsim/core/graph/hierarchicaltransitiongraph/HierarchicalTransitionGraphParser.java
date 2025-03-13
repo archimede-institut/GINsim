@@ -55,6 +55,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
 	private byte[] childCount;
     
     /**
+     * Constructor
      * @param nodeToParse the set of node to parse, the others will be filtered
      * @param attributes
      * @param s_dtd

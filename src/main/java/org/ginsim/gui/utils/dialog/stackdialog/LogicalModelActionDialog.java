@@ -54,21 +54,19 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
     public LogicalModelActionDialog(RegulatoryGraph lrg, Frame parent, String id, int w, int h) {
         super(parent, id, w, h);
         this.lrg = lrg;
-
         this.perturbations = (ListOfPerturbations)OManager.getObject(lrg, PerturbationManager.KEY, true);
-        this.reductions = (ListOfReductionConfigs)OManager.getObject(lrg, ReductionConfigManager.KEY, true);
+		this.reductions = (ListOfReductionConfigs)OManager.getObject(lrg, ReductionConfigManager.KEY, true);
         perturbationPanel = new PerturbationSelectionPanel(this, lrg, this);
-        reductionPanel = new ReductionSelectionPanel(this, lrg, this);
+        reductionPanel = new ReductionSelectionPanel(this, lrg, this, cb_simplify);
         super.setMainPanel(getMainPanel());
-
         cb_simplify.addChangeListener(this);
         cb_propagate.addChangeListener(this);
-
 		this.addWindowListener(new java.awt.event.WindowAdapter() { 
 			public void windowClosing(java.awt.event.WindowEvent e) {
 				cancel();
 			}
 		});
+		if(getReduction() != null){ cb_simplify.setSelected(false);}
     }
 
     /**
@@ -79,10 +77,14 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
     	this.userID = userID;
 		this.perturbation = perturbations.getUsedPerturbation(userID);
 		this.reduction = reductions.getUsedReduction(userID);
-    	perturbationPanel.refresh();
-        reductionPanel.refresh();
-        cb_simplify.setSelected(reductions.isStrippingOutput(userID));
+		if (reduction != null){
+			cb_simplify.setSelected(false);
+		}
+        // eductions.isStrippingOutput(userID))
+		// cb_simplify.setSelected(true);
         cb_propagate.setSelected(reductions.isPropagatingFixed(userID));
+		perturbationPanel.refresh();
+		reductionPanel.refresh();
     }
 
 	/**
@@ -150,13 +152,21 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	}
 
 	@Override
-	public void setReduction(ReductionConfig reduction) {
-		if (userID != null) {
-			reductions.useReduction(userID, reduction);
+	public void setReduction(ReductionConfig reduc) {
+		if (userID != null ) {
+			reductions.useReduction(userID, reduc);
 			this.reduction = reductions.getUsedReduction(userID);
+			if (reduction != null) {
+				cb_simplify.setSelected(false);
+			}
 		} else {
-			this.reduction = reduction;
+			reduction = reduc;
+			if (reduction != null){
+				this.cb_simplify.setSelected(false);
+			}
+			//this.reduction.outputs = this.cb_simplify.isSelected();}
 		}
+		cb_simplify.repaint();
 	}
 
 	@Override
@@ -176,12 +186,26 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 
 	@Override
 	public void stateChanged(ChangeEvent e) {
-		if (userID != null) {
-            reductions.setStrippingOutput(userID, cb_simplify.isSelected());
-            reductions.setPropagateFixed(userID, cb_propagate.isSelected());
+		if (userID != null){
+			if (e.getSource().equals(cb_simplify)) {
+				if (cb_simplify.isSelected()){
+					this.reduction = null;
+				}
+			}
+			if (e.getSource().equals(reduction)) {
+				if (getReduction() != null) { cb_simplify.setSelected(false);}
+			}
+			//
+			//setReduction(null);
+			//&&} reductions.getUsedReduction(userID) != null) {
+			// reductions.setStrippingOutput(userID, cb_simplify.isSelected());
+			//reductions.getUsedReduction(userID).outputs = cb_simplify.isSelected();
+			reductions.setPropagateFixed(userID, cb_propagate.isSelected());
+			reductionPanel.refresh();
+			cb_simplify.repaint();
 		}
 	}
-	
+
 	@Override
 	public void setResult(Object result) {
 		// empty implementation: not all derived classes will want to do something
@@ -211,6 +235,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         // retrieve the model
         LogicalModel model = lrg.getModel();
 
+
         // apply model modifiers: perturbation and reduction
         Perturbation p = getPerturbation();
         if (p != null) {
@@ -221,6 +246,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 		ReductionConfig reduction = getReduction();
 		if (reduction != null) {
 			model = reduction.apply(model);
+			
 		}
 
         ReductionModifier reducer = reductionService.getModifier(model);

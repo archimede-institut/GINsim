@@ -37,8 +37,9 @@ public final class GinmlParser extends XMLHelper {
     }
     
     /**
+	 * parse from map
      * @param is from where to read
-     * @param map
+     * @param map Set to parse
      * @return the new graph
      */
     public Graph  parse(InputStream is, Set map)  throws GsException{

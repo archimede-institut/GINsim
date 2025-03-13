@@ -81,7 +81,6 @@ public class SingleSimulationFrame extends BaseSimulationFrame {
 		if (currentParameter == null) {
 			return;
 		}
-		
 		setMessage(Txt.t("STR_wait_msg"));
 		bcancel.setText(Txt.t("STR_abort"));
 		

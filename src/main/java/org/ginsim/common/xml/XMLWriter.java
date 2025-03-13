@@ -66,8 +66,8 @@ public class XMLWriter {
     /**
      * Create a XMLWriter with the path to a file.
      * 
-     * @param filename
-     * @throws IOException
+     * @param filename the string filename
+     * @throws IOException the io exception
      */
     public XMLWriter(String filename) throws IOException {
         this(filename, null);
@@ -76,9 +76,9 @@ public class XMLWriter {
     /**
      * Create a XMLWriter with the path to a file.
      *
-     * @param filename
-     * @param docType
-     * @throws IOException
+     * @param filename the string filename
+     * @param docType doc type value
+     * @throws IOException the io exception
      */
     public XMLWriter(String filename, String docType) throws IOException {
     	this(new FileOutputStream(filename), docType);
@@ -88,8 +88,8 @@ public class XMLWriter {
      * Create a XMLWriter with an existing Writer.
      * Warning: the writer should use the right encoding, otherwise we may get into troubles.
      *
-     * @param out
-     * @throws IOException
+     * @param out the OutputStreamWriter as out attribute
+     * @throws IOException the io exception
      */
     public XMLWriter(OutputStreamWriter out) throws IOException {
         this(out, null);
@@ -98,9 +98,9 @@ public class XMLWriter {
      * Create a XMLWriter with an existing Writer.
      * Warning: the writer should use the right encoding, otherwise we may get into troubles.
      * 
-     * @param out
-     * @param docType
-     * @throws IOException
+     * @param out the OutputStreamWriter
+     * @param docType doc type value
+     * @throws IOException the io exception
      */
     public XMLWriter(OutputStreamWriter out, String docType) throws IOException {
         this(out,docType,true);
@@ -109,8 +109,8 @@ public class XMLWriter {
      * Create a XMLWriter with an output stream.
      * It will create a Writer for this stream, using an UTF-8 encoding.
      *
-     * @param out
-     * @throws IOException
+     * @param out the OutputStream
+     * @throws IOException the io exception
      */
     public XMLWriter(OutputStream out) throws IOException {
         this(new OutputStreamWriter(out, "UTF-8"),null);
@@ -119,9 +119,9 @@ public class XMLWriter {
      * Create a XMLWriter with an output stream.
      * It will create a Writer for this stream, using an UTF-8 encoding.
      *
-     * @param out
-     * @param docType
-     * @throws IOException
+     * @param out the OutputStreamWriter
+     * @param docType doc type value
+     * @throws IOException the io exception
      */
     private XMLWriter(OutputStream out, String docType) throws IOException {
         this(new OutputStreamWriter(out, "UTF-8"),docType,true);
@@ -130,10 +130,10 @@ public class XMLWriter {
     /**
      * Create a XMLWriter with an existing Writer.
      * 
-     * @param out
-     * @param docType
-     * @param indent
-     * @throws IOException
+     * @param out the OutputStreamWriter as out attribute
+     * @param docType doc type value
+     * @param indent boolean if indent
+     * @throws IOException the io exception
      */
     private XMLWriter(OutputStreamWriter out, String docType, boolean indent) throws IOException {
         this.indent = indent;
@@ -147,7 +147,7 @@ public class XMLWriter {
 	/**
      * ask to store the next calls into a string buffer.
      * Use <code>getBuffer()</code> to stop it and get the content of the buffer.
-     * @throws IOException
+     * @throws IOException the io exception
      */
     public void toBuffer()  throws IOException {
         if (inTag) {
@@ -175,9 +175,10 @@ public class XMLWriter {
     }
     
     /**
-     * @param s
-     * @param isAttVal
-     * @throws IOException
+     * Re write string with protected characted
+     * @param s the string to write
+     * @param isAttVal boolean if Attribute value if \
+     * @throws IOException the exception
      */
     public void writeEsc (String s, boolean isAttVal) throws IOException
     {

@@ -10,7 +10,7 @@ import org.ginsim.core.graph.objectassociation.UserSupporter;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.utils.data.NamedList;
-
+import org.ginsim.service.tool.modelreduction.ReductionConfig;
 
 /**
  * store all simplification parameters and offer a mean to access them.
@@ -81,9 +81,14 @@ public class ListOfReductionConfigs extends NamedList<ReductionConfig>
 
     public void useReduction(String key, ReductionConfig reduction) {
         if (reduction == null) {
+            //outputStrippers.remove(key);
+            //fixedPropagaters.remove(key);
             users.remove(key);
+
         } else {
             users.put(key, reduction);
+            // decouplage reduction output do do
+            if(reduction.outputs)   {outputStrippers.add(key);}
         }
     }
 

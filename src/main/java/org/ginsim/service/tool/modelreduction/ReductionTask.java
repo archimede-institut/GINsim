@@ -35,7 +35,7 @@ public class ReductionTask extends AbstractTask<LogicalModel> {
     private final Collection<NodeInfo> to_remove;
     private final Collection<NodeInfo> l_removed;
 
-    private final boolean propagate, outputs;
+    private final boolean propagate; // , outputs;
 
     public ReductionTask(RegulatoryGraph graph, ReductionConfig config) {
         this(graph.getModel(), config, null);
@@ -59,7 +59,7 @@ public class ReductionTask extends AbstractTask<LogicalModel> {
         this.l_removed = new ArrayList<NodeInfo>();
         this.launcher = launcher;
         this.propagate = config.propagate;
-        this.outputs = config.outputs;
+        // this.outputs = config.outputs;
 	}
 	
     @Override
@@ -94,13 +94,10 @@ public class ReductionTask extends AbstractTask<LogicalModel> {
 				throw new RuntimeException(sb.toString());
 			}
 		}
-
-        if (outputs) {
-            reducer.removePseudoOutputs();
-        }
-
+        //if (outputs) {
+        //    reducer.removePseudoOutputs();
+        //}
         LogicalModel result = reducer.getModel(false, true);
-
         return result;
     }
     
