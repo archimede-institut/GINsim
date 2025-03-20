@@ -110,6 +110,13 @@ public class StateInRegGraphFrame extends StackDialog {
 		colorizerCheckbox.undoColorize();
 		super.cancel();
 	}
+
+	@Override
+	public void doClose(){
+		colorizerCheckbox.undoColorize();
+		dispose();
+		//super.cancel();
+	}
 }
 
 /**
