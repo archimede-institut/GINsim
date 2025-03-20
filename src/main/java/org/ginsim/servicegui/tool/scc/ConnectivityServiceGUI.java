@@ -2,12 +2,11 @@ package org.ginsim.servicegui.tool.scc;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import javax.swing.Action;
+import javax.swing.*;
 
+import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.common.task.Task;
 import org.colomoto.common.task.TaskListener;
 import org.colomoto.common.task.TaskStatus;
@@ -32,8 +31,19 @@ import org.ginsim.core.service.ServiceStatus;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.scc.SCCGraphService;
 import org.kohsuke.MetaInfServices;
-
-
+import org.ginsim.core.graph.GSGraphManager;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphFactory;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphImpl;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
+import org.ginsim.gui.GUIManager;
+import org.ginsim.core.graph.backend.JgraphtBackendImpl;
+import org.ginsim.core.graph.GraphBackend;
+import org.ginsim.core.graph.AbstractGraph;
+import org.ginsim.core.graph.GraphFactory;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphFactory;
+import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
+import org.ginsim.service.tool.modelbooleanizer.ModelBooleanizerService;
 /**
  * register the scc service
  */
@@ -70,7 +80,7 @@ class SCCGraphAction extends ToolAction implements TaskListener {
         super( "STR_constructReducedGraph", "STR_constructReducedGraph_descr", serviceGUI);
 		this.graph = graph;
 	}
-	
+
 	@Override
 	public synchronized void actionPerformed( ActionEvent arg0) {
         if (task != null && task.getStatus() == TaskStatus.RUNNING) {
@@ -87,6 +97,7 @@ class SCCGraphAction extends ToolAction implements TaskListener {
             return;
         }
         ReducedGraph result = this.task.getResult();
+
         GUIManager.getInstance().whatToDoWithGraph(result);
         this.task = null;
         setEnabled(true);
@@ -97,21 +108,35 @@ class SCCGraphAction extends ToolAction implements TaskListener {
 class ConnectivityColorizeGraphAction extends GenericGraphAction {
 	private static final long serialVersionUID = 8294301473668672512L;
     private StyleProvider styler;
+	private StyleProvider oldstyle;
 
 	protected ConnectivityColorizeGraphAction( Graph graph, ServiceGUI serviceGUI) {
-        super( graph, "STR_connectivity", null, "STR_connectivity_descr", null, serviceGUI);
+		super(graph, "STR_connectivity", null, "STR_connectivity_descr", null, serviceGUI);
+
 	}
-	
+
 	@Override
 	public void actionPerformed( ActionEvent arg0) {
 		SCCGraphService service = GSServiceManager.getService(SCCGraphService.class);
-        List<NodeReducedData> components = service.getComponents(graph);
-        styler = service.getStyleProvider(components, graph);
-        graph.getStyleManager().setStyleProvider(styler);
-        if (GUIManager.getInstance().getFrame(graph) == null) {
-        		GUIManager.getInstance().whatToDoWithGraph(graph);
-        }
+		RegulatoryGraph ngraph = copyGraph(graph);
+		List<NodeReducedData> components = service.getComponents(ngraph);
+		styler = service.getStyleProvider(components, ngraph );
+		ngraph.getStyleManager().setStyleProvider(styler);
+		GUIManager.getInstance().newFrame(ngraph);
 	}
+
+	private void doclose(){
+		//graph.getStyleManager().setStyleProvider(oldstyle);
+		;
+	}
+	private RegulatoryGraph copyGraph(Graph  graph){
+		RegulatoryGraph graph1 =  (RegulatoryGraph) graph;
+		ArrayList<NodeInfo> to_remove = new ArrayList<NodeInfo>();
+		RegulatoryGraph simplifiedGraph = LogicalModel2RegulatoryGraph.importModel(graph1.getModel(), to_remove);
+		new ModelBooleanizerService().copyNodeStyles(graph1, simplifiedGraph);
+		return simplifiedGraph;
+	}
+
 }
 
 class ExtractFromSCCGraphAction extends GenericGraphAction {

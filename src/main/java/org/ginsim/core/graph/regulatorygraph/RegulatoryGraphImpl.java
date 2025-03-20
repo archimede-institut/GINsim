@@ -21,7 +21,7 @@ import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.io.parser.GINMLWriter;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.NotificationResolution;
-
+import org.ginsim.core.graph.GraphFactory;
 /**
  * Implementation of the RegulatoryGraph interface.
  * 
@@ -47,7 +47,7 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     public RegulatoryGraphImpl() {
         super( RegulatoryGraphFactory.getInstance());
     }
-    
+
     @Override
     public List<RegulatoryNode> getNodeOrder() {
     	return nodeOrder;
@@ -360,7 +360,6 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 
     @Override
     public Graph getSubgraph(Collection<RegulatoryNode> v_vertex, Collection<RegulatoryMultiEdge> v_edges) {
-
         RegulatoryGraph copiedGraph = GSGraphManager.getInstance().getNewGraph();
         NodeAttributesReader vReader = getNodeAttributeReader();
         NodeAttributesReader cvreader = copiedGraph.getNodeAttributeReader();
@@ -611,4 +610,38 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 	public boolean hasOracles() {
 		return oracles != null;
 	}
+
+    public int getNextid(){
+        return nextid;
+    }
+
+    public void setInitialStates(List<byte[]> initialStates){
+        this.initialStates = initialStates;
+    }
+    public void setUseNameTest(boolean use_name_test){
+        this.use_name_test = use_name_test;
+    }
+    public void setUseName(boolean use_name){
+        this.use_name = use_name;
+    }
+
+    public List<byte[]>  getInitialStates() {
+        return initialStates;
+    }
+
+    /**
+     *
+     * @return boolean value
+     */
+    public boolean getUseNameTest(){
+        return use_name_test;
+    }
+    public boolean getUseName(){
+        return use_name;
+    }
+
+    public void setNextid(int nextid){
+        this.nextid = nextid;
+    }
+
 }

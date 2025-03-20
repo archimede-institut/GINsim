@@ -87,6 +87,7 @@ public class FileSelectionHelper {
 			int confirm = JOptionPane.showConfirmDialog(parent, "The file exists, do you want to overwrite it?");
 			if (confirm != JOptionPane.OK_OPTION) {
 				return null;
+
 			}
 		}
 		

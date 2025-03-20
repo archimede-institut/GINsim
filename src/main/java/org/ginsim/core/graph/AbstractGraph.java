@@ -96,7 +96,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	 * Create a new graph with the default back-end.
 	 * @param factory the factory from construction
 	 */
-	protected AbstractGraph(GraphFactory factory) {
+	public AbstractGraph(GraphFactory factory) {
     	this.factory = factory;
     	this.graphBackend = (GraphBackend<V, E>)JgraphtBackendImpl.getGraphBackend(this);
         graphBackend.setViewListener(this);
@@ -144,6 +144,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 	public void setAttribute(String name, String value) {
 		attributes.put(name, value);
 	}
+
 
 //    //----------------------   GRAPH SAVING MANAGEMENT METHODS -------------------------------
 //    
@@ -427,7 +428,7 @@ abstract public class AbstractGraph<V, E extends Edge<V>> implements Graph<V, E>
 		}
 		return styleManager;
 	}
-	
+
 	@Override
 	public EdgeAttributesReader getEdgeAttributeReader() {
 		return new EdgeAttributeReaderImpl(getStyleManager(), graphBackend, getNodeAttributeReader());
