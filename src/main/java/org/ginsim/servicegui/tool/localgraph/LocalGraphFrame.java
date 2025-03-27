@@ -151,16 +151,13 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 		if (states == null || states.size() < 1) {
 			return null;
 		}
-		
 		// TODO: should we color nodes for multiple states?
 		byte[] state = states.get(0);
-
 		if (activityMap == null) {
 			activityMap = new HashMap<RegulatoryNode, ActivityLevel>();
 		} else {
 			activityMap.clear();
 		}
-		
 		int idx = 0;
 		for (RegulatoryNode node: config.getGraph().getNodeOrder()) {
 			byte cur = state[idx++];
@@ -208,12 +205,14 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 	public void tableChanged(TableModelEvent e) {
 		changed();
 	}
-
 	public void valueChanged(ListSelectionEvent e) {
 		changed();
 	}
 	
 	private void changed() {
+	    //if (isColorized){
+		//	undoColorize();
+		//}
 		functionalityMap = null;
 		activityMap = null;
 		isColorized = false;
@@ -224,7 +223,6 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 		if (isColorized) {
 			return;
 		}
-		
 		isColorized = true;
 		if (functionalityMap == null) {
 			run();

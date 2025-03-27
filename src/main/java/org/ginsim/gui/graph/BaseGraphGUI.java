@@ -192,11 +192,13 @@ public abstract class BaseGraphGUI<G extends Graph<V,E>, V, E extends Edge<V>>
 			}
 			try {
 				graph.setGraphName( graph_name);
+				GSGraphManager.getInstance().registerGraph( graph, filename);
+				return save();
 			} catch (GsException gse) {
-				LogManager.debug( "Unable to set graph name: " + graph_name);
+				GUIMessageUtils.openWarningDialog( "Unable to set graph name: " + graph_name);
+				LogManager.info( "Unable to set graph name: " + graph_name);
 			}
-			GSGraphManager.getInstance().registerGraph( graph, filename);
-			return save();
+
 		}
 		
 		return false;
