@@ -13,7 +13,7 @@ import org.ginsim.service.tool.avatar.domain.Dictionary;
 import org.ginsim.service.tool.avatar.domain.Result;
 import org.ginsim.service.tool.avatar.domain.StateSet;
 import org.ginsim.service.tool.avatar.utils.ChartGNUPlot;
-
+import javax.swing.SwingUtilities;
 /**
  * Class defining an abstract simulation and providing facilities for their
  * management.<br>
@@ -164,7 +164,7 @@ public abstract class Simulation {
 
 	public void exit() {
 		if (t1 != null && t1.isAlive())
-			t1.stop();
+			t1.interrupt();
 	}
 
 	public Result run() throws Exception {
@@ -174,13 +174,16 @@ public abstract class Simulation {
 		t1 = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				try {
-					res[0] = runSimulation();
-				} catch (Exception e) {
-					// e.printStackTrace();
-					es[0] = e;
-					ok[0] = false;
-				}
+				SwingUtilities.invokeLater(() -> {
+					try {
+						res[0] = runSimulation();
+					}
+					catch (Exception e) {
+						// e.printStackTrace();
+						es[0] = e;
+						ok[0] = false;
+					}
+				});
 			}
 		});
 		t1.start();

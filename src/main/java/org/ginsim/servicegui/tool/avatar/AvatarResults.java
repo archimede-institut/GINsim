@@ -32,7 +32,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
-
+import javax.swing.SwingUtilities;
 import org.colomoto.biolqm.StatefulLogicalModel;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
@@ -105,44 +105,48 @@ public class AvatarResults {
 	public void runAvatarResults() {
 		try {
 			sim.setComponents(progress);
-			Thread t1 = new Thread(new Runnable() {
-				@Override
-				public void run() {
+			//Thread t1 = new Thread(new Runnable() {
+			//	@Override
+			//	public void run() {
 					try {
 						Result res = sim.run();
 						if (res != null) {
-							progress.append("Simulation successfully computed!\n");
+							SwingUtilities.invokeLater(() -> {
+								progress.append("Simulation successfully computed!\n");
 
-							if (parent.getPerturbation() != null)
-								res.perturbation = parent.getPerturbation().toString();
-							if (parent.getReduction() != null)
-								res.reduction = parent.getReduction().toString();
-
-							showOutputFrame(res);
+								if (parent.getPerturbation() != null)
+									res.perturbation = parent.getPerturbation().toString();
+								if (parent.getReduction() != null)
+									res.reduction = parent.getReduction().toString();
+								showOutputFrame(res);
+							});
 						} else {
-							progress.append("Simulation was interrupted!\n");
-							stop.setEnabled(false);
-							brun.setEnabled(true);
-							System.gc();
-							System.runFinalization();
+								SwingUtilities.invokeLater(() -> {
+									progress.append("Simulation was interrupted!\n");
+									stop.setEnabled(false);
+									brun.setEnabled(true);
+								});
 						}
 					} catch (Exception e) {
-						String fileErrorMessage = e.getMessage();
-						if (fileErrorMessage == null) {
-							e.printStackTrace();
-						} else if (!fileErrorMessage.contains("FireFront requests")) {
-							fileErrorMessage = "Unfortunately we were not able to finish your request.<br>Exception while running the algorithm.<br><em>Reason:</em> "
-									+ fileErrorMessage;
-							e.printStackTrace();
-						}
-						// errorDisplay(fileErrorMessage, e);
-						GUIMessageUtils.openErrorDialog(fileErrorMessage);
-						stop.setEnabled(false);
-						brun.setEnabled(true);
+						SwingUtilities.invokeLater(() -> {
+							String fileErrorMessage = (e.getMessage() != null) ? e.getMessage()
+									: "Unknown error occurred while running the algorithm.";
+
+							if (!fileErrorMessage.contains("FireFront requests")) {
+								fileErrorMessage = "Unfortunately, we were not able to finish your request.<br>Exception while running the algorithm.<br><em>Reason:</em> "
+										+ fileErrorMessage;
+							}
+
+							GUIMessageUtils.openErrorDialog(fileErrorMessage);
+							stop.setEnabled(false);
+							brun.setEnabled(true);
+						});
+						e.printStackTrace();
 					}
-				}
-			});
-			t1.start();
+			//	}
+
+			//});
+			//t1.start();
 		} catch (Exception e) {
 			String fileErrorMessage = "Unfortunately we were not able to finish your request.<br><em>Reason:</em> Exception while running the algorithm.";
 			errorDisplay(fileErrorMessage, e);
