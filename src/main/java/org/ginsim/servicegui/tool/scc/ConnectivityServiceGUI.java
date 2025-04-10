@@ -18,6 +18,10 @@ import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.reducedgraph.NodeReducedData;
 import org.ginsim.core.graph.reducedgraph.ReducedGraph;
 import org.ginsim.core.graph.view.style.StyleProvider;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
+import org.ginsim.core.graph.view.style.NodeStyle;
+import org.ginsim.core.graph.view.style.NodeStyleImpl;
+import org.ginsim.core.graph.view.style.EdgeStyle;
 import org.ginsim.core.service.EStatus;
 import org.ginsim.core.service.GSServiceManager;
 import org.ginsim.gui.GUIManager;
@@ -44,6 +48,8 @@ import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraphFactory;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.service.tool.modelbooleanizer.ModelBooleanizerService;
+import org.ginsim.core.graph.view.style.StyleProperty;
+import java.awt.Color;
 /**
  * register the scc service
  */
@@ -117,13 +123,11 @@ class ConnectivityColorizeGraphAction extends GenericGraphAction {
 
 	@Override
 	public void actionPerformed( ActionEvent arg0) {
-		SCCGraphService service = GSServiceManager.getService(SCCGraphService.class);
-		RegulatoryGraph ngraph = copyGraph(graph);
-		List<NodeReducedData> components = service.getComponents(ngraph);
-		styler = service.getStyleProvider(components, ngraph );
-		ngraph.getStyleManager().setStyleProvider(styler);
-		GUIManager.getInstance().newFrame(ngraph);
+		new ConnecttivityRegGraphFrame( GUIManager.getInstance().getFrame( graph), graph);
+		if ( GUIManager.getInstance().getFrame(graph)== null){
+			GUIManager.getInstance().whatToDoWithGraph(graph);}
 	}
+
 
 	private void doclose(){
 		//graph.getStyleManager().setStyleProvider(oldstyle);

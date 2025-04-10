@@ -63,6 +63,7 @@ public class NodeStyleImpl<V> extends BaseStyle<NodeStyle<V>> implements NodeSty
 			border = DEFAULT_BORDER;
 		}
 	}
+
 	
 	@Override
 	public Color getBackground(V obj) {
@@ -77,6 +78,10 @@ public class NodeStyleImpl<V> extends BaseStyle<NodeStyle<V>> implements NodeSty
 			return parent.getBackground(obj);
 		}
 		return bg;
+	}
+
+	public void setBg(Color bg) {
+		this.bg = bg;
 	}
 
 	@Override

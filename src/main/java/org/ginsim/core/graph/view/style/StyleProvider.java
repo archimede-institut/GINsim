@@ -2,6 +2,10 @@ package org.ginsim.core.graph.view.style;
 
 import org.ginsim.core.graph.Edge;
 
+import java.util.Map;
+import java.awt.Color;
+
+
 /**
  * Define a style provider: it provides styles for nodes and edges
  * and can be applied to a StyleManager to temporarily override the graph styles.
@@ -33,4 +37,8 @@ public interface StyleProvider<V, E extends Edge<V>> {
 	default String getCSS() {
 		return "";
 	}
+
+	default Map<Object, Color>  getMColorsMap(){
+		return null;
+	};
 }

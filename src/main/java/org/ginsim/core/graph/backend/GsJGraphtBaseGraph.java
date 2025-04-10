@@ -126,6 +126,14 @@ public class GsJGraphtBaseGraph<V,E extends Edge<V>> extends AbstractGraph<V, E>
         return true;
     }
 
+    public boolean updateNodeColorStyleVertex(V v, NodeStyle nodeStyle) {
+        if (!m_vertices.containsKey(v)) {
+            return false;
+        }
+        m_vertices.replace(v, new VInfo<V,E>( v, nodeStyle));
+        return true;
+    }
+
     /**
      * Get an existing vertex.
      * @param v
