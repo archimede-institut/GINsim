@@ -14,7 +14,7 @@
   <url>http://www.ginsim.org</url>
 
   <properties>
-    <project.java.version>1.8</project.java.version>
+    <project.java.version>11</project.java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
@@ -95,11 +95,6 @@
         <groupId>org.knowm.xchart</groupId>
         <artifactId>xchart</artifactId>
         <version>3.8.1</version>
-    </dependency>
-    <dependency>
-        <groupId>org.bibsonomy</groupId>
-        <artifactId>bibsonomy-bibtex-parser</artifactId>
-        <version>2.0.48</version>
     </dependency>
     <dependency>
         <groupId>org.bibsonomy</groupId>

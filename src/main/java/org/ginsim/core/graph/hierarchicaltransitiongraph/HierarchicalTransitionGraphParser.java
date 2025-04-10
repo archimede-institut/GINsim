@@ -62,7 +62,8 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
      */
     public HierarchicalTransitionGraphParser(Set<String> nodeToParse, Attributes attributes, String s_dtd) throws GsException{
     	
-    	this.htg = GSGraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, true);
+        this.htg = GSGraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class);
+        
     	this.nodeToParse = nodeToParse;
 		styleManager = htg.getStyleManager();
 		vareader = htg.getNodeAttributeReader();
