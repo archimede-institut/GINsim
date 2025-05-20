@@ -112,44 +112,26 @@
     <testSourceDirectory>src/test/java</testSourceDirectory>
     <plugins>
       <plugin>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-            <archive>
-                <manifest>
-                    <mainClass>org.ginsim.Launcher</mainClass>
-                </manifest>
-            </archive>
-            <descriptorRefs>
-                <descriptorRef>jar-with-dependencies</descriptorRef>
-            </descriptorRefs>
-        </configuration>
-      </plugin>
-
-<!-- TODO: Shade plugin: merge deps into the main jar (during package), concatenate service discovery files -->
-<!-- 
-      <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-shade-plugin</artifactId>
-        <version>3.1.0</version>
         <executions>
           <execution>
-             <phase>assembly</phase> 
+            <phase>package</phase>
             <goals>
               <goal>shade</goal>
             </goals>
             <configuration>
+              <shadedArtifactAttached>true</shadedArtifactAttached>
+              <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
               <transformers>
-                <transformer  implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer"> 
-                   <mainClass>org.ginsim.Launcher</mainClass> 
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>org.ginsim.Launcher</mainClass>
                 </transformer>
-                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
               </transformers>
             </configuration>
           </execution>
         </executions>
       </plugin>
--->
-
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
