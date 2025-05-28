@@ -64,6 +64,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 		perturbationPanel = new PerturbationSelectionPanel(this, lrg, this);
         reductionPanel = new ReductionSelectionPanel(this, lrg, this);
         super.setMainPanel(getMainPanel());
+		cb_simplify.setVisible(false);
         cb_simplify.addChangeListener(this);
         cb_propagate.addChangeListener(this);
 		this.addWindowListener(new java.awt.event.WindowAdapter() { 
@@ -73,6 +74,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 		});
 		if(getReduction() != null && reduction.getName().contains("Output")){
 			cb_simplify.setSelected(true);
+
 		    realReduction = null;}
 		else {
 			realReduction = reduction;
