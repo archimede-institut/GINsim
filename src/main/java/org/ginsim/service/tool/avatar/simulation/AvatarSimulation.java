@@ -168,7 +168,10 @@ public class AvatarSimulation extends Simulation {
 			while (!F.isEmpty()) {
 				State s = F.getProbableRandomState();
 				//System.out.println("new state: "+s.toShortString());
-				
+				if (Thread.currentThread().isInterrupted()) {
+					System.out.println("Simulation stoped by user !");
+					return null;
+				}
 				if (!quiet)
 					output("  Popped state=" + s + " Sim=" + sn + ", Reincarnation=" + time + ", #F="
 							+ F.size() + ", #D=" + D.size() + ", #A=" + result.attractorsCount.keySet().size());
@@ -178,6 +181,10 @@ public class AvatarSimulation extends Simulation {
 				// State nv = null; #1024
 				for (AbstractStateSet itrans : temporaryTransients) {
 					StateSet trans = (StateSet) itrans;
+					if (Thread.currentThread().isInterrupted()) {
+						System.out.println("Simulation interrompue !");
+						return null;
+					}
 					if (trans.contains(s)) {
 						//System.out.println("tempTransient #"+trans.size()+" "+trans.getKey()+" P"+trans.hasPaths()+" E"+trans.hasExits());
 						if (strategy.equals(AvatarStrategy.RandomExit))
@@ -204,6 +211,10 @@ public class AvatarSimulation extends Simulation {
 				if (keepTransients) {
 					for (AbstractStateSet itrans : savedTransients) {
 						StateSet trans = (StateSet) itrans;
+						if (Thread.currentThread().isInterrupted()) {
+							System.out.println("Simulation interrompue !");
+							return null;
+						}
 						if (trans.contains(s)) {
 							//System.out.println("tempTransient #"+trans.size()+" "+trans.getKey()+" P"+trans.hasPaths()+" E"+trans.hasExits());
 							minSteps++;
@@ -273,6 +284,10 @@ public class AvatarSimulation extends Simulation {
 					exitStates = null;
 					//System.out.println("growing");
 					do {
+						if (Thread.currentThread().isInterrupted()) {
+							System.out.println("Simulation interrompue !");
+							return null;
+						}
 						prev_cycle_size = Ct.size();
 						if (!quiet)
 							output("  Tau updated from " + tau + " to " + (tau * 2) + " (prev cycle=#" + prev_cycle_size

@@ -19,9 +19,7 @@ public class Reg2DynService implements Service {
 	public static final String KEY = "simulation";
 	
 	public Simulation get( LogicalModel model, ProgressListener<Graph> plist, SimulationParameters currentParameter, ReductionConfig reduction){
-		
 		Simulation sim;
-		
 		if (currentParameter.simulationStrategy == SimulationParameters.STRATEGY_STG) {
 			sim = new Simulation( model, plist, currentParameter);
 		} else {
@@ -29,5 +27,4 @@ public class Reg2DynService implements Service {
 		}
 		return sim;
 	}
-
 }

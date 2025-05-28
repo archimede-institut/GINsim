@@ -43,21 +43,26 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	public ReductionSelectionPanel reductionPanel;
 	public Perturbation perturbation = null;
 	public ReductionConfig reduction = null;
+	public ReductionConfig realReduction = null;
 
     private NamedState pattern = null;
 	private String userID = null;
 
 	protected JPanel mainPanel = new JPanel(new GridBagLayout());
     private JCheckBox cb_propagate = new JCheckBox("Propagate fixed values");
-    protected JCheckBox cb_simplify = new JCheckBox("Strip (pseudo-)outputs");
+    //
+	protected JCheckBox cb_simplify = new JCheckBox("Strip (pseudo-)outputs");
 
     public LogicalModelActionDialog(RegulatoryGraph lrg, Frame parent, String id, int w, int h) {
         super(parent, id, w, h);
+		//this.cb_simplify.setVisible(false);
         this.lrg = lrg;
         this.perturbations = (ListOfPerturbations)OManager.getObject(lrg, PerturbationManager.KEY, true);
 		this.reductions = (ListOfReductionConfigs)OManager.getObject(lrg, ReductionConfigManager.KEY, true);
-        perturbationPanel = new PerturbationSelectionPanel(this, lrg, this);
-        reductionPanel = new ReductionSelectionPanel(this, lrg, this, cb_simplify);
+        if (reductions.size() < 1 || (reductions.size() >= 1 && !reductions.get(0).getName().contains("Output"))){
+			reductions.create(true) ;}
+		perturbationPanel = new PerturbationSelectionPanel(this, lrg, this);
+        reductionPanel = new ReductionSelectionPanel(this, lrg, this);
         super.setMainPanel(getMainPanel());
         cb_simplify.addChangeListener(this);
         cb_propagate.addChangeListener(this);
@@ -66,7 +71,12 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 				cancel();
 			}
 		});
-		if(getReduction() != null){ cb_simplify.setSelected(false);}
+		if(getReduction() != null && reduction.getName().contains("Output")){
+			cb_simplify.setSelected(true);
+		    realReduction = null;}
+		else {
+			realReduction = reduction;
+			cb_simplify.setSelected(false);}
     }
 
     /**
@@ -77,12 +87,16 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
     	this.userID = userID;
 		this.perturbation = perturbations.getUsedPerturbation(userID);
 		this.reduction = reductions.getUsedReduction(userID);
-		if (reduction != null){
-			cb_simplify.setSelected(false);
+		if (reduction != null && reduction.getName().contains("Output")){
+			cb_simplify.setSelected(true);
+			realReduction = null;
 		}
-        // eductions.isStrippingOutput(userID))
-		// cb_simplify.setSelected(true);
+		else {
+			cb_simplify.setSelected(false);
+			realReduction = reduction;
+		}
         cb_propagate.setSelected(reductions.isPropagatingFixed(userID));
+		cb_simplify.repaint();
 		perturbationPanel.refresh();
 		reductionPanel.refresh();
     }
@@ -94,13 +108,11 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	protected JPanel getMainPanel() {
 
         GridBagConstraints c = new GridBagConstraints();
-
         // perturbation panel
         c.weightx = 1;
         c.gridwidth = 2;
         c.fill = GridBagConstraints.HORIZONTAL;
         mainPanel.add(perturbationPanel, c);
-
         // reduction panel
         c.gridy = 1;
 		c.weightx = 1;
@@ -112,10 +124,9 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         // simplification checkboxes
         c.gridx = 1;
         c.weightx = 0;
-//        mainPanel.add(cb_propagate, c);
-//        c.gridx++; // TODO: adapt layout!
+       // mainPanel.add(cb_propagate, c);
+        c.gridx++; // TODO: adapt layout!
         mainPanel.add(cb_simplify, c);
-
         return mainPanel;
     }
     
@@ -151,21 +162,38 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 		return reduction;
 	}
 
+	public ReductionConfig getRealReduction() {
+		return realReduction;
+	}
+
 	@Override
 	public void setReduction(ReductionConfig reduc) {
 		if (userID != null ) {
 			reductions.useReduction(userID, reduc);
 			this.reduction = reductions.getUsedReduction(userID);
-			if (reduction != null) {
-				cb_simplify.setSelected(false);
+			if (reduction != null && reduction.getName().contains("Output")) {
+			     realReduction = null;
+				reductions.setOutputStrippers(true);
+				 this.cb_simplify.setSelected(true);
+			}
+			else {
+				realReduction = reduction;
+				this.cb_simplify.setSelected(false);
+				reductions.setOutputStrippers(false);
 			}
 		} else {
 			reduction = reduc;
-			if (reduction != null){
-				this.cb_simplify.setSelected(false);
+			if (reduction != null && reduction.getName().contains("Output")){
+					reductions.setOutputStrippers(true);
+					realReduction = null;
+					this.cb_simplify.setSelected(true);
+				}
+				else {
+					realReduction = reduction;
+					reductions.setOutputStrippers(false);
+					this.cb_simplify.setSelected(false);
+				}
 			}
-			//this.reduction.outputs = this.cb_simplify.isSelected();}
-		}
 		cb_simplify.repaint();
 	}
 
@@ -187,23 +215,36 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 	@Override
 	public void stateChanged(ChangeEvent e) {
 		if (userID != null){
-			if (e.getSource().equals(cb_simplify)) {
-				if (cb_simplify.isSelected()){
-					this.reduction = null;
+			//if (e.getSource().equals(reductions)) {
+				if (reduction != null && reduction.getName().contains("Output")) {
+					reductions.setOutputStrippers(true);
+					realReduction = null;
+					cb_simplify.setSelected(true);
 				}
-			}
-			if (e.getSource().equals(reduction)) {
-				if (getReduction() != null) { cb_simplify.setSelected(false);}
-			}
-			//
+				else {
+					realReduction = reduction;
+					reductions.setOutputStrippers(false);
+					cb_simplify.setSelected(false);
+				}
+			//}
 			//setReduction(null);
 			//&&} reductions.getUsedReduction(userID) != null) {
-			// reductions.setStrippingOutput(userID, cb_simplify.isSelected());
-			//reductions.getUsedReduction(userID).outputs = cb_simplify.isSelected();
 			reductions.setPropagateFixed(userID, cb_propagate.isSelected());
-			reductionPanel.refresh();
-			cb_simplify.repaint();
 		}
+		else {
+			if (reduction != null && reduction.getName().contains("Output")){
+					reductions.setOutputStrippers(true);
+					realReduction = null;
+					this.cb_simplify.setSelected(true);
+				}
+			else {
+					realReduction = reduction;
+					reductions.setOutputStrippers(false);
+					this.cb_simplify.setSelected(false);
+				}
+		}
+		reductionPanel.refresh();
+		cb_simplify.repaint();
 	}
 
 	@Override
@@ -243,8 +284,8 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         }
 
 		// TODO: merge all reductions in a single pass
-		ReductionConfig reduction = getReduction();
-		if (reduction != null) {
+		ReductionConfig reduction = getRealReduction();
+		if (reduction != null ) {
 			model = reduction.apply(model);
 			
 		}
@@ -255,9 +296,10 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
 			reducer.purgeFixed = true;
         }
         
-        if (cb_simplify.isSelected()) {
+       if (cb_simplify.isSelected()) {//cb_simplify.isSelected(
 			reducer.handleOutputs = true;
         }
+	   else reducer.handleOutputs = false;
 
 		// Apply input pattern
 		if (pattern != null) {

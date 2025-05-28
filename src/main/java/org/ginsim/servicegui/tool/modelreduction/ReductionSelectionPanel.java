@@ -18,10 +18,10 @@ public class ReductionSelectionPanel extends JPanel {
 	public ReductionSelectionPanel(StackDialog dialog, RegulatoryGraph graph, ReductionHolder holder) {
 		this.internalConstructorReductionSelectionPanel(dialog, graph, holder);
 	}
-	public ReductionSelectionPanel(StackDialog dialog, RegulatoryGraph graph, ReductionHolder holder, JCheckBox  cb_simplify) {
-		this.internalConstructorReductionSelectionPanel(dialog, graph, holder);
-		cfgPanel.setCBSimplify(cb_simplify);
-	}
+	//public ReductionSelectionPanel(StackDialog dialog, RegulatoryGraph graph, ReductionHolder holder, JCheckBox  cb_simplify) {
+	//	this.internalConstructorReductionSelectionPanel(dialog, graph, holder);
+		//cfgPanel.setCBSimplify(cb_simplify);
+	//}
 	public void refresh() {
 		cfgPanel.refresh();
 	}

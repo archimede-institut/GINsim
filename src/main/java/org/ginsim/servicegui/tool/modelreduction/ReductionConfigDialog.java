@@ -114,7 +114,7 @@ class ReductionConfigContentList extends AbstractList<NodeInfo> {
     }
 
     public boolean isSelected(NodeInfo node) {
-        if (config == null) {
+        if (config == null ) {
             return false;
         }
         return config.isSelected(node);

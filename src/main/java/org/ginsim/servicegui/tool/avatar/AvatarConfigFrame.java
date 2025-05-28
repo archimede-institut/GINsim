@@ -260,7 +260,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 		// simplification checkboxes
 		c.gridx = 1;
 		c.weightx = 0;
-		topPanel.add(cb_simplify, c);
+		//topPanel.add(cb_simplify, c);
 
 		/** B: avatar-specific stuff **/		
 		JPanel rightPanel = new JPanel();

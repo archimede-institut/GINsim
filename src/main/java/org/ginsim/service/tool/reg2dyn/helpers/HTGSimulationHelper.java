@@ -45,7 +45,7 @@ public class HTGSimulationHelper  implements SimulationHelper {
 		NodeAttributesReader vreader = htg.getNodeAttributeReader();
         htg.getAnnotation().setComment(params.getDescr(nodes)+"\n");
 		//Edges = params.param_list.graph.getIncomingEdges(node);
-		if (reduction != null){
+		if (reduction != null ){
 			htg.setReduction(reduction);
 		}
         arcs = new HashMap();

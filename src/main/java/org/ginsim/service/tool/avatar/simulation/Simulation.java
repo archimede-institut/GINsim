@@ -44,6 +44,16 @@ public abstract class Simulation {
 	protected ChartGNUPlot chart = new ChartGNUPlot();
 	protected int memory;
 
+	private volatile boolean stopRequested = false;
+
+	public void requestStop() {
+		stopRequested = true;
+	}
+
+	public boolean isStopRequested() {
+		return stopRequested;
+	}
+
 	/**
 	 * Add the model function
 	 * @param _model StatefulLogicalModel model
@@ -163,6 +173,7 @@ public abstract class Simulation {
 	private JTextArea progress;
 
 	public void exit() {
+		requestStop();
 		if (t1 != null && t1.isAlive())
 			t1.interrupt();
 	}
@@ -171,10 +182,7 @@ public abstract class Simulation {
 		final Result[] res = new Result[1];
 		final Exception[] es = new Exception[1];
 		final boolean[] ok = new boolean[] { true };
-		t1 = new Thread(new Runnable() {
-			@Override
-			public void run() {
-				SwingUtilities.invokeLater(() -> {
+
 					try {
 						res[0] = runSimulation();
 					}
@@ -183,12 +191,7 @@ public abstract class Simulation {
 						es[0] = e;
 						ok[0] = false;
 					}
-				});
-			}
-		});
-		t1.start();
-		t1.join();
-		t1 = null;
+
 		if (!ok[0])
 			throw es[0];
 		return res[0];

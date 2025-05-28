@@ -32,6 +32,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 import javax.swing.ScrollPaneConstants;
+import javax.swing.SwingWorker;
 import javax.swing.SwingUtilities;
 import org.colomoto.biolqm.StatefulLogicalModel;
 import org.ginsim.common.application.LogManager;
@@ -66,6 +67,8 @@ public class AvatarResults {
 	private File memFile, logFile, resFile, csvFile;
 	private JButton brun, stop;
 
+	private SwingWorker<Result, Void> simulationWorker;
+
 	/**
 	 * Creates the necessary context to run a simulation and display its results
 	 * 
@@ -97,17 +100,79 @@ public class AvatarResults {
 		csvFile = _csvFile;
 		brun = _brun;
 		stop = _stop;
+		stop.addActionListener(e -> {
+			if (simulationWorker != null && !simulationWorker.isDone()) {
+				simulationWorker.cancel(true);
+			}
+		});
+	}
+
+	public void runAvatarResults() {
+		try {
+			sim.setComponents(progress);
+
+			// Crée le SwingWorker
+			simulationWorker = new SwingWorker<Result, Void>() {
+				@Override
+				protected Result doInBackground() throws Exception {
+					return sim.run();
+				}
+
+				@Override
+				protected void done() {
+					try {
+						if (isCancelled()) {
+							progress.append("Simulation was interrupted!\n");
+						} else {
+							Result res = get();
+							progress.append("Simulation successfully computed!\n");
+
+							if (parent.getPerturbation() != null)
+								res.perturbation = parent.getPerturbation().toString();
+							if (parent.getReduction() != null)
+								res.reduction = parent.getReduction().toString();
+
+							showOutputFrame(res);
+						}
+					} catch (Exception e) {
+						String msg = (e.getMessage() != null) ? e.getMessage()
+								: "Unknown error occurred while running the algorithm.";
+
+						if (!msg.contains("FireFront requests")) {
+							msg = "Unfortunately, we were not able to finish your request.<br>Exception while running the algorithm.<br><em>Reason:</em> "
+									+ msg;
+						}
+
+						GUIMessageUtils.openErrorDialog(msg);
+						//e.printStackTrace();
+					}
+
+					stop.setEnabled(false);
+					brun.setEnabled(true);
+				}
+			};
+
+			simulationWorker.execute(); // Démarre le thread de fond
+			stop.setEnabled(true);
+			brun.setEnabled(false);
+
+		} catch (Exception e) {
+			errorDisplay("Unfortunately we were not able to finish your request.<br><em>Reason:</em> Exception while running the algorithm.", e);
+			stop.setEnabled(false);
+			brun.setEnabled(true);
+			//e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Executes the instantiated simulation and displays its results
 	 */
-	public void runAvatarResults() {
+	/*public void runAvatarResults() {
 		try {
 			sim.setComponents(progress);
-			//Thread t1 = new Thread(new Runnable() {
-			//	@Override
-			//	public void run() {
+			Thread t1 = new Thread(new Runnable() {
+				@Override
+				public void run() {
 					try {
 						Result res = sim.run();
 						if (res != null) {
@@ -143,10 +208,10 @@ public class AvatarResults {
 						});
 						e.printStackTrace();
 					}
-			//	}
+				}
 
-			//});
-			//t1.start();
+			});
+			t1.start();
 		} catch (Exception e) {
 			String fileErrorMessage = "Unfortunately we were not able to finish your request.<br><em>Reason:</em> Exception while running the algorithm.";
 			errorDisplay(fileErrorMessage, e);
@@ -155,6 +220,7 @@ public class AvatarResults {
 			e.printStackTrace();
 		}
 	}
+*/
 
 	/**
 	 *  Kill function
