@@ -169,7 +169,7 @@ public class AvatarSimulation extends Simulation {
 				State s = F.getProbableRandomState();
 				//System.out.println("new state: "+s.toShortString());
 				if (Thread.currentThread().isInterrupted()) {
-					System.out.println("Simulation stoped by user !");
+					// System.out.println("Simulation stoped by user !");
 					return null;
 				}
 				if (!quiet)

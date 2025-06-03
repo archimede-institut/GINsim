@@ -123,6 +123,7 @@ public class AvatarResults {
 					try {
 						if (isCancelled()) {
 							progress.append("Simulation was interrupted!\n");
+							progress.append("Re-run from the beginning \n");
 						} else {
 							Result res = get();
 							progress.append("Simulation successfully computed!\n");
@@ -164,63 +165,6 @@ public class AvatarResults {
 		}
 	}
 
-	/**
-	 * Executes the instantiated simulation and displays its results
-	 */
-	/*public void runAvatarResults() {
-		try {
-			sim.setComponents(progress);
-			Thread t1 = new Thread(new Runnable() {
-				@Override
-				public void run() {
-					try {
-						Result res = sim.run();
-						if (res != null) {
-							SwingUtilities.invokeLater(() -> {
-								progress.append("Simulation successfully computed!\n");
-
-								if (parent.getPerturbation() != null)
-									res.perturbation = parent.getPerturbation().toString();
-								if (parent.getReduction() != null)
-									res.reduction = parent.getReduction().toString();
-								showOutputFrame(res);
-							});
-						} else {
-								SwingUtilities.invokeLater(() -> {
-									progress.append("Simulation was interrupted!\n");
-									stop.setEnabled(false);
-									brun.setEnabled(true);
-								});
-						}
-					} catch (Exception e) {
-						SwingUtilities.invokeLater(() -> {
-							String fileErrorMessage = (e.getMessage() != null) ? e.getMessage()
-									: "Unknown error occurred while running the algorithm.";
-
-							if (!fileErrorMessage.contains("FireFront requests")) {
-								fileErrorMessage = "Unfortunately, we were not able to finish your request.<br>Exception while running the algorithm.<br><em>Reason:</em> "
-										+ fileErrorMessage;
-							}
-
-							GUIMessageUtils.openErrorDialog(fileErrorMessage);
-							stop.setEnabled(false);
-							brun.setEnabled(true);
-						});
-						e.printStackTrace();
-					}
-				}
-
-			});
-			t1.start();
-		} catch (Exception e) {
-			String fileErrorMessage = "Unfortunately we were not able to finish your request.<br><em>Reason:</em> Exception while running the algorithm.";
-			errorDisplay(fileErrorMessage, e);
-			stop.setEnabled(false);
-			brun.setEnabled(true);
-			e.printStackTrace();
-		}
-	}
-*/
 
 	/**
 	 *  Kill function

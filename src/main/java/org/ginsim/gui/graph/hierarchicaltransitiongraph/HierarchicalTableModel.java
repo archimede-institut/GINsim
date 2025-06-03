@@ -73,7 +73,8 @@ public class HierarchicalTableModel extends AbstractTableModel {
 		if (columnIndex >= colCount) {
 			i = extraContent[rowIndex][columnIndex - colCount];
 			if (i < 0) {
-				return "*";
+				// replace * by ? for negativ values can be all value or only  intervall(s)
+				return "?";
 				//return extraContentString[rowIndex][columnIndex - colCount];
 				//return a;
 				//return extraContent[rowIndex];
