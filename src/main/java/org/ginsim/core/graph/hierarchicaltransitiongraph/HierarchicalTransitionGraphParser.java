@@ -80,11 +80,11 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
 		for (int i=0 ; i<t_nodeOrder.length ; i++) {
 			String[] args = t_nodeOrder[i].split(":");
 			byte max = 1;
-			try {
-				max = Byte.parseByte(args[1]);
-			} catch(NumberFormatException e) {
-				
-			}
+            if (args.length > 1) {
+                try {
+                    max = Byte.parseByte(args[1]);
+                } catch(NumberFormatException e) {}
+            }
 		    nodeOrder.add( new NodeInfo( args[0], max));
 		    childCount[i] = (byte)(max+1);
 		}
