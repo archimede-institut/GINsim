@@ -131,15 +131,21 @@ public class ListOfReductionConfigs extends NamedList<ReductionConfig>
         return graph.getNodeOrder();
     }
 
+    public boolean ifOutputIn(){
+        for (int i=this.size()-1 ; i>-1 ; i--) {
+            if (this.get(i).getName().contains("Output")) return true;}
+        return false;
+    }
     public int create(boolean initoutput) {
         ReductionConfig cfg = new ReductionConfig();
         if (initoutput){
-            cfg.setName("StripedOutput");
+            cfg.setName("Output Reduction");
         }
         else {
-            cfg.setName(findUniqueName("Reduction "));}
-        int pos = size();
+            cfg.setName(findUniqueName("Reduction "));
+        }
         add(cfg);
+        int pos = size()-1;
         return pos;
     }
 }

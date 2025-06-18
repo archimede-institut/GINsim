@@ -59,7 +59,7 @@ abstract public class LogicalModelActionDialog extends StackDialog implements Pr
         this.lrg = lrg;
         this.perturbations = (ListOfPerturbations)OManager.getObject(lrg, PerturbationManager.KEY, true);
 		this.reductions = (ListOfReductionConfigs)OManager.getObject(lrg, ReductionConfigManager.KEY, true);
-        if (reductions.size() < 1 || (reductions.size() >= 1 && !reductions.get(0).getName().contains("Output"))){
+        if (reductions.size() < 1 || (reductions.size() >= 1 && !reductions.ifOutputIn())){
 			reductions.create(true) ;}
 		perturbationPanel = new PerturbationSelectionPanel(this, lrg, this);
         reductionPanel = new ReductionSelectionPanel(this, lrg, this);
