@@ -13,7 +13,6 @@ import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
 
 
-
 /**
  * This is the SimulationHelper used for the simulation of STG.
  * 
@@ -34,6 +33,7 @@ public class STGSimulationHelper implements SimulationHelper {
         // add some default comments to the state transition graph
         stateTransitionGraph.getAnnotation().setComment(params.getDescr(nodes)+"\n");
 	}
+
 
 	public boolean addNode(SimulationQueuedState item) {
 		node = new DynamicNode(item.state);

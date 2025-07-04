@@ -424,7 +424,13 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
         }
 
         for (int i=0 ; i<dynOrder.size() ; i++) {
-            if (!dynOrder.get(i).equals( regOrder.get(i))) {
+            boolean flagOrder = false;
+            for (int j=0; j<regOrder.size(); j++) {
+               if (dynOrder.get(i).equals( regOrder.get(j))){
+                    flagOrder = true;
+               }
+            }
+            if (!flagOrder) {
                 return false;
             }
         }
