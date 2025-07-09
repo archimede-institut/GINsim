@@ -33,6 +33,8 @@ public final class DynamicGraphImpl	extends TransitionGraphImpl<DynamicNode, Dyn
 	
 	protected List v_stables = null;
 
+    private int _simulationStrategy = 0;
+
 	/**
 	 * create a new DynamicGraph.
 	 * @param nodeOrder
@@ -212,4 +214,10 @@ public final class DynamicGraphImpl	extends TransitionGraphImpl<DynamicNode, Dyn
         return RegulatoryGraphImpl.associationValid((RegulatoryGraph)graph, this);
     }
 
+    public void setSimulationStrategy(int strategy) {
+        _simulationStrategy = strategy;
+    }
+    public int getSimulationStrategy() {
+        return _simulationStrategy;
+    }
 }

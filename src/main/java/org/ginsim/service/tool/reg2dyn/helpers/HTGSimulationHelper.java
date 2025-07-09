@@ -36,7 +36,7 @@ public class HTGSimulationHelper  implements SimulationHelper {
 		}
 		List<NodeInfo> nodes = model.getComponents();
 		this.htg = GSGraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, nodes, compacted);
-
+		this.htg.setSimulationStrategy(params.simulationStrategy);
 		// FIXME: associated graph based on LogicalModel
         //RegulatoryGraph lrg = LogicalModel2RegulatoryGraph.importModel(model);
 		htg.setAssociatedGraph(params.param_list.graph);

@@ -11,16 +11,14 @@ import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDManagerFactory;
 import org.colomoto.mddlib.MDDVariableFactory;
-import org.ginsim.core.graph.AbstractDerivedGraph;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.GraphEventCascade;
 import org.ginsim.core.graph.dynamicgraph.TransitionGraphImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
-import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.io.parser.GINMLWriter;
 import org.ginsim.service.tool.modelreduction.ReductionConfig;
+import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 /**
  * Implementation of the HTG interface
  *
@@ -29,6 +27,7 @@ import org.ginsim.service.tool.modelreduction.ReductionConfig;
 public class HierarchicalTransitionGraphImpl extends TransitionGraphImpl<HierarchicalNode, DecisionOnEdge> implements HierarchicalTransitionGraph {
 
 	public static final String GRAPH_ZIP_NAME = "hierarchicalTransitionGraph.ginml";
+	public static final String GRAPH_ZIP_NAME_SCC = "sccGraph.ginml";
 	
 	private List<NodeInfo> nodeOrder = new ArrayList<NodeInfo>();
 
@@ -45,6 +44,8 @@ public class HierarchicalTransitionGraphImpl extends TransitionGraphImpl<Hierarc
 	 * An array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
 	 */
 	private byte[] childsCount = null;
+
+	private int _simulationStrategy = 0;
 	
 	
 /* **************** CONSTRUCTORS ************/	
@@ -164,6 +165,9 @@ public class HierarchicalTransitionGraphImpl extends TransitionGraphImpl<Hierarc
 		
 	@Override
 	public String getGraphZipName(){
+		if (getSimulationStrategy() == SimulationParameters.STRATEGY_SCCG) {
+			return GRAPH_ZIP_NAME_SCC;
+		}
 		return GRAPH_ZIP_NAME;
 	}
 
@@ -314,4 +318,12 @@ public class HierarchicalTransitionGraphImpl extends TransitionGraphImpl<Hierarc
     public StatesSet createStateSet() {
         return new StatesSet(ddmanager, getChildsCount());
     }
+
+
+	public void setSimulationStrategy(int strategy) {
+		_simulationStrategy = strategy;
+	}
+	public int getSimulationStrategy() {
+		return _simulationStrategy;
+	}
 }
