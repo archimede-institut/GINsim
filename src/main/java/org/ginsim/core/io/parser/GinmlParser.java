@@ -32,7 +32,7 @@ public final class GinmlParser extends XMLHelper {
         XMLHelper.addEntity("GINML_2_1.dtd", DTD);
 
     	String NEWDTD = "/org/ginsim/dtd/GINML_2_2.dtd";
-        XMLHelper.addEntity("http://ginsim.org/GINML_2_2.dtd", NEWDTD);
+        XMLHelper.addEntity("https://ginsim.github.io/GINML_2_2.dtd", NEWDTD);
         XMLHelper.addEntity("GINML_2_2.dtd", NEWDTD);
     }
     

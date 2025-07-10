@@ -11,7 +11,7 @@
   <description>Edition, simulation and analysis of logical models</description>
   <inceptionYear>2005</inceptionYear>
   <packaging>jar</packaging>
-  <url>http://www.ginsim.org</url>
+  <url>https://ginsim.github.io</url>
 
   <properties>
     <project.java.version>11</project.java.version>
