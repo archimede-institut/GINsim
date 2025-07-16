@@ -63,7 +63,7 @@ public class FormatSupportServiceGUI<S extends FormatSupportService> extends Abs
 
 	@Override
 	public int getInitialWeight() {
-		return 1;
+		return 5;
 	}
 	
 	public StackDialogHandler getConfigPanel(ExportAction action, RegulatoryGraph graph) {

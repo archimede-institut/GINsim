@@ -61,7 +61,7 @@ public class LRGDocumentationServiceGUI extends AbstractServiceGUI {
 
     @Override
     public int getInitialWeight() {
-        return W_EXPORT_DOC;
+        return W_EXPORT_SPECIFIC + 4;
     }
 }
 

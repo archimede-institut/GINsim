@@ -46,7 +46,7 @@ public class GraphStructureExportServiceGUI extends AbstractServiceGUI {
 
 	@Override
 	public int getInitialWeight() {
-		return W_EXPORT_GENERIC + 10;
+		return W_UNDER_DEVELOPMENT+W_TOOLS_MAIN +2;//W_EXPORT_GENERIC + 10;
 	}
 }
 
