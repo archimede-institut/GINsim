@@ -46,5 +46,32 @@ public interface TransitionGraph<V,E extends Edge<V>> extends Graph<V,E> {
      */
     void setLogicalModel(LogicalModel model);
 
+    /**
+     * Set the simulation strategy to use.
+     * This will determine how the simulation is performed, and which
+     * extra components are available.
+     * <p>
+     * The strategy can be one of the following:
+     * <ul>
+     * <li>SimulationParameters.STRATEGY_STG: the default strategy, which
+     *     uses the state transition graph (STG) to simulate the system.</li>
+     * <li>SimulationParameters.STRATEGY_MDD: the MDD strategy, which         uses the MDD to simulate the system.</li>
+     * </ul>
+     * @param strategy
+     */
+    public void setSimulationStrategy(int strategy);
+    /**
+     * Get the current simulation strategy.
+     * This will return one of the following:
+     * <ul>
+     * <li>SimulationParameters.STRATEGY_STG: the default strategy, which
+     *     uses the state transition graph (STG) to simulate the system.</li>
+     * <li>SimulationParameters.STRATEGY_MDD: the MDD strategy, which         uses the MDD to simulate the system.</li>
+     * <li>SimulationParameters.STRATEGY_SCCG: the Strongly Connected Components Graph, which         uses the SCC to simulate the system.</li>
+     * </ul>
+     *
+     * @return the current simulation strategy
+     */
+    public int getSimulationStrategy();
     }
 
