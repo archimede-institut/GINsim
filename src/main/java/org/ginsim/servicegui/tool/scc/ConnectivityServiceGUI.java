@@ -32,7 +32,6 @@ import org.ginsim.gui.service.ServiceGUI;
 import org.ginsim.gui.service.GUIFor;
 import org.ginsim.gui.shell.actions.GenericGraphAction;
 import org.ginsim.core.service.ServiceStatus;
-import org.ginsim.gui.shell.actions.ToolAction;
 import org.ginsim.service.tool.scc.SCCGraphService;
 import org.kohsuke.MetaInfServices;
 import org.ginsim.core.graph.GSGraphManager;
@@ -72,18 +71,20 @@ public class ConnectivityServiceGUI extends AbstractServiceGUI {
 
 	@Override
 	public int getInitialWeight() {
-		return W_TOOLS_MAIN + 35;
+		return W_GRAPH_COLORIZE + 50;
 	}
 }
 
 
-class SCCGraphAction extends ToolAction implements TaskListener {
+class SCCGraphAction extends GenericGraphAction implements TaskListener {
 	private static final long serialVersionUID = 8294301473668672512L;
 	private final Graph graph;
     private Task<ReducedGraph> task = null;
 	
 	protected SCCGraphAction( Graph graph, ServiceGUI serviceGUI) {
-        super( "STR_constructReducedGraph", "STR_constructReducedGraph_descr", serviceGUI);
+        super(graph,"STR_constructReducedGraph", null,"STR_constructReducedGraph_descr", null, serviceGUI);
+		//super(graph, "STR_connectivity", null, "STR_connectivity_descr", null, serviceGUI);
+
 		this.graph = graph;
 	}
 
