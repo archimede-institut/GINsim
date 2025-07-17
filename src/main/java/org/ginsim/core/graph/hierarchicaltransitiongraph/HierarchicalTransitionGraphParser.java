@@ -112,6 +112,7 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
     public void endElement(String uri, String localName, String qName)
             throws SAXException {
         
+
         switch (pos) {
 			case POS_FILTERED:
 			    if (qName.equals("node") || qName.equals("edge")) {
@@ -255,6 +256,9 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
                 	pos = POS_COMPACT;
                 } else if (qName.equals("link")) {
                     htg.setAssociatedGraphID(attributes.getValue("xlink:href"));
+                } else if (qName.equals("annotation")) {
+                    pos = POS_GRAPH_NOTES;
+                    annotation = this.htg.getAnnotation();
                 }
                 break; // POS_OUT
             case POS_GRAPH_NOTES:
