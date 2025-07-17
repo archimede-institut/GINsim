@@ -44,7 +44,7 @@ public class ImageExportServiceGUI extends AbstractServiceGUI {
 
 	@Override
 	public int getInitialWeight() {
-		return W_EXPORT_DOC + 10;
+		return W_EXPORT_SPECIFIC ; // ,W_EXPORT_DOC + 10
 	}
 }
 

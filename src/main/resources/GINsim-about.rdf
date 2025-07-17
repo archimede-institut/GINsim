@@ -3,15 +3,15 @@
 	<Project>
 		<name>GINsim</name>
 		<description>A computer tool for the modeling and simulation of regulatory networks</description>
-		<homepage rdf:resource="http://www.ginsim.org"/>
+		<homepage rdf:resource="https://ginsim.github.io"/>
 		<logo>banner.png</logo>
 		<license rdf:resource="http://usefulinc.com/doap/licenses/gpl">GPL</license>
 		<version>2.9</version>
 <!--
     <created>2008-01-21</created>
-    <bug-database rdf:resource="http://www.ginsim.org" />
-    <mailing-list rdf:resource="http://www.ginsim.org" />
-    <download-page rdf:resource="http://www.ginsim.org" />
+    <bug-database rdf:resource="https://ginsim.github.io" />
+    <mailing-list rdf:resource="https://ginsim.github.io" />
+    <download-page rdf:resource="https://ginsim.github.io" />
     <programming-language>Java</programming-language>
 -->
 <!--	CREDITS		-->

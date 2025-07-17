@@ -24,7 +24,12 @@ public class CNetFormatServiceGUI extends FormatSupportServiceGUI<CNetFormatServ
 	private static FileFormatDescription FORMAT = new FileFormatDescription("CNET (bns tool)", "cnet");
 	
 	public CNetFormatServiceGUI() {
-		super("CNET (bns tool)", SERVICE, FORMAT);
+		super("Others/CNET (bns tool)", SERVICE, FORMAT);
+	}
+
+	@Override
+	public int getInitialWeight() {
+		return 7;//W_EXPORT_SPECIFIC + 40
 	}
 	
 }

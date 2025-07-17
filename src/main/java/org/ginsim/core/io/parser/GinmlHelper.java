@@ -25,7 +25,7 @@ import org.xml.sax.Attributes;
 public class GinmlHelper {
 	
     /** default URL of the DTD */
-    public static final String DEFAULT_URL_DTD_FILE = "http://ginsim.org/GINML_2_2.dtd";
+    public static final String DEFAULT_URL_DTD_FILE = "https://ginsim.github.io/GINML_2_2.dtd";
     public static final String DOCTYPE = "gxl SYSTEM \""+DEFAULT_URL_DTD_FILE+"\"";
 
     /**

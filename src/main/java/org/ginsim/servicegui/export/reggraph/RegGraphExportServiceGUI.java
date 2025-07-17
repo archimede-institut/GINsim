@@ -42,7 +42,7 @@ public class RegGraphExportServiceGUI extends AbstractServiceGUI {
 
 	@Override
 	public int getInitialWeight() {
-		return W_EXPORT_GENERIC + 30;
+		return W_UNDER_DEVELOPMENT+W_TOOLS_MAIN + 4;
 	}
 }
 
