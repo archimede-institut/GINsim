@@ -21,9 +21,9 @@ public abstract class TransitionGraphImpl<V,E extends Edge<V>> extends AbstractD
 
     protected List<NodeInfo> extraNodes = null;
     private int[][] incomingedges = null;
-    private MDDManager ddmanager = null;
-    private int[] extraFunctions = null;
-    private int[] coreFunctions = null;
+    protected MDDManager ddmanager = null;
+    protected int[] extraFunctions = null;
+    protected int[] coreFunctions = null;
 
 
     protected TransitionGraphImpl(GraphFactory factory) {

@@ -11,6 +11,7 @@ import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDManagerFactory;
 import org.colomoto.mddlib.MDDVariableFactory;
+import org.colomoto.mddlib.PathSearcher;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphChangeType;
 import org.ginsim.core.graph.GraphEventCascade;
@@ -41,7 +42,7 @@ public class HierarchicalTransitionGraphImpl extends TransitionGraphImpl<Hierarc
 	private ReductionConfig reduction = null;
 
 	/**
-	 * An array indicating for each node in the nodeOrder their count of childs. (ie. their max value)
+	 * An array indicating for each node in the nodeOrder their count of children. (ie. their max value)
 	 */
 	private byte[] childsCount = null;
 
@@ -78,7 +79,7 @@ public class HierarchicalTransitionGraphImpl extends TransitionGraphImpl<Hierarc
 	}
 
 	/**
-	 * set reduction RedictionConfig if hth is making from reduction
+	 * set reduction ReductionConfig if htg is making from reduction
 	 */
      public void setReduction(ReductionConfig reduction){
 		 this.reduction = reduction;
@@ -133,8 +134,8 @@ public class HierarchicalTransitionGraphImpl extends TransitionGraphImpl<Hierarc
 	}
 
 	/**
-	 * Set the reduction boolean value if this htg is comes from a reduction calcultion
-	 * @param tue  or false
+	 * Set the reduction boolean value if this htg is comes from a reduction calculation
+	 * @param true or false
 	 */
 /* **************** EDITION OF VERTEX AND EDGE ************/	
 
@@ -326,4 +327,29 @@ public class HierarchicalTransitionGraphImpl extends TransitionGraphImpl<Hierarc
 	public int getSimulationStrategy() {
 		return _simulationStrategy;
 	}
+	
+    public String getExtraValueInterval(byte[] state, int idx) {
+		PathSearcher searcher = new PathSearcher(super.ddmanager);
+		int[] path = searcher.getPath();
+		searcher.setNode(super.extraFunctions[0]);
+
+		int min = Integer.MAX_VALUE, max = -1;
+		nextp: for (int l : searcher) { // for each MDD path
+			for (int i = 0; i < path.length; i++) { // for each level / component
+				if (path[i] != -1 && state[i] != -1 && path[i] != state[i]) {
+					// path incompatible with state[]
+					continue nextp;
+				}
+			}
+			if (l > max) max = l;
+			if (l < min) min = l;
+		}
+		
+		if (min == 0 && max == super.extraNodes.get(idx).getMax()) {
+			return "*";
+		} else if (min == max) {
+			return "" + min;
+		} 
+		return min + "-" + max;
+    }
 }

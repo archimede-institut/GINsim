@@ -85,4 +85,11 @@ public interface HierarchicalTransitionGraph extends TransitionGraph<Hierarchica
 	public void setReduction(ReductionConfig reduction);
 
 	public ReductionConfig getReduction();
+	
+	/**
+	 * Gets the range of values of a extra node on a given (set of) state(s).
+	 * 
+	 * @return "*" if range is 0-max, or "min-max"
+	 */
+	public String getExtraValueInterval(byte[] state, int idx);
 }
