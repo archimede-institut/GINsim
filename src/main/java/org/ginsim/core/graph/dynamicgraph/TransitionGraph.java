@@ -5,6 +5,7 @@ import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
+import org.ginsim.service.tool.reg2dyn.SimulationStrategy;
 import org.colomoto.mddlib.MDDManager;
 
 import java.util.List;
@@ -59,19 +60,19 @@ public interface TransitionGraph<V,E extends Edge<V>> extends Graph<V,E> {
      * </ul>
      * @param strategy
      */
-    public void setSimulationStrategy(int strategy);
+    public void setSimulationStrategy(SimulationStrategy strategy);
     /**
      * Get the current simulation strategy.
      * This will return one of the following:
      * <ul>
-     * <li>SimulationParameters.STRATEGY_STG: the default strategy, which
+     * <li>SimulationStrategy.STG: the default strategy, which
      *     uses the state transition graph (STG) to simulate the system.</li>
-     * <li>SimulationParameters.STRATEGY_MDD: the MDD strategy, which         uses the MDD to simulate the system.</li>
-     * <li>SimulationParameters.STRATEGY_SCCG: the Strongly Connected Components Graph, which         uses the SCC to simulate the system.</li>
+     * <li>SimulationStrategy.HTG: the Hierarchical Transition Graph, which uses the HTG to simulate the system.</li>
+     * <li>SimulationStrategy.SCCG: the Strongly Connected Components Graph, which uses the SCC to simulate the system.</li>
      * </ul>
      *
      * @return the current simulation strategy
      */
-    public int getSimulationStrategy();
+    public SimulationStrategy getSimulationStrategy();
     }
 

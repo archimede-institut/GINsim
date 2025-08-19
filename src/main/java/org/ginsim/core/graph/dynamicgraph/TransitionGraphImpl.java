@@ -3,15 +3,12 @@ package org.ginsim.core.graph.dynamicgraph;
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.NodeInfo;
 import org.colomoto.mddlib.MDDManager;
-import org.colomoto.mddlib.MDDVariable;
-import org.colomoto.mddlib.operators.MDDBaseOperators;
 import org.ginsim.core.graph.AbstractDerivedGraph;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.GraphFactory;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
-import org.colomoto.biolqm.modifier.reverse.ReverseModifier;
 import java.util.List;
 
 public abstract class TransitionGraphImpl<V,E extends Edge<V>> extends AbstractDerivedGraph<V, E, RegulatoryGraph, RegulatoryNode, RegulatoryMultiEdge> implements TransitionGraph<V,E> {

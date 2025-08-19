@@ -14,6 +14,7 @@ import org.ginsim.core.graph.hierarchicaltransitiongraph.HierarchicalTransitionG
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
 import org.ginsim.service.tool.reg2dyn.SimulationQueuedState;
+import org.ginsim.service.tool.reg2dyn.SimulationStrategy;
 import org.ginsim.core.graph.regulatorygraph.LogicalModel2RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.service.tool.modelreduction.ReductionConfig;
@@ -31,12 +32,12 @@ public class HTGSimulationHelper  implements SimulationHelper {
 		this.model = model;
 		boolean compacted = false;
 
-		if (params.simulationStrategy == SimulationParameters.STRATEGY_HTG) {
+		if (params.strategy == SimulationStrategy.HTG) {
 			compacted = true;
 		}
 		List<NodeInfo> nodes = model.getComponents();
 		this.htg = GSGraphManager.getInstance().getNewGraph( HierarchicalTransitionGraph.class, nodes, compacted);
-		this.htg.setSimulationStrategy(params.simulationStrategy);
+		this.htg.setSimulationStrategy(params.strategy);
 		// FIXME: associated graph based on LogicalModel
         //RegulatoryGraph lrg = LogicalModel2RegulatoryGraph.importModel(model);
 		htg.setAssociatedGraph(params.param_list.graph);

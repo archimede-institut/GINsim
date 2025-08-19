@@ -17,6 +17,7 @@ import org.ginsim.core.graph.view.style.StyleManager;
 import org.ginsim.core.io.parser.GinmlHelper;
 import org.ginsim.core.io.parser.GsXMLHelper;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
+import org.ginsim.service.tool.reg2dyn.SimulationStrategy;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 
@@ -72,12 +73,12 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
 		
         if (attributes.getValue("type")!=null) {
             if (attributes.getValue("type").equals("scc")) {
-                htg.setSimulationStrategy(SimulationParameters.STRATEGY_SCCG);
+                htg.setSimulationStrategy(SimulationStrategy.SCCG);
             } else {
-                htg.setSimulationStrategy(SimulationParameters.STRATEGY_HTG);
+                htg.setSimulationStrategy(SimulationStrategy.HTG);
             }
         } else {
-            htg.setSimulationStrategy(SimulationParameters.STRATEGY_HTG);
+            htg.setSimulationStrategy(SimulationStrategy.HTG);
         }
         
 		try {
@@ -225,9 +226,9 @@ public class HierarchicalTransitionGraphParser extends GsXMLHelper {
             				throw new SAXException( new GsException( GsException.GRAVITY_ERROR, "STR_HTG_NotHierarchicalTransitionGraph"));
             			}
                         if (attributes.getValue("type") != null && attributes.getValue("type").equals("scc")) {
-                            htg.setSimulationStrategy(SimulationParameters.STRATEGY_SCCG);
+                            htg.setSimulationStrategy(SimulationStrategy.SCCG);
                         } else {
-                            htg.setSimulationStrategy(SimulationParameters.STRATEGY_HTG);
+                            htg.setSimulationStrategy(SimulationStrategy.HTG);
                         }
             			try {
 							htg.setGraphName( attributes.getValue("id"));

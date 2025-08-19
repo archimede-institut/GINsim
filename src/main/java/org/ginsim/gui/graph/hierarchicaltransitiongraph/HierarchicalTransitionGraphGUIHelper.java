@@ -17,6 +17,7 @@ import org.ginsim.gui.graph.regulatorygraph.RegulatoryGraphOptionPanel;
 import org.ginsim.gui.shell.GsFileFilter;
 import org.ginsim.gui.utils.widgets.Frame;
 import org.ginsim.service.tool.reg2dyn.SimulationParameters;
+import org.ginsim.service.tool.reg2dyn.SimulationStrategy;
 import org.kohsuke.MetaInfServices;
 
 
@@ -71,15 +72,7 @@ public class HierarchicalTransitionGraphGUIHelper implements GraphGUIHelper<Hier
 
 	@Override
 	public String getEditingTabLabel(HierarchicalTransitionGraph graph) {
-		if(graph.getSimulationStrategy() == SimulationParameters.STRATEGY_HTG) {
-			return "HTG";
-		}
-		else if(graph.getSimulationStrategy() == SimulationParameters.STRATEGY_SCCG) {
-			return "SCC Graph";
-		}
-		else {
-			return "HTG";
-		}
+		return graph.getSimulationStrategy().getAcronym();
 	}
 
 	@Override

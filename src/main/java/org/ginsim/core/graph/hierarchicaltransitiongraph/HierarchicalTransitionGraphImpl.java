@@ -19,7 +19,7 @@ import org.ginsim.core.graph.dynamicgraph.TransitionGraphImpl;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.io.parser.GINMLWriter;
 import org.ginsim.service.tool.modelreduction.ReductionConfig;
-import org.ginsim.service.tool.reg2dyn.SimulationParameters;
+import org.ginsim.service.tool.reg2dyn.SimulationStrategy;
 /**
  * Implementation of the HTG interface
  *
@@ -46,7 +46,7 @@ public class HierarchicalTransitionGraphImpl extends TransitionGraphImpl<Hierarc
 	 */
 	private byte[] childsCount = null;
 
-	private int _simulationStrategy = 0;
+	private SimulationStrategy _strategy = SimulationStrategy.STG;
 	
 	
 /* **************** CONSTRUCTORS ************/	
@@ -166,7 +166,7 @@ public class HierarchicalTransitionGraphImpl extends TransitionGraphImpl<Hierarc
 		
 	@Override
 	public String getGraphZipName(){
-		if (getSimulationStrategy() == SimulationParameters.STRATEGY_SCCG) {
+		if (getSimulationStrategy() == SimulationStrategy.SCCG) {
 			return GRAPH_ZIP_NAME_SCC;
 		}
 		return GRAPH_ZIP_NAME;
@@ -321,11 +321,11 @@ public class HierarchicalTransitionGraphImpl extends TransitionGraphImpl<Hierarc
     }
 
 
-	public void setSimulationStrategy(int strategy) {
-		_simulationStrategy = strategy;
+	public void setSimulationStrategy(SimulationStrategy strategy) {
+		_strategy = strategy;
 	}
-	public int getSimulationStrategy() {
-		return _simulationStrategy;
+	public SimulationStrategy getSimulationStrategy() {
+		return _strategy;
 	}
 	
     public String getExtraValueInterval(byte[] state, int idx) {

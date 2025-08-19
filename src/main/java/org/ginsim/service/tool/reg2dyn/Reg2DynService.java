@@ -20,7 +20,7 @@ public class Reg2DynService implements Service {
 	
 	public Simulation get( LogicalModel model, ProgressListener<Graph> plist, SimulationParameters currentParameter, ReductionConfig reduction){
 		Simulation sim;
-		if (currentParameter.simulationStrategy == SimulationParameters.STRATEGY_STG) {
+		if (currentParameter.strategy == SimulationStrategy.STG) {
 			sim = new Simulation( model, plist, currentParameter);
 		} else {
 			sim = new HTGSimulation( model, plist, currentParameter, reduction );
