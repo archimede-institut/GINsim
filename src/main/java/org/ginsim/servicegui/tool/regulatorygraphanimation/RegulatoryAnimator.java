@@ -177,10 +177,12 @@ public class RegulatoryAnimator extends AbstractListModel implements GraphGUILis
     }
     
     private void fillNext() {
-      nextEdges = dynGraph.getOutgoingEdges(path.get(path.size()-1));
-      nextNodes.clear();
-      for (DynamicEdge edge: nextEdges) {
-    	  nextNodes.add(edge.getTarget());
+      if (path.size() > 0) {
+          nextEdges = dynGraph.getOutgoingEdges(path.get(path.size() - 1));
+          nextNodes.clear();
+          for (DynamicEdge edge : nextEdges) {
+              nextNodes.add(edge.getTarget());
+          }
       }
     }
     
