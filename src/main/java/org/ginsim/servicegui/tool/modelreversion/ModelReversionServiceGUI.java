@@ -66,24 +66,24 @@ public class ModelReversionServiceGUI extends AbstractServiceGUI {
 			ModelBooleanizerService boolService = GSServiceManager.getService( ModelBooleanizerService.class);
 
 			LogicalModel origModel = this.graph.getModel();
+      if (!origModel.isBoolean()) {
+        GUIMessageUtils.openWarningDialog(Txt.t("STR_reverse_multivalue"));
 
-			// Model reverser
-			ModelModifier modelReverser = revService.getModelReverser(origModel);
-			try {
-				RegulatoryGraph gReversed = LogicalModel2RegulatoryGraph.importModel(modelReverser.call());
-				// Copy all the (edge & node) styles from the original graph to the reversed one
-				boolService.copyNodeStyles(this.graph, gReversed);
+      } else {
+        // Model reverser
+        ModelModifier modelReverser = revService.getModelReverser(origModel);
+        try {
+          RegulatoryGraph gReversed = LogicalModel2RegulatoryGraph.importModel(modelReverser.call());
+          // Copy all the (edge & node) styles from the original graph to the reversed one
+          boolService.copyNodeStyles(this.graph, gReversed);
 
-				// Show the reversed graph
-				GUIManager.getInstance().whatToDoWithGraph(gReversed);
-				if (!origModel.isBoolean()) {
-					GUIMessageUtils.openWarningDialog(Txt.t("STR_reverse_multivalue"));
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-				// TODO: error dialog
-			}
-
+          // Show the reversed graph
+          GUIManager.getInstance().whatToDoWithGraph(gReversed);
+        } catch (Exception e) {
+          e.printStackTrace();
+          // TODO: error dialog
+        }
+      }
 		}
 	}
 }

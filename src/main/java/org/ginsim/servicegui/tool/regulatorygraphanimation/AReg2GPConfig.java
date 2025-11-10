@@ -338,7 +338,7 @@ public class AReg2GPConfig extends JDialog {
     }
     private JButton getBut_export() {
         if (but_export == null) {
-            but_export = new JButton(Txt.t("STR_export"));
+            but_export = new JButton(Txt.t("STR_Export"));
             but_export.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                 	try{
