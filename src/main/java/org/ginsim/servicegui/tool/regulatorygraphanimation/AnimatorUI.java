@@ -105,8 +105,8 @@ public class AnimatorUI extends JDialog {
             contentPane.add(getscrollPane(), cons_table);
             contentPane.add(getBRewind(), cons_rewind);
             contentPane.add(getBPlay(), cons_play);
-            contentPane.add(getBClose(), cons_close);
             contentPane.add(getBGP(), cons_gp);
+            contentPane.add(getBClose(), cons_close);
         }
         return contentPane;
     }
@@ -127,7 +127,8 @@ public class AnimatorUI extends JDialog {
     }
     private JButton getBClose() {
         if (bClose == null) {
-            bClose = new JButton("X");
+            bClose = new JButton("Close");
+            bClose.setToolTipText("Close Animate dialog");
             bClose.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     close();
@@ -139,6 +140,7 @@ public class AnimatorUI extends JDialog {
     private JButton getBGP() {
         if (bGP == null) {
             bGP = new JButton("gnuplot");
+            bGP.setToolTipText("Export to gnuplot selected path from STG");
             bGP.setToolTipText(Txt.t("STR_gnuplot_descr"));
             bGP.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
@@ -151,6 +153,7 @@ public class AnimatorUI extends JDialog {
     private JButton getBPlay() {
         if (bPlay == null) {
             bPlay = new JButton("|>");
+            bPlay.setToolTipText("Animate LRG with selected path from STG");
             bPlay.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     play();
@@ -162,6 +165,7 @@ public class AnimatorUI extends JDialog {
     private JButton getBRewind() {
         if (bRewind == null) {
             bRewind = new JButton("<<");
+            bRewind.setToolTipText("Prune future states from selected state in path");
             bRewind.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     rewind();
