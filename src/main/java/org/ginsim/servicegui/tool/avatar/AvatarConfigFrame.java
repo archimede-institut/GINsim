@@ -97,7 +97,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 	 * JTextArea jtaOutput
 	 */
 	public JTextArea jtaOutput = new JTextArea();
-	private JButton forceStop = new JButton("Pause/Run");
+	private JButton forceStop = new JButton("Pause");
 	private AvatarResults results;
 	private File memorizedFile = new File("chart.png"), logFile = new File("log.txt"),
 			resFile = new File("result.html"), csvFile = new File("result.csv");
@@ -444,6 +444,7 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 
 		brun.setEnabled(false);
 		forceStop.setEnabled(true);
+		forceStop.setText("Pause");
 		jtaOutput.append("Initializing simulation\n");
 		outputPanel.setVisible(true);
 		horizontalPanel.getRightComponent().setVisible(true);
@@ -528,10 +529,6 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 				}
 				oracles.get(oracles.size() - 1).add(state);
 			}
-			// for(List<byte[]> o : oracles) System.out.println("Oracle
-			// entry:"+AvatarUtils.toString(o));
-			// FIXME ptgm this avoids consecutive runs to use previously discovered oracles
-			// ((StatefulLogicalModelImpl) model).setOracles(oracles);
 
 		} catch (Exception e) {
 			jtaOutput.setEnabled(false);
@@ -586,13 +583,3 @@ public class AvatarConfigFrame extends AvatarLogicalModelActionDialog {
 		editionPanel.setCurrent(p);
 	}
 }
-
-/*
- * class ParamActionListener implements ActionListener { AvatarParameters param;
- * AvatarConfigFrame frame; RegulatoryGraph graph; public
- * ParamActionListener(AvatarParameters p, AvatarConfigFrame f, RegulatoryGraph
- * lrg){ param=p; frame=f; graph=lrg; }
- * 
- * @Override public void actionPerformed(ActionEvent arg0) { param =
- * AvatarParamDynamicUpdate.complete(param,graph); frame.refresh(param); } }
- */

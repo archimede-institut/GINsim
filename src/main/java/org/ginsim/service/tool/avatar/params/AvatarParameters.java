@@ -3,19 +3,16 @@ package org.ginsim.service.tool.avatar.params;
 import java.io.IOException;
 
 import org.colomoto.biolqm.io.avatar.AvatarUtils;
-import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.common.xml.XMLize;
 import org.ginsim.core.graph.regulatorygraph.namedstates.NamedStateList;
 import org.ginsim.core.graph.regulatorygraph.perturbation.ListOfPerturbations;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.utils.data.NamedObject;
-import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.service.tool.avatar.simulation.AvatarSimulation;
 import org.ginsim.service.tool.avatar.simulation.AvatarSimulation.AvatarStrategy;
 import org.ginsim.service.tool.modelreduction.ListOfReductionConfigs;
 import org.ginsim.service.tool.modelreduction.ReductionConfig;
-import org.ginsim.servicegui.tool.modelreduction.ReductionSelectionPanel;
 import org.ginsim.service.tool.avatar.simulation.FirefrontSimulation;
 import org.ginsim.service.tool.avatar.simulation.MonteCarloSimulation;
 import org.ginsim.service.tool.avatar.simulation.Simulation;
@@ -137,24 +134,24 @@ public class AvatarParameters implements XMLize, NamedObject {
 	 * Creates an empty context
 	 */
 	public AvatarParameters() {
-		algorithm = 0;
-		quiet = true;
-		avaRuns = "1000";
-		avaTau = "3";
-		avaDepth = "1E6";
-		avaAproxDepth = "7";
-		avaMinTran = "200";
-		avaMinCycle = "4";
-		avaMaxPSize = "1E4";
-		avaMaxRewiringSize = "1E3";
-		avaKeepTrans = true;
-		avaStrategy = 0;
-		ffMaxExpand = "1E3";
-		ffDepth = "1E4";
-		ffAlpha = "1E-5";
-		ffBeta = "1E-5";
-		mcDepth = "1000";
-		mcRuns = "1000";
+		this.algorithm = 0;
+		this.quiet = true;
+		this.avaRuns = "1000";
+		this.avaTau = "3";
+		this.avaDepth = "1E6";
+		this.avaAproxDepth = "7";
+		this.avaMinTran = "200";
+		this.avaMinCycle = "4";
+		this.avaMaxPSize = "1E4";
+		this.avaMaxRewiringSize = "1E3";
+		this.avaKeepTrans = true;
+		this.avaStrategy = 0;
+		this.ffMaxExpand = "1E3";
+		this.ffDepth = "1E4";
+		this.ffAlpha = "1E-5";
+		this.ffBeta = "1E-5";
+		this.mcDepth = "1000";
+		this.mcRuns = "1000";
 	}
 
 	/**
