@@ -100,11 +100,7 @@ public class AvatarResults {
 		csvFile = _csvFile;
 		brun = _brun;
 		stop = _stop;
-		stop.addActionListener(e -> {
-			if (simulationWorker != null && !simulationWorker.isDone()) {
-				simulationWorker.cancel(true);
-			}
-		});
+		stop = _stop;
 	}
 
 	public void runAvatarResults() {
@@ -170,8 +166,18 @@ public class AvatarResults {
 	 *  Kill function
 	 * @param dialog boolean not used
 	 */
+	public void togglePause() {
+		if (simulationWorker != null && !simulationWorker.isDone()) {
+			boolean isPaused = sim.isPaused();
+			sim.setPaused(!isPaused);
+		}
+	}
+
 	public void kill(boolean dialog) {
 		sim.exit();
+		if (simulationWorker != null && !simulationWorker.isDone()) {
+			simulationWorker.cancel(true);
+		}
 	}
 
 	/**

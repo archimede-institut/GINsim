@@ -40,82 +40,82 @@ public class AvatarParameters implements XMLize, NamedObject {
 	 * boolean array statesSelected,
 	 */
 	public boolean[] statesSelected,
+			/**
+			 * boolean array istatesSelected;
+			 */
+			istatesSelected; // oraclesSelected, ioraclesSelected, enabled, ienabled;
 	/**
-	 *  boolean array  istatesSelected;
-	 */
-	istatesSelected; // oraclesSelected, ioraclesSelected, enabled, ienabled;
-	/**
-	 *  boolean quiet,
+	 * boolean quiet,
 	 */
 	public boolean quiet,
-	/**
-	 *  boolean avaKeepTrans
-	 */
-	avaKeepTrans;
+			/**
+			 * boolean avaKeepTrans
+			 */
+			avaKeepTrans;
 	/**
 	 * the int algorithm
 	 */
 	public int algorithm,
-	/**
-	 * int avaStrategy
-	 */
-	avaStrategy;
+			/**
+			 * int avaStrategy
+			 */
+			avaStrategy;
 	/**
 	 * String avaRuns
 	 */
 	public String avaRuns,
-	/**
-	 * String avaTau
-	 */
-	avaTau,
-	/**
-	 * String avaDeath
-	 */
-	avaDepth,
-	/**
-	 * String avaAproxDepth
-	 */
-	avaAproxDepth,
-	/**
-	 * string avaMinTran
-	 */
-	avaMinTran,
-	/**
-	 * String avaMinCycle
-	 */
-	avaMinCycle,
-	/**
-	 * String avaMaxPSize
-	 */
-	avaMaxPSize,
-	/**
-	 * String avaMaxRewiringSize
-	 */
-	avaMaxRewiringSize;
+			/**
+			 * String avaTau
+			 */
+			avaTau,
+			/**
+			 * String avaDeath
+			 */
+			avaDepth,
+			/**
+			 * String avaAproxDepth
+			 */
+			avaAproxDepth,
+			/**
+			 * string avaMinTran
+			 */
+			avaMinTran,
+			/**
+			 * String avaMinCycle
+			 */
+			avaMinCycle,
+			/**
+			 * String avaMaxPSize
+			 */
+			avaMaxPSize,
+			/**
+			 * String avaMaxRewiringSize
+			 */
+			avaMaxRewiringSize;
 	/**
 	 * String ffMaxExpand
 	 */
 	public String ffMaxExpand,
-	/**
-	 * String ffDepth,
-	 */
-	ffDepth,
-	/**
-	 * String  ffAlpha,
-	 */
-	ffAlpha,
-	/**
-	 * String ffBeta
-	 */
-	ffBeta,
-	/**
-	 * String mcDepth,
-	 */
-	mcDepth,
-	/**
-	 * String  mcRuns
-	 */
-	mcRuns;
+			/**
+			 * String ffDepth,
+			 */
+			ffDepth,
+			/**
+			 * String ffAlpha,
+			 */
+			ffAlpha,
+			/**
+			 * String ffBeta
+			 */
+			ffBeta,
+			/**
+			 * String mcDepth,
+			 */
+			mcDepth,
+			/**
+			 * String mcRuns
+			 */
+			mcRuns;
 	/**
 	 * ListOfPerturbations perturbations;
 	 */
@@ -137,6 +137,24 @@ public class AvatarParameters implements XMLize, NamedObject {
 	 * Creates an empty context
 	 */
 	public AvatarParameters() {
+		algorithm = 0;
+		quiet = true;
+		avaRuns = "1000";
+		avaTau = "3";
+		avaDepth = "1E6";
+		avaAproxDepth = "7";
+		avaMinTran = "200";
+		avaMinCycle = "4";
+		avaMaxPSize = "1E4";
+		avaMaxRewiringSize = "1E3";
+		avaKeepTrans = true;
+		avaStrategy = 0;
+		ffMaxExpand = "1E3";
+		ffDepth = "1E4";
+		ffAlpha = "1E-5";
+		ffBeta = "1E-5";
+		mcDepth = "1000";
+		mcRuns = "1000";
 	}
 
 	/**
@@ -230,7 +248,7 @@ public class AvatarParameters implements XMLize, NamedObject {
 		// +="\noracleselection="+AvatarUtils.toString(oraclesSelected)+"\nioracleselection="+AvatarUtils.toString(ioraclesSelected);
 		// result+"\nenabled="+AvatarUtils.toString(enabled)+"\nienabled="+AvatarUtils.toString(ienabled);
 	}
-	
+
 	private String getStates(NamedStateList stateList) {
 		String result = "";
 		for (int i = 0; i < stateList.size(); i++) {
@@ -240,6 +258,7 @@ public class AvatarParameters implements XMLize, NamedObject {
 		}
 		return result;
 	}
+
 	private String getStateNames(NamedStateList stateList) {
 		String result = "";
 		for (int i = 0; i < stateList.size(); i++) {
@@ -254,21 +273,21 @@ public class AvatarParameters implements XMLize, NamedObject {
 	public void toXML(XMLWriter out) throws IOException {
 		out.openTag("parameter");
 		out.addAttr("name", name);
-		out.addAttr("avatarparameters",toFullString());
+		out.addAttr("avatarparameters", toFullString());
 		// System.out.println(toFullString());
 		// State List
-		if(reduction != null) {
+		if (reduction != null) {
 			out.openTag("reduction");
-            reduction.toXML(out);
-            out.closeTag();
+			reduction.toXML(out);
+			out.closeTag();
 		}
-		if(perturbation != null) {
-            out.openTag("perturbation");
-            perturbation.toXML(out);
-            out.closeTag();
-		}            
-		//System.out.println("after perturbations");
-		
+		if (perturbation != null) {
+			out.openTag("perturbation");
+			perturbation.toXML(out);
+			out.closeTag();
+		}
+		// System.out.println("after perturbations");
+
 		out.openTag("stateList");
 		out.addAttr("states", this.getStates(statestore.nstates));
 		out.addAttr("namestates", this.getStates(statestore.nstates));
@@ -279,7 +298,7 @@ public class AvatarParameters implements XMLize, NamedObject {
 		out.addAttr("ostates", this.getStates(statestore.oracles));
 		out.addAttr("onamestates", this.getStates(statestore.oracles));
 		out.closeTag();
-		// 
+		//
 		out.closeTag();
 	}
 

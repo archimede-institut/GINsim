@@ -37,7 +37,7 @@ public class MonteCarloPanel extends SimulationPanel {
 		this.setBorder(BorderFactory.createTitledBorder(EnumAlgorithm.MONTE_CARLO + " Parameters"));
 
 		JLabel runsL = new JLabel("#Runs");
-		JLabel depthL = new JLabel("Max depth    ");
+		JLabel depthL = new JLabel("Max depth");
 		runs.setText("1E3");
 		depth.setText("1E3");
 
@@ -55,7 +55,7 @@ public class MonteCarloPanel extends SimulationPanel {
 		MonteCarloSimulation sim = new MonteCarloSimulation();
 		sim.addModel(model);
 		sim.isGUI = true;
-		sim.runs = (int) safeParseDouble(runs.getText());
+		sim.runs = (int) Double.parseDouble(runs.getText());
 		sim.maxSteps = (int) Double.parseDouble(depth.getText()); // optional
 		sim.quiet = quiet;
 
@@ -70,13 +70,6 @@ public class MonteCarloPanel extends SimulationPanel {
 	public void load(AvatarParameters p) {
 		p.mcDepth = depth.getText();
 		p.mcRuns = runs.getText();
-	}
-
-	private static double safeParseDouble(String str) {
-		if (str.matches(".*E$")) {
-			str += "0";
-		}
-		return Double.parseDouble(str);
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import org.ginsim.service.tool.avatar.domain.Dictionary;
 import org.ginsim.service.tool.avatar.domain.Result;
 import org.ginsim.service.tool.avatar.domain.StateSet;
 import org.ginsim.service.tool.avatar.utils.ChartGNUPlot;
-import javax.swing.SwingUtilities;
+
 /**
  * Class defining an abstract simulation and providing facilities for their
  * management.<br>
@@ -45,6 +45,7 @@ public abstract class Simulation {
 	protected int memory;
 
 	private volatile boolean stopRequested = false;
+	private volatile boolean paused = false;
 
 	public void requestStop() {
 		stopRequested = true;
@@ -54,8 +55,31 @@ public abstract class Simulation {
 		return stopRequested;
 	}
 
+	public synchronized void setPaused(boolean paused) {
+		this.paused = paused;
+		if (!paused) {
+			notifyAll();
+		}
+	}
+
+	public boolean isPaused() {
+		return paused;
+	}
+
+	protected synchronized void checkPause() {
+		while (paused) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				Thread.currentThread().interrupt();
+				break;
+			}
+		}
+	}
+
 	/**
 	 * Add the model function
+	 * 
 	 * @param _model StatefulLogicalModel model
 	 */
 	public void addModel(StatefulLogicalModel _model) {
@@ -115,7 +139,7 @@ public abstract class Simulation {
 	 * 
 	 * @return the discovered attractors, their reachability, and remaining
 	 *         contextual information
-	 * @throws Exception  the exception
+	 * @throws Exception the exception
 	 */
 	public abstract Result runSim() throws Exception;
 
@@ -128,6 +152,7 @@ public abstract class Simulation {
 
 	/**
 	 * Name getter
+	 * 
 	 * @return the name as string
 	 */
 	public abstract String getName();
@@ -144,7 +169,7 @@ public abstract class Simulation {
 	 * properties of the input model
 	 * 
 	 * simulation with updated parameters (values dynamically selected based
-	 *         on the input model)
+	 * on the input model)
 	 */
 	public abstract void dynamicUpdateValues();
 
@@ -174,6 +199,7 @@ public abstract class Simulation {
 
 	public void exit() {
 		requestStop();
+		setPaused(false); // Resume if paused to allow exit
 		if (t1 != null && t1.isAlive())
 			t1.interrupt();
 	}
@@ -183,14 +209,13 @@ public abstract class Simulation {
 		final Exception[] es = new Exception[1];
 		final boolean[] ok = new boolean[] { true };
 
-					try {
-						res[0] = runSimulation();
-					}
-					catch (Exception e) {
-						// e.printStackTrace();
-						es[0] = e;
-						ok[0] = false;
-					}
+		try {
+			res[0] = runSimulation();
+		} catch (Exception e) {
+			// e.printStackTrace();
+			es[0] = e;
+			ok[0] = false;
+		}
 
 		if (!ok[0])
 			throw es[0];

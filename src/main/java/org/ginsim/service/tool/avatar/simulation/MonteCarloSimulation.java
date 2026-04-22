@@ -58,6 +58,7 @@ public class MonteCarloSimulation extends Simulation {
 		List<Integer> depth = new ArrayList<Integer>();
 		int truncated = 0;
 		for (int sn = 1, i = 0; sn <= runs; sn++, i = 0) {
+			checkPause();
 			State currentState = SimulationUtils.getRandomState(model, model.getInitialStates(), false);
 			if (isGUI)
 				publish("Iteration: " + sn + " state=" + currentState.toShortString());
@@ -67,6 +68,7 @@ public class MonteCarloSimulation extends Simulation {
 			// output("Run:" + sn + "/" + runs);
 
 			while (true) {
+				checkPause();
 
 				boolean complex = false;
 				for (AbstractStateSet trans : result.complexAttractors.values()) {

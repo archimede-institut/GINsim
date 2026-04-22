@@ -138,6 +138,7 @@ public class AvatarSimulation extends Simulation {
 		/** II: Simulation **/
 
 		for (int sn = 1, time = 0, tau = tauInit; sn <= runs; sn++, time = 0, avgSteps = 0, minSteps = 0, psize = 0, tau = tauInit) {
+			checkPause();
 		    if(keepTransients && savedTransients.size() > limitTransients) {
 		    	PriorityQueue<StateSet> pqnew = new PriorityQueue<StateSet>(new StateSetComparator());
 		    	while(pqnew.size() < 10) pqnew.add(savedTransients.poll());
@@ -166,6 +167,7 @@ public class AvatarSimulation extends Simulation {
 
 			StateSet localTransient = null;
 			while (!F.isEmpty()) {
+				checkPause();
 				State s = F.getProbableRandomState();
 				//System.out.println("new state: "+s.toShortString());
 				if (Thread.currentThread().isInterrupted()) {
@@ -284,6 +286,7 @@ public class AvatarSimulation extends Simulation {
 					exitStates = null;
 					//System.out.println("growing");
 					do {
+						checkPause();
 						if (Thread.currentThread().isInterrupted()) {
 							System.out.println("Simulation interrompue !");
 							return null;
