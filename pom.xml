@@ -7,7 +7,7 @@
   <groupId>org.ginsim</groupId>
   <artifactId>GINsim</artifactId>
   <name>GINsim</name>
-  <version>3.0.0b-SNAPSHOT</version>
+  <version>3.1-SNAPSHOT</version>
   <description>Edition, simulation and analysis of logical models</description>
   <inceptionYear>2005</inceptionYear>
   <packaging>jar</packaging>
@@ -44,7 +44,7 @@
       <artifactId>metainf-services</artifactId>
       <version>1.8</version>
       <!-- only needed to compile: this allows to exclude it from copy-dependencies goal -->
-      <scope>provided</scope>  
+      <scope>provided</scope>
     </dependency>
 
 
@@ -65,13 +65,13 @@
       <groupId>org.python</groupId>
       <artifactId>jython-standalone</artifactId>
       <version>2.7.2</version>
-      <scope>provided</scope>  
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
       <groupId>org.colomoto</groupId>
       <artifactId>bioLQM</artifactId>
-      <version>0.7.1</version>
+      <version>0.8</version>
     </dependency>
     <dependency>
       <groupId>org.bibsonomy</groupId>
