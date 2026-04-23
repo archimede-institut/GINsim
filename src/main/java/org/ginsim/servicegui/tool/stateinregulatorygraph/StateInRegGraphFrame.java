@@ -35,11 +35,11 @@ import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.ginsim.servicegui.tool.regulatorygraphanimation.LRGStateStyleProvider;
 import org.ginsim.gui.graph.dynamicgraph.StableTableModel;
 
-
 /**
  * The main frame.
  * 
- * Display a JTabbedPane that contains different TabComponantProvidingAState having a method to get a state
+ * Display a JTabbedPane that contains different TabComponantProvidingAState
+ * having a method to get a state
  *
  */
 public class StateInRegGraphFrame extends StackDialog {
@@ -49,7 +49,7 @@ public class StateInRegGraphFrame extends StackDialog {
 
 	private Container mainPanel;
 	private JTabbedPane tabbedPane;
-	
+
 	private final LRGStateStyleProvider styleProvider;
 
 	private StyleColorizerCheckbox colorizerCheckbox;
@@ -95,13 +95,13 @@ public class StateInRegGraphFrame extends StackDialog {
 			c.ipady = 0;
 			c.fill = GridBagConstraints.CENTER;
 			colorizerCheckbox = new StyleColorizerCheckbox("stateInRegGraph.", regGraph, styleProvider);
-		    mainPanel.add(colorizerCheckbox, c);
+			mainPanel.add(colorizerCheckbox, c);
 		}
 		return mainPanel;
 	}
 
 	protected void run() {
-		byte[] state = ((TabComponantProvidingAState)tabbedPane.getSelectedComponent()).getState();
+		byte[] state = ((TabComponantProvidingAState) tabbedPane.getSelectedComponent()).getState();
 		styleProvider.setState(state);
 		colorizerCheckbox.refresh();
 	}
@@ -112,10 +112,10 @@ public class StateInRegGraphFrame extends StackDialog {
 	}
 
 	@Override
-	public void doClose(){
+	public void doClose() {
 		colorizerCheckbox.undoColorize();
 		dispose();
-		//super.cancel();
+		// super.cancel();
 	}
 }
 
@@ -146,15 +146,16 @@ abstract class TabComponantProvidingAState extends JPanel {
 		c.ipady = 0;
 		ssl = new SimpleStateListTableModel(g, isEditable);
 		table = new EnhancedJTable(ssl);
-        table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-		add(new JScrollPane(table), c);	
+		table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+		add(new JScrollPane(table), c);
 		return c;
 	}
 
 }
 
 /**
- *  Return the state (1,1,...,1) and display the state (max_1, max_2,..., max_n) where max_i is the max value of the node i.
+ * Return the state (1,1,...,1) and display the state (max_1, max_2,..., max_n)
+ * where max_i is the max value of the node i.
  */
 class MaxValues extends TabComponantProvidingAState {
 	private static final long serialVersionUID = -6227864741059321245L;
@@ -195,13 +196,13 @@ class State extends TabComponantProvidingAState {
  */
 class StableState extends TabComponantProvidingAState {
 	private static final long serialVersionUID = 1301082532863004279L;
-	
+
 	JTable table;
 	private PerturbationSelectionPanel mutantSelectionPanel;
 	private PerturbationStore mutantStore;
 	private RegulatoryGraph g;
 	private JButton computeStableStateButton;
-	
+
 	private StableTableModel tableModel;
 
 	private StateInRegGraphFrame stateInRegGraphFrame;
@@ -234,17 +235,17 @@ class StableState extends TabComponantProvidingAState {
 		c.ipady = 0;
 		tableModel = new StableTableModel();
 		tableModel.setResult(null);
-        table = new EnhancedJTable(tableModel);
-        table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
-        table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		table = new EnhancedJTable(tableModel);
+		table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				if (e.getValueIsAdjusting() == false) {
-					stateInRegGraphFrame.run(); //Colorize the graph when the selection change
-				}				
+					stateInRegGraphFrame.run(); // Colorize the graph when the selection change
+				}
 			}
-        });
-		add(new JScrollPane(table), c);	
-		
+		});
+		add(new JScrollPane(table), c);
+
 		c.gridy++;
 		c.weightx = 0;
 		c.weighty = 0;
@@ -253,7 +254,7 @@ class StableState extends TabComponantProvidingAState {
 		add(computeStableStateButton, c);
 		computeStableStateButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				run(); //call run() when the button is clicked
+				run(); // call run() when the button is clicked
 			}
 		});
 	}
@@ -280,8 +281,8 @@ class StableState extends TabComponantProvidingAState {
 			return null;
 		}
 		byte[] ret = new byte[state.length];
-		for (int i=0 ; i<state.length ; i++) {
-			ret[i] = (byte)state[i];
+		for (int i = 0; i < state.length; i++) {
+			ret[i] = (byte) state[i];
 		}
 		return ret;
 	}
