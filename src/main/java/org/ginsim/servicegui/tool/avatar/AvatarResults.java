@@ -165,8 +165,6 @@ public class AvatarResults {
 
 	/**
 	 * Kill function
-	 * 
-	 * @param dialog boolean not used
 	 */
 	public void togglePause() {
 		if (simulationWorker != null && !simulationWorker.isDone()) {
