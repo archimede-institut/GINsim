@@ -26,6 +26,7 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.perturbation.Perturbation;
 import org.ginsim.core.graph.regulatorygraph.perturbation.PerturbationStore;
 import org.ginsim.core.service.GSServiceManager;
+import org.ginsim.gui.graph.dynamicgraph.StableTableModel;
 import org.ginsim.gui.graph.regulatorygraph.perturbation.PerturbationSelectionPanel;
 import org.ginsim.gui.graph.view.style.StyleColorizerCheckbox;
 import org.ginsim.gui.utils.data.SimpleStateListTableModel;
@@ -33,7 +34,6 @@ import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.ginsim.servicegui.tool.regulatorygraphanimation.LRGStateStyleProvider;
-import org.ginsim.gui.graph.dynamicgraph.StableTableModel;
 
 /**
  * The main frame.
@@ -63,6 +63,7 @@ public class StateInRegGraphFrame extends StackDialog {
 
 	private Container getMainPanel() {
 		if (mainPanel == null) {
+			this.setTitle(Txt.t("STR_stateInRegGraph"));
 			mainPanel = new javax.swing.JPanel();
 			mainPanel.setLayout(new GridBagLayout());
 			GridBagConstraints c = new GridBagConstraints();
@@ -221,7 +222,7 @@ class StableState extends TabComponantProvidingAState {
 		c.gridy = 0;
 		c.ipady = 8;
 		c.fill = GridBagConstraints.BOTH;
-		add(new JLabel(Txt.t("STR_stateInRegGraph_statedescr")), c);
+		add(new JLabel(Txt.t("STR_stateInRegGraph_stabledescr")), c);
 
 		c.gridy++;
 		c.ipady = 0;

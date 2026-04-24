@@ -43,7 +43,7 @@ public class CircuitServiceGUI extends AbstractServiceGUI {
 
 	@Override
 	public int getInitialWeight() {
-		return ServiceGUI.W_TOOLS_MAIN + 4;
+		return ServiceGUI.W_TOOLS_MAIN + 5;
 	}
 
 

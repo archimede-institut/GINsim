@@ -1,17 +1,21 @@
 package org.ginsim.servicegui.tool.scc;
 
-import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
-import org.ginsim.core.graph.view.style.StyleProvider;
-import org.ginsim.core.graph.Graph;
-import org.ginsim.service.tool.scc.SCCGraphService;
-import org.ginsim.core.service.GSServiceManager;
-import org.ginsim.core.graph.reducedgraph.NodeReducedData;
-import org.ginsim.common.application.Txt;
-import org.ginsim.gui.graph.view.style.StyleColorizerCheckbox;
-import org.ginsim.service.tool.scc.SCCGraphService;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Container;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.util.List;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+import org.ginsim.common.application.Txt;
+import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.reducedgraph.NodeReducedData;
+import org.ginsim.core.graph.view.style.StyleProvider;
+import org.ginsim.core.service.GSServiceManager;
+import org.ginsim.gui.graph.view.style.StyleColorizerCheckbox;
+import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
+import org.ginsim.service.tool.scc.SCCGraphService;
 
 public class ConnecttivityRegGraphFrame extends StackDialog {
     private static final long serialVersionUID = -5576209151262677441L;
@@ -24,19 +28,20 @@ public class ConnecttivityRegGraphFrame extends StackDialog {
 
     private StyleColorizerCheckbox colorizerCheckbox;
 
-    public ConnecttivityRegGraphFrame(JFrame frame, Graph  graph) {
+    public ConnecttivityRegGraphFrame(JFrame frame, Graph graph) {
         super(frame, "SSC_Color", 420, 260);
         SCCGraphService service = GSServiceManager.getService(SCCGraphService.class);
-        //RegulatoryGraph ngraph = copyGraph(graph);
+        // RegulatoryGraph ngraph = copyGraph(graph);
         List<NodeReducedData> components = service.getComponents(graph);
-        this.styleProvider = service.getStyleProvider(components, graph );
-        this.graph =  graph;
+        this.styleProvider = service.getStyleProvider(components, graph);
+        this.graph = graph;
         graph.getStyleManager().setStyleProvider(styleProvider);
         setMainPanel(getMainPanel());
     }
 
     private Container getMainPanel() {
         if (mainPanel == null) {
+            this.setTitle(Txt.t("STR_connectivity"));
             mainPanel = new javax.swing.JPanel();
             mainPanel.setLayout(new GridBagLayout());
             GridBagConstraints c = new GridBagConstraints();
@@ -67,8 +72,9 @@ public class ConnecttivityRegGraphFrame extends StackDialog {
     }
 
     protected void run() {
-        //byte[] state = ((org.ginsim.servicegui.tool.stateinregulatorygraph.TabComponantProvidingAState)tabbedPane.getSelectedComponent()).getState();
-        //styleProvider.setState(state);
+        // byte[] state =
+        // ((org.ginsim.servicegui.tool.stateinregulatorygraph.TabComponantProvidingAState)tabbedPane.getSelectedComponent()).getState();
+        // styleProvider.setState(state);
         graph.getStyleManager().setStyleProvider(styleProvider);
         colorizerCheckbox.refresh();
     }
@@ -79,12 +85,8 @@ public class ConnecttivityRegGraphFrame extends StackDialog {
     }
 
     @Override
-    public void doClose(){
+    public void doClose() {
         colorizerCheckbox.undoColorize();
         dispose();
     }
 }
-
-
-
-
