@@ -15,6 +15,8 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTable;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.tool.fixpoints.FixpointList;
@@ -81,9 +83,9 @@ public class StateInRegGraphFrame extends StackDialog {
 			c.weightx = 1;
 			c.weighty = 1;
 			tabbedPane = new JTabbedPane();
-			tabbedPane.add(Txt.t("STR_stateInRegGraph_state"), new State(regGraph));
+			tabbedPane.add(Txt.t("STR_stateInRegGraph_state"), new State(regGraph, this));
 			tabbedPane.add(Txt.t("STR_stateInRegGraph_stablestate"), new StableState(regGraph, this));
-			tabbedPane.add(Txt.t("STR_stateInRegGraph_maxvalues"), new MaxValues(regGraph));
+			tabbedPane.add(Txt.t("STR_stateInRegGraph_maxvalues"), new MaxValues(regGraph, this));
 			mainPanel.add(tabbedPane, c);
 
 			c.gridy++;
@@ -128,7 +130,13 @@ abstract class TabComponantProvidingAState extends JPanel {
 	protected SimpleStateListTableModel ssl;
 	protected EnhancedJTable table;
 
+	protected StateInRegGraphFrame stateInRegGraphFrame;
+
 	abstract public byte[] getState();
+
+	public TabComponantProvidingAState(StateInRegGraphFrame stateInRegGraphFrame) {
+		this.stateInRegGraphFrame = stateInRegGraphFrame;
+	}
 
 	protected GridBagConstraints initPanel(RegulatoryGraph g, String desckey, boolean isEditable) {
 		setLayout(new GridBagLayout());
@@ -151,28 +159,33 @@ abstract class TabComponantProvidingAState extends JPanel {
 		add(new JScrollPane(table), c);
 		return c;
 	}
-
 }
 
 /**
  * Return the state (1,1,...,1) and display the state (max_1, max_2,..., max_n)
  * where max_i is the max value of the node i.
  */
-class MaxValues extends TabComponantProvidingAState {
+class MaxValues extends TabComponantProvidingAState implements ListSelectionListener {
 	private static final long serialVersionUID = -6227864741059321245L;
 	private byte[] state1;
 
-	public MaxValues(RegulatoryGraph g) {
+	public MaxValues(RegulatoryGraph g, StateInRegGraphFrame stateInRegGraphFrame) {
+		super(stateInRegGraphFrame);
 		state1 = new byte[g.getNodeOrderSize()];
 		for (int i = 0; i < g.getNodeOrderSize(); i++) {
 			state1[i] = 1;
 		}
 		initPanel(g, "STR_stateInRegGraph_maxValuesdescr", false);
 		ssl.addState(ssl.getMaxValues());
+		table.getSelectionModel().addListSelectionListener(this);
 	}
 
 	public byte[] getState() {
 		return state1;
+	}
+
+	public void valueChanged(ListSelectionEvent e) {
+		stateInRegGraphFrame.run();
 	}
 }
 
@@ -180,15 +193,26 @@ class MaxValues extends TabComponantProvidingAState {
  * Provide a table to enter a state manually.
  *
  */
-class State extends TabComponantProvidingAState {
+class State extends TabComponantProvidingAState implements ListSelectionListener, TableModelListener {
 	private static final long serialVersionUID = 918581816104803491L;
 
-	public State(RegulatoryGraph g) {
+	public State(RegulatoryGraph g, StateInRegGraphFrame stateInRegGraphFrame) {
+		super(stateInRegGraphFrame);
 		initPanel(g, "STR_stateInRegGraph_statedescr", true);
+		table.getSelectionModel().addListSelectionListener(this);
+		table.getModel().addTableModelListener(this);
 	}
 
 	public byte[] getState() {
 		return ssl.getState(table.getSelectedRow());
+	}
+
+	public void tableChanged(TableModelEvent e) {
+		stateInRegGraphFrame.run();
+	}
+
+	public void valueChanged(ListSelectionEvent e) {
+		stateInRegGraphFrame.run();
 	}
 }
 
@@ -206,11 +230,9 @@ class StableState extends TabComponantProvidingAState {
 
 	private StableTableModel tableModel;
 
-	private StateInRegGraphFrame stateInRegGraphFrame;
-
 	public StableState(RegulatoryGraph g, StateInRegGraphFrame stateInRegGraphFrame) {
+		super(stateInRegGraphFrame);
 		this.g = g;
-		this.stateInRegGraphFrame = stateInRegGraphFrame;
 		setMainPanel();
 	}
 
