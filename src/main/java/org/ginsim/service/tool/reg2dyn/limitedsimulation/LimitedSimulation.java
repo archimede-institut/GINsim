@@ -33,7 +33,7 @@ public class LimitedSimulation implements Runnable {
 	private boolean breadthFirst;
 	private SimulationUpdater updater;
 	private SimulationHelper helper;
-	private Iterator<byte[]> initStatesIterator;
+	private SimulationConstraint constraint;
 	private boolean ready;
 
 	private int nbnode;
@@ -57,7 +57,7 @@ public class LimitedSimulation implements Runnable {
 
 		helper = new STGLimitedSimulationHelper(model, htg, params, constraint);
 		updater = params.getPriorityClassDefinition().getUpdater(model);
-		initStatesIterator = constraint.getNewIterator();
+		this.constraint = constraint;
 	}
 
 	public void interrupt() {
@@ -91,47 +91,52 @@ public class LimitedSimulation implements Runnable {
 	public Graph do_simulation() throws GsException {
 		ready = true;
 		try {
+			Iterator<byte[]> initStatesIterator = constraint.getNewIterator();
 			// iterate through initial states and run the simulation from each of them
 			while (initStatesIterator.hasNext()) {
 				// add the next proposed state
 				queue.add(new SimulationQueuedState((byte[]) initStatesIterator.next(), 0, null, false));
+			}
+			// do the simulation itself
+			while (!queue.isEmpty()) {
+				SimulationQueuedState item = (SimulationQueuedState) (breadthFirst ? queue.removeFirst()
+						: queue.removeLast());
 
-				// do the simulation itself
-				while (!queue.isEmpty()) {
-					SimulationQueuedState item = (SimulationQueuedState) (breadthFirst ? queue.removeFirst()
-							: queue.removeLast());
-
-					if (helper.addNode(item)) {
-						// this is a new node, increase node count, do some checks and so on
-						nbnode++;
-						if (nbnode % 100 == 0) {
-							if (simulationManager != null) {
-								simulationManager.setProgress(nbnode);
-							}
+				if (helper.addNode(item)) {
+					// this is a new node, increase node count, do some checks and so on
+					nbnode++;
+					if (nbnode % 100 == 0) {
+						if (simulationManager != null) {
+							simulationManager.setProgress(nbnode);
 						}
-						if (!ready) {
-							throw new GsException(GsException.GRAVITY_NORMAL, Txt.t("STR_interrupted"));
-						}
+					}
+					if (!ready) {
+						throw new GsException(GsException.GRAVITY_NORMAL, Txt.t("STR_interrupted"));
+					}
 
-						// run the simulation on the new node
-						updater.setState(item.state, item.depth, helper.getNode());
-						if (!updater.hasNext()) {
-							helper.setStable();
-							simulationManager.milestone(item);
-							String display = "";
-							for (int i = 0; i < item.state.length; i++) {
-								display += item.state[i] + " ";
-							}
-							display += "\n";
-							LogManager.trace(display, false);
-						} else {
-							while (updater.hasNext()) {
-								queue.addLast((SimulationQueuedState) updater.next());
+					// run the simulation on the new node
+					updater.setState(item.state, item.depth, helper.getNode());
+					if (!updater.hasNext()) {
+						helper.setStable();
+						simulationManager.milestone(item);
+						String display = "";
+						for (int i = 0; i < item.state.length; i++) {
+							display += item.state[i] + " ";
+						}
+						display += "\n";
+						LogManager.trace(display, false);
+					} else {
+						while (updater.hasNext()) {
+							SimulationQueuedState next = (SimulationQueuedState) updater.next();
+							if (this.constraint.shouldAdd(next.state, null) == 1) {
+								// Only add state if it is contained in the limited space
+								queue.addLast(next);
 							}
 						}
 					}
 				}
 			}
+
 		} catch (GsException e) {
 			LogManager.error("Simulation was interrupted");
 		} catch (OutOfMemoryError e) {
