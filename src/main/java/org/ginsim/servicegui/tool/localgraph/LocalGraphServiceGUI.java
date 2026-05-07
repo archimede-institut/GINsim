@@ -23,7 +23,7 @@ import org.kohsuke.MetaInfServices;
 
 @MetaInfServices(ServiceGUI.class)
 @GUIFor(LocalGraphService.class)
-@ServiceStatus(EStatus.RELEASED)
+@ServiceStatus(EStatus.DEVELOPMENT)
 public class LocalGraphServiceGUI extends AbstractServiceGUI {
 
 	@Override
@@ -70,4 +70,3 @@ public class LocalGraphServiceGUI extends AbstractServiceGUI {
 		}
 	}
 }
-
