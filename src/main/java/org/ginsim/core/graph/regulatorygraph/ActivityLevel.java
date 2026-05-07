@@ -5,15 +5,19 @@ package org.ginsim.core.graph.regulatorygraph;
  */
 public enum ActivityLevel {
 	/**
-	 * attibute status inactive
+	 * attribute status inactive
 	 */
 	INACTIVE,
 	/**
-	 * attibute status midlevel
+	 * attribute status midlevel
 	 */
 	MIDLEVEL,
 	/**
-	 * attibute status active
+	 * attribute status active
 	 */
-	ACTIVE;
+	ACTIVE,
+	/**
+	 * attribute status free
+	 */
+	FREE;
 }

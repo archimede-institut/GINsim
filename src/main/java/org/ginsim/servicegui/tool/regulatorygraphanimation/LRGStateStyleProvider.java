@@ -97,7 +97,7 @@ class StateColoredNodeStyle extends NodeStyleOverride<RegulatoryNode> {
 	private static Color FREE = new Color(255, 220, 150);
 	private static Color INACTIVE = new Color(255, 255, 255);
 	private static Color ACTIVE = new Color(50, 50, 150);
-	private static Color INTERMEDIATE = new Color(50, 150, 200);;
+	private static Color INTERMEDIATE = new Color(50, 150, 200);
 
 	public StateColoredNodeStyle(NodeStyle<RegulatoryNode> style) {
 		super(style);

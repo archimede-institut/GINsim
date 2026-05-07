@@ -161,12 +161,14 @@ public class LocalGraphFrame extends StackDialog implements ActionListener,
 		int idx = 0;
 		for (RegulatoryNode node : config.getGraph().getNodeOrder()) {
 			byte cur = state[idx++];
-			if (cur > 0) {
-				if (cur < node.getMaxValue()) {
-					activityMap.put(node, ActivityLevel.MIDLEVEL);
-				} else {
-					activityMap.put(node, ActivityLevel.ACTIVE);
-				}
+			if (cur == node.getMaxValue()) {
+				activityMap.put(node, ActivityLevel.ACTIVE);
+			} else if (cur > 0) {
+				activityMap.put(node, ActivityLevel.MIDLEVEL);
+			} else if (cur == 0) {
+				activityMap.put(node, ActivityLevel.INACTIVE);
+			} else {
+				activityMap.put(node, ActivityLevel.FREE);
 			}
 		}
 		return activityMap;
