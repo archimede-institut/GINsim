@@ -1,6 +1,5 @@
 package org.ginsim.servicegui.tool.reg2dyn.limitedSimulation;
 
-
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,17 +20,16 @@ import org.ginsim.gui.service.StandaloneGUI;
 import org.ginsim.gui.shell.actions.ToolAction;
 import org.kohsuke.MetaInfServices;
 
-
 @StandaloneGUI
-@MetaInfServices( ServiceGUI.class)
-@ServiceStatus( EStatus.RELEASED)
+@MetaInfServices(ServiceGUI.class)
+@ServiceStatus(EStatus.RELEASED)
 public class LimitedSimulationServiceGUI extends AbstractServiceGUI {
-	
+
 	@Override
 	public List<Action> getAvailableActions(Graph<?, ?> graph) {
 		if (graph instanceof HierarchicalTransitionGraph) {
 			List<Action> actions = new ArrayList<Action>();
-			actions.add(new LimitedSimulationAction((HierarchicalTransitionGraph)graph, this));
+			actions.add(new LimitedSimulationAction((HierarchicalTransitionGraph) graph, this));
 			return actions;
 		}
 		return null;
@@ -43,14 +41,13 @@ public class LimitedSimulationServiceGUI extends AbstractServiceGUI {
 	}
 }
 
-
 class LimitedSimulationAction extends ToolAction {
 	private static final long serialVersionUID = -2719039497869822805L;
 	private final HierarchicalTransitionGraph graph;
-	
-	public LimitedSimulationAction ( HierarchicalTransitionGraph graph, ServiceGUI serviceGUI) {
-		
-		super( "STR_limitedSimulation", "STR_limitedSimulation_descr", serviceGUI);
+
+	public LimitedSimulationAction(HierarchicalTransitionGraph graph, ServiceGUI serviceGUI) {
+
+		super("STR_limitedSimulation", "STR_limitedSimulation_descr", serviceGUI);
 		this.graph = graph;
 	}
 
@@ -59,10 +56,10 @@ class LimitedSimulationAction extends ToolAction {
 		RegulatoryGraph lrg;
 		try {
 			lrg = graph.getAssociatedGraph();
-			new LimitedSimulationFrame( GUIManager.getInstance().getFrame( graph), graph, lrg);
+			new LimitedSimulationFrame(GUIManager.getInstance().getFrame(graph), graph, lrg);
 		} catch (GsException ex) {
-			LogManager.error("The htg is not associated with a regulatory graph");
+			LogManager.error("The scc/htg is not associated with a regulatory graph");
 		}
 	}
-	
+
 }
