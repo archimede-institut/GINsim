@@ -21,6 +21,8 @@ import javax.swing.event.TableModelListener;
 import org.colomoto.biolqm.LogicalModel;
 import org.colomoto.biolqm.tool.fixpoints.FixpointList;
 import org.colomoto.biolqm.tool.fixpoints.FixpointTask;
+import org.colomoto.biolqm.tool.trapspaces.TrapSpaceList;
+import org.colomoto.biolqm.tool.trapspaces.TrapSpaceTask;
 import org.ginsim.common.application.LogManager;
 import org.ginsim.common.application.Txt;
 import org.ginsim.core.graph.Graph;
@@ -36,6 +38,7 @@ import org.ginsim.gui.utils.dialog.stackdialog.StackDialog;
 import org.ginsim.gui.utils.widgets.EnhancedJTable;
 import org.ginsim.service.tool.stablestates.StableStatesService;
 import org.ginsim.servicegui.tool.regulatorygraphanimation.LRGStateStyleProvider;
+import org.ginsim.servicegui.tool.trapspace.TrapSpaceTableModel;
 
 /**
  * The main frame.
@@ -85,6 +88,7 @@ public class StateInRegGraphFrame extends StackDialog {
 			tabbedPane = new JTabbedPane();
 			tabbedPane.add(Txt.t("STR_stateInRegGraph_state"), new State(regGraph, this));
 			tabbedPane.add(Txt.t("STR_stateInRegGraph_stablestate"), new StableState(regGraph, this));
+			tabbedPane.add(Txt.t("STR_stateInRegGraph_trapspaces"), new TrapSpaces(regGraph, this));
 			tabbedPane.add(Txt.t("STR_stateInRegGraph_maxvalues"), new MaxValues(regGraph, this));
 			mainPanel.add(tabbedPane, c);
 
@@ -293,6 +297,107 @@ class StableState extends TabComponantProvidingAState {
 		try {
 			result = task.call();
 			tableModel.setResult(result);
+		} catch (Exception e) {
+			LogManager.error(e);
+		}
+	}
+
+	public byte[] getState() {
+		byte[] state = tableModel.getState(table.getSelectedRow());
+		if (state == null) {
+			return null;
+		}
+		byte[] ret = new byte[state.length];
+		for (int i = 0; i < state.length; i++) {
+			ret[i] = (byte) state[i];
+		}
+		return ret;
+	}
+}
+
+/**
+ * Return a state provided by the TrapSpaces plugin.
+ */
+class TrapSpaces extends TabComponantProvidingAState {
+	private static final long serialVersionUID = 1301082532863004279L;
+
+	JTable table;
+	private PerturbationSelectionPanel mutantSelectionPanel;
+	private PerturbationStore mutantStore;
+	private RegulatoryGraph g;
+	private JButton computeTrapStateButton;
+
+	private TrapSpaceTableModel tableModel;
+
+	public TrapSpaces(RegulatoryGraph g, StateInRegGraphFrame stateInRegGraphFrame) {
+		super(stateInRegGraphFrame);
+		this.g = g;
+		setMainPanel();
+	}
+
+	private void setMainPanel() {
+		setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+
+		c.gridx = 0;
+		c.gridy = 0;
+		c.ipady = 8;
+		c.fill = GridBagConstraints.BOTH;
+		add(new JLabel(Txt.t("STR_stateInRegGraph_trapSpacesdescr")), c);
+
+		c.gridy++;
+		c.ipady = 0;
+		mutantStore = new PerturbationStore();
+		mutantSelectionPanel = new PerturbationSelectionPanel(stateInRegGraphFrame, g, mutantStore);
+		add(mutantSelectionPanel, c);
+
+		c.gridy++;
+		c.weightx = 1;
+		c.weighty = 1;
+		c.ipady = 0;
+		tableModel = new TrapSpaceTableModel();
+		tableModel.setSolutions(null);
+		table = new EnhancedJTable(tableModel);
+		table.setAutoResizeMode(javax.swing.JTable.AUTO_RESIZE_OFF);
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if (e.getValueIsAdjusting() == false) {
+					stateInRegGraphFrame.run(); // Colorize the graph when the selection change
+				}
+			}
+		});
+		add(new JScrollPane(table), c);
+
+		c.gridy++;
+		c.weightx = 0;
+		c.weighty = 0;
+		c.fill = GridBagConstraints.CENTER;
+		if (this.g.getModel().isBoolean()) {
+			computeTrapStateButton = new JButton(Txt.t("STR_stateInRegGraph_computeTrapSpaces"));
+			add(computeTrapStateButton, c);
+			computeTrapStateButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					run(); // call run() when the button is clicked
+				}
+			});
+		} else {
+			add(new JLabel("Cannot map Boolean trap spaces on a non-boolean table. Booleanize the model first."), c);
+		}
+	}
+
+	protected void run() {
+		LogicalModel model = g.getModel();
+		Perturbation p = mutantStore.getPerturbation();
+		if (p != null) {
+			p.update(model);
+		}
+
+		TrapSpaceTask task = new TrapSpaceTask(model);
+		TrapSpaceList result = null;
+		try {
+			task.run();
+			result = task.getResult();
+			tableModel.setSolutions(result);
 		} catch (Exception e) {
 			LogManager.error(e);
 		}
