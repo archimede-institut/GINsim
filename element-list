@@ -37,6 +37,8 @@ org.ginsim.core.service
 org.ginsim.core.utils.data
 org.ginsim.gui
 org.ginsim.gui.annotation
+org.ginsim.gui.annotation.classes
+org.ginsim.gui.annotation.classes.autocomplete
 org.ginsim.gui.graph
 org.ginsim.gui.graph.canvas
 org.ginsim.gui.graph.canvas.events
