@@ -217,7 +217,9 @@ public class SVGEncoder extends AbstractTask {
         String[] attrs = {
                 "class", type,
                 "marker-end", "url(#"+marker+")",
-                "d", sb.toString()
+                "d", sb.toString(),
+                "inkscape:connection-start", "#"+edge.getSource().toString(),
+                "inkscape:connection-end", "#"+edge.getTarget().toString(),
         };
         out.addTag("path", attrs);
     }

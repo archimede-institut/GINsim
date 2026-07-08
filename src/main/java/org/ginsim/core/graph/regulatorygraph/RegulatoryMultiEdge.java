@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.ginsim.common.utils.ToolTipsable;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphChangeType;
@@ -21,8 +20,7 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements ToolTip
 	private RegulatoryEdge[] edges = new RegulatoryEdge[RegulatoryNode.MAXVALUE+1];
 	private int edgecount = 0;
     private RegulatoryEdgeSign sign = RegulatoryEdgeSign.POSITIVE;
-	private Annotation annotation = new Annotation();
-	
+
     /**
      * @param source
      * @param target
@@ -158,8 +156,6 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements ToolTip
             }
             out.addAttr("effects", s.trim());
         }
-
-    	annotation.toXML(out);
     }
 
     @Override
@@ -198,10 +194,6 @@ public class RegulatoryMultiEdge extends Edge<RegulatoryNode> implements ToolTip
 		graph.fireGraphChange(GraphChangeType.EDGEUPDATED, this);
 	}
 
-	public Annotation getAnnotation() {
-		return annotation;
-	}
-	
 	/**
 	 * @param index index of a subedge.
 	 * @return name of this sub edge.

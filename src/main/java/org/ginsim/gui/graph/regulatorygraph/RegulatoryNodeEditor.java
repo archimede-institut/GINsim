@@ -4,11 +4,9 @@ import java.awt.GridBagConstraints;
 
 import org.ginsim.common.application.Txt;
 import org.ginsim.common.xml.XMLWriter;
-import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.core.notification.NotificationManager;
-import org.ginsim.gui.annotation.AnnotationPanel;
 import org.ginsim.gui.graph.regulatorygraph.logicalfunction.LogicalFunctionPanel;
 import org.ginsim.gui.utils.data.GenericPropertyEditorPanel;
 import org.ginsim.gui.utils.data.GenericPropertyInfo;
@@ -23,13 +21,11 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
 	public static final int PROP_NAME = 1;
     public static final int PROP_MAX = 2;
     public static final int PROP_INPUT = 3;
-	public static final int PROP_ANNOTATION = 5;
 	public static final int PROP_RAW = 10;
 	
 	RegulatoryGraph graph;
 
 	static {
-		GenericPropertyEditorPanel.addSupportedClass(Annotation.class, AnnotationPanel.class);
 		GenericPropertyEditorPanel.addSupportedClass(RegulatoryNode.class, InteractionPanel.class);
 		GenericPropertyEditorPanel.addSupportedClass(LogicalFunctionPanel.class, LogicalFunctionPanel.class);
 	}
@@ -52,15 +48,13 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
         v_prop.add(pinfo);
 
 		// build the group [note, parameter, function]
-		GenericPropertyInfo[] t = new GenericPropertyInfo[3];
-		pinfo = new GenericPropertyInfo(this, PROP_ANNOTATION, Txt.t("STR_notes"), Annotation.class);
-		t[0] = pinfo;
+		GenericPropertyInfo[] t = new GenericPropertyInfo[2];
 		pinfo = new GenericPropertyInfo(this, PROP_RAW, Txt.t("STR_parameters"), RegulatoryNode.class);
 		pinfo.data = graph;
-		t[1] = pinfo;
+		t[0] = pinfo;
 		pinfo = new GenericPropertyInfo(this, PROP_RAW, Txt.t("STR_function"), LogicalFunctionPanel.class);
 		pinfo.data = graph;
-		t[2] = pinfo;
+		t[1] = pinfo;
 		
 		// and add the group
 		pinfo = new GenericPropertyInfo(this, -1, null, GenericPropertyInfo[].class);
@@ -158,8 +152,6 @@ public class RegulatoryNodeEditor extends ObjectEditor<RegulatoryNode> {
 
 	public Object getRawValue(int prop) {
 		switch (prop) {
-			case PROP_ANNOTATION:
-				return o.getAnnotation();
 			case PROP_RAW:
 				return o;
             case PROP_INPUT:

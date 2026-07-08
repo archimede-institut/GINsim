@@ -5,12 +5,15 @@ import java.io.OutputStreamWriter;
 import java.util.Collection;
 import java.util.Map;
 
+import org.colomoto.biolqm.NodeInfo;
+import org.colomoto.biolqm.metadata.Annotator;
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.xml.XMLWriter;
 import org.ginsim.core.annotation.Annotation;
 import org.ginsim.core.graph.Edge;
 import org.ginsim.core.graph.Graph;
 import org.ginsim.core.graph.GraphAssociation;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.view.EdgeAttributesReader;
 import org.ginsim.core.graph.view.NodeAttributesReader;
 import org.ginsim.core.graph.view.style.StyleManager;
@@ -73,14 +76,21 @@ public class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 		saveNodes(out, vertices);
 		saveEdges(out, edges);
 		
+		// old ginml annotations
 		Annotation annot = graph.getAnnotation();
 		if (annot != null) {
-			annot.toXML(out);
+			annot.toXML(out);	
 		}
+		
+		// new ginml annotations
+		if (graph instanceof RegulatoryGraph) {
+			Annotator<NodeInfo> annotator = ((RegulatoryGraph)graph).getAnnotator().onModel();
+        	annotationsToXML(out, annotator);
+        }
 
 		// handle associated graphs!
 		if (graph instanceof GraphAssociation) {
-			GraphAssociation ga = (GraphAssociation)graph;
+			GraphAssociation ga = (GraphAssociation) graph;
 			try {
 				String associatedID = ga.getAssociatedGraphID();
 	            if (associatedID != null) {
@@ -104,7 +114,7 @@ public class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 			// save visual settings
 			nReader.setNode(node);
 			nReader.writeGINML(out);
-
+			
 			out.closeTag();
 		}
 	}
@@ -171,14 +181,37 @@ public class GINMLWriter<G extends Graph<V,E>, V,E extends Edge<V>> {
 	}
 	
 	protected String stringNodeOrder(Collection nodeOrder) {
-		String s = "";
+		StringBuilder s = new StringBuilder();
 		for (Object o: nodeOrder) {
-			s += o+" ";
+			s.append(o).append(" ");
 		}
-		if (s.length() > 0) {
-			return s.substring(0, s.length()-1);
-		}
-		return s.trim();
+		return s.toString().trim();
 	}
+	
+	protected void annotationsToXML(XMLWriter out, Annotator annotator) throws IOException {
+		if (!annotator.hasData()) {
+			return;
+		}
 
+		// FIXME: write unqualified annotations to the GINML
+		out.openTag("annotation");
+//        if (resources.size() > 0) {
+//            out.openTag("linklist");
+//            for (int i=0 ; i<resources.size() ; i++) {
+//                out.openTag("link");
+//                out.addAttr("xlink:href", resources.get(i));
+//                out.closeTag();
+//            }
+//            out.closeTag();
+//        }
+		// we put the notes
+		String notes = annotator.getNotes();
+		if (notes != null && !notes.trim().isEmpty()) {
+			out.openTag("comment");
+			out.addContent(notes);
+			out.closeTag();
+		}
+		
+        out.closeTag();
+	}
 }

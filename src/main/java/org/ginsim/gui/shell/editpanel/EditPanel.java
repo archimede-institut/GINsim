@@ -48,7 +48,7 @@ public class EditPanel extends JTabbedPane implements GraphGUIListener {
     	Component panel = tab.getComponent();
         addTab(name, null, panel, null);
         tabs.add(tab);
-        updateTabs( gui.getSelection());
+        updateTabs(gui.getSelection());
     }
 
     /**
@@ -80,7 +80,7 @@ public class EditPanel extends JTabbedPane implements GraphGUIListener {
 
 	@Override
 	public void graphSelectionChanged(GraphGUI gui) {
-		updateTabs( gui.getSelection());
+		updateTabs(gui.getSelection());
 	}
 
 	@Override

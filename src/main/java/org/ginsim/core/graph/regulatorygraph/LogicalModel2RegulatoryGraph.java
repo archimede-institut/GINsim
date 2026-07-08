@@ -45,11 +45,11 @@ public class LogicalModel2RegulatoryGraph {
     public static RegulatoryGraph importModel(LogicalModel model, Collection<NodeInfo> to_remove) {
         return new LogicalModel2RegulatoryGraph(model, to_remove).getRegulatoryGraph();
     }
-
-
-
+    
+    
+    
     private LogicalModel2RegulatoryGraph( LogicalModel model) {
-        this(model, new ArrayList<NodeInfo>());
+        this(model, new ArrayList<>());
     }
 
     private LogicalModel2RegulatoryGraph( LogicalModel model, Collection<NodeInfo> to_remove) {
@@ -100,6 +100,7 @@ public class LogicalModel2RegulatoryGraph {
 			}
 		}
 
+		// FIXME: handle annotations!
 	}
 	
 	private RegulatoryGraph getRegulatoryGraph() {

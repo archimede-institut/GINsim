@@ -55,20 +55,10 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 			simport.setSource(filename);
 			LogicalModel model = simport.call();
 			RegulatoryGraph lrg = LogicalModel2RegulatoryGraph.importModel(model);
-			
+
 			SBMLQualBundle qbundle = simport.getQualBundle();
-			
 			// TODO: add unused interactions and consistency checks
 
-
-
-			// Handle annotations
-			importAnnotation(lrg, qbundle.document.getModel(), lrg.getAnnotation());
-			for (QualitativeSpecies sp: qbundle.qmodel.getListOfQualitativeSpecies()) {
-				RegulatoryNode node = lrg.getNodeByName(sp.getId());
-				importAnnotation(lrg, sp, node.getAnnotation());
-			}
-			
 			return lrg;
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -97,7 +87,7 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 	 */
 	public String export( SBMLQualConfig config, String filename) throws IOException{
         RegulatoryGraph graph = config.getGraph();
-		LogicalModel model = graph.getModel(null, true);
+		LogicalModel model = graph.getModel(null, true, true);
 		try {
 			SBMLqualExport sExport = new SBMLqualExport(model, true);
 			SBMLQualBundle qbundle = sExport.getSBMLBundle();
@@ -120,24 +110,6 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
                 state[idx] = v;
             }
             sExport.setInitialCondition(state);
-
-			// Add annotations
-			Model smodel = qbundle.document.getModel();
-			try {
-				exportAnnotation(smodel, graph.getAnnotation());
-			} catch (XMLStreamException e) {
-				System.err.println("Error exporting model annotation");
-			}
-			for (RegulatoryNode node: graph.getNodeOrder()) {
-				QualitativeSpecies qs = qbundle.qmodel.getQualitativeSpecies(node.getId());
-				org.ginsim.core.annotation.Annotation annotation = node.getAnnotation();
-				try {
-					exportAnnotation(qs, annotation);
-				} catch (XMLStreamException e) {
-					System.err.println("Error exporting annotation for "+ node.getId());
-				}
-			}
-			
 
 			sExport.setDestination(filename);
 			sExport.export();
@@ -177,22 +149,6 @@ public class SBMLqualService extends FormatSupportService<SBMLFormat> {
 			}
 			sb.append("</p>\n</body></notes>");
 			elt.setNotes(sb.toString());
-		}
-	}
-	
-	public void importAnnotation(RegulatoryGraph lrg, SBase elt, org.ginsim.core.annotation.Annotation gsnote) throws XMLStreamException {
-		Annotation as = elt.getAnnotation();
-		for (CVTerm term: as.getListOfCVTerms()) {
-			for (String s: term.getResources()) {
-				gsnote.add(new AnnotationLink(s, lrg));
-			}
-		}
-
-		XMLNode notes = elt.getNotes();
-		if (notes != null && notes.getChildCount() > 0) {
-			StringBuffer sb = new StringBuffer();
-			fillNote(sb, notes);
-			gsnote.setComment(sb.toString());
 		}
 	}
 

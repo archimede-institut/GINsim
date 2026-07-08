@@ -3,14 +3,22 @@ package org.ginsim.gui.shell.callbacks;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.JFileChooser;
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.ginsim.common.application.GsException;
 import org.ginsim.common.application.LogManager;
@@ -19,6 +27,7 @@ import org.ginsim.common.application.Txt;
 import org.ginsim.commongui.dialog.GUIMessageUtils;
 import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
+import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.gui.GUIManager;
 import org.ginsim.gui.graph.GraphGUI;
@@ -49,12 +58,20 @@ public class FileCallBack {
 		JMenu recent = new RecentMenu();
 		menu.add(recent);
 		menu.add(importMenu);
+		if (g instanceof RegulatoryGraph) {
+			importMenu.add(new JSeparator());
+			importMenu.add(new ImportJSONAction(g));
+		}
 
 		menu.add(new JSeparator());
 		
 		menu.add(new SaveAction(g));
 		menu.add(new SaveAsAction(g));
 		menu.add(exportMenu);
+		if (g instanceof RegulatoryGraph) {
+			exportMenu.add(new JSeparator());
+			exportMenu.add(new ExportJSONAction(g));
+		}
 
         menu.add(new JSeparator());
         menu.add(new CloseAction(g));
@@ -63,7 +80,7 @@ public class FileCallBack {
 	}
 
     public static JMenu getMainMenu() {
-        JMenu menu = new JMenu( "GINsim");
+        JMenu menu = new JMenu("GINsim");
 
         for (Action a: HelpCallBack.getActions()) {
             menu.add(a);
@@ -282,5 +299,79 @@ class QuitAction extends AbstractAction {
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		GUIManager.getInstance().quit();
+	}
+}
+
+class ImportJSONAction extends AbstractAction {
+	private static final long serialVersionUID = 1L;
+	private final RegulatoryGraph g;
+	
+	public ImportJSONAction(Graph<?,?> g) {
+		super(Txt.t("STR_ImportAnnotations"));
+		this.g = (RegulatoryGraph) g;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		try {
+		    JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+		    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+		        "JSON files", "json");
+		    chooser.setFileFilter(filter);
+		    int returnVal = chooser.showOpenDialog(null);
+		    if (returnVal == JFileChooser.APPROVE_OPTION) {
+		    	System.out.println("You chose to open this file: " + chooser.getSelectedFile().getName());
+
+				this.g.getAnnotator().importMetadata(chooser.getSelectedFile().getAbsolutePath(), this.g.getNodeInfos());
+		    }
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	}
+}
+
+class ExportJSONAction extends AbstractAction {
+	private static final long serialVersionUID = 1L;
+	private final RegulatoryGraph g;
+	
+	public ExportJSONAction(Graph<?,?> g) {
+		super(Txt.t("STR_ExportAnnotations"));
+		this.g = (RegulatoryGraph) g;
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		try {
+		    JFileChooser chooser = new JFileChooser(System.getProperty("user.dir"));
+		    FileNameExtensionFilter filter = new FileNameExtensionFilter(
+		        "JSON files", "json");
+		    chooser.setFileFilter(filter);
+		    int returnVal = chooser.showSaveDialog(null);
+		    if (returnVal == JFileChooser.APPROVE_OPTION) {
+		    	String nameFile = chooser.getSelectedFile().getName();
+		    	
+		    	if (!nameFile.substring(nameFile.length()-5).equals(".json")) {
+		    		nameFile = nameFile + ".json";
+		    	}
+		    	
+		    	File f = chooser.getSelectedFile();
+		    	if (f.exists()) {
+					int confirm = JOptionPane.showConfirmDialog(null, "The file exists, do you want to overwrite it?");
+					if (confirm != JOptionPane.OK_OPTION) {
+						return;
+					}
+				}
+		    	
+		    	System.out.println("You chose to save the annotations under the name: " + nameFile);
+				Writer out = new OutputStreamWriter(Files.newOutputStream(Paths.get(nameFile)), StandardCharsets.UTF_8);
+				out.write(this.g.getAnnotator().writeAnnotationsInJSON().toString());
+				out.flush();
+				out.close();
+
+			}
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
 	}
 }

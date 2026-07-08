@@ -10,7 +10,6 @@ import org.ginsim.core.graph.regulatorygraph.RegulatoryGraph;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryMultiEdge;
 import org.ginsim.core.graph.regulatorygraph.RegulatoryNode;
 import org.ginsim.gui.GUIManager;
-import org.ginsim.gui.annotation.AnnotationPanel;
 import org.ginsim.gui.graph.GUIEditor;
 import org.ginsim.gui.graph.GraphGUI;
 
@@ -21,8 +20,6 @@ public class RegulatoryEdgeEditor extends JPanel implements GUIEditor<Regulatory
 
     private final SelectButton bSource;
     private final SelectButton bTarget;
-
-    private final AnnotationPanel annotPanel = new AnnotationPanel();
     private final MultiEdgeEditPanel edgeEditPanel;
 
 	public RegulatoryEdgeEditor( RegulatoryGraph graph) {
@@ -52,15 +49,6 @@ public class RegulatoryEdgeEditor extends JPanel implements GUIEditor<Regulatory
         cst.weighty = 1;
         edgeEditPanel = new MultiEdgeEditPanel(graph);
         add(edgeEditPanel, cst);
-
-        // annotation panel
-        cst.weightx = 1;
-        cst.gridx = 6;
-        cst.gridwidth = 1;
-        cst.gridx++;
-        cst.gridy = 1;
-        cst.gridheight = 2;
-        add(annotPanel, cst);
 	}
 
     @Override
@@ -78,7 +66,6 @@ public class RegulatoryEdgeEditor extends JPanel implements GUIEditor<Regulatory
         bTarget.setNode(medge.getTarget());
 
         edgeEditPanel.setEdge(medge);
-        annotPanel.setAnnotation(medge.getAnnotation());
     }
 }
 

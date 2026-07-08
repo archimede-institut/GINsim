@@ -1,16 +1,24 @@
 package org.ginsim.core.graph.regulatorygraph;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipOutputStream;
 
 import org.colomoto.biolqm.*;
+import org.colomoto.biolqm.metadata.AnnotationModule;
+import org.colomoto.biolqm.metadata.Annotator;
+import org.colomoto.biolqm.metadata.annotations.JsonReader;
 import org.colomoto.mddlib.MDDManager;
 import org.colomoto.mddlib.MDDManagerFactory;
 import org.colomoto.mddlib.MDDVariableFactory;
 import org.ginsim.common.application.GsException;
-import org.ginsim.core.annotation.Annotation;
-import org.ginsim.core.annotation.AnnotationLink;
+import org.ginsim.common.application.LogManager;
 import org.ginsim.core.graph.AbstractGraph;
 import org.ginsim.core.graph.GSGraphManager;
 import org.ginsim.core.graph.Graph;
@@ -22,13 +30,14 @@ import org.ginsim.core.io.parser.GINMLWriter;
 import org.ginsim.core.notification.NotificationManager;
 import org.ginsim.core.notification.resolvable.NotificationResolution;
 import org.ginsim.core.graph.GraphFactory;
+
 /**
  * Implementation of the RegulatoryGraph interface.
  * 
  * @author Aurelien Naldi
  */
 public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, RegulatoryMultiEdge> 
-	implements RegulatoryGraph{
+	implements RegulatoryGraph {
 
 	public static final String GRAPH_ZIP_NAME = "regulatoryGraph.ginml";
 	
@@ -46,6 +55,13 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
      */
     public RegulatoryGraphImpl() {
         super( RegulatoryGraphFactory.getInstance());
+        
+        try {
+			this.annotationModule = new AnnotationModule();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
 
     @Override
@@ -493,21 +509,21 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 
     @Override
     public LogicalModel getModel(NodeOrderer orderer) {
-        return getModel(orderer, false);
+        return getModel(orderer, false, false);
     }
     @Override
-    public LogicalModel getModel(NodeOrderer orderer, boolean withLayout) {
+    public LogicalModel getModel(NodeOrderer orderer, boolean withLayout, boolean withAnnotations) {
         //System.out.println(">>I3:"+AvatarUtils.toString(getState()));
 		List<NodeInfo> order = null;
 		if (orderer == null) {
-			order = new ArrayList<NodeInfo>();
+			order = new ArrayList<>();
 			for (RegulatoryNode node: getNodeOrder()) {
 				order.add(node.getNodeInfo());
 			}
 		} else {
 			order = orderer.getOrder(this);
 		}
-		
+
 		MDDManager factory = getMDDFactory(order);
 		int[] functions = getMDDs(factory);
 		if(isStateful()) return new StatefulLogicalModelImpl(order, factory, functions, initialStates, graphName);
@@ -527,7 +543,11 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
                 li.width = nreader.getWidth();
                 li.height = nreader.getHeight();
             }
+        }
 
+        if (withAnnotations) {
+            // FIXME: transfer metadata to the LogicalModel
+//            model.setAnnotationModule(annotationModule);
         }
 
 		return model;
@@ -564,15 +584,8 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
 				v.add(vertex);
 				continue;
 			}
-			
-			Annotation annot = vertex.getAnnotation();
-			for (AnnotationLink link: annot.getLinkList()) {
-				matcher = pattern.matcher(link.getLink());
-				if (matcher.find()) {
-					v.add(vertex);
-					break;
-				}
-			}
+
+            // FIXME: search in annotations
 		}
 		return v;
 	}
@@ -581,12 +594,115 @@ public final class RegulatoryGraphImpl  extends AbstractGraph<RegulatoryNode, Re
     public Collection<RegulatoryNode> getNodes() {
         return nodeOrder;
     }
+    
+	@Override
+	public void setAnnotationModule(AnnotationModule oldAnnotationModule) {
+		this.annotationModule = oldAnnotationModule;
+//
+//		Map<NodeInfo, Index> oldNodesIndex = oldAnnotationModule.getNodesIndex();
+//		Map<NodeInfoPair, Index> oldEdgesIndex = oldAnnotationModule.getEdgesIndex();
+//
+//		Map<NodeInfo, Index> newNodesIndex = new HashMap<>();
+//		Map<NodeInfoPair, Index> newEdgesIndex = new HashMap<>();
+//
+//		Map<String, NodeInfo> oldIdsNodes = new HashMap<>();
+//		Map<ArrayList<String>, NodeInfoPair> oldIdsEdges = new HashMap<>();
+//
+//		// update nodesIndex with the nodes of the GINsim model
+//		for (Entry<NodeInfo, Index> oldEntry: oldAnnotationModule.getNodesIndex().entrySet()) {
+//			NodeInfo node = oldEntry.getKey();
+//			oldIdsNodes.put(node.getNodeID(), node);
+//		}
+//
+//		for (NodeInfo newNodeInfo: this.getNodeInfos()) {
+//			String newId = newNodeInfo.getNodeID();
+//
+//			if (oldIdsNodes.containsKey(newId)) {
+//    			Index newIndex = oldNodesIndex.get(oldIdsNodes.get(newId));
+//    			newNodesIndex.put(newNodeInfo, newIndex);
+//    		}
+//		}
+//
+//		// update edgesIndex with the nodes of the GINsim model
+//		for (Entry<NodeInfoPair, Index> oldEntry: oldAnnotationModule.getEdgesIndex().entrySet()) {
+//			NodeInfoPair pair = oldEntry.getKey();
+//
+//			String id1 = pair.getNode1().getNodeID();
+//			String id2 = pair.getNode2().getNodeID();
+//			ArrayList<String> ids = new ArrayList<>();
+//			ids.add(id1);
+//			ids.add(id2);
+//
+//			oldIdsEdges.put(ids, pair);
+//		}
+//
+//		for (RegulatoryMultiEdge newEdge: this.getEdges()) {
+//			RegulatoryNode interNode1 = newEdge.getSource();
+//        	NodeInfo newNodeInfo1 = interNode1.getNodeInfo();
+//        	String newId1 = newNodeInfo1.getNodeID();
+//
+//        	RegulatoryNode interNode2 = newEdge.getTarget();
+//        	NodeInfo newNodeInfo2 = interNode2.getNodeInfo();
+//			String newId2 = newNodeInfo2.getNodeID();
+//
+//			ArrayList<String> newIds = new ArrayList<>();
+//			newIds.add(newId1);
+//			newIds.add(newId2);
+//
+//			if (oldIdsEdges.containsKey(newIds)) {
+//    			Index newIndex = oldEdgesIndex.get(oldIdsEdges.get(newIds));
+//    			newEdgesIndex.put(new NodeInfoPair(newNodeInfo1, newNodeInfo2), newIndex);
+//    		}
+//		}
+//
+//		this.annotationModule.setNodesIndex(newNodesIndex);
+//		this.annotationModule.setEdgesIndex(newEdgesIndex);
+	}
+    
+	@Override
+	public Annotator<NodeInfo> getAnnotator() {
+		return new Annotator<>(this.annotationModule);
+	}
 
+    public void saveAssociated(ZipOutputStream zos, OutputStreamWriter osw) throws IOException {
+        zos.putNextEntry(new ZipEntry(ZIP_PREFIX+"annotations.json"));
+        
+        // write JSON to osw
+        JSONObject json = this.getAnnotator().writeAnnotationsInJSON();
+        osw.write(json.toString());
+        
+        osw.flush();
+        zos.closeEntry();
+    }
+
+    public void parseAssociated(ZipFile f, String prefix) throws GsException {
+        ZipEntry ze = f.getEntry(prefix+"annotations.json");
+        if (ze != null) {
+            try {
+                InputStream is = f.getInputStream(ze);
+
+                // parse JSON from is
+                JSONObject json = JsonReader.readInputStream(is);
+
+                // we reinitialize the annotation module to get rid of the old annotations extracted from the GINML file
+                this.setAnnotationModule(new AnnotationModule());
+
+                // then we put the annotations from the JSON file in the new annotation module
+                HashMap<String, NodeInfo> name2node = new HashMap<>();
+                for (RegulatoryNode node: this.getNodes()) {
+                    name2node.put(node.getId(), node.getNodeInfo());
+                }
+            	this.getAnnotator().readAnnotationsFromJSON(json, name2node);
+                
+                is.close();
+            } catch (Exception e) {
+                LogManager.error(e);
+            }
+        }
+    }
     
-	/**********************/
-	/*** STATEFUL GRAPH ***/
-	/**********************/
-    
+	/* *****  STATEFUL GRAPH  ***** */
+
     @Override
 	public List<byte[]> getStates() {
 		return initialStates;

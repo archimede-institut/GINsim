@@ -82,7 +82,7 @@ public class AnnotationPanel extends JPanel
      * @param obj edited object
      */
     public void setEditedObject(Object obj) {
-        if (obj != null && obj instanceof Annotation) {
+        if (obj instanceof Annotation) {
             setAnnotation((Annotation)obj);
         }
     }
